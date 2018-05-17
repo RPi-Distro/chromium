@@ -1,0 +1,24 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+import apt
+import os.path
+from selenium import webdriver
+
+if __name__ == '__main__':
+    options = webdriver.chrome.options.Options()
+    options.binary_location = "/usr/bin/chromium-browser"
+    options.add_argument("headless")
+    driver_path = "/usr/lib/chromium-browser/chromedriver"
+    driver = webdriver.Chrome(executable_path=driver_path,
+                              chrome_options=options)
+    version = driver.capabilities['version']
+
+    package = apt.Cache()['chromium-browser']
+    assert package.installed.version.split('-')[0] == version
+
+    tests_dir = os.path.dirname(os.path.realpath(__file__))
+    driver.get("file://{}/data/chromium-version.html".format(tests_dir))
+    assert driver.find_element_by_id("chromium_version").text == version
+
+    driver.quit()

@@ -1,0 +1,14 @@
+<?php
+
+	$GLOBALS['configuration'] = [
+		'readonly' => false,
+
+		'release' => 8,
+
+		'database' => [
+			'server' => 'localhost',
+			'username' => '******';
+			'password' => '******';
+			'database' => 'html5test'
+		]
+	];

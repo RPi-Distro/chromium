@@ -1,0 +1,15 @@
+Description: Partially revert ff69d30 because -nostdlib++ requires clang 6.0 (unreleased)
+Origin: https://chromium.googlesource.com/chromium/src/+/ff69d3018c42eb994533de337f81d417a0209913
+Author: Olivier Tilloy <olivier.tilloy@canonical.com>
+
+--- a/build/config/posix/BUILD.gn
++++ b/build/config/posix/BUILD.gn
+@@ -58,7 +58,7 @@ config("runtime_library") {
+     }
+ 
+     # Make sure we don't link against libc++ or libstdc++.
+-    if (is_clang) {
++    if (false) {
+       ldflags += [ "-nostdlib++" ]
+     } else {
+       ldflags += [ "-nodefaultlibs" ]

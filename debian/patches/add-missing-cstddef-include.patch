@@ -1,0 +1,14 @@
+Description: add missing include, for size_t
+Author: Olivier Tilloy <olivier.tilloy@canonical.com>
+
+--- a/third_party/angle/src/libANGLE/Constants.h
++++ b/third_party/angle/src/libANGLE/Constants.h
+@@ -11,6 +11,8 @@
+ 
+ #include "common/platform.h"
+ 
++#include <cstddef>
++
+ namespace gl
+ {
+ 

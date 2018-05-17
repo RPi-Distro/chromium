@@ -1,0 +1,358 @@
+description: don't set sse2 compiler flags on i386
+author: Michael Gilbert <mgilbert@debian.org>
+debian-bug: http://bugs.debian.org/750361
+
+--- a/cc/raster/texture_compressor.cc
++++ b/cc/raster/texture_compressor.cc
+@@ -8,7 +8,7 @@
+ #include "base/memory/ptr_util.h"
+ #include "cc/raster/texture_compressor_etc1.h"
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+ #include "base/cpu.h"
+ #include "cc/raster/texture_compressor_etc1_sse.h"
+ #endif
+@@ -18,7 +18,7 @@ namespace cc {
+ std::unique_ptr<TextureCompressor> TextureCompressor::Create(Format format) {
+   switch (format) {
+     case kFormatETC1: {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+       base::CPU cpu;
+       if (cpu.has_sse2()) {
+         return base::WrapUnique(new TextureCompressorETC1SSE());
+--- a/media/base/sinc_resampler.cc
++++ b/media/base/sinc_resampler.cc
+@@ -81,7 +81,7 @@
+ #include "base/numerics/math_constants.h"
+ #include "build/build_config.h"
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+ #include <xmmintrin.h>
+ #define CONVOLVE_FUNC Convolve_SSE
+ #elif defined(ARCH_CPU_ARM_FAMILY) && defined(USE_NEON)
+@@ -326,7 +326,7 @@ float SincResampler::Convolve_C(const fl
+       kernel_interpolation_factor * sum2);
+ }
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+ float SincResampler::Convolve_SSE(const float* input_ptr, const float* k1,
+                                   const float* k2,
+                                   double kernel_interpolation_factor) {
+--- a/media/base/sinc_resampler.h
++++ b/media/base/sinc_resampler.h
+@@ -98,7 +98,7 @@ class MEDIA_EXPORT SincResampler {
+   // ARM, NEON support is chosen at compile time based on compilation flags.
+   static float Convolve_C(const float* input_ptr, const float* k1,
+                           const float* k2, double kernel_interpolation_factor);
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+   static float Convolve_SSE(const float* input_ptr, const float* k1,
+                             const float* k2,
+                             double kernel_interpolation_factor);
+--- a/media/base/sinc_resampler_perftest.cc
++++ b/media/base/sinc_resampler_perftest.cc
+@@ -22,7 +22,7 @@ static const double kKernelInterpolation
+ static void DoNothing(int frames, float* destination) {}
+ 
+ // Define platform independent function name for Convolve* tests.
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+ #define CONVOLVE_FUNC Convolve_SSE
+ #elif defined(ARCH_CPU_ARM_FAMILY) && defined(USE_NEON)
+ #define CONVOLVE_FUNC Convolve_NEON
+--- a/media/base/sinc_resampler_unittest.cc
++++ b/media/base/sinc_resampler_unittest.cc
+@@ -150,7 +150,7 @@ TEST(SincResamplerTest, DISABLED_SetRati
+ 
+ 
+ // Define platform independent function name for Convolve* tests.
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+ #define CONVOLVE_FUNC Convolve_SSE
+ #elif defined(ARCH_CPU_ARM_FAMILY) && defined(USE_NEON)
+ #define CONVOLVE_FUNC Convolve_NEON
+--- a/media/base/vector_math.cc
++++ b/media/base/vector_math.cc
+@@ -11,7 +11,7 @@
+ #include "build/build_config.h"
+ 
+ // NaCl does not allow intrinsics.
+-#if defined(ARCH_CPU_X86_FAMILY) && !defined(OS_NACL)
++#if defined(__x86_64__) && !defined(OS_NACL)
+ #include <xmmintrin.h>
+ // Don't use custom SSE versions where the auto-vectorized C version performs
+ // better, which is anywhere clang is used.
+@@ -91,7 +91,7 @@ std::pair<float, float> EWMAAndMaxPower_
+   return result;
+ }
+ 
+-#if defined(ARCH_CPU_X86_FAMILY) && !defined(OS_NACL)
++#if defined(__x86_64__) && !defined(OS_NACL)
+ void FMUL_SSE(const float src[], float scale, int len, float dest[]) {
+   const int rem = len % 4;
+   const int last_index = len - rem;
+--- a/media/base/vector_math_perftest.cc
++++ b/media/base/vector_math_perftest.cc
+@@ -83,7 +83,7 @@ class VectorMathPerfTest : public testin
+ };
+ 
+ // Define platform dependent function names for SIMD optimized methods.
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+ #define FMAC_FUNC FMAC_SSE
+ #define FMUL_FUNC FMUL_SSE
+ #define EWMAAndMaxPower_FUNC EWMAAndMaxPower_SSE
+--- a/media/base/vector_math_testing.h
++++ b/media/base/vector_math_testing.h
+@@ -28,7 +28,7 @@ MEDIA_SHMEM_EXPORT std::pair<float, floa
+     int len,
+     float smoothing_factor);
+ 
+-#if defined(ARCH_CPU_X86_FAMILY) && !defined(OS_NACL)
++#if defined(__x86_64__) && !defined(OS_NACL)
+ MEDIA_SHMEM_EXPORT void FMAC_SSE(const float src[],
+                                  float scale,
+                                  int len,
+--- a/media/base/vector_math_unittest.cc
++++ b/media/base/vector_math_unittest.cc
+@@ -73,7 +73,7 @@ TEST_F(VectorMathTest, FMAC) {
+     VerifyOutput(kResult);
+   }
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+   {
+     SCOPED_TRACE("FMAC_SSE");
+     FillTestVectors(kInputFillValue, kOutputFillValue);
+@@ -114,7 +114,7 @@ TEST_F(VectorMathTest, FMUL) {
+     VerifyOutput(kResult);
+   }
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+   {
+     SCOPED_TRACE("FMUL_SSE");
+     FillTestVectors(kInputFillValue, kOutputFillValue);
+@@ -222,7 +222,7 @@ class EWMATestScenario {
+       EXPECT_NEAR(expected_max_, result.second, 0.0000001f);
+     }
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(__x86_64__)
+     {
+       SCOPED_TRACE("EWMAAndMaxPower_SSE");
+       const std::pair<float, float>& result = vector_math::EWMAAndMaxPower_SSE(
+--- a/skia/ext/convolver.h
++++ b/skia/ext/convolver.h
+@@ -17,7 +17,6 @@
+ // We can build SSE2 optimized versions for all x86 CPUs
+ // except when building for the IOS emulator.
+ #if defined(ARCH_CPU_X86_FAMILY) && !defined(OS_IOS)
+-#define SIMD_SSE2 1
+ #define SIMD_PADDING 8  // 8 * int16_t
+ #endif
+ 
+--- a/third_party/WebKit/Source/platform/audio/DirectConvolver.cpp
++++ b/third_party/WebKit/Source/platform/audio/DirectConvolver.cpp
+@@ -35,7 +35,7 @@
+ #include <Accelerate/Accelerate.h>
+ #endif
+ 
+-#if defined(ARCH_CPU_X86_FAMILY) && !defined(OS_MACOSX)
++#if defined(ARCH_CPU_X86_64) && !defined(OS_MACOSX)
+ #include <emmintrin.h>
+ #endif
+ 
+@@ -83,7 +83,7 @@ void DirectConvolver::Process(AudioFloat
+ #endif  // ARCH_CPU_X86
+ #else
+   size_t i = 0;
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   // Convolution using SSE2. Currently only do this if both |kernelSize| and
+   // |framesToProcess| are multiples of 4. If not, use the straightforward loop
+   // below.
+@@ -397,7 +397,7 @@ void DirectConvolver::Process(AudioFloat
+       }
+       dest_p[i++] = sum;
+     }
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   }
+ #endif
+ #endif  // OS_MACOSX
+--- a/third_party/WebKit/Source/platform/audio/SincResampler.cpp
++++ b/third_party/WebKit/Source/platform/audio/SincResampler.cpp
+@@ -32,7 +32,7 @@
+ #include "platform/audio/AudioBus.h"
+ #include "platform/wtf/MathExtras.h"
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+ #include <emmintrin.h>
+ #endif
+ 
+@@ -277,7 +277,7 @@ void SincResampler::Process(AudioSourceP
+       {
+         float input;
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+         // If the sourceP address is not 16-byte aligned, the first several
+         // frames (at most three) should be processed seperately.
+         while ((reinterpret_cast<uintptr_t>(input_p) & 0x0F) && n) {
+--- a/third_party/WebKit/Source/platform/audio/VectorMath.cpp
++++ b/third_party/WebKit/Source/platform/audio/VectorMath.cpp
+@@ -37,7 +37,7 @@
+ #include "platform/audio/cpu/arm/VectorMathNEON.h"
+ #elif HAVE_MIPS_MSA_INTRINSICS
+ #include "platform/audio/cpu/mips/VectorMathMSA.h"
+-#elif defined(ARCH_CPU_X86_FAMILY)
++#elif defined(ARCH_CPU_X86_64)
+ #include "platform/audio/cpu/x86/VectorMathX86.h"
+ #else
+ #include "platform/audio/VectorMathScalar.h"
+@@ -54,7 +54,7 @@ namespace Impl = Mac;
+ namespace Impl = NEON;
+ #elif HAVE_MIPS_MSA_INTRINSICS
+ namespace Impl = MSA;
+-#elif defined(ARCH_CPU_X86_FAMILY)
++#elif defined(ARCH_CPU_X86_64)
+ namespace Impl = X86;
+ #else
+ namespace Impl = Scalar;
+--- a/third_party/WebKit/Source/platform/graphics/cpu/x86/WebGLImageConversionSSE.h
++++ b/third_party/WebKit/Source/platform/graphics/cpu/x86/WebGLImageConversionSSE.h
+@@ -7,7 +7,7 @@
+ 
+ #include "build/build_config.h"
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+ #include <emmintrin.h>
+ 
+ namespace blink {
+@@ -195,6 +195,6 @@ ALWAYS_INLINE void PackOneRowOfRGBA8Litt
+ }  // namespace SIMD
+ }  // namespace blink
+ 
+-#endif  // ARCH_CPU_X86_FAMILY
++#endif  // ARCH_CPU_X86_64
+ 
+ #endif  // WebGLImageConversionSSE_h
+--- a/third_party/WebKit/Source/platform/graphics/gpu/WebGLImageConversion.cpp
++++ b/third_party/WebKit/Source/platform/graphics/gpu/WebGLImageConversion.cpp
+@@ -444,7 +444,7 @@ void Unpack<WebGLImageConversion::kDataF
+   const uint32_t* source32 = reinterpret_cast_ptr<const uint32_t*>(source);
+   uint32_t* destination32 = reinterpret_cast_ptr<uint32_t*>(destination);
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   SIMD::UnpackOneRowOfBGRA8LittleToRGBA8(source32, destination32,
+                                          pixels_per_row);
+ #endif
+@@ -472,7 +472,7 @@ void Unpack<WebGLImageConversion::kDataF
+     const uint16_t* source,
+     uint8_t* destination,
+     unsigned pixels_per_row) {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   SIMD::UnpackOneRowOfRGBA5551LittleToRGBA8(source, destination,
+                                             pixels_per_row);
+ #endif
+@@ -502,7 +502,7 @@ void Unpack<WebGLImageConversion::kDataF
+     const uint16_t* source,
+     uint8_t* destination,
+     unsigned pixels_per_row) {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   SIMD::UnpackOneRowOfRGBA4444LittleToRGBA8(source, destination,
+                                             pixels_per_row);
+ #endif
+@@ -718,7 +718,7 @@ void Pack<WebGLImageConversion::kDataFor
+           uint8_t>(const uint8_t* source,
+                    uint8_t* destination,
+                    unsigned pixels_per_row) {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   SIMD::PackOneRowOfRGBA8LittleToR8(source, destination, pixels_per_row);
+ #endif
+ #if HAVE_MIPS_MSA_INTRINSICS
+@@ -775,7 +775,7 @@ void Pack<WebGLImageConversion::kDataFor
+           uint8_t>(const uint8_t* source,
+                    uint8_t* destination,
+                    unsigned pixels_per_row) {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   SIMD::PackOneRowOfRGBA8LittleToRA8(source, destination, pixels_per_row);
+ #endif
+ #if HAVE_MIPS_MSA_INTRINSICS
+@@ -887,7 +887,7 @@ void Pack<WebGLImageConversion::kDataFor
+           uint8_t>(const uint8_t* source,
+                    uint8_t* destination,
+                    unsigned pixels_per_row) {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   SIMD::PackOneRowOfRGBA8LittleToRGBA8(source, destination, pixels_per_row);
+ #endif
+ #if HAVE_MIPS_MSA_INTRINSICS
+--- a/third_party/WebKit/Source/modules/webaudio/AudioParamTimeline.cpp
++++ b/third_party/WebKit/Source/modules/webaudio/AudioParamTimeline.cpp
+@@ -39,7 +39,7 @@
+ #include "platform/wtf/CPU.h"
+ #include "platform/wtf/MathExtras.h"
+ 
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+ #include <emmintrin.h>
+ #endif
+ 
+@@ -1333,7 +1333,7 @@ std::tuple<size_t, float, unsigned> Audi
+     size_t current_frame,
+     float value,
+     unsigned write_index) {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   auto number_of_values = current_state.number_of_values;
+ #endif
+   auto fill_to_frame = current_state.fill_to_frame;
+@@ -1346,7 +1346,7 @@ std::tuple<size_t, float, unsigned> Audi
+   double delta_time = time2 - time1;
+   float k = delta_time > 0 ? 1 / delta_time : 0;
+   const float value_delta = value2 - value1;
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   if (fill_to_frame > write_index) {
+     // Minimize in-loop operations. Calculate starting value and increment.
+     // Next step: value += inc.
+@@ -1474,7 +1474,7 @@ std::tuple<size_t, float, unsigned> Audi
+     size_t current_frame,
+     float value,
+     unsigned write_index) {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   auto number_of_values = current_state.number_of_values;
+ #endif
+   auto fill_to_frame = current_state.fill_to_frame;
+@@ -1524,7 +1524,7 @@ std::tuple<size_t, float, unsigned> Audi
+     for (; write_index < fill_to_frame; ++write_index)
+       values[write_index] = target;
+   } else {
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+     if (fill_to_frame > write_index) {
+       // Resolve recursion by expanding constants to achieve a 4-step
+       // loop unrolling.
+@@ -1658,7 +1658,7 @@ std::tuple<size_t, float, unsigned> Audi
+   // Oversampled curve data can be provided if sharp discontinuities are
+   // desired.
+   unsigned k = 0;
+-#if defined(ARCH_CPU_X86_FAMILY)
++#if defined(ARCH_CPU_X86_64)
+   if (fill_to_frame > write_index) {
+     const __m128 v_curve_virtual_index = _mm_set_ps1(curve_virtual_index);
+     const __m128 v_curve_points_per_frame = _mm_set_ps1(curve_points_per_frame);

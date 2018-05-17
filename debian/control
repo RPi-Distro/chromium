@@ -23,6 +23,7 @@ Build-Depends:
 	libnss3-dev,
 	mesa-common-dev,
 	libgles2-mesa-dev [armel armhf],
+	libraspberrypi-dev [armel armhf],
 	libpci-dev,
 	libxtst-dev,
 	libxss-dev,

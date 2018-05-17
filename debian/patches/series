@@ -1,5 +1,4 @@
 title-bar-default-system.patch-v35
-search-credit.patch
 chromium_useragent.patch
 configuration-directory.patch
 arm-neon.patch
@@ -22,3 +21,4 @@ set-rpath-on-chromium-executables.patch
 add-missing-cstddef-include.patch
 restore-clang-no-integrated-as.patch
 fix-ffmpeg-ia32-build.patch
+v65.0.3325.212_mmal_2.15.patch

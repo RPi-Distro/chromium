@@ -7,26 +7,26 @@ DEBIAN_REVISION := $(shell echo $(DEBIAN_VERSION) | sed 's/^.*r\([^-]*\)-.*/\1/'
 DEBIAN_DIST := $(shell lsb_release -ds | tr -d '()' |sed -e 's/\#/ /g')
 DEBIAN_DIST_NAME	:= $(shell lsb_release -si |sed -e 's/\#/ /g')
 
-LIB_DIR        := usr/lib/chromium-browser
-
-ifneq (,$(findstring Ubuntu,$(DEBIAN_DIST)))
-DISTRIBUTION := UBUNTU
-UBUNTU_DIST := $(DEBIAN_DIST)
+ifneq (,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
+  NJOBS := -j $(subst parallel=,,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
 endif
 
-# Set up Google API keys, see http://www.chromium.org/developers/how-tos/api-keys .
-# Note: these are for Ubuntu use ONLY. For your own distribution,
-# please get your own set of keys.
-# Permission to add API keys, from Paweł Hajdan, To chad.miller@canonical.com
-# msgid: CAADNaOFSFoch68NM1SGpCTRXqmspyKQgUPUtsF7SGRsRXiHZcg@mail.gmail.com
-GOOGLEAPI_APIKEY_UBUNTU := AIzaSyDGQzx0c0ptZVDriLi9Wblo2voeLnmPq-o
-GOOGLEAPI_CLIENTID_UBUNTU := 424119844901-tilod0e1nm0dt85e1evrdfp3cc3ec01d.apps.googleusercontent.com
-GOOGLEAPI_CLIENTSECRET_UBUNTU := WCCejhqORuxKG272GAWxsPIU
+LIB_DIR        := usr/lib/chromium-browser
+
+ifneq (,$(findstring Raspbian,$(DEBIAN_DIST)))
+DISTRIBUTION := RASPBIAN
+endif
+
+GOOGLEAPI_APIKEY_RASPBIAN := AIzaSyCkfPOPZXDKNn8hhgu3JrA62wIgC93d44k
+GOOGLEAPI_CLIENTID_RASPBIAN := 811574891467.apps.googleusercontent.com
+GOOGLEAPI_CLIENTSECRET_RASPBIAN := kdloedMFGdGla2P1zacGjAQh
 
 common_defines :=
 browser_defines :=
 ffmpeg_std_defines :=
 ffmpeg_extra_defines :=
+v6_defines :=
+v7_defines :=
 
 # enable verbose build messages
 export DH_VERBOSE=1
@@ -46,8 +46,8 @@ DEB_DH_SCOUR_ARGS += -Xsvg
 # which codecs are built inside the ffmpeg lib.  By default, ffmpeg_branding
 # equals to "Chromium" and only builds the ogg/vorbis/theora codecs.
 # When set to "Chrome", it also builds aac/ac3/mpeg4audio/h264/mov/mp3
-DEB_DH_SHLIBDEPS_ARGS_chromium-codecs-ffmpeg := -ldebian/chromium-codecs-ffmpeg/$(LIB_DIR)
-DEB_DH_SHLIBDEPS_ARGS_chromium-codecs-ffmpeg-extra := -ldebian/chromium-codecs-ffmpeg-extra/$(LIB_DIR)
+DEB_DH_SHLIBDEPS_ARGS_chromium-codecs-ffmpeg := -ldebian/chromium-codecs-ffmpeg/$(LIB_DIR) -ldebian/chromium-codecs-ffmpeg/$(LIB_DIR)/neon/vfp
+DEB_DH_SHLIBDEPS_ARGS_chromium-codecs-ffmpeg-extra := -ldebian/chromium-codecs-ffmpeg-extra/$(LIB_DIR) -ldebian/chromium-codecs-ffmpeg-extra/$(LIB_DIR)/neon/vfp
 
 common_defines+=\
 	enable_google_now=false \
@@ -93,6 +93,10 @@ common_defines+=\
 	current_os="linux" \
 	optimize_webui=false
 
+ifeq (ccache,$(findstring ccache,$(DEB_BUILD_OPTIONS)))
+	common_defines += cc_wrapper="ccache"
+endif
+
 ffmpeg_std_defines   += proprietary_codecs=false
 ffmpeg_extra_defines += proprietary_codecs=true ffmpeg_branding="Chrome"
 
@@ -118,8 +122,18 @@ common_defines += v8_use_arm_eabi_hardfloat=false
 common_defines += arm_float_abi="soft" arm_use_thumb=false
 else ifeq (armhf,$(DEB_HOST_ARCH))
 common_defines += target_cpu="arm"
-common_defines += arm_use_neon=false
-common_defines += arm_float_abi="hard" arm_use_thumb=true
+common_defines += arm_float_abi="hard"
+v6_defines +=\
+	arm_use_neon=false \
+	arm_optionally_use_neon=true \
+	arm_version=6 \
+	arm_use_thumb=false \
+	arm_arch="armv6z"
+v7_defines +=\
+	arm_use_neon=true \
+	arm_optionally_use_neon=false \
+	arm_version=7 \
+	arm_arch="armv7-a"
 else ifeq (arm64,$(DEB_HOST_ARCH))
 common_defines += target_cpu="arm64"
 else ifeq (i386,$(DEB_HOST_ARCH))
@@ -167,7 +181,7 @@ get-packaged-orig-source: DEST_FILENAME=chromium-browser_$(ORIG_VERSION).orig.ta
 get-packaged-orig-source:
 	wget --continue --progress=dot:giga $(URL)
 	wget -O sumfile -q $(SUMURL); echo >>sumfile
-	for hasher in md5 sha1 sha224 sha256 sha384 sha512; do echo -n "$$hasher  "; $${hasher}sum chromium-$(ORIG_VERSION).tar.xz; done >testfile
+	for hasher in md5; do echo -n "$$hasher  "; $${hasher}sum chromium-$(ORIG_VERSION).tar.xz; done >testfile
 	diff testfile sumfile
 	mv "chromium-$(ORIG_VERSION).tar.xz" "$(DEST_FILENAME)"
 
@@ -189,25 +203,30 @@ override_dh_auto_configure: out/Release/gn
 	-grep is_component out/argtest/discovered-gn-values
 
 	test ! "$(use_system_libraries)" || python2 build/linux/unbundle/replace_gn_files.py --system-libraries $(use_system_libraries)
-	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(browser_defines) $(ffmpeg_extra_defines)' out/Release
+	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v6_defines) $(browser_defines) $(ffmpeg_extra_defines)' out/Release
+	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v7_defines) $(ffmpeg_extra_defines)' out/ffmpeg-extra-v7
 
-	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(ffmpeg_std_defines)' out/ffmpeg-std
-
+	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v6_defines) $(ffmpeg_std_defines)' out/ffmpeg-std
+	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v7_defines) $(ffmpeg_std_defines)' out/ffmpeg-std-v7
 
 # There are two things to build. Standard ffmpeg+browser, and full ffmpeg.
 override_dh_auto_build: BUILD_TARGETS := chrome chrome_sandbox chromedriver
 override_dh_auto_build:
 
-	while sleep 1200; do echo "#  I ATEN'T DEAD"; done& ninja -v -C out/Release $(BUILD_TARGETS) && { kill \%1; sleep 1; echo; true; } || { kill \%1; exit 1; sleep 2; echo; false; }
+	while sleep 1200; do echo "#  I ATEN'T DEAD"; done& ninja $(NJOBS) -v -C out/Release $(BUILD_TARGETS) && { kill \%1; sleep 1; echo; true; } || { kill \%1; exit 1; sleep 2; echo; false; }
 
-	ninja -v -C out/ffmpeg-std libffmpeg.so
-
+	ninja $(NJOBS) -v -C out/ffmpeg-extra-v7 libffmpeg_chrome.so.65
+	ninja $(NJOBS) -v -C out/ffmpeg-std libffmpeg_chrome.so.65
+	ninja $(NJOBS) -v -C out/ffmpeg-std-v7 libffmpeg_chrome.so.65
 
 override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_builddeb:
 	dh_builddeb -- -Zxz
+
+override_dh_shlibdeps:
+	dh_shlibdeps -- -xchromium-codecs-ffmpeg -xchromium-codecs-ffmpeg-extra
 
 override_dh_installman:
 	# install does this
@@ -260,11 +279,17 @@ override_dh_install-arch:
 
 	mkdir -p $(T)
 
-	mkdir -p                             $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
-	mv -v out/Release/libffmpeg.so       $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
+	mkdir -p                                          $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
+	mv -v out/Release/libffmpeg_chrome.so.65          $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
 
-	mkdir -p                             $(CURDIR)/debian/tmp-std/$(LIB_DIR)
-	mv -v out/ffmpeg-std/libffmpeg.so    $(CURDIR)/debian/tmp-std/$(LIB_DIR)
+	mkdir -p                                          $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/ffmpeg-extra-v7/libffmpeg_chrome.so.65  $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
+
+	mkdir -p                                          $(CURDIR)/debian/tmp-std/$(LIB_DIR)
+	mv -v out/ffmpeg-std/libffmpeg_chrome.so.65       $(CURDIR)/debian/tmp-std/$(LIB_DIR)
+
+	mkdir -p                                          $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/ffmpeg-std-v7/libffmpeg_chrome.so.65    $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
 
 	mkdir -p $(CURDIR)/debian/tmp/$(LIB_DIR)
 	(cd out/Release && tar --remove-files $(foreach excl,$(TRASH),--exclude=$(excl) ) --dereference -cf - .;) | (cd debian/tmp/$(LIB_DIR) && tar xvf -;)
@@ -289,7 +314,8 @@ override_dh_install-arch:
 
 
 	# Record files that were built, so we can compare later that we installed everything.
-	find debian/tmp debian/tmp-std debian/tmp-std -type f |cut -d/ -f3- >$(T)/unfiltered-built
+	find debian/tmp debian/tmp-std debian/tmp-std-v7 debian/tmp-extra debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
+
 	grep -vE \($(subst $(SPACE),\|,$(BUILT_UNUSED_MATCH))\) $(T)/unfiltered-built $(foreach expr,$(RENAMED_FILE), |sed -r -e $(expr)) |grep -vE \($(subst $(SPACE),\|,$(INDEP_MATCH))\) | LC_ALL=C sort >$(T)/built
 
 	#
@@ -337,7 +363,7 @@ override_dh_install-arch:
 	find debian/chromium-browser/$(LIB_DIR)/locales -type f -name \*.pak -print
 
 
-ifneq (,$(findstring Ubuntu,$(DEBIAN_DIST)))
+ifneq (,$(findstring Raspbian,$(DEBIAN_DIST)))
 	# we need space on the CD, so remove duplicates of the doc files
 	# (See LP: #194574 as for why we don't let cdbs do it)
 	@for doc in copyright AUTHORS changelog.Debian.gz ; do \
@@ -355,7 +381,7 @@ endif
 
 
 	# compare built to packaged
-	DUPES=`find $(PKG_DIRS) -type f -print | grep -v /DEBIAN/ | cut -d/ -f3- | LC_ALL=C sort | uniq -c | grep -vE '^ *2 .*/libffmpeg.so$$' | grep -vE '^  *1 '`; \
+	DUPES=`find $(PKG_DIRS) -type f -print | grep -v /DEBIAN/ | cut -d/ -f3- | LC_ALL=C sort | uniq -c | grep -vE '^ *2 .*/libffmpeg_chrome.so.65$$' | grep -vE '^  *1 '`; \
 	if [ "Z$$DUPES" != Z ] ; then \
 	  echo " => Found duplicates:\n $$DUPES" ; \
 	  exit 1 ; \
@@ -384,7 +410,7 @@ override_dh_install-indep:
 
 	# record built so we can compare later
 	mkdir -p $(T)
-	find debian/tmp debian/tmp-std -type f |cut -d/ -f3- >$(T)/unfiltered-built
+	find debian/tmp debian/tmp-std debian/tmp-std-v7 debian/tmp-extra debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
 	grep -E \($(subst $(SPACE),\|,$(INDEP_MATCH))\) $(T)/unfiltered-built $(foreach expr,$(RENAMED_FILE), |sed -r -e $(expr)) |grep -v /en-US.pak | LC_ALL=C sort >$(T)/built
 
 
@@ -419,7 +445,7 @@ override_dh_clean:
 	set +x
 	echo
 	echo VERIFICATION:
-	cd .. && for crypto in md5 sha1 sha224 sha256 sha384 sha512; do $${crypto}sum 'chromium-browser_$(DEBIAN_UPSTREAM_VERSION).orig.tar.xz' |sed -e 's/-browser//' -e "s/^/$${crypto}  /"; done
+	cd .. && for crypto in md5; do $${crypto}sum 'chromium-browser_$(DEBIAN_UPSTREAM_VERSION).orig.tar.xz' |sed -e 's/-browser//' -e "s/^/$${crypto}  /"; done
 	echo VERIFICATION-
 	echo Compare to https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$(DEBIAN_UPSTREAM_VERSION).tar.xz.hashes
 	echo

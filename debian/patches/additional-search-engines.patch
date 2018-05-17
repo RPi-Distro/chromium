@@ -1,5 +1,7 @@
---- a/components/search_engines/prepopulated_engines.json
-+++ b/components/search_engines/prepopulated_engines.json
+Index: chromium-browser-65.0.3325.181/components/search_engines/prepopulated_engines.json
+===================================================================
+--- chromium-browser-65.0.3325.181.orig/components/search_engines/prepopulated_engines.json
++++ chromium-browser-65.0.3325.181/components/search_engines/prepopulated_engines.json
 @@ -14,6 +14,7 @@
  //    89, 91+
  //
@@ -25,7 +27,7 @@
 +      "name": "DuckDuckGo",
 +      "keyword": "duckduckgo.com",
 +      "favicon_url": "https://duckduckgo.com/favicon.ico",
-+      "search_url": "https://duckduckgo.com/?q={searchTerms}&t=canonical",
++      "search_url": "https://duckduckgo.com/?q={searchTerms}&t=raspberrypi",
 +      "suggest_url": "https://duckduckgo.com/ac/?q={searchTerms}&type=list",
 +      "type": "SEARCH_ENGINE_DUCKDUCKGO",
 +      "id": 1001
@@ -34,8 +36,10 @@
      "google": {
        "name": "Google",
        "keyword": "google.com",
---- a/components/search_engines/search_engine_type.h
-+++ b/components/search_engines/search_engine_type.h
+Index: chromium-browser-65.0.3325.181/components/search_engines/search_engine_type.h
+===================================================================
+--- chromium-browser-65.0.3325.181.orig/components/search_engines/search_engine_type.h
++++ chromium-browser-65.0.3325.181/components/search_engines/search_engine_type.h
 @@ -26,6 +26,7 @@ enum SearchEngineType {
    SEARCH_ENGINE_DAUM,
    SEARCH_ENGINE_DELFI,
@@ -44,8 +48,10 @@
    SEARCH_ENGINE_FUNMOODS,
    SEARCH_ENGINE_GOO,
    SEARCH_ENGINE_GOOGLE,
---- a/components/search_engines/template_url_prepopulate_data.cc
-+++ b/components/search_engines/template_url_prepopulate_data.cc
+Index: chromium-browser-65.0.3325.181/components/search_engines/template_url_prepopulate_data.cc
+===================================================================
+--- chromium-browser-65.0.3325.181.orig/components/search_engines/template_url_prepopulate_data.cc
++++ chromium-browser-65.0.3325.181/components/search_engines/template_url_prepopulate_data.cc
 @@ -51,7 +51,7 @@ namespace {
  
  // Default (for countries with no better engine set)

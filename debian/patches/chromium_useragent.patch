@@ -1,8 +1,9 @@
-Description: Add "Chromium" and "Ubuntu" to the user-agent text.
-Author: Chad Miller <chad.miller@canonical.com>
+Description: Add "Chromium" and "Raspbian" to the user-agent text.
 
---- a/content/common/user_agent.cc
-+++ b/content/common/user_agent.cc
+Index: chromium-browser-65.0.3325.181/content/common/user_agent.cc
+===================================================================
+--- chromium-browser-65.0.3325.181.orig/content/common/user_agent.cc
++++ chromium-browser-65.0.3325.181/content/common/user_agent.cc
 @@ -177,13 +177,21 @@ std::string BuildUserAgentFromOSAndProdu
    // Derived from Safari's UA string.
    // This is done to expose our product name in a manner that is maximally
@@ -18,7 +19,7 @@ Author: Chad Miller <chad.miller@canonical.com>
    base::StringAppendF(
        &user_agent,
 -      "Mozilla/5.0 (%s) AppleWebKit/%d.%d (KHTML, like Gecko) %s Safari/%d.%d",
-+      "Mozilla/5.0 (%s) AppleWebKit/%d.%d (KHTML, like Gecko) Ubuntu %s %s Safari/%d.%d",
++      "Mozilla/5.0 (%s) AppleWebKit/%d.%d (KHTML, like Gecko) Raspbian %s %s Safari/%d.%d",
        os_info.c_str(),
        WEBKIT_VERSION_MAJOR,
        WEBKIT_VERSION_MINOR,

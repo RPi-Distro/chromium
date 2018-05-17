@@ -85,7 +85,7 @@ if test -d /etc/$APPNAME/customizations; then
 fi
 test -f ~/.chromium-browser.init && . ~/.chromium-browser.init
 
-FLASH_GOOD_PACKAGE="adobe-flashplugin"
+FLASH_GOOD_PACKAGE="chromium-browser"
 if test "$FLASH_GOOD_PACKAGE"; then
 	PREVIOUS_CANDIDATE=""
 	CANDIDATE="$CHROMIUM_FLAGS"
@@ -97,9 +97,9 @@ if test "$FLASH_GOOD_PACKAGE"; then
 	CHROMIUM_FLAGS="$CANDIDATE"
 fi
 
-if test -x /usr/bin/python3 -a -f "/usr/lib/adobe-flashplugin/manifest.json"; then
+if test -x /usr/bin/python3 -a -f "/usr/lib/chromium-browser/flash_manifest.json"; then
 	if echo "$CHROMIUM_FLAGS" |grep -E -- "--ppapi-flash-version=( |\$)"; then
-		ver=$(python -c 'import json,sys; print(json.load(open("/usr/lib/adobe-flashplugin/manifest.json"))["version"]);')
+		ver=$(python -c 'import json,sys; print(json.load(open("/usr/lib/chromium-browser/flash_manifest.json"))["version"]);')
 		CHROMIUM_FLAGS=${CHROMIUM_FLAGS/--ppapi-flash-version=/--ppapi-flash-version="${ver}" }
 	fi
 fi

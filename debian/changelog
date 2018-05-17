@@ -1,3 +1,29 @@
+chromium-browser (65.0.3325.181-0+rpt4) stretch; urgency=medium
+
+  * Bump browser priority to 90
+
+ -- Serge Schneider <serge@raspberrypi.org>  Mon, 14 May 2018 13:39:05 +0100
+
+chromium-browser (65.0.3325.181-0+rpt3) stretch; urgency=medium
+
+  * Remove Raspverry Pi flags from launcher
+  * Rename Flash manifest file
+
+ -- Serge Schneider <serge@raspberrypi.org>  Mon, 14 May 2018 11:48:54 +0100
+
+chromium-browser (65.0.3325.181-0+rpt2) stretch; urgency=medium
+
+  * Disable use_libjpeg_turbo
+  * Re-enable pulseaudio
+
+ -- Serge Schneider <serge@raspberrypi.org>  Mon, 14 May 2018 10:20:21 +0100
+
+chromium-browser (65.0.3325.181-0+rpt1) stretch; urgency=medium
+
+  * Add v65.0.3325.212_mmal_2.15.patch
+
+ -- Serge Schneider <serge@raspberrypi.org>  Thu, 10 May 2018 13:09:37 +0100
+
 chromium-browser (65.0.3325.181-0ubuntu0.16.04.1) xenial; urgency=medium
 
   * Upstream release: 65.0.3325.181

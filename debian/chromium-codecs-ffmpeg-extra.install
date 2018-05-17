@@ -1,1 +1,2 @@
-debian/tmp-extra/usr/lib/chromium-browser/libffmpeg.so usr/lib/chromium-browser
+debian/tmp-extra/usr/lib/chromium-browser/libffmpeg_chrome.so.65 usr/lib/chromium-browser
+debian/tmp-extra-v7/usr/lib/chromium-browser/neon/vfp/libffmpeg_chrome.so.65 usr/lib/chromium-browser/neon/vfp

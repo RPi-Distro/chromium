@@ -1,28 +1,553 @@
-chromium-browser (65.0.3325.181-0+rpt4) stretch; urgency=medium
+chromium-browser (72.0.3626.121-0+rpt4) stretch; urgency=medium
 
-  * Bump browser priority to 90
+  * Add libgl1-mesa-dri as a dependency
+    - https://github.com/RPi-Distro/repo/issues/131
 
- -- Serge Schneider <serge@raspberrypi.org>  Mon, 14 May 2018 13:39:05 +0100
+ -- Serge Schneider <serge@raspberrypi.org>  Tue, 26 Mar 2019 18:41:09 +0000
 
-chromium-browser (65.0.3325.181-0+rpt3) stretch; urgency=medium
+chromium-browser (72.0.3626.121-0+rpt3) stretch; urgency=medium
 
-  * Remove Raspverry Pi flags from launcher
-  * Rename Flash manifest file
+  * Pull Skia patches from https://github.com/bavison/skia/tree/a53_sched_chrome72
 
- -- Serge Schneider <serge@raspberrypi.org>  Mon, 14 May 2018 11:48:54 +0100
+ -- Serge Schneider <serge@raspberrypi.org>  Thu, 21 Mar 2019 15:02:49 +0000
 
-chromium-browser (65.0.3325.181-0+rpt2) stretch; urgency=medium
+chromium-browser (72.0.3626.121-0+rpt2) stretch; urgency=medium
 
-  * Disable use_libjpeg_turbo
-  * Re-enable pulseaudio
+  * Use flash_manifest.json
 
- -- Serge Schneider <serge@raspberrypi.org>  Mon, 14 May 2018 10:20:21 +0100
+ -- Serge Schneider <serge@raspberrypi.org>  Tue, 19 Mar 2019 14:00:27 +0000
 
-chromium-browser (65.0.3325.181-0+rpt1) stretch; urgency=medium
+chromium-browser (72.0.3626.121-0+rpt1) stretch; urgency=medium
 
-  * Add v65.0.3325.212_mmal_2.15.patch
+  * Apply v72.0.3626.110_mmal_3_19.patch
+  * Add v6/v7 split for chrome binary
+  * Fix libjpeg SIMD build failure
+  * Remove Ubuntu search credit
+  * Bump alternatives priority to 90
 
- -- Serge Schneider <serge@raspberrypi.org>  Thu, 10 May 2018 13:09:37 +0100
+ -- Serge Schneider <serge@raspberrypi.org>  Tue, 12 Mar 2019 15:47:55 +0000
+
+chromium-browser (72.0.3626.121-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 72.0.3626.121
+    - CVE-2019-5786: Use-after-free in FileReader
+  * debian/patches/gn-fix-link-pthread.patch: removed, no longer needed
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Tue, 05 Mar 2019 16:34:54 +0100
+
+chromium-browser (72.0.3626.119-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 72.0.3626.119
+  * debian/patches/gn-fix-link-pthread.patch: added
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Mon, 25 Feb 2019 17:05:46 +0100
+
+chromium-browser (72.0.3626.109-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 72.0.3626.109
+  * debian/rules:
+    - restore old keepalive snippet to prevent builds from timing out during
+      the link phase (this happens often enough on armhf, Launchpad builders
+      have an inactivity timeout of 150 minutes)
+    - install the chromedriver executable in /usr/bin, where python{,3}-selenium
+      and other packages expect it by default (LP: #1667208)
+  * debian/control: make chromium-chromedriver provide "chromium-driver"
+  * debian/chromium-chromedriver.{dirs,install}: removed, no longer needed
+  * debian/tests/{chromium-version,html5test}: remove custom driver path
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 21 Feb 2019 11:49:50 +0100
+
+chromium-browser (72.0.3626.96-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 72.0.3626.96
+    - CVE-2019-5784: Inappropriate implementation in V8.
+  * debian/patches/gn-do-not-build-with-icf.patch: removed, no longer needed
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Fri, 08 Feb 2019 18:01:05 +0100
+
+chromium-browser (72.0.3626.81-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 72.0.3626.81
+    - CVE-2019-5754: Inappropriate implementation in QUIC Networking.
+    - CVE-2019-5782: Inappropriate implementation in V8.
+    - CVE-2019-5755: Inappropriate implementation in V8.
+    - CVE-2019-5756: Use after free in PDFium.
+    - CVE-2019-5757: Type Confusion in SVG.
+    - CVE-2019-5758: Use after free in Blink.
+    - CVE-2019-5759: Use after free in HTML select elements.
+    - CVE-2019-5760: Use after free in WebRTC.
+    - CVE-2019-5761: Use after free in SwiftShader.
+    - CVE-2019-5762: Use after free in PDFium.
+    - CVE-2019-5763: Insufficient validation of untrusted input in V8.
+    - CVE-2019-5764: Use after free in WebRTC.
+    - CVE-2019-5765: Insufficient policy enforcement in the browser.
+    - CVE-2019-5766: Insufficient policy enforcement in Canvas.
+    - CVE-2019-5767: Incorrect security UI in WebAPKs.
+    - CVE-2019-5768: Insufficient policy enforcement in DevTools.
+    - CVE-2019-5769: Insufficient validation of untrusted input in Blink.
+    - CVE-2019-5770: Heap buffer overflow in WebGL.
+    - CVE-2019-5771: Heap buffer overflow in SwiftShader.
+    - CVE-2019-5772: Use after free in PDFium.
+    - CVE-2019-5773: Insufficient data validation in IndexedDB.
+    - CVE-2019-5774: Insufficient validation of untrusted input in SafeBrowsing.
+    - CVE-2019-5775: Insufficient policy enforcement in Omnibox.
+    - CVE-2019-5776: Insufficient policy enforcement in Omnibox.
+    - CVE-2019-5777: Insufficient policy enforcement in Omnibox.
+    - CVE-2019-5778: Insufficient policy enforcement in Extensions.
+    - CVE-2019-5779: Insufficient policy enforcement in ServiceWorker.
+    - CVE-2019-5780: Insufficient policy enforcement.
+    - CVE-2019-5781: Insufficient policy enforcement in Omnibox.
+  * debian/control: add default-jre-headless as a build dependency
+    (needed to compile the new lite JS mojom bindings)
+  * debian/patches/additional-search-engines.patch: refreshed
+  * debian/patches/chromium_useragent.patch: refreshed
+  * debian/patches/closure-compiler-java-no-client-vm.patch: added
+  * debian/patches/configuration-directory.patch: refreshed
+  * debian/patches/disable-sse2: refreshed
+  * debian/patches/fix-extra-arflags.patch: refreshed
+  * debian/patches/fix-ffmpeg-ia32-build.patch: refreshed
+  * debian/patches/gn-bootstrap-remove-sysroot-options.patch: removed, no longer
+    needed
+  * debian/patches/gn-do-not-build-with-icf.patch: added
+  * debian/patches/gn-no-last-commit-position.patch: refreshed
+  * debian/patches/no-new-ninja-flag.patch: refreshed
+  * debian/patches/revert-Xclang-instcombine-lower-dbg-declare.patch: refreshed
+  * debian/patches/set-rpath-on-chromium-executables.patch: refreshed
+  * debian/patches/suppress-newer-clang-warning-flags.patch: refreshed
+  * debian/patches/title-bar-default-system.patch-v35: refreshed
+  * debian/patches/use-clang-versioned.patch: refreshed
+  * debian/patches/widevine-other-locations: refreshed
+  * debian/tests/html5test: update test expectations
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 30 Jan 2019 12:48:30 +0100
+
+chromium-browser (71.0.3578.98-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 71.0.3578.98
+    - CVE-2018-17481: Use after free in PDFium.
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 13 Dec 2018 12:56:41 +0100
+
+chromium-browser (71.0.3578.80-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 71.0.3578.80
+    - CVE-2018-17480: Out of bounds write in V8.
+    - CVE-2018-17481: Use after frees in PDFium.
+    - CVE-2018-18335: Heap buffer overflow in Skia.
+    - CVE-2018-18336: Use after free in PDFium.
+    - CVE-2018-18337: Use after free in Blink.
+    - CVE-2018-18338: Heap buffer overflow in Canvas.
+    - CVE-2018-18339: Use after free in WebAudio.
+    - CVE-2018-18340: Use after free in MediaRecorder.
+    - CVE-2018-18341: Heap buffer overflow in Blink.
+    - CVE-2018-18342: Out of bounds write in V8.
+    - CVE-2018-18343: Use after free in Skia.
+    - CVE-2018-18344: Inappropriate implementation in Extensions.
+    - CVE-2018-18345: Inappropriate implementation in Site Isolation.
+    - CVE-2018-18346: Incorrect security UI in Blink.
+    - CVE-2018-18347: Inappropriate implementation in Navigation.
+    - CVE-2018-18348: Inappropriate implementation in Omnibox.
+    - CVE-2018-18349: Insufficient policy enforcement in Blink.
+    - CVE-2018-18350: Insufficient policy enforcement in Blink.
+    - CVE-2018-18351: Insufficient policy enforcement in Navigation.
+    - CVE-2018-18352: Inappropriate implementation in Media.
+    - CVE-2018-18353: Inappropriate implementation in Network Authentication.
+    - CVE-2018-18354: Insufficient data validation in Shell Integration.
+    - CVE-2018-18355: Insufficient policy enforcement in URL Formatter.
+    - CVE-2018-18356: Use after free in Skia.
+    - CVE-2018-18357: Insufficient policy enforcement in URL Formatter.
+    - CVE-2018-18358: Insufficient policy enforcement in Proxy.
+    - CVE-2018-18359: Out of bounds read in V8.
+  * debian/patches/chromium_useragent.patch: refreshed
+  * debian/patches/configuration-directory.patch: refreshed
+  * debian/patches/disable-sse2: refreshed
+  * debian/patches/fix-extra-arflags.patch: refreshed
+  * debian/patches/gn-bootstrap-remove-sysroot-options.patch: refreshed
+  * debian/patches/gn-no-last-commit-position.patch: refreshed
+  * debian/patches/no-new-ninja-flag.patch: refreshed
+  * debian/patches/revert-Xclang-instcombine-lower-dbg-declare.patch: refreshed
+  * debian/patches/search-credit.patch: refreshed
+  * debian/patches/set-rpath-on-chromium-executables.patch: refreshed
+  * debian/patches/suppress-newer-clang-warning-flags.patch: refreshed
+  * debian/patches/title-bar-default-system.patch-v35: refreshed
+  * debian/patches/touch-v35: refreshed
+  * debian/patches/use-clang-versioned.patch: refreshed
+  * debian/patches/widevine-allow-enable.patch: removed, no longer needed
+  * debian/patches/widevine-other-locations: refreshed
+  * debian/patches/widevine-revision.patch: renamed to
+    debian/patches/widevine-enable-version-string.patch and updated
+  * debian/tests/html5test: update test expectations
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Tue, 04 Dec 2018 23:08:03 +0100
+
+chromium-browser (70.0.3538.110-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 70.0.3538.110
+    - CVE-2018-17479: Use-after-free in GPU.
+  * debian/patches/relax-ninja-version-requirement.patch: refreshed
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Tue, 20 Nov 2018 12:13:30 +0100
+
+chromium-browser (70.0.3538.102-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 70.0.3538.102
+    - CVE-2018-17478: Out of bounds memory access in V8.
+  * debian/patches/gn-bootstrap-remove-sysroot-options.patch: added
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 15 Nov 2018 07:08:10 +0100
+
+chromium-browser (70.0.3538.77-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 70.0.3538.77
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 25 Oct 2018 07:33:53 +0200
+
+chromium-browser (70.0.3538.67-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 70.0.3538.67
+    - CVE-2018-17462: Sandbox escape in AppCache.
+    - CVE-2018-17463: Remote code execution in V8.
+    - CVE to be assigned: Heap buffer overflow in Little CMS in PDFium.
+    - CVE-2018-17464: URL spoof in Omnibox.
+    - CVE-2018-17465: Use after free in V8.
+    - CVE-2018-17466: Memory corruption in Angle.
+    - CVE-2018-17467: URL spoof in Omnibox.
+    - CVE-2018-17468: Cross-origin URL disclosure in Blink.
+    - CVE-2018-17469: Heap buffer overflow in PDFium.
+    - CVE-2018-17470: Memory corruption in GPU Internals.
+    - CVE-2018-17471: Security UI occlusion in full screen mode.
+    - CVE-2018-17472: iframe sandbox escape on iOS.
+    - CVE-2018-17473: URL spoof in Omnibox.
+    - CVE-2018-17474: Use after free in Blink.
+    - CVE-2018-17475: URL spoof in Omnibox.
+    - CVE-2018-17476: Security UI occlusion in full screen mode.
+    - CVE-2018-5179: Lack of limits on update() in ServiceWorker.
+    - CVE-2018-17477: UI spoof in Extensions.
+  * debian/rules:
+    - remove enable_google_now build flag
+    - remove use_gtk3 build flag
+  * debian/patches/arm-neon.patch: refreshed
+  * debian/patches/chromium_useragent.patch: refreshed
+  * debian/patches/configuration-directory.patch: refreshed
+  * debian/patches/define__libc_malloc.patch: refreshed
+  * debian/patches/disable-sse2: refreshed
+  * debian/patches/fix-extra-arflags.patch: refreshed
+  * debian/patches/revert-Xclang-instcombine-lower-dbg-declare.patch: refreshed
+  * debian/patches/search-credit.patch: refreshed
+  * debian/patches/set-rpath-on-chromium-executables.patch: refreshed
+  * debian/patches/suppress-newer-clang-warning-flags.patch: refreshed
+  * debian/patches/use-clang-versioned.patch: refreshed
+  * debian/patches/widevine-other-locations: refreshed
+  * debian/known_gn_gen_args-*:
+    - remove enable_google_now build flag
+    - remove use_gtk3 build flag
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Tue, 16 Oct 2018 22:54:27 +0200
+
+chromium-browser (69.0.3497.100-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 69.0.3497.100
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Tue, 18 Sep 2018 09:40:32 +0200
+
+chromium-browser (69.0.3497.92-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 69.0.3497.92
+    - CVE-2018-XXXXX: Function signature mismatch in WebAssembly.
+    - CVE-2018-XXXXX: URL Spoofing in Omnibox.
+  * debian/rules: exclude more build artifacts from the binary package
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Tue, 11 Sep 2018 23:51:57 +0200
+
+chromium-browser (69.0.3497.81-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 69.0.3497.81
+    - CVE-2018-16065: Out of bounds write in V8.
+    - CVE-2018-16066: Out of bounds read in Blink.
+    - CVE-2018-16067: Out of bounds read in WebAudio.
+    - CVE-2018-16068: Out of bounds write in Mojo.
+    - CVE-2018-16069: Out of bounds read in SwiftShader.
+    - CVE-2018-16070: Integer overflow in Skia.
+    - CVE-2018-16071: Use after free in WebRTC.
+    - CVE-2018-16072: Cross origin pixel leak in Chrome's interaction with
+      Android's MediaPlayer.
+    - CVE-2018-16073: Site Isolation bypass after tab restore.
+    - CVE-2018-16074: Site Isolation bypass using Blob URLS.
+    - CVE-2018-16075: Local file access in Blink.
+    - CVE-2018-16076: Out of bounds read in PDFium.
+    - CVE-2018-16077: Content security policy bypass in Blink.
+    - CVE-2018-16078: Credit card information leak in Autofill.
+    - CVE-2018-16079: URL spoof in permission dialogs.
+    - CVE-2018-16080: URL spoof in full screen mode.
+    - CVE-2018-16081: Local file access in DevTools.
+    - CVE-2018-16082: Stack buffer overflow in SwiftShader.
+    - CVE-2018-16083: Out of bounds read in WebRTC.
+    - CVE-2018-16084: User confirmation bypass in external protocol handling.
+    - CVE-2018-16085: Use after free in Memory Instrumentation.
+  * debian/control: add uuid-dev as a build dependency (needed by fontconfig)
+  * debian/rules: specify AR=llvm-ar-6.0 to build gn
+  * debian/patches/additional-search-engines.patch: refreshed
+  * debian/patches/disable-sse2: refreshed
+  * debian/patches/fix-extra-arflags.patch: refreshed
+  * debian/patches/gn-add-missing-arm-impl-files.patch: added
+  * debian/patches/last-commit-position: replaced by
+    debian/patches/gn-no-last-commit-position.patch
+  * debian/patches/no-new-ninja-flag.patch: updated
+  * debian/patches/relax-ninja-version-requirement.patch: updated
+  * debian/patches/search-credit.patch: refreshed
+  * debian/patches/set-rpath-on-chromium-executables.patch: refreshed
+  * debian/patches/skia-undef-HWCAP_CRC32.patch: refreshed
+  * debian/patches/suppress-newer-clang-warning-flags.patch: updated
+  * debian/patches/title-bar-default-system.patch-v35: refreshed
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 05 Sep 2018 13:47:36 +0200
+
+chromium-browser (68.0.3440.106-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 68.0.3440.106
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 09 Aug 2018 00:10:42 +0200
+
+chromium-browser (68.0.3440.84-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 68.0.3440.84
+  * debian/patches/add-missing-base-namespace.patch: removed, no longer needed
+  * debian/patches/widevine-other-locations: updated
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 01 Aug 2018 09:09:41 +0200
+
+chromium-browser (68.0.3440.75-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 68.0.3440.75
+    - CVE-2018-6153: Stack buffer overflow in Skia.
+    - CVE-2018-6154: Heap buffer overflow in WebGL.
+    - CVE-2018-6155: Use after free in WebRTC.
+    - CVE-2018-6156: Heap buffer overflow in WebRTC.
+    - CVE-2018-6157: Type confusion in WebRTC.
+    - CVE-2018-6158: Use after free in Blink.
+    - CVE-2018-6159: Same origin policy bypass in ServiceWorker.
+    - CVE-2018-6160: URL spoof in Chrome on iOS.
+    - CVE-2018-6161: Same origin policy bypass in WebAudio.
+    - CVE-2018-6162: Heap buffer overflow in WebGL.
+    - CVE-2018-6163: URL spoof in Omnibox.
+    - CVE-2018-6164: Same origin policy bypass in ServiceWorker.
+    - CVE-2018-6165: URL spoof in Omnibox.
+    - CVE-2018-6166: URL spoof in Omnibox.
+    - CVE-2018-6167: URL spoof in Omnibox.
+    - CVE-2018-6168: CORS bypass in Blink.
+    - CVE-2018-6169: Permissions bypass in extension installation.
+    - CVE-2018-6170: Type confusion in PDFium.
+    - CVE-2018-6171: Use after free in WebBluetooth.
+    - CVE-2018-6172: URL spoof in Omnibox.
+    - CVE-2018-6173: URL spoof in Omnibox.
+    - CVE-2018-6174: Integer overflow in SwiftShader.
+    - CVE-2018-6175: URL spoof in Omnibox.
+    - CVE-2018-6176: Local user privilege escalation in Extensions.
+    - CVE-2018-6177: Cross origin information leak in Blink.
+    - CVE-2018-6178: UI spoof in Extensions.
+    - CVE-2018-6179: Local file information leak in Extensions.
+    - CVE-2018-6044: Request privilege escalation in Extensions.
+    - CVE-2018-4117: Cross origin information leak in Blink.
+  * debian/rules:
+    - remove enable_webrtc build flag
+    - make ninja less verbose to reduce build log size
+  * debian/chromium-browser.sh.in: parse flashplugin manifest with Python 3
+    (LP: #1772448)
+  * debian/patches/add-missing-base-namespace.patch: added
+  * debian/patches/chromium_useragent.patch: refreshed
+  * debian/patches/configuration-directory.patch: refreshed
+  * debian/patches/disable-sse2: refreshed
+  * debian/patches/enable-chromecast-by-default.patch: refreshed
+  * debian/patches/fix-crashpad-linux-compat.patch: removed, no longer needed
+  * debian/patches/fix-extra-arflags.patch: updated
+  * debian/patches/fix-ffmpeg-ia32-build.patch: updated
+  * debian/patches/last-commit-position: refreshed
+  * debian/patches/no-new-ninja-flag.patch: refreshed
+  * debian/patches/revert-Xclang-instcombine-lower-dbg-declare.patch: updated
+  * debian/patches/search-credit.patch: refreshed
+  * debian/patches/set-rpath-on-chromium-executables.patch: refreshed
+  * debian/patches/suppress-newer-clang-warning-flags.patch: updated
+  * debian/patches/title-bar-default-system.patch-v35: refreshed
+  * debian/patches/touch-v35: refreshed
+  * debian/patches/use-clang-versioned.patch: refreshed
+  * debian/known_gn_gen_args-*: remove enable_webrtc build flag
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 25 Jul 2018 10:51:24 +0200
+
+chromium-browser (67.0.3396.99-0ubuntu0.16.04.2) xenial; urgency=medium
+
+  * debian/patches/libcxxabi-arm-ehabi-fix.patch: removed, no longer needed
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 11 Jul 2018 10:22:52 +0200
+
+chromium-browser (67.0.3396.99-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 67.0.3396.99
+    - CVE-2018-6148: Incorrect handling of CSP header.
+    - CVE-2018-6149: Out of bounds write in V8.
+  * debian/control: build-depend on clang-6.0 and llvm-6.0, which are now in
+    xenial-updates
+  * debian/rules: build gn with clang 6.0
+  * debian/patches/revert-clang-nostdlib++.patch: removed, no longer needed
+  * debian/patches/suppress-newer-clang-warning-flags.patch: updated
+  * debian/patches/use-clang-versioned.patch: updated
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Mon, 09 Jul 2018 23:51:26 +0200
+
+chromium-browser (67.0.3396.62-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 67.0.3396.62
+    - CVE-2018-6123: Use after free in Blink.
+    - CVE-2018-6124: Type confusion in Blink.
+    - CVE-2018-6125: Overly permissive policy in WebUSB.
+    - CVE-2018-6126: Heap buffer overflow in Skia.
+    - CVE-2018-6127: Use after free in indexedDB.
+    - CVE-2018-6128: uXSS in Chrome on iOS.
+    - CVE-2018-6129: Out of bounds memory access in WebRTC.
+    - CVE-2018-6130: Out of bounds memory access in WebRTC.
+    - CVE-2018-6131: Incorrect mutability protection in WebAssembly.
+    - CVE-2018-6132: Use of uninitialized memory in WebRTC.
+    - CVE-2018-6133: URL spoof in Omnibox.
+    - CVE-2018-6134: Referrer Policy bypass in Blink.
+    - CVE-2018-6135: UI spoofing in Blink.
+    - CVE-2018-6136: Out of bounds memory access in V8.
+    - CVE-2018-6137: Leak of visited status of page in Blink.
+    - CVE-2018-6138: Overly permissive policy in Extensions.
+    - CVE-2018-6139: Restrictions bypass in the debugger extension API.
+    - CVE-2018-6140: Restrictions bypass in the debugger extension API.
+    - CVE-2018-6141: Heap buffer overflow in Skia.
+    - CVE-2018-6142: Out of bounds memory access in V8.
+    - CVE-2018-6143: Out of bounds memory access in V8.
+    - CVE-2018-6144: Out of bounds memory access in PDFium.
+    - CVE-2018-6145: Incorrect escaping of MathML in Blink.
+    - CVE-2018-6147: Password fields not taking advantage of OS protections in
+      Views.
+  * debian/rules: stop installing an outdated chromium-browser.svg icon
+    (LP: #1771847)
+  * debian/chromium-browser.svg: removed (outdated)
+  * debian/patches/additional-search-engines.patch: refreshed
+  * debian/patches/configuration-directory.patch: refreshed
+  * debian/patches/default-allocator: refreshed
+  * debian/patches/disable-sse2: updated
+  * debian/patches/fix-crashpad-linux-compat.patch: added
+  * debian/patches/fix-extra-arflags.patch: added
+  * debian/patches/libcxxabi-arm-ehabi-fix.patch: refreshed
+  * debian/patches/no-new-ninja-flag.patch: updated
+  * debian/patches/revert-clang-nostdlib++.patch: refreshed
+  * debian/patches/revert-Xclang-instcombine-lower-dbg-declare.patch: refreshed
+  * debian/patches/search-credit.patch: refreshed
+  * debian/patches/set-rpath-on-chromium-executables.patch: refreshed
+  * debian/patches/skia-disable-neon.patch: removed, no longer needed
+  * debian/patches/skia-undef-HWCAP_CRC32.patch: refreshed
+  * debian/patches/suppress-newer-clang-warning-flags.patch: updated
+  * debian/patches/use-clang-versioned.patch: refreshed
+  * debian/patches/widevine-allow-enable.patch: added
+  * debian/patches/widevine-other-locations: updated
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 30 May 2018 14:06:56 +0200
+
+chromium-browser (66.0.3359.181-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 66.0.3359.181
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Tue, 15 May 2018 22:36:44 +0200
+
+chromium-browser (66.0.3359.170-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 66.0.3359.170
+    - CVE-2018-6121: Privilege Escalation in extensions.
+    - CVE-2018-6122: Type confusion in V8.
+    - CVE-2018-6120: Heap buffer overflow in PDFium.
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Fri, 11 May 2018 16:17:04 +0200
+
+chromium-browser (66.0.3359.139-0ubuntu0.16.04.3) xenial; urgency=medium
+
+  * debian/control: build-depend on clang-5.0 and llvm-5.0, which are now in
+    xenial-updates
+  * debian/rules: build gn with clang 5.0
+  * debian/patches/restore-clang-no-integrated-as.patch: removed, no longer
+    needed
+  * debian/patches/skia-undef-HWCAP_CRC32.patch: added
+  * debian/patches/use-clang-versioned.patch: updated
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Fri, 04 May 2018 16:28:21 +0200
+
+chromium-browser (66.0.3359.139-0ubuntu0.16.04.2) xenial; urgency=medium
+
+  * debian/patches/libcxxabi-arm-ehabi-fix.patch: added (LP: #1768653)
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 03 May 2018 16:31:41 +0200
+
+chromium-browser (66.0.3359.139-0ubuntu0.16.04.1) xenial; urgency=medium
+
+  * Upstream release: 66.0.3359.139
+    - CVE-2018-6118: Use after free in Media Cache.
+  * debian/patches/add-missing-blink-tools.patch: removed, no longer needed
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 02 May 2018 20:32:00 +0200
+
+chromium-browser (66.0.3359.117-0ubuntu0.16.04) UNRELEASED; urgency=medium
+
+  * Upstream release: 66.0.3359.117
+    - CVE-2018-6085: Use after free in Disk Cache.
+    - CVE-2018-6086: Use after free in Disk Cache.
+    - CVE-2018-6087: Use after free in WebAssembly.
+    - CVE-2018-6088: Use after free in PDFium.
+    - CVE-2018-6089: Same origin policy bypass in Service Worker.
+    - CVE-2018-6090: Heap buffer overflow in Skia.
+    - CVE-2018-6091: Incorrect handling of plug-ins by Service Worker.
+    - CVE-2018-6092: Integer overflow in WebAssembly.
+    - CVE-2018-6093: Same origin bypass in Service Worker.
+    - CVE-2018-6094: Exploit hardening regression in Oilpan.
+    - CVE-2018-6095: Lack of meaningful user interaction requirement before
+      file upload.
+    - CVE-2018-6096: Fullscreen UI spoof.
+    - CVE-2018-6097: Fullscreen UI spoof.
+    - CVE-2018-6098: URL spoof in Omnibox.
+    - CVE-2018-6099: CORS bypass in ServiceWorker.
+    - CVE-2018-6100: URL spoof in Omnibox.
+    - CVE-2018-6101: Insufficient protection of remote debugging prototol in
+      DevTools.
+    - CVE-2018-6102: URL spoof in Omnibox.
+    - CVE-2018-6103: UI spoof in Permissions.
+    - CVE-2018-6104: URL spoof in Omnibox.
+    - CVE-2018-6105: URL spoof in Omnibox.
+    - CVE-2018-6106: Incorrect handling of promises in V8.
+    - CVE-2018-6107: URL spoof in Omnibox.
+    - CVE-2018-6108: URL spoof in Omnibox.
+    - CVE-2018-6109: Incorrect handling of files by FileAPI.
+    - CVE-2018-6110: Incorrect handling of plaintext files via file://.
+    - CVE-2018-6111: Heap-use-after-free in DevTools.
+    - CVE-2018-6112: Incorrect URL handling in DevTools.
+    - CVE-2018-6113: URL spoof in Navigation.
+    - CVE-2018-6114: CSP bypass.
+    - CVE-2018-6115: SmartScreen bypass in downloads.
+    - CVE-2018-6116: Incorrect low memory handling in WebAssembly.
+    - CVE-2018-6117: Confusing autofill settings.
+    - CVE-2018-6084: Incorrect use of Distributed Objects in Google Software
+      Updater on MacOS.
+  * debian/rules:
+    - remove use_system_sqlite build flag
+    - force rtc_use_h264=true (LP: #1763662)
+  * debian/patches/add-missing-blink-tools.patch: added
+  * debian/patches/configuration-directory.patch: refreshed
+  * debian/patches/default-allocator: refreshed
+  * debian/patches/disable-sse2: refreshed
+  * debian/patches/last-commit-position: refreshed
+  * debian/patches/no-new-ninja-flag.patch: refreshed
+  * debian/patches/revert-Xclang-instcombine-lower-dbg-declare.patch: refreshed
+  * debian/patches/revert-clang-nostdlib++.patch: refreshed
+  * debian/patches/search-credit.patch: refreshed
+  * debian/patches/set-rpath-on-chromium-executables.patch: refreshed
+  * debian/patches/skia-disable-neon.patch: added
+  * debian/patches/suppress-newer-clang-warning-flags.patch: updated
+  * debian/patches/touch-v35: refreshed
+  * debian/patches/use-clang-versioned.patch: refreshed
+  * debian/patches/widevine-other-locations: refreshed
+  * debian/known_gn_gen_args-*: remove use_system_sqlite build flag
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 02 May 2018 20:17:40 +0200
 
 chromium-browser (65.0.3325.181-0ubuntu0.16.04.1) xenial; urgency=medium
 

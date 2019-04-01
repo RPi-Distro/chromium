@@ -1,29 +1,25 @@
 Author: Olivier Tilloy <olivier.tilloy@canonical.com>
-Description: Do not use warning flags that require a newer Clang
+Description: Do not use warning flags that require a newer Clang (xenial has 6.0.0,
+  see https://releases.llvm.org/6.0.0/tools/clang/docs/DiagnosticsReference.html)
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1312,19 +1312,19 @@ config("default_warnings") {
-         "-Wno-user-defined-warnings",
+@@ -735,8 +735,7 @@ config("compiler") {
+   # This flag enforces that member pointer base types are complete. It helps
+   # prevent us from running into problems in the Microsoft C++ ABI (see
+   # https://crbug.com/847724).
+-  if (is_clang && !is_nacl && target_os != "chromeos" && !use_xcode_clang &&
+-      (is_win || use_custom_libcxx)) {
++  if (false) {
+     cflags += [ "-fcomplete-member-pointers" ]
+   }
  
-         # TODO(thakis): https://crbug.com/753973
--        "-Wno-enum-compare-switch",
-+        #"-Wno-enum-compare-switch",
- 
-         # TODO(hans): https://crbug.com/763392
--        "-Wno-tautological-unsigned-zero-compare",
-+        #"-Wno-tautological-unsigned-zero-compare",
- 
-         # TODO(hans): https://crbug.com/766891
--        "-Wno-null-pointer-arithmetic",
-+        #"-Wno-null-pointer-arithmetic",
- 
-         # TODO(hans): https://crbug.com/767059
-         # Disable -Wtautological-constant-compare (and implicitly also
-         # -Wtautological-unsigned-enum-zero-compare), but re-enable
-         # useful sub-diagnostics in that group.
--        "-Wno-tautological-constant-compare",
-+        #"-Wno-tautological-constant-compare",
-         "-Wtautological-constant-out-of-range-compare",
-       ]
-     } else if (use_xcode_clang) {
+@@ -1480,7 +1479,7 @@ config("default_warnings") {
+         cflags += [
+           # Ignore warnings about MSVC optimization pragmas.
+           # TODO(thakis): Only for no_chromium_code? http://crbug.com/505314
+-          "-Wno-ignored-pragma-optimize",
++          #"-Wno-ignored-pragma-optimize",
+         ]
+         if (is_fuchsia) {
+           cflags += [

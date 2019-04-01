@@ -1,0 +1,18 @@
+Description: Undef HWCAP_CRC32 prior to redefining it
+ See https://skia-review.googlesource.com/c/18844/1/src/core/SkCpu.cpp#81 for
+ a valid concern that was dismissed as unlikely, but actually happens when
+ building for arm64 on zesty/artful.
+Author: Olivier Tilloy <olivier.tilloy@canonical.com>
+
+--- a/third_party/skia/src/core/SkCpu.cpp
++++ b/third_party/skia/src/core/SkCpu.cpp
+@@ -72,6 +72,9 @@
+ 
+ #elif defined(SK_CPU_ARM64) && __has_include(<sys/auxv.h>)
+     #include <sys/auxv.h>
++    #if defined(HWCAP_CRC32)
++        #undef HWCAP_CRC32
++    #endif
+ 
+     static uint32_t read_cpu_features() {
+         const uint32_t kHWCAP_CRC32   = (1<< 7),

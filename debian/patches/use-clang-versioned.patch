@@ -3,18 +3,18 @@ Author: Olivier Tilloy <olivier.tilloy@canonical.com>
 
 --- a/build/toolchain/gcc_toolchain.gni
 +++ b/build/toolchain/gcc_toolchain.gni
-@@ -597,11 +597,11 @@ template("clang_toolchain") {
+@@ -608,11 +608,11 @@ template("clang_toolchain") {
  
    gcc_toolchain(target_name) {
      prefix = rebase_path("$clang_base_path/bin", root_build_dir)
 -    cc = "$prefix/clang"
 -    cxx = "$prefix/clang++"
-+    cc = "$prefix/clang-4.0"
-+    cxx = "$prefix/clang++-4.0"
++    cc = "$prefix/clang-6.0"
++    cxx = "$prefix/clang++-6.0"
      ld = cxx
      readelf = "${toolprefix}readelf"
 -    ar = "${prefix}/llvm-ar"
-+    ar = "${prefix}/llvm-ar-4.0"
++    ar = "${prefix}/llvm-ar-6.0"
      nm = "${toolprefix}nm"
  
      forward_variables_from(invoker,

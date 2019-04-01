@@ -1,0 +1,13 @@
+--- a/third_party/libjpeg_turbo/simd/jsimd_arm_neon.S
++++ b/third_party/libjpeg_turbo/simd/jsimd_arm_neon.S
+@@ -31,8 +31,8 @@
+ #endif
+ 
+ .text
+-.fpu neon
+-.arch armv7a
++.arch armv7-a
++.fpu neon-vfpv4
+ .object_arch armv4
+ .arm
+ .syntax unified

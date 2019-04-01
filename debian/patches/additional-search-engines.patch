@@ -1,9 +1,7 @@
-Index: chromium-browser-65.0.3325.181/components/search_engines/prepopulated_engines.json
-===================================================================
---- chromium-browser-65.0.3325.181.orig/components/search_engines/prepopulated_engines.json
-+++ chromium-browser-65.0.3325.181/components/search_engines/prepopulated_engines.json
+--- a/components/search_engines/prepopulated_engines.json
++++ b/components/search_engines/prepopulated_engines.json
 @@ -14,6 +14,7 @@
- //    89, 91+
+ //    91+
  //
  // IDs > 1000 are reserved for distribution custom engines.
 +// 1001: DuckDuckGo
@@ -19,7 +17,7 @@ Index: chromium-browser-65.0.3325.181/components/search_engines/prepopulated_eng
  
      // Increment this if you change the data in ways that mean users with
      // existing data should get a new version.
-@@ -114,6 +115,16 @@
+@@ -119,6 +120,16 @@
        "id": 68
      },
  
@@ -36,11 +34,9 @@ Index: chromium-browser-65.0.3325.181/components/search_engines/prepopulated_eng
      "google": {
        "name": "Google",
        "keyword": "google.com",
-Index: chromium-browser-65.0.3325.181/components/search_engines/search_engine_type.h
-===================================================================
---- chromium-browser-65.0.3325.181.orig/components/search_engines/search_engine_type.h
-+++ chromium-browser-65.0.3325.181/components/search_engines/search_engine_type.h
-@@ -26,6 +26,7 @@ enum SearchEngineType {
+--- a/components/search_engines/search_engine_type.h
++++ b/components/search_engines/search_engine_type.h
+@@ -26,6 +26,7 @@
    SEARCH_ENGINE_DAUM,
    SEARCH_ENGINE_DELFI,
    SEARCH_ENGINE_DELTA,
@@ -48,11 +44,9 @@ Index: chromium-browser-65.0.3325.181/components/search_engines/search_engine_ty
    SEARCH_ENGINE_FUNMOODS,
    SEARCH_ENGINE_GOO,
    SEARCH_ENGINE_GOOGLE,
-Index: chromium-browser-65.0.3325.181/components/search_engines/template_url_prepopulate_data.cc
-===================================================================
---- chromium-browser-65.0.3325.181.orig/components/search_engines/template_url_prepopulate_data.cc
-+++ chromium-browser-65.0.3325.181/components/search_engines/template_url_prepopulate_data.cc
-@@ -51,7 +51,7 @@ namespace {
+--- a/components/search_engines/template_url_prepopulate_data.cc
++++ b/components/search_engines/template_url_prepopulate_data.cc
+@@ -33,7 +33,7 @@
  
  // Default (for countries with no better engine set)
  const PrepopulatedEngine* const engines_default[] = {
@@ -61,7 +55,7 @@ Index: chromium-browser-65.0.3325.181/components/search_engines/template_url_pre
  };
  
  // United Arab Emirates
-@@ -166,7 +166,7 @@ const PrepopulatedEngine* const engines_
+@@ -148,7 +148,7 @@
  
  // Germany
  const PrepopulatedEngine* const engines_DE[] = {
@@ -70,7 +64,7 @@ Index: chromium-browser-65.0.3325.181/components/search_engines/template_url_pre
  };
  
  // Denmark
-@@ -216,12 +216,12 @@ const PrepopulatedEngine* const engines_
+@@ -198,12 +198,12 @@
  
  // France
  const PrepopulatedEngine* const engines_FR[] = {
@@ -85,7 +79,7 @@ Index: chromium-browser-65.0.3325.181/components/search_engines/template_url_pre
  };
  
  // Greece
-@@ -556,7 +556,7 @@ const PrepopulatedEngine* const engines_
+@@ -538,7 +538,7 @@
  
  // United States
  const PrepopulatedEngine* const engines_US[] = {
@@ -94,7 +88,7 @@ Index: chromium-browser-65.0.3325.181/components/search_engines/template_url_pre
  };
  
  // Uruguay
-@@ -591,6 +591,7 @@ const PrepopulatedEngine* const engines_
+@@ -573,6 +573,7 @@
  
  // A list of all the engines that we know about.
  const PrepopulatedEngine* const kAllEngines[] = {

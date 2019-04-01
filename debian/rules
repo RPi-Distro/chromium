@@ -50,12 +50,10 @@ DEB_DH_SHLIBDEPS_ARGS_chromium-codecs-ffmpeg := -ldebian/chromium-codecs-ffmpeg/
 DEB_DH_SHLIBDEPS_ARGS_chromium-codecs-ffmpeg-extra := -ldebian/chromium-codecs-ffmpeg-extra/$(LIB_DIR) -ldebian/chromium-codecs-ffmpeg-extra/$(LIB_DIR)/neon/vfp
 
 common_defines+=\
-	enable_google_now=false \
 	enable_hangout_services_extension=true \
 	enable_mdns=true \
 	enable_nacl=false \
 	enable_wayland_server=false \
-	enable_webrtc=true \
 	enable_widevine=true \
 	fieldtrial_testing_like_official_build=true \
 	is_component_build=false \
@@ -74,14 +72,13 @@ common_defines+=\
 	use_gio=true \
 	use_glib=true \
 	use_gold=false \
-	use_gtk3=true \
 	use_libpci=true \
 	use_pulseaudio=true \
 	use_sysroot=false \
 	use_system_harfbuzz=false \
 	use_system_libjpeg=false \
-	use_system_sqlite=false \
 	rtc_enable_protobuf=false \
+	rtc_use_h264=true \
 	is_clang=true \
 	clang_base_path="/usr" \
 	clang_use_chrome_plugins=false \
@@ -123,17 +120,17 @@ common_defines += arm_float_abi="soft" arm_use_thumb=false
 else ifeq (armhf,$(DEB_HOST_ARCH))
 common_defines += target_cpu="arm"
 common_defines += arm_float_abi="hard"
+common_defines += arm_optionally_use_neon=false
 v6_defines +=\
 	arm_use_neon=false \
-	arm_optionally_use_neon=true \
 	arm_version=6 \
 	arm_use_thumb=false \
 	arm_arch="armv6z"
 v7_defines +=\
 	arm_use_neon=true \
-	arm_optionally_use_neon=false \
 	arm_version=7 \
 	arm_arch="armv7-a"
+
 else ifeq (arm64,$(DEB_HOST_ARCH))
 common_defines += target_cpu="arm64"
 else ifeq (i386,$(DEB_HOST_ARCH))
@@ -181,7 +178,7 @@ get-packaged-orig-source: DEST_FILENAME=chromium-browser_$(ORIG_VERSION).orig.ta
 get-packaged-orig-source:
 	wget --continue --progress=dot:giga $(URL)
 	wget -O sumfile -q $(SUMURL); echo >>sumfile
-	for hasher in md5; do echo -n "$$hasher  "; $${hasher}sum chromium-$(ORIG_VERSION).tar.xz; done >testfile
+	for hasher in sha256; do echo -n "$$hasher  "; $${hasher}sum chromium-$(ORIG_VERSION).tar.xz; done >testfile
 	diff testfile sumfile
 	mv "chromium-$(ORIG_VERSION).tar.xz" "$(DEST_FILENAME)"
 
@@ -204,29 +201,27 @@ override_dh_auto_configure: out/Release/gn
 
 	test ! "$(use_system_libraries)" || python2 build/linux/unbundle/replace_gn_files.py --system-libraries $(use_system_libraries)
 	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v6_defines) $(browser_defines) $(ffmpeg_extra_defines)' out/Release
-	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v7_defines) $(ffmpeg_extra_defines)' out/ffmpeg-extra-v7
+	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v7_defines) $(browser_defines) $(ffmpeg_extra_defines)' out/Release-v7
 
 	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v6_defines) $(ffmpeg_std_defines)' out/ffmpeg-std
 	out/Release/gn gen --fail-on-unused-args --args='$(common_defines) $(v7_defines) $(ffmpeg_std_defines)' out/ffmpeg-std-v7
 
+
+
 # There are two things to build. Standard ffmpeg+browser, and full ffmpeg.
 override_dh_auto_build: BUILD_TARGETS := chrome chrome_sandbox chromedriver
 override_dh_auto_build:
-
-	while sleep 1200; do echo "#  I ATEN'T DEAD"; done& ninja $(NJOBS) -v -C out/Release $(BUILD_TARGETS) && { kill \%1; sleep 1; echo; true; } || { kill \%1; exit 1; sleep 2; echo; false; }
-
-	ninja $(NJOBS) -v -C out/ffmpeg-extra-v7 libffmpeg_chrome.so.65
-	ninja $(NJOBS) -v -C out/ffmpeg-std libffmpeg_chrome.so.65
-	ninja $(NJOBS) -v -C out/ffmpeg-std-v7 libffmpeg_chrome.so.65
+	while sleep 1200; do echo "#  I ATEN'T DEAD"; done& ninja $(NJOBS )-C out/Release $(BUILD_TARGETS) && { kill \%1; sleep 1; echo; true; } || { kill \%1; exit 1; sleep 2; echo; false; }
+	ninja $(NJOBS) -C out/ffmpeg-std libffmpeg.so
+	ninja $(NJOBS) -C out/Release-v7 chrome libffmpeg.so
+	ninja $(NJOBS) -C out/ffmpeg-std libffmpeg.so
+	ninja $(NJOBS) -C out/ffmpeg-std-v7 libffmpeg.so
 
 override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_builddeb:
 	dh_builddeb -- -Zxz
-
-override_dh_shlibdeps:
-	dh_shlibdeps -- -xchromium-codecs-ffmpeg -xchromium-codecs-ffmpeg-extra
 
 override_dh_installman:
 	# install does this
@@ -261,6 +256,7 @@ override_dh_install-arch: TRASH := \
 	v8_context_snapshot_generator \
 	args.gn \
 	gn \
+	gn_build \
 	\*.ninja \
 	.ninja\* \
 	angledata \
@@ -279,21 +275,26 @@ override_dh_install-arch:
 
 	mkdir -p $(T)
 
-	mkdir -p                                          $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
-	mv -v out/Release/libffmpeg_chrome.so.65          $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
+	mkdir -p                             $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
+	mv -v out/Release/libffmpeg.so       $(CURDIR)/debian/tmp-extra/$(LIB_DIR)
 
-	mkdir -p                                          $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
-	mv -v out/ffmpeg-extra-v7/libffmpeg_chrome.so.65  $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
+	mkdir -p                             $(CURDIR)/debian/tmp-std/$(LIB_DIR)
+	mv -v out/ffmpeg-std/libffmpeg.so    $(CURDIR)/debian/tmp-std/$(LIB_DIR)
 
-	mkdir -p                                          $(CURDIR)/debian/tmp-std/$(LIB_DIR)
-	mv -v out/ffmpeg-std/libffmpeg_chrome.so.65       $(CURDIR)/debian/tmp-std/$(LIB_DIR)
+	mkdir -p                             $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/Release-v7/libffmpeg.so    $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
 
-	mkdir -p                                          $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
-	mv -v out/ffmpeg-std-v7/libffmpeg_chrome.so.65    $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
+	mkdir -p                             $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/ffmpeg-std-v7/libffmpeg.so $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
 
 	mkdir -p $(CURDIR)/debian/tmp/$(LIB_DIR)
 	(cd out/Release && tar --remove-files $(foreach excl,$(TRASH),--exclude=$(excl) ) --dereference -cf - .;) | (cd debian/tmp/$(LIB_DIR) && tar xvf -;)
 	(cd out/Release && tar --remove-files -cf - $$(find *locales -type f -name en-US.pak) --dereference;) | (cd debian/tmp/$(LIB_DIR) && tar xvf -;)
+
+	mkdir -p $(CURDIR)/debian/tmp-v7/$(LIB_DIR)
+	mv -v out/Release-v7/chrome                     $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/chrome-v7
+	mv -v out/Release-v7/v8_context_snapshot_v7.bin $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/
+
 #
 	# NaCL may be blacklisted.
 	cp -a out/Release/libppGoogleNaClPluginChrome.so debian/chromium-browser/$(LIB_DIR)/ || echo No NaCl. That is okay.
@@ -310,12 +311,10 @@ override_dh_install-arch:
 	    echo "There is no size $${size} icon. We expected one."; \
 	  fi; \
 	done
-	cp -a debian/chromium-browser.svg debian/chromium-browser/usr/share/icons/hicolor/scalable/apps
 
 
 	# Record files that were built, so we can compare later that we installed everything.
-	find debian/tmp debian/tmp-std debian/tmp-std-v7 debian/tmp-extra debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
-
+	find debian/tmp debian/tmp-std debian/tmp-extra debian/tmp-v7 debian/tmp-std-v7 debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
 	grep -vE \($(subst $(SPACE),\|,$(BUILT_UNUSED_MATCH))\) $(T)/unfiltered-built $(foreach expr,$(RENAMED_FILE), |sed -r -e $(expr)) |grep -vE \($(subst $(SPACE),\|,$(INDEP_MATCH))\) | LC_ALL=C sort >$(T)/built
 
 	#
@@ -323,7 +322,7 @@ override_dh_install-arch:
 	##### Copy installed to package ####
 	dh_install -a
 
-	mkdir -p debian/chromium-chromedriver/$(LIB_DIR)
+	mkdir -p debian/chromium-chromedriver/usr/bin
 	mkdir -p debian/chromium-browser/$(LIB_DIR)
 
 	install -T -m 644 debian/chromium-browser.default debian/chromium-browser/etc/chromium-browser/default
@@ -334,13 +333,16 @@ override_dh_install-arch:
 	install -T -m 555 debian/tmp/$(LIB_DIR)/chrome debian/chromium-browser/$(LIB_DIR)/chromium-browser
 	rm                debian/tmp/$(LIB_DIR)/chrome
 
+	install -T -m 555 debian/tmp-v7/$(LIB_DIR)/chrome-v7 debian/chromium-browser/$(LIB_DIR)/chromium-browser-v7
+	rm                debian/tmp-v7/$(LIB_DIR)/chrome-v7
+
 	# "you have to change the underscore from the build target into a hyphen".
 	# https://code.google.com/p/chromium/wiki/LinuxSUIDSandbox
 	install -T -m 4555 debian/tmp/$(LIB_DIR)/chrome_sandbox debian/chromium-browser/$(LIB_DIR)/chrome-sandbox
 	rm                 debian/tmp/$(LIB_DIR)/chrome_sandbox
 
 	# move chromedriver into its own package
-	install    -m 555 debian/tmp/$(LIB_DIR)/chromedriver debian/chromium-chromedriver/$(LIB_DIR)
+	install    -m 555 debian/tmp/$(LIB_DIR)/chromedriver debian/chromium-chromedriver/usr/bin
 	rm                debian/tmp/$(LIB_DIR)/chromedriver
 
 	mv -iv debian/tmp/$(LIB_DIR)/* debian/chromium-browser/$(LIB_DIR)/
@@ -381,7 +383,7 @@ endif
 
 
 	# compare built to packaged
-	DUPES=`find $(PKG_DIRS) -type f -print | grep -v /DEBIAN/ | cut -d/ -f3- | LC_ALL=C sort | uniq -c | grep -vE '^ *2 .*/libffmpeg_chrome.so.65$$' | grep -vE '^  *1 '`; \
+	DUPES=`find $(PKG_DIRS) -type f -print | grep -v /DEBIAN/ | cut -d/ -f3- | LC_ALL=C sort | uniq -c | grep -vE '^ *2 .*/libffmpeg.so$$' | grep -vE '^  *1 '`; \
 	if [ "Z$$DUPES" != Z ] ; then \
 	  echo " => Found duplicates:\n $$DUPES" ; \
 	  exit 1 ; \
@@ -410,7 +412,7 @@ override_dh_install-indep:
 
 	# record built so we can compare later
 	mkdir -p $(T)
-	find debian/tmp debian/tmp-std debian/tmp-std-v7 debian/tmp-extra debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
+	find debian/tmp debian/tmp-std debian/tmp-v7 debian/tmp-std-v7 debian/tmp-extra debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
 	grep -E \($(subst $(SPACE),\|,$(INDEP_MATCH))\) $(T)/unfiltered-built $(foreach expr,$(RENAMED_FILE), |sed -r -e $(expr)) |grep -v /en-US.pak | LC_ALL=C sort >$(T)/built
 
 
@@ -445,7 +447,7 @@ override_dh_clean:
 	set +x
 	echo
 	echo VERIFICATION:
-	cd .. && for crypto in md5; do $${crypto}sum 'chromium-browser_$(DEBIAN_UPSTREAM_VERSION).orig.tar.xz' |sed -e 's/-browser//' -e "s/^/$${crypto}  /"; done
+	cd .. && for crypto in sha256; do $${crypto}sum 'chromium-browser_$(DEBIAN_UPSTREAM_VERSION).orig.tar.xz' |sed -e 's/-browser//' -e "s/^/$${crypto}  /"; done
 	echo VERIFICATION-
 	echo Compare to https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$(DEBIAN_UPSTREAM_VERSION).tar.xz.hashes
 	echo
@@ -461,7 +463,7 @@ debian/chromium-browser.sh: debian/chromium-browser.sh.in
     $< > $@
 
 out/Release/gn:
-	CC=clang-4.0 CXX=clang++-4.0 tools/gn/bootstrap/bootstrap.py --verbose --no-rebuild --gn-gen-args '$(common_defines)'
+	CC=clang-6.0 CXX=clang++-6.0 AR=llvm-ar-6.0 tools/gn/bootstrap/bootstrap.py --verbose --no-rebuild --gn-gen-args '$(common_defines)'
 	echo built $@
 
 
@@ -485,7 +487,6 @@ PACKAGED_NOT_FROM_TREE_MATCH += ^usr/share/apport/package-hooks/chromium-browser
 #PACKAGED_NOT_FROM_TREE_MATCH += ^usr/share/doc/.\*/buildinfo_.\*.gz$$
 PACKAGED_NOT_FROM_TREE_MATCH += ^usr/share/gnome-control-center/default-apps/chromium-browser.xml$$
 PACKAGED_NOT_FROM_TREE_MATCH += ^usr/share/.\*/chromium-browser.png$$
-PACKAGED_NOT_FROM_TREE_MATCH += ^usr/share/.\*/chromium-browser.svg$$
 #PACKAGED_NOT_FROM_TREE_MATCH += ^usr/share/doc/.\*/copyright$$
 #PACKAGED_NOT_FROM_TREE_MATCH += ^usr/share/doc/.\*/changelog.Debian.gz$$
 PACKAGED_NOT_FROM_TREE_MATCH += ^usr/bin/chromium-browser$$
@@ -503,7 +504,9 @@ RENAMED_FILE := s,^usr/lib/chromium-browser/chrome.1\$$,usr/share/man/man1/chrom
 RENAMED_FILE += s,^usr/lib/chromium-browser/chrome_sandbox$$,usr/lib/chromium-browser/chrome-sandbox,
 #  Executable name is different.
 RENAMED_FILE += s,^usr/lib/chromium-browser/chrome$$,usr/lib/chromium-browser/chromium-browser,
-
+RENAMED_FILE += s,^usr/lib/chromium-browser/chrome-v7$$,usr/lib/chromium-browser/chromium-browser-v7,
+#  chromedriver is moved to /usr/bin (LP: #1667208)
+RENAMED_FILE += s,^usr/lib/chromium-browser/chromedriver$$,usr/bin/chromedriver,
 
 ###############################################################################################
 # Translations

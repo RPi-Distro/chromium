@@ -50,6 +50,12 @@ if grep -E -w ^flags\\s\*:.\*sse /proc/cpuinfo >/dev/null; then
 fi
 export CPU_FEATURES_TESTED=1
 
+if [ "$(uname -m)" != "armv6l" ]; then
+	APPSUFFIX="-v7"
+else
+	APPSUFFIX=""
+fi
+
 readonly APPNAME=chromium-browser
 LIBDIR=/usr/lib/chromium-browser
 GDB=/usr/bin/gdb
@@ -99,7 +105,7 @@ fi
 
 if test -x /usr/bin/python3 -a -f "/usr/lib/chromium-browser/flash_manifest.json"; then
 	if echo "$CHROMIUM_FLAGS" |grep -E -- "--ppapi-flash-version=( |\$)"; then
-		ver=$(python -c 'import json,sys; print(json.load(open("/usr/lib/chromium-browser/flash_manifest.json"))["version"]);')
+		ver=$(python3 -c 'import json,sys; print(json.load(open("/usr/lib/chromium-browser/flash_manifest.json"))["version"]);')
 		CHROMIUM_FLAGS=${CHROMIUM_FLAGS/--ppapi-flash-version=/--ppapi-flash-version="${ver}" }
 	fi
 fi
@@ -204,18 +210,18 @@ if [ $want_debug -eq 1 ] ; then
   echo "#            GTK_PATH=$GTK_PATH"
   echo "# CHROMIUM_USER_FLAGS=$CHROMIUM_USER_FLAGS"
   echo "#      CHROMIUM_FLAGS=$CHROMIUM_FLAGS"
-  echo "$GDB $LIBDIR/$APPNAME -x $tmpfile"
-  $GDB "$LIBDIR/$APPNAME" -x $tmpfile
+  echo "$GDB $LIBDIR/$APPNAME$APPSUFFIX -x $tmpfile"
+  $GDB "$LIBDIR/$APPNAME$APPSUFFIX" -x $tmpfile
   if [ $want_temp_profile -eq 1 ] ; then
     rm -rf $TEMP_PROFILE
   fi
   exit $?
 else
   if [ $want_temp_profile -eq 0 ] ; then
-    exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
+    exec $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
   else
     # we can't exec here as we need to clean-up the temporary profile
-    $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
+    $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
     rm -rf $TEMP_PROFILE
   fi
 fi

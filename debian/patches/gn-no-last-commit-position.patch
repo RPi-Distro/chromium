@@ -1,0 +1,25 @@
+Description: When building from a source tarball (as opposed to a git checkout) there is no last commit position
+Author: Olivier Tilloy <olivier.tilloy@canonical.com>
+
+--- a/tools/gn/bootstrap/bootstrap.py
++++ b/tools/gn/bootstrap/bootstrap.py
+@@ -76,8 +76,6 @@ def main(argv):
+     cmd.append('--debug')
+   subprocess.check_call(cmd)
+ 
+-  shutil.copy2(
+-      os.path.join(BOOTSTRAP_DIR, 'last_commit_position.h'), gn_build_dir)
+   subprocess.check_call(
+       ['ninja', '-C', gn_build_dir, 'gn'])
+   shutil.copy2(os.path.join(gn_build_dir, 'gn'), gn_path)
+--- a/tools/gn/tools/gn/gn_main.cc
++++ b/tools/gn/tools/gn/gn_main.cc
+@@ -16,7 +16,7 @@
+ #include "util/msg_loop.h"
+ #include "util/sys_info.h"
+ 
+-#include "last_commit_position.h"
++#define LAST_COMMIT_POSITION "UNKNOWN"
+ 
+ namespace {
+ 

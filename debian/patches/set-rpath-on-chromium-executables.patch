@@ -4,7 +4,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
 
 --- a/chrome/BUILD.gn
 +++ b/chrome/BUILD.gn
-@@ -281,6 +281,8 @@ if (!is_android && !is_mac) {
+@@ -291,6 +291,8 @@ if (!is_android && !is_mac) {
                         rebase_path(version_script, root_build_dir) ]
          }
  
@@ -15,7 +15,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
              "//build/config/linux:x11",
 --- a/tools/v8_context_snapshot/BUILD.gn
 +++ b/tools/v8_context_snapshot/BUILD.gn
-@@ -97,6 +97,10 @@ if (use_v8_context_snapshot) {
+@@ -106,6 +106,10 @@ if (use_v8_context_snapshot) {
        "//v8",
      ]
  
@@ -23,6 +23,6 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
 +      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
 +    }
 +
-     if (is_linux && (is_component_build || using_sanitizer) &&
-         use_custom_libcxx) {
-       deps += [ "//buildtools/third_party/libc++:libc++" ]
+     configs += [
+       "//v8:external_startup_data",
+       ":disable_icf",

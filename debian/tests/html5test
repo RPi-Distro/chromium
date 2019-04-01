@@ -21,9 +21,7 @@ if __name__ == '__main__':
     options = webdriver.chrome.options.Options()
     options.binary_location = "/usr/bin/chromium-browser"
     options.add_argument("headless")
-    driver_path = "/usr/lib/chromium-browser/chromedriver"
-    driver = webdriver.Chrome(executable_path=driver_path,
-                              chrome_options=options)
+    driver = webdriver.Chrome(chrome_options=options)
 
     tests_dir = os.path.dirname(os.path.realpath(__file__))
     html5test_dir = os.path.join(tests_dir, "data", "HTML5test")
@@ -43,7 +41,7 @@ if __name__ == '__main__':
     match = re.search("YOUR BROWSER SCORES (\d+) OUT OF (\d+) POINTS", score)
     assert match is not None
     score = (int(match.group(1)), int(match.group(2)))
-    expected_score = (523, 555)
+    expected_score = (530, 555)
     sys.stderr.flush()
     print("Score: {}/{}".format(score[0], score[1]))
 
@@ -248,7 +246,7 @@ if __name__ == '__main__':
         ("row-location.geolocation", "Yes"),
         ("row-location.orientation", "Yes"),
         ("row-location.motion", "Yes"),
-        ("row-output.requestFullScreen", "Prefixed"),
+        ("row-output.requestFullScreen", "Yes"),
         ("row-output.notifications", "Yes"),
         ("row-input.getGamepads", "Yes"),
         ("row-input.pointerevents", "Yes"),
@@ -270,7 +268,7 @@ if __name__ == '__main__':
         ("row-rtc.objectrtc", "No"),
         ("row-rtc.datachannel", "Yes"),
         ("row-media.getUserMedia", "Yes"),
-        ("row-media.getDisplayMedia", "No"),
+        ("row-media.getDisplayMedia", "Yes"),
         ("row-media.enumerateDevices", "Yes"),
         ("row-rtc.recorder", "Yes"),
         ("row-interaction.dragdrop.attributes", "Partial"),

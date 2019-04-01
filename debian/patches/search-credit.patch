@@ -9,12 +9,12 @@ Author: Chad Miller <chad.miller@canonical.com>
        "favicon_url": "https://www.baidu.com/favicon.ico",
 -      "search_url": "https://www.baidu.com/#ie={inputEncoding}&wd={searchTerms}",
 +      "search_url": "https://www.baidu.com/#ie={inputEncoding}&tn=ubuntuu_cb&wd={searchTerms}",
-       "suggest_url": "http://suggestion.baidu.com/su?wd={searchTerms}&action=opensearch&ie={inputEncoding}",
-       "type": "SEARCH_ENGINE_BAIDU",
-       "id": 21
+       "alternate_urls": [
+         "https://www.baidu.com/s?ie={inputEncoding}&wd={searchTerms}",
+         "https://www.baidu.com/s?ie={inputEncoding}&word={searchTerms}",
 --- a/components/search_engines/template_url.cc
 +++ b/components/search_engines/template_url.cc
-@@ -875,6 +875,9 @@ std::string TemplateURLRef::HandleReplac
+@@ -950,6 +950,9 @@ std::string TemplateURLRef::HandleReplac
  
    std::string url = parsed_url_;
  
@@ -23,8 +23,8 @@ Author: Chad Miller <chad.miller@canonical.com>
 +
    // replacements_ is ordered in ascending order, as such we need to iterate
    // from the back.
-   for (Replacements::reverse_iterator i = replacements_.rbegin();
-@@ -904,6 +907,7 @@ std::string TemplateURLRef::HandleReplac
+   for (auto i = replacements_.rbegin(); i != replacements_.rend(); ++i) {
+@@ -978,6 +981,7 @@ std::string TemplateURLRef::HandleReplac
  
        case GOOGLE_BASE_URL:
          DCHECK(!i->is_post_param);
@@ -32,7 +32,7 @@ Author: Chad Miller <chad.miller@canonical.com>
          HandleReplacement(
              std::string(), search_terms_data.GoogleBaseURLValue(), *i, &url);
          break;
-@@ -1014,7 +1018,8 @@ std::string TemplateURLRef::HandleReplac
+@@ -1096,7 +1100,8 @@ std::string TemplateURLRef::HandleReplac
  
        case GOOGLE_SEARCH_CLIENT: {
          DCHECK(!i->is_post_param);
@@ -42,7 +42,7 @@ Author: Chad Miller <chad.miller@canonical.com>
          if (!client.empty())
            HandleReplacement("client", client, *i, &url);
          break;
-@@ -1133,6 +1138,13 @@ std::string TemplateURLRef::HandleReplac
+@@ -1215,6 +1220,13 @@ std::string TemplateURLRef::HandleReplac
      }
    }
  

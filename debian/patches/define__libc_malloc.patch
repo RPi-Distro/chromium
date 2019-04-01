@@ -5,7 +5,7 @@ Author: Olivier Tilloy <olivier.tilloy@canonical.com>
 
 --- a/base/process/memory_linux.cc
 +++ b/base/process/memory_linux.cc
-@@ -42,6 +42,12 @@ void OnNoMemory() {
+@@ -48,6 +48,12 @@ void OnNoMemory() {
  
  }  // namespace
  

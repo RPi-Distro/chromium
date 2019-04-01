@@ -1,0 +1,29 @@
+--- a/gin/v8_initializer.cc
++++ b/gin/v8_initializer.cc
+@@ -78,7 +78,11 @@
+ #endif
+ 
+ #else  // defined(OS_ANDROID)
++#if __ARM_ARCH >= 7
++const char kV8ContextSnapshotFileName[] = "v8_context_snapshot_v7.bin";
++#else
+ const char kV8ContextSnapshotFileName[] = "v8_context_snapshot.bin";
++#endif
+ const char kSnapshotFileName[] = "snapshot_blob.bin";
+ #endif  // defined(OS_ANDROID)
+ 
+--- a/tools/v8_context_snapshot/BUILD.gn
++++ b/tools/v8_context_snapshot/BUILD.gn
+@@ -58,7 +58,11 @@
+ 
+   action("generate_v8_context_snapshot") {
+     script = "//build/gn_run_binary.py"
+-    output_file = "$root_out_dir/v8_context_snapshot.bin"
++    if (arm_use_neon) {
++      output_file = "$root_out_dir/v8_context_snapshot_v7.bin"
++    } else {
++      output_file = "$root_out_dir/v8_context_snapshot.bin"
++    }
+     output_path = rebase_path(output_file, root_build_dir)
+ 
+     args = [

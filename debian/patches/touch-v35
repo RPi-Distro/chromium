@@ -4,7 +4,7 @@ Forwarded: yes
 
 --- a/ui/events/devices/x11/touch_factory_x11.cc
 +++ b/ui/events/devices/x11/touch_factory_x11.cc
-@@ -343,8 +343,12 @@ void TouchFactory::CacheTouchscreenIds(i
+@@ -344,8 +344,12 @@ void TouchFactory::CacheTouchscreenIds(i
                       return touchscreen.id == device_id;
                     });
    // Internal displays will have a vid and pid of 0. Ignore them.

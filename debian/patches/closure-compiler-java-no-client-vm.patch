@@ -1,0 +1,15 @@
+Description: Do not request the client JVM when running the closure compiler
+ as only the server JVM is available. This parameter should be safely ignored
+ if not available, but for some reason on xenial arm64 it results in an error.
+Author: Olivier Tilloy <olivier.tilloy@canonical.com>
+
+--- a/third_party/closure_compiler/compile2.py
++++ b/third_party/closure_compiler/compile2.py
+@@ -27,7 +27,6 @@ class Checker(object):
+     "java",
+     "-jar",
+     "-Xms1024m",
+-    "-client",
+     "-XX:+TieredCompilation"
+   ]
+ 

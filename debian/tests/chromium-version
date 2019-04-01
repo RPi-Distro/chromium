@@ -9,9 +9,7 @@ if __name__ == '__main__':
     options = webdriver.chrome.options.Options()
     options.binary_location = "/usr/bin/chromium-browser"
     options.add_argument("headless")
-    driver_path = "/usr/lib/chromium-browser/chromedriver"
-    driver = webdriver.Chrome(executable_path=driver_path,
-                              chrome_options=options)
+    driver = webdriver.Chrome(chrome_options=options)
     version = driver.capabilities['version']
 
     package = apt.Cache()['chromium-browser']

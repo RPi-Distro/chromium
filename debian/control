@@ -14,8 +14,9 @@ Build-Depends:
 	quilt,
 	python,
 	bison,
-	clang-4.0,
-	llvm-4.0,
+	clang-6.0,
+	llvm-6.0,
+	default-jre-headless,
 	gperf,
 	libpulse-dev,
 	libcups2-dev | libcupsys2-dev,
@@ -23,7 +24,6 @@ Build-Depends:
 	libnss3-dev,
 	mesa-common-dev,
 	libgles2-mesa-dev [armel armhf],
-	libraspberrypi-dev [armel armhf],
 	libpci-dev,
 	libxtst-dev,
 	libxss-dev,
@@ -38,8 +38,11 @@ Build-Depends:
 	libxkbcommon-dev,
 	libpam0g-dev,
 	libffi-dev,
+	uuid-dev,
 	chrpath,
-	yasm
+	yasm,
+	libxcb-image0-dev,
+	libraspberrypi-dev [armel armhf]
 Standards-Version: 4.1.1
 
 Package: chromium-browser
@@ -49,7 +52,9 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
 	bash (>= 4),
 	libnss3,
 	xdg-utils,
-	chromium-codecs-ffmpeg-extra (= ${binary:Version}) | chromium-codecs-ffmpeg (= ${binary:Version})
+	chromium-codecs-ffmpeg-extra (= ${binary:Version}) | chromium-codecs-ffmpeg (= ${binary:Version}),
+	libraspberrypi0,
+	libgl1-mesa-dri
 Recommends: chromium-browser-l10n
 Suggests: webaccounts-chromium-extension,
 	unity-chromium-extension,
@@ -80,7 +85,7 @@ Description: chromium-browser language packages
 Package: chromium-codecs-ffmpeg
 Architecture: i386 amd64 armhf arm64
 Pre-Depends: dpkg (>= 1.15.6)
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libraspberrypi0
 Conflicts: chromium-codecs-ffmpeg-extra, chromium-browser (<< 44)
 Replaces: chromium-codecs-ffmpeg-extra, chromium-browser (<< 44)
 Description: Free ffmpeg codecs for the Chromium Browser
@@ -94,7 +99,7 @@ Description: Free ffmpeg codecs for the Chromium Browser
 Package: chromium-codecs-ffmpeg-extra
 Architecture: i386 amd64 armhf arm64
 Pre-Depends: dpkg (>= 1.15.6)
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libraspberrypi0
 Conflicts: chromium-codecs-ffmpeg, chromium-browser (<< 44)
 Replaces: chromium-codecs-ffmpeg, chromium-browser (<< 44)
 Description: Extra ffmpeg codecs for the Chromium Browser
@@ -107,6 +112,7 @@ Description: Extra ffmpeg codecs for the Chromium Browser
  chromium-codecs-ffmpeg if you prefer only the patent-free codecs
 
 Package: chromium-chromedriver
+Provides: chromium-driver
 Architecture: i386 amd64 armhf arm64
 Pre-Depends: dpkg (>= 1.15.6)
 Depends: ${shlibs:Depends}, ${misc:Depends}, chromium-browser (>= 4.0.203.0~)

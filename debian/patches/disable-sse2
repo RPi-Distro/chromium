@@ -2,38 +2,18 @@ description: don't set sse2 compiler flags on i386
 author: Michael Gilbert <mgilbert@debian.org>
 debian-bug: http://bugs.debian.org/750361
 
---- a/cc/raster/texture_compressor.cc
-+++ b/cc/raster/texture_compressor.cc
-@@ -8,7 +8,7 @@
- #include "base/memory/ptr_util.h"
- #include "cc/raster/texture_compressor_etc1.h"
- 
--#if defined(ARCH_CPU_X86_FAMILY)
-+#if defined(ARCH_CPU_X86_64)
- #include "base/cpu.h"
- #include "cc/raster/texture_compressor_etc1_sse.h"
- #endif
-@@ -18,7 +18,7 @@ namespace cc {
- std::unique_ptr<TextureCompressor> TextureCompressor::Create(Format format) {
-   switch (format) {
-     case kFormatETC1: {
--#if defined(ARCH_CPU_X86_FAMILY)
-+#if defined(ARCH_CPU_X86_64)
-       base::CPU cpu;
-       if (cpu.has_sse2()) {
-         return base::WrapUnique(new TextureCompressorETC1SSE());
 --- a/media/base/sinc_resampler.cc
 +++ b/media/base/sinc_resampler.cc
-@@ -81,7 +81,7 @@
- #include "base/numerics/math_constants.h"
+@@ -82,7 +82,7 @@
  #include "build/build_config.h"
+ #include "cc/base/math_util.h"
  
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(__x86_64__)
  #include <xmmintrin.h>
  #define CONVOLVE_FUNC Convolve_SSE
  #elif defined(ARCH_CPU_ARM_FAMILY) && defined(USE_NEON)
-@@ -326,7 +326,7 @@ float SincResampler::Convolve_C(const fl
+@@ -333,7 +333,7 @@ float SincResampler::Convolve_C(const fl
        kernel_interpolation_factor * sum2);
  }
  
@@ -55,8 +35,8 @@ debian-bug: http://bugs.debian.org/750361
                              double kernel_interpolation_factor);
 --- a/media/base/sinc_resampler_perftest.cc
 +++ b/media/base/sinc_resampler_perftest.cc
-@@ -22,7 +22,7 @@ static const double kKernelInterpolation
- static void DoNothing(int frames, float* destination) {}
+@@ -19,7 +19,7 @@ static const double kSampleRateRatio = 1
+ static const double kKernelInterpolationFactor = 0.5;
  
  // Define platform independent function name for Convolve* tests.
 -#if defined(ARCH_CPU_X86_FAMILY)
@@ -156,9 +136,9 @@ debian-bug: http://bugs.debian.org/750361
  #define SIMD_PADDING 8  // 8 * int16_t
  #endif
  
---- a/third_party/WebKit/Source/platform/audio/DirectConvolver.cpp
-+++ b/third_party/WebKit/Source/platform/audio/DirectConvolver.cpp
-@@ -35,7 +35,7 @@
+--- a/third_party/blink/renderer/platform/audio/direct_convolver.cc
++++ b/third_party/blink/renderer/platform/audio/direct_convolver.cc
+@@ -37,7 +37,7 @@
  #include <Accelerate/Accelerate.h>
  #endif
  
@@ -167,29 +147,11 @@ debian-bug: http://bugs.debian.org/750361
  #include <emmintrin.h>
  #endif
  
-@@ -83,7 +83,7 @@ void DirectConvolver::Process(AudioFloat
- #endif  // ARCH_CPU_X86
- #else
-   size_t i = 0;
--#if defined(ARCH_CPU_X86_FAMILY)
-+#if defined(ARCH_CPU_X86_64)
-   // Convolution using SSE2. Currently only do this if both |kernelSize| and
-   // |framesToProcess| are multiples of 4. If not, use the straightforward loop
-   // below.
-@@ -397,7 +397,7 @@ void DirectConvolver::Process(AudioFloat
-       }
-       dest_p[i++] = sum;
-     }
--#if defined(ARCH_CPU_X86_FAMILY)
-+#if defined(ARCH_CPU_X86_64)
-   }
- #endif
- #endif  // OS_MACOSX
---- a/third_party/WebKit/Source/platform/audio/SincResampler.cpp
-+++ b/third_party/WebKit/Source/platform/audio/SincResampler.cpp
+--- a/third_party/blink/renderer/platform/audio/sinc_resampler.cc
++++ b/third_party/blink/renderer/platform/audio/sinc_resampler.cc
 @@ -32,7 +32,7 @@
- #include "platform/audio/AudioBus.h"
- #include "platform/wtf/MathExtras.h"
+ #include "third_party/blink/renderer/platform/audio/audio_bus.h"
+ #include "third_party/blink/renderer/platform/wtf/math_extras.h"
  
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
@@ -205,28 +167,37 @@ debian-bug: http://bugs.debian.org/750361
          // If the sourceP address is not 16-byte aligned, the first several
          // frames (at most three) should be processed seperately.
          while ((reinterpret_cast<uintptr_t>(input_p) & 0x0F) && n) {
---- a/third_party/WebKit/Source/platform/audio/VectorMath.cpp
-+++ b/third_party/WebKit/Source/platform/audio/VectorMath.cpp
+--- a/third_party/blink/renderer/platform/audio/vector_math.cc
++++ b/third_party/blink/renderer/platform/audio/vector_math.cc
 @@ -37,7 +37,7 @@
- #include "platform/audio/cpu/arm/VectorMathNEON.h"
+ #include "third_party/blink/renderer/platform/audio/cpu/arm/vector_math_neon.h"
  #elif HAVE_MIPS_MSA_INTRINSICS
- #include "platform/audio/cpu/mips/VectorMathMSA.h"
+ #include "third_party/blink/renderer/platform/audio/cpu/mips/vector_math_msa.h"
 -#elif defined(ARCH_CPU_X86_FAMILY)
 +#elif defined(ARCH_CPU_X86_64)
- #include "platform/audio/cpu/x86/VectorMathX86.h"
+ #include "third_party/blink/renderer/platform/audio/cpu/x86/vector_math_x86.h"
  #else
- #include "platform/audio/VectorMathScalar.h"
-@@ -54,7 +54,7 @@ namespace Impl = Mac;
- namespace Impl = NEON;
+ #include "third_party/blink/renderer/platform/audio/vector_math_scalar.h"
+@@ -54,7 +54,7 @@ namespace impl = mac;
+ namespace impl = neon;
  #elif HAVE_MIPS_MSA_INTRINSICS
- namespace Impl = MSA;
+ namespace impl = msa;
 -#elif defined(ARCH_CPU_X86_FAMILY)
 +#elif defined(ARCH_CPU_X86_64)
- namespace Impl = X86;
+ namespace impl = x86;
  #else
- namespace Impl = Scalar;
---- a/third_party/WebKit/Source/platform/graphics/cpu/x86/WebGLImageConversionSSE.h
-+++ b/third_party/WebKit/Source/platform/graphics/cpu/x86/WebGLImageConversionSSE.h
+ namespace impl = scalar;
+@@ -70,7 +70,7 @@ void PrepareFilterForConv(const float* f
+   // vectors are not implemented by all implementations.
+   DCHECK_EQ(-1, filter_stride);
+   DCHECK(prepared_filter);
+-#if defined(ARCH_CPU_X86_FAMILY) && !defined(OS_MACOSX)
++#if defined(ARCH_CPU_X86_64) && !defined(OS_MACOSX)
+   x86::PrepareFilterForConv(filter_p, filter_stride, filter_size,
+                             prepared_filter);
+ #endif
+--- a/third_party/blink/renderer/platform/graphics/cpu/x86/webgl_image_conversion_sse.h
++++ b/third_party/blink/renderer/platform/graphics/cpu/x86/webgl_image_conversion_sse.h
 @@ -7,7 +7,7 @@
  
  #include "build/build_config.h"
@@ -237,81 +208,81 @@ debian-bug: http://bugs.debian.org/750361
  
  namespace blink {
 @@ -195,6 +195,6 @@ ALWAYS_INLINE void PackOneRowOfRGBA8Litt
- }  // namespace SIMD
+ }  // namespace simd
  }  // namespace blink
  
 -#endif  // ARCH_CPU_X86_FAMILY
 +#endif  // ARCH_CPU_X86_64
  
- #endif  // WebGLImageConversionSSE_h
---- a/third_party/WebKit/Source/platform/graphics/gpu/WebGLImageConversion.cpp
-+++ b/third_party/WebKit/Source/platform/graphics/gpu/WebGLImageConversion.cpp
-@@ -444,7 +444,7 @@ void Unpack<WebGLImageConversion::kDataF
+ #endif  // THIRD_PARTY_BLINK_RENDERER_PLATFORM_GRAPHICS_CPU_X86_WEBGL_IMAGE_CONVERSION_SSE_H_
+--- a/third_party/blink/renderer/platform/graphics/gpu/webgl_image_conversion.cc
++++ b/third_party/blink/renderer/platform/graphics/gpu/webgl_image_conversion.cc
+@@ -445,7 +445,7 @@ void Unpack<WebGLImageConversion::kDataF
    const uint32_t* source32 = reinterpret_cast_ptr<const uint32_t*>(source);
    uint32_t* destination32 = reinterpret_cast_ptr<uint32_t*>(destination);
  
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
-   SIMD::UnpackOneRowOfBGRA8LittleToRGBA8(source32, destination32,
+   simd::UnpackOneRowOfBGRA8LittleToRGBA8(source32, destination32,
                                           pixels_per_row);
  #endif
-@@ -472,7 +472,7 @@ void Unpack<WebGLImageConversion::kDataF
+@@ -473,7 +473,7 @@ void Unpack<WebGLImageConversion::kDataF
      const uint16_t* source,
      uint8_t* destination,
      unsigned pixels_per_row) {
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
-   SIMD::UnpackOneRowOfRGBA5551LittleToRGBA8(source, destination,
+   simd::UnpackOneRowOfRGBA5551LittleToRGBA8(source, destination,
                                              pixels_per_row);
  #endif
-@@ -502,7 +502,7 @@ void Unpack<WebGLImageConversion::kDataF
+@@ -503,7 +503,7 @@ void Unpack<WebGLImageConversion::kDataF
      const uint16_t* source,
      uint8_t* destination,
      unsigned pixels_per_row) {
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
-   SIMD::UnpackOneRowOfRGBA4444LittleToRGBA8(source, destination,
+   simd::UnpackOneRowOfRGBA4444LittleToRGBA8(source, destination,
                                              pixels_per_row);
  #endif
-@@ -718,7 +718,7 @@ void Pack<WebGLImageConversion::kDataFor
+@@ -719,7 +719,7 @@ void Pack<WebGLImageConversion::kDataFor
            uint8_t>(const uint8_t* source,
                     uint8_t* destination,
                     unsigned pixels_per_row) {
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
-   SIMD::PackOneRowOfRGBA8LittleToR8(source, destination, pixels_per_row);
+   simd::PackOneRowOfRGBA8LittleToR8(source, destination, pixels_per_row);
  #endif
  #if HAVE_MIPS_MSA_INTRINSICS
-@@ -775,7 +775,7 @@ void Pack<WebGLImageConversion::kDataFor
+@@ -776,7 +776,7 @@ void Pack<WebGLImageConversion::kDataFor
            uint8_t>(const uint8_t* source,
                     uint8_t* destination,
                     unsigned pixels_per_row) {
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
-   SIMD::PackOneRowOfRGBA8LittleToRA8(source, destination, pixels_per_row);
+   simd::PackOneRowOfRGBA8LittleToRA8(source, destination, pixels_per_row);
  #endif
  #if HAVE_MIPS_MSA_INTRINSICS
-@@ -887,7 +887,7 @@ void Pack<WebGLImageConversion::kDataFor
+@@ -888,7 +888,7 @@ void Pack<WebGLImageConversion::kDataFor
            uint8_t>(const uint8_t* source,
                     uint8_t* destination,
                     unsigned pixels_per_row) {
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
-   SIMD::PackOneRowOfRGBA8LittleToRGBA8(source, destination, pixels_per_row);
+   simd::PackOneRowOfRGBA8LittleToRGBA8(source, destination, pixels_per_row);
  #endif
  #if HAVE_MIPS_MSA_INTRINSICS
---- a/third_party/WebKit/Source/modules/webaudio/AudioParamTimeline.cpp
-+++ b/third_party/WebKit/Source/modules/webaudio/AudioParamTimeline.cpp
+--- a/third_party/blink/renderer/modules/webaudio/audio_param_timeline.cc
++++ b/third_party/blink/renderer/modules/webaudio/audio_param_timeline.cc
 @@ -39,7 +39,7 @@
- #include "platform/wtf/CPU.h"
- #include "platform/wtf/MathExtras.h"
+ #include "third_party/blink/renderer/platform/wtf/cpu.h"
+ #include "third_party/blink/renderer/platform/wtf/math_extras.h"
  
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
  #include <emmintrin.h>
  #endif
  
-@@ -1333,7 +1333,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1401,7 +1401,7 @@ std::tuple<size_t, float, unsigned> Audi
      size_t current_frame,
      float value,
      unsigned write_index) {
@@ -320,7 +291,7 @@ debian-bug: http://bugs.debian.org/750361
    auto number_of_values = current_state.number_of_values;
  #endif
    auto fill_to_frame = current_state.fill_to_frame;
-@@ -1346,7 +1346,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1414,7 +1414,7 @@ std::tuple<size_t, float, unsigned> Audi
    double delta_time = time2 - time1;
    float k = delta_time > 0 ? 1 / delta_time : 0;
    const float value_delta = value2 - value1;
@@ -329,7 +300,7 @@ debian-bug: http://bugs.debian.org/750361
    if (fill_to_frame > write_index) {
      // Minimize in-loop operations. Calculate starting value and increment.
      // Next step: value += inc.
-@@ -1474,7 +1474,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1542,7 +1542,7 @@ std::tuple<size_t, float, unsigned> Audi
      size_t current_frame,
      float value,
      unsigned write_index) {
@@ -338,7 +309,7 @@ debian-bug: http://bugs.debian.org/750361
    auto number_of_values = current_state.number_of_values;
  #endif
    auto fill_to_frame = current_state.fill_to_frame;
-@@ -1524,7 +1524,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1593,7 +1593,7 @@ std::tuple<size_t, float, unsigned> Audi
      for (; write_index < fill_to_frame; ++write_index)
        values[write_index] = target;
    } else {
@@ -347,7 +318,7 @@ debian-bug: http://bugs.debian.org/750361
      if (fill_to_frame > write_index) {
        // Resolve recursion by expanding constants to achieve a 4-step
        // loop unrolling.
-@@ -1658,7 +1658,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1727,7 +1727,7 @@ std::tuple<size_t, float, unsigned> Audi
    // Oversampled curve data can be provided if sharp discontinuities are
    // desired.
    unsigned k = 0;

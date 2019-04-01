@@ -1,7 +1,7 @@
 --- a/build/config/allocator.gni
 +++ b/build/config/allocator.gni
-@@ -10,7 +10,7 @@ if (is_android || current_cpu == "mipsel
-     (is_linux && target_cpu == "arm64")) {
+@@ -9,7 +9,7 @@ if (is_android || is_mac || is_ios || is
+     is_msan || is_win || is_fuchsia || (is_linux && target_cpu == "arm64")) {
    _default_allocator = "none"
  } else {
 -  _default_allocator = "tcmalloc"
@@ -9,7 +9,7 @@
  }
  
  # The debug CRT on Windows has some debug features that are incompatible with
-@@ -19,7 +19,7 @@ if (is_android || current_cpu == "mipsel
+@@ -18,7 +18,7 @@ if (is_android || is_mac || is_ios || is
  if ((is_linux || is_android || is_mac ||
       (is_win && !is_component_build && !is_debug)) && !is_asan && !is_lsan &&
      !is_tsan && !is_msan) {

@@ -8,11 +8,10 @@
  import("//build/config/ui.gni")
  
  group("linux") {
-@@ -113,14 +112,3 @@
- config("export_dynamic") {
+@@ -114,13 +113,4 @@
    ldflags = [ "-rdynamic" ]
  }
--
+ 
 -# MMAL ld flags
 -config("use_mmal") {
 -  if (is_linux && target_cpu == "arm") {
@@ -23,6 +22,7 @@
 -    ]
 -  }
 -}
++config("use_mmal") {}
 --- a/chrome/BUILD.gn
 +++ b/chrome/BUILD.gn
 @@ -28,6 +28,7 @@
@@ -33,11 +33,10 @@
  
  if (is_android) {
    import("//build/config/android/rules.gni")
-@@ -310,7 +311,11 @@
-         # Add pi link stuff
+@@ -311,6 +312,11 @@
          # * is there a better place?
          if (is_linux && target_cpu == "arm") {
--          configs += [ "//build/config/linux:use_mmal" ]
+           configs += [ "//build/config/linux:use_mmal" ]
 +          ldflags += [
 +            "-L$sysroot/opt/vc/lib",
 +            "-Wl,--rpath=/opt/vc/lib,--rpath-link=$sysroot/opt/vc/lib",
@@ -46,13 +45,3 @@
            if (symbol_level >= 2) {
              # For debug symbols!
              ldflags += [ "-Wl,--long-plt" ]
---- a/media/filters/BUILD.gn
-+++ b/media/filters/BUILD.gn
-@@ -133,7 +133,6 @@
-       "$target_sysroot/opt/vc/include/interface/vmcs_host/linux",
-     ]
- 
--    public_configs = [ "//build/config/linux:use_mmal" ]
-     public_deps += [ "//services/service_manager/zygote" ]
-   }
- 

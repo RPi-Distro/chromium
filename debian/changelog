@@ -1,3 +1,9 @@
+chromium-browser (74.0.3729.157-rpt2) buster; urgency=medium
+
+  * v74.0.3729.180_mmal_3_21.patch
+
+ -- Serge Schneider <serge@raspberrypi.org>  Wed, 12 Jun 2019 15:47:03 +0100
+
 chromium-browser (74.0.3729.157-rpt1) buster; urgency=medium
 
   * v74.0.3729.150_mmal_3.20.patch

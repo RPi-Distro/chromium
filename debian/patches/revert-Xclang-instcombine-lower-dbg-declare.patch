@@ -3,7 +3,7 @@ Description: revert of 074fa51f85b15ad2e2d6c804a03825d48dbeb063, which requires 
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -501,17 +501,6 @@ config("compiler") {
+@@ -489,17 +489,6 @@ config("compiler") {
      }
    }
  

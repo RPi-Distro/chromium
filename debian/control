@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XS-Testsuite: autopkgtest
-Vcs-Bzr: https://code.launchpad.net/~chromium-team/chromium-browser/xenial-stable
+Vcs-Bzr: https://code.launchpad.net/~chromium-team/chromium-browser/eoan-stable
 Homepage: https://chromium.googlesource.com/chromium/src/
 Build-Depends:
 	debhelper (>= 9),
@@ -14,8 +14,8 @@ Build-Depends:
 	quilt,
 	python,
 	bison,
-	clang-6.0,
-	llvm-6.0,
+	clang-9,
+	llvm-9,
 	default-jre-headless,
 	gperf,
 	libpulse-dev,
@@ -29,7 +29,6 @@ Build-Depends:
 	libxss-dev,
 	libgtk-3-dev,
 	libglib2.0-dev,
-	libgnome-keyring-dev,
 	libudev-dev,
 	libdrm-dev,
 	libcap-dev,

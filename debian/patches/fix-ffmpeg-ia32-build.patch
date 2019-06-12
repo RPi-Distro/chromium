@@ -3,7 +3,7 @@ Origin: https://chromium.googlesource.com/chromium/third_party/ffmpeg.git/+/5dcc
 
 --- a/third_party/ffmpeg/BUILD.gn
 +++ b/third_party/ffmpeg/BUILD.gn
-@@ -241,11 +241,9 @@ target(link_target_type, "ffmpeg_interna
+@@ -246,11 +246,9 @@ target(link_target_type, "ffmpeg_interna
    # Windows builds can't compile without EBP because we can't omit frame
    # pointers like we do on posix.
    if (target_cpu == "x86") {

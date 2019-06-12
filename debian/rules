@@ -74,6 +74,7 @@ common_defines+=\
 	use_gold=false \
 	use_libpci=true \
 	use_pulseaudio=true \
+	use_gnome_keyring=false \
 	use_sysroot=false \
 	use_system_harfbuzz=false \
 	use_system_libjpeg=false \
@@ -82,6 +83,7 @@ common_defines+=\
 	is_clang=true \
 	clang_base_path="/usr" \
 	clang_use_chrome_plugins=false \
+	use_custom_libcxx=false \
 	use_lld=false \
 	is_cfi=false \
 	use_thin_lto=false \
@@ -463,7 +465,7 @@ debian/chromium-browser.sh: debian/chromium-browser.sh.in
     $< > $@
 
 out/Release/gn:
-	CC=clang-6.0 CXX=clang++-6.0 AR=llvm-ar-6.0 tools/gn/bootstrap/bootstrap.py --verbose --no-rebuild --gn-gen-args '$(common_defines)'
+	CC=clang-9 CXX=clang++-9 tools/gn/bootstrap/bootstrap.py --verbose --no-rebuild --gn-gen-args '$(common_defines)'
 	echo built $@
 
 

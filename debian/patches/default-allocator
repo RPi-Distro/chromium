@@ -11,8 +11,8 @@
  # The debug CRT on Windows has some debug features that are incompatible with
 @@ -18,7 +18,7 @@ if (is_android || is_mac || is_ios || is
  if ((is_linux || is_android || is_mac ||
-      (is_win && !is_component_build && !is_debug)) && !is_asan && !is_lsan &&
-     !is_tsan && !is_msan) {
+      (is_win && !is_component_build && !is_debug)) && !is_asan && !is_hwasan &&
+     !is_lsan && !is_tsan && !is_msan) {
 -  _default_use_allocator_shim = true
 +  _default_use_allocator_shim = false
  } else {

@@ -1,9 +1,9 @@
-Description: partially revert changes in https://chromium.googlesource.com/chromium/src/+/40a8d84 that require a version of llvm-ar that's more recent than what is in xenial
+Description: partially revert changes in https://chromium.googlesource.com/chromium/src/+/40a8d84 that require a version of llvm-ar that's more recent than what is in eoan
 Author: Olivier Tilloy <olivier.tilloy@canonical.com>
 
 --- a/build/toolchain/gcc_toolchain.gni
 +++ b/build/toolchain/gcc_toolchain.gni
-@@ -348,7 +348,7 @@ template("gcc_toolchain") {
+@@ -377,7 +377,7 @@ template("gcc_toolchain") {
        } else {
          rspfile = "{{output}}.rsp"
          rspfile_content = "{{inputs}}"
@@ -14,11 +14,11 @@ Author: Olivier Tilloy <olivier.tilloy@canonical.com>
        # Remove the output file first so that ar doesn't try to modify the
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1673,7 +1673,6 @@ config("thin_archive") {
+@@ -1697,7 +1697,6 @@ config("thin_archive") {
    # have a "thin archive" mode (it does accept -T, but it means truncating
    # archive names to 16 characters, which is not what we want).
    if ((is_posix && !is_nacl && !is_mac && !is_ios) || is_fuchsia) {
 -    arflags = [ "-T" ]
+   } else if (is_win && use_lld) {
+     arflags = [ "/llvmlibthin" ]
    }
- }
- 

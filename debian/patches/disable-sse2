@@ -282,7 +282,7 @@ debian-bug: http://bugs.debian.org/750361
  #include <emmintrin.h>
  #endif
  
-@@ -1401,7 +1401,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1402,7 +1402,7 @@ std::tuple<size_t, float, unsigned> Audi
      size_t current_frame,
      float value,
      unsigned write_index) {
@@ -291,16 +291,16 @@ debian-bug: http://bugs.debian.org/750361
    auto number_of_values = current_state.number_of_values;
  #endif
    auto fill_to_frame = current_state.fill_to_frame;
-@@ -1414,7 +1414,7 @@ std::tuple<size_t, float, unsigned> Audi
-   double delta_time = time2 - time1;
-   float k = delta_time > 0 ? 1 / delta_time : 0;
+@@ -1420,7 +1420,7 @@ std::tuple<size_t, float, unsigned> Audi
+   float k =
+       delta_time <= std::numeric_limits<float>::min() ? 0 : 1 / delta_time;
    const float value_delta = value2 - value1;
 -#if defined(ARCH_CPU_X86_FAMILY)
 +#if defined(ARCH_CPU_X86_64)
    if (fill_to_frame > write_index) {
      // Minimize in-loop operations. Calculate starting value and increment.
      // Next step: value += inc.
-@@ -1542,7 +1542,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1548,7 +1548,7 @@ std::tuple<size_t, float, unsigned> Audi
      size_t current_frame,
      float value,
      unsigned write_index) {
@@ -309,7 +309,7 @@ debian-bug: http://bugs.debian.org/750361
    auto number_of_values = current_state.number_of_values;
  #endif
    auto fill_to_frame = current_state.fill_to_frame;
-@@ -1593,7 +1593,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1599,7 +1599,7 @@ std::tuple<size_t, float, unsigned> Audi
      for (; write_index < fill_to_frame; ++write_index)
        values[write_index] = target;
    } else {
@@ -318,7 +318,7 @@ debian-bug: http://bugs.debian.org/750361
      if (fill_to_frame > write_index) {
        // Resolve recursion by expanding constants to achieve a 4-step
        // loop unrolling.
-@@ -1727,7 +1727,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1733,7 +1733,7 @@ std::tuple<size_t, float, unsigned> Audi
    // Oversampled curve data can be provided if sharp discontinuities are
    // desired.
    unsigned k = 0;

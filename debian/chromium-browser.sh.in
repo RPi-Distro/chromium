@@ -183,6 +183,12 @@ discover_registration ${LIBDIR}/pepper/pepper-flash.info ppapi-flash && echo "Pe
 
 CHROMIUM_FLAGS="${CHROMIUM_FLAGS} ${PLUGIN_PARAMETERS}"
 
+# Video playback does not work on non-pi 4 models running with FKMS enabled.
+# Work around this with --disable-gpu until it's fixed.
+if grep -q okay /proc/device-tree/soc/firmwarekms@7e600000/status 2> /dev/null; then
+  CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --disable-gpu"
+fi
+
 if [ $want_verbose -eq 1 ] ; then
   CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --enable-logging=stderr --v=${want_verbose}"
 fi

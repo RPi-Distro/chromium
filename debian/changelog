@@ -1,6 +1,7 @@
 chromium-browser (74.0.3729.157-rpt2) buster; urgency=medium
 
   * v74.0.3729.180_mmal_3_21.patch
+  * Temporarily --disable-gpu on non-pi4 models running FKMS
 
  -- Serge Schneider <serge@raspberrypi.org>  Wed, 12 Jun 2019 15:47:03 +0100
 

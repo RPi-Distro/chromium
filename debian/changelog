@@ -1,3 +1,9 @@
+chromium-browser (74.0.3729.157-rpt4) UNRELEASED; urgency=medium
+
+  * Remove FKMS check
+
+ -- Serge Schneider <serge@raspberrypi.org>  Mon, 08 Jul 2019 13:54:25 +0100
+
 chromium-browser (74.0.3729.157-rpt3) buster; urgency=medium
 
   * Fix FKMS check

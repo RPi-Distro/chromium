@@ -19,7 +19,7 @@ fix-extra-arflags.patch
 gn-no-last-commit-position.patch
 gn-add-missing-arm-impl-files.patch
 flashplayer-syscall-restrictions-update.patch
-v74.0.3729.180_mmal_3_21.patch
+v74.0.3729.182_mmal_3_22.patch
 ffmpeg_chromium.patch
 v8_filename.patch
 use-clang-versioned.patch

@@ -1,6 +1,7 @@
-chromium-browser (74.0.3729.157-rpt4) UNRELEASED; urgency=medium
+chromium-browser (74.0.3729.157-rpt4) buster; urgency=medium
 
   * Remove FKMS check
+  * v74.0.3729.182_mmal_3_22.patch
 
  -- Serge Schneider <serge@raspberrypi.org>  Mon, 08 Jul 2019 13:54:25 +0100
 

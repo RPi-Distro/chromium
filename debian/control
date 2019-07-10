@@ -58,9 +58,10 @@ Recommends: chromium-browser-l10n
 Suggests: webaccounts-chromium-extension,
 	unity-chromium-extension,
 	adobe-flashplugin
-Provides: www-browser, chromium-browser-inspector, exec<usr/bin/chromium-browser>, mime<text/html>, mime<x-scheme-handler/http>, mime<x-scheme-handler/https>
-Replaces: chromium-browser-inspector
-Conflicts: chromium-browser-inspector
+Provides: www-browser, chromium-browser-inspector, exec<usr/bin/chromium-browser>, mime<text/html>, mime<x-scheme-handler/http>, mime<x-scheme-handler/https>,
+         chromium
+Replaces: chromium-browser-inspector, chromium
+Conflicts: chromium-browser-inspector, chromium
 Description: Chromium web browser, open-source version of Chrome
  An open-source browser project that aims to build a safer, faster, and more
  stable way for all Internet users to experience the web.

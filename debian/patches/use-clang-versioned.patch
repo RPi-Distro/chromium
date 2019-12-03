@@ -3,7 +3,7 @@ Author: Olivier Tilloy <olivier.tilloy@canonical.com>
 
 --- a/build/toolchain/gcc_toolchain.gni
 +++ b/build/toolchain/gcc_toolchain.gni
-@@ -637,11 +637,11 @@
+@@ -590,11 +590,11 @@
  
    gcc_toolchain(target_name) {
      prefix = rebase_path("$clang_base_path/bin", root_build_dir)

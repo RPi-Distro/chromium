@@ -265,7 +265,7 @@ if __name__ == '__main__':
         ("row-streams.readable", "Yes"),
         ("row-streams.writeable", "No"),
         ("row-rtc.webrtc", "Yes"),
-        ("row-rtc.objectrtc", "No"),
+        ("row-rtc.objectrtc", "Yes"),
         ("row-rtc.datachannel", "Yes"),
         ("row-media.getUserMedia", "Yes"),
         ("row-media.getDisplayMedia", "Yes"),

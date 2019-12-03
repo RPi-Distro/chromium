@@ -61,7 +61,7 @@ common_defines+=\
 	is_debug=false \
 	is_desktop_linux=true \
 	is_official_build=true \
-	remove_webcore_debug_symbols=true \
+	blink_symbol_level=0 \
 	symbol_level=1 \
 	treat_warnings_as_errors=false \
 	use_allocator="none" \
@@ -509,6 +509,7 @@ RENAMED_FILE += s,^usr/lib/chromium-browser/chrome$$,usr/lib/chromium-browser/ch
 RENAMED_FILE += s,^usr/lib/chromium-browser/chrome-v7$$,usr/lib/chromium-browser/chromium-browser-v7,
 #  chromedriver is moved to /usr/bin (LP: #1667208)
 RENAMED_FILE += s,^usr/lib/chromium-browser/chromedriver$$,usr/bin/chromedriver,
+
 
 ###############################################################################################
 # Translations

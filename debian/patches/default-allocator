@@ -1,6 +1,6 @@
---- a/build/config/allocator.gni
-+++ b/build/config/allocator.gni
-@@ -9,7 +9,7 @@ if (is_android || is_mac || is_ios || is
+--- a/base/allocator/allocator.gni
++++ b/base/allocator/allocator.gni
+@@ -9,7 +9,7 @@
      is_msan || is_win || is_fuchsia || (is_linux && target_cpu == "arm64")) {
    _default_allocator = "none"
  } else {
@@ -9,7 +9,7 @@
  }
  
  # The debug CRT on Windows has some debug features that are incompatible with
-@@ -18,7 +18,7 @@ if (is_android || is_mac || is_ios || is
+@@ -18,7 +18,7 @@
  if ((is_linux || is_android || is_mac ||
       (is_win && !is_component_build && !is_debug)) && !is_asan && !is_hwasan &&
      !is_lsan && !is_tsan && !is_msan) {

@@ -9,7 +9,7 @@
  #define HAVE_ARMV8 0
  #define HAVE_NEON 0
  #define HAVE_VFP 1
-@@ -85,7 +85,7 @@
+@@ -86,7 +86,7 @@
  #define HAVE_MMI 0
  #define HAVE_ARMV5TE_EXTERNAL 1
  #define HAVE_ARMV6_EXTERNAL 1
@@ -18,7 +18,7 @@
  #define HAVE_ARMV8_EXTERNAL 0
  #define HAVE_NEON_EXTERNAL 0
  #define HAVE_VFP_EXTERNAL 1
-@@ -130,7 +130,7 @@
+@@ -132,7 +132,7 @@
  #define HAVE_MMI_EXTERNAL 0
  #define HAVE_ARMV5TE_INLINE 1
  #define HAVE_ARMV6_INLINE 1
@@ -27,7 +27,7 @@
  #define HAVE_ARMV8_INLINE 0
  #define HAVE_NEON_INLINE 0
  #define HAVE_VFP_INLINE 1
-@@ -572,7 +572,7 @@
+@@ -577,7 +577,7 @@
  #define CONFIG_NEON_CLOBBER_TEST 0
  #define CONFIG_OSSFUZZ 0
  #define CONFIG_PIC 1

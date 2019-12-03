@@ -6,7 +6,7 @@ Author: Olivier Tilloy <olivier.tilloy@canonical.com>
 
 --- a/third_party/skia/src/core/SkCpu.cpp
 +++ b/third_party/skia/src/core/SkCpu.cpp
-@@ -72,6 +72,9 @@
+@@ -74,6 +74,9 @@
  
  #elif defined(SK_CPU_ARM64) && __has_include(<sys/auxv.h>)
      #include <sys/auxv.h>

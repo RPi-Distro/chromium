@@ -13,7 +13,7 @@ debian-bug: http://bugs.debian.org/750361
  #include <xmmintrin.h>
  #define CONVOLVE_FUNC Convolve_SSE
  #elif defined(ARCH_CPU_ARM_FAMILY) && defined(USE_NEON)
-@@ -333,7 +333,7 @@ float SincResampler::Convolve_C(const fl
+@@ -333,7 +333,7 @@
        kernel_interpolation_factor * sum2);
  }
  
@@ -24,7 +24,7 @@ debian-bug: http://bugs.debian.org/750361
                                    double kernel_interpolation_factor) {
 --- a/media/base/sinc_resampler.h
 +++ b/media/base/sinc_resampler.h
-@@ -98,7 +98,7 @@ class MEDIA_EXPORT SincResampler {
+@@ -98,7 +98,7 @@
    // ARM, NEON support is chosen at compile time based on compilation flags.
    static float Convolve_C(const float* input_ptr, const float* k1,
                            const float* k2, double kernel_interpolation_factor);
@@ -35,7 +35,7 @@ debian-bug: http://bugs.debian.org/750361
                              double kernel_interpolation_factor);
 --- a/media/base/sinc_resampler_perftest.cc
 +++ b/media/base/sinc_resampler_perftest.cc
-@@ -19,7 +19,7 @@ static const double kSampleRateRatio = 1
+@@ -19,7 +19,7 @@
  static const double kKernelInterpolationFactor = 0.5;
  
  // Define platform independent function name for Convolve* tests.
@@ -46,7 +46,7 @@ debian-bug: http://bugs.debian.org/750361
  #define CONVOLVE_FUNC Convolve_NEON
 --- a/media/base/sinc_resampler_unittest.cc
 +++ b/media/base/sinc_resampler_unittest.cc
-@@ -150,7 +150,7 @@ TEST(SincResamplerTest, DISABLED_SetRati
+@@ -150,7 +150,7 @@
  
  
  // Define platform independent function name for Convolve* tests.
@@ -66,7 +66,7 @@ debian-bug: http://bugs.debian.org/750361
  #include <xmmintrin.h>
  // Don't use custom SSE versions where the auto-vectorized C version performs
  // better, which is anywhere clang is used.
-@@ -91,7 +91,7 @@ std::pair<float, float> EWMAAndMaxPower_
+@@ -84,7 +84,7 @@
    return result;
  }
  
@@ -77,7 +77,7 @@ debian-bug: http://bugs.debian.org/750361
    const int last_index = len - rem;
 --- a/media/base/vector_math_perftest.cc
 +++ b/media/base/vector_math_perftest.cc
-@@ -83,7 +83,7 @@ class VectorMathPerfTest : public testin
+@@ -83,7 +83,7 @@
  };
  
  // Define platform dependent function names for SIMD optimized methods.
@@ -88,7 +88,7 @@ debian-bug: http://bugs.debian.org/750361
  #define EWMAAndMaxPower_FUNC EWMAAndMaxPower_SSE
 --- a/media/base/vector_math_testing.h
 +++ b/media/base/vector_math_testing.h
-@@ -28,7 +28,7 @@ MEDIA_SHMEM_EXPORT std::pair<float, floa
+@@ -28,7 +28,7 @@
      int len,
      float smoothing_factor);
  
@@ -99,7 +99,7 @@ debian-bug: http://bugs.debian.org/750361
                                   int len,
 --- a/media/base/vector_math_unittest.cc
 +++ b/media/base/vector_math_unittest.cc
-@@ -73,7 +73,7 @@ TEST_F(VectorMathTest, FMAC) {
+@@ -73,7 +73,7 @@
      VerifyOutput(kResult);
    }
  
@@ -108,7 +108,7 @@ debian-bug: http://bugs.debian.org/750361
    {
      SCOPED_TRACE("FMAC_SSE");
      FillTestVectors(kInputFillValue, kOutputFillValue);
-@@ -114,7 +114,7 @@ TEST_F(VectorMathTest, FMUL) {
+@@ -114,7 +114,7 @@
      VerifyOutput(kResult);
    }
  
@@ -117,7 +117,7 @@ debian-bug: http://bugs.debian.org/750361
    {
      SCOPED_TRACE("FMUL_SSE");
      FillTestVectors(kInputFillValue, kOutputFillValue);
-@@ -222,7 +222,7 @@ class EWMATestScenario {
+@@ -212,7 +212,7 @@
        EXPECT_NEAR(expected_max_, result.second, 0.0000001f);
      }
  
@@ -158,7 +158,7 @@ debian-bug: http://bugs.debian.org/750361
  #include <emmintrin.h>
  #endif
  
-@@ -277,7 +277,7 @@ void SincResampler::Process(AudioSourceP
+@@ -273,7 +273,7 @@
        {
          float input;
  
@@ -171,23 +171,23 @@ debian-bug: http://bugs.debian.org/750361
 +++ b/third_party/blink/renderer/platform/audio/vector_math.cc
 @@ -37,7 +37,7 @@
  #include "third_party/blink/renderer/platform/audio/cpu/arm/vector_math_neon.h"
- #elif HAVE_MIPS_MSA_INTRINSICS
+ #elif defined(HAVE_MIPS_MSA_INTRINSICS)
  #include "third_party/blink/renderer/platform/audio/cpu/mips/vector_math_msa.h"
 -#elif defined(ARCH_CPU_X86_FAMILY)
 +#elif defined(ARCH_CPU_X86_64)
  #include "third_party/blink/renderer/platform/audio/cpu/x86/vector_math_x86.h"
  #else
  #include "third_party/blink/renderer/platform/audio/vector_math_scalar.h"
-@@ -54,7 +54,7 @@ namespace impl = mac;
+@@ -54,7 +54,7 @@
  namespace impl = neon;
- #elif HAVE_MIPS_MSA_INTRINSICS
+ #elif defined(HAVE_MIPS_MSA_INTRINSICS)
  namespace impl = msa;
 -#elif defined(ARCH_CPU_X86_FAMILY)
 +#elif defined(ARCH_CPU_X86_64)
  namespace impl = x86;
  #else
  namespace impl = scalar;
-@@ -70,7 +70,7 @@ void PrepareFilterForConv(const float* f
+@@ -70,7 +70,7 @@
    // vectors are not implemented by all implementations.
    DCHECK_EQ(-1, filter_stride);
    DCHECK(prepared_filter);
@@ -207,7 +207,7 @@ debian-bug: http://bugs.debian.org/750361
  #include <emmintrin.h>
  
  namespace blink {
-@@ -195,6 +195,6 @@ ALWAYS_INLINE void PackOneRowOfRGBA8Litt
+@@ -195,6 +195,6 @@
  }  // namespace simd
  }  // namespace blink
  
@@ -217,7 +217,7 @@ debian-bug: http://bugs.debian.org/750361
  #endif  // THIRD_PARTY_BLINK_RENDERER_PLATFORM_GRAPHICS_CPU_X86_WEBGL_IMAGE_CONVERSION_SSE_H_
 --- a/third_party/blink/renderer/platform/graphics/gpu/webgl_image_conversion.cc
 +++ b/third_party/blink/renderer/platform/graphics/gpu/webgl_image_conversion.cc
-@@ -445,7 +445,7 @@ void Unpack<WebGLImageConversion::kDataF
+@@ -447,7 +447,7 @@
    const uint32_t* source32 = reinterpret_cast_ptr<const uint32_t*>(source);
    uint32_t* destination32 = reinterpret_cast_ptr<uint32_t*>(destination);
  
@@ -226,7 +226,7 @@ debian-bug: http://bugs.debian.org/750361
    simd::UnpackOneRowOfBGRA8LittleToRGBA8(source32, destination32,
                                           pixels_per_row);
  #endif
-@@ -473,7 +473,7 @@ void Unpack<WebGLImageConversion::kDataF
+@@ -475,7 +475,7 @@
      const uint16_t* source,
      uint8_t* destination,
      unsigned pixels_per_row) {
@@ -235,7 +235,7 @@ debian-bug: http://bugs.debian.org/750361
    simd::UnpackOneRowOfRGBA5551LittleToRGBA8(source, destination,
                                              pixels_per_row);
  #endif
-@@ -503,7 +503,7 @@ void Unpack<WebGLImageConversion::kDataF
+@@ -505,7 +505,7 @@
      const uint16_t* source,
      uint8_t* destination,
      unsigned pixels_per_row) {
@@ -244,7 +244,7 @@ debian-bug: http://bugs.debian.org/750361
    simd::UnpackOneRowOfRGBA4444LittleToRGBA8(source, destination,
                                              pixels_per_row);
  #endif
-@@ -719,7 +719,7 @@ void Pack<WebGLImageConversion::kDataFor
+@@ -721,7 +721,7 @@
            uint8_t>(const uint8_t* source,
                     uint8_t* destination,
                     unsigned pixels_per_row) {
@@ -252,8 +252,8 @@ debian-bug: http://bugs.debian.org/750361
 +#if defined(ARCH_CPU_X86_64)
    simd::PackOneRowOfRGBA8LittleToR8(source, destination, pixels_per_row);
  #endif
- #if HAVE_MIPS_MSA_INTRINSICS
-@@ -776,7 +776,7 @@ void Pack<WebGLImageConversion::kDataFor
+ #if defined(HAVE_MIPS_MSA_INTRINSICS)
+@@ -778,7 +778,7 @@
            uint8_t>(const uint8_t* source,
                     uint8_t* destination,
                     unsigned pixels_per_row) {
@@ -261,8 +261,8 @@ debian-bug: http://bugs.debian.org/750361
 +#if defined(ARCH_CPU_X86_64)
    simd::PackOneRowOfRGBA8LittleToRA8(source, destination, pixels_per_row);
  #endif
- #if HAVE_MIPS_MSA_INTRINSICS
-@@ -888,7 +888,7 @@ void Pack<WebGLImageConversion::kDataFor
+ #if defined(HAVE_MIPS_MSA_INTRINSICS)
+@@ -890,7 +890,7 @@
            uint8_t>(const uint8_t* source,
                     uint8_t* destination,
                     unsigned pixels_per_row) {
@@ -270,11 +270,11 @@ debian-bug: http://bugs.debian.org/750361
 +#if defined(ARCH_CPU_X86_64)
    simd::PackOneRowOfRGBA8LittleToRGBA8(source, destination, pixels_per_row);
  #endif
- #if HAVE_MIPS_MSA_INTRINSICS
+ #if defined(HAVE_MIPS_MSA_INTRINSICS)
 --- a/third_party/blink/renderer/modules/webaudio/audio_param_timeline.cc
 +++ b/third_party/blink/renderer/modules/webaudio/audio_param_timeline.cc
-@@ -39,7 +39,7 @@
- #include "third_party/blink/renderer/platform/wtf/cpu.h"
+@@ -38,7 +38,7 @@
+ #include "third_party/blink/renderer/platform/bindings/exception_state.h"
  #include "third_party/blink/renderer/platform/wtf/math_extras.h"
  
 -#if defined(ARCH_CPU_X86_FAMILY)
@@ -282,7 +282,7 @@ debian-bug: http://bugs.debian.org/750361
  #include <emmintrin.h>
  #endif
  
-@@ -1402,7 +1402,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1406,7 +1406,7 @@
      size_t current_frame,
      float value,
      unsigned write_index) {
@@ -291,7 +291,7 @@ debian-bug: http://bugs.debian.org/750361
    auto number_of_values = current_state.number_of_values;
  #endif
    auto fill_to_frame = current_state.fill_to_frame;
-@@ -1420,7 +1420,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1424,7 +1424,7 @@
    float k =
        delta_time <= std::numeric_limits<float>::min() ? 0 : 1 / delta_time;
    const float value_delta = value2 - value1;
@@ -300,7 +300,7 @@ debian-bug: http://bugs.debian.org/750361
    if (fill_to_frame > write_index) {
      // Minimize in-loop operations. Calculate starting value and increment.
      // Next step: value += inc.
-@@ -1548,7 +1548,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1552,7 +1552,7 @@
      size_t current_frame,
      float value,
      unsigned write_index) {
@@ -309,7 +309,7 @@ debian-bug: http://bugs.debian.org/750361
    auto number_of_values = current_state.number_of_values;
  #endif
    auto fill_to_frame = current_state.fill_to_frame;
-@@ -1599,7 +1599,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1604,7 +1604,7 @@
      for (; write_index < fill_to_frame; ++write_index)
        values[write_index] = target;
    } else {
@@ -318,7 +318,7 @@ debian-bug: http://bugs.debian.org/750361
      if (fill_to_frame > write_index) {
        // Resolve recursion by expanding constants to achieve a 4-step
        // loop unrolling.
-@@ -1733,7 +1733,7 @@ std::tuple<size_t, float, unsigned> Audi
+@@ -1738,7 +1738,7 @@
    // Oversampled curve data can be provided if sharp discontinuities are
    // desired.
    unsigned k = 0;

@@ -25,7 +25,7 @@
 +config("use_mmal") {}
 --- a/chrome/BUILD.gn
 +++ b/chrome/BUILD.gn
-@@ -28,6 +28,7 @@
+@@ -26,6 +26,7 @@
  import("//tools/v8_context_snapshot/v8_context_snapshot.gni")
  import("//ui/gl/features.gni")
  import("//v8/gni/v8.gni")
@@ -33,7 +33,7 @@
  
  if (is_android) {
    import("//build/config/android/rules.gni")
-@@ -311,6 +312,11 @@
+@@ -313,6 +314,11 @@
          # * is there a better place?
          if (is_linux && target_cpu == "arm") {
            configs += [ "//build/config/linux:use_mmal" ]

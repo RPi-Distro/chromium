@@ -10,7 +10,7 @@ if __name__ == '__main__':
     options.binary_location = "/usr/bin/chromium-browser"
     options.add_argument("headless")
     driver = webdriver.Chrome(chrome_options=options)
-    version = driver.capabilities['version']
+    version = driver.capabilities['browserVersion']
 
     package = apt.Cache()['chromium-browser']
     assert package.installed.version.split('-')[0] == version

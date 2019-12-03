@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XS-Testsuite: autopkgtest
-Vcs-Bzr: https://code.launchpad.net/~chromium-team/chromium-browser/eoan-stable
+Vcs-Bzr: https://code.launchpad.net/~chromium-team/chromium-browser/disco-stable
 Homepage: https://chromium.googlesource.com/chromium/src/
 Build-Depends:
 	debhelper (>= 9),

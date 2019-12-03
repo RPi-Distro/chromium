@@ -1,3 +1,10 @@
+chromium-browser (78.0.3904.108-rpt1) buster; urgency=medium
+
+  * Merge in 78.0.3904.108-0ubuntu0.19.04.1
+  * v78.0.3904.126_mmal_3_23.patch
+
+ -- Serge Schneider <serge@raspberrypi.org>  Tue, 03 Dec 2019 20:31:08 +0000
+
 chromium-browser (74.0.3729.157-rpt5) buster; urgency=medium
 
   * Add 'chromium' to Provides, Replaces and Conflicts control fields

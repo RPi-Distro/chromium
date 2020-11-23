@@ -1,0 +1,126 @@
+--- a/src/pi-util/gngen.py
++++ b/src/pi-util/gngen.py
+@@ -2,7 +2,7 @@
+ 
+ import os, ast, fileinput, subprocess, sys
+ 
+-def docopy(name, vars, is_debug=False, is_ozone=False):
++def docopy(name, vars, is_debug=False, is_ozone=False, use_lld=True, extra_codecs=True):
+     dir_suffix = ""
+     deb_str = "false"
+ 
+@@ -19,6 +19,8 @@ def docopy(name, vars, is_debug=False, i
+         deb_str = "false"
+         dir_suffix = dir_suffix + "-rel"
+ 
++    if not extra_codecs:
++        dir_suffix = dir_suffix + "-std"
+ 
+     dest_dir = os.path.join("out", name + dir_suffix)
+     src_file = os.path.join("pi-util", "defargs_" + name + ".gn")
+@@ -36,20 +38,33 @@ def docopy(name, vars, is_debug=False, i
+         dargs.write(line)
+ 
+     dargs.write('# -- created by ' + sys.argv[0] + '\n')
++    dargs.write('cc_wrapper = "ccache"\n')
+     dargs.write('is_debug = ' + deb_str + '\n')
+     dargs.write('use_ozone = ' + ozone_str + '\n')
+     if is_ozone:
+         dargs.write('ozone_platform_x11 = true\n')
++    if not use_lld:
++        dargs.write('use_lld = false\n')
++    if extra_codecs:
++        dargs.write('ffmpeg_branding = "Chrome"\n')
++        dargs.write('proprietary_codecs = true\n')
++    else:
++        dargs.write('ffmpeg_branding = "Chromium"\n')
++        dargs.write('proprietary_codecs = false\n')
++
+     dargs.write('target_sysroot = "' + vars["target_sysroot"] + '"\n')
+     dargs.write('google_api_key = "' + vars["google_api_key"] + '"\n')
+     dargs.write('google_default_client_id = "' + vars["google_default_client_id"] + '"\n')
+     dargs.write('google_default_client_secret = "' + vars["google_default_client_secret"] + '"\n')
+ 
++    dargs.write('enable_nacl = false\n')
++    dargs.write('enable_widevine = true\n')
++    dargs.write('blink_symbol_level = 0\n')
++    dargs.write('symbol_level = 1\n')
+     dargs.close()
+ 
+     subprocess.check_call(["gn", "gen", dest_dir])
+ 
+-
+ if __name__ == '__main__':
+     gyp_vars = {}
+     gypi = os.path.join(os.environ["HOME"], ".gyp", "include.gypi")
+@@ -59,11 +74,14 @@ if __name__ == '__main__':
+         gyp_vars = ast.literal_eval(gyps)["variables"]
+ 
+     gyp_vars["target_sysroot"] = os.path.abspath("build/linux/raspian_stretch_pi1-sysroot")
++    gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_buster_arm-sysroot")
+ 
+-    docopy("armv6", gyp_vars)
+-    docopy("armv7", gyp_vars)
+-    docopy("armv7", gyp_vars, is_debug=True)
+-    docopy("armv7", gyp_vars, is_ozone=True)
++    docopy("armv6", gyp_vars, use_lld=False)
++    docopy("armv6", gyp_vars, extra_codecs=False)
++    docopy("armv7", gyp_vars, use_lld=False)
++    docopy("armv7", gyp_vars, extra_codecs=False)
++    #docopy("armv7", gyp_vars, is_debug=True)
++    #docopy("armv7", gyp_vars, is_ozone=True)
+ 
+ 
+ 
+--- a/src/pi-util/defargs_armv7.gn
++++ b/src/pi-util/defargs_armv7.gn
+@@ -13,12 +13,13 @@ arm_optionally_use_neon = false
+ arm_version = 7
+ arm_arch = "armv7-a"
+ 
+-# Pulse deprecated on Pi
+-use_pulseaudio = false
++use_pulseaudio = true
+ #rtc_use_pipewire = false
+ 
+-#is_component_ffmpeg = true
++is_component_ffmpeg = true
+ # tcmalloc doesn't like armv6 by default
+ #use_allocator = "none"
+-ffmpeg_branding = "Chrome"
+-proprietary_codecs = true
++
++use_gnome_keyring = false
++
++is_official_build = true
+--- a/src/pi-util/defargs_armv6.gn
++++ b/src/pi-util/defargs_armv6.gn
+@@ -10,23 +10,21 @@ arm_use_thumb = false
+ arm_arch = "armv6z"
+ 
+ # Separate out so we can have both arm v6 & v7 versions
+-#is_component_ffmpeg = true
++is_component_ffmpeg = true
+ 
+ # tcmalloc doesn't like armv6 by default
+ #use_allocator = "none"
+ 
+-# Pulse deprecated on Pi
+-use_pulseaudio = false
++use_pulseaudio = true
+ rtc_use_pipewire = false
+ 
+ # Could use system libjpeg but go with chromiums version
+ # use_system_libjpeg = true
+ #use_libjpeg_turbo = true
+ 
+-# We want H.264 in ffmpeg
+-ffmpeg_branding = "Chrome"
+-proprietary_codecs = true
+-
+ # This crashes the compiler!
+ rtc_use_h264 = false
+ 
++use_gnome_keyring = false
++
++is_official_build = true

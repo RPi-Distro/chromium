@@ -1,8 +1,8 @@
 Description: Add Ubuntu id into search queries to get credit.
 Author: Chad Miller <chad.miller@canonical.com>
 
---- a/components/search_engines/prepopulated_engines.json
-+++ b/components/search_engines/prepopulated_engines.json
+--- a/src/components/search_engines/prepopulated_engines.json
++++ b/src/components/search_engines/prepopulated_engines.json
 @@ -95,7 +95,7 @@
        "name": "DuckDuckGo",
        "keyword": "duckduckgo.com",
@@ -12,9 +12,9 @@ Author: Chad Miller <chad.miller@canonical.com>
        "suggest_url": "https://duckduckgo.com/ac/?q={searchTerms}&type=list",
        "new_tab_url": "https://duckduckgo.com/chrome_newtab",
        "type": "SEARCH_ENGINE_DUCKDUCKGO",
---- a/components/search_engines/template_url_prepopulate_data.cc
-+++ b/components/search_engines/template_url_prepopulate_data.cc
-@@ -35,6 +35,7 @@
+--- a/src/components/search_engines/template_url_prepopulate_data.cc
++++ b/src/components/search_engines/template_url_prepopulate_data.cc
+@@ -35,6 +35,7 @@ const PrepopulatedEngine* const engines_
      &google,
      &bing,
      &yahoo,
@@ -22,11 +22,11 @@ Author: Chad Miller <chad.miller@canonical.com>
  };
  
  // Note, the below entries are sorted by country code, not the name in comment.
-@@ -295,6 +296,7 @@
-     &bing,
-     &yahoo_fr,
+@@ -604,6 +605,7 @@ const PrepopulatedEngine* const engines_
+     &duckduckgo,
+     &yahoo,
      &qwant,
 +    &duckduckgo,
  };
  
- // United Kingdom
+ // Moldova

@@ -1,3 +1,9 @@
+chromium-browser (84.0.4147.141-rpt1) buster; urgency=medium
+
+  * Update chromium to 84.0.4147.141
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 23 Nov 2020 15:36:17 +0000
+
 chromium-browser (78.0.3904.108-rpt1) buster; urgency=medium
 
   * Merge in 78.0.3904.108-0ubuntu0.19.04.1

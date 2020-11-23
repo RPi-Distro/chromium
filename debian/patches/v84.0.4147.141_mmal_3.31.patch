@@ -1,54 +1,18 @@
---- a/base/debug/stack_trace_posix.cc
-+++ b/base/debug/stack_trace_posix.cc
-@@ -834,7 +834,8 @@
+--- a/src/base/debug/stack_trace_posix.cc
++++ b/src/base/debug/stack_trace_posix.cc
+@@ -834,7 +834,9 @@ size_t CollectStackTrace(void** trace, s
    // NOTE: This code MUST be async-signal safe (it's used by in-process
    // stack dumping signal handler). NO malloc or stdio is allowed here.
  
--#if !defined(__UCLIBC__) && !defined(_AIX)
 +// ARM backtrace sometimes MAPERRs
-+#if !defined(__UCLIBC__) && !defined(_AIX) && !(defined(OS_LINUX) && defined(__arm__) && !defined(_DEBUG))
+ #if !defined(__UCLIBC__) && !defined(_AIX)
++//#if !defined(__UCLIBC__) && !defined(_AIX) && !(defined(OS_LINUX) && defined(__arm__) && !defined(_DEBUG))
    // Though the backtrace API man page does not list any possible negative
    // return values, we take no chance.
    return base::saturated_cast<size_t>(backtrace(trace, count));
---- a/base/memory/shared_memory_helper.cc
-+++ b/base/memory/shared_memory_helper.cc
-@@ -29,11 +29,33 @@
- using ScopedPathUnlinker =
-     ScopedGeneric<const FilePath*, ScopedPathUnlinkerTraits>;
- 
-+#if defined(OS_LINUX)
-+#include <sys/syscall.h>
-+static inline int sys_memfd_create(const char * name, unsigned int flags)
-+{
-+  return (int)syscall(SYS_memfd_create, name, flags);
-+}
-+#endif
-+
- #if !defined(OS_ANDROID)
- bool CreateAnonymousSharedMemory(const SharedMemoryCreateOptions& options,
-                                  ScopedFD* fd,
-                                  ScopedFD* readonly_fd,
-                                  FilePath* path) {
-+#if defined(OS_LINUX)
-+  // If we have a simple RW request
-+  if (!options.share_read_only) {
-+    // Can't reopen as readonly from just an fd - though I guess we could
-+    // just dup (or given ScopedFD simply copy) & ignore the fact it is RW
-+    fd->reset(sys_memfd_create("chrome_shmem", 0));
-+    if (!fd->is_valid()) {
-+      PLOG(WARNING) << "memfd_create failed";
-+      return false;
-+    }
-+    return true;
-+  }
-+#endif  // defined(OS_LINUX)
-+
-   // Q: Why not use the shm_open() etc. APIs?
-   // A: Because they're limited to 4mb on OS X.  FFFFFFFUUUUUUUUUUU
-   FilePath directory;
---- a/build/.gitignore
-+++ b/build/.gitignore
-@@ -19,6 +19,8 @@
+--- a/src/build/.gitignore
++++ b/src/build/.gitignore
+@@ -20,6 +20,8 @@ ciopfs
  /x64/
  /linux/debian_*-sysroot/
  /linux/ubuntu_*-sysroot/
@@ -57,25 +21,25 @@
  /ios_files
  /mac_files
  
---- a/build/config/linux/BUILD.gn
-+++ b/build/config/linux/BUILD.gn
-@@ -4,6 +4,7 @@
- 
+--- a/src/build/config/linux/BUILD.gn
++++ b/src/build/config/linux/BUILD.gn
+@@ -5,6 +5,7 @@
  import("//build/config/c++/c++.gni")
+ import("//build/config/chromeos/ui_mode.gni")
  import("//build/config/linux/pkg_config.gni")
 +import("//build/config/sysroot.gni")
  import("//build/config/ui.gni")
  
  group("linux") {
-@@ -38,6 +39,7 @@
-     "X11",
+@@ -41,6 +42,7 @@ config("x11") {
      "X11-xcb",
      "xcb",
+     "xcb-dri3",
 +    "xcb-shm",
      "Xcomposite",
      "Xcursor",
      "Xdamage",
-@@ -47,6 +49,9 @@
+@@ -50,6 +52,9 @@ config("x11") {
      "Xrender",
      "Xtst",
    ]
@@ -85,7 +49,7 @@
  }
  
  config("xcomposite") {
-@@ -108,3 +113,14 @@
+@@ -111,3 +116,14 @@ if (use_glib) {
  config("export_dynamic") {
    ldflags = [ "-rdynamic" ]
  }
@@ -100,9 +64,20 @@
 +    ]
 +  }
 +}
---- a/cc/layers/video_frame_provider.h
-+++ b/cc/layers/video_frame_provider.h
-@@ -97,6 +97,8 @@
+--- a/src/build/config/linux/atk/BUILD.gn
++++ b/src/build/config/linux/atk/BUILD.gn
+@@ -10,7 +10,7 @@ import("//build/config/ui.gni")
+ assert(!is_chromeos)
+ 
+ # These packages should _only_ be expected when building for a target.
+-assert(current_toolchain == default_toolchain)
++#assert(current_toolchain == default_toolchain)
+ 
+ if (use_atk) {
+   assert(use_glib, "use_atk=true requires that use_glib=true")
+--- a/src/cc/layers/video_frame_provider.h
++++ b/src/cc/layers/video_frame_provider.h
+@@ -97,6 +97,8 @@ class CC_EXPORT VideoFrameProvider {
    // the client.
    virtual base::TimeDelta GetPreferredRenderInterval() = 0;
  
@@ -111,9 +86,9 @@
   protected:
    virtual ~VideoFrameProvider() {}
  };
---- a/cc/mojo_embedder/async_layer_tree_frame_sink.h
-+++ b/cc/mojo_embedder/async_layer_tree_frame_sink.h
-@@ -138,6 +138,7 @@
+--- a/src/cc/mojo_embedder/async_layer_tree_frame_sink.h
++++ b/src/cc/mojo_embedder/async_layer_tree_frame_sink.h
+@@ -136,6 +136,7 @@ class CC_MOJO_EMBEDDER_EXPORT AsyncLayer
    void OnBeginFramePausedChanged(bool paused) override;
    void ReclaimResources(
        const std::vector<viz::ReturnedResource>& resources) override;
@@ -121,9 +96,9 @@
  
    // ExternalBeginFrameSourceClient implementation.
    void OnNeedsBeginFrames(bool needs_begin_frames) override;
---- a/cc/test/test_layer_tree_frame_sink.h
-+++ b/cc/test/test_layer_tree_frame_sink.h
-@@ -104,6 +104,7 @@
+--- a/src/cc/test/test_layer_tree_frame_sink.h
++++ b/src/cc/test/test_layer_tree_frame_sink.h
+@@ -104,6 +104,7 @@ class TestLayerTreeFrameSink : public La
                      const viz::FrameTimingDetailsMap& timing_details) override;
    void ReclaimResources(
        const std::vector<viz::ReturnedResource>& resources) override;
@@ -131,36 +106,36 @@
    void OnBeginFramePausedChanged(bool paused) override;
  
    // DisplayClient implementation.
---- a/chrome/BUILD.gn
-+++ b/chrome/BUILD.gn
-@@ -308,6 +308,16 @@
-             "//build/config/linux:xext",
-           ]
-         }
-+
-+        # Add pi link stuff
-+        # * is there a better place?
-+        if (is_linux && target_cpu == "arm") {
-+          configs += [ "//build/config/linux:use_mmal" ]
-+          if (symbol_level >= 2) {
-+            # For debug symbols!
-+            ldflags += [ "-Wl,--long-plt" ]
-+          }
-+        }
+--- a/src/chrome/BUILD.gn
++++ b/src/chrome/BUILD.gn
+@@ -251,6 +251,16 @@ if (!is_android && !is_mac) {
+         ldflags += [ "-Wl,--long-plt" ]
        }
  
-       if (is_chromeos || is_win) {
---- a/chrome/app/chrome_main_delegate.cc
-+++ b/chrome/app/chrome_main_delegate.cc
-@@ -50,6 +50,7 @@
- #include "components/gwp_asan/buildflags/buildflags.h"
++      # Add pi link stuff
++      # * is there a better place?
++      if (is_linux && target_cpu == "arm") {
++        configs += [ "//build/config/linux:use_mmal" ]
++        if (symbol_level >= 2) {
++          # For debug symbols!
++          ldflags += [ "-Wl,--long-plt" ]
++        }
++      }
++
+       if (is_desktop_linux && !is_component_build && !using_sanitizer) {
+         version_script = "//build/linux/chrome.map"
+         inputs = [ version_script ]
+--- a/src/chrome/app/chrome_main_delegate.cc
++++ b/src/chrome/app/chrome_main_delegate.cc
+@@ -54,6 +54,7 @@
  #include "components/nacl/common/buildflags.h"
  #include "components/services/heap_profiling/public/cpp/profiling_client.h"
+ #include "components/startup_metric_utils/browser/startup_metric_utils.h"
 +#include "components/version_info/pi_patch_version_info.h"
  #include "components/version_info/version_info.h"
  #include "content/public/common/content_client.h"
- #include "content/public/common/content_paths.h"
-@@ -334,6 +335,15 @@
+ #include "content/public/common/content_constants.h"
+@@ -341,6 +342,15 @@ bool HandleVersionSwitches(const base::C
    }
  #endif
  
@@ -176,9 +151,9 @@
    if (command_line.HasSwitch(switches::kVersion)) {
      printf("%s %s %s\n", version_info::GetProductName().c_str(),
             version_info::GetVersionNumber().c_str(),
---- a/chrome/common/chrome_switches.cc
-+++ b/chrome/common/chrome_switches.cc
-@@ -484,6 +484,9 @@
+--- a/src/chrome/common/chrome_switches.cc
++++ b/src/chrome/common/chrome_switches.cc
+@@ -454,6 +454,9 @@ const char kPermissionRequestApiScope[]
  // TODO(bauerb): Remove when this flag is not needed anymore.
  const char kPermissionRequestApiUrl[]       = "permission-request-api-url";
  
@@ -188,9 +163,9 @@
  // Use the PPAPI (Pepper) Flash found at the given path.
  const char kPpapiFlashPath[]                = "ppapi-flash-path";
  
---- a/chrome/common/chrome_switches.h
-+++ b/chrome/common/chrome_switches.h
-@@ -146,6 +146,7 @@
+--- a/src/chrome/common/chrome_switches.h
++++ b/src/chrome/common/chrome_switches.h
+@@ -136,6 +136,7 @@ extern const char kPackExtension[];
  extern const char kPackExtensionKey[];
  extern const char kPermissionRequestApiScope[];
  extern const char kPermissionRequestApiUrl[];
@@ -198,9 +173,9 @@
  extern const char kPpapiFlashPath[];
  extern const char kPpapiFlashVersion[];
  extern const char kPrivetIPv6Only[];
---- a/components/version_info/BUILD.gn
-+++ b/components/version_info/BUILD.gn
-@@ -15,6 +15,9 @@
+--- a/src/components/version_info/BUILD.gn
++++ b/src/components/version_info/BUILD.gn
+@@ -14,6 +14,9 @@ static_library("version_info") {
    sources = [
      "version_info.cc",
      "version_info.h",
@@ -211,7 +186,7 @@
  
    deps = [
 --- /dev/null
-+++ b/components/version_info/pi_patch_version_info.cc
++++ b/src/components/version_info/pi_patch_version_info.cc
 @@ -0,0 +1,11 @@
 +#include "components/version_info/pi_patch_version_info.h"
 +#include "components/version_info/pi_patch_version_values.h"
@@ -225,7 +200,7 @@
 +}  // namespace version_info
 +
 --- /dev/null
-+++ b/components/version_info/pi_patch_version_info.h
++++ b/src/components/version_info/pi_patch_version_info.h
 @@ -0,0 +1,12 @@
 +#ifndef COMPONENTS_PI_PATCH_VERSION_INFO_VERSION_INFO_H_
 +#define COMPONENTS_PI_PATCH_VERSION_INFO_VERSION_INFO_H_
@@ -240,25 +215,13 @@
 +}  // namespace version_info
 +#endif  // COMPONENTS_VERSION_INFO_VERSION_INFO_H_
 --- /dev/null
-+++ b/components/version_info/pi_patch_version_values.h
++++ b/src/components/version_info/pi_patch_version_values.h
 @@ -0,0 +1,2 @@
 +// Pi patch version - generated by pi-util/settag.py
-+#define PI_PATCH_VERSION_STRING "mmal_3_23"
---- a/components/viz/common/display/overlay_strategy.h
-+++ b/components/viz/common/display/overlay_strategy.h
-@@ -21,7 +21,8 @@
-   kSingleOnTop = 3,
-   kUnderlay = 4,
-   kUnderlayCast = 5,
--  kMaxValue = kUnderlayCast,
-+  kSingleShmid = 6,
-+  kMaxValue = kSingleShmid
- };
- 
- // Parses a comma separated list of overlay strategy types and returns a list
---- a/components/viz/common/resources/transferable_resource.h
-+++ b/components/viz/common/resources/transferable_resource.h
-@@ -79,6 +79,9 @@
++#define PI_PATCH_VERSION_STRING "mmal_3.31"
+--- a/src/components/viz/common/resources/transferable_resource.h
++++ b/src/components/viz/common/resources/transferable_resource.h
+@@ -80,6 +80,9 @@ struct VIZ_COMMON_EXPORT TransferableRes
    // The number of pixels in the gpu mailbox/software bitmap.
    gfx::Size size;
  
@@ -268,18 +231,20 @@
    // The format of the pixels in the gpu mailbox/software bitmap. This should
    // almost always be RGBA_8888 for resources generated by compositor clients,
    // and must be RGBA_8888 always for software resources.
---- a/components/viz/service/BUILD.gn
-+++ b/components/viz/service/BUILD.gn
-@@ -67,6 +67,8 @@
-     "display/overlay_strategy_fullscreen.h",
-     "display/overlay_strategy_single_on_top.cc",
-     "display/overlay_strategy_single_on_top.h",
-+    "display/overlay_strategy_single_shmid.cc",
-+    "display/overlay_strategy_single_shmid.h",
-     "display/overlay_strategy_underlay.cc",
-     "display/overlay_strategy_underlay.h",
-     "display/overlay_strategy_underlay_cast.cc",
-@@ -83,6 +85,7 @@
+--- a/src/components/viz/host/host_gpu_memory_buffer_manager.cc
++++ b/src/components/viz/host/host_gpu_memory_buffer_manager.cc
+@@ -46,7 +46,7 @@ HostGpuMemoryBufferManager::HostGpuMemor
+       client_id_(client_id),
+       gpu_memory_buffer_support_(std::move(gpu_memory_buffer_support)),
+       task_runner_(std::move(task_runner)) {
+-#if !defined(USE_X11)
++#if !defined(USE_X11) || RPI_PIXMAP  // (gpu_memory_buffer_support.h)  RPI needs configs fot Pi4
+   native_configurations_ = gpu::GetNativeGpuMemoryBufferConfigurations(
+       gpu_memory_buffer_support_.get());
+   native_configurations_initialized_.Signal();
+--- a/src/components/viz/service/BUILD.gn
++++ b/src/components/viz/service/BUILD.gn
+@@ -76,6 +76,7 @@ viz_component("service") {
      "display/shader.cc",
      "display/shader.h",
      "display/shared_bitmap_manager.h",
@@ -287,31 +252,34 @@
      "display/skia_output_surface.cc",
      "display/skia_output_surface.h",
      "display/skia_renderer.cc",
-@@ -223,6 +226,8 @@
+@@ -218,6 +219,14 @@ viz_component("service") {
  
    if (use_x11) {
      sources += [
++      "display/overlay_processor_shm_x11.cc",
++      "display/overlay_processor_shm_x11.h",
++
++      "display/overlay_processor_using_strategy.cc",
++      "display/overlay_processor_using_strategy.h",
++
 +      "display_embedder/shared_image_x11.cc",
 +      "display_embedder/shared_image_x11.h",
        "display_embedder/software_output_device_x11.cc",
        "display_embedder/software_output_device_x11.h",
      ]
-@@ -278,6 +283,13 @@
-     defines += [ "ALWAYS_ENABLE_BLENDING_FOR_PRIMARY" ]
-   }
- 
-+  if (use_x11) {
-+    sources += [
-+      "display_embedder/overlay_candidate_validator_x_shm.cc",
-+      "display_embedder/overlay_candidate_validator_x_shm.h",
-+    ]
-+  }
-+
-   if (is_win) {
-     sources += [
-       "display_embedder/output_device_backing.cc",
---- a/components/viz/service/display/display_resource_provider.cc
-+++ b/components/viz/service/display/display_resource_provider.cc
+--- a/src/components/viz/service/display/display.cc
++++ b/src/components/viz/service/display/display.cc
+@@ -508,7 +508,7 @@ void Display::InitializeRenderer(bool en
+         &settings_, output_surface_.get(), resource_provider_.get(),
+         overlay_processor_.get(), current_task_runner_);
+   } else {
+-    DCHECK(!overlay_processor_->IsOverlaySupported());
++//    DCHECK(!overlay_processor_->IsOverlaySupported());
+     auto renderer = std::make_unique<SoftwareRenderer>(
+         &settings_, output_surface_.get(), resource_provider_.get(),
+         overlay_processor_.get());
+--- a/src/components/viz/service/display/display_resource_provider.cc
++++ b/src/components/viz/service/display/display_resource_provider.cc
 @@ -18,6 +18,7 @@
  #include "components/viz/common/resources/resource_sizes.h"
  #include "components/viz/service/display/shared_bitmap_manager.h"
@@ -320,7 +288,7 @@
  #include "gpu/GLES2/gl2extchromium.h"
  #include "gpu/command_buffer/client/context_support.h"
  #include "gpu/command_buffer/client/gles2_interface.h"
-@@ -425,7 +426,8 @@
+@@ -455,7 +456,8 @@ void DisplayResourceProvider::PopulateSk
        SkImageInfo::MakeN32Premul(resource->transferable.size.width(),
                                   resource->transferable.size.height());
    bool pixels_installed = sk_bitmap->installPixels(
@@ -330,7 +298,7 @@
    DCHECK(pixels_installed);
  }
  
-@@ -463,7 +465,7 @@
+@@ -493,7 +495,7 @@ GLES2Interface* DisplayResourceProvider:
  }
  
  const DisplayResourceProvider::ChildResource*
@@ -339,7 +307,7 @@
    // TODO(ericrk): We should never fail TryGetResource, but we appear to be
    // doing so on Android in rare cases. Handle this gracefully until a better
    // solution can be found. https://crbug.com/811858
-@@ -496,7 +498,7 @@
+@@ -526,7 +528,7 @@ DisplayResourceProvider::LockForRead(Res
      }
    }
  
@@ -348,10 +316,11 @@
      const SharedBitmapId& shared_bitmap_id = mailbox;
      std::unique_ptr<SharedBitmap> bitmap =
          shared_bitmap_manager_->GetSharedBitmapFromId(
-@@ -885,6 +887,34 @@
-   resource_provider_->UnlockForRead(resource_id_);
+@@ -986,6 +988,36 @@ DisplayResourceProvider::ScopedReadLockS
+   return *this;
  }
  
++#if USE_SHARED_IMAGE_X11
 +DisplayResourceProvider::ScopedReadLockSharedImageX11::ScopedReadLockSharedImageX11(
 +    DisplayResourceProvider* resource_provider,
 +    viz::ResourceId resource_id)
@@ -379,25 +348,35 @@
 +    resource_provider_->UnlockForRead(resource_id_);
 +  }
 +}
++#endif
 +
  DisplayResourceProvider::LockSetForExternalUse::LockSetForExternalUse(
      DisplayResourceProvider* resource_provider,
      ExternalUseClient* client)
---- a/components/viz/service/display/display_resource_provider.h
-+++ b/components/viz/service/display/display_resource_provider.h
-@@ -47,6 +47,8 @@
- 
+--- a/src/components/viz/service/display/display_resource_provider.h
++++ b/src/components/viz/service/display/display_resource_provider.h
+@@ -24,6 +24,7 @@
+ #include "components/viz/common/resources/transferable_resource.h"
+ #include "components/viz/service/display/external_use_client.h"
+ #include "components/viz/service/display/resource_fence.h"
++#include "components/viz/service/display_embedder/shared_image_x11.h"
+ #include "components/viz/service/viz_service_export.h"
+ #include "gpu/command_buffer/common/sync_token.h"
+ #include "third_party/khronos/GLES2/gl2.h"
+@@ -47,6 +48,8 @@ namespace viz {
  class ContextProvider;
+ class ScopedAllowGpuAccessForDisplayResourceProvider;
  class SharedBitmapManager;
 +class SharedImageX11;
 +class BitmapData;
  
  // This class provides abstractions for receiving and using resources from other
  // modules/threads/processes. It abstracts away GL textures vs GpuMemoryBuffers
-@@ -197,6 +199,27 @@
-     DISALLOW_COPY_AND_ASSIGN(ScopedReadLockSkImage);
+@@ -207,6 +210,29 @@ class VIZ_SERVICE_EXPORT DisplayResource
+     sk_sp<SkImage> sk_image_;
    };
  
++#if USE_SHARED_IMAGE_X11
 +  class VIZ_SERVICE_EXPORT ScopedReadLockSharedImageX11 {
 +  public:
 +    ScopedReadLockSharedImageX11(DisplayResourceProvider* resource_provider,
@@ -418,11 +397,12 @@
 +
 +    DISALLOW_COPY_AND_ASSIGN(ScopedReadLockSharedImageX11);
 +  };
++#endif
 +
   private:
    // Forward declared for LockSetForExternalUse below.
    struct ChildResource;
-@@ -459,7 +482,7 @@
+@@ -521,7 +547,7 @@ class VIZ_SERVICE_EXPORT DisplayResource
    // Returns null if we do not have a ContextProvider.
    gpu::gles2::GLES2Interface* ContextGL() const;
  
@@ -431,267 +411,410 @@
    void UnlockForRead(ResourceId id);
  
    void TryReleaseResource(ResourceId id, ChildResource* resource);
---- a/components/viz/service/display/overlay_candidate_validator.cc
-+++ b/components/viz/service/display/overlay_candidate_validator.cc
-@@ -32,6 +32,10 @@
+--- a/src/components/viz/service/display/overlay_processor_interface.cc
++++ b/src/components/viz/service/display/overlay_processor_interface.cc
+@@ -21,6 +21,7 @@
+ #include "ui/ozone/public/overlay_manager_ozone.h"
  #include "ui/ozone/public/ozone_platform.h"
+ #else
++#include "components/viz/service/display/overlay_processor_shm_x11.h"
+ #include "components/viz/service/display/overlay_processor_stub.h"
  #endif
  
-+#if defined(USE_X11)
-+#include "components/viz/service/display_embedder/overlay_candidate_validator_x_shm.h"
-+#endif
-+
- namespace viz {
- namespace {
- 
-@@ -95,6 +99,14 @@
-     gpu::SurfaceHandle surface_handle,
-     const ContextProvider* context_provider,
-     const RendererSettings& renderer_settings) {
-+
-+#if USE_X11
-+  // Enable this overlay for software only
-+  if (surface_handle == gpu::kNullSurfaceHandle && !context_provider) {
-+    return std::make_unique<OverlayCandidateValidatorXShm>(true);
-+  }
-+#endif
-+
-   if (surface_handle == gpu::kNullSurfaceHandle)
-     return nullptr;
- 
---- a/components/viz/service/display/overlay_processor.h
-+++ b/components/viz/service/display/overlay_processor.h
-@@ -69,7 +69,7 @@
-     // RenderPass, the last element.
-     virtual bool Attempt(
-         const SkMatrix44& output_color_matrix,
--        const FilterOperationsMap& render_pass_backdrop_filters,
-+        const OverlayProcessor::FilterOperationsMap& render_pass_backdrop_filters,
-         DisplayResourceProvider* resource_provider,
-         RenderPassList* render_pass_list,
-         const PrimaryPlane* primary_plane,
+@@ -134,6 +135,12 @@ OverlayProcessorInterface::CreateOverlay
+         shared_image_manager, memory_tracker, gpu_task_scheduler,
+         overlay_enabled);
+   }
++#elif USE_SHARED_IMAGE_X11
++  bool overlay_enabled = surface_handle != gpu::kNullSurfaceHandle;
++  if (overlay_enabled)
++    return std::make_unique<OverlayProcessorShmX11>(surface_handle);
++  else
++    return std::make_unique<OverlayProcessorStub>();
+ #else  // Default
+   return std::make_unique<OverlayProcessorStub>();
+ #endif
 --- /dev/null
-+++ b/components/viz/service/display/overlay_strategy_single_shmid.cc
-@@ -0,0 +1,154 @@
-+// Copyright 2018 Raspberry Pi
-+
-+#include "components/viz/service/display/overlay_strategy_single_shmid.h"
-+
-+#include "cc/base/math_util.h"
-+#include "components/viz/common/quads/draw_quad.h"
-+#include "components/viz/service/display/display_resource_provider.h"
-+#include "components/viz/service/display/overlay_candidate_validator.h"
-+#include "components/viz/service/display_embedder/shared_image_x11.h"
-+
-+#include "ui/gfx/buffer_types.h"
-+#include "ui/gfx/geometry/rect_conversions.h"
-+
-+
-+namespace viz {
-+
-+OverlayStrategySingleShmid::OverlayStrategySingleShmid(
-+    OverlayCandidateValidator* capability_checker)
-+    : capability_checker_(capability_checker) {
-+  DCHECK(capability_checker);
-+}
-+
-+OverlayStrategySingleShmid::~OverlayStrategySingleShmid() {}
-+
-+
-+#define TRACE_SINGLE_SHMID 0
-+
-+// Returns false if the strategy cannot be made to work with the
-+// current set of render passes. Returns true if the strategy was successful
-+// and adds any additional passes necessary to represent overlays to
-+// |render_pass_list|. Most strategies should look at the primary
-+// RenderPass, the last element.
-+bool
-+OverlayStrategySingleShmid::Attempt(
-+    const SkMatrix44& output_color_matrix,
-+    const OverlayProcessor::FilterOperationsMap& render_pass_backdrop_filters,
-+    DisplayResourceProvider* resource_provider,
-+    RenderPassList* render_pass_list,
-+    const PrimaryPlane* primary_plane,
-+    OverlayCandidateList* candidates,
-+    std::vector<gfx::Rect>* content_bounds)
-+{
-+  RenderPass* const render_pass = render_pass_list->back().get();
-+  QuadList* quad_list = &render_pass->quad_list;
-+
-+  for (auto it = quad_list->begin(); it != quad_list->end(); ++it) {
-+    OverlayCandidate candidate;
-+
-+    if (it->material != DrawQuad::Material::kTextureContent)
-+      continue;
-+
-+    if (!OverlayCandidate::FromDrawQuad(resource_provider, output_color_matrix, *it, &candidate))
-+      continue;
-+
-+//    const gfx::Size image_size(resource_provider->ImageSize(candidate.resource_id));
-+    const gfx::Size image_size(ScaleToCeiledSize(candidate.resource_size_in_pixels,
-+                                                 candidate.uv_rect.width(), candidate.uv_rect.height()));
-+
-+#if TRACE_SINGLE_SHMID
-+    const OverlayCandidate& x = candidate;
-+
-+    LOG(ERROR) << "Got candidate id=" << x.resource_id <<
-+      ", is_unoccluded=" << x.is_unoccluded <<
-+      ", no_occluding_damage=" << x.no_occluding_damage <<
-+      ", is_opaque=" << x.is_opaque <<
-+      ", display_rect=" << x.display_rect.ToString() <<
-+      ", pixels=" << x.resource_size_in_pixels.ToString() <<
-+      ", uv_rect=" << x.uv_rect.ToString() <<
-+      ", clip_rect=" << x.clip_rect.ToString() <<
-+      ", z=" << x.plane_z_order <<
-+      ", image_size=" << image_size.ToString() <<
-+      ", pass damage=" << render_pass->damage_rect.ToString();
-+#endif
-+
-+    const gfx::Rect cand_rect(gfx::ToEnclosingRect(candidate.display_rect));
-+
-+    if (image_size != cand_rect.size()) {
-+#if TRACE_SINGLE_SHMID
-+      LOG(ERROR) << "Size mismatch " << image_size.ToString() << "/" << cand_rect.size().ToString();
-+#endif
-+      continue;
-+    }
-+
-+    // Check we cover the damage rect
-+    if (!cand_rect.Contains(render_pass->damage_rect)) {
-+#if TRACE_SINGLE_SHMID
-+      LOG(ERROR) << "Damage exceeds texture " << cand_rect.ToString() << "/" << render_pass->damage_rect.ToString();
-+#endif
-+      continue;
-+    }
-+
-+    if (TryOverlay(quad_list, primary_plane, candidates, candidate, it)) {
-+      return true;
-+    }
-+  }
-+
-+  return false;
-+}
-+
-+bool OverlayStrategySingleShmid::TryOverlay(
-+    QuadList* quad_list,
-+    const PrimaryPlane* primary_plane,
-+    OverlayCandidateList* candidate_list,
-+    const OverlayCandidate& candidate,
-+    QuadList::Iterator candidate_iterator)
-+{
-+  // Check that no prior quads overlap it.
-+  if (OverlayCandidate::IsOccluded(candidate, quad_list->cbegin(),
-+                                   candidate_iterator))
-+  {
-+#if TRACE_SINGLE_SHMID
-+      LOG(INFO) << "Is occluded";
-+#endif
-+      return false;
-+  }
-+
-+  // Add the overlay.
-+  OverlayCandidateList new_candidate_list = *candidate_list;
-+  new_candidate_list.push_back(candidate);
-+  new_candidate_list.back().plane_z_order = 1;
-+  new_candidate_list.back().is_unoccluded = true;
-+  new_candidate_list.back().is_opaque = true;
-+
-+  // Check for support.
-+  capability_checker_->CheckOverlaySupport(primary_plane, &new_candidate_list);
-+
-+  const OverlayCandidate& overlay_candidate = new_candidate_list.back();
-+  // If the candidate can be handled by an overlay, create a pass for it.
-+  if (overlay_candidate.overlay_handled) {
-+#if TRACE_SINGLE_SHMID
-+    LOG(INFO) << "Opaque=" << overlay_candidate.is_opaque << ", unocc=" << overlay_candidate.is_unoccluded;
-+#endif
-+    quad_list->EraseAndInvalidateAllPointers(candidate_iterator);
-+    candidate_list->swap(new_candidate_list);
-+#if TRACE_SINGLE_SHMID
-+    LOG(INFO) << "Handled";
-+#endif
-+    return true;
-+  }
-+
-+#if TRACE_SINGLE_SHMID
-+  LOG(INFO) << "Not handled";
-+#endif
-+
-+  return false;
-+}
-+
-+OverlayStrategy OverlayStrategySingleShmid::GetUMAEnum() const {
-+  return OverlayStrategy::kSingleShmid;
-+}
-+
-+}  // namespace cc
-+
-+
---- /dev/null
-+++ b/components/viz/service/display/overlay_strategy_single_shmid.h
-@@ -0,0 +1,54 @@
-+// Copyright 2014 The Chromium Authors. All rights reserved.
++++ b/src/components/viz/service/display/overlay_processor_shm_x11.cc
+@@ -0,0 +1,296 @@
++// Copyright 2019 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
-+#ifndef VIZ_SERVICE_DISPLAY_OVERLAY_STRATEGY_SINGLE_SHMID_H_
-+#define VIZ_SERVICE_DISPLAY_OVERLAY_STRATEGY_SINGLE_SHMID_H_
++#include "components/viz/service/display/overlay_processor_shm_x11.h"
 +
-+#include "base/macros.h"
-+#include "components/viz/service/display/overlay_processor.h"
-+#include "components/viz/service/viz_service_export.h"
++#include <vector>
++
++#include "base/trace_event/trace_event.h"
++#include "build/build_config.h"
++#include "components/viz/common/quads/solid_color_draw_quad.h"
++#include "components/viz/service/display/display_resource_provider.h"
++#include "components/viz/service/display/output_surface.h"
++#include "ui/gfx/geometry/rect_conversions.h"
++
++#define TRACE_SINGLE_SHMID 0
++
++#if USE_SHARED_IMAGE_X11
 +
 +namespace viz {
-+class OverlayCandidateValidator;
 +
-+class VIZ_SERVICE_EXPORT OverlayStrategySingleShmid : public OverlayProcessor::Strategy {
++
++class StrategyShmX11 : public OverlayProcessorUsingStrategy::Strategy {
++  OverlayProcessorShmX11 * const overlay_processor_;
++
 + public:
-+  explicit OverlayStrategySingleShmid(
-+      OverlayCandidateValidator* capability_checker);
-+  ~OverlayStrategySingleShmid() override;
++  StrategyShmX11(OverlayProcessorShmX11 * const overlay_processor) :
++    OverlayProcessorUsingStrategy::Strategy(),
++    overlay_processor_(overlay_processor)
++  {
++  }
 +
-+  // Returns false if the strategy cannot be made to work with the
-+  // current set of render passes. Returns true if the strategy was successful
-+  // and adds any additional passes necessary to represent overlays to
-+  // |render_pass_list|. Most strategies should look at the primary
-+  // RenderPass, the last element.
++  ~StrategyShmX11() override = default;
++
++  bool TryOverlay(
++      QuadList* quad_list,
++      const PrimaryPlane* primary_plane,
++      OverlayCandidateList* candidate_list,
++      const OverlayCandidate& candidate,
++      QuadList::Iterator candidate_iterator)
++  {
++    // Check that no prior quads overlap it.
++    if (OverlayCandidate::IsOccluded(candidate, quad_list->cbegin(),
++                                     candidate_iterator))
++    {
++#if TRACE_SINGLE_SHMID
++        LOG(INFO) << "Is occluded";
++#endif
++        return false;
++    }
++
++    // Add the overlay.
++    OverlayCandidateList new_candidate_list = *candidate_list;
++    new_candidate_list.push_back(candidate);
++    new_candidate_list.back().plane_z_order = 1;
++    new_candidate_list.back().is_unoccluded = true;
++    new_candidate_list.back().is_opaque = true;
++
++    // Check for support.
++    overlay_processor_->CheckOverlaySupport(primary_plane, &new_candidate_list);
++
++    const OverlayCandidate& overlay_candidate = new_candidate_list.back();
++    // If the candidate can be handled by an overlay, create a pass for it.
++    if (overlay_candidate.overlay_handled) {
++#if TRACE_SINGLE_SHMID
++      LOG(INFO) << "Opaque=" << overlay_candidate.is_opaque << ", unocc=" << overlay_candidate.is_unoccluded;
++#endif
++      quad_list->EraseAndInvalidateAllPointers(candidate_iterator);
++      candidate_list->swap(new_candidate_list);
++#if TRACE_SINGLE_SHMID
++      LOG(INFO) << "Handled";
++#endif
++      return true;
++    }
++
++#if TRACE_SINGLE_SHMID
++    LOG(INFO) << "Not handled";
++#endif
++
++    return false;
++  }
++
 +  bool Attempt(
 +      const SkMatrix44& output_color_matrix,
-+      const OverlayProcessor::FilterOperationsMap& render_pass_backdrop_filters,
++      const OverlayProcessorInterface::FilterOperationsMap& render_pass_backdrop_filters,
 +      DisplayResourceProvider* resource_provider,
 +      RenderPassList* render_pass_list,
 +      const PrimaryPlane* primary_plane,
 +      OverlayCandidateList* candidates,
-+      std::vector<gfx::Rect>* content_bounds) override;
++      std::vector<gfx::Rect>* content_bounds) override
++  {
++    RenderPass* const render_pass = render_pass_list->back().get();
++    QuadList* quad_list = &render_pass->quad_list;
 +
-+  OverlayStrategy GetUMAEnum() const override;
++    for (auto it = quad_list->begin(); it != quad_list->end(); ++it) {
++      OverlayCandidate candidate;
++      candidate.no_occluding_damage = true;
++      candidate.is_unoccluded = true;
++
++      if (it->material != DrawQuad::Material::kTextureContent)
++        continue;
++
++      if (!OverlayCandidate::FromDrawQuad(resource_provider, output_color_matrix, *it, &candidate))
++        continue;
++
++  //    const gfx::Size image_size(resource_provider->ImageSize(candidate.resource_id));
++      const gfx::Size image_size(ScaleToCeiledSize(candidate.resource_size_in_pixels,
++                                                   candidate.uv_rect.width(), candidate.uv_rect.height()));
++
++#if TRACE_SINGLE_SHMID
++      const OverlayCandidate& x = candidate;
++
++      LOG(ERROR) << "Got candidate id=" << x.resource_id <<
++        ", is_unoccluded=" << x.is_unoccluded <<
++        ", no_occluding_damage=" << x.no_occluding_damage <<
++        ", is_opaque=" << x.is_opaque <<
++        ", display_rect=" << x.display_rect.ToString() <<
++        ", pixels=" << x.resource_size_in_pixels.ToString() <<
++        ", uv_rect=" << x.uv_rect.ToString() <<
++        ", clip_rect=" << x.clip_rect.ToString() <<
++        ", z=" << x.plane_z_order <<
++        ", image_size=" << image_size.ToString() <<
++        ", pass damage=" << render_pass->damage_rect.ToString();
++#endif
++
++      const gfx::Rect cand_rect(gfx::ToEnclosingRect(candidate.display_rect));
++
++      if (image_size != cand_rect.size()) {
++#if TRACE_SINGLE_SHMID
++        LOG(ERROR) << "Size mismatch " << image_size.ToString() << "/" << cand_rect.size().ToString();
++#endif
++        continue;
++      }
++
++      // Check we cover the damage rect
++      if (!cand_rect.Contains(render_pass->damage_rect)) {
++#if TRACE_SINGLE_SHMID
++        LOG(ERROR) << "Damage exceeds texture " << cand_rect.ToString() << "/" << render_pass->damage_rect.ToString();
++#endif
++        continue;
++      }
++
++      if (TryOverlay(quad_list, primary_plane, candidates, candidate, it)) {
++        return true;
++      }
++    }
++
++    return false;
++  }
++
++};
++
++OverlayProcessorShmX11::OverlayProcessorShmX11(const gpu::SurfaceHandle surface_handle) :
++    OverlayProcessorUsingStrategy(),
++    use_shm_(false),
++    widget_(surface_handle),
++    display_(gfx::GetXDisplay()),
++    gc_(XCreateGC(display_, widget_, 0, nullptr))
++{
++#if TRACE_SINGLE_SHMID
++  LOG(INFO) << "@@@ " << __func__;
++#endif
++
++  if (!gc_ || !SharedImageX11::check_support(display_)) {
++    LOG(INFO) << "No support for X11 shm";
++    return;
++  }
++
++  if (!XGetWindowAttributes(display_, widget_, &attributes_)) {
++    LOG(ERROR) << "XGetWindowAttributes failed for window " << widget_;
++    return;
++  }
++
++  strategies_.push_back(std::make_unique<StrategyShmX11>(this));
++  use_shm_ = true;
++}
++
++OverlayProcessorShmX11::~OverlayProcessorShmX11() {
++  if (gc_)
++    XFreeGC(display_, gc_);
++}
++
++
++bool
++OverlayProcessorShmX11::IsOverlaySupported() const {
++  return use_shm_;
++}
++
++// Returns true if the platform supports hw overlays and surface occluding
++// damage rect needs to be computed since it will be used by overlay
++// processor.
++bool
++OverlayProcessorShmX11::NeedsSurfaceOccludingDamageRect() const {
++  return false;
++}
++
++// Before the overlay refactor to use OverlayProcessorOnGpu, overlay
++// candidates are stored inside DirectRenderer. Those overlay candidates are
++// later sent over to the GPU thread by GLRenderer or SkiaRenderer. This
++// helper function will be called by DirectRenderer to take these overlay
++// candidates inside overlay processor to avoid sending over DirectRenderer
++// implementation. This is overridden by each platform that is ready to send
++// overlay candidates inside |OverlayProcessor|. Must be called before
++// ScheduleOverlays().
++void
++OverlayProcessorShmX11::TakeOverlayCandidates(CandidateList* candidate_list)
++{
++  overlay_candidates_ = std::move(*candidate_list);
++#if TRACE_SINGLE_SHMID
++  if (!overlay_candidates_.empty())
++    LOG(INFO) << "OverlayProcessorShmX11::TakeOverlayCandidates: size=" << overlay_candidates_.size();
++#endif
++}
++
++// TODO(weiliangc): Make it pure virtual after it is implemented by every
++// subclass.
++void
++OverlayProcessorShmX11::ScheduleOverlays(DisplayResourceProvider* resource_provider)
++{
++  if (overlay_candidates_.empty())
++    return;
++
++  // Release these locks at end of func - but allow reassignment before then
++  const std::unique_ptr<DisplayResourceProvider::ScopedReadLockSharedImageX11> lock(std::move(overlay_lock_));
++  // Ordering means sync will be released (on destruction) before overlay lock
++  const std::unique_ptr<XcbCookie> sync_cookie(std::move(last_cookie_));
++
++  for (const OverlayCandidate& ovly : overlay_candidates_ ) {
++
++    if (ovly.overlay_handled) {
++
++      overlay_lock_ = std::make_unique<DisplayResourceProvider::ScopedReadLockSharedImageX11>(
++          resource_provider, ovly.resource_id);
++
++      SharedImageX11 *const xshm = overlay_lock_->shared_image_x11();
++      if (xshm == nullptr){
++        LOG(ERROR) << "SharedMemory unexpectly null";
++        continue;
++      }
++
++      const gfx::Rect rect(gfx::ToEnclosingRect(ovly.display_rect));
++
++      if (!xshm->create_image(display_, attributes_))
++      {
++          LOG(ERROR) << "xshm.create_image failed!";
++          continue;
++      }
++
++      last_cookie_ = xshm->put_image(widget_, gc_, rect, gfx::Rect());
++    }
++  }
++  XFlush(display_);
++}
++
++// This is a signal from Display::DidReceiveSwapBuffersAck. This is used as
++// approximate signale for when the overlays are presented.
++void
++OverlayProcessorShmX11::OverlayPresentationComplete()
++{
++  last_cookie_.reset();
++  overlay_lock_.reset();
++  if (!overlay_candidates_.empty())
++  {
++#if TRACE_SINGLE_SHMID
++    LOG(INFO) << "OverlayProcessorShmX11::OverlayPresentationComplete";
++#endif
++    overlay_candidates_.clear();
++  }
++}
++
++
++
++// A list of possible overlay candidates is presented to this function.
++// The expected result is that those candidates that can be in a separate
++// plane are marked with |overlay_handled| set to true, otherwise they are
++// to be traditionally composited. Candidates with |overlay_handled| set to
++// true must also have their |display_rect| converted to integer
++// coordinates if necessary.
++void
++OverlayProcessorShmX11::CheckOverlaySupport(
++    const OverlayProcessorInterface::OutputSurfaceOverlayPlane* primary_plane,
++    OverlayCandidateList* candidate_list)
++{
++#if TRACE_SINGLE_SHMID
++  LOG(INFO) << "OverlayProcessorShmX11::CheckOverlaySupport";
++#endif
++  // Accept if we have shm support
++  for (auto& x: *candidate_list) {
++    x.overlay_handled = use_shm_;
++  }
++}
++
++
++}  // namespace viz
++
++#endif
+--- /dev/null
++++ b/src/components/viz/service/display/overlay_processor_shm_x11.h
+@@ -0,0 +1,70 @@
++// Copyright 2014 The Chromium Authors. All rights reserved.
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef COMPONENTS_VIZ_SERVICE_DISPLAY_OVERLAY_PROCESSOR_SHM_X11_H_
++#define COMPONENTS_VIZ_SERVICE_DISPLAY_OVERLAY_PROCESSOR_SHM_X11_H_
++
++#include <memory>
++
++#include "base/containers/flat_map.h"
++#include "base/macros.h"
++#include "build/build_config.h"
++#include "components/viz/common/quads/render_pass.h"
++#include "components/viz/service/display/display_resource_provider.h"
++#include "components/viz/service/display/output_surface.h"
++#include "components/viz/service/display/overlay_candidate.h"
++#include "components/viz/service/display/overlay_processor_interface.h"
++#include "components/viz/service/display/overlay_processor_using_strategy.h"
++#include "components/viz/service/display_embedder/shared_image_x11.h"
++#include "components/viz/service/viz_service_export.h"
++#include "ui/gfx/x/x11.h"
++#include "ui/gfx/x/x11_types.h"
++
++#if USE_SHARED_IMAGE_X11
++
++namespace cc {
++class DisplayResourceProvider;
++}
++
++namespace viz {
++class VIZ_SERVICE_EXPORT OverlayProcessorShmX11
++    : public OverlayProcessorUsingStrategy {
++ public:
++  OverlayProcessorShmX11(const gpu::SurfaceHandle surface_handle);
++  ~OverlayProcessorShmX11() override;
++
++  // Override from OverlayProcessorInterface (required)
++  bool IsOverlaySupported() const override;
++  // Override from OverlayProcessorInterface (required)
++  bool NeedsSurfaceOccludingDamageRect() const override;
++
++  void TakeOverlayCandidates(CandidateList* candidate_list) override;
++  void ScheduleOverlays(
++      DisplayResourceProvider* display_resource_provider) override;
++  void OverlayPresentationComplete() override;
++
++  // Override from OverlayProcessorUsingStrategy (required)
++  void CheckOverlaySupport(
++      const OverlayProcessorInterface::OutputSurfaceOverlayPlane* primary_plane,
++      OverlayCandidateList* candidate_list) override;
 +
 + private:
-+   bool TryOverlay(
-+         QuadList* quad_list,
-+         const PrimaryPlane* primary_plane,
-+         OverlayCandidateList* candidate_list,
-+         const OverlayCandidate& candidate,
-+         QuadList::Iterator candidate_iterator);
++  bool use_shm_;
++  CandidateList overlay_candidates_;
 +
-+  OverlayCandidateValidator* capability_checker_;  // Weak.
++  gfx::AcceleratedWidget widget_;
++  XDisplay* display_;
++  GC gc_;
++  XWindowAttributes attributes_;
 +
-+  DISALLOW_COPY_AND_ASSIGN(OverlayStrategySingleShmid);
++  std::unique_ptr<DisplayResourceProvider::ScopedReadLockSharedImageX11> overlay_lock_;
++  std::unique_ptr<XcbCookie> last_cookie_;
++
++  DISALLOW_COPY_AND_ASSIGN(OverlayProcessorShmX11);
 +};
 +
 +}  // namespace viz
 +
-+#endif  // VIZ_SERVICE_DISPLAY_OVERLAY_STRATEGY_SINGLE_SHMID_H__
-+
-+
++#endif
++#endif  // COMPONENTS_VIZ_SERVICE_DISPLAY_OVERLAY_PROCESSOR_SHM_X11_H_
 --- /dev/null
-+++ b/components/viz/service/display/shared_bitmap_manager.cc
-@@ -0,0 +1,27 @@
++++ b/src/components/viz/service/display/shared_bitmap_manager.cc
+@@ -0,0 +1,29 @@
 +#include "components/viz/service/display/shared_bitmap_manager.h"
 +#include "components/viz/service/display_embedder/shared_image_x11.h"
 +
 +namespace viz {
 +
++#if USE_SHARED_IMAGE_X11
 +scoped_refptr<SharedImageX11>
 +SharedBitmapManager::GetSharedImageX11FromId(
 +      const gfx::Size& size,
@@ -701,6 +824,7 @@
 +{
 +  return nullptr;
 +}
++#endif
 +
 +// We need the handle for X11 shared images, but where we don't need that
 +// then default back to just the mapping
@@ -714,17 +838,18 @@
 +
 +}  // viz
 +
---- a/components/viz/service/display/shared_bitmap_manager.h
-+++ b/components/viz/service/display/shared_bitmap_manager.h
-@@ -9,6 +9,7 @@
+--- a/src/components/viz/service/display/shared_bitmap_manager.h
++++ b/src/components/viz/service/display/shared_bitmap_manager.h
+@@ -9,13 +9,16 @@
  
  #include "base/macros.h"
  #include "base/memory/shared_memory_mapping.h"
 +#include "base/memory/read_only_shared_memory_region.h"
  #include "components/viz/common/resources/shared_bitmap.h"
++#include "components/viz/service/display_embedder/shared_image_x11.h"
  
  namespace gfx {
-@@ -16,6 +17,7 @@
+ class Size;
  }
  
  namespace viz {
@@ -732,15 +857,17 @@
  
  class SharedBitmapManager {
   public:
-@@ -27,12 +29,23 @@
+@@ -27,12 +30,25 @@ class SharedBitmapManager {
        const gfx::Size& size,
        ResourceFormat format,
        const SharedBitmapId& id) = 0;
++#if USE_SHARED_IMAGE_X11
 +  virtual scoped_refptr<SharedImageX11> GetSharedImageX11FromId(
 +      const gfx::Size& size,
 +      uint32_t stride,
 +      ResourceFormat format,
 +      const SharedBitmapId& id);
++#endif
    virtual base::UnguessableToken GetSharedBitmapTracingGUIDFromId(
        const SharedBitmapId& id) = 0;
    // Used in the display compositor to associate an id to a shm mapping.
@@ -756,60 +883,47 @@
    // Used in the display compositor to break an association of an id to a shm
    // handle.
    virtual void ChildDeletedSharedBitmap(const SharedBitmapId& id) = 0;
---- a/components/viz/service/display/software_output_device.cc
-+++ b/components/viz/service/display/software_output_device.cc
-@@ -46,6 +46,14 @@
+--- a/src/components/viz/service/display/software_output_device.cc
++++ b/src/components/viz/service/display/software_output_device.cc
+@@ -62,4 +62,8 @@ int SoftwareOutputDevice::MaxFramesPendi
+   return 1;
+ }
  
- void SoftwareOutputDevice::EndPaint() {}
- 
-+void SoftwareOutputDevice::EndPaint(const gfx::Rect& damage_rect,
-+  DisplayResourceProvider * const resource_provider,
-+  const OverlayCandidateList& overlay_list)
-+{
-+  // By default just ignore the extra parameters
-+  EndPaint();
++gpu::SurfaceHandle SoftwareOutputDevice::GetSurfaceHandle() const {
++  return gpu::kNullSurfaceHandle;
 +}
 +
- gfx::VSyncProvider* SoftwareOutputDevice::GetVSyncProvider() {
-   return vsync_provider_.get();
- }
---- a/components/viz/service/display/software_output_device.h
-+++ b/components/viz/service/display/software_output_device.h
-@@ -26,6 +26,8 @@
+ }  // namespace viz
+--- a/src/components/viz/service/display/software_output_device.h
++++ b/src/components/viz/service/display/software_output_device.h
+@@ -12,6 +12,7 @@
+ #include "base/sequenced_task_runner.h"
+ #include "components/viz/service/display/software_output_device_client.h"
+ #include "components/viz/service/viz_service_export.h"
++#include "gpu/ipc/common/surface_handle.h"
+ #include "third_party/skia/include/core/SkSurface.h"
+ #include "ui/gfx/geometry/rect.h"
+ #include "ui/gfx/geometry/size.h"
+@@ -26,6 +27,7 @@ class VSyncProvider;
  namespace viz {
  
  class SoftwareOutputDeviceClient;
 +class DisplayResourceProvider;
-+class OverlayCandidateList;
  
  // This is a "tear-off" class providing software drawing support to
  // OutputSurface, such as to a platform-provided window framebuffer.
-@@ -56,6 +58,10 @@
-   // that it holds to it.
-   virtual void EndPaint();
+@@ -75,6 +77,8 @@ class VIZ_SERVICE_EXPORT SoftwareOutputD
  
-+  virtual void EndPaint(const gfx::Rect& damage_rect,
-+    DisplayResourceProvider * const resource_provider,
-+    const OverlayCandidateList& overlay_list);
+   virtual int MaxFramesPending() const;
+ 
++  virtual gpu::SurfaceHandle GetSurfaceHandle() const;
 +
-   // Discard the backing buffer in the surface provided by this instance.
-   virtual void DiscardBackbuffer() {}
- 
---- a/components/viz/service/display/software_renderer.cc
-+++ b/components/viz/service/display/software_renderer.cc
-@@ -92,7 +92,8 @@
-   current_canvas_ = nullptr;
-   root_canvas_ = nullptr;
- 
--  output_device_->EndPaint();
-+  DrawingFrame * const frame = current_frame();
-+  output_device_->EndPaint(frame->root_damage_rect, resource_provider_, frame->overlay_list);
- }
- 
- void SoftwareRenderer::SwapBuffers(std::vector<ui::LatencyInfo> latency_info) {
---- a/components/viz/service/display/surface_aggregator.cc
-+++ b/components/viz/service/display/surface_aggregator.cc
-@@ -1407,6 +1407,26 @@
+  protected:
+   scoped_refptr<base::SequencedTaskRunner> task_runner_;
+   SoftwareOutputDeviceClient* client_ = nullptr;
+--- a/src/components/viz/service/display/surface_aggregator.cc
++++ b/src/components/viz/service/display/surface_aggregator.cc
+@@ -1542,6 +1542,26 @@ gfx::Rect SurfaceAggregator::PrewalkTree
          gfx::Rect child_rect =
              PrewalkTree(child_surface, child_surface_info.has_moved_pixels,
                          child_surface_info.parent_pass_id, will_draw, result);
@@ -836,158 +950,24 @@
          if (child_surface->size_in_pixels().GetCheckedArea().ValueOrDefault(0) >
              0) {
            float y_scale =
---- /dev/null
-+++ b/components/viz/service/display_embedder/overlay_candidate_validator_x_shm.cc
-@@ -0,0 +1,73 @@
-+#include "components/viz/service/display_embedder/overlay_candidate_validator_x_shm.h"
-+
-+#include "components/viz/service/display/overlay_processor.h"
-+#include "components/viz/service/display/overlay_strategy_single_shmid.h"
-+
-+
-+namespace viz {
-+
-+OverlayCandidateValidatorXShm::OverlayCandidateValidatorXShm(const bool use_shm) :
-+  use_shm_(use_shm)
-+{
-+}
-+
-+OverlayCandidateValidatorXShm::~OverlayCandidateValidatorXShm()
-+{
-+}
-+
-+// Populates a list of strategies that may work with this validator. Should be
-+// called at most once.
-+void
-+OverlayCandidateValidatorXShm::InitializeStrategies()
-+{
-+  if (use_shm_) {
-+    strategies_.push_back(std::make_unique<OverlayStrategySingleShmid>(this));
-+  }
-+}
-+
-+// Returns true if draw quads can be represented as CALayers (Mac only).
-+bool
-+OverlayCandidateValidatorXShm::AllowCALayerOverlays() const
-+{
-+  return false;
-+}
-+
-+// Returns true if draw quads can be represented as Direct Composition
-+// Visuals (Windows only).
-+bool
-+OverlayCandidateValidatorXShm::AllowDCLayerOverlays() const
-+{
-+  return false;
-+}
-+
-+// Returns true if the platform supports hw overlays and surface occluding
-+// damage rect needs to be computed since it will be used by overlay
-+// processor.
-+bool
-+OverlayCandidateValidatorXShm::NeedsSurfaceOccludingDamageRect() const
-+{
-+  return false;
-+}
-+
-+// A list of possible overlay candidates is presented to this function.
-+// The expected result is that those candidates that can be in a separate
-+// plane are marked with |overlay_handled| set to true, otherwise they are
-+// to be traditionally composited. Candidates with |overlay_handled| set to
-+// true must also have their |display_rect| converted to integer
-+// coordinates if necessary. When the output surface uses buffer from the
-+// buffer queue, it generates a |primary_plane|. The |primary_plane| is
-+// always handled, but its information needs to be passed to the hardware
-+// overlay system though this function.
-+void
-+OverlayCandidateValidatorXShm::CheckOverlaySupport(const PrimaryPlane* primary_plane,
-+                                                   OverlayCandidateList* surfaces)
-+{
-+  // Accept if we have shm support
-+  for (auto& x: *surfaces) {
-+    x.overlay_handled = use_shm_;
-+  }
-+}
-+
-+} // namespace display_compositor
-+
-+
---- /dev/null
-+++ b/components/viz/service/display_embedder/overlay_candidate_validator_x_shm.h
-@@ -0,0 +1,60 @@
-+// Use of this source code is governed by a BSD-style license that can be
-+// found in the LICENSE file.
-+
-+#ifndef VIZ_SERVICE_DISPLAY_EMBEDDER_OVERLAY_CANDIDATE_VALIDATOR_X_SHM_H_
-+#define VIZ_SERVICE_DISPLAY_EMBEDDER_OVERLAY_CANDIDATE_VALIDATOR_X_SHM_H_
-+
-+#include <memory>
-+
-+#include "base/macros.h"
-+#include "components/viz/service/display/overlay_candidate_validator.h"
-+#include "components/viz/service/viz_service_export.h"
-+
-+namespace viz {
-+
-+class VIZ_SERVICE_EXPORT OverlayCandidateValidatorXShm
-+    : public OverlayCandidateValidator {
-+ public:
-+  explicit OverlayCandidateValidatorXShm(const bool use_shm);
-+  ~OverlayCandidateValidatorXShm() override;
-+
-+  // Populates a list of strategies that may work with this validator. Should be
-+  // called at most once.
-+  void InitializeStrategies() override;
-+
-+  // Returns true if draw quads can be represented as CALayers (Mac only).
-+  bool AllowCALayerOverlays() const override;
-+
-+  // Returns true if draw quads can be represented as Direct Composition
-+  // Visuals (Windows only).
-+  bool AllowDCLayerOverlays() const override;
-+
-+  // Returns true if the platform supports hw overlays and surface occluding
-+  // damage rect needs to be computed since it will be used by overlay
-+  // processor.
-+  bool NeedsSurfaceOccludingDamageRect() const override;
-+
-+  // A list of possible overlay candidates is presented to this function.
-+  // The expected result is that those candidates that can be in a separate
-+  // plane are marked with |overlay_handled| set to true, otherwise they are
-+  // to be traditionally composited. Candidates with |overlay_handled| set to
-+  // true must also have their |display_rect| converted to integer
-+  // coordinates if necessary. When the output surface uses buffer from the
-+  // buffer queue, it generates a |primary_plane|. The |primary_plane| is
-+  // always handled, but its information needs to be passed to the hardware
-+  // overlay system though this function.
-+  void CheckOverlaySupport(const PrimaryPlane* primary_plane,
-+                                   OverlayCandidateList* surfaces) override;
-+
-+
-+ private:
-+  const bool use_shm_;
-+
-+  DISALLOW_COPY_AND_ASSIGN(OverlayCandidateValidatorXShm);
-+};
-+
-+}  // namespace display_compositor
-+
-+#endif  // COMPONENTS_DISPLAY_COMPOSITOR_COMPOSITOR_OVERLAY_CANDIDATE_VALIDATOR_X_SHM_H_
-+
-+
---- a/components/viz/service/display_embedder/server_shared_bitmap_manager.cc
-+++ b/components/viz/service/display_embedder/server_shared_bitmap_manager.cc
-@@ -19,6 +19,9 @@
+--- a/src/components/viz/service/display_embedder/server_shared_bitmap_manager.cc
++++ b/src/components/viz/service/display_embedder/server_shared_bitmap_manager.cc
+@@ -13,12 +13,14 @@
+ #include "base/memory/read_only_shared_memory_region.h"
+ #include "base/memory/ref_counted.h"
+ #include "base/memory/shared_memory_mapping.h"
++#include "base/posix/eintr_wrapper.h"
+ #include "base/stl_util.h"
+ #include "base/strings/string_number_conversions.h"
+ #include "base/strings/stringprintf.h"
  #include "base/trace_event/process_memory_dump.h"
  #include "components/viz/common/resources/bitmap_allocation.h"
  #include "components/viz/common/resources/resource_sizes.h"
-+#if USE_SHARED_IMAGE_X11
 +#include "components/viz/service/display_embedder/shared_image_x11.h"
-+#endif
  #include "mojo/public/cpp/system/platform_handle.h"
  #include "ui/gfx/geometry/size.h"
  
-@@ -26,18 +29,58 @@
+@@ -26,18 +28,64 @@ namespace viz {
  
  class BitmapData : public base::RefCounted<BitmapData> {
   public:
@@ -997,7 +977,7 @@
 +                      int map_handle)
 +      : mapping_(std::move(mapping))
 +  {
-+    handle_.reset(map_handle == -1 ? -1 : dup(map_handle));
++    handle_.reset(map_handle == -1 ? -1 : HANDLE_EINTR(dup(map_handle)));
 +  }
  
 -  const void* memory() const { return mapping_.memory(); }
@@ -1024,6 +1004,7 @@
 +    return mapping_.guid();
 +  }
 +
++#if USE_SHARED_IMAGE_X11
 +  void GenerateSharedImageX11(const gfx::Size& size, uint32_t stride)
 +  {
 +    if (!xshm_) {
@@ -1035,10 +1016,15 @@
 +  scoped_refptr<SharedImageX11> xshm() const {
 +      return xshm_;
 +  }
++#endif
 +
 +  bool is_xshm() const
 +  {
++#if USE_SHARED_IMAGE_X11
 +      return bool(xshm_);
++#else
++      return false;
++#endif
 +  }
  
   private:
@@ -1050,7 +1036,7 @@
    DISALLOW_COPY_AND_ASSIGN(BitmapData);
  };
  
-@@ -98,6 +141,35 @@
+@@ -98,6 +146,35 @@ std::unique_ptr<SharedBitmap> ServerShar
    return std::make_unique<ServerSharedBitmap>(data);
  }
  
@@ -1086,7 +1072,7 @@
  base::UnguessableToken
  ServerSharedBitmapManager::GetSharedBitmapTracingGUIDFromId(
      const SharedBitmapId& id) {
-@@ -108,9 +180,10 @@
+@@ -108,9 +185,10 @@ ServerSharedBitmapManager::GetSharedBitm
    return data->mapped_id();
  }
  
@@ -1099,7 +1085,7 @@
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
  
    // Duplicate ids are not allowed.
-@@ -122,12 +195,24 @@
+@@ -122,12 +200,24 @@ bool ServerSharedBitmapManager::ChildAll
    if (!mapping.IsValid())
      return false;
  
@@ -1125,22 +1111,17 @@
  void ServerSharedBitmapManager::ChildDeletedSharedBitmap(
      const SharedBitmapId& id) {
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
---- a/components/viz/service/display_embedder/server_shared_bitmap_manager.h
-+++ b/components/viz/service/display_embedder/server_shared_bitmap_manager.h
-@@ -16,6 +16,12 @@
+--- a/src/components/viz/service/display_embedder/server_shared_bitmap_manager.h
++++ b/src/components/viz/service/display_embedder/server_shared_bitmap_manager.h
+@@ -14,6 +14,7 @@
+ #include "base/unguessable_token.h"
+ #include "components/viz/common/resources/resource_format_utils.h"
  #include "components/viz/service/display/shared_bitmap_manager.h"
++#include "components/viz/service/display_embedder/shared_image_x11.h"
  #include "components/viz/service/viz_service_export.h"
  
-+#ifdef USE_X11
-+#define USE_SHARED_IMAGE_X11 1
-+#else
-+#define USE_SHARED_IMAGE_X11 0
-+#endif
-+
  namespace viz {
- class BitmapData;
- 
-@@ -36,10 +42,19 @@
+@@ -36,10 +37,19 @@ class VIZ_SERVICE_EXPORT ServerSharedBit
        const gfx::Size& size,
        ResourceFormat format,
        const SharedBitmapId& id) override;
@@ -1160,7 +1141,7 @@
    void ChildDeletedSharedBitmap(const SharedBitmapId& id) override;
  
    // base::trace_event::MemoryDumpProvider implementation.
-@@ -49,6 +64,9 @@
+@@ -49,6 +59,9 @@ class VIZ_SERVICE_EXPORT ServerSharedBit
   private:
    SEQUENCE_CHECKER(sequence_checker_);
  
@@ -1171,8 +1152,8 @@
                       scoped_refptr<BitmapData>,
                       SharedBitmapIdHash>
 --- /dev/null
-+++ b/components/viz/service/display_embedder/shared_image_x11.cc
-@@ -0,0 +1,454 @@
++++ b/src/components/viz/service/display_embedder/shared_image_x11.cc
+@@ -0,0 +1,449 @@
 +#include <stddef.h>
 +#include <stdint.h>
 +#include <string.h>
@@ -1181,14 +1162,9 @@
 +#include "base/memory/writable_shared_memory_region.h"
 +#include "base/memory/platform_shared_memory_region.h"
 +#include "components/viz/service/display_embedder/shared_image_x11.h"
-+#include "mojo/public/cpp/base/shared_memory_utils.h"
 +#include "ui/gfx/x/x11_types.h"
 +
-+#ifdef __ARMEL__
-+#define XCB_IMAGE_SUPPORT 1
-+#else
-+#define XCB_IMAGE_SUPPORT 0
-+#endif
++#define XCB_IMAGE_SUPPORT USE_SHARED_IMAGE_X11
 +
 +#include <X11/Xlib-xcb.h>
 +#include <xcb/shm.h>
@@ -1499,7 +1475,7 @@
 +      return false;
 +    }
 +
-+    base::MappedReadOnlyRegion shm(mojo::CreateReadOnlySharedMemoryRegion(buffer_size_));
++    base::MappedReadOnlyRegion shm(base::ReadOnlySharedMemoryRegion::Create(buffer_size_));
 +    if (!shm.IsValid()) {
 +      LOG(ERROR) << "Failed to create RO anon shm: size=" << buffer_size_;
 +      return false;
@@ -1545,7 +1521,7 @@
 +
 +}  // namespace viz
 +
-+#else
++#elif 0
 +
 +namespace viz {
 +
@@ -1628,13 +1604,21 @@
 +
 +
 --- /dev/null
-+++ b/components/viz/service/display_embedder/shared_image_x11.h
-@@ -0,0 +1,84 @@
++++ b/src/components/viz/service/display_embedder/shared_image_x11.h
+@@ -0,0 +1,90 @@
 +#ifndef COMPONENTS_VIZ_SERVICE_DISPLAY_EMBEDDER_SHARED_IMAGE_X11_H_
 +#define COMPONENTS_VIZ_SERVICE_DISPLAY_EMBEDDER_SHARED_IMAGE_X11_H_
 +
++#if defined(__ARMEL__) && USE_X11
++#define USE_SHARED_IMAGE_X11 1
++#else
++#define USE_SHARED_IMAGE_X11 0
++#endif
++
++#if USE_SHARED_IMAGE_X11
++
++#include "base/files/scoped_file.h"
 +#include "base/memory/ref_counted.h"
-+#include "base/memory/shared_memory_handle.h"
 +#include "base/memory/shared_memory_mapping.h"
 +#include "components/viz/service/viz_service_export.h"
 +#include "ui/gfx/x/x11_types.h"
@@ -1710,330 +1694,63 @@
 +}  // namespace viz
 +
 +#endif
++#endif
 +
-+
-+
-+
---- a/components/viz/service/display_embedder/software_output_device_x11.cc
-+++ b/components/viz/service/display_embedder/software_output_device_x11.cc
-@@ -9,6 +9,9 @@
- #include <string.h>
- 
- #include "base/macros.h"
-+#include "components/viz/service/display/display_resource_provider.h"
-+#include "components/viz/service/display/overlay_candidate.h"
-+#include "components/viz/service/display_embedder/shared_image_x11.h"
- #include "third_party/skia/include/core/SkCanvas.h"
- #include "third_party/skia/include/core/SkImageInfo.h"
- #include "ui/base/x/x11_util.h"
-@@ -16,6 +19,7 @@
- #include "ui/gfx/x/x11.h"
- #include "ui/gfx/x/x11_error_tracker.h"
- #include "ui/gfx/x/x11_types.h"
-+#include "ui/gfx/geometry/rect_conversions.h"
- 
- namespace viz {
- 
-@@ -113,8 +117,75 @@
- 
- }  // namespace
- 
-+
-+int
-+SoftwareOutputDeviceX11::ShmDesc::attach(XDisplay * const display,
-+  const XWindowAttributes& attributes, const int w, const int h)
-+{
-+  // Clear out old allocation
-+  xshm_ = nullptr;
-+
-+  scoped_refptr<SharedImageX11> xshm(new SharedImageX11());
-+
-+  // Set size to requested (min)w x h; let the code pick stride
-+  xshm->set_size(gfx::Size(w, h), 0);
-+
-+  if (!xshm->create_image(display, attributes))
-+      return -1;
-+
-+  xshm_ = std::move(xshm);
-+  return 0;
-+}
-+
-+std::unique_ptr<viz::XcbCookie> SoftwareOutputDeviceX11::ShmDesc::put_image(Drawable drawable, GC gc, const gfx::Rect& rect)
-+{
-+  return xshm_->put_image(drawable, gc, rect, rect);
-+}
-+
-+void SoftwareOutputDeviceX11::ShmDesc::resize(const SkImageInfo& info)
-+{
-+//  LOG(ERROR) << "resize req:" << info.width() << "x" << info.height();
-+  req_ii_ = info;
-+}
-+
-+sk_sp<SkSurface>
-+SoftwareOutputDeviceX11::ShmDesc::use_surface(XDisplay * const display, const XWindowAttributes& attributes)
-+{
-+  if (req_ii_ != cur_ii_) {
-+//    LOG(ERROR) << "resize set:" << req_ii_.width() << "x" << req_ii_.height();
-+
-+    // Kill all current stuff
-+    surface_.reset();
-+
-+    // Rebuild
-+    if (attach(display, attributes, req_ii_.minRowBytes()/req_ii_.bytesPerPixel(), req_ii_.height()) != 0)
-+    {
-+      LOG(ERROR) << "Failed to make new XImage";
-+    }
-+    // Build a surface on it
-+    else if (!(surface_ = SkSurface::MakeRasterDirect(req_ii_, xshm_->memory_rw(), xshm_->stride())))
-+    {
-+      LOG(ERROR) << "Failed to make new SkSurface";
-+    }
-+    else
-+    {
-+      // Success
-+      cur_ii_ = req_ii_;
-+    }
-+  }
-+  return surface_;
-+}
-+
-+
-+SoftwareOutputDeviceX11::ShmDesc::ShmDesc() {
-+}
-+
-+SoftwareOutputDeviceX11::ShmDesc::~ShmDesc() {
-+}
-+
-+
- SoftwareOutputDeviceX11::SoftwareOutputDeviceX11(gfx::AcceleratedWidget widget)
--    : widget_(widget), display_(gfx::GetXDisplay()), gc_(nullptr) {
-+    : widget_(widget), display_(gfx::GetXDisplay()), gc_(nullptr), shm_n_(0) {
-   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
- 
-   gc_ = XCreateGC(display_, widget_, 0, nullptr);
-@@ -123,15 +194,69 @@
-     return;
-   }
-   ui::GetIntProperty(widget_, "CHROMIUM_COMPOSITE_WINDOW", &composite_);
-+
-+  if (!(gfx::BitsPerPixelForPixmapDepth(display_, attributes_.depth) == 32 &&
-+        attributes_.visual->red_mask == 0xff0000 &&
-+        attributes_.visual->green_mask == 0xff00 &&
-+        attributes_.visual->blue_mask == 0xff &&
-+        SharedImageX11::check_support(display_)))
-+  {
-+    LOG(WARNING) << "Display attributes incompatible with SHM";
-+    shm_n_ = -1;
-+  }
-+  else
-+  {
-+    for (int i = 0; i != 2; ++i) {
-+      // Pick any old initial shape - it will be freed as soon as we start
-+      // and know what size we actually want (even if it is 1024x768!)
-+      // This also allows us to check here that SHM actually works
-+      if (shm_descs_[i].attach(display_, attributes_, 1024, 768) != 0)
-+      {
-+        shm_n_ = -1;
-+        break;
-+      }
-+    }
-+	}
+--- a/src/components/viz/service/display_embedder/software_output_device_x11.cc
++++ b/src/components/viz/service/display_embedder/software_output_device_x11.cc
+@@ -64,4 +64,8 @@ int SoftwareOutputDeviceX11::MaxFramesPe
+   return x11_software_bitmap_presenter_.MaxFramesPending();
  }
  
- SoftwareOutputDeviceX11::~SoftwareOutputDeviceX11() {
-   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
- 
-+  overlay_lock_.release();  // Avoid shutdown crash
-   XFreeGC(display_, gc_);
- }
- 
--void SoftwareOutputDeviceX11::EndPaint() {
-+bool SoftwareOutputDeviceX11::use_shm() const
-+{
-+  return shm_n_ >= 0;
-+}
-+
-+void SoftwareOutputDeviceX11::Resize(const gfx::Size& viewport_pixel_size,
-+                                  float scale_factor) {
-+//  scale_factor_ = scale_factor;
-+
-+  if (viewport_pixel_size_ == viewport_pixel_size)
-+    return;
-+
-+  const SkImageInfo info(SkImageInfo::MakeN32(viewport_pixel_size.width(),
-+                                          viewport_pixel_size.height(),
-+                                          kOpaque_SkAlphaType));
-+  viewport_pixel_size_ = viewport_pixel_size;
-+
-+  if (shm_n_ < 0) {
-+    surface_ = SkSurface::MakeRaster(info);
-+  }
-+  else
-+  {
-+    for (int i = 0; i != 2; ++i) {
-+      shm_descs_[i].resize(info);
-+    }
-+
-+    surface_ = shm_descs_[shm_n_].use_surface(display_, attributes_);
-+  }
-+}
-+
-+void SoftwareOutputDeviceX11::paint_surface() {
-   DCHECK_CALLED_ON_VALID_THREAD(thread_checker_);
- 
-   SoftwareOutputDevice::EndPaint();
-@@ -207,15 +332,22 @@
-     XRenderFreePicture(display_, picture);
-     XRenderFreePicture(display_, dest_picture);
-     XFreePixmap(display_, pixmap);
-+  } else if (shm_n_ >= 0) {
-+    last_cookie_ = shm_descs_[shm_n_].put_image(widget_, static_cast<GC>(gc_), rect);
-+    // Swap to other surface for next draw
-+    // Could use sync if we only want 1 surface but that wastes time
-+    //  XSync(display_, false);
-+    shm_n_ = (shm_n_ + 1) % 2;
-+    surface_ = shm_descs_[shm_n_].use_surface(display_, attributes_);
-   } else {
-     // TODO(jbauman): Switch to XShmPutImage since it's async.
-     SkPixmap pixmap;
-     surface_->peekPixels(&pixmap);
-     gfx::PutARGBImage(display_, attributes_.visual, attributes_.depth, widget_,
-                       gc_, static_cast<const uint8_t*>(pixmap.addr()),
--                      viewport_pixel_size_.width(),
--                      viewport_pixel_size_.height(), rect.x(), rect.y(),
--                      rect.x(), rect.y(), rect.width(), rect.height());
-+                      viewport_pixel_size_.width(), viewport_pixel_size_.height(),
-+                      rect.x(), rect.y(), rect.x(), rect.y(), rect.width(),
-+                      rect.height());
-   }
- 
-   // Ensure the new window content appears immediately. On a TYPE_UI thread we
-@@ -225,4 +357,53 @@
-   XFlush(display_);
- }
- 
-+void SoftwareOutputDeviceX11::EndPaint() {
-+  last_cookie_.reset();
-+  overlay_lock_.reset();
-+  paint_surface();
-+  XFlush(display_);
-+}
-+
-+void SoftwareOutputDeviceX11::EndPaint(const gfx::Rect& damage_rect,
-+  DisplayResourceProvider * const resource_provider,
-+  const OverlayCandidateList& overlay_list)
-+{
-+  // Release these locks at end of func - but allow reassignment before then
-+  const std::unique_ptr<DisplayResourceProvider::ScopedReadLockSharedImageX11> lock(std::move(overlay_lock_));
-+  // Ordering means sync will be released (on destruction) before overlay lock
-+  const std::unique_ptr<XcbCookie> sync_cookie(std::move(last_cookie_));
-+
-+  damage_rect_ = damage_rect;
-+  paint_surface();
-+
-+  for (const OverlayCandidate& ovly : overlay_list ) {
-+
-+    if (ovly.overlay_handled) {
-+      if (!damage_rect.IsEmpty()) {
-+        LOG(ERROR) << "Damage rect not empty: " << damage_rect.ToString();
-+      }
-+
-+      overlay_lock_ = std::make_unique<DisplayResourceProvider::ScopedReadLockSharedImageX11>(
-+          resource_provider, ovly.resource_id);
-+
-+      SharedImageX11 *const xshm = overlay_lock_->shared_image_x11();
-+      if (xshm == nullptr){
-+        LOG(ERROR) << "SharedMemory unexpectly null";
-+        continue;
-+      }
-+
-+      const gfx::Rect rect(gfx::ToEnclosingRect(ovly.display_rect));
-+
-+      if (!xshm->create_image(display_, attributes_))
-+      {
-+          LOG(ERROR) << "xshm.create_image failed!";
-+          continue;
-+      }
-+
-+      last_cookie_ = xshm->put_image(widget_, gc_, rect, gfx::Rect());
-+    }
-+  }
-+  XFlush(display_);
++gpu::SurfaceHandle SoftwareOutputDeviceX11::GetSurfaceHandle() const {
++  return x11_software_bitmap_presenter_.GetAcceleratedWidget();
 +}
 +
  }  // namespace viz
---- a/components/viz/service/display_embedder/software_output_device_x11.h
-+++ b/components/viz/service/display_embedder/software_output_device_x11.h
-@@ -5,9 +5,13 @@
- #ifndef COMPONENTS_VIZ_SERVICE_DISPLAY_EMBEDDER_SOFTWARE_OUTPUT_DEVICE_X11_H_
- #define COMPONENTS_VIZ_SERVICE_DISPLAY_EMBEDDER_SOFTWARE_OUTPUT_DEVICE_X11_H_
- 
-+#include <X11/Xlib.h>
-+
- #include "base/macros.h"
+--- a/src/components/viz/service/display_embedder/software_output_device_x11.h
++++ b/src/components/viz/service/display_embedder/software_output_device_x11.h
+@@ -10,6 +10,7 @@
  #include "base/threading/thread_checker.h"
-+#include "components/viz/service/display/display_resource_provider.h"
  #include "components/viz/service/display/software_output_device.h"
-+#include "components/viz/service/display_embedder/shared_image_x11.h"
  #include "components/viz/service/viz_service_export.h"
++#include "gpu/ipc/common/surface_handle.h"
+ #include "ui/base/x/x11_software_bitmap_presenter.h"
  #include "ui/gfx/native_widget_types.h"
  #include "ui/gfx/x/x11.h"
-@@ -21,11 +25,19 @@
- 
-   ~SoftwareOutputDeviceX11() override;
- 
-+  void Resize(const gfx::Size& viewport_pixel_size, float scale_factor) override;
+@@ -32,6 +33,7 @@ class VIZ_SERVICE_EXPORT SoftwareOutputD
    void EndPaint() override;
-+  void EndPaint(const gfx::Rect& damage_rect,
-+    DisplayResourceProvider * const resource_provider,
-+    const OverlayCandidateList& overlay_list) override;
-+
-+  bool use_shm() const;
+   void OnSwapBuffers(SwapBuffersCallback swap_ack_callback) override;
+   int MaxFramesPending() const override;
++  gpu::SurfaceHandle GetSurfaceHandle() const override;
  
-  private:
-+  void paint_surface();
-+
-   gfx::AcceleratedWidget widget_;
--  XDisplay* display_;
-+  XDisplay* const display_;
-   GC gc_;
-   XWindowAttributes attributes_;
-   // If nonzero, indicates that the widget should be drawn over its
-@@ -33,6 +45,31 @@
-   int composite_ = 0;
-   THREAD_CHECKER(thread_checker_);
+   ui::X11SoftwareBitmapPresenter x11_software_bitmap_presenter_;
  
-+  // Shared memory stuff
-+
-+  std::unique_ptr<DisplayResourceProvider::ScopedReadLockSharedImageX11> overlay_lock_;
-+  std::unique_ptr<XcbCookie> last_cookie_;
-+
-+  int shm_n_;
-+  class ShmDesc
-+  {
-+    sk_sp<SkSurface> surface_;
-+    SkImageInfo req_ii_;
-+    SkImageInfo cur_ii_;
-+
-+public:
-+    scoped_refptr<SharedImageX11> xshm_;
-+
-+    ShmDesc();
-+    virtual ~ShmDesc();
-+    int attach(XDisplay * const display, const XWindowAttributes& attributes, const int stride, const int h);
-+    void detach();
-+    void destroy();
-+    void resize(const SkImageInfo& info);
-+    std::unique_ptr<XcbCookie> put_image(Drawable drawable, GC gc, const gfx::Rect& rect);
-+    sk_sp<SkSurface> use_surface(XDisplay * const display, const XWindowAttributes& attributes);
-+  } shm_descs_[2];
-+
-   DISALLOW_COPY_AND_ASSIGN(SoftwareOutputDeviceX11);
- };
+--- a/src/components/viz/service/display_embedder/software_output_surface.cc
++++ b/src/components/viz/service/display_embedder/software_output_surface.cc
+@@ -30,6 +30,10 @@ SoftwareOutputSurface::SoftwareOutputSur
  
---- a/components/viz/service/frame_sinks/compositor_frame_sink_support.cc
-+++ b/components/viz/service/frame_sinks/compositor_frame_sink_support.cc
-@@ -342,8 +342,8 @@
+ SoftwareOutputSurface::~SoftwareOutputSurface() = default;
+ 
++gpu::SurfaceHandle SoftwareOutputSurface::GetSurfaceHandle() const {
++  return software_device()->GetSurfaceHandle();
++}
++
+ void SoftwareOutputSurface::BindToClient(OutputSurfaceClient* client) {
+   DCHECK(client);
+   DCHECK(!client_);
+--- a/src/components/viz/service/display_embedder/software_output_surface.h
++++ b/src/components/viz/service/display_embedder/software_output_surface.h
+@@ -28,6 +28,7 @@ class VIZ_SERVICE_EXPORT SoftwareOutputS
+   ~SoftwareOutputSurface() override;
+ 
+   // OutputSurface implementation.
++  gpu::SurfaceHandle GetSurfaceHandle() const override;
+   void BindToClient(OutputSurfaceClient* client) override;
+   void EnsureBackbuffer() override;
+   void DiscardBackbuffer() override;
+--- a/src/components/viz/service/frame_sinks/compositor_frame_sink_support.cc
++++ b/src/components/viz/service/frame_sinks/compositor_frame_sink_support.cc
+@@ -376,8 +376,8 @@ void CompositorFrameSinkSupport::SubmitC
  bool CompositorFrameSinkSupport::DidAllocateSharedBitmap(
      base::ReadOnlySharedMemoryRegion region,
      const SharedBitmapId& id) {
@@ -2044,7 +1761,7 @@
      return false;
    }
  
-@@ -590,6 +590,12 @@
+@@ -633,6 +633,12 @@ void CompositorFrameSinkSupport::DidPres
    UpdateNeedsBeginFramesInternal();
  }
  
@@ -2056,10 +1773,10 @@
 +
  void CompositorFrameSinkSupport::DidRejectCompositorFrame(
      uint32_t frame_token,
-     std::vector<TransferableResource> frame_resource_list) {
---- a/components/viz/service/frame_sinks/compositor_frame_sink_support.h
-+++ b/components/viz/service/frame_sinks/compositor_frame_sink_support.h
-@@ -118,6 +118,7 @@
+     std::vector<TransferableResource> frame_resource_list,
+--- a/src/components/viz/service/frame_sinks/compositor_frame_sink_support.h
++++ b/src/components/viz/service/frame_sinks/compositor_frame_sink_support.h
+@@ -120,6 +120,7 @@ class VIZ_SERVICE_EXPORT CompositorFrame
        const std::vector<TransferableResource>& resources) override;
    void UnrefResources(const std::vector<ReturnedResource>& resources) override;
    void ReturnResources(const std::vector<ReturnedResource>& resources) override;
@@ -2067,20 +1784,10 @@
    void ReceiveFromChild(
        const std::vector<TransferableResource>& resources) override;
    // Takes the CopyOutputRequests that were requested for a surface with at
---- a/components/viz/service/frame_sinks/direct_layer_tree_frame_sink.h
-+++ b/components/viz/service/frame_sinks/direct_layer_tree_frame_sink.h
-@@ -108,6 +108,7 @@
-                     const FrameTimingDetailsMap& timing_details) override;
-   void ReclaimResources(
-       const std::vector<ReturnedResource>& resources) override;
-+  void DidStretchFrame(uint32_t width, uint32_t height) override {}
-   void OnBeginFramePausedChanged(bool paused) override;
- 
-   // ExternalBeginFrameSourceClient implementation:
---- a/components/viz/service/surfaces/surface.cc
-+++ b/components/viz/service/surfaces/surface.cc
-@@ -642,6 +642,32 @@
-                                         gfx::PresentationFeedback::Failure());
+--- a/src/components/viz/service/surfaces/surface.cc
++++ b/src/components/viz/service/surfaces/surface.cc
+@@ -661,6 +661,32 @@ void Surface::UnrefFrameResourcesAndRunC
+     info.Terminate();
  }
  
 +void Surface::DidStretchFrame(uint32_t width, uint32_t height) {
@@ -2112,11 +1819,11 @@
  void Surface::ClearCopyRequests() {
    if (active_frame_data_) {
      for (const auto& render_pass : active_frame_data_->frame.render_pass_list) {
---- a/components/viz/service/surfaces/surface.h
-+++ b/components/viz/service/surfaces/surface.h
-@@ -135,6 +135,9 @@
-     return surface_client_ ? surface_client_->NeedsSyncTokens() : false;
-   }
+--- a/src/components/viz/service/surfaces/surface.h
++++ b/src/components/viz/service/surfaces/surface.h
+@@ -131,6 +131,9 @@ class VIZ_SERVICE_EXPORT Surface final {
+   // Decrements the reference count on resources specified by |resources|.
+   void UnrefResources(const std::vector<ReturnedResource>& resources);
  
 +  void DidStretchFrame(uint32_t width, uint32_t height);
 +  void DidntStretchFrame();
@@ -2124,7 +1831,7 @@
    // Returns false if |frame| is invalid.
    // |frame_rejected_callback| will be called once if the frame will not be
    // displayed.
-@@ -353,6 +356,10 @@
+@@ -344,6 +347,10 @@ class VIZ_SERVICE_EXPORT Surface final {
  
    SurfaceAllocationGroup* const allocation_group_;
  
@@ -2135,10 +1842,10 @@
    base::WeakPtrFactory<Surface> weak_factory_{this};
  
    DISALLOW_COPY_AND_ASSIGN(Surface);
---- a/components/viz/service/surfaces/surface_client.h
-+++ b/components/viz/service/surfaces/surface_client.h
-@@ -82,6 +82,9 @@
-       uint32_t frame_token,
+--- a/src/components/viz/service/surfaces/surface_client.h
++++ b/src/components/viz/service/surfaces/surface_client.h
+@@ -81,6 +81,9 @@ class VIZ_SERVICE_EXPORT SurfaceClient {
+       const gfx::SwapTimings& swap_timings,
        const gfx::PresentationFeedback& feedback) = 0;
  
 +  // OK - this probably should be pure but that makes the patch bigger...
@@ -2147,9 +1854,9 @@
    // This is called when |surface| or one of its descendents is determined to be
    // damaged at aggregation time.
    virtual void OnSurfaceAggregatedDamage(
---- a/components/viz/test/fake_compositor_frame_sink_client.h
-+++ b/components/viz/test/fake_compositor_frame_sink_client.h
-@@ -28,6 +28,7 @@
+--- a/src/components/viz/test/fake_compositor_frame_sink_client.h
++++ b/src/components/viz/test/fake_compositor_frame_sink_client.h
+@@ -29,6 +29,7 @@ class FakeCompositorFrameSinkClient : pu
                      const FrameTimingDetailsMap& timing_details) override;
    void ReclaimResources(
        const std::vector<ReturnedResource>& resources) override;
@@ -2157,33 +1864,24 @@
    void OnBeginFramePausedChanged(bool paused) override;
  
    void clear_returned_resources() { returned_resources_.clear(); }
---- a/content/browser/browser_main_loop.cc
-+++ b/content/browser/browser_main_loop.cc
-@@ -576,7 +576,10 @@
+--- a/src/content/browser/browser_main_loop.cc
++++ b/src/content/browser/browser_main_loop.cc
+@@ -612,6 +612,12 @@ int BrowserMainLoop::EarlyInitialization
  #endif
  
  #if defined(USE_X11)
--  if (UsingInProcessGpu()) {
++#if 0
 +  // (Pi) The mmal shared memory passthrough requires MT X as the frame
 +  // can be deleted (and detached) outside the display thread
-+//  if (UsingInProcessGpu()) {
-+  if (1) {
-     if (!gfx::InitializeThreadedX11()) {
-       LOG(ERROR) << "Failed to put Xlib into threaded mode.";
-     }
---- a/content/browser/renderer_host/delegated_frame_host.h
-+++ b/content/browser/renderer_host/delegated_frame_host.h
-@@ -93,6 +93,7 @@
-                     const viz::FrameTimingDetailsMap& timing_details) override;
-   void ReclaimResources(
-       const std::vector<viz::ReturnedResource>& resources) override;
-+  void DidStretchFrame(uint32_t width, uint32_t height) override {}
-   void OnBeginFramePausedChanged(bool paused) override;
- 
-   // viz::HostFrameSinkClient implementation.
---- a/content/browser/renderer_host/render_process_host_impl.cc
-+++ b/content/browser/renderer_host/render_process_host_impl.cc
-@@ -3072,6 +3072,15 @@
++  if (!gfx::InitializeThreadedX11()) {
++    LOG(ERROR) << "Failed to put Xlib into threaded mode.";
++#endif
+   if (UsingInProcessGpu()) {
+     if (!gfx::GetXDisplay()) {
+       LOG(ERROR) << "Failed to open an X11 connection.";
+--- a/src/content/browser/renderer_host/render_process_host_impl.cc
++++ b/src/content/browser/renderer_host/render_process_host_impl.cc
+@@ -3420,6 +3420,15 @@ void RenderProcessHostImpl::PropagateBro
      switches::kIpcDumpDirectory,
      switches::kIpcFuzzerTestcase,
  #endif
@@ -2199,29 +1897,8 @@
    };
    renderer_cmd->CopySwitchesFrom(browser_cmd, kSwitchNames,
                                   base::size(kSwitchNames));
---- a/content/browser/renderer_host/render_widget_host_impl.cc
-+++ b/content/browser/renderer_host/render_widget_host_impl.cc
-@@ -2192,7 +2192,7 @@
- void RenderWidgetHostImpl::DidAllocateSharedBitmap(
-     base::ReadOnlySharedMemoryRegion region,
-     const viz::SharedBitmapId& id) {
--  if (!shared_bitmap_manager_->ChildAllocatedSharedBitmap(region.Map(), id)) {
-+  if (!shared_bitmap_manager_->ChildAllocatedSharedRegion(region, id)) {
-     bad_message::ReceivedBadMessage(GetProcess(),
-                                     bad_message::RWH_SHARED_BITMAP);
-   }
---- a/content/browser/renderer_host/render_widget_host_view_child_frame.h
-+++ b/content/browser/renderer_host/render_widget_host_view_child_frame.h
-@@ -194,6 +194,7 @@
-                     const viz::FrameTimingDetailsMap& timing_details) override;
-   void ReclaimResources(
-       const std::vector<viz::ReturnedResource>& resources) override;
-+  void DidStretchFrame(uint32_t width, uint32_t height) override {}
-   void OnBeginFramePausedChanged(bool paused) override;
- 
-   // viz::HostFrameSinkClient implementation.
---- a/content/browser/sandbox_ipc_linux.cc
-+++ b/content/browser/sandbox_ipc_linux.cc
+--- a/src/content/browser/sandbox_ipc_linux.cc
++++ b/src/content/browser/sandbox_ipc_linux.cc
 @@ -8,6 +8,7 @@
  #include <stddef.h>
  #include <stdint.h>
@@ -2230,7 +1907,7 @@
  #include <sys/poll.h>
  #include <sys/socket.h>
  #include <sys/stat.h>
-@@ -123,6 +124,12 @@
+@@ -123,6 +124,12 @@ void SandboxIPCHandler::HandleRequestFro
        service_manager::SandboxLinux::METHOD_MAKE_SHARED_MEMORY_SEGMENT) {
      HandleMakeSharedMemorySegment(fd, iter, fds);
      return;
@@ -2243,7 +1920,7 @@
    }
    NOTREACHED();
  }
-@@ -154,6 +161,89 @@
+@@ -154,6 +161,89 @@ void SandboxIPCHandler::HandleMakeShared
    // shm_fd will close the handle which is no longer needed by this process.
  }
  
@@ -2333,9 +2010,9 @@
  void SandboxIPCHandler::SendRendererReply(
      const std::vector<base::ScopedFD>& fds,
      const base::Pickle& reply,
---- a/content/browser/sandbox_ipc_linux.h
-+++ b/content/browser/sandbox_ipc_linux.h
-@@ -37,6 +37,13 @@
+--- a/src/content/browser/sandbox_ipc_linux.h
++++ b/src/content/browser/sandbox_ipc_linux.h
+@@ -37,6 +37,13 @@ class SandboxIPCHandler : public base::D
                                       base::PickleIterator iter,
                                       const std::vector<base::ScopedFD>& fds);
  
@@ -2349,20 +2026,19 @@
    void SendRendererReply(const std::vector<base::ScopedFD>& fds,
                           const base::Pickle& reply,
                           int reply_fd);
---- a/content/renderer/android/synchronous_layer_tree_frame_sink.h
-+++ b/content/renderer/android/synchronous_layer_tree_frame_sink.h
-@@ -110,6 +110,8 @@
-   void DemandDrawSw(SkCanvas* canvas);
-   void WillSkipDraw();
- 
+--- a/src/content/renderer/android/synchronous_layer_tree_frame_sink.h
++++ b/src/content/renderer/android/synchronous_layer_tree_frame_sink.h
+@@ -129,6 +129,7 @@ class SynchronousLayerTreeFrameSink
+   void ReclaimResources(
+       const std::vector<viz::ReturnedResource>& resources) override;
+   void OnBeginFramePausedChanged(bool paused) override;
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
-+
+ 
    // viz::ExternalBeginFrameSourceClient overrides.
    void OnNeedsBeginFrames(bool needs_begin_frames) override;
- 
---- a/content/test/fake_renderer_compositor_frame_sink.h
-+++ b/content/test/fake_renderer_compositor_frame_sink.h
-@@ -35,6 +35,7 @@
+--- a/src/content/test/fake_renderer_compositor_frame_sink.h
++++ b/src/content/test/fake_renderer_compositor_frame_sink.h
+@@ -38,6 +38,7 @@ class FakeRendererCompositorFrameSink
    void OnBeginFramePausedChanged(bool paused) override {}
    void ReclaimResources(
        const std::vector<viz::ReturnedResource>& resources) override;
@@ -2370,22 +2046,9 @@
  
    // Resets test data.
    void Reset();
---- a/gpu/command_buffer/common/gpu_memory_buffer_support.cc
-+++ b/gpu/command_buffer/common/gpu_memory_buffer_support.cc
-@@ -110,7 +110,9 @@
- 
- GPU_EXPORT bool NativeBufferNeedsPlatformSpecificTextureTarget(
-     gfx::BufferFormat format) {
--#if defined(USE_OZONE)
-+#if defined(USE_OZONE) || 1  // RPI
-+  // On Pi RGB works but yields a lot of "unhandled 1" logging out of mesa
-+  // // so disable - probably saves CMA too
-   // Always use GL_TEXTURE_2D as the target for RGB textures.
-   // https://crbug.com/916728
-   if (format == gfx::BufferFormat::R_8 || format == gfx::BufferFormat::RG_88 ||
---- a/gpu/command_buffer/service/gl_utils.cc
-+++ b/gpu/command_buffer/service/gl_utils.cc
-@@ -1023,6 +1023,7 @@
+--- a/src/gpu/command_buffer/service/gl_utils.cc
++++ b/src/gpu/command_buffer/service/gl_utils.cc
+@@ -1127,6 +1127,7 @@ bool ValidateCopyTextureCHROMIUMInternal
        source_internal_format == GL_LUMINANCE_ALPHA ||
        source_internal_format == GL_BGRA_EXT ||
        source_internal_format == GL_BGRA8_EXT ||
@@ -2393,9 +2056,9 @@
        source_internal_format == GL_RGB_YCBCR_420V_CHROMIUM ||
        source_internal_format == GL_RGB_YCBCR_422_CHROMIUM ||
        source_internal_format == GL_RGB_YCBCR_P010_CHROMIUM ||
---- a/gpu/ipc/common/gpu_memory_buffer_support.cc
-+++ b/gpu/ipc/common/gpu_memory_buffer_support.cc
-@@ -88,6 +88,28 @@
+--- a/src/gpu/ipc/common/gpu_memory_buffer_support.cc
++++ b/src/gpu/ipc/common/gpu_memory_buffer_support.cc
+@@ -92,6 +92,29 @@ bool GpuMemoryBufferSupport::IsNativeGpu
    }
    NOTREACHED();
    return false;
@@ -2417,6 +2080,7 @@
 +    case gfx::BufferUsage::SCANOUT_VDA_WRITE:
 +    case gfx::BufferUsage::SCANOUT_CAMERA_READ_WRITE:
 +    case gfx::BufferUsage::CAMERA_AND_CPU_READ_WRITE:
++    case gfx::BufferUsage::SCANOUT_VEA_READ_CAMERA_AND_CPU_READ_WRITE:
 +      return false;
 +  }
 +  NOTREACHED();
@@ -2424,8 +2088,8 @@
  #elif defined(OS_ANDROID)
    if (!base::AndroidHardwareBufferCompat::IsSupportAvailable()) {
      return false;
---- a/gpu/ipc/common/gpu_memory_buffer_support.h
-+++ b/gpu/ipc/common/gpu_memory_buffer_support.h
+--- a/src/gpu/ipc/common/gpu_memory_buffer_support.h
++++ b/src/gpu/ipc/common/gpu_memory_buffer_support.h
 @@ -16,6 +16,8 @@
  #include "ui/gfx/geometry/size.h"
  #include "ui/gfx/gpu_memory_buffer.h"
@@ -2435,9 +2099,9 @@
  #if defined(OS_LINUX) || defined(USE_OZONE)
  namespace gfx {
  class ClientNativePixmapFactory;
---- a/gpu/ipc/host/gpu_memory_buffer_support.cc
-+++ b/gpu/ipc/host/gpu_memory_buffer_support.cc
-@@ -17,7 +17,7 @@
+--- a/src/gpu/ipc/host/gpu_memory_buffer_support.cc
++++ b/src/gpu/ipc/host/gpu_memory_buffer_support.cc
+@@ -16,7 +16,7 @@ GpuMemoryBufferConfigurationSet GetNativ
    GpuMemoryBufferConfigurationSet configurations;
  
  #if defined(USE_OZONE) || defined(OS_MACOSX) || defined(OS_WIN) || \
@@ -2446,7 +2110,7 @@
    const gfx::BufferFormat kBufferFormats[] = {
        gfx::BufferFormat::R_8,          gfx::BufferFormat::R_16,
        gfx::BufferFormat::RG_88,        gfx::BufferFormat::BGR_565,
-@@ -54,7 +54,7 @@
+@@ -55,7 +55,7 @@ bool GetImageNeedsPlatformSpecificTextur
    if (!NativeBufferNeedsPlatformSpecificTextureTarget(format))
      return false;
  #if defined(USE_OZONE) || defined(OS_MACOSX) || defined(OS_WIN) || \
@@ -2455,8 +2119,8 @@
    GpuMemoryBufferSupport support;
    GpuMemoryBufferConfigurationSet native_configurations =
        GetNativeGpuMemoryBufferConfigurations(&support);
---- a/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc
-+++ b/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc
+--- a/src/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc
++++ b/src/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc
 @@ -11,6 +11,7 @@
  #include "ui/gfx/buffer_usage_util.h"
  #include "ui/gfx/client_native_pixmap.h"
@@ -2465,7 +2129,7 @@
  #include "ui/gfx/native_pixmap.h"
  #include "ui/gl/gl_bindings.h"
  #include "ui/gl/gl_enums.h"
-@@ -41,12 +42,18 @@
+@@ -67,12 +68,18 @@ GpuMemoryBufferFactoryNativePixmap::Crea
      gfx::BufferUsage usage,
      int client_id,
      SurfaceHandle surface_handle) {
@@ -2483,17 +2147,8 @@
 +
    return CreateGpuMemoryBufferFromNativePixmap(id, size, format, usage,
                                                 client_id, std::move(pixmap));
- #else
-@@ -72,6 +79,8 @@
-               &GpuMemoryBufferFactoryNativePixmap::OnNativePixmapCreated, id,
-               size, format, usage, client_id, std::move(callback),
-               weak_factory_.GetWeakPtr()));
-+#elif RPI_PIXMAP_VCSM
-+  std::move(callback).Run(CreateGpuMemoryBuffer(id, size, format, usage, client_id, surface_handle));
- #else
-   NOTIMPLEMENTED();
-   std::move(callback).Run(gfx::GpuMemoryBufferHandle());
-@@ -120,6 +129,11 @@
+ #elif defined(USE_X11)
+@@ -161,6 +168,11 @@ GpuMemoryBufferFactoryNativePixmap::Crea
                   ->CreateNativePixmapFromHandle(
                       surface_handle, size, format,
                       std::move(handle.native_pixmap_handle));
@@ -2505,7 +2160,7 @@
  #else
      DCHECK_EQ(surface_handle, gpu::kNullSurfaceHandle);
      pixmap = base::WrapRefCounted(new gfx::NativePixmapDmaBuf(
-@@ -141,7 +155,7 @@
+@@ -191,7 +203,7 @@ GpuMemoryBufferFactoryNativePixmap::Crea
  }
  
  bool GpuMemoryBufferFactoryNativePixmap::SupportsCreateAnonymousImage() const {
@@ -2514,18 +2169,18 @@
    return true;
  #else
    return false;
-@@ -160,6 +174,8 @@
+@@ -211,6 +223,8 @@ GpuMemoryBufferFactoryNativePixmap::Crea
                 ->GetSurfaceFactoryOzone()
-                ->CreateNativePixmap(gpu::kNullSurfaceHandle, GetVulkanDevice(),
-                                     size, format, usage);
+                ->CreateNativePixmap(surface_handle, GetVulkanDevice(), size,
+                                     format, usage);
 +#elif RPI_PIXMAP_VCSM
 +  pixmap = CreateVCSMPixmap(size, format);
  #else
    NOTIMPLEMENTED();
  #endif
---- a/media/base/media_switches.cc
-+++ b/media/base/media_switches.cc
-@@ -181,6 +181,21 @@
+--- a/src/media/base/media_switches.cc
++++ b/src/media/base/media_switches.cc
+@@ -201,6 +201,21 @@ const char kUserGestureRequiredPolicy[]
  
  }  // namespace autoplay
  
@@ -2547,9 +2202,9 @@
  }  // namespace switches
  
  namespace media {
---- a/media/base/media_switches.h
-+++ b/media/base/media_switches.h
-@@ -86,6 +86,21 @@
+--- a/src/media/base/media_switches.h
++++ b/src/media/base/media_switches.h
+@@ -93,6 +93,21 @@ MEDIA_EXPORT extern const char kUserGest
  
  }  // namespace autoplay
  
@@ -2571,9 +2226,9 @@
  }  // namespace switches
  
  namespace media {
---- a/media/base/video_decoder.h
-+++ b/media/base/video_decoder.h
-@@ -133,6 +133,9 @@
+--- a/src/media/base/video_decoder.h
++++ b/src/media/base/video_decoder.h
+@@ -134,6 +134,9 @@ class MEDIA_EXPORT VideoDecoder {
    // [|limits::kMinVideoDecodeThreads|, |limits::kMaxVideoDecodeThreads|].
    static int GetRecommendedThreadCount(int desired_threads);
  
@@ -2583,9 +2238,9 @@
   protected:
    // Deletion is only allowed via Destroy().
    virtual ~VideoDecoder();
---- a/media/base/video_frame.cc
-+++ b/media/base/video_frame.cc
-@@ -1225,4 +1225,21 @@
+--- a/src/media/base/video_frame.cc
++++ b/src/media/base/video_frame.cc
+@@ -1323,4 +1323,21 @@ std::vector<size_t> VideoFrame::Calculat
    return plane_size;
  }
  
@@ -2607,8 +2262,8 @@
 +}
 +
  }  // namespace media
---- a/media/base/video_frame.h
-+++ b/media/base/video_frame.h
+--- a/src/media/base/video_frame.h
++++ b/src/media/base/video_frame.h
 @@ -18,6 +18,7 @@
  #include "base/logging.h"
  #include "base/macros.h"
@@ -2617,7 +2272,7 @@
  #include "base/memory/ref_counted.h"
  #include "base/memory/unsafe_shared_memory_region.h"
  #include "base/optional.h"
-@@ -47,6 +48,8 @@
+@@ -52,6 +53,8 @@ namespace media {
  
  class MEDIA_EXPORT VideoFrame : public base::RefCountedThreadSafe<VideoFrame> {
   public:
@@ -2626,7 +2281,7 @@
    enum {
      kFrameSizeAlignment = 16,
      kFrameSizePadding = 16,
-@@ -444,6 +447,13 @@
+@@ -485,6 +488,13 @@ class MEDIA_EXPORT VideoFrame : public b
    // mailbox, the caller must wait for the included sync point.
    const gpu::MailboxHolder& mailbox_holder(size_t texture_index) const;
  
@@ -2640,7 +2295,7 @@
  #if defined(OS_LINUX)
    // Returns a vector containing the backing DmaBufs for this frame. The number
    // of returned DmaBufs will be equal or less than the number of planes of
-@@ -560,6 +570,10 @@
+@@ -594,6 +604,10 @@ class MEDIA_EXPORT VideoFrame : public b
      data_[plane] = ptr;
    }
  
@@ -2651,9 +2306,9 @@
   private:
    static scoped_refptr<VideoFrame> CreateFrameInternal(
        VideoPixelFormat format,
---- a/media/base/video_renderer_sink.h
-+++ b/media/base/video_renderer_sink.h
-@@ -42,6 +42,8 @@
+--- a/src/media/base/video_renderer_sink.h
++++ b/src/media/base/video_renderer_sink.h
+@@ -42,6 +42,8 @@ class MEDIA_EXPORT VideoRendererSink {
      // client.
      virtual base::TimeDelta GetPreferredRenderInterval() = 0;
  
@@ -2662,25 +2317,25 @@
      virtual ~RenderCallback() {}
    };
  
---- a/media/base/video_types.h
-+++ b/media/base/video_types.h
-@@ -75,6 +75,13 @@
-       PIXEL_FORMAT_P016LE,  // Must always be equal to largest entry logged.
+--- a/src/media/base/video_types.h
++++ b/src/media/base/video_types.h
+@@ -82,6 +82,13 @@ enum VideoPixelFormat {
+       PIXEL_FORMAT_BGRA,  // Must always be equal to largest entry logged.
  };
  
 +
 +// *****
-+// Alias MMAL to ARGB so it is easy to spot where I've used this
++// Alias MMAL to XRGB so it is easy to spot where I've used this
 +// * In the fullness of time remove this and rename to actual fmt
-+#define PIXEL_FORMAT_MMAL_BUFFER PIXEL_FORMAT_ARGB
++#define PIXEL_FORMAT_MMAL_BUFFER PIXEL_FORMAT_XRGB
 +
 +
  // Returns the name of a Format as a string.
  MEDIA_EXPORT std::string VideoPixelFormatToString(VideoPixelFormat format);
  
---- a/media/blink/video_frame_compositor.cc
-+++ b/media/blink/video_frame_compositor.cc
-@@ -164,6 +164,13 @@
+--- a/src/media/blink/video_frame_compositor.cc
++++ b/src/media/blink/video_frame_compositor.cc
+@@ -177,6 +177,13 @@ void VideoFrameCompositor::PutCurrentFra
    rendered_last_frame_ = true;
  }
  
@@ -2694,9 +2349,9 @@
  bool VideoFrameCompositor::UpdateCurrentFrame(base::TimeTicks deadline_min,
                                                base::TimeTicks deadline_max) {
    DCHECK(task_runner_->BelongsToCurrentThread());
---- a/media/blink/video_frame_compositor.h
-+++ b/media/blink/video_frame_compositor.h
-@@ -94,6 +94,7 @@
+--- a/src/media/blink/video_frame_compositor.h
++++ b/src/media/blink/video_frame_compositor.h
+@@ -96,6 +96,7 @@ class MEDIA_BLINK_EXPORT VideoFrameCompo
    scoped_refptr<VideoFrame> GetCurrentFrame() override;
    void PutCurrentFrame() override;
    base::TimeDelta GetPreferredRenderInterval() override;
@@ -2704,17 +2359,17 @@
  
    // Returns |current_frame_|, without offering a guarantee as to how recently
    // it was updated. In certain applications, one might need to periodically
---- a/media/filters/BUILD.gn
-+++ b/media/filters/BUILD.gn
-@@ -5,6 +5,7 @@
- import("//build/config/jumbo.gni")
+--- a/src/media/filters/BUILD.gn
++++ b/src/media/filters/BUILD.gn
+@@ -6,6 +6,7 @@ import("//build/config/jumbo.gni")
+ import("//media/gpu/args.gni")
  import("//media/media_options.gni")
  import("//third_party/libaom/options.gni")
 +import("//build/config/sysroot.gni")
  
  jumbo_source_set("filters") {
    # Do not expand the visibility here without double-checking with OWNERS, this
-@@ -95,6 +96,9 @@
+@@ -97,6 +98,9 @@ jumbo_source_set("filters") {
    ]
  
    libs = []
@@ -2724,7 +2379,7 @@
  
    if (proprietary_codecs) {
      sources += [
-@@ -103,6 +107,22 @@
+@@ -105,6 +109,22 @@ jumbo_source_set("filters") {
      ]
    }
  
@@ -2747,9 +2402,9 @@
    if (media_use_ffmpeg) {
      deps += [
        "//media/ffmpeg",
---- a/media/filters/decoder_stream.cc
-+++ b/media/filters/decoder_stream.cc
-@@ -1008,6 +1008,15 @@
+--- a/src/media/filters/decoder_stream.cc
++++ b/src/media/filters/decoder_stream.cc
+@@ -1017,6 +1017,14 @@ void DecoderStream<StreamType>::Complete
    preparing_output_ = false;
  }
  
@@ -2758,16 +2413,15 @@
 +
 +template <>
 +void DecoderStream<DemuxerStream::VIDEO>::TryResizeFrame(uint32_t width, uint32_t height) const {
-+  LOG(INFO) << "DecoderStream<DemuxerStream::VIDEO>::TryResizeFrame";
 +  decoder_->TryResizeFrame(width, height);
 +}
 +
  template class DecoderStream<DemuxerStream::VIDEO>;
  template class DecoderStream<DemuxerStream::AUDIO>;
  
---- a/media/filters/decoder_stream.h
-+++ b/media/filters/decoder_stream.h
-@@ -154,6 +154,8 @@
+--- a/src/media/filters/decoder_stream.h
++++ b/src/media/filters/decoder_stream.h
+@@ -154,6 +154,8 @@ class MEDIA_EXPORT DecoderStream {
      return fallback_buffers_.size();
    }
  
@@ -2776,7 +2430,7 @@
   private:
    enum State {
      STATE_UNINITIALIZED,
-@@ -310,6 +312,9 @@
+@@ -310,6 +312,9 @@ bool DecoderStream<DemuxerStream::AUDIO>
  template <>
  int DecoderStream<DemuxerStream::AUDIO>::GetMaxDecodeRequests() const;
  
@@ -2787,8 +2441,8 @@
  using AudioDecoderStream = DecoderStream<DemuxerStream::AUDIO>;
  
 --- /dev/null
-+++ b/media/filters/mmal_video_decoder.cc
-@@ -0,0 +1,5232 @@
++++ b/src/media/filters/mmal_video_decoder.cc
+@@ -0,0 +1,5256 @@
 +// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -2839,7 +2493,7 @@
 +#include "media/base/video_frame.h"
 +#include "media/base/video_util.h"
 +#include "media/video/gpu_video_accelerator_factories.h"
-+#include "mojo/public/cpp/base/shared_memory_utils.h"
++//#include "mojo/public/cpp/base/shared_memory_utils.h"
 +//#include "mojo/public/cpp/system/platform_handle.h"
 +#include "services/service_manager/public/cpp/connector.h"
 +#include "services/service_manager/sandbox/linux/sandbox_linux.h"
@@ -2866,8 +2520,8 @@
 +
 +// Really the DMA version should be better but in actual performance terms
 +// copying on the ARM seems to work better :-(
-+//#define OPT_FRAME_COPY_DEFAULT FrameCopyMode::FRAME_ARGB_DMA
-+#define OPT_FRAME_COPY_DEFAULT FrameCopyMode::FRAME_ARGB_COPY
++#define OPT_FRAME_COPY_DEFAULT FrameCopyMode::FRAME_ARGB_DMA
++//#define OPT_FRAME_COPY_DEFAULT FrameCopyMode::FRAME_ARGB_COPY
 +//#define OPT_FRAME_COPY_GPU_DEFAULT FrameCopyMode::FRAME_I420
 +#define OPT_FRAME_COPY_GPU_DEFAULT FrameCopyMode::FRAME_GPU_YUV_VCSM
 +//#define OPT_FRAME_COPY_GPU_DEFAULT FrameCopyMode::FRAME_GPU_YUV_COPY
@@ -3088,27 +2742,38 @@
 +#define GEO_YUV_3  3, {4,  2,  2,  0}, {4,  2,  2,  0}
 +#define GEO_YC_2   2, {4,  4,  0,  0}, {4,  2,  0,  0}
 +
++// Array designators now not allowed (v80) so have to get the order right here :-(
 +const FrameCopyMode::Xlat FrameCopyMode::xlat[FrameCopyMode::MODE_COUNT] =
 +{
-+  [unset]               = {"unset",                 PortCopy::unset,          GEO_UNSET,
++//  [unset]               =
++  {"unset",                 PortCopy::unset,          GEO_UNSET,
 +    PIXEL_FORMAT_UNKNOWN, MMAL_ENCODING_UNKNOWN,    FrameDescType::unset,     gfx::BufferFormat::R_8},
-+  [SLICE]               = {"SLICE",                 PortCopy::Copy,           GEO_RGBX_1,
-+    PIXEL_FORMAT_ARGB,    MMAL_ENCODING_BGRA_SLICE, FrameDescType::SingleShm, gfx::BufferFormat::R_8},
-+  [FRAME_I420]          = {"SHM-YUV-DMA",           PortCopy::Dma,            GEO_YUV_3,
++//  [SLICE]               =
++  {"SLICE",                 PortCopy::Copy,           GEO_RGBX_1,
++    PIXEL_FORMAT_XRGB,    MMAL_ENCODING_BGRA_SLICE, FrameDescType::SingleShm, gfx::BufferFormat::R_8},
++//  [FRAME_I420]          = 
++  {"SHM-YUV-DMA",           PortCopy::Dma,            GEO_YUV_3,
 +    PIXEL_FORMAT_I420,    MMAL_ENCODING_I420,       FrameDescType::SingleShm, gfx::BufferFormat::R_8},
-+  [FRAME_NV12]          = {"SHM-YC-DMA",            PortCopy::Dma,            GEO_YC_2,
++//  [FRAME_NV12]          = 
++  {"SHM-YC-DMA",            PortCopy::Dma,            GEO_YC_2,
 +    PIXEL_FORMAT_NV12,    MMAL_ENCODING_NV12,       FrameDescType::SingleShm, gfx::BufferFormat::R_8},
-+  [FRAME_ARGB_DMA]      = {"SHM-RGB-DMA",           PortCopy::Dma,            GEO_RGBX_1,
-+    PIXEL_FORMAT_ARGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleShm, gfx::BufferFormat::R_8},
-+  [FRAME_ARGB_COPY]     = {"SHM-RGB-COPY",          PortCopy::Copy,           GEO_RGBX_1,
-+    PIXEL_FORMAT_ARGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleShm, gfx::BufferFormat::R_8},
-+  [FRAME_GPU_ARGB_DMA]  = {"GPU-RGB-DMA",           PortCopy::Dma,            GEO_RGBX_1,
-+    PIXEL_FORMAT_ARGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleGPU, gfx::BufferFormat::BGRX_8888},
-+  [FRAME_GPU_ARGB_VCSM] = {"GPU-RGB-ZC",            PortCopy::Zc,             GEO_RGBX_1,
-+    PIXEL_FORMAT_ARGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleGPU, gfx::BufferFormat::BGRX_8888},
-+  [FRAME_GPU_YUV_COPY]  = {"GPU-YUV-COPY",          PortCopy::Copy,           GEO_YUV_3,
++//  [FRAME_ARGB_DMA]      = 
++  {"SHM-RGB-DMA",           PortCopy::Dma,            GEO_RGBX_1,
++    PIXEL_FORMAT_XRGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleShm, gfx::BufferFormat::R_8},
++//  [FRAME_ARGB_COPY]     = 
++  {"SHM-RGB-COPY",          PortCopy::Copy,           GEO_RGBX_1,
++    PIXEL_FORMAT_XRGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleShm, gfx::BufferFormat::R_8},
++//  [FRAME_GPU_ARGB_DMA]  = 
++  {"GPU-RGB-DMA",           PortCopy::Dma,            GEO_RGBX_1,
++    PIXEL_FORMAT_XRGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleGPU, gfx::BufferFormat::BGRX_8888},
++//  [FRAME_GPU_ARGB_VCSM] = 
++  {"GPU-RGB-ZC",            PortCopy::Zc,             GEO_RGBX_1,
++    PIXEL_FORMAT_XRGB,    MMAL_ENCODING_BGRA,       FrameDescType::SingleGPU, gfx::BufferFormat::BGRX_8888},
++//  [FRAME_GPU_YUV_COPY]  = 
++  {"GPU-YUV-COPY",          PortCopy::Copy,           GEO_YUV_3,
 +    PIXEL_FORMAT_I420,    MMAL_ENCODING_I420,       FrameDescType::MultiGPU,  gfx::BufferFormat::R_8},
-+  [FRAME_GPU_YUV_VCSM]  = {"GPU-YUV-ZC",            PortCopy::Zc,             GEO_YUV_3,
++//  [FRAME_GPU_YUV_VCSM]  = 
++  {"GPU-YUV-ZC",            PortCopy::Zc,             GEO_YUV_3,
 +    PIXEL_FORMAT_YV12,    MMAL_ENCODING_YV12,       FrameDescType::SingleGPU, gfx::BufferFormat::YVU_420},
 +};
 +
@@ -3445,7 +3110,7 @@
 +  {
 +    base::CommandLine::StringType cl_str(cmd_line.GetSwitchValueNative(name));
 +    const char * const cl(cl_str.c_str());
-+    char * eoi = NULL;
++    char * eoi = nullptr;
 +    const unsigned long w = strtoul(cl, &eoi, 10);
 +    if (*eoi != 'x' && *eoi != 'X') {
 +      return gfx::Size();
@@ -3715,7 +3380,7 @@
 +    }
 +
 +    //create a vchi connection
-+    if (vchi_connect(NULL, 0, vchi_instance) != 0) {
++    if (vchi_connect(nullptr, 0, vchi_instance) != 0) {
 +      LOG(ERROR) << "VCHI connection failed";
 +      return;
 +    }
@@ -4050,7 +3715,7 @@
 +    LOG(ERROR) << "New frame: size=" << size << ", total=" << talloc;
 +#endif
 +
-+    base::WritableSharedMemoryRegion wsmr(mojo::CreateWritableSharedMemoryRegion(size));
++    base::WritableSharedMemoryRegion wsmr(base::WritableSharedMemoryRegion::Create(size));
 +    if (!wsmr.IsValid())
 +    {
 +      LOG(ERROR) << "### Smr creation failed";
@@ -4218,7 +3883,7 @@
 +    texture_target_(gpu_factories_->ImageTextureTarget(buffer_format))
 +  {
 +#if TRACE_DESC
-+    LOG(INFO) << __func__;
++    LOG(INFO) << __func__ << ": factories=" << (void*)gpu_factories;
 +//     << ": " << frame_size.ToString() << ", type=" << gpu_buf_->GetType() << ", target=" << texture_target_;
 +#endif
 +    gpu_buf_ = gpu_factories->CreateGpuMemoryBuffer(frame_size, buffer_format,
@@ -4387,12 +4052,12 @@
 +  const FrameCopyMode copy_mode_;
 +  const gfx::ColorSpace color_space_;
 +
-+  std::stack<FrameDesc *> frames_;
++  std::queue<FrameDesc *> frames_;
 +  GpuVideoAcceleratorFactories* const gpu_factories_;
 +
 +  FrameDesc * frame_pop()
 +  {
-+    FrameDesc * const frame = frames_.top();
++    FrameDesc * const frame = frames_.front();
 +    frames_.pop();
 +    return frame;
 +  }
@@ -4452,7 +4117,9 @@
 +    if (killing_)
 +      return nullptr;
 +
-+    return !frames_.empty() ? frame_pop() : new_frame();
++//    return !frames_.empty() ? frame_pop() : new_frame();
++    // ### Keep an old one to avoid any possibility of overwrite
++    return frames_.size() > 1 ? frame_pop() : new_frame();
 +  }
 +
 +  void free_all_frames()
@@ -4533,7 +4200,7 @@
 +    DCHECK(tail_ == nullptr);
 +  }
 +
-+  void ReclaimStart()
++  void ReclaimStart() EXCLUSIVE_LOCK_FUNCTION(reclaim_lock_)
 +  {
 +    {
 +      base::AutoLock lock(list_lock_);
@@ -4543,7 +4210,7 @@
 +    reclaim_lock_.Acquire();
 +  }
 +
-+  MMAL_BUFFER_HEADER_T * ExtractTail()
++  MMAL_BUFFER_HEADER_T* ExtractTail() ASSERT_EXCLUSIVE_LOCK(reclaim_lock_)
 +  {
 +    reclaim_lock_.AssertAcquired();
 +
@@ -4563,13 +4230,13 @@
 +    return buffer;
 +  }
 +
-+  void ReclaimFinish()
++  void ReclaimFinish() UNLOCK_FUNCTION(reclaim_lock_)
 +  {
 +    reclaim_ = false;
 +    reclaim_lock_.Release();
 +  }
 +
-+  MMAL_BUFFER_HEADER_T * Extract(DeferredBuffer * const dbuf)
++  MMAL_BUFFER_HEADER_T * Extract(DeferredBuffer * const dbuf) EXCLUSIVE_TRYLOCK_FUNCTION(true, reclaim_lock_)
 +  {
 +    if (!reclaim_lock_.Try())
 +    {
@@ -4601,7 +4268,7 @@
 +
 +  // Only called from DeferredBuffer destructor so cleanup of
 +  // dbuf vars is ignored
-+  void ExtractDone()
++  void ExtractDone() UNLOCK_FUNCTION(reclaim_lock_)
 +  {
 +    reclaim_lock_.Release();
 +  }
@@ -4973,7 +4640,7 @@
 +  const unsigned int buf_n = frame->buffer_count();
 +  const unsigned int plane_n = copy_mode.planes();
 +
-+  std::vector<VideoFrameLayout::Plane> planes;
++  std::vector<ColorPlaneLayout> planes;
 +
 +  size_t offset = 0;
 +  for (unsigned int i = 0; i != plane_n; ++i) {
@@ -4984,7 +4651,9 @@
 +      stride = copy_mode.width_to_stride(i, frame->frame_size().width());
 +
 +    planes.emplace_back(stride, offset, size);
-+    offset += size;
++    // Whilst we have backing buffers assume that planes match them 1:1
++    if (i + 1 >= buf_n)
++      offset += size;
 +  }
 +
 +  if (buf_n == 1) {
@@ -5133,7 +4802,9 @@
 +        visible_rect, natural_size, timestamp)
 +  {
 +#if TRACE_DESC
++    LOG(INFO) << __func__ << "A";
 +    LOG(INFO) << __func__ << ": HasTextures: " << HasTextures() << ", this=" << (void*)this << ", desc=" << (void*)frame_desc_;
++    LOG(INFO) << __func__ << "B";
 +#endif
 +
 +    metadata()->SetBoolean(VideoFrameMetadata::ALLOW_OVERLAY, true);
@@ -5302,7 +4973,7 @@
 +
 +  ~MmalPortPool() override
 +  {
-+    if (pool_ != NULL) {
++    if (pool_) {
 +      mmal_port_pool_destroy(port_, pool_);
 +    }
 +  }
@@ -5314,7 +4985,7 @@
 +
 +  int create(const uint32_t num, const uint32_t buf_size, const gfx::Size& frame_size) override
 +  {
-+    if ((pool_ = mmal_port_pool_create(port_, num, buf_size)) == NULL)
++    if (!(pool_ = mmal_port_pool_create(port_, num, buf_size)))
 +    {
 +      LOG(ERROR) << "### mmal_port_pool_create failed: " << num << "*" << buf_size;
 +      return -1;
@@ -5338,7 +5009,7 @@
 +
 +  ~MmalUserPool() override
 +  {
-+    if (pool_ != NULL) {
++    if (pool_) {
 +      mmal_pool_destroy(pool_);
 +    }
 +  }
@@ -5350,7 +5021,7 @@
 +
 +  int create(const uint32_t num, const uint32_t buf_size, const gfx::Size& frame_size) override
 +  {
-+    if ((pool_ = mmal_pool_create(num, buf_size)) == NULL)
++    if (!(pool_ = mmal_pool_create(num, buf_size)))
 +    {
 +      LOG(ERROR) << "### mmal_pool_create failed: " << num << "*" << buf_size;
 +      return -1;
@@ -5378,7 +5049,7 @@
 +  {
 +    // Ignore null
 +    if (buffer != nullptr) {
-+      if (buffer->data != NULL) {
++      if (buffer->data != nullptr) {
 +        LOG(FATAL) << "Buffer already in use";
 +      }
 +
@@ -5495,7 +5166,7 @@
 +  {
 +    // Ignore null
 +    if (buffer != nullptr) {
-+      if (buffer->data != NULL) {
++      if (buffer->data != nullptr) {
 +        LOG(FATAL) << "Buffer already in use";
 +      }
 +
@@ -5563,7 +5234,7 @@
 +        ", num_min:" << fc->buffer_num_min <<
 +          ", size_rec:" << fc->buffer_size_recommended <<
 +          ", num_rec:" << fc->buffer_num_recommended;
-+      if (fc->format != NULL) {
++      if (fc->format != nullptr) {
 +        mmal_log_dump_format(fc->format);
 +      }
 +    } else {
@@ -5599,7 +5270,7 @@
 +  {
 +    MmalPort *p = static_cast<MmalPort*>((void*)port->userdata);
 +
-+    if (p == NULL) {
++    if (p == nullptr) {
 +      LOG(ERROR) << __func__ << "### Port NULL";
 +    }
 +    else
@@ -5628,7 +5299,7 @@
 +  {
 +    MMAL_STATUS_T err = MMAL_SUCCESS;
 +
-+    if (port_ != NULL && port_->is_enabled) {
++    if (port_ && port_->is_enabled) {
 +      err = mmal_port_disable(port_);
 +    }
 +
@@ -5859,14 +5530,14 @@
 +
 +  MmalPort(const scoped_refptr<MmalVcInit>& vc_init) :
 +    vc_init_(vc_init),
-+    port_(NULL),
++    port_(nullptr),
 +    killing_(false)
 +  {
 +  }
 +
 +  virtual void set_port(MMAL_PORT_T * const port)
 +  {
-+    if (port_ != NULL) {
++    if (port_) {
 +      LOG(ERROR) << "### Port not null";
 +      return;
 +    }
@@ -5932,7 +5603,7 @@
 +  friend base::RefCountedThreadSafe<MmalConnection>;
 +  virtual ~MmalConnection()
 +  {
-+    if (connection_ != NULL) {
++    if (connection_) {
 +      mmal_connection_destroy(connection_);
 +    }
 +  }
@@ -5940,9 +5611,9 @@
 +  MmalConnection(const scoped_refptr<MmalVcInit>& vc_init) :
 +    vc_init_(vc_init),
 +    enabled_(false),
-+    connection_(NULL),
-+    src_(NULL),
-+    dest_(NULL)
++    connection_(nullptr),
++    src_(nullptr),
++    dest_(nullptr)
 +  {
 +  }
 +
@@ -6011,7 +5682,7 @@
 +
 +  int disconnect()
 +  {
-+    if (connection_ != NULL) {
++    if (connection_) {
 +      connection_->disconnect();
 +    }
 +    return 0;
@@ -6024,7 +5695,7 @@
 +
 +  int disable() override
 +  {
-+    return connection_ == NULL ? 0 : connection_->disable();
++    return !connection_ ? 0 : connection_->disable();
 +  }
 +
 +  void kill() override
@@ -6168,15 +5839,15 @@
 +
 +  MMAL_BUFFER_HEADER_T * pool_get(const bool wait = false)
 +  {
-+    if (pool_ == NULL) {
++    if (!pool_) {
 +      LOG(ERROR) << "### Pool not set up\n";
-+      return NULL;
++      return nullptr;
 +    }
 +
 +    MMAL_BUFFER_HEADER_T * const header =  wait ?
 +      pool_->get_timeout(5000) : pool_->get();
 +
-+    if (header != NULL) {
++    if (header) {
 +      AddRef();
 +    }
 +
@@ -6197,7 +5868,7 @@
 +  int stuff()
 +  {
 +    MMAL_BUFFER_HEADER_T * buffer;
-+    while ((buffer = pool_get()) != NULL) {
++    while ((buffer = pool_get())) {
 +      // When flushing/disabling we may have left stuff with lengths in the pool
 +      mmal_buffer_header_reset(buffer);
 +      if (submit(buffer) != 0)
@@ -6211,7 +5882,7 @@
 +    while (--stuff_count >= 0)
 +    {
 +      MMAL_BUFFER_HEADER_T * buffer;
-+      if ((buffer = pool_get(wait)) == NULL)
++      if (!(buffer = pool_get(wait)))
 +      {
 +        LOG(ERROR) << "### Unexpected pool_get_failure";
 +        return -1;
@@ -6370,7 +6041,7 @@
 +    ESBufferUserData * user_data = nullptr;
 +
 +    MMAL_BUFFER_HEADER_T * const buffer = pool_get(esb->is_not_pkt());
-+    if (buffer == NULL) {
++    if (!buffer) {
 +      return 0;
 +    }
 +
@@ -6540,7 +6211,7 @@
 +    if (frame_trampoline_)
 +    {
 +      frame_trampoline_->kill();
-+      frame_trampoline_ = NULL;
++      frame_trampoline_.reset();
 +    }
 +  }
 +
@@ -6888,7 +6559,7 @@
 +        // Remember end of frame flag as we kill the buffer before using it
 +        const bool eof = (buffer->flags & MMAL_BUFFER_HEADER_FLAG_FRAME_END) != 0;
 +
-+        if (sliced_frame_ == NULL) {
++        if (!sliced_frame_) {
 +          sliced_y_ = 0;
 +          // pts only correct at eof
 +          sliced_frame_ = MmalShmVideoFrame::Create(
@@ -6905,7 +6576,7 @@
 +          // Partial - stop now
 +          if (eof) {
 +            // Partial frame - discard
-+            sliced_frame_ = NULL;
++            sliced_frame_.reset();
 +            LOG(WARNING) << "### frame underrun";
 +          }
 +          return;
@@ -7069,7 +6740,7 @@
 +    // Worry about class status vars after disable to avoid race conditions
 +    kill_trampoline();
 +
-+    sliced_frame_ = NULL;  // Forget any partial frame info
++    sliced_frame_.reset();  // Forget any partial frame info
 +
 +    if (eos_pending()) {
 +      LOG(INFO) << ">>> EOS (abort)";
@@ -7113,7 +6784,7 @@
 +  friend class base::RefCountedThreadSafe<MmalComponent>;
 +  virtual ~MmalComponent()
 +  {
-+    if (component_ != NULL) {
++    if (component_) {
 +      mmal_component_release(component_);
 +    }
 +  }
@@ -7124,7 +6795,7 @@
 +public:
 +  MmalComponent(const scoped_refptr<MmalVcInit>& vc_init) :
 +    vc_init_(vc_init),
-+    component_(NULL),
++    component_(nullptr),
 +//    task_runner_(base::ThreadTaskRunnerHandle::Get())
 +    task_runner_(base::SequencedTaskRunnerHandle::Get())
 +  {
@@ -7193,7 +6864,7 @@
 +
 +  MmalConnectedPort * input_port() override
 +  {
-+    return NULL;
++    return nullptr;
 +  }
 +
 +  MmalConnectedPort * output_port() override
@@ -7312,7 +6983,7 @@
 +
 +  MmalConnectedPort * output_port() override
 +  {
-+    return NULL;
++    return nullptr;
 +  }
 +
 +
@@ -7477,7 +7148,7 @@
 +
 +void MmalConnection::disconnect()
 +{
-+  if (src_ == NULL || dest_ == NULL) {
++  if (!src_ || !dest_) {
 +    LOG(ERROR) << "#### src or dest NULL";
 +    return;
 +  }
@@ -7487,8 +7158,8 @@
 +  // Commit suicide by killing our refs
 +  // Both ends should still exist as the destruction of either
 +  // should call this fn
-+  src_->set_connection(NULL);
-+  dest_->set_connection(NULL);
++  src_->set_connection(nullptr);
++  dest_->set_connection(nullptr);
 +}
 +
 +int MmalConnection::connect(MmalConnectedPort * const src, MmalConnectedPort * const dest)
@@ -7502,7 +7173,7 @@
 +  if ((err = mmal_connection_create(&connection_, src->port_, dest->port_,
 +      MMAL_CONNECTION_FLAG_KEEP_BUFFER_REQUIREMENTS | MMAL_CONNECTION_FLAG_TUNNELLING)) != MMAL_SUCCESS) {
 +    LOG(ERROR) << "### mmal_connection_create failed: err=" << err;
-+    connection_ = NULL;  // Just in case
++    connection_ = nullptr;  // Just in case
 +    return -1;
 +  }
 +
@@ -7635,7 +7306,7 @@
 +    // Select YUV copy if we don't have tex import
 +    // * Really should have better logic downstream s.t. stuff all works but
 +    //   for now this will fix the crash
-+    scoped_refptr<viz::ContextProvider> context_provider(gpu_factories_->GetMediaContextProvider());
++    scoped_refptr<viz::RasterContextProvider> context_provider(gpu_factories_->GetMediaContextProvider());
 +    const gpu::Capabilities& capabilities = context_provider->ContextCapabilities();
 +    // tex_import false if unset
 +    opt_->set_tex_import(capabilities.egl_image_external);
@@ -7669,16 +7340,16 @@
 +
 +void MmalVideoDecoder::uninitialise(const MmalDecoderState new_state)
 +{
-+  if (decoder_ != NULL) {
++  if (decoder_) {
 +    decoder_->kill();
-+    decoder_ = NULL;
++    decoder_.reset();
 +  }
-+  if (resizer_ != NULL) {
++  if (resizer_) {
 +    resizer_->kill();
-+    resizer_ = NULL;
++    resizer_.reset();
 +  }
 +
-+  extra_data_ = NULL;
++  extra_data_.reset();
 +  wants_extra_data_ = false;
 +
 +  state_ = new_state;
@@ -7734,6 +7405,7 @@
 +                        const WaitingCB& waiting_cb)
 +{
 +  base::AutoLock lock(lock_);
++  Status fail_status(StatusCode::kDecoderFailedInitialization);
 +
 +  LOG(INFO) << "Mmal Init: low_delay=" << low_delay << ", config=" << config.AsHumanReadableString();
 +
@@ -7745,7 +7417,7 @@
 +  // If dead - give up now
 +  if (state_ <= MmalDecoderState::kFatal) {
 +    LOG(ERROR) << __func__ << ": FATAL";
-+    std::move(bound_init_cb).Run(false);
++    std::move(bound_init_cb).Run(fail_status);
 +    return;
 +  }
 +
@@ -7765,10 +7437,16 @@
 +  }
 +
 +  // Do we support this?
-+  if (config.is_encrypted() || !IsCodecSupported(config.codec()) ||
-+      !IsSizeSupported(config.coded_size())) {
-+//    LOG(ERROR) << "Encrypted or unsupported";
-+    // No
++  if (config.is_encrypted()) {
++    fail_status = Status(StatusCode::kEncryptedContentUnsupported);
++    goto fail;
++  }
++  if (!IsCodecSupported(config.codec())) {
++    fail_status = Status(StatusCode::kDecoderUnsupportedCodec);
++    goto fail;
++  }
++  if (!IsSizeSupported(config.coded_size())) {
++    fail_status = Status(StatusCode::kDecoderUnsupportedConfig);
 +    goto fail;
 +  }
 +
@@ -7822,7 +7500,7 @@
 +  state_ = MmalDecoderState::kInitialised;
 +
 +  // Success!
-+  std::move(bound_init_cb).Run(true);
++  std::move(bound_init_cb).Run(OkStatus());
 +  LOG(INFO) << __func__ << ": OK";
 +  return;
 +
@@ -7834,7 +7512,7 @@
 +    counted_ = false;
 +    base::subtle::NoBarrier_AtomicIncrement(&decoder_count, -1);
 +  }
-+  std::move(bound_init_cb).Run(false);
++  std::move(bound_init_cb).Run(fail_status);
 +}
 +
 +// Requests a |buffer| to be decoded. The status of the decoder and decoded
@@ -7887,7 +7565,7 @@
 +
 +    resizer_->reset2();
 +
-+    wants_extra_data_ = (extra_data_ != NULL);
++    wants_extra_data_ = bool(extra_data_);
 +
 +    state_ = MmalDecoderState::kInitialised;
 +  }
@@ -7905,7 +7583,7 @@
 +  }
 +
 +  if (wants_extra_data_) {
-+    if (extra_data_ == NULL) {
++    if (!extra_data_) {
 +      LOG(ERROR) << "### extra_data_ NULL";
 +      goto fail;
 +    }
@@ -8022,7 +7700,7 @@
 +
 +
 --- /dev/null
-+++ b/media/filters/mmal_video_decoder.h
++++ b/src/media/filters/mmal_video_decoder.h
 @@ -0,0 +1,121 @@
 +// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -8145,10 +7823,10 @@
 +#endif  // MEDIA_FILTERS_MMAL_VIDEO_DECODER_H_
 +
 +
---- a/media/renderers/default_decoder_factory.cc
-+++ b/media/renderers/default_decoder_factory.cc
-@@ -46,6 +46,10 @@
- #include "media/filters/vpx_video_decoder.h"
+--- a/src/media/renderers/default_decoder_factory.cc
++++ b/src/media/renderers/default_decoder_factory.cc
+@@ -52,6 +52,10 @@
+ #include "media/filters/gav1_video_decoder.h"
  #endif
  
 +#ifdef __ARM_ARCH
@@ -8158,7 +7836,7 @@
  namespace media {
  
  DefaultDecoderFactory::DefaultDecoderFactory(
-@@ -112,6 +116,10 @@
+@@ -146,6 +150,10 @@ void DefaultDecoderFactory::CreateVideoD
    }
  #endif
  
@@ -8169,9 +7847,9 @@
  #if BUILDFLAG(ENABLE_LIBVPX)
    video_decoders->push_back(std::make_unique<OffloadingVpxVideoDecoder>());
  #endif
---- a/media/renderers/paint_canvas_video_renderer.cc
-+++ b/media/renderers/paint_canvas_video_renderer.cc
-@@ -576,6 +576,7 @@
+--- a/src/media/renderers/paint_canvas_video_renderer.cc
++++ b/src/media/renderers/paint_canvas_video_renderer.cc
+@@ -793,6 +793,7 @@ void PaintCanvasVideoRenderer::Paint(
    // frame has an unexpected format.
    if (!video_frame.get() || video_frame->natural_size().IsEmpty() ||
        !(media::IsYuvPlanar(video_frame->format()) ||
@@ -8179,15 +7857,14 @@
          video_frame->format() == media::PIXEL_FORMAT_Y16 ||
          video_frame->HasTextures())) {
      cc::PaintFlags black_with_alpha_flags;
---- a/media/renderers/video_renderer_impl.cc
-+++ b/media/renderers/video_renderer_impl.cc
-@@ -333,6 +333,13 @@
+--- a/src/media/renderers/video_renderer_impl.cc
++++ b/src/media/renderers/video_renderer_impl.cc
+@@ -283,6 +283,12 @@ base::TimeDelta VideoRendererImpl::GetPr
    return algorithm_->average_frame_duration();
  }
  
 +void VideoRendererImpl::TryResizeFrame(uint32_t width, uint32_t height)
 +{
-+  LOG(INFO) << "VideoRendererImpl::TryResizeFrame";
 +  base::AutoLock auto_lock(lock_);
 +  video_decoder_stream_->TryResizeFrame(width, height);
 +}
@@ -8195,9 +7872,9 @@
  void VideoRendererImpl::OnVideoDecoderStreamInitialized(bool success) {
    DCHECK(task_runner_->BelongsToCurrentThread());
    base::AutoLock auto_lock(lock_);
---- a/media/renderers/video_renderer_impl.h
-+++ b/media/renderers/video_renderer_impl.h
-@@ -85,6 +85,7 @@
+--- a/src/media/renderers/video_renderer_impl.h
++++ b/src/media/renderers/video_renderer_impl.h
+@@ -89,6 +89,7 @@ class MEDIA_EXPORT VideoRendererImpl
                                     bool background_rendering) override;
    void OnFrameDropped() override;
    base::TimeDelta GetPreferredRenderInterval() override;
@@ -8205,8 +7882,8 @@
  
   private:
    // Callback for |video_decoder_stream_| initialization.
---- a/media/renderers/video_resource_updater.cc
-+++ b/media/renderers/video_resource_updater.cc
+--- a/src/media/renderers/video_resource_updater.cc
++++ b/src/media/renderers/video_resource_updater.cc
 @@ -40,9 +40,11 @@
  #include "gpu/command_buffer/client/shared_image_interface.h"
  #include "gpu/command_buffer/common/shared_image_trace_utils.h"
@@ -8219,9 +7896,9 @@
  #include "third_party/khronos/GLES2/gl2.h"
  #include "third_party/khronos/GLES2/gl2ext.h"
  #include "third_party/libyuv/include/libyuv.h"
-@@ -93,6 +95,12 @@
-       }
-       break;
+@@ -99,6 +101,12 @@ VideoFrameResourceType ExternalResourceT
+                               : gfx::BufferFormat::RGBA_1010102;
+       return VideoFrameResourceType::RGB;
      case PIXEL_FORMAT_I420:
 +      if (num_textures == 1 && target == GL_TEXTURE_EXTERNAL_OES)
 +      {
@@ -8232,9 +7909,9 @@
        DCHECK_EQ(num_textures, 3);
        buffer_formats[0] = gfx::BufferFormat::R_8;
        buffer_formats[1] = gfx::BufferFormat::R_8;
-@@ -116,6 +124,9 @@
-       return VideoFrameResourceType::YUV;
- 
+@@ -125,6 +133,9 @@ VideoFrameResourceType ExternalResourceT
+       NOTREACHED();
+       FALLTHROUGH;
      case PIXEL_FORMAT_YV12:
 +      if (num_textures == 1 && target == GL_TEXTURE_EXTERNAL_OES)
 +        return VideoFrameResourceType::STREAM_TEXTURE;
@@ -8242,7 +7919,7 @@
      case PIXEL_FORMAT_I422:
      case PIXEL_FORMAT_I444:
      case PIXEL_FORMAT_I420A:
-@@ -220,6 +231,7 @@
+@@ -229,6 +240,7 @@ class VideoResourceUpdater::PlaneResourc
  
    // Casts |this| to SoftwarePlaneResource for software compositing.
    SoftwarePlaneResource* AsSoftware();
@@ -8250,7 +7927,7 @@
  
    // Casts |this| to HardwarePlaneResource for GPU compositing.
    HardwarePlaneResource* AsHardware();
-@@ -234,12 +246,17 @@
+@@ -243,12 +255,17 @@ class VideoResourceUpdater::PlaneResourc
    // Sets the unique identifiers for this resource, may only be called when
    // there is a single reference to the resource (i.e. |ref_count_| == 1).
    void SetUniqueId(int unique_frame_id, size_t plane_index) {
@@ -8269,7 +7946,7 @@
    // Accessors for resource identifiers provided at construction time.
    uint32_t plane_resource_id() const { return plane_resource_id_; }
    const gfx::Size& resource_size() const { return resource_size_; }
-@@ -250,6 +267,8 @@
+@@ -259,6 +276,8 @@ class VideoResourceUpdater::PlaneResourc
    void remove_ref() { --ref_count_; }
    void clear_refs() { ref_count_ = 0; }
    bool has_refs() const { return ref_count_ != 0; }
@@ -8278,7 +7955,7 @@
  
   private:
    const uint32_t plane_resource_id_;
-@@ -273,16 +292,43 @@
+@@ -282,16 +301,43 @@ class VideoResourceUpdater::PlaneResourc
  
  class VideoResourceUpdater::SoftwarePlaneResource
      : public VideoResourceUpdater::PlaneResource {
@@ -8328,7 +8005,7 @@
      DCHECK(shared_bitmap_reporter_);
  
      // Allocate SharedMemory and notify display compositor of the allocation.
-@@ -293,28 +339,91 @@
+@@ -302,28 +348,91 @@ class VideoResourceUpdater::SoftwarePlan
      shared_bitmap_reporter_->DidAllocateSharedBitmap(std::move(shm.region),
                                                       shared_bitmap_id_);
    }
@@ -8426,7 +8103,7 @@
  class VideoResourceUpdater::HardwarePlaneResource
      : public VideoResourceUpdater::PlaneResource {
   public:
-@@ -385,7 +494,7 @@
+@@ -394,7 +503,7 @@ class VideoResourceUpdater::HardwarePlan
    const gpu::Mailbox& mailbox() const { return mailbox_; }
  
    GLenum texture_target() const { return texture_target_; }
@@ -8435,7 +8112,7 @@
  
   private:
    gpu::SharedImageInterface* SharedImageInterface() {
-@@ -722,7 +831,7 @@
+@@ -731,7 +840,7 @@ VideoResourceUpdater::PlaneResource* Vid
    if (software_compositor()) {
      DCHECK_EQ(format, viz::ResourceFormat::RGBA_8888);
  
@@ -8444,7 +8121,7 @@
          plane_resource_id, plane_size, shared_bitmap_reporter_));
    } else {
      all_resources_.push_back(std::make_unique<HardwarePlaneResource>(
-@@ -863,6 +972,12 @@
+@@ -880,6 +989,12 @@ VideoFrameExternalResources VideoResourc
    return external_resources;
  }
  
@@ -8457,7 +8134,7 @@
  VideoFrameExternalResources VideoResourceUpdater::CreateForSoftwarePlanes(
      scoped_refptr<VideoFrame> video_frame) {
    TRACE_EVENT0("cc", "VideoResourceUpdater::CreateForSoftwarePlanes");
-@@ -872,6 +987,7 @@
+@@ -889,6 +1004,7 @@ VideoFrameExternalResources VideoResourc
  
    // Only YUV and Y16 software video frames are supported.
    DCHECK(IsYuvPlanar(input_frame_format) ||
@@ -8465,7 +8142,7 @@
           input_frame_format == PIXEL_FORMAT_Y16);
  
    viz::ResourceFormat output_resource_format;
-@@ -935,6 +1051,7 @@
+@@ -952,6 +1068,7 @@ VideoFrameExternalResources VideoResourc
            return false;
  
          return resource->resource_format() != output_resource_format ||
@@ -8473,7 +8150,7 @@
                 !base::Contains(outplane_plane_sizes, resource->resource_size());
        };
    base::EraseIf(all_resources_, can_delete_resource_fn);
-@@ -942,11 +1059,37 @@
+@@ -959,11 +1076,37 @@ VideoFrameExternalResources VideoResourc
    // Recycle or allocate resources for each video plane.
    std::vector<PlaneResource*> plane_resources;
    plane_resources.reserve(output_plane_count);
@@ -8516,7 +8193,7 @@
    }
  
    VideoFrameExternalResources external_resources;
-@@ -980,19 +1123,30 @@
+@@ -997,19 +1140,30 @@ VideoFrameExternalResources VideoResourc
          video_renderer_->Copy(video_frame, &canvas, nullptr);
        } else {
          HardwarePlaneResource* hardware_resource = plane_resource->AsHardware();
@@ -8559,7 +8236,7 @@
  
          // Copy pixels into texture.
          auto* gl = raster_context_provider_
-@@ -1007,7 +1161,7 @@
+@@ -1024,7 +1178,7 @@ VideoFrameExternalResources VideoResourc
            gl->TexSubImage2D(
                hardware_resource->texture_target(), 0, 0, 0, plane_size.width(),
                plane_size.height(), GLDataFormat(viz::ResourceFormat::RGBA_8888),
@@ -8568,7 +8245,7 @@
          }
        }
        plane_resource->SetUniqueId(video_frame->unique_id(), 0);
-@@ -1021,6 +1175,8 @@
+@@ -1038,6 +1192,8 @@ VideoFrameExternalResources VideoResourc
            software_resource->shared_bitmap_id(),
            software_resource->resource_size(),
            plane_resource->resource_format());
@@ -8577,7 +8254,7 @@
      } else {
        HardwarePlaneResource* hardware_resource = plane_resource->AsHardware();
        external_resources.type = VideoFrameResourceType::RGBA;
-@@ -1213,6 +1369,11 @@
+@@ -1230,6 +1386,11 @@ void VideoResourceUpdater::ReturnTexture
    video_frame->UpdateReleaseSyncToken(&client);
  }
  
@@ -8589,9 +8266,9 @@
  void VideoResourceUpdater::RecycleResource(uint32_t plane_resource_id,
                                             const gpu::SyncToken& sync_token,
                                             bool lost_resource) {
---- a/media/renderers/video_resource_updater.h
-+++ b/media/renderers/video_resource_updater.h
-@@ -132,6 +132,8 @@
+--- a/src/media/renderers/video_resource_updater.h
++++ b/src/media/renderers/video_resource_updater.h
+@@ -132,6 +132,8 @@ class MEDIA_EXPORT VideoResourceUpdater
    class PlaneResource;
    class HardwarePlaneResource;
    class SoftwarePlaneResource;
@@ -8600,7 +8277,7 @@
  
    // A resource that will be embedded in a DrawQuad in the next CompositorFrame.
    // Each video plane will correspond to one FrameResource.
-@@ -189,6 +191,8 @@
+@@ -189,6 +191,8 @@ class MEDIA_EXPORT VideoResourceUpdater
                       const gpu::SyncToken& sync_token,
                       bool lost_resource);
  
@@ -8609,9 +8286,9 @@
    // base::trace_event::MemoryDumpProvider implementation.
    bool OnMemoryDump(const base::trace_event::MemoryDumpArgs& args,
                      base::trace_event::ProcessMemoryDump* pmd) override;
---- a/media/video/gpu_memory_buffer_video_frame_pool.cc
-+++ b/media/video/gpu_memory_buffer_video_frame_pool.cc
-@@ -560,6 +560,11 @@
+--- a/src/media/video/gpu_memory_buffer_video_frame_pool.cc
++++ b/src/media/video/gpu_memory_buffer_video_frame_pool.cc
+@@ -577,6 +577,11 @@ void GpuMemoryBufferVideoFramePool::Pool
  #endif
  
    bool passthrough = false;
@@ -8621,11 +8298,11 @@
 +    passthrough = true;
 +
  #if defined(OS_MACOSX)
-   // GPU memory buffers do not support full-range YUV video on mac.
-   // Fortunately, the hardware decoders never produce full-range video.
+   if (!IOSurfaceCanSetColorSpace(video_frame->ColorSpace()))
+     passthrough = true;
 --- /dev/null
-+++ b/pi-util/BUILD.txt
-@@ -0,0 +1,235 @@
++++ b/src/pi-util/BUILD.txt
+@@ -0,0 +1,242 @@
 +Build notes (cross compile from Ubuntu)
 +=======================================
 +
@@ -8712,6 +8389,14 @@
 +If updating between major versions then mergeing tends to fail horribly
 +so something along the lines of:
 +
++# Remember where we are
++cat pi-util/pipaths.py
++OLDTAG=84...
++
++# Look for where we are going
++git tag -l "85.*"
++TAG=85...
++
 +# * Make sure there are no updates required and no untracked files
 +pi-util/gitscan.py status
 +# Set rename limit to huge as files are moved around frequently and getting
@@ -8720,19 +8405,19 @@
 +
 +# Tag source & make a patch file - patch file is useful when files are moved
 +# as then git goes all unhelpful
-+pi-util/settag.py -p mmal_2.13
++pi-util/settag.py -p mmal_3.29
 +# As git stash will reset the brnch switch to a temp branch 1st
-+pi-util/gitscan.py checkout -b stash/73/base
++pi-util/gitscan.py checkout -b stash/84/base
 +pi-util/gitscan.py --gitscan-no-src reset {BASE}
 +pi-util/gitscan.py --gitscan-no-src stash -u
 +pi-util/gitscan.py --gitscan-no-src checkout {BASE}
 +
 +# Need to do src separately as the stash will lose pi-utils
 +cat pi-util/pipaths.py
-+git reset 56.0.2924.84
++git reset $OLDTAG
 +git stash -u
 +
-+git checkout <new tag> -b test/67/mmal_2
++git checkout $TAG -b test/85/mmal_3
 +
 +# Clean out old objects
 +rm -rf obj
@@ -8745,7 +8430,7 @@
 +./build/install-build-deps.sh --arm
 +# Fetch & pull the other bits of the tree to sync.
 +# As we are checking out a tag the --with_branch_heads is important
-+gclient sync --with_branch_heads
++gclient sync -D --with_branch_heads
 +
 +# Start rebuild
 +git stash pop
@@ -8754,11 +8439,12 @@
 +sed "s/src_commit=.*/src_commit=\"$TAG\"/" pi-util/pipaths.py | tee t
 +mv t pi-util/pipaths.py && git add pi-util/pipaths.py
 +chmod 0755 pi-util/*.py pi-util/*.sh
-+pi-util/gitscan.py --gitscan-no-src checkout -b test/78/mmal_3
++pi-util/gitscan.py --gitscan-no-src checkout -b test/85/mmal_3
 +
 +### Fix conflicts (there will be some)
 +
-+# Fix chrome major version for ffmpeg .so in pi-util/cplibs.sh and third_party//ffmpeg/BUILD.gn
++# If building a separated ffmpeg .so (we are not not currrently) then
++# fix chrome major version for ffmpeg .so in pi-util/cplibs.sh and third_party//ffmpeg/BUILD.gn
 +
 +git commit
 +### run through all other dirs we care about doing the same
@@ -8791,7 +8477,7 @@
 +# Get the rest of the tree
 +gclient sync --with_branch_heads
 +# Checkout our tree and merge the new base into it
-+pi-util/gitscan.py --gitscan-no-src checkout test/78/mmal_3
++pi-util/gitscan.py --gitscan-no-src checkout test/83/mmal_3
 +pi-util/gitscan.py --gitscan-no-src merge --no-edit {BASE}
 +
 +and we should be good to go.  At this point you can either clean build or
@@ -8801,10 +8487,8 @@
 +# Rebuild gn (clean)
 +rm -rf out
 +pi-util/gngen.py
-+# Build armv7 ffmpeg
-+ninja -C out/armv7 third_party/ffmpeg
-+# Build chrome
-+LD_LIBRARY_PATH=`pwd`/out/armv6/clang_x86_v8_arm ninja -C out/armv6 chrome chrome_sandbox
++# Build release armv7 chrome (and any other targets you feel like)
++ninja -C out/armv7-rel chrome
 +
 +
 +Sysroots (one time only)
@@ -8862,7 +8546,7 @@
 +third_party/libyuv/libyuv.gni:     yes
 +third_party/pdfium/skia/BUILD.gn:  unused
 --- /dev/null
-+++ b/pi-util/README.txt
++++ b/src/pi-util/README.txt
 @@ -0,0 +1,118 @@
 +Release notes
 +=============
@@ -8983,7 +8667,7 @@
 +Change with care.
 +
 --- /dev/null
-+++ b/pi-util/cplibs.sh
++++ b/src/pi-util/cplibs.sh
 @@ -0,0 +1,19 @@
 +set -e
 +
@@ -9005,7 +8689,7 @@
 +
 +
 --- /dev/null
-+++ b/pi-util/defargs_armv6.gn
++++ b/src/pi-util/defargs_armv6.gn
 @@ -0,0 +1,32 @@
 +# See "gn args <out_dir> --list" for available build arguments.
 +target_cpu = "arm"
@@ -9040,8 +8724,8 @@
 +rtc_use_h264 = false
 +
 --- /dev/null
-+++ b/pi-util/defargs_armv7.gn
-@@ -0,0 +1,22 @@
++++ b/src/pi-util/defargs_armv7.gn
+@@ -0,0 +1,24 @@
 +# Build arguments go here. Examples:
 +#   is_component_build = true
 +#   is_debug = false
@@ -9051,6 +8735,8 @@
 +
 +arm_float_abi = "hard"
 +arm_use_neon = true
++# We have lib issues if we enable thumb
++arm_use_thumb = false
 +arm_optionally_use_neon = false
 +arm_version = 7
 +arm_arch = "armv7-a"
@@ -9065,7 +8751,7 @@
 +ffmpeg_branding = "Chrome"
 +proprietary_codecs = true
 --- /dev/null
-+++ b/pi-util/dodiff.py
++++ b/src/pi-util/dodiff.py
 @@ -0,0 +1,35 @@
 +#!/usr/bin/env python
 +
@@ -9103,7 +8789,7 @@
 +    doscan()
 +
 --- /dev/null
-+++ b/pi-util/gitscan.py
++++ b/src/pi-util/gitscan.py
 @@ -0,0 +1,69 @@
 +#!/usr/bin/env python
 +
@@ -9175,19 +8861,29 @@
 +
 +
 --- /dev/null
-+++ b/pi-util/gngen.py
-@@ -0,0 +1,55 @@
++++ b/src/pi-util/gngen.py
+@@ -0,0 +1,69 @@
 +#!/usr/bin/env python
 +
 +import os, ast, fileinput, subprocess, sys
 +
-+def docopy(name, vars, is_debug=False):
-+
++def docopy(name, vars, is_debug=False, is_ozone=False):
++    dir_suffix = ""
 +    deb_str = "false"
-+    dir_suffix = "-rel"
++
++    if is_ozone:
++        ozone_str = "true"
++        dir_suffix = dir_suffix + "-ozone"
++    else:
++        ozone_str = "false"
++
 +    if is_debug:
 +        deb_str = "true"
-+        dir_suffix = "-deb"
++        dir_suffix = dir_suffix + "-deb"
++    else:
++        deb_str = "false"
++        dir_suffix = dir_suffix + "-rel"
++
 +
 +    dest_dir = os.path.join("out", name + dir_suffix)
 +    src_file = os.path.join("pi-util", "defargs_" + name + ".gn")
@@ -9206,6 +8902,9 @@
 +
 +    dargs.write('# -- created by ' + sys.argv[0] + '\n')
 +    dargs.write('is_debug = ' + deb_str + '\n')
++    dargs.write('use_ozone = ' + ozone_str + '\n')
++    if is_ozone:
++        dargs.write('ozone_platform_x11 = true\n')
 +    dargs.write('target_sysroot = "' + vars["target_sysroot"] + '"\n')
 +    dargs.write('google_api_key = "' + vars["google_api_key"] + '"\n')
 +    dargs.write('google_default_client_id = "' + vars["google_default_client_id"] + '"\n')
@@ -9229,12 +8928,13 @@
 +    docopy("armv6", gyp_vars)
 +    docopy("armv7", gyp_vars)
 +    docopy("armv7", gyp_vars, is_debug=True)
++    docopy("armv7", gyp_vars, is_ozone=True)
 +
 +
 +
 --- /dev/null
-+++ b/pi-util/pi-install-dev.sh
-@@ -0,0 +1,46 @@
++++ b/src/pi-util/pi-install-dev.sh
+@@ -0,0 +1,50 @@
 +# Install set to build appropriate root on a clean pi
 +
 +APT=aptitude
@@ -9251,7 +8951,6 @@
 +libffi-dev \
 +libgconf2-dev \
 +libgl1-mesa-dev \
-+libgnome-keyring-dev \
 +libgtk-3-dev \
 +libjpeg-dev \
 +libkrb5-dev \
@@ -9265,13 +8964,18 @@
 +libssl-dev \
 +libudev-dev \
 +libxcb1-dev \
++libxcb-dri3-dev \
 +libxcb-shm0-dev \
 +libxcb-image0-dev \
 +libxss-dev \
 +libxt-dev \
 +libxtst-dev \
 +mesa-common-dev \
-+uuid-dev
++python-xcbgen \
++uuid-dev \
++xcb-proto
++
++echo Also need python-xcbgen on host
 +
 +# Pulse (hopefully) disabled
 +# libpulse-dev \
@@ -9282,7 +8986,7 @@
 +# e.g. ON COMPILE M/C in src dir:
 +# pi-util/syncroot.sh my-pi: raspian_jessie_pi1
 --- /dev/null
-+++ b/pi-util/pipaths.py
++++ b/src/pi-util/pipaths.py
 @@ -0,0 +1,10 @@
 +pipaths=[
 +    "src",
@@ -9293,9 +8997,9 @@
 +    "src/third_party/skia"]
 +
 +# Our base tag or commit no
-+src_commit="78.0.3904.126"
++src_commit="84.0.4147.141"
 --- /dev/null
-+++ b/pi-util/pipewire_utils_h.patch
++++ b/src/pi-util/pipewire_utils_h.patch
 @@ -0,0 +1,11 @@
 +--- a/build/linux/raspian_stretch_pi1-sysroot/usr/include/pipewire/utils.h
 ++++ b/build/linux/raspian_stretch_pi1-sysroot/usr/include/pipewire/utils.h
@@ -9309,7 +9013,7 @@
 + 	if (pod == NULL)
 + 		return NULL;
 --- /dev/null
-+++ b/pi-util/rebase_liblinks.py
++++ b/src/pi-util/rebase_liblinks.py
 @@ -0,0 +1,37 @@
 +#!/usr/bin/env python
 +
@@ -9349,7 +9053,7 @@
 +
 +
 --- /dev/null
-+++ b/pi-util/settag.py
++++ b/src/pi-util/settag.py
 @@ -0,0 +1,60 @@
 +#!/usr/bin/env python
 +
@@ -9412,8 +9116,8 @@
 +            dodiff.doscan(f)
 +
 --- /dev/null
-+++ b/pi-util/syncroot.sh
-@@ -0,0 +1,49 @@
++++ b/src/pi-util/syncroot.sh
+@@ -0,0 +1,54 @@
 +set -e
 +
 +if [ "$1" == "" ]; then
@@ -9457,41 +9161,42 @@
 +rsync -rl $SRC/usr/lib/gcc $DST/usr/lib
 +rsync -rl $SRC/usr/include $DST/usr
 +rsync -rl $SRC/usr/share/pkgconfig $DST/usr/share
-+rsync -rl $SRC/usr/bin/cups-config $DST/usr/bin
++rsync -rl $SRC/usr/share/xcb $DST/usr/share
++#rsync -rl $SRC/usr/bin/cups-config $DST/usr/bin
++
++# Fix up pipewire issue
++sed 's/struct spa_pod \*c/void \* c/' < $DST/usr/include/pipewire/utils.h > u.h
++mv u.h $DST/usr/include/pipewire/utils.h
 +
 +cd $DST/usr/lib/pkgconfig
 +ln -sf ../arm-linux-gnueabihf/pkgconfig/* .
 +cd ../../../../../..
 +pi-util/rebase_liblinks.py $DST
---- a/printing/backend/cups_helper.h
-+++ b/printing/backend/cups_helper.h
-@@ -8,6 +8,9 @@
- #include <cups/cups.h>
- #include <cups/ppd.h>
- 
-+// cups ppd stuff is full of deprecation which causes compile fail
-+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-+
- #include "base/strings/string_piece.h"
- #include "printing/printing_export.h"
- 
---- a/services/service_manager/sandbox/linux/bpf_gpu_policy_linux.cc
-+++ b/services/service_manager/sandbox/linux/bpf_gpu_policy_linux.cc
-@@ -49,6 +49,11 @@
+--- a/src/services/service_manager/sandbox/linux/bpf_gpu_policy_linux.cc
++++ b/src/services/service_manager/sandbox/linux/bpf_gpu_policy_linux.cc
+@@ -58,6 +58,19 @@ ResultExpr GpuProcessPolicy::EvaluateSys
      // (MAP_LOCKED | MAP_EXECUTABLE | MAP_32BIT)
      case __NR_mmap:
  #endif
 +#ifdef USE_X11
 +    // Wanted for shm generation for ImageX11
 +    case __NR_memfd_create:
-+    case __NR_ftruncate64:
++
++    // Wanted for MESA to fire up happily
++    // *** Should almost certainly arrange for the offending setup
++    //     to happen before sandbox is applied but I can't work out
++    //     what is needed
++    // Alternatively --in-process-gpu fixes the issue
++    case __NR_readlink:  // 85
++    case __NR_stat64:    // 195
++    case __NR_openat:    // 322 --- This one is clearly bad!
 +#endif
      // We also hit this on the linux_chromeos bot but don't yet know what
      // weird flags were involved.
      case __NR_mprotect:
---- a/services/service_manager/sandbox/linux/bpf_renderer_policy_linux.cc
-+++ b/services/service_manager/sandbox/linux/bpf_renderer_policy_linux.cc
-@@ -27,6 +27,8 @@
+--- a/src/services/service_manager/sandbox/linux/bpf_renderer_policy_linux.cc
++++ b/src/services/service_manager/sandbox/linux/bpf_renderer_policy_linux.cc
+@@ -27,6 +27,8 @@ struct local_dma_buf_sync {
    _IOW(LOCAL_DMA_BUF_BASE, 0, struct local_dma_buf_sync)
  
  using sandbox::SyscallSets;
@@ -9500,7 +9205,7 @@
  using sandbox::bpf_dsl::Allow;
  using sandbox::bpf_dsl::Arg;
  using sandbox::bpf_dsl::Error;
-@@ -36,14 +38,18 @@
+@@ -36,14 +38,18 @@ namespace service_manager {
  
  namespace {
  
@@ -9521,9 +9226,9 @@
  }
  
  }  // namespace
---- a/services/service_manager/sandbox/linux/sandbox_linux.h
-+++ b/services/service_manager/sandbox/linux/sandbox_linux.h
-@@ -61,6 +61,8 @@
+--- a/src/services/service_manager/sandbox/linux/sandbox_linux.h
++++ b/src/services/service_manager/sandbox/linux/sandbox_linux.h
+@@ -61,6 +61,8 @@ class SERVICE_MANAGER_SANDBOX_EXPORT San
      DEPRECATED_METHOD_GET_STYLE_FOR_STRIKE,
      METHOD_MAKE_SHARED_MEMORY_SEGMENT,
      DEPRECATED_METHOD_MATCH_WITH_FALLBACK,
@@ -9532,9 +9237,9 @@
    };
  
    // These form a bitmask which describes the conditions of the Linux sandbox.
---- a/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc
-+++ b/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc
-@@ -31,6 +31,7 @@
+--- a/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc
++++ b/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc
+@@ -33,6 +33,7 @@ bool StructTraits<viz::mojom::Transferab
    out->is_backed_by_surface_texture = data.is_backed_by_surface_texture();
    out->wants_promotion_hint = data.wants_promotion_hint();
  #endif
@@ -9542,22 +9247,21 @@
    return true;
  }
  
---- a/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h
-+++ b/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h
-@@ -76,6 +76,10 @@
-     return resource.color_space;
+--- a/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h
++++ b/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h
+@@ -82,6 +82,9 @@ struct StructTraits<viz::mojom::Transfer
+       const viz::TransferableResource& resource) {
+     return resource.ycbcr_info;
    }
- 
 +  static uint32_t stride(const viz::TransferableResource& resource) {
 +    return resource.stride;
 +  }
-+
+ 
    static bool Read(viz::mojom::TransferableResourceDataView data,
                     viz::TransferableResource* out);
- };
---- a/services/viz/public/mojom/compositing/compositor_frame_sink.mojom
-+++ b/services/viz/public/mojom/compositing/compositor_frame_sink.mojom
-@@ -97,4 +97,8 @@
+--- a/src/services/viz/public/mojom/compositing/compositor_frame_sink.mojom
++++ b/src/services/viz/public/mojom/compositing/compositor_frame_sink.mojom
+@@ -112,4 +112,8 @@ interface CompositorFrameSinkClient {
  
    // Returns resources sent to SubmitCompositorFrame to be reused or freed.
    ReclaimResources(array<ReturnedResource> resources);
@@ -9566,17 +9270,17 @@
 +  // without later resizing
 +  DidStretchFrame(uint32 width, uint32 height);
  };
---- a/services/viz/public/mojom/compositing/transferable_resource.mojom
-+++ b/services/viz/public/mojom/compositing/transferable_resource.mojom
-@@ -47,4 +47,5 @@
-   bool is_backed_by_surface_texture;
+--- a/src/services/viz/public/mojom/compositing/transferable_resource.mojom
++++ b/src/services/viz/public/mojom/compositing/transferable_resource.mojom
+@@ -48,4 +48,5 @@ struct TransferableResource {
    bool wants_promotion_hint;
    gfx.mojom.ColorSpace color_space;
+   gpu.mojom.VulkanYCbCrInfo ? ycbcr_info;
 +  uint32 stride;
  };
---- a/third_party/blink/renderer/platform/graphics/begin_frame_provider.h
-+++ b/third_party/blink/renderer/platform/graphics/begin_frame_provider.h
-@@ -53,6 +53,7 @@
+--- a/src/third_party/blink/renderer/platform/graphics/begin_frame_provider.h
++++ b/src/third_party/blink/renderer/platform/graphics/begin_frame_provider.h
+@@ -58,6 +58,7 @@ class PLATFORM_EXPORT BeginFrameProvider
        const WTF::Vector<viz::ReturnedResource>& resources) final {
      NOTIMPLEMENTED();
    }
@@ -9584,20 +9288,20 @@
  
    // viz::mojom::blink::EmbeddedFrameSinkClient implementation.
    void BindSurfaceEmbedder(
---- a/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h
-+++ b/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h
-@@ -72,6 +72,7 @@
+--- a/src/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h
++++ b/src/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h
+@@ -79,6 +79,7 @@ class PLATFORM_EXPORT CanvasResourceDisp
    void OnBeginFramePausedChanged(bool paused) final {}
    void ReclaimResources(
        const WTF::Vector<viz::ReturnedResource>& resources) final;
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
  
    void DidAllocateSharedBitmap(base::ReadOnlySharedMemoryRegion region,
-                                ::gpu::mojom::blink::MailboxPtr id);
---- a/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc
-+++ b/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc
-@@ -263,6 +263,11 @@
-       SharedBitmapIdToGpuMailboxPtr(id));
+                                const gpu::Mailbox& id);
+--- a/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc
++++ b/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc
+@@ -288,6 +288,11 @@ void VideoFrameSubmitter::DidDeleteShare
+   compositor_frame_sink_->DidDeleteSharedBitmap(id);
  }
  
 +void VideoFrameSubmitter::DidStretchFrame(uint32_t width, uint32_t height) {
@@ -9608,9 +9312,9 @@
  void VideoFrameSubmitter::OnReceivedContextProvider(
      bool use_gpu_compositing,
      scoped_refptr<viz::RasterContextProvider> context_provider) {
---- a/third_party/blink/renderer/platform/graphics/video_frame_submitter.h
-+++ b/third_party/blink/renderer/platform/graphics/video_frame_submitter.h
-@@ -76,6 +76,7 @@
+--- a/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.h
++++ b/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.h
+@@ -80,6 +80,7 @@ class PLATFORM_EXPORT VideoFrameSubmitte
    void OnBeginFramePausedChanged(bool paused) override {}
    void ReclaimResources(
        const WTF::Vector<viz::ReturnedResource>& resources) override;
@@ -9618,9 +9322,9 @@
  
    // viz::SharedBitmapReporter implementation.
    void DidAllocateSharedBitmap(base::ReadOnlySharedMemoryRegion,
---- a/third_party/libdrm/BUILD.gn
-+++ b/third_party/libdrm/BUILD.gn
-@@ -52,6 +52,7 @@
+--- a/src/third_party/libdrm/BUILD.gn
++++ b/src/third_party/libdrm/BUILD.gn
+@@ -52,6 +52,7 @@ static_library("libdrm") {
      # glibc-2.24.  This causes a build error when using the Debian
      # Stretch sysroot.
      "-Wno-deprecated-declarations",
@@ -9628,10 +9332,24 @@
    ]
  
    public_configs = [ ":libdrm_config" ]
---- a/ui/android/delegated_frame_host_android.h
-+++ b/ui/android/delegated_frame_host_android.h
-@@ -119,6 +119,8 @@
-   void DidNavigate();
+--- a/src/ui/accessibility/platform/ax_platform_node_auralinux.cc
++++ b/src/ui/accessibility/platform/ax_platform_node_auralinux.cc
+@@ -190,9 +190,11 @@ bool SupportsAtkComponentScrollingInterf
+   return dlsym(RTLD_DEFAULT, "atk_component_scroll_to_point");
+ }
+ 
++#if 0
+ bool SupportsAtkTextScrollingInterface() {
+   return dlsym(RTLD_DEFAULT, "atk_text_scroll_substring_to_point");
+ }
++#endif
+ 
+ AtkObject* FindAtkObjectParentFrame(AtkObject* atk_object) {
+   AXPlatformNodeAuraLinux* node =
+--- a/src/ui/android/delegated_frame_host_android.h
++++ b/src/ui/android/delegated_frame_host_android.h
+@@ -121,6 +121,8 @@ class UI_ANDROID_EXPORT DelegatedFrameHo
+   void SetTopControlsVisibleHeight(float height);
  
   private:
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
@@ -9639,8 +9357,20 @@
    // viz::HostFrameSinkClient implementation.
    void OnFirstSurfaceActivation(const viz::SurfaceInfo& surface_info) override;
    void OnFrameTokenChanged(uint32_t frame_token) override;
---- a/ui/gfx/BUILD.gn
-+++ b/ui/gfx/BUILD.gn
+--- a/src/ui/base/x/x11_software_bitmap_presenter.h
++++ b/src/ui/base/x/x11_software_bitmap_presenter.h
+@@ -40,6 +40,9 @@ class COMPONENT_EXPORT(UI_BASE_X) X11Sof
+   void EndPaint(const gfx::Rect& damage_rect);
+   void OnSwapBuffers(SwapBuffersCallback swap_ack_callback);
+   int MaxFramesPending() const;
++  gfx::AcceleratedWidget GetAcceleratedWidget() const {
++    return widget_;
++  }
+ 
+  private:
+   // Draw |data| over |widget|'s parent-relative background, and write the
+--- a/src/ui/gfx/BUILD.gn
++++ b/src/ui/gfx/BUILD.gn
 @@ -3,6 +3,7 @@
  # found in the LICENSE file.
  
@@ -9649,7 +9379,7 @@
  import("//build/config/ui.gni")
  import("//device/vr/buildflags/buildflags.gni")
  import("//testing/libfuzzer/fuzzer_test.gni")
-@@ -571,6 +572,21 @@
+@@ -578,6 +579,21 @@ jumbo_source_set("memory_buffer_sources"
      ]
  
      deps += [ "//build/config/linux/libdrm" ]
@@ -9671,19 +9401,9 @@
    }
  
    if (is_linux || is_android) {
---- a/ui/gfx/linux/client_native_pixmap_dmabuf.h
-+++ b/ui/gfx/linux/client_native_pixmap_dmabuf.h
-@@ -49,6 +49,7 @@
-     void* data = nullptr;
-     size_t offset = 0;
-     size_t size = 0;
-+    size_t map_size = 0;
-   };
-   ClientNativePixmapDmaBuf(gfx::NativePixmapHandle handle,
-                            const gfx::Size& size,
 --- /dev/null
-+++ b/ui/gfx/linux/native_pixmap_vcsm.cc
-@@ -0,0 +1,317 @@
++++ b/src/ui/gfx/linux/native_pixmap_vcsm.cc
+@@ -0,0 +1,324 @@
 +#include "ui/gfx/linux/native_pixmap_vcsm.h"
 +
 +#include "base/posix/eintr_wrapper.h"
@@ -9694,6 +9414,7 @@
 +#include <interface/vcsm/user-vcsm.h>
 +}
 +
++#if RPI_PIXMAP_VCSM
 +
 +namespace gfx {
 +
@@ -9709,6 +9430,7 @@
 +    // Build planes to keep a copy
 +    const size_t plane_count = NumberOfPlanesForLinearBufferFormat(format);
 +    size_t offset = 0;
++
 +    for (size_t i = 0; i != plane_count; ++i) {
 +      size_t pitch = RowSizeForBufferFormat(size.width(), format, i);
 +      size_t next_offset = i + 1 >= plane_count ?
@@ -9735,6 +9457,7 @@
 +  {
 +  }
 +
++  // Assume that this is an import of a handle we exported
 +  NativePixmapVCSM(const gfx::Size& size,
 +                     gfx::BufferFormat format,
 +                     uint64_t modifier,
@@ -9742,9 +9465,8 @@
 +    size_(size),
 +    format_(format),
 +    modifier_(modifier),
-+    planes_(std::move(handle.planes))
++    planes_(BuildPlanes(size, format, std::move(handle.planes.front().fd)))
 +  {
-+    LOG(INFO) << "FromHandle: " << ToString();
 +  }
 +
 +  // NativePixmap:
@@ -9814,12 +9536,16 @@
 +  gfx::NativePixmapHandle ExportHandle() override
 +  {
 +    gfx::NativePixmapHandle ph;
-+
++    // The rest of the pixmap handle code is expecting a valid fd on every plane
++    // so we have to generate dups for all planes.  This is much simpler than
++    // trying to make the rest of the code cope with fewer fds
 +    ph.modifier = modifier_;
-+    ph.planes.emplace_back(planes_.front().stride,
-+                           planes_.front().offset,
-+                           planes_.back().offset + planes_.back().size,
-+                           base::ScopedFD(HANDLE_EINTR(dup(planes_.front().fd.get()))));
++    for (const auto& plane : planes_) {
++      ph.planes.emplace_back(plane.stride,
++                             plane.offset,
++                             plane.size,
++                             base::ScopedFD(HANDLE_EINTR(dup(planes_.front().fd.get()))));
++    }
 +
 +    return ph;
 +  }
@@ -10000,9 +9726,10 @@
 +
 +}  // namespace gfx
 +
++#endif
 +
 --- /dev/null
-+++ b/ui/gfx/linux/native_pixmap_vcsm.h
++++ b/src/ui/gfx/linux/native_pixmap_vcsm.h
 @@ -0,0 +1,32 @@
 +// Copyright 2017 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -10036,21 +9763,27 @@
 +
 +#endif  // UI_GFX_LINUX_NATIVE_PIXMAP_VCSM_H_
 +
---- a/ui/gl/init/gl_factory_x11.cc
-+++ b/ui/gl/init/gl_factory_x11.cc
-@@ -25,8 +25,8 @@
+--- a/src/ui/gl/init/gl_factory.cc
++++ b/src/ui/gl/init/gl_factory.cc
+@@ -71,6 +71,15 @@ GLImplementation GetRequestedGLImplement
+     return kGLImplementationNone;
+   }
  
- std::vector<GLImplementation> GetAllowedGLImplementations() {
-   std::vector<GLImplementation> impls;
-+  impls.push_back(kGLImplementationEGLGLES2);  // On Pi we want EGL so make that 1st
-   impls.push_back(kGLImplementationDesktopGL);
--  impls.push_back(kGLImplementationEGLGLES2);
-   impls.push_back(kGLImplementationEGLANGLE);
-   impls.push_back(kGLImplementationSwiftShaderGL);
-   return impls;
---- a/native_client/src/include/concurrency_ops.h
-+++ b/native_client/src/include/concurrency_ops.h
-@@ -32,14 +32,13 @@
++  // RPI: We always want EGL as our preferred render
++  // Easiest to simply add here - angle + GLES +/- EGL crashes
++  // so add here after the angle add.
++  //
++  // BEWARE: falling back from EGL to anything else with --in-process-gpu
++  // set produces a segfault when we exit so ideally we would only do this
++  // on Pi4/(F)KMS?
++  allowed_impls.insert(allowed_impls.begin(), kGLImplementationEGLGLES2);
++
+   // The default implementation is always the first one in list.
+   GLImplementation impl = allowed_impls[0];
+   *fallback_to_software_gl = false;
+--- a/src/native_client/src/include/concurrency_ops.h
++++ b/src/native_client/src/include/concurrency_ops.h
+@@ -32,14 +32,13 @@ static INLINE void NaClWriteMemoryBarrie
  #elif NACL_ARCH(NACL_BUILD_ARCH) == NACL_arm
  
  static INLINE void NaClWriteMemoryBarrier(void) {
@@ -10070,8 +9803,8 @@
  }
  
  #elif NACL_ARCH(NACL_BUILD_ARCH) == NACL_mips
---- a/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
-+++ b/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
+--- a/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
++++ b/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
 @@ -40,7 +40,7 @@
  #define ARCH_X86_64 0
  #define HAVE_ARMV5TE 1
@@ -10099,7 +9832,7 @@
  #define HAVE_ARMV8_INLINE 0
  #define HAVE_NEON_INLINE 0
  #define HAVE_VFP_INLINE 1
-@@ -577,7 +577,7 @@
+@@ -589,7 +589,7 @@
  #define CONFIG_NEON_CLOBBER_TEST 0
  #define CONFIG_OSSFUZZ 0
  #define CONFIG_PIC 1
@@ -10108,8 +9841,8 @@
  #define CONFIG_VALGRIND_BACKTRACE 0
  #define CONFIG_XMM_CLOBBER_TEST 0
  #define CONFIG_BSFS 1
---- a/third_party/libjpeg_turbo/simd/arm/arm/jsimd_neon.S
-+++ b/third_party/libjpeg_turbo/simd/arm/arm/jsimd_neon.S
+--- a/src/third_party/libjpeg_turbo/simd/arm/arm/jsimd_neon.S
++++ b/src/third_party/libjpeg_turbo/simd/arm/arm/jsimd_neon.S
 @@ -31,8 +31,8 @@
  #endif
  
@@ -10121,9 +9854,9 @@
  .object_arch armv4
  .arm
  .syntax unified
---- a/third_party/libyuv/BUILD.gn
-+++ b/third_party/libyuv/BUILD.gn
-@@ -210,6 +210,11 @@
+--- a/src/third_party/libyuv/BUILD.gn
++++ b/src/third_party/libyuv/BUILD.gn
+@@ -210,6 +210,11 @@ if (libyuv_use_neon) {
  
      if (current_cpu != "arm64") {
        configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
@@ -10135,9 +9868,9 @@
        cflags = [ "-mfpu=neon" ]
      }
    }
---- a/third_party/libyuv/source/cpu_id.cc
-+++ b/third_party/libyuv/source/cpu_id.cc
-@@ -133,6 +133,18 @@
+--- a/src/third_party/libyuv/source/cpu_id.cc
++++ b/src/third_party/libyuv/source/cpu_id.cc
+@@ -133,6 +133,18 @@ int GetXCR0() {
  #pragma optimize("g", on)
  #endif
  
@@ -10156,7 +9889,7 @@
  // based on libvpx arm_cpudetect.c
  // For Arm, but public to allow testing on any CPU
  LIBYUV_API SAFEBUFFERS int ArmCpuCaps(const char* cpuinfo_name) {
-@@ -161,6 +173,7 @@
+@@ -161,6 +173,7 @@ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(co
    fclose(f);
    return 0;
  }
@@ -10164,60 +9897,21 @@
  
  // TODO(fbarchard): Consider read_msa_ir().
  // TODO(fbarchard): Add unittest.
---- a/third_party/skia/src/core/SkBitmapProcState.cpp
-+++ b/third_party/skia/src/core/SkBitmapProcState.cpp
-@@ -24,56 +24,203 @@
- //   - with at most a scale and translate matrix (_DX_),
- //   - and no extra alpha applied (_opaque_),
- //   - sampling from 8888 (_S32_) and drawing to 8888 (_S32_).
--static void Clamp_S32_opaque_D32_nofilter_DX_shaderproc(const void* sIn, int x, int y,
--                                                        SkPMColor* dst, int count) {
--    const SkBitmapProcState& s = *static_cast<const SkBitmapProcState*>(sIn);
--    SkASSERT((s.fInvType & ~(SkMatrix::kTranslate_Mask |
--                             SkMatrix::kScale_Mask)) == 0);
--    SkASSERT(s.fAlphaScale == 256);
--
--    const unsigned maxX = s.fPixmap.width() - 1;
--    SkFractionalInt fx;
--    int dstY;
--    {
--        const SkBitmapProcStateAutoMapper mapper(s, x, y);
--        const unsigned maxY = s.fPixmap.height() - 1;
--        dstY = SkClampMax(mapper.intY(), maxY);
--        fx = mapper.fractionalIntX();
--    }
--
--    const SkPMColor* src = s.fPixmap.addr32(0, dstY);
--    const SkFractionalInt dx = s.fInvSxFractionalInt;
--
--    // Check if we're safely inside [0...maxX] so no need to clamp each computed index.
--    //
--    if ((uint64_t)SkFractionalIntToInt(fx) <= maxX &&
--        (uint64_t)SkFractionalIntToInt(fx + dx * (count - 1)) <= maxX)
--    {
--        int count4 = count >> 2;
--        for (int i = 0; i < count4; ++i) {
--            SkPMColor src0 = src[SkFractionalIntToInt(fx)]; fx += dx;
--            SkPMColor src1 = src[SkFractionalIntToInt(fx)]; fx += dx;
--            SkPMColor src2 = src[SkFractionalIntToInt(fx)]; fx += dx;
--            SkPMColor src3 = src[SkFractionalIntToInt(fx)]; fx += dx;
--            dst[0] = src0;
--            dst[1] = src1;
--            dst[2] = src2;
--            dst[3] = src3;
--            dst += 4;
--        }
--        for (int i = (count4 << 2); i < count; ++i) {
--            unsigned index = SkFractionalIntToInt(fx);
--            SkASSERT(index <= maxX);
--            *dst++ = src[index];
--            fx += dx;
--        }
--    } else {
--        for (int i = 0; i < count; ++i) {
--            dst[i] = src[SkClampMax(SkFractionalIntToInt(fx), maxX)];
--            fx += dx;
--        }
+--- a/src/third_party/skia/src/core/SkBitmapProcState.cpp
++++ b/src/third_party/skia/src/core/SkBitmapProcState.cpp
+@@ -18,6 +18,7 @@
+ #include "src/core/SkResourceCache.h"
+ #include "src/core/SkUtils.h"
+ 
++#if !defined(SK_ARM_HAS_NEON) || defined(__ARM_64BIT_STATE)
+ // One-stop-shop shader for,
+ //   - nearest-neighbor sampling (_nofilter_),
+ //   - clamp tiling in X and Y both (Clamp_),
+@@ -73,6 +74,201 @@ static void Clamp_S32_opaque_D32_nofilte
+         }
+     }
+ }
++#endif
 +
 +// We define two variants of this: one for 32-bit ARM NEON, and one generic C:
 +
@@ -10304,7 +9998,7 @@
 +}
 +#endif
 +
-+#if !defined(SK_ARM_HAS_NEON) || defined(__ARM_64BIT_STATE)
++#if 0
 +static inline void Clamp_S32_opaque_D32_nofilter_DX_shaderproc_core(SkPMColor* __restrict__ &dst, const SkPMColor* __restrict__ src, int core, SkFractionalInt fx, const SkFractionalInt dx)
 +{
 +    const SkPMColor*p = src + (int32_t)(fx >> 32);
@@ -10317,8 +10011,8 @@
 +            p += (int32_t)(dx >> 32) + 1;
 +        else
 +            p += (int32_t)(dx >> 32);
-     }
- }
++    }
++}
 +#endif
 +
 +#define Clamp_S32_opaque_D32_nofilter_DX_shaderproc_template(SUFFIX)                               \
@@ -10335,7 +10029,7 @@
 +    {                                                                                              \
 +        const SkBitmapProcStateAutoMapper mapper(s, x, y);                                         \
 +        const unsigned maxY = s.fPixmap.height() - 1;                                              \
-+        dstY = SkClampMax(mapper.intY(), maxY);                                                    \
++        dstY = SkTPin(mapper.intY(), 0, (int)maxY);                                                    \
 +        fx = mapper.fractionalIntX();                                                              \
 +    }                                                                                              \
 +                                                                                                   \
@@ -10350,14 +10044,14 @@
 +    if (dx == 0x100000000ll) {                                                                     \
 +        int32_t fx_integer = fx >> 32;                                                             \
 +        if (fx_integer < 0) {                                                                      \
-+            int left = SkMin32(-fx_integer, count);                                                \
++            int left = std::min(-fx_integer, count);                                                \
 +            fx_integer += left;                                                                    \
 +            count -= left;                                                                         \
 +            for (; left > 0; --left)                                                               \
 +                *dst++ = src[0];                                                                   \
 +        }                                                                                          \
 +        if (fx_integer < (int)maxX) {                                                              \
-+            core = SkMin32((int)maxX + 1 - fx_integer, count);                                     \
++            core = std::min((int)maxX + 1 - fx_integer, count);                                     \
 +            memcpy(dst, src + fx_integer, core * sizeof (uint32_t));                               \
 +            dst += core;                                                                           \
 +            count -= core;                                                                         \
@@ -10411,31 +10105,69 @@
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
 +Clamp_S32_opaque_D32_nofilter_DX_shaderproc_template(_neon)
 +#endif
-+#if !defined(SK_ARM_HAS_NEON) || defined(__ARM_64BIT_STATE)
-+Clamp_S32_opaque_D32_nofilter_DX_shaderproc_template()
-+#endif
 +
  
  static void S32_alpha_D32_nofilter_DX(const SkBitmapProcState& s,
                                        const uint32_t* xy, int count, SkPMColor* colors) {
-@@ -261,6 +408,11 @@
-     SkASSERT(fMatrixProc);
+@@ -278,7 +474,11 @@ bool SkBitmapProcState::chooseProcs() {
  
-     if (fFilterQuality > kNone_SkFilterQuality) {
+     const bool filter = fFilterQuality > kNone_SkFilterQuality;
+     if (fInvMatrix.isScaleTranslate()) {
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
-+        if (fAlphaScale == 256)
-+            fSampleProc32 = SkOpts::S32_opaque_D32_filter_DX;
-+        else
++        fSampleProc32 = filter ? (fAlphaScale == 256 ? SkOpts::S32_opaque_D32_filter_DX : SkOpts::S32_alpha_D32_filter_DX)   : S32_alpha_D32_nofilter_DX  ;
++#else
+         fSampleProc32 = filter ? SkOpts::S32_alpha_D32_filter_DX   : S32_alpha_D32_nofilter_DX  ;
 +#endif
-         fSampleProc32 = SkOpts::S32_alpha_D32_filter_DX;
      } else {
-         fSampleProc32 = S32_alpha_D32_nofilter_DX;
---- a/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
-+++ b/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
-@@ -253,6 +253,58 @@
+         fSampleProc32 = filter ? SkOpts::S32_alpha_D32_filter_DXDY : S32_alpha_D32_nofilter_DXDY;
      }
+--- a/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
++++ b/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
+@@ -246,6 +246,535 @@ static unsigned clamp(SkFixed fx, int ma
+     return SkTPin(fx >> 16, 0, max);
+ }
  
-     static void decal_filter_scale_neon(uint32_t dst[], SkFixed fx, SkFixed dx, int count) {
++// Clamp/Clamp and Repeat/Repeat have NEON or portable implementations.
++#if defined(SK_ARM_HAS_NEON)
++    #include <arm_neon.h>
++
++    // TODO: this is a fine drop-in for decal_nofilter_scale() generally.
++    static void decal_nofilter_scale_neon(uint32_t dst[], SkFixed fx, SkFixed dx, int count) {
++        if (count >= 8) {
++            // SkFixed is 16.16 fixed point
++            SkFixed dx8 = dx * 8;
++            int32x4_t vdx8 = vdupq_n_s32(dx8);
++
++            // setup lbase and hbase
++            int32x4_t lbase, hbase;
++            lbase = vdupq_n_s32(fx);
++            lbase = vsetq_lane_s32(fx + dx, lbase, 1);
++            lbase = vsetq_lane_s32(fx + dx + dx, lbase, 2);
++            lbase = vsetq_lane_s32(fx + dx + dx + dx, lbase, 3);
++            hbase = lbase + vdupq_n_s32(4 * dx);
++
++            do {
++                // store the upper 16 bits
++                vst1q_u32(dst, vreinterpretq_u32_s16(
++                    vuzpq_s16(vreinterpretq_s16_s32(lbase), vreinterpretq_s16_s32(hbase)).val[1]
++                ));
++
++                // on to the next group of 8
++                lbase += vdx8;
++                hbase += vdx8;
++                dst += 4; // we did 8 elements but the result is twice smaller
++                count -= 8;
++                fx += dx8;
++            } while (count >= 8);
++        }
++
++        uint16_t* xx = (uint16_t*)dst;
++        for (int i = count; i > 0; --i) {
++            *xx++ = SkToU16(fx >> 16); fx += dx;
++        }
++    }
++
++    static void decal_filter_scale_neon(uint32_t dst[], SkFixed fx, SkFixed dx, int count) {
 +#ifndef __ARM_64BIT_STATE
 +        SkASSERT(((fx + (count-1) * dx) >> (16 + 14)) == 0);
 +        fx = (fx << 2) + 1;
@@ -10488,21 +10220,285 @@
 +            } while (--count >= 0);
 +        }
 +#else // !defined(__ARM_64BIT_STATE)
-         if (count >= 8) {
-             SkFixed dx8 = dx * 8;
-             int32x4_t vdx8 = vdupq_n_s32(dx8);
-@@ -301,6 +353,7 @@
-             *dst++ = (fx >> 12 << 14) | ((fx >> 16) + 1);
-             fx += dx;
-         }
++        if (count >= 8) {
++            SkFixed dx8 = dx * 8;
++            int32x4_t vdx8 = vdupq_n_s32(dx8);
++
++            int32x4_t wide_fx, wide_fx2;
++            wide_fx = vdupq_n_s32(fx);
++            wide_fx = vsetq_lane_s32(fx + dx, wide_fx, 1);
++            wide_fx = vsetq_lane_s32(fx + dx + dx, wide_fx, 2);
++            wide_fx = vsetq_lane_s32(fx + dx + dx + dx, wide_fx, 3);
++
++            wide_fx2 = vaddq_s32(wide_fx, vdupq_n_s32(4 * dx));
++
++            while (count >= 8) {
++                int32x4_t wide_out;
++                int32x4_t wide_out2;
++
++                wide_out = vshlq_n_s32(vshrq_n_s32(wide_fx, 12), 14);
++                wide_out = wide_out | (vshrq_n_s32(wide_fx,16) + vdupq_n_s32(1));
++
++                wide_out2 = vshlq_n_s32(vshrq_n_s32(wide_fx2, 12), 14);
++                wide_out2 = wide_out2 | (vshrq_n_s32(wide_fx2,16) + vdupq_n_s32(1));
++
++                vst1q_u32(dst, vreinterpretq_u32_s32(wide_out));
++                vst1q_u32(dst+4, vreinterpretq_u32_s32(wide_out2));
++
++                dst += 8;
++                fx += dx8;
++                wide_fx += vdx8;
++                wide_fx2 += vdx8;
++                count -= 8;
++            }
++        }
++
++        if (count & 1)
++        {
++            SkASSERT((fx >> (16 + 14)) == 0);
++            *dst++ = (fx >> 12 << 14) | ((fx >> 16) + 1);
++            fx += dx;
++        }
++        while ((count -= 2) >= 0)
++        {
++            SkASSERT((fx >> (16 + 14)) == 0);
++            *dst++ = (fx >> 12 << 14) | ((fx >> 16) + 1);
++            fx += dx;
++
++            *dst++ = (fx >> 12 << 14) | ((fx >> 16) + 1);
++            fx += dx;
++        }
 +#endif
-     }
- 
-     static inline int16x8_t clamp8(int32x4_t low, int32x4_t high, unsigned max) {
-@@ -531,6 +584,111 @@
-             return;
-         }
- 
++    }
++
++    static inline int16x8_t clamp8(int32x4_t low, int32x4_t high, unsigned max) {
++        int16x8_t res;
++
++        // get the hi 16s of all those 32s
++        res = vuzpq_s16(vreinterpretq_s16_s32(low), vreinterpretq_s16_s32(high)).val[1];
++
++        // clamp
++        res = vmaxq_s16(res, vdupq_n_s16(0));
++        res = vminq_s16(res, vdupq_n_s16(max));
++
++        return res;
++    }
++
++    static inline int32x4_t clamp4(int32x4_t f, unsigned max) {
++        int32x4_t res;
++
++        // get the hi 16s of all those 32s
++        res = vshrq_n_s32(f, 16);
++
++        // clamp
++        res = vmaxq_s32(res, vdupq_n_s32(0));
++        res = vminq_s32(res, vdupq_n_s32(max));
++
++        return res;
++    }
++
++    static inline int32x4_t extract_low_bits_clamp4(int32x4_t fx, unsigned) {
++        int32x4_t ret;
++
++        ret = vshrq_n_s32(fx, 12);
++
++        /* We don't need the mask below because the caller will
++         * overwrite the non-masked bits
++         */
++        //ret = vandq_s32(ret, vdupq_n_s32(0xF));
++
++        return ret;
++    }
++
++    static inline int16x8_t repeat8(int32x4_t low, int32x4_t high, unsigned max) {
++        uint16x8_t res;
++        uint32x4_t tmpl, tmph;
++
++        // get the lower 16 bits
++        res = vuzpq_u16(vreinterpretq_u16_s32(low), vreinterpretq_u16_s32(high)).val[0];
++
++        // bare multiplication, not SkFixedMul
++        tmpl = vmull_u16(vget_low_u16(res), vdup_n_u16(max+1));
++        tmph = vmull_u16(vget_high_u16(res), vdup_n_u16(max+1));
++
++        // extraction of the 16 upper bits
++        res = vuzpq_u16(vreinterpretq_u16_u32(tmpl), vreinterpretq_u16_u32(tmph)).val[1];
++
++        return vreinterpretq_s16_u16(res);
++    }
++
++    static inline int32x4_t repeat4(int32x4_t f, unsigned max) {
++        uint16x4_t res;
++        uint32x4_t tmp;
++
++        // get the lower 16 bits
++        res = vmovn_u32(vreinterpretq_u32_s32(f));
++
++        // bare multiplication, not SkFixedMul
++        tmp = vmull_u16(res, vdup_n_u16(max+1));
++
++        // extraction of the 16 upper bits
++        tmp = vshrq_n_u32(tmp, 16);
++
++        return vreinterpretq_s32_u32(tmp);
++    }
++
++    static inline int32x4_t extract_low_bits_repeat_mirror4(int32x4_t fx, unsigned max) {
++        uint16x4_t res;
++        uint32x4_t tmp;
++        int32x4_t ret;
++
++        // get the lower 16 bits
++        res = vmovn_u32(vreinterpretq_u32_s32(fx));
++
++        // bare multiplication, not SkFixedMul
++        tmp = vmull_u16(res, vdup_n_u16(max + 1));
++
++        // shift and mask
++        ret = vshrq_n_s32(vreinterpretq_s32_u32(tmp), 12);
++
++        /* We don't need the mask below because the caller will
++         * overwrite the non-masked bits
++         */
++        //ret = vandq_s32(ret, vdupq_n_s32(0xF));
++
++        return ret;
++    }
++
++    template <unsigned   (*tile)(SkFixed, int),
++              int16x8_t (*tile8)(int32x4_t, int32x4_t, unsigned),
++             bool tryDecal>
++    static void nofilter_scale_neon(const SkBitmapProcState& s,
++                                    uint32_t xy[], int count, int x, int y) {
++        SkASSERT((s.fInvType & ~(SkMatrix::kTranslate_Mask |
++                                 SkMatrix::kScale_Mask)) == 0);
++
++        // we store y, x, x, x, x, x
++        const unsigned maxX = s.fPixmap.width() - 1;
++        SkFractionalInt fx;
++        {
++            const SkBitmapProcStateAutoMapper mapper(s, x, y);
++            const unsigned maxY = s.fPixmap.height() - 1;
++            *xy++ = tile(mapper.fixedY(), maxY);
++            fx = mapper.fractionalIntX();
++        }
++
++        if (0 == maxX) {
++            // all of the following X values must be 0
++            memset(xy, 0, count * sizeof(uint16_t));
++            return;
++        }
++
++        const SkFractionalInt dx = s.fInvSxFractionalInt;
++
++        // test if we don't need to apply the tile proc
++        const SkFixed fixedFx = SkFractionalIntToFixed(fx);
++        const SkFixed fixedDx = SkFractionalIntToFixed(dx);
++        if (tryDecal && can_truncate_to_fixed_for_decal(fixedFx, fixedDx, count, maxX)) {
++            decal_nofilter_scale_neon(xy, fixedFx, fixedDx, count);
++            return;
++        }
++
++        if (count >= 8) {
++            SkFractionalInt dx2 = dx+dx;
++            SkFractionalInt dx4 = dx2+dx2;
++            SkFractionalInt dx8 = dx4+dx4;
++
++            // now build fx/fx+dx/fx+2dx/fx+3dx
++            SkFractionalInt fx1, fx2, fx3;
++            int32x4_t lbase, hbase;
++            int16_t *dst16 = (int16_t *)xy;
++
++            fx1 = fx+dx;
++            fx2 = fx1+dx;
++            fx3 = fx2+dx;
++
++            lbase = vdupq_n_s32(SkFractionalIntToFixed(fx));
++            lbase = vsetq_lane_s32(SkFractionalIntToFixed(fx1), lbase, 1);
++            lbase = vsetq_lane_s32(SkFractionalIntToFixed(fx2), lbase, 2);
++            lbase = vsetq_lane_s32(SkFractionalIntToFixed(fx3), lbase, 3);
++            hbase = vaddq_s32(lbase, vdupq_n_s32(SkFractionalIntToFixed(dx4)));
++
++            // store & bump
++            while (count >= 8) {
++
++                int16x8_t fx8;
++
++                fx8 = tile8(lbase, hbase, maxX);
++
++                vst1q_s16(dst16, fx8);
++
++                // but preserving base & on to the next
++                lbase = vaddq_s32 (lbase, vdupq_n_s32(SkFractionalIntToFixed(dx8)));
++                hbase = vaddq_s32 (hbase, vdupq_n_s32(SkFractionalIntToFixed(dx8)));
++                dst16 += 8;
++                count -= 8;
++                fx += dx8;
++            }
++            xy = (uint32_t *) dst16;
++        }
++
++        uint16_t* xx = (uint16_t*)xy;
++        for (int i = count; i > 0; --i) {
++            *xx++ = tile(SkFractionalIntToFixed(fx), maxX);
++            fx += dx;
++        }
++    }
++
++    template <unsigned              (*tile )(SkFixed, int),
++              int32x4_t             (*tile4)(int32x4_t, unsigned),
++              unsigned  (*extract_low_bits )(SkFixed, int),
++              int32x4_t (*extract_low_bits4)(int32x4_t, unsigned),
++              bool tryDecal>
++    static void filter_scale_neon(const SkBitmapProcState& s,
++                                  unsigned int * xy, int count, int x, int y) {
++        SkASSERT((s.fInvType & ~(SkMatrix::kTranslate_Mask |
++                                 SkMatrix::kScale_Mask)) == 0);
++        SkASSERT(s.fInvKy == 0);
++
++        auto pack = [&](SkFixed f, unsigned max, SkFixed one) {
++            unsigned i = tile(f, max);
++            i = (i << 4) | extract_low_bits(f, max);
++            return (i << 14) | (tile((f + one), max));
++        };
++
++        auto pack4 = [&](int32x4_t f, unsigned max, SkFixed one) {
++            int32x4_t ret, res;
++
++            res = tile4(f, max);
++
++            ret = extract_low_bits4(f, max);
++            ret = vsliq_n_s32(ret, res, 4);
++
++            res = tile4(f + vdupq_n_s32(one), max);
++            ret = vorrq_s32(vshlq_n_s32(ret, 14), res);
++
++            return ret;
++        };
++
++        const unsigned maxX = s.fPixmap.width() - 1;
++        const SkFixed one = s.fFilterOneX;
++        const SkFractionalInt dx = s.fInvSxFractionalInt;
++        SkFractionalInt fx;
++
++        {
++            const SkBitmapProcStateAutoMapper mapper(s, x, y);
++            const SkFixed fy = mapper.fixedY();
++            const unsigned maxY = s.fPixmap.height() - 1;
++            // compute our two Y values up front
++            *xy++ = pack(fy, maxY, s.fFilterOneY);
++            // now initialize fx
++            fx = mapper.fractionalIntX();
++        }
++
++        // test if we don't need to apply the tile proc
++        const SkFixed fixedFx = SkFractionalIntToFixed(fx);
++        const SkFixed fixedDx = SkFractionalIntToFixed(dx);
++        if (tryDecal && can_truncate_to_fixed_for_decal(fixedFx, fixedDx, count, maxX)) {
++            decal_filter_scale_neon(xy, fixedFx, fixedDx, count);
++            return;
++        }
++
 +#ifndef __ARM_64BIT_STATE
 +        if (tile == clamp && one == SK_Fixed1) {
 +            SkASSERT(maxX < (1<<14)-1);
@@ -10608,21 +10604,73 @@
 +        {
 +        // Drop back to old code for repeat or other values of 'one'
 +#endif
-         if (count >= 4) {
-             int32x4_t wide_fx;
- 
-@@ -557,6 +715,9 @@
-             *xy++ = pack(SkFractionalIntToFixed(fx), maxX, one);
-             fx += dx;
-         }
++        if (count >= 4) {
++            int32x4_t wide_fx;
++
++            wide_fx = vdupq_n_s32(SkFractionalIntToFixed(fx));
++            wide_fx = vsetq_lane_s32(SkFractionalIntToFixed(fx+dx), wide_fx, 1);
++            wide_fx = vsetq_lane_s32(SkFractionalIntToFixed(fx+dx+dx), wide_fx, 2);
++            wide_fx = vsetq_lane_s32(SkFractionalIntToFixed(fx+dx+dx+dx), wide_fx, 3);
++
++            while (count >= 4) {
++                int32x4_t res;
++
++                res = pack4(wide_fx, maxX, one);
++
++                vst1q_u32(xy, vreinterpretq_u32_s32(res));
++
++                wide_fx += vdupq_n_s32(SkFractionalIntToFixed(dx+dx+dx+dx));
++                fx += dx+dx+dx+dx;
++                xy += 4;
++                count -= 4;
++            }
++        }
++
++        while (--count >= 0) {
++            *xy++ = pack(SkFractionalIntToFixed(fx), maxX, one);
++            fx += dx;
++        }
 +#ifndef __ARM_64BIT_STATE
 +        }
 +#endif
-     }
- 
-     static const SkBitmapProcState::MatrixProc ClampX_ClampY_Procs[] = {
---- a/third_party/skia/src/core/SkBlitter_ARGB32.cpp
-+++ b/third_party/skia/src/core/SkBlitter_ARGB32.cpp
++    }
++
++    static const SkBitmapProcState::MatrixProc ClampX_ClampY_Procs[] = {
++        nofilter_scale_neon<clamp, clamp8, true>,
++        filter_scale_neon<clamp,
++                          clamp4,
++                          extract_low_bits_clamp_clamp,
++                          extract_low_bits_clamp4,
++                          true>,
++        nofilter_affine<clamp, clamp>,       filter_affine<clamp, clamp, extract_low_bits_clamp_clamp>,
++    };
++
++    static const SkBitmapProcState::MatrixProc RepeatX_RepeatY_Procs[] = {
++        nofilter_scale_neon<repeat, repeat8, false>,
++        filter_scale_neon<repeat,
++                          repeat4,
++                          extract_low_bits_general,
++                          extract_low_bits_repeat_mirror4,
++                          false>,
++        nofilter_affine<repeat, repeat>,        filter_affine<repeat, repeat, extract_low_bits_general>
++    };
++#else
++
+ static const SkBitmapProcState::MatrixProc ClampX_ClampY_Procs[] = {
+     nofilter_scale <clamp, clamp, true>, filter_scale <clamp, clamp, extract_low_bits_clamp_clamp, true>,
+     nofilter_affine<clamp, clamp>,       filter_affine<clamp, clamp, extract_low_bits_clamp_clamp>,
+@@ -254,6 +783,9 @@ static const SkBitmapProcState::MatrixPr
+     nofilter_scale <repeat, repeat, false>, filter_scale <repeat, repeat, extract_low_bits_general, false>,
+     nofilter_affine<repeat, repeat>,        filter_affine<repeat, repeat, extract_low_bits_general>
+ };
++
++#endif
++
+ static const SkBitmapProcState::MatrixProc MirrorX_MirrorY_Procs[] = {
+     nofilter_scale <mirror, mirror,  false>, filter_scale <mirror, mirror, extract_low_bits_general, false>,
+     nofilter_affine<mirror, mirror>,         filter_affine<mirror, mirror, extract_low_bits_general>,
+--- a/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp
++++ b/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp
 @@ -11,6 +11,7 @@
  #include "src/core/SkCoreBlitters.h"
  #include "src/core/SkUtils.h"
@@ -10631,7 +10679,7 @@
  
  static inline int upscale_31_to_32(int value) {
      SkASSERT((unsigned)value <= 31);
-@@ -1184,6 +1185,7 @@
+@@ -1184,6 +1185,7 @@ static void drive(SkPMColor* dst, const
      }
  }
  
@@ -10639,7 +10687,7 @@
  static void blend_row_A8(SkPMColor* dst, const void* mask, const SkPMColor* src, int n) {
      auto cov = (const uint8_t*)mask;
      drive(dst, src, cov, n, [](U8x4 d, U8x4 s, U8x4 c) {
-@@ -1192,6 +1194,7 @@
+@@ -1192,6 +1194,7 @@ static void blend_row_A8(SkPMColor* dst,
          return s_aa + skvx::approx_scale(d, 255 - alpha);
      });
  }
@@ -10647,7 +10695,7 @@
  
  static void blend_row_A8_opaque(SkPMColor* dst, const void* mask, const SkPMColor* src, int n) {
      auto cov = (const uint8_t*)mask;
-@@ -1296,7 +1299,8 @@
+@@ -1296,7 +1299,8 @@ void SkARGB32_Shader_Blitter::blitMask(c
          if (mask.fFormat == SkMask::kA8_Format && opaque) {
              blend_row = blend_row_A8_opaque;
          } else if (mask.fFormat == SkMask::kA8_Format) {
@@ -10657,9 +10705,9 @@
          } else if (mask.fFormat == SkMask::kLCD16_Format && opaque) {
              blend_row = blend_row_LCD16_opaque;
          } else if (mask.fFormat == SkMask::kLCD16_Format) {
---- a/third_party/skia/src/core/SkOpts.cpp
-+++ b/third_party/skia/src/core/SkOpts.cpp
-@@ -56,6 +56,7 @@
+--- a/src/third_party/skia/src/core/SkOpts.cpp
++++ b/src/third_party/skia/src/core/SkOpts.cpp
+@@ -58,6 +58,7 @@ namespace SkOpts {
      DEFINE_DEFAULT(create_xfermode);
  
      DEFINE_DEFAULT(blit_mask_d32_a8);
@@ -10667,10 +10715,10 @@
  
      DEFINE_DEFAULT(blit_row_color32);
      DEFINE_DEFAULT(blit_row_s32a_opaque);
-@@ -84,6 +85,11 @@
-     DEFINE_DEFAULT(hash_fn);
+@@ -89,6 +90,11 @@ namespace SkOpts {
+     DEFINE_DEFAULT(S32_alpha_D32_filter_DXDY);
  
-     DEFINE_DEFAULT(S32_alpha_D32_filter_DX);
+     DEFINE_DEFAULT(interpret_skvm);
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
 +    DEFINE_DEFAULT(S32_opaque_D32_filter_DX);
 +#else
@@ -10679,9 +10727,9 @@
  #undef DEFINE_DEFAULT
  
  #define M(st) (StageFn)SK_OPTS_NS::st,
---- a/third_party/skia/src/core/SkOpts.h
-+++ b/third_party/skia/src/core/SkOpts.h
-@@ -27,6 +27,7 @@
+--- a/src/third_party/skia/src/core/SkOpts.h
++++ b/src/third_party/skia/src/core/SkOpts.h
+@@ -28,6 +28,7 @@ namespace SkOpts {
  
      extern void (*blit_mask_d32_a8)(SkPMColor*, size_t, const SkAlpha*, size_t, SkColor, int, int);
      extern void (*blit_row_color32)(SkPMColor*, const SkPMColor*, int, SkPMColor);
@@ -10689,9 +10737,9 @@
      extern void (*blit_row_s32a_opaque)(SkPMColor*, const SkPMColor*, int, U8CPU);
  
      // Swizzle input into some sort of 8888 pixel, {premul,unpremul} x {rgba,bgra}.
-@@ -65,6 +66,9 @@
-     extern void (*S32_alpha_D32_filter_DX)(const SkBitmapProcState&,
-                                            const uint32_t* xy, int count, SkPMColor*);
+@@ -67,6 +68,9 @@ namespace SkOpts {
+     extern void (*S32_alpha_D32_filter_DXDY)(const SkBitmapProcState&,
+                                              const uint32_t* xy, int count, SkPMColor*);
  
 +    extern void (*S32_opaque_D32_filter_DX)(const SkBitmapProcState&,
 +                                            const uint32_t* xy, int count, SkPMColor*);
@@ -10699,9 +10747,24 @@
  #define M(st) +1
      // We can't necessarily express the type of SkJumper stage functions here,
      // so we just use this void(*)(void) as a stand-in.
---- a/third_party/skia/src/opts/SkBitmapProcState_opts.h
-+++ b/third_party/skia/src/opts/SkBitmapProcState_opts.h
-@@ -252,6 +252,214 @@
+--- a/src/third_party/skia/src/core/SkSpan.h
++++ b/src/third_party/skia/src/core/SkSpan.h
+@@ -65,8 +65,10 @@ private:
+ template <typename T, typename S>
+ inline constexpr SkSpan<T> SkMakeSpan(T* p, S s) { return SkSpan<T>{p, SkTo<size_t>(s)}; }
+ 
+-template <size_t N, typename T>
+-inline constexpr SkSpan<T> SkMakeSpan(T(&a)[N]) { return SkSpan<T>{a, N}; }
++// *** Caused redefinition errors in v82 (but was OK in in v82??)
++//     but doesn't seem to be needed
++//template <size_t N, typename T>
++//inline constexpr SkSpan<T> SkMakeSpan(T(&a)[N]) { return SkSpan<T>{a, N}; }
+ 
+ template <typename Container>
+ inline auto SkMakeSpan(Container& c)
+--- a/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
++++ b/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
+@@ -387,6 +387,257 @@ static void decode_packed_coordinates_an
          }
      }
  
@@ -10913,11 +10976,54 @@
 +    );
 +}
 +
++        // Copied from just below
++        static void filter_and_scale_by_alpha(unsigned x, unsigned y,
++                                              SkPMColor a00, SkPMColor a01,
++                                              SkPMColor a10, SkPMColor a11,
++                                              SkPMColor *dst,
++                                              uint16_t scale) {
++            uint8x8_t vy, vconst16_8, v16_y, vres;
++            uint16x4_t vx, vconst16_16, v16_x, tmp, vscale;
++            uint32x2_t va0, va1;
++            uint16x8_t tmp1, tmp2;
++
++            vy = vdup_n_u8(y);                // duplicate y into vy
++            vconst16_8 = vmov_n_u8(16);       // set up constant in vconst16_8
++            v16_y = vsub_u8(vconst16_8, vy);  // v16_y = 16-y
++
++            va0 = vdup_n_u32(a00);            // duplicate a00
++            va1 = vdup_n_u32(a10);            // duplicate a10
++            va0 = vset_lane_u32(a01, va0, 1); // set top to a01
++            va1 = vset_lane_u32(a11, va1, 1); // set top to a11
++
++            tmp1 = vmull_u8(vreinterpret_u8_u32(va0), v16_y); // tmp1 = [a01|a00] * (16-y)
++            tmp2 = vmull_u8(vreinterpret_u8_u32(va1), vy);    // tmp2 = [a11|a10] * y
++
++            vx = vdup_n_u16(x);                // duplicate x into vx
++            vconst16_16 = vmov_n_u16(16);      // set up constant in vconst16_16
++            v16_x = vsub_u16(vconst16_16, vx); // v16_x = 16-x
++
++            tmp = vmul_u16(vget_high_u16(tmp1), vx);        // tmp  = a01 * x
++            tmp = vmla_u16(tmp, vget_high_u16(tmp2), vx);   // tmp += a11 * x
++            tmp = vmla_u16(tmp, vget_low_u16(tmp1), v16_x); // tmp += a00 * (16-x)
++            tmp = vmla_u16(tmp, vget_low_u16(tmp2), v16_x); // tmp += a10 * (16-x)
++
++            if (scale < 256) {
++                vscale = vdup_n_u16(scale);        // duplicate scale
++                tmp = vshr_n_u16(tmp, 8);          // shift down result by 8
++                tmp = vmul_u16(tmp, vscale);       // multiply result by scale
++            }
++
++            vres = vshrn_n_u16(vcombine_u16(tmp, vcreate_u16(0)), 8); // shift down result by 8
++            vst1_lane_u32(dst, vreinterpret_u32_u8(vres), 0);         // store result
++        }
++
++
  #else
  
      // The NEON code only actually differs from the portable code in the
-@@ -364,6 +572,203 @@
- 
+@@ -533,6 +784,203 @@ static void decode_packed_coordinates_an
+                                                        const uint32_t*, int, SkPMColor*) = nullptr;
  #endif
  
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
@@ -11120,9 +11226,9 @@
  }  // namespace SK_OPTS_NS
  
  #endif
---- a/third_party/skia/src/opts/SkBlitMask_opts.h
-+++ b/third_party/skia/src/opts/SkBlitMask_opts.h
-@@ -226,6 +226,322 @@
+--- a/src/third_party/skia/src/opts/SkBlitMask_opts.h
++++ b/src/third_party/skia/src/opts/SkBlitMask_opts.h
+@@ -226,6 +226,322 @@ namespace SK_OPTS_NS {
      }
  }
  
@@ -11445,9 +11551,9 @@
  }  // SK_OPTS_NS
  
  #endif//SkBlitMask_opts_DEFINED
---- a/third_party/skia/src/opts/SkBlitRow_opts.h
-+++ b/third_party/skia/src/opts/SkBlitRow_opts.h
-@@ -121,6 +121,9 @@
+--- a/src/third_party/skia/src/opts/SkBlitRow_opts.h
++++ b/src/third_party/skia/src/opts/SkBlitRow_opts.h
+@@ -151,6 +151,9 @@ inline void blit_row_color32(SkPMColor*
  }
  
  #if defined(SK_ARM_HAS_NEON)
@@ -11457,7 +11563,7 @@
  
  // Return a uint8x8_t value, r, computed as r[i] = SkMulDiv255Round(x[i], y[i]), where r[i], x[i],
  // y[i] are the i-th lanes of the corresponding NEON vectors.
-@@ -157,8 +160,193 @@
+@@ -187,8 +190,193 @@ static inline uint8x8_t SkPMSrcOver_neon
      return vadd_u8(src, SkMulDiv255Round_neon8(nalphas, dst));
  }
  
@@ -11651,7 +11757,7 @@
  /*not static*/ inline
  void blit_row_s32a_opaque(SkPMColor* dst, const SkPMColor* src, int len, U8CPU alpha) {
      SkASSERT(alpha == 0xFF);
-@@ -312,6 +500,10 @@
+@@ -392,6 +580,10 @@ void blit_row_s32a_opaque(SkPMColor* dst
      }
  
  #elif defined(SK_ARM_HAS_NEON)
@@ -11662,7 +11768,7 @@
      // Do 8-pixels at a time. A 16-pixels at a time version of this code was also tested, but it
      // underperformed on some of the platforms under test for inputs with frequent transitions of
      // alpha (corresponding to changes of the conditions [~]alpha_u64 == 0 below). It may be worth
-@@ -358,6 +550,154 @@
+@@ -438,6 +630,154 @@ void blit_row_s32a_opaque(SkPMColor* dst
          vst1_lane_u32(dst, vreinterpret_u32_u8(result), 0);
      }
      return;
@@ -11817,9 +11923,9 @@
  #endif
  
      while (len-- > 0) {
---- a/third_party/skia/src/opts/SkUtils_opts.h
-+++ b/third_party/skia/src/opts/SkUtils_opts.h
-@@ -34,7 +34,81 @@
+--- a/src/third_party/skia/src/opts/SkUtils_opts.h
++++ b/src/third_party/skia/src/opts/SkUtils_opts.h
+@@ -34,7 +34,81 @@ namespace SK_OPTS_NS {
          memsetT(buffer, value, count);
      }
      /*not static*/ inline void memset32(uint32_t buffer[], uint32_t value, int count) {

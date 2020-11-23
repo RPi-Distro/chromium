@@ -1,6 +1,6 @@
---- a/gin/v8_initializer.cc
-+++ b/gin/v8_initializer.cc
-@@ -78,7 +78,11 @@
+--- a/src/gin/v8_initializer.cc
++++ b/src/gin/v8_initializer.cc
+@@ -76,7 +76,11 @@ const char kSnapshotFileName32[] = "snap
  #endif
  
  #else  // defined(OS_ANDROID)
@@ -12,9 +12,17 @@
  const char kSnapshotFileName[] = "snapshot_blob.bin";
  #endif  // defined(OS_ANDROID)
  
---- a/tools/v8_context_snapshot/BUILD.gn
-+++ b/tools/v8_context_snapshot/BUILD.gn
-@@ -58,7 +58,11 @@
+--- a/src/tools/v8_context_snapshot/BUILD.gn
++++ b/src/tools/v8_context_snapshot/BUILD.gn
+@@ -12,6 +12,7 @@ import("//tools/v8_context_snapshot/v8_c
+ import("//build/config/c++/c++.gni")
+ import("//build/config/compiler/compiler.gni")
+ import("//v8/gni/snapshot_toolchain.gni")
++import("//build/config/arm.gni")
+ 
+ if (is_android) {
+   import("//build/config/android/rules.gni")
+@@ -49,7 +50,11 @@ if (use_v8_context_snapshot) {
  
    action("generate_v8_context_snapshot") {
      script = "//build/gn_run_binary.py"

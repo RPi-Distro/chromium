@@ -1,30 +1,47 @@
-Description: try alternative locations for libwidevinecdm.so:
-  - $HOME/.local/lib/ (snap-friendly, see https://launchpad.net/bugs/1738149)
-  - /opt/google/chrome/WidevineCdm/_platform_specific/linux_x64/ (installed by official google chrome package)
+Description: try an alternative location for the Widevine CDM library
+ ($HOME/.local/lib/WidevineCdm/ - snap-friendly, see https://launchpad.net/bugs/1738149)
+ The manifest lives at the top level, whereas libwidevinecdm.so is inside
+ a platform specific directory, see media::GetPlatformSpecificDirectory(…).
 Author: Olivier Tilloy <olivier.tilloy@canonical.com>
 
---- a/chrome/common/chrome_paths.cc
-+++ b/chrome/common/chrome_paths.cc
-@@ -377,6 +377,22 @@
-     // TODO(crbug.com/663554): Remove this after component updated CDM is
-     // supported on Linux and ChromeOS.
-     case chrome::FILE_WIDEVINE_CDM:
+--- a/src/chrome/common/chrome_paths.cc
++++ b/src/chrome/common/chrome_paths.cc
+@@ -381,8 +381,17 @@ bool PathProvider(int key, base::FilePat
+       cur = cur.Append(FILE_PATH_LITERAL("pnacl"));
+       break;
+ 
+-#if defined(OS_LINUX) && BUILDFLAG(BUNDLE_WIDEVINE_CDM)
++#if defined(OS_LINUX) && BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
+     case chrome::DIR_BUNDLED_WIDEVINE_CDM:
 +      base::PathService::Get(base::DIR_HOME, &cur);
-+      cur =
-+          cur.Append(
-+                 FILE_PATH_LITERAL(".local/lib"))
-+              .AppendASCII(base::GetNativeLibraryName(kWidevineCdmLibraryName));
-+      if (base::PathExists(cur)) {
++      cur = cur.Append(FILE_PATH_LITERAL(".local/lib"))
++               .AppendASCII(kWidevineCdmBaseDirectory);
++      if (base::PathExists(cur))
 +        break;
-+      }
-+      cur = base::FilePath(FILE_PATH_LITERAL("/opt/google/chrome"));
-+      cur =
-+          cur.Append(
-+                 media::GetPlatformSpecificDirectory(kWidevineCdmBaseDirectory))
-+              .AppendASCII(base::GetNativeLibraryName(kWidevineCdmLibraryName));
-+      if (base::PathExists(cur)) {
++      cur = base::FilePath(FILE_PATH_LITERAL("/opt"));
++      cur = cur.Append(kWidevineCdmBaseDirectory);
++      if (base::PathExists(cur))
 +        break;
-+      }
        if (!GetComponentDirectory(&cur))
          return false;
-       cur =
+ #if !defined(OS_CHROMEOS)
+@@ -391,7 +400,7 @@ bool PathProvider(int key, base::FilePat
+       cur = cur.AppendASCII(kWidevineCdmBaseDirectory);
+ #endif  // !defined(OS_CHROMEOS)
+       break;
+-#endif  // defined(OS_LINUX) && BUILDFLAG(BUNDLE_WIDEVINE_CDM)
++#endif  // defined(OS_LINUX) && BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
+ 
+ #if defined(OS_LINUX) && !defined(OS_CHROMEOS) && \
+     BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
+--- a/src/media/cdm/library_cdm/cdm_paths.gni
++++ b/src/media/cdm/library_cdm/cdm_paths.gni
+@@ -32,7 +32,7 @@ if (current_cpu == "x86" || current_cpu
+ # Note: |cdm_platform_specific_path| is exported as a BUILDFLAG to
+ # cdm_paths.cc.
+ if ((is_win || is_mac || is_desktop_linux) &&
+-    (current_cpu == "x86" || current_cpu == "x64")) {
++    (current_cpu == "x86" || current_cpu == "x64" || current_cpu == "arm")) {
+   cdm_platform_specific_path =
+       "_platform_specific/$component_os" + "_" + "$component_arch"
+ 

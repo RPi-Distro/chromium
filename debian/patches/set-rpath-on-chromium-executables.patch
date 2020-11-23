@@ -2,20 +2,20 @@ Description: set rpath on chromium-browser and v8_context_snapshot_generator exe
 Author: Olivier Tilloy <olivier.tilloy@canonical.com>
 Bug-Ubuntu: https://launchpad.net/bugs/1718885
 
---- a/chrome/BUILD.gn
-+++ b/chrome/BUILD.gn
-@@ -300,6 +300,8 @@
-                        rebase_path(version_script, root_build_dir) ]
-         }
- 
-+        configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+--- a/src/chrome/BUILD.gn
++++ b/src/chrome/BUILD.gn
+@@ -267,6 +267,8 @@ if (!is_android && !is_mac) {
+         ldflags += [ "-Wl,--version-script=" +
+                      rebase_path(version_script, root_build_dir) ]
+       }
 +
-         if (use_x11) {
-           configs += [
-             "//build/config/linux:x11",
---- a/tools/v8_context_snapshot/BUILD.gn
-+++ b/tools/v8_context_snapshot/BUILD.gn
-@@ -106,6 +106,10 @@
++      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+     }
+ 
+     if (is_chromeos || is_win) {
+--- a/src/tools/v8_context_snapshot/BUILD.gn
++++ b/src/tools/v8_context_snapshot/BUILD.gn
+@@ -100,6 +100,10 @@ if (use_v8_context_snapshot) {
        "//v8",
      ]
  
@@ -26,3 +26,13 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
      configs += [
        "//v8:external_startup_data",
        ":disable_icf",
+--- a/src/components/nacl/loader/BUILD.gn
++++ b/src/components/nacl/loader/BUILD.gn
+@@ -117,6 +117,7 @@ if (is_linux) {
+       "nacl_helper_linux.h",
+     ]
+ 
++    configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+     deps = [
+       ":loader",
+       "//base",

@@ -1,37 +1,23 @@
---- a/src/gin/v8_initializer.cc
-+++ b/src/gin/v8_initializer.cc
-@@ -76,7 +76,11 @@ const char kSnapshotFileName32[] = "snap
- #endif
- 
- #else  // defined(OS_ANDROID)
-+#if __ARM_ARCH >= 7
-+const char kV8ContextSnapshotFileName[] = "v8_context_snapshot_v7.bin";
-+#else
- const char kV8ContextSnapshotFileName[] = "v8_context_snapshot.bin";
-+#endif
- const char kSnapshotFileName[] = "snapshot_blob.bin";
- #endif  // defined(OS_ANDROID)
- 
---- a/src/tools/v8_context_snapshot/BUILD.gn
-+++ b/src/tools/v8_context_snapshot/BUILD.gn
-@@ -12,6 +12,7 @@ import("//tools/v8_context_snapshot/v8_c
- import("//build/config/c++/c++.gni")
- import("//build/config/compiler/compiler.gni")
- import("//v8/gni/snapshot_toolchain.gni")
+--- a/src/tools/v8_context_snapshot/v8_context_snapshot.gni
++++ b/src/tools/v8_context_snapshot/v8_context_snapshot.gni
+@@ -10,6 +10,7 @@
+ import("//build/config/chromecast_build.gni")
+ import("//build/config/v8_target_cpu.gni")
+ import("//v8/gni/v8.gni")
 +import("//build/config/arm.gni")
  
- if (is_android) {
-   import("//build/config/android/rules.gni")
-@@ -49,7 +50,11 @@ if (use_v8_context_snapshot) {
- 
-   action("generate_v8_context_snapshot") {
-     script = "//build/gn_run_binary.py"
--    output_file = "$root_out_dir/v8_context_snapshot.bin"
+ declare_args() {
+   # TODO(crbug.com/764576): Enable the feature on more environments.
+@@ -29,7 +30,11 @@ declare_args() {
+       v8_context_snapshot_filename = "v8_context_snapshot.arm64.bin"
+     }
+   } else {
+-    v8_context_snapshot_filename = "v8_context_snapshot.bin"
 +    if (arm_use_neon) {
-+      output_file = "$root_out_dir/v8_context_snapshot_v7.bin"
++      v8_context_snapshot_filename = "v8_context_snapshot_v7.bin"
 +    } else {
-+      output_file = "$root_out_dir/v8_context_snapshot.bin"
++      v8_context_snapshot_filename = "v8_context_snapshot.bin"
 +    }
-     output_path = rebase_path(output_file, root_build_dir)
+   }
+ }
  
-     args = [

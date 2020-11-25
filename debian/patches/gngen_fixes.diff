@@ -18,11 +18,12 @@
  
      dest_dir = os.path.join("out", name + dir_suffix)
      src_file = os.path.join("pi-util", "defargs_" + name + ".gn")
-@@ -36,22 +38,35 @@ def docopy(name, vars, is_debug=False, i
+@@ -36,22 +38,36 @@ def docopy(name, vars, is_debug=False, i
          dargs.write(line)
  
      dargs.write('# -- created by ' + sys.argv[0] + '\n')
 +    dargs.write('cc_wrapper = "ccache"\n')
++    dargs.write('enable_hangout_services_extension = true\n')
      dargs.write('is_debug = ' + deb_str + '\n')
      dargs.write('use_ozone = ' + ozone_str + '\n')
      if is_ozone:
@@ -55,20 +56,18 @@
  if __name__ == '__main__':
      gyp_vars = {}
      gypi = os.path.join(os.environ["HOME"], ".gyp", "include.gypi")
-@@ -62,12 +77,14 @@ if __name__ == '__main__':
+@@ -62,12 +78,14 @@ if __name__ == '__main__':
  
      gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_buster_arm-sysroot")
  
--    docopy("armv6", gyp_vars)
--    docopy("armv7", gyp_vars)
--    docopy("armv7", gyp_vars, is_debug=True)
+-    docopy("armv6", gyp_vars, is_ozone=True)
++    docopy("armv6", gyp_vars, is_ozone=True, use_lld=False)
++    docopy("armv6", gyp_vars, is_ozone=True, extra_codecs=False)
+ #    docopy("armv7", gyp_vars)
+ #    docopy("armv7", gyp_vars, is_debug=True)
 -    docopy("armv7", gyp_vars, is_ozone=True)
-+    docopy("armv6", gyp_vars, use_lld=False)
-+    docopy("armv6", gyp_vars, extra_codecs=False)
-+    docopy("armv7", gyp_vars, use_lld=False)
-+    docopy("armv7", gyp_vars, extra_codecs=False)
-+    #docopy("armv7", gyp_vars, is_debug=True)
-+    #docopy("armv7", gyp_vars, is_ozone=True)
++    docopy("armv7", gyp_vars, is_ozone=True, use_lld=False)
++    docopy("armv7", gyp_vars, is_ozone=True, extra_codecs=False)
  
      gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_buster_arm64-sysroot")
  
@@ -77,7 +76,7 @@
 +    docopy("arm64", gyp_vars, is_ozone=True, extra_codecs=False)
 --- a/src/pi-util/defargs_armv7.gn
 +++ b/src/pi-util/defargs_armv7.gn
-@@ -18,8 +18,7 @@ media_use_mmal = true
+@@ -22,8 +22,7 @@ enable_hangout_services_extension = true
  # We have issues with the lib for this & it is probably for unittest only
  use_gnome_keyring = false
  
@@ -113,7 +112,7 @@
 +is_official_build = true
 --- a/src/pi-util/defargs_arm64.gn
 +++ b/src/pi-util/defargs_arm64.gn
-@@ -11,5 +11,5 @@ media_use_mmal = false
+@@ -14,5 +14,5 @@ enable_hangout_services_extension = true
  # We have issues with the lib for this & it is probably for unittest only
  use_gnome_keyring = false
  

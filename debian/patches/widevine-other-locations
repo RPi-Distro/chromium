@@ -1,6 +1,6 @@
 --- a/src/chrome/common/chrome_paths.cc
 +++ b/src/chrome/common/chrome_paths.cc
-@@ -379,8 +379,17 @@ bool PathProvider(int key, base::FilePat
+@@ -338,8 +338,17 @@ bool PathProvider(int key, base::FilePat
        break;
  
  #if (defined(OS_LINUX) || defined(OS_CHROMEOS)) && \
@@ -19,7 +19,7 @@
        if (!GetComponentDirectory(&cur))
          return false;
  #if !defined(OS_CHROMEOS)
-@@ -390,7 +399,7 @@ bool PathProvider(int key, base::FilePat
+@@ -349,7 +358,7 @@ bool PathProvider(int key, base::FilePat
  #endif  // !defined(OS_CHROMEOS)
        break;
  #endif  // (defined(OS_LINUX) || defined(OS_CHROMEOS)) &&

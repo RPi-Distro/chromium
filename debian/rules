@@ -120,7 +120,7 @@ common_defines += arm_use_neon=false
 common_defines += v8_use_arm_eabi_hardfloat=false
 common_defines += arm_float_abi="soft" arm_use_thumb=false
 else ifeq (armhf,$(DEB_HOST_ARCH))
-main_build="armv6-rel"
+main_build="armv6-ozone-rel"
 common_defines += target_cpu="arm"
 common_defines += arm_float_abi="hard"
 common_defines += arm_optionally_use_neon=false
@@ -242,10 +242,10 @@ override_dh_install-arch:
 
 ifeq (armhf,$(DEB_HOST_ARCH))
 	mkdir -p                             $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
-	mv -v out/armv7-rel/libffmpeg.so    $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/armv7-ozone-rel/libffmpeg.so    $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
 
 	mkdir -p                             $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
-	mv -v out/armv7-rel-std/libffmpeg.so $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/armv7-ozone-rel-std/libffmpeg.so $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
 endif
 
 	mkdir -p $(CURDIR)/debian/tmp/$(LIB_DIR)
@@ -254,8 +254,8 @@ endif
 
 ifeq (armhf,$(DEB_HOST_ARCH))
 	mkdir -p $(CURDIR)/debian/tmp-v7/$(LIB_DIR)
-	mv -v out/armv7-rel/chrome                     $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/chrome-v7
-	mv -v out/armv7-rel/v8_context_snapshot_v7.bin $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/
+	mv -v out/armv7-ozone-rel/chrome                     $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/chrome-v7
+	mv -v out/armv7-ozone-rel/v8_context_snapshot_v7.bin $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/
 endif
 
 #

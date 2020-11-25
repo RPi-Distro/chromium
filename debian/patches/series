@@ -1,5 +1,6 @@
-v86.0.4240.197_rpi_1.32.patch
+v88.0.4324.187_rpi_1.36.patch
 gngen_fixes.diff
+sysroot.patch
 set-rpath-on-chromium-executables.patch
 configuration-directory.patch
 search-credit.patch
@@ -10,4 +11,4 @@ widevine-enable-version-string.patch
 title-bar-default-system.patch-v35
 enable-chromecast-by-default.patch
 welcome-page.patch
-widevine_avail_fix.patch
+netflix.patch

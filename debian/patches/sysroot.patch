@@ -1,0 +1,284 @@
+--- a/src/build/linux/sysroot_scripts/generate_pios_gpg.sh
++++ b/src/build/linux/sysroot_scripts/generate_pios_gpg.sh
+@@ -9,27 +9,17 @@ set -o errexit
+ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ 
+ KEYS=(
+-    # Debian Archive Automatic Signing Key (10/buster)
+-    "DC30D7C23CBBABEE"
+-    # Debian Security Archive Automatic Signing Key (10/buster)
+-    "4DFAB270CAA96DFA"
+-    # Debian Archive Automatic Signing Key (10/buster)
+-    "DC30D7C23CBBABEE"
+-    # Jessie Stable Release Key
+-    "CBF8D6FD518E17E1"
+-    # Debian Archive Automatic Signing Key (7.0/wheezy)
+-    "8B48AD6246925553"
+-    # Debian Archive Automatic Signing Key (8/jessie)
+-    "7638D0442B90D010"
+-    # Debian Security Archive Automatic Signing Key (8/jessie)
+-    "9D6D8F6BC857C906"
+-    # Debian Archive Automatic Signing Key (9/stretch)
+-    "E0B11894F66AEC98"
+-    # Debian Security Archive Automatic Signing Key (9/stretch)
+-    "EDA0D2388AE22BA9"
+-    # Debian Stable Release Key (9/stretch)
+-    "EF0F382A1A7B6500"
++    # Raspbian
++    "A0DA38D0D76E8B5D638872819165938D90FDDD2E"
++    # Raspberry Pi OS
++    "CF8A1AF502A2AA2D763BAE7E82B129927FA3303E"
++    # Debian
++    "16E90B3FDF65EDE3AA7F323C04EE7237B7D453EC"
++    "0146DC6D4A0B2914BDED34DB648ACFD622F3D138"
++    "6D33866EDD8FFA41C0143AEDDCC9EFBF77E11517"
++    "379483D8B60160B155B372DDAA8E81B4331F7F50"
++    "5237CEEEF212F3D51C74ABE0112695A0E562B32A"
+ )
+ 
+ gpg --recv-keys ${KEYS[@]}
+-gpg --output "${SCRIPT_DIR}/debian_archive_unstable.gpg" --export ${KEYS[@]}
++gpg --output "${SCRIPT_DIR}/raspbian_archive.gpg" --export ${KEYS[@]}
+--- a/src/build/linux/sysroot_scripts/sysroot-creator-pios-buster.sh
++++ b/src/build/linux/sysroot_scripts/sysroot-creator-pios-buster.sh
+@@ -5,8 +5,8 @@
+ 
+ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ 
+-DISTRO=debian
+-DIST=sid
++DISTRO=pios
++DIST=buster
+ 
+ # Keep the "experimental" repo before the "sid" repo.  There are some packages
+ # that are currently only available in experimental like libgtk-4-0, but if it
+@@ -18,22 +18,35 @@ DIST=sid
+ # bring back libgnome-keyring-dev which has since been deprecated and removed
+ # from sid.  It will be needed until gnome keyring is removed
+ # (http://crbug.com/466975 and http://crbug.com/355223).
+-ARCHIVE_URL="https://snapshot.debian.org/archive/debian"
+-ARCHIVE_TIMESTAMP=20191212T145612Z
+-APT_SOURCES_LIST="${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ stretch main
+-${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ experimental main
+-${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ sid main"
++ARCHIVE_TIMESTAMP=latest
++
++if [ "$1" = "BuildSysrootARM" ]; then
++    ARCHIVE_URL="http://snapshot.raspbian.org/"
++    APT_SOURCES_LIST="${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/raspbian/ buster main contrib non-free rpi
++http://archive.raspberrypi.org/debian/ buster main"
++    HAS_ARCH_ARM=1
++    HAS_ARCH_ARM64=0
++elif [ "$1" = "BuildSysrootARM64" ]; then
++    ARCHIVE_URL="http://deb.debian.org/debian/"
++    APT_SOURCES_LIST="${ARCHIVE_URL} buster main contrib non-free
++http://deb.debian.org/debian-security/ buster/updates main contrib non-free
++http://deb.debian.org/debian buster-updates main contrib non-free
++http://archive.raspberrypi.org/debian/ buster main"
++    HAS_ARCH_ARM=0
++    HAS_ARCH_ARM64=1
++else
++    echo "Please run with either BuildSysrootARM64 or BuildSysrootARM"
++    exit 1
++fi
+ 
+ # gpg keyring file generated using generate_debian_archive_unstable.sh
+-KEYRING_FILE="${SCRIPT_DIR}/debian_archive_unstable.gpg"
++KEYRING_FILE="${SCRIPT_DIR}/raspbian_archive.gpg"
+ 
+-HAS_ARCH_AMD64=1
+-HAS_ARCH_I386=1
+-HAS_ARCH_ARM=1
+-HAS_ARCH_ARM64=1
+-HAS_ARCH_ARMEL=1
+-HAS_ARCH_MIPS=1
+-HAS_ARCH_MIPS64EL=1
++HAS_ARCH_AMD64=0
++HAS_ARCH_I386=0
++HAS_ARCH_ARMEL=0
++HAS_ARCH_MIPS=0
++HAS_ARCH_MIPS64EL=0
+ 
+ # Sysroot packages: these are the packages needed to build chrome.
+ # NOTE: When DEBIAN_PACKAGES is modified, the packagelist files must be updated
+@@ -94,6 +107,7 @@ DEBIAN_PACKAGES="\
+   libdrm-nouveau2
+   libdrm-radeon1
+   libdrm2
++  libegl-dev
+   libegl1
+   libegl1-mesa
+   libegl1-mesa-dev
+@@ -103,18 +117,17 @@ DEBIAN_PACKAGES="\
+   libepoxy0
+   libevdev-dev
+   libevdev2
+-  libevent-2.1-7
++  libevent-2.1-6
+   libexpat1
+   libexpat1-dev
+   libffi-dev
+   libffi6
+-  libffi7
+   libflac-dev
+   libflac8
+   libfontconfig1
+   libfontconfig1-dev
+   libfreetype6
+-  libfreetype-dev
++  libfreetype6-dev
+   libfribidi-dev
+   libfribidi0
+   libgbm-dev
+@@ -125,20 +138,21 @@ DEBIAN_PACKAGES="\
+   libgcrypt20-dev
+   libgdk-pixbuf2.0-0
+   libgdk-pixbuf2.0-dev
++  libgl-dev
+   libgl1
+   libgl1-mesa-dev
+   libgl1-mesa-glx
+   libglapi-mesa
++  libgles-dev
+   libgles1
+   libgles2
+   libglib2.0-0
+   libglib2.0-dev
+   libglvnd-dev
+   libglvnd0
++  libglx-dev
+   libglx0
+   libgmp10
+-  libgnome-keyring-dev
+-  libgnome-keyring0
+   libgnutls-dane0
+   libgnutls-openssl27
+   libgnutls28-dev
+@@ -155,15 +169,13 @@ DEBIAN_PACKAGES="\
+   libgssrpc4
+   libgtk-3-0
+   libgtk-3-dev
+-  libgtk-4-0
+-  libgtk-4-dev
+   libgtk2.0-0
+   libgudev-1.0-0
+   libharfbuzz-dev
+   libharfbuzz-gobject0
+   libharfbuzz-icu0
+   libharfbuzz0b
+-  libhogweed5
++  libhogweed4
+   libice6
+   libicu-le-hb0
+   libicu63
+@@ -198,7 +210,7 @@ DEBIAN_PACKAGES="\
+   libmount-dev
+   libmount1
+   libmtdev1
+-  libnettle7
++  libnettle6
+   libnspr4
+   libnspr4-dev
+   libnss-db
+@@ -230,7 +242,6 @@ DEBIAN_PACKAGES="\
+   libpcre2-8-0
+   libpcre2-dev
+   libpcre2-posix0
+-  libpcre2-posix2
+   libpcre3
+   libpcre3-dev
+   libpcre32-3
+@@ -286,7 +297,7 @@ DEBIAN_PACKAGES="\
+   libvorbis0a
+   libvorbisenc2
+   libvpx-dev
+-  libvpx6
++  libvpx5
+   libvulkan1
+   libwacom2
+   libwayland-client0
+@@ -320,6 +331,10 @@ DEBIAN_PACKAGES="\
+   libxcb-shm0-dev
+   libxcb-sync1
+   libxcb-xfixes0
++  libxcb-image0
++  libxcb-image0-dev
++  libxcb-util0
++  libxcb-util0-dev
+   libxcb1
+   libxcb1-dev
+   libxcomposite-dev
+@@ -405,6 +420,8 @@ DEBIAN_PACKAGES_ARM="
+   libdrm-omap1
+   libdrm-tegra0
+   libubsan0
++  libraspberrypi0
++  libraspberrypi-dev
+ "
+ 
+ DEBIAN_PACKAGES_ARM64="
+@@ -418,6 +435,8 @@ DEBIAN_PACKAGES_ARM64="
+   libthai0
+   libtsan0
+   libubsan0
++  libraspberrypi0
++  libraspberrypi-dev
+ "
+ 
+ DEBIAN_PACKAGES_ARMEL="
+--- a/src/build/linux/sysroot_scripts/sysroot-creator.sh
++++ b/src/build/linux/sysroot_scripts/sysroot-creator.sh
+@@ -58,7 +58,7 @@ readonly REQUIRED_TOOLS="curl xzcat"
+ # Package Config
+ ######################################################################
+ 
+-readonly PACKAGES_EXT=xz
++readonly PACKAGES_EXT=gz
+ readonly RELEASE_FILE="Release"
+ readonly RELEASE_FILE_GPG="Release.gpg"
+ 
+@@ -230,7 +230,16 @@ ExtractPackageXz() {
+   local src_file="$1"
+   local dst_file="$2"
+   local repo="$3"
+-  xzcat "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
++  local cat_tool
++  if [ "$PACKAGES_EXT" == "xz" ]; then
++    cat_tool="xzcat"
++  elif [ "$PACKAGES_EXT" == "gz" ]; then
++    cat_tool="zcat"
++  else
++    echo "ERROR: No tool to 'cat' archive type: $PACKAGES_EXT"
++    exit 1
++  fi
++  "$cat_tool" "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
+     sed "s|Filename: |Filename: ${repo}|" > "${dst_file}"
+ }
+ 
+@@ -397,6 +406,8 @@ HacksAndPatchesCommon() {
+   # [1] https://github.com/PipeWire/pipewire/commit/371da358d1580dc06218d18a12a99611cac39e4e
+   local pipewire_utils_h="${INSTALL_ROOT}/usr/include/pipewire/utils.h"
+   sed -i 's/malloc/(struct spa_pod*)malloc/' "${pipewire_utils_h}"
++
++  rm -rf "${INSTALL_ROOT}/opt/vc/include/"*GL*
+ }
+ 
+ 
+@@ -877,14 +888,14 @@ GeneratePackageList() {
+   shift
+   shift
+   for pkg in $@ ; do
+-    local pkg_full=$(grep -A 1 " ${pkg}\$" "$input_file" | \
+-      egrep "pool/.*" | sed 's/.*Filename: //')
++    local pkg_full=$(grep -A 2 " ${pkg}\$" "$input_file" | \
++      egrep -m1 "pool/.*" | sed 's/.*Filename: //')
+     if [ -z "${pkg_full}" ]; then
+         echo "ERROR: missing package: $pkg"
+         exit 1
+     fi
+     local sha256sum=$(grep -A 4 " ${pkg}\$" "$input_file" | \
+-      grep ^SHA256: | sed 's/^SHA256: //')
++      grep -m1 ^SHA256: | sed 's/^SHA256: //')
+     if [ "${#sha256sum}" -ne "64" ]; then
+       echo "Bad sha256sum from Packages"
+       exit 1

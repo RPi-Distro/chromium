@@ -4,7 +4,7 @@ Author: Chad Miller <chad.miller@canonical.com>
 
 --- a/src/chrome/common/chrome_paths.cc
 +++ b/src/chrome/common/chrome_paths.cc
-@@ -60,6 +60,8 @@ const base::FilePath::CharType kFilepath
+@@ -61,6 +61,8 @@ const base::FilePath::CharType kFilepath
  #else
      FILE_PATH_LITERAL("/usr/share/chromium/extensions");
  #endif  // BUILDFLAG(GOOGLE_CHROME_BRANDING)
@@ -13,7 +13,7 @@ Author: Chad Miller <chad.miller@canonical.com>
  
  // The path to the hint file that tells the pepper plugin loader
  // where it can find the latest component updated flash.
-@@ -497,6 +499,9 @@ bool PathProvider(int key, base::FilePat
+@@ -496,6 +498,9 @@ bool PathProvider(int key, base::FilePat
        cur = base::FilePath(FILE_PATH_LITERAL("/etc/opt/chrome/policies"));
  #else
        cur = base::FilePath(FILE_PATH_LITERAL("/etc/chromium/policies"));
@@ -23,9 +23,9 @@ Author: Chad Miller <chad.miller@canonical.com>
  #endif
        break;
      }
-@@ -512,6 +517,10 @@ bool PathProvider(int key, base::FilePat
+@@ -511,6 +516,10 @@ bool PathProvider(int key, base::FilePat
  #endif
- #if defined(OS_LINUX)
+ #if defined(OS_LINUX) || defined(OS_CHROMEOS)
      case chrome::DIR_STANDALONE_EXTERNAL_EXTENSIONS: {
 +      if (access(kFilepathSinglePrefExtensionsNew, R_OK|X_OK) == 0) {
 +        cur = base::FilePath(kFilepathSinglePrefExtensionsNew);
@@ -34,7 +34,7 @@ Author: Chad Miller <chad.miller@canonical.com>
        cur = base::FilePath(kFilepathSinglePrefExtensions);
        break;
      }
-@@ -562,6 +571,10 @@ bool PathProvider(int key, base::FilePat
+@@ -561,6 +570,10 @@ bool PathProvider(int key, base::FilePat
  #else
        cur = base::FilePath(FILE_PATH_LITERAL(
            "/etc/chromium/native-messaging-hosts"));
@@ -43,5 +43,5 @@ Author: Chad Miller <chad.miller@canonical.com>
 +            "/etc/chromium-browser/native-messaging-hosts"));
 +
  #endif
- #endif  // !defined(OS_MACOSX)
+ #endif  // !defined(OS_MAC)
        break;

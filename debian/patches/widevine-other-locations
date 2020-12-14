@@ -1,17 +1,11 @@
-Description: try an alternative location for the Widevine CDM library
- ($HOME/.local/lib/WidevineCdm/ - snap-friendly, see https://launchpad.net/bugs/1738149)
- The manifest lives at the top level, whereas libwidevinecdm.so is inside
- a platform specific directory, see media::GetPlatformSpecificDirectory(…).
-Author: Olivier Tilloy <olivier.tilloy@canonical.com>
-
 --- a/src/chrome/common/chrome_paths.cc
 +++ b/src/chrome/common/chrome_paths.cc
-@@ -381,8 +381,17 @@ bool PathProvider(int key, base::FilePat
-       cur = cur.Append(FILE_PATH_LITERAL("pnacl"));
+@@ -379,8 +379,17 @@ bool PathProvider(int key, base::FilePat
        break;
  
--#if defined(OS_LINUX) && BUILDFLAG(BUNDLE_WIDEVINE_CDM)
-+#if defined(OS_LINUX) && BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
+ #if (defined(OS_LINUX) || defined(OS_CHROMEOS)) && \
+-    BUILDFLAG(BUNDLE_WIDEVINE_CDM)
++    BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
      case chrome::DIR_BUNDLED_WIDEVINE_CDM:
 +      base::PathService::Get(base::DIR_HOME, &cur);
 +      cur = cur.Append(FILE_PATH_LITERAL(".local/lib"))
@@ -25,23 +19,12 @@ Author: Olivier Tilloy <olivier.tilloy@canonical.com>
        if (!GetComponentDirectory(&cur))
          return false;
  #if !defined(OS_CHROMEOS)
-@@ -391,7 +400,7 @@ bool PathProvider(int key, base::FilePat
-       cur = cur.AppendASCII(kWidevineCdmBaseDirectory);
+@@ -390,7 +399,7 @@ bool PathProvider(int key, base::FilePat
  #endif  // !defined(OS_CHROMEOS)
        break;
--#endif  // defined(OS_LINUX) && BUILDFLAG(BUNDLE_WIDEVINE_CDM)
-+#endif  // defined(OS_LINUX) && BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
+ #endif  // (defined(OS_LINUX) || defined(OS_CHROMEOS)) &&
+-        // BUILDFLAG(BUNDLE_WIDEVINE_CDM)
++        // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
  
  #if defined(OS_LINUX) && !defined(OS_CHROMEOS) && \
      BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
---- a/src/media/cdm/library_cdm/cdm_paths.gni
-+++ b/src/media/cdm/library_cdm/cdm_paths.gni
-@@ -32,7 +32,7 @@ if (current_cpu == "x86" || current_cpu
- # Note: |cdm_platform_specific_path| is exported as a BUILDFLAG to
- # cdm_paths.cc.
- if ((is_win || is_mac || is_desktop_linux) &&
--    (current_cpu == "x86" || current_cpu == "x64")) {
-+    (current_cpu == "x86" || current_cpu == "x64" || current_cpu == "arm")) {
-   cdm_platform_specific_path =
-       "_platform_specific/$component_os" + "_" + "$component_arch"
- 

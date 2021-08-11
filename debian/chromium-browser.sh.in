@@ -50,12 +50,6 @@ if grep -E -w ^flags\\s\*:.\*sse /proc/cpuinfo >/dev/null; then
 fi
 export CPU_FEATURES_TESTED=1
 
-if [ "$(uname -m)" != "armv6l" ] && [ "$(dpkg --print-architecture)" != "arm64"  ]; then
-	APPSUFFIX="-v7"
-else
-	APPSUFFIX=""
-fi
-
 readonly APPNAME=chromium-browser
 LIBDIR=/usr/lib/chromium-browser
 GDB=/usr/bin/gdb
@@ -84,11 +78,12 @@ if [ -f /etc/$APPNAME/default ] ; then
   . /etc/$APPNAME/default
 fi
 
-if test -d /etc/$APPNAME/customizations; then
+if test -d /etc/chromium.d; then
 	while read f; do
 		. "$f"
-	done < <(run-parts --list -- /etc/$APPNAME/customizations)
+	done < <(run-parts --list -- /etc/chromium.d)
 fi
+
 test -f ~/.chromium-browser.init && . ~/.chromium-browser.init
 
 FLASH_GOOD_PACKAGE="chromium-browser"
@@ -201,6 +196,10 @@ if [ "$(dpkg -l bluealsa | tail -n 1 | cut -d ' ' -f 1)" = "ii" ] ; then
   CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-features=AudioServiceOutOfProcess"
 fi
 
+if [ -f /opt/WidevineCdm/_platform_specific/linux_arm/libwidevinecdm.so ]; then
+  export LD_PRELOAD=/opt/WidevineCdm/_platform_specific/linux_arm/libwidevinecdm.so
+fi
+
 if [ $want_debug -eq 1 ] ; then
   if [ ! -x $GDB ] ; then
     echo "Sorry, can't find usable $GDB. Please install it."
@@ -215,18 +214,18 @@ if [ $want_debug -eq 1 ] ; then
   echo "#            GTK_PATH=$GTK_PATH"
   echo "# CHROMIUM_USER_FLAGS=$CHROMIUM_USER_FLAGS"
   echo "#      CHROMIUM_FLAGS=$CHROMIUM_FLAGS"
-  echo "$GDB $LIBDIR/$APPNAME$APPSUFFIX -x $tmpfile"
-  $GDB "$LIBDIR/$APPNAME$APPSUFFIX" -x $tmpfile
+  echo "$GDB $LIBDIR/$APPNAME -x $tmpfile"
+  $GDB "$LIBDIR/$APPNAME" -x $tmpfile
   if [ $want_temp_profile -eq 1 ] ; then
     rm -rf $TEMP_PROFILE
   fi
   exit $?
 else
   if [ $want_temp_profile -eq 0 ] ; then
-    exec $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
+    exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
   else
     # we can't exec here as we need to clean-up the temporary profile
-    $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
+    $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
     rm -rf $TEMP_PROFILE
   fi
 fi

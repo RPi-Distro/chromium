@@ -1,4 +1,3 @@
 debian/chromium-browser.desktop usr/share/applications
 debian/chromium-browser.xml usr/share/gnome-control-center/default-apps
 debian/apport/chromium-browser.py usr/share/apport/package-hooks/
-debian/tmp-v7/usr/lib/chromium-browser/v8_context_snapshot_v7.bin usr/lib/chromium-browser

@@ -1,9 +1,9 @@
 usr/bin
-etc/chromium-browser
-etc/chromium-browser/customizations
+etc/chromium
+etc/chromium.d
 usr/share/pixmaps
 usr/share/icons/hicolor/scalable/apps
-usr/share/chromium-browser
+usr/share/chromium
 usr/lib/chromium-browser/plugins
-etc/chromium-browser/policies/managed
-etc/chromium-browser/policies/recommended
+etc/chromium/policies/managed
+etc/chromium/policies/recommended

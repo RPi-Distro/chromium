@@ -1,14 +1,14 @@
-v88.0.4324.187_rpi_1.36.patch
+v92.0.4515.98_rpi_1.42.patch
 gngen_fixes.diff
-sysroot.patch
 set-rpath-on-chromium-executables.patch
 configuration-directory.patch
 search-credit.patch
 ffmpeg_chromium.patch
 v8_filename.patch
-widevine-other-locations
 widevine-enable-version-string.patch
+widevine-other-locations
 title-bar-default-system.patch-v35
 enable-chromecast-by-default.patch
 welcome-page.patch
 netflix.patch
+libaom-armhf-build-cpudetect.patch

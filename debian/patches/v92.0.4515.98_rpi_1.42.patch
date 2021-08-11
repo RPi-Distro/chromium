@@ -1,6 +1,8 @@
+diff --git a/src/build/.gitignore b/src/build/.gitignore
+index 2e963395b77b..4438e841e187 100644
 --- a/src/build/.gitignore
 +++ b/src/build/.gitignore
-@@ -22,6 +22,11 @@ ciopfs
+@@ -22,6 +22,12 @@ ciopfs
  /x64/
  /linux/debian_*-sysroot/
  /linux/ubuntu_*-sysroot/
@@ -8,10 +10,13 @@
 +/linux/pios_*-sysroot/
 +/linux/sysroot_scripts/*pios*
 +/linux/sysroot_scripts/generated_package_lists/buster.*
++/linux/sysroot_scripts/generated_package_lists/bullseye.*
 +
  /ios_files
  /mac_files
  
+diff --git a/src/build/config/linux/BUILD.gn b/src/build/config/linux/BUILD.gn
+index 47704248bfae..192db7b2bec5 100644
 --- a/src/build/config/linux/BUILD.gn
 +++ b/src/build/config/linux/BUILD.gn
 @@ -5,6 +5,7 @@
@@ -27,10 +32,12 @@
    ldflags = [ "-rdynamic" ]
  }
 +
+diff --git a/src/build/config/linux/atk/BUILD.gn b/src/build/config/linux/atk/BUILD.gn
+index bc8e27894732..f7381c1d5b58 100644
 --- a/src/build/config/linux/atk/BUILD.gn
 +++ b/src/build/config/linux/atk/BUILD.gn
-@@ -10,7 +10,7 @@ import("//build/config/ui.gni")
- assert(!is_chromeos)
+@@ -12,7 +12,7 @@ import("//build/config/ui.gni")
+ assert(!is_chromeos_ash)
  
  # These packages should _only_ be expected when building for a target.
 -assert(current_toolchain == default_toolchain)
@@ -38,6 +45,22 @@
  
  if (use_atk) {
    assert(use_glib, "use_atk=true requires that use_glib=true")
+diff --git a/src/build/config/linux/atspi2/BUILD.gn b/src/build/config/linux/atspi2/BUILD.gn
+index 988a99568136..6ab6eef57503 100644
+--- a/src/build/config/linux/atspi2/BUILD.gn
++++ b/src/build/config/linux/atspi2/BUILD.gn
+@@ -6,7 +6,7 @@ import("//build/config/linux/pkg_config.gni")
+ import("//build/config/ui.gni")
+ 
+ # These packages should _only_ be expected when building for a target.
+-assert(current_toolchain == default_toolchain)
++#assert(current_toolchain == default_toolchain)
+ 
+ if (use_atk) {
+   pkg_config("atspi2") {
+diff --git a/src/build/config/linux/rpi/BUILD.gn b/src/build/config/linux/rpi/BUILD.gn
+new file mode 100644
+index 000000000000..d90f6a46759a
 --- /dev/null
 +++ b/src/build/config/linux/rpi/BUILD.gn
 @@ -0,0 +1,20 @@
@@ -61,6 +84,9 @@
 +}
 +
 +
+diff --git a/src/build/config/linux/rpi/args.gni b/src/build/config/linux/rpi/args.gni
+new file mode 100644
+index 000000000000..3c4f98c7e3a9
 --- /dev/null
 +++ b/src/build/config/linux/rpi/args.gni
 @@ -0,0 +1,22 @@
@@ -86,6 +112,8 @@
 +  enable_native_pixmap_vcsm = media_use_mmal && (current_cpu == "arm64" || current_cpu == "arm")
 +}
 +
+diff --git a/src/cc/layers/video_frame_provider.h b/src/cc/layers/video_frame_provider.h
+index 7ae08903b6b0..00689ffd64af 100644
 --- a/src/cc/layers/video_frame_provider.h
 +++ b/src/cc/layers/video_frame_provider.h
 @@ -97,6 +97,8 @@ class CC_EXPORT VideoFrameProvider {
@@ -97,29 +125,35 @@
   protected:
    virtual ~VideoFrameProvider() {}
  };
+diff --git a/src/cc/mojo_embedder/async_layer_tree_frame_sink.h b/src/cc/mojo_embedder/async_layer_tree_frame_sink.h
+index bc258e3d1937..8f302c5e47a5 100644
 --- a/src/cc/mojo_embedder/async_layer_tree_frame_sink.h
 +++ b/src/cc/mojo_embedder/async_layer_tree_frame_sink.h
-@@ -106,6 +106,7 @@ class CC_MOJO_EMBEDDER_EXPORT AsyncLayer
-   void OnBeginFramePausedChanged(bool paused) override;
-   void ReclaimResources(
-       const std::vector<viz::ReturnedResource>& resources) override;
+@@ -109,6 +109,7 @@ class CC_MOJO_EMBEDDER_EXPORT AsyncLayerTreeFrameSink
+   void ReclaimResources(std::vector<viz::ReturnedResource> resources) override;
+   void OnCompositorFrameTransitionDirectiveProcessed(
+       uint32_t sequence_id) override;
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
  
    // ExternalBeginFrameSourceClient implementation.
    void OnNeedsBeginFrames(bool needs_begin_frames) override;
+diff --git a/src/cc/test/test_layer_tree_frame_sink.h b/src/cc/test/test_layer_tree_frame_sink.h
+index f714223d4cd2..c241ab12b74b 100644
 --- a/src/cc/test/test_layer_tree_frame_sink.h
 +++ b/src/cc/test/test_layer_tree_frame_sink.h
-@@ -113,6 +113,7 @@ class TestLayerTreeFrameSink : public La
+@@ -113,6 +113,7 @@ class TestLayerTreeFrameSink : public LayerTreeFrameSink,
+   void OnBeginFrame(const viz::BeginFrameArgs& args,
                      const viz::FrameTimingDetailsMap& timing_details) override;
-   void ReclaimResources(
-       const std::vector<viz::ReturnedResource>& resources) override;
+   void ReclaimResources(std::vector<viz::ReturnedResource> resources) override;
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
    void OnBeginFramePausedChanged(bool paused) override;
- 
-   // DisplayClient implementation.
+   void OnCompositorFrameTransitionDirectiveProcessed(
+       uint32_t sequence_id) override {}
+diff --git a/src/chrome/app/chrome_main_delegate.cc b/src/chrome/app/chrome_main_delegate.cc
+index c64f406ba5b8..78f9ea33acb7 100644
 --- a/src/chrome/app/chrome_main_delegate.cc
 +++ b/src/chrome/app/chrome_main_delegate.cc
-@@ -56,6 +56,7 @@
+@@ -58,6 +58,7 @@
  #include "components/nacl/common/buildflags.h"
  #include "components/services/heap_profiling/public/cpp/profiling_client.h"
  #include "components/startup_metric_utils/browser/startup_metric_utils.h"
@@ -127,7 +161,7 @@
  #include "components/version_info/version_info.h"
  #include "content/public/common/content_client.h"
  #include "content/public/common/content_constants.h"
-@@ -328,6 +329,15 @@ bool HandleVersionSwitches(const base::C
+@@ -328,6 +329,15 @@ bool HandleVersionSwitches(const base::CommandLine& command_line) {
    }
  #endif
  
@@ -135,7 +169,7 @@
 +    printf("%s %s %s\nPi patch: %s\n",
 +           version_info::GetProductName().c_str(),
 +           version_info::GetVersionNumber().c_str(),
-+           chrome::GetChannelName().c_str(),
++           chrome::GetChannelName(chrome::WithExtendedStable(true)).c_str(),
 +           version_info::GetPiPatchVersionString().c_str());
 +    return true;
 +  }
@@ -143,9 +177,11 @@
    if (command_line.HasSwitch(switches::kVersion)) {
      printf("%s %s %s\n", version_info::GetProductName().c_str(),
             version_info::GetVersionNumber().c_str(),
+diff --git a/src/chrome/common/chrome_switches.cc b/src/chrome/common/chrome_switches.cc
+index aa3f88f3eb7e..adab357b3f1c 100644
 --- a/src/chrome/common/chrome_switches.cc
 +++ b/src/chrome/common/chrome_switches.cc
-@@ -433,6 +433,9 @@ const char kPermissionRequestApiScope[]
+@@ -444,6 +444,9 @@ const char kPermissionRequestApiScope[]     = "permission-request-api-scope";
  // TODO(bauerb): Remove when this flag is not needed anymore.
  const char kPermissionRequestApiUrl[]       = "permission-request-api-url";
  
@@ -155,16 +191,20 @@
  // Used to mock the response received from the Web Permission Prediction
  // Service. Used for testing.
  const char kPredictionServiceMockLikelihood[] =
+diff --git a/src/chrome/common/chrome_switches.h b/src/chrome/common/chrome_switches.h
+index 12a0457572a6..153a13eec549 100644
 --- a/src/chrome/common/chrome_switches.h
 +++ b/src/chrome/common/chrome_switches.h
-@@ -136,6 +136,7 @@ extern const char kPackExtension[];
+@@ -141,6 +141,7 @@ extern const char kPackExtension[];
  extern const char kPackExtensionKey[];
  extern const char kPermissionRequestApiScope[];
  extern const char kPermissionRequestApiUrl[];
 +extern const char kPiPatchVersion[];
  extern const char kPredictionServiceMockLikelihood[];
+ extern const char kPreinstalledWebAppsDir[];
  extern const char kPrivetIPv6Only[];
- extern const char kProductVersion[];
+diff --git a/src/components/version_info/BUILD.gn b/src/components/version_info/BUILD.gn
+index 931da8429699..a7e5a5c2175c 100644
 --- a/src/components/version_info/BUILD.gn
 +++ b/src/components/version_info/BUILD.gn
 @@ -14,6 +14,9 @@ static_library("version_info") {
@@ -177,6 +217,9 @@
    ]
  
    deps = [
+diff --git a/src/components/version_info/pi_patch_version_info.cc b/src/components/version_info/pi_patch_version_info.cc
+new file mode 100644
+index 000000000000..f7e06cb64415
 --- /dev/null
 +++ b/src/components/version_info/pi_patch_version_info.cc
 @@ -0,0 +1,11 @@
@@ -191,6 +234,9 @@
 +
 +}  // namespace version_info
 +
+diff --git a/src/components/version_info/pi_patch_version_info.h b/src/components/version_info/pi_patch_version_info.h
+new file mode 100644
+index 000000000000..d8009bdcd0ad
 --- /dev/null
 +++ b/src/components/version_info/pi_patch_version_info.h
 @@ -0,0 +1,12 @@
@@ -206,14 +252,19 @@
 +
 +}  // namespace version_info
 +#endif  // COMPONENTS_VERSION_INFO_VERSION_INFO_H_
+diff --git a/src/components/version_info/pi_patch_version_values.h b/src/components/version_info/pi_patch_version_values.h
+new file mode 100644
+index 000000000000..dc1b4bf6a178
 --- /dev/null
 +++ b/src/components/version_info/pi_patch_version_values.h
 @@ -0,0 +1,2 @@
 +// Pi patch version - generated by pi-util/settag.py
-+#define PI_PATCH_VERSION_STRING "rpi_1.36"
++#define PI_PATCH_VERSION_STRING "rpi_1.42"
+diff --git a/src/components/viz/common/resources/transferable_resource.h b/src/components/viz/common/resources/transferable_resource.h
+index 8713ea10218a..674bbb6fcc19 100644
 --- a/src/components/viz/common/resources/transferable_resource.h
 +++ b/src/components/viz/common/resources/transferable_resource.h
-@@ -80,6 +80,9 @@ struct VIZ_COMMON_EXPORT TransferableRes
+@@ -81,6 +81,9 @@ struct VIZ_COMMON_EXPORT TransferableResource {
    // The number of pixels in the gpu mailbox/software bitmap.
    gfx::Size size;
  
@@ -223,80 +274,24 @@
    // The format of the pixels in the gpu mailbox/software bitmap. This should
    // almost always be RGBA_8888 for resources generated by compositor clients,
    // and must be RGBA_8888 always for software resources.
---- a/src/components/viz/host/host_gpu_memory_buffer_manager.cc
-+++ b/src/components/viz/host/host_gpu_memory_buffer_manager.cc
-@@ -48,7 +48,7 @@ HostGpuMemoryBufferManager::HostGpuMemor
-       gpu_memory_buffer_support_(std::move(gpu_memory_buffer_support)),
-       task_runner_(std::move(task_runner)) {
-   bool should_get_native_configs = true;
--#if defined(USE_X11)
-+#if defined(USE_X11) && !RPI_PIXMAP  // (gpu_memory_buffer_support.h)  RPI needs configs fot Pi4
-   should_get_native_configs = features::IsUsingOzonePlatform();
- #endif
-   if (should_get_native_configs) {
---- a/src/components/viz/service/display/display.cc
-+++ b/src/components/viz/service/display/display.cc
-@@ -534,7 +534,7 @@ void Display::InitializeRenderer(bool en
-         resource_provider_.get(), overlay_processor_.get(),
-         current_task_runner_);
-   } else {
--    DCHECK(!overlay_processor_->IsOverlaySupported());
-+//    DCHECK(!overlay_processor_->IsOverlaySupported());
-     auto renderer = std::make_unique<SoftwareRenderer>(
-         &settings_, debug_settings_, output_surface_.get(),
-         resource_provider_.get(), overlay_processor_.get());
---- a/src/components/viz/service/display/display_resource_provider.cc
-+++ b/src/components/viz/service/display/display_resource_provider.cc
-@@ -415,7 +415,8 @@ void DisplayResourceProvider::PopulateSk
-       SkImageInfo::MakeN32Premul(resource->transferable.size.width(),
-                                  resource->transferable.size.height());
-   bool pixels_installed = sk_bitmap->installPixels(
--      info, resource->shared_bitmap->pixels(), info.minRowBytes());
-+      info, resource->shared_bitmap->pixels(),
-+      std::max((size_t)info.minRowBytes(), (size_t)resource->transferable.stride));
-   DCHECK(pixels_installed);
- }
- 
-@@ -453,7 +454,7 @@ GLES2Interface* DisplayResourceProvider:
- }
- 
- const DisplayResourceProvider::ChildResource*
--DisplayResourceProvider::LockForRead(ResourceId id, bool overlay_only) {
-+DisplayResourceProvider::LockForRead(ResourceId id, bool overlay_only, bool no_bitmap_fetch) {
-   // TODO(ericrk): We should never fail TryGetResource, but we appear to be
-   // doing so on Android in rare cases. Handle this gracefully until a better
-   // solution can be found. https://crbug.com/811858
-@@ -503,7 +504,7 @@ DisplayResourceProvider::LockForRead(Res
-     }
-   }
- 
--  if (!resource->shared_bitmap && !resource->is_gpu_resource_type()) {
-+  if (!no_bitmap_fetch && !resource->shared_bitmap && !resource->is_gpu_resource_type()) {
-     const SharedBitmapId& shared_bitmap_id = mailbox;
-     std::unique_ptr<SharedBitmap> bitmap =
-         shared_bitmap_manager_->GetSharedBitmapFromId(
+diff --git a/src/components/viz/service/display/display_resource_provider.h b/src/components/viz/service/display/display_resource_provider.h
+index c9cea0ded48c..4f11925d8b97 100644
 --- a/src/components/viz/service/display/display_resource_provider.h
 +++ b/src/components/viz/service/display/display_resource_provider.h
-@@ -47,6 +47,7 @@ namespace viz {
- class ContextProvider;
+@@ -38,6 +38,8 @@ class ColorSpace;
+ namespace viz {
+ 
  class ScopedAllowGpuAccessForDisplayResourceProvider;
- class SharedBitmapManager;
++class SharedBitmapManager;
 +class BitmapData;
  
  // This class provides abstractions for receiving and using resources from other
  // modules/threads/processes. It abstracts away GL textures vs GpuMemoryBuffers
-@@ -520,7 +521,7 @@ class VIZ_SERVICE_EXPORT DisplayResource
-   // Returns null if we do not have a ContextProvider.
-   gpu::gles2::GLES2Interface* ContextGL() const;
- 
--  const ChildResource* LockForRead(ResourceId id, bool overlay_only);
-+  const ChildResource* LockForRead(ResourceId id, bool overlay_only, bool no_bitmap_fetch = false);
-   void UnlockForRead(ResourceId id, bool overlay_only);
- 
-   void TryReleaseResource(ResourceId id, ChildResource* resource);
+diff --git a/src/components/viz/service/display/software_output_device.cc b/src/components/viz/service/display/software_output_device.cc
+index 0ac41068d5f9..eb33927c41f1 100644
 --- a/src/components/viz/service/display/software_output_device.cc
 +++ b/src/components/viz/service/display/software_output_device.cc
-@@ -64,4 +64,8 @@ int SoftwareOutputDevice::MaxFramesPendi
+@@ -64,4 +64,8 @@ int SoftwareOutputDevice::MaxFramesPending() const {
    return 1;
  }
  
@@ -305,6 +300,8 @@
 +}
 +
  }  // namespace viz
+diff --git a/src/components/viz/service/display/software_output_device.h b/src/components/viz/service/display/software_output_device.h
+index 6fa80d67eb80..1d49332b543a 100644
 --- a/src/components/viz/service/display/software_output_device.h
 +++ b/src/components/viz/service/display/software_output_device.h
 @@ -12,6 +12,7 @@
@@ -323,7 +320,7 @@
  
  // This is a "tear-off" class providing software drawing support to
  // OutputSurface, such as to a platform-provided window framebuffer.
-@@ -75,6 +77,8 @@ class VIZ_SERVICE_EXPORT SoftwareOutputD
+@@ -75,6 +77,8 @@ class VIZ_SERVICE_EXPORT SoftwareOutputDevice {
  
    virtual int MaxFramesPending() const;
  
@@ -332,6 +329,8 @@
   protected:
    scoped_refptr<base::SequencedTaskRunner> task_runner_;
    SoftwareOutputDeviceClient* client_ = nullptr;
+diff --git a/src/components/viz/service/display/surface_aggregator.cc b/src/components/viz/service/display/surface_aggregator.cc
+index bf18b592cacf..41549b809e1f 100644
 --- a/src/components/viz/service/display/surface_aggregator.cc
 +++ b/src/components/viz/service/display/surface_aggregator.cc
 @@ -13,6 +13,7 @@
@@ -342,7 +341,7 @@
  #include "base/macros.h"
  #include "base/metrics/histogram_macros.h"
  #include "base/numerics/ranges.h"
-@@ -1368,6 +1369,39 @@ gfx::Rect SurfaceAggregator::PrewalkRend
+@@ -1380,6 +1381,39 @@ gfx::Rect SurfaceAggregator::PrewalkRenderPass(
  
        if (child_surface) {
          gfx::Rect child_rect;
@@ -382,7 +381,7 @@
          float x_scale = SK_Scalar1;
          float y_scale = SK_Scalar1;
          if (surface_quad->stretch_content_to_fill_bounds) {
-@@ -1410,6 +1444,26 @@ gfx::Rect SurfaceAggregator::PrewalkRend
+@@ -1422,6 +1456,26 @@ gfx::Rect SurfaceAggregator::PrewalkRenderPass(
          child_rect = PrewalkSurface(child_surface, in_moved_pixel_rp,
                                      remapped_pass_id, will_draw,
                                      accumulated_damage_in_child_space, result);
@@ -409,9 +408,11 @@
          child_rect = gfx::ScaleToEnclosingRect(child_rect, x_scale, y_scale);
          quad_damage_rect.Union(child_rect);
        }
+diff --git a/src/components/viz/service/display_embedder/software_output_surface.cc b/src/components/viz/service/display_embedder/software_output_surface.cc
+index a909718f5f17..b274fdea6974 100644
 --- a/src/components/viz/service/display_embedder/software_output_surface.cc
 +++ b/src/components/viz/service/display_embedder/software_output_surface.cc
-@@ -30,6 +30,10 @@ SoftwareOutputSurface::SoftwareOutputSur
+@@ -31,6 +31,10 @@ SoftwareOutputSurface::SoftwareOutputSurface(
  
  SoftwareOutputSurface::~SoftwareOutputSurface() = default;
  
@@ -422,9 +423,11 @@
  void SoftwareOutputSurface::BindToClient(OutputSurfaceClient* client) {
    DCHECK(client);
    DCHECK(!client_);
+diff --git a/src/components/viz/service/display_embedder/software_output_surface.h b/src/components/viz/service/display_embedder/software_output_surface.h
+index 7f75e707a9fe..d842b3db93ee 100644
 --- a/src/components/viz/service/display_embedder/software_output_surface.h
 +++ b/src/components/viz/service/display_embedder/software_output_surface.h
-@@ -28,6 +28,7 @@ class VIZ_SERVICE_EXPORT SoftwareOutputS
+@@ -29,6 +29,7 @@ class VIZ_SERVICE_EXPORT SoftwareOutputSurface : public OutputSurface {
    ~SoftwareOutputSurface() override;
  
    // OutputSurface implementation.
@@ -432,9 +435,11 @@
    void BindToClient(OutputSurfaceClient* client) override;
    void EnsureBackbuffer() override;
    void DiscardBackbuffer() override;
+diff --git a/src/components/viz/service/frame_sinks/compositor_frame_sink_support.cc b/src/components/viz/service/frame_sinks/compositor_frame_sink_support.cc
+index 90ef058b804d..0fd2c1e79377 100644
 --- a/src/components/viz/service/frame_sinks/compositor_frame_sink_support.cc
 +++ b/src/components/viz/service/frame_sinks/compositor_frame_sink_support.cc
-@@ -638,6 +638,12 @@ void CompositorFrameSinkSupport::DidPres
+@@ -697,6 +697,12 @@ void CompositorFrameSinkSupport::DidPresentCompositorFrame(
    UpdateNeedsBeginFramesInternal();
  }
  
@@ -447,16 +452,20 @@
  void CompositorFrameSinkSupport::DidRejectCompositorFrame(
      uint32_t frame_token,
      std::vector<TransferableResource> frame_resource_list,
+diff --git a/src/components/viz/service/frame_sinks/compositor_frame_sink_support.h b/src/components/viz/service/frame_sinks/compositor_frame_sink_support.h
+index 1f163e40d3c4..6b4589720145 100644
 --- a/src/components/viz/service/frame_sinks/compositor_frame_sink_support.h
 +++ b/src/components/viz/service/frame_sinks/compositor_frame_sink_support.h
-@@ -123,6 +123,7 @@ class VIZ_SERVICE_EXPORT CompositorFrame
+@@ -126,6 +126,7 @@ class VIZ_SERVICE_EXPORT CompositorFrameSinkSupport
        const std::vector<TransferableResource>& resources) override;
-   void UnrefResources(const std::vector<ReturnedResource>& resources) override;
-   void ReturnResources(const std::vector<ReturnedResource>& resources) override;
+   void UnrefResources(std::vector<ReturnedResource> resources) override;
+   void ReturnResources(std::vector<ReturnedResource> resources) override;
 +  void DidStretchFrame(uint32_t width, uint32_t height) override;
    void ReceiveFromChild(
        const std::vector<TransferableResource>& resources) override;
    // Takes the CopyOutputRequests that were requested for a surface with at
+diff --git a/src/components/viz/service/surfaces/surface.cc b/src/components/viz/service/surfaces/surface.cc
+index 9e808d5da973..84d363f6df48 100644
 --- a/src/components/viz/service/surfaces/surface.cc
 +++ b/src/components/viz/service/surfaces/surface.cc
 @@ -11,6 +11,7 @@
@@ -467,7 +476,7 @@
  #include "base/metrics/histogram_functions.h"
  #include "base/stl_util.h"
  #include "base/time/tick_clock.h"
-@@ -663,6 +664,32 @@ void Surface::UnrefFrameResourcesAndRunC
+@@ -767,6 +768,32 @@ void Surface::UnrefFrameResourcesAndRunCallbacks(
      info.Terminate();
  }
  
@@ -499,12 +508,14 @@
 +
  void Surface::ClearCopyRequests() {
    if (active_frame_data_) {
-     for (const auto& render_pass : active_frame_data_->frame.render_pass_list) {
+     for (const auto& render_pass :
+diff --git a/src/components/viz/service/surfaces/surface.h b/src/components/viz/service/surfaces/surface.h
+index c58755669940..31f6d6527bba 100644
 --- a/src/components/viz/service/surfaces/surface.h
 +++ b/src/components/viz/service/surfaces/surface.h
-@@ -132,6 +132,9 @@ class VIZ_SERVICE_EXPORT Surface final {
-   // Decrements the reference count on resources specified by |resources|.
-   void UnrefResources(const std::vector<ReturnedResource>& resources);
+@@ -128,6 +128,9 @@ class VIZ_SERVICE_EXPORT Surface final {
+ 
+   void SetPreviousFrameSurface(Surface* surface);
  
 +  void DidStretchFrame(uint32_t width, uint32_t height);
 +  void DidntStretchFrame();
@@ -512,9 +523,9 @@
    // Returns false if |frame| is invalid.
    // |frame_rejected_callback| will be called once if the frame will not be
    // displayed.
-@@ -353,6 +356,10 @@ class VIZ_SERVICE_EXPORT Surface final {
+@@ -391,6 +394,10 @@ class VIZ_SERVICE_EXPORT Surface final {
  
-   SurfaceAllocationGroup* const allocation_group_;
+   bool has_damage_from_interpolated_frame_ = false;
  
 +  uint32_t stretch_last_width_ = 0;
 +  uint32_t stretch_last_height_ = 0;
@@ -523,9 +534,11 @@
    base::WeakPtrFactory<Surface> weak_factory_{this};
  
    DISALLOW_COPY_AND_ASSIGN(Surface);
+diff --git a/src/components/viz/service/surfaces/surface_client.h b/src/components/viz/service/surfaces/surface_client.h
+index a3305ac2b418..79824a63f420 100644
 --- a/src/components/viz/service/surfaces/surface_client.h
 +++ b/src/components/viz/service/surfaces/surface_client.h
-@@ -81,6 +81,9 @@ class VIZ_SERVICE_EXPORT SurfaceClient {
+@@ -80,6 +80,9 @@ class VIZ_SERVICE_EXPORT SurfaceClient {
        const gfx::SwapTimings& swap_timings,
        const gfx::PresentationFeedback& feedback) = 0;
  
@@ -535,19 +548,23 @@
    // This is called when |surface| or one of its descendents is determined to be
    // damaged at aggregation time.
    virtual void OnSurfaceAggregatedDamage(
+diff --git a/src/components/viz/test/fake_compositor_frame_sink_client.h b/src/components/viz/test/fake_compositor_frame_sink_client.h
+index 71af948c1f96..4872c17d14e8 100644
 --- a/src/components/viz/test/fake_compositor_frame_sink_client.h
 +++ b/src/components/viz/test/fake_compositor_frame_sink_client.h
-@@ -29,6 +29,7 @@ class FakeCompositorFrameSinkClient : pu
+@@ -28,6 +28,7 @@ class FakeCompositorFrameSinkClient : public mojom::CompositorFrameSinkClient {
+   void OnBeginFrame(const BeginFrameArgs& args,
                      const FrameTimingDetailsMap& timing_details) override;
-   void ReclaimResources(
-       const std::vector<ReturnedResource>& resources) override;
+   void ReclaimResources(std::vector<ReturnedResource> resources) override;
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
    void OnBeginFramePausedChanged(bool paused) override;
- 
-   void clear_returned_resources() { returned_resources_.clear(); }
+   void OnCompositorFrameTransitionDirectiveProcessed(
+       uint32_t sequence_id) override {}
+diff --git a/src/content/browser/browser_main_loop.cc b/src/content/browser/browser_main_loop.cc
+index 058bdd404d31..4d4bccb288ee 100644
 --- a/src/content/browser/browser_main_loop.cc
 +++ b/src/content/browser/browser_main_loop.cc
-@@ -579,6 +579,12 @@ int BrowserMainLoop::EarlyInitialization
+@@ -527,6 +527,12 @@ int BrowserMainLoop::EarlyInitialization() {
    DCHECK(SandboxHostLinux::GetInstance()->IsInitialized());
  #endif
  
@@ -560,11 +577,13 @@
  #if defined(USE_X11)
    if (!features::IsUsingOzonePlatform() && UsingInProcessGpu() &&
        !x11::Connection::Get()->Ready()) {
+diff --git a/src/content/browser/renderer_host/render_process_host_impl.cc b/src/content/browser/renderer_host/render_process_host_impl.cc
+index 621f9405e1a9..9c9d05075b45 100644
 --- a/src/content/browser/renderer_host/render_process_host_impl.cc
 +++ b/src/content/browser/renderer_host/render_process_host_impl.cc
-@@ -3452,6 +3452,15 @@ void RenderProcessHostImpl::PropagateBro
-     switches::kIpcDumpDirectory,
-     switches::kIpcFuzzerTestcase,
+@@ -3499,6 +3499,15 @@ void RenderProcessHostImpl::PropagateBrowserCommandLineToRenderer(
+ #if BUILDFLAG(IS_CHROMEOS_ASH) || BUILDFLAG(IS_CHROMEOS_LACROS)
+     switches::kSchedulerBoostUrgent,
  #endif
 +
 +    switches::kMmalFrameBuffers, switches::kMmalCopyMode,
@@ -578,6 +597,8 @@
    };
    renderer_cmd->CopySwitchesFrom(browser_cmd, kSwitchNames,
                                   base::size(kSwitchNames));
+diff --git a/src/content/browser/sandbox_ipc_linux.cc b/src/content/browser/sandbox_ipc_linux.cc
+index b0cade3d5066..0a39a6c409df 100644
 --- a/src/content/browser/sandbox_ipc_linux.cc
 +++ b/src/content/browser/sandbox_ipc_linux.cc
 @@ -8,6 +8,7 @@
@@ -588,7 +609,7 @@
  #include <sys/poll.h>
  #include <sys/socket.h>
  #include <sys/stat.h>
-@@ -124,6 +125,12 @@ void SandboxIPCHandler::HandleRequestFro
+@@ -124,6 +125,12 @@ void SandboxIPCHandler::HandleRequestFromChild(int fd) {
        sandbox::policy::SandboxLinux::METHOD_MAKE_SHARED_MEMORY_SEGMENT) {
      HandleMakeSharedMemorySegment(fd, iter, fds);
      return;
@@ -601,7 +622,7 @@
    }
    NOTREACHED();
  }
-@@ -155,6 +162,89 @@ void SandboxIPCHandler::HandleMakeShared
+@@ -155,6 +162,89 @@ void SandboxIPCHandler::HandleMakeSharedMemorySegment(
    // shm_fd will close the handle which is no longer needed by this process.
  }
  
@@ -691,9 +712,11 @@
  void SandboxIPCHandler::SendRendererReply(
      const std::vector<base::ScopedFD>& fds,
      const base::Pickle& reply,
+diff --git a/src/content/browser/sandbox_ipc_linux.h b/src/content/browser/sandbox_ipc_linux.h
+index 8a961034e97e..9868977b1f8e 100644
 --- a/src/content/browser/sandbox_ipc_linux.h
 +++ b/src/content/browser/sandbox_ipc_linux.h
-@@ -37,6 +37,13 @@ class SandboxIPCHandler : public base::D
+@@ -37,6 +37,13 @@ class SandboxIPCHandler : public base::DelegateSimpleThread::Delegate {
                                       base::PickleIterator iter,
                                       const std::vector<base::ScopedFD>& fds);
  
@@ -707,38 +730,45 @@
    void SendRendererReply(const std::vector<base::ScopedFD>& fds,
                           const base::Pickle& reply,
                           int reply_fd);
+diff --git a/src/content/renderer/render_thread_impl.cc b/src/content/renderer/render_thread_impl.cc
+index 5bb7fec55d93..53efa5ec161c 100644
 --- a/src/content/renderer/render_thread_impl.cc
 +++ b/src/content/renderer/render_thread_impl.cc
-@@ -102,6 +102,7 @@
- #include "ipc/ipc_platform_file.h"
+@@ -110,6 +110,7 @@
+ #include "media/base/decoder_factory.h"
  #include "media/base/media.h"
  #include "media/base/media_switches.h"
 +#include "media/gpu/buildflags.h"
  #include "media/media_buildflags.h"
+ #include "media/renderers/default_decoder_factory.h"
  #include "media/video/gpu_video_accelerator_factories.h"
- #include "mojo/public/cpp/bindings/binder_map.h"
-@@ -1103,7 +1104,7 @@ media::GpuVideoAcceleratorFactories* Ren
+@@ -1039,8 +1040,7 @@ media::GpuVideoAcceleratorFactories* RenderThreadImpl::GetGpuFactories() {
            kGpuStreamPriorityMedia);
  
    const bool enable_video_accelerator =
--#if defined(OS_LINUX) && !defined(OS_CHROMEOS)
-+#if defined(OS_LINUX) && !defined(OS_CHROMEOS) && !BUILDFLAG(USE_V4L2_CODEC)
-       cmd_line->HasSwitch(switches::kEnableAcceleratedVideoDecode) &&
+-
+-#if defined(OS_LINUX)
++#if defined(OS_LINUX) && !BUILDFLAG(USE_V4L2_CODEC)
+       base::FeatureList::IsEnabled(media::kVaapiVideoDecodeLinux) &&
  #else
        !cmd_line->HasSwitch(switches::kDisableAcceleratedVideoDecode) &&
+diff --git a/src/content/test/fake_renderer_compositor_frame_sink.h b/src/content/test/fake_renderer_compositor_frame_sink.h
+index 370a9e546947..5455e6d553d5 100644
 --- a/src/content/test/fake_renderer_compositor_frame_sink.h
 +++ b/src/content/test/fake_renderer_compositor_frame_sink.h
-@@ -38,6 +38,7 @@ class FakeRendererCompositorFrameSink
-   void OnBeginFramePausedChanged(bool paused) override {}
-   void ReclaimResources(
-       const std::vector<viz::ReturnedResource>& resources) override;
+@@ -39,6 +39,7 @@ class FakeRendererCompositorFrameSink
+   void ReclaimResources(std::vector<viz::ReturnedResource> resources) override;
+   void OnCompositorFrameTransitionDirectiveProcessed(
+       uint32_t sequence_id) override {}
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
  
    // Resets test data.
    void Reset();
+diff --git a/src/gpu/command_buffer/service/gl_utils.cc b/src/gpu/command_buffer/service/gl_utils.cc
+index 1a284386acc5..e09d5e5a2497 100644
 --- a/src/gpu/command_buffer/service/gl_utils.cc
 +++ b/src/gpu/command_buffer/service/gl_utils.cc
-@@ -1141,6 +1141,7 @@ bool ValidateCopyTextureCHROMIUMInternal
+@@ -1141,6 +1141,7 @@ bool ValidateCopyTextureCHROMIUMInternalFormats(const FeatureInfo* feature_info,
        source_internal_format == GL_LUMINANCE_ALPHA ||
        source_internal_format == GL_BGRA_EXT ||
        source_internal_format == GL_BGRA8_EXT ||
@@ -746,9 +776,11 @@
        source_internal_format == GL_RGB_YCBCR_420V_CHROMIUM ||
        source_internal_format == GL_RGB_YCBCR_422_CHROMIUM ||
        source_internal_format == GL_RGB_YCBCR_P010_CHROMIUM ||
+diff --git a/src/gpu/ipc/common/gpu_memory_buffer_support.cc b/src/gpu/ipc/common/gpu_memory_buffer_support.cc
+index 0e0b612894b6..90294a72e1ac 100644
 --- a/src/gpu/ipc/common/gpu_memory_buffer_support.cc
 +++ b/src/gpu/ipc/common/gpu_memory_buffer_support.cc
-@@ -104,6 +104,31 @@ bool GpuMemoryBufferSupport::IsNativeGpu
+@@ -106,6 +106,32 @@ bool GpuMemoryBufferSupport::IsNativeGpuMemoryBufferConfigurationSupported(
    }
    NOTREACHED();
    return false;
@@ -772,7 +804,8 @@
 +    case gfx::BufferUsage::SCANOUT_CAMERA_READ_WRITE:
 +    case gfx::BufferUsage::CAMERA_AND_CPU_READ_WRITE:
 +    case gfx::BufferUsage::SCANOUT_VEA_CPU_READ:
-+    case gfx::BufferUsage::SCANOUT_VEA_READ_CAMERA_AND_CPU_READ_WRITE:
++    case gfx::BufferUsage::VEA_READ_CAMERA_AND_CPU_READ_WRITE:
++    case gfx::BufferUsage::SCANOUT_FRONT_RENDERING:
 +      return false;
 +  }
 +  NOTREACHED();
@@ -780,9 +813,11 @@
  #elif defined(OS_ANDROID)
    if (!base::AndroidHardwareBufferCompat::IsSupportAvailable()) {
      return false;
+diff --git a/src/gpu/ipc/common/gpu_memory_buffer_support.h b/src/gpu/ipc/common/gpu_memory_buffer_support.h
+index 32428cc4f90e..09d8765f5669 100644
 --- a/src/gpu/ipc/common/gpu_memory_buffer_support.h
 +++ b/src/gpu/ipc/common/gpu_memory_buffer_support.h
-@@ -16,6 +16,8 @@
+@@ -18,6 +18,8 @@
  #include "ui/gfx/geometry/size.h"
  #include "ui/gfx/gpu_memory_buffer.h"
  
@@ -791,9 +826,11 @@
  #if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(USE_OZONE)
  namespace gfx {
  class ClientNativePixmapFactory;
+diff --git a/src/gpu/ipc/host/gpu_memory_buffer_support.cc b/src/gpu/ipc/host/gpu_memory_buffer_support.cc
+index 8d4851ef934e..dcb5d05c7813 100644
 --- a/src/gpu/ipc/host/gpu_memory_buffer_support.cc
 +++ b/src/gpu/ipc/host/gpu_memory_buffer_support.cc
-@@ -17,7 +17,7 @@ GpuMemoryBufferConfigurationSet GetNativ
+@@ -18,7 +18,7 @@ GpuMemoryBufferConfigurationSet GetNativeGpuMemoryBufferConfigurations(
    GpuMemoryBufferConfigurationSet configurations;
  
  #if defined(USE_OZONE) || defined(OS_MAC) || defined(OS_WIN) || \
@@ -802,7 +839,7 @@
  #if defined(USE_OZONE)
    if (!features::IsUsingOzonePlatform())
      return configurations;
-@@ -62,7 +62,7 @@ bool GetImageNeedsPlatformSpecificTextur
+@@ -64,7 +64,7 @@ bool GetImageNeedsPlatformSpecificTextureTarget(gfx::BufferFormat format,
    if (!NativeBufferNeedsPlatformSpecificTextureTarget(format))
      return false;
  #if defined(USE_OZONE) || defined(OS_MAC) || defined(OS_WIN) || \
@@ -811,6 +848,8 @@
    GpuMemoryBufferSupport support;
    GpuMemoryBufferConfigurationSet native_configurations =
        GetNativeGpuMemoryBufferConfigurations(&support);
+diff --git a/src/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc b/src/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc
+index b645f8b38ebd..9e7d3256436c 100644
 --- a/src/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc
 +++ b/src/gpu/ipc/service/gpu_memory_buffer_factory_native_pixmap.cc
 @@ -8,6 +8,7 @@
@@ -832,7 +871,7 @@
  namespace gpu {
  
  namespace {
-@@ -84,6 +89,11 @@ GpuMemoryBufferFactoryNativePixmap::Crea
+@@ -84,6 +89,11 @@ GpuMemoryBufferFactoryNativePixmap::CreateGpuMemoryBuffer(
                                                   client_id, std::move(pixmap));
    }
  #endif
@@ -844,7 +883,7 @@
    DCHECK_EQ(framebuffer_size, size);
  
  #if defined(USE_X11)
-@@ -103,6 +113,7 @@ GpuMemoryBufferFactoryNativePixmap::Crea
+@@ -103,6 +113,7 @@ GpuMemoryBufferFactoryNativePixmap::CreateGpuMemoryBuffer(
    NOTIMPLEMENTED();
    return gfx::GpuMemoryBufferHandle();
  #endif
@@ -852,7 +891,7 @@
  }
  
  void GpuMemoryBufferFactoryNativePixmap::CreateGpuMemoryBufferAsync(
-@@ -182,6 +193,11 @@ GpuMemoryBufferFactoryNativePixmap::Crea
+@@ -192,6 +203,11 @@ GpuMemoryBufferFactoryNativePixmap::CreateImageForGpuMemoryBuffer(
                         std::move(handle.native_pixmap_handle));
      }
  #endif
@@ -864,7 +903,7 @@
  #if !defined(OS_FUCHSIA)
      if (!pixmap) {
        DCHECK_EQ(surface_handle, gpu::kNullSurfaceHandle);
-@@ -221,11 +237,15 @@ GpuMemoryBufferFactoryNativePixmap::Crea
+@@ -231,11 +247,15 @@ GpuMemoryBufferFactoryNativePixmap::CreateImageForGpuMemoryBuffer(
  }
  
  bool GpuMemoryBufferFactoryNativePixmap::SupportsCreateAnonymousImage() const {
@@ -880,7 +919,7 @@
  }
  
  scoped_refptr<gl::GLImage>
-@@ -236,6 +256,7 @@ GpuMemoryBufferFactoryNativePixmap::Crea
+@@ -246,6 +266,7 @@ GpuMemoryBufferFactoryNativePixmap::CreateAnonymousImage(
      SurfaceHandle surface_handle,
      bool* is_cleared) {
    scoped_refptr<gfx::NativePixmap> pixmap;
@@ -888,7 +927,7 @@
  #if defined(USE_OZONE)
    if (features::IsUsingOzonePlatform()) {
      pixmap = ui::OzonePlatform::GetInstance()
-@@ -243,6 +264,11 @@ GpuMemoryBufferFactoryNativePixmap::Crea
+@@ -253,6 +274,11 @@ GpuMemoryBufferFactoryNativePixmap::CreateAnonymousImage(
                   ->CreateNativePixmap(surface_handle, GetVulkanDevice(), size,
                                        format, usage);
    }
@@ -900,9 +939,11 @@
  #else
    NOTIMPLEMENTED();
  #endif
+diff --git a/src/media/BUILD.gn b/src/media/BUILD.gn
+index 740789d1dcc8..53ce9135fa00 100644
 --- a/src/media/BUILD.gn
 +++ b/src/media/BUILD.gn
-@@ -7,6 +7,7 @@ import("//build/config/android/config.gn
+@@ -7,6 +7,7 @@ import("//build/config/android/config.gni")
  import("//build/config/arm.gni")
  import("//build/config/features.gni")
  import("//build/config/linux/pkg_config.gni")
@@ -918,9 +959,40 @@
      "ENABLE_OPENH264=$media_use_openh264",
      "ENABLE_PLATFORM_MPEG_H_AUDIO=$enable_platform_mpeg_h_audio",
      "ENABLE_MSE_MPEG2TS_STREAM_PARSER=$enable_mse_mpeg2ts_stream_parser",
+diff --git a/src/media/base/decoder.cc b/src/media/base/decoder.cc
+index f14ec631d2e7..1b23386dd275 100644
+--- a/src/media/base/decoder.cc
++++ b/src/media/base/decoder.cc
+@@ -52,6 +52,8 @@ std::string GetDecoderName(VideoDecoderType type) {
+       return "V4L2VideoDecoder";
+     case VideoDecoderType::kTesting:
+       return "Testing or Mock Video decoder";
++    case VideoDecoderType::kMmal:
++      return "MmalVideoDecoder";
+     default:
+       NOTREACHED();
+       return "VideoDecoderType created through invalid static_cast";
+diff --git a/src/media/base/decoder.h b/src/media/base/decoder.h
+index d724edb49703..788cbe93e059 100644
+--- a/src/media/base/decoder.h
++++ b/src/media/base/decoder.h
+@@ -51,9 +51,10 @@ enum class VideoDecoderType : int {
+   kV4L2 = 16,       // V4L2VideoDecoder
+ 
+   kTesting = 17,  // Never send this to UKM, for tests only.
++  kMmal,
+ 
+   // Keep this at the end and equal to the last entry.
+-  kMaxValue = kTesting
++  kMaxValue = kMmal  // Keep this at the end and equal to the last entry.
+ };
+ 
+ MEDIA_EXPORT std::string GetDecoderName(AudioDecoderType type);
+diff --git a/src/media/base/media_switches.cc b/src/media/base/media_switches.cc
+index 7c6ca90d52ac..6cdf0a09caa3 100644
 --- a/src/media/base/media_switches.cc
 +++ b/src/media/base/media_switches.cc
-@@ -206,6 +206,21 @@ const char kUserGestureRequiredPolicy[]
+@@ -220,6 +220,21 @@ const char kUserGestureRequiredPolicy[] = "user-gesture-required";
  
  }  // namespace autoplay
  
@@ -942,9 +1014,11 @@
  }  // namespace switches
  
  namespace media {
+diff --git a/src/media/base/media_switches.h b/src/media/base/media_switches.h
+index 69b9cfcc7b8e..7e60fc355c66 100644
 --- a/src/media/base/media_switches.h
 +++ b/src/media/base/media_switches.h
-@@ -94,6 +94,21 @@ MEDIA_EXPORT extern const char kUserGest
+@@ -99,6 +99,21 @@ MEDIA_EXPORT extern const char kUserGestureRequiredPolicy[];
  
  }  // namespace autoplay
  
@@ -966,21 +1040,26 @@
  }  // namespace switches
  
  namespace media {
+diff --git a/src/media/base/video_decoder.h b/src/media/base/video_decoder.h
+index 77772ab6b828..4da068baa276 100644
 --- a/src/media/base/video_decoder.h
 +++ b/src/media/base/video_decoder.h
-@@ -122,6 +122,9 @@ class MEDIA_EXPORT VideoDecoder : public
-   // [|limits::kMinVideoDecodeThreads|, |limits::kMaxVideoDecodeThreads|].
-   static int GetRecommendedThreadCount(int desired_threads);
- 
+@@ -130,6 +130,10 @@ class MEDIA_EXPORT VideoDecoder : public Decoder {
+   // this should return the underlying type, if it is known, otherwise return
+   // its own type.
+   virtual VideoDecoderType GetDecoderType() const = 0;
++
 +  // Alert that we would like a different frame size
 +  virtual void TryResizeFrame(uint32_t width, uint32_t height) {}
 +
-  private:
-   DISALLOW_COPY_AND_ASSIGN(VideoDecoder);
  };
+ 
+ }  // namespace media
+diff --git a/src/media/base/video_frame.cc b/src/media/base/video_frame.cc
+index d895ebf38a43..50274f86a39d 100644
 --- a/src/media/base/video_frame.cc
 +++ b/src/media/base/video_frame.cc
-@@ -1462,4 +1462,21 @@ std::vector<size_t> VideoFrame::Calculat
+@@ -1541,4 +1541,21 @@ std::vector<size_t> VideoFrame::CalculatePlaneSize() const {
    return plane_size;
  }
  
@@ -1002,26 +1081,21 @@
 +}
 +
  }  // namespace media
+diff --git a/src/media/base/video_frame.h b/src/media/base/video_frame.h
+index 373d0268b67d..50be6f858a2b 100644
 --- a/src/media/base/video_frame.h
 +++ b/src/media/base/video_frame.h
-@@ -18,6 +18,7 @@
+@@ -16,7 +16,9 @@
+ #include "base/callback.h"
+ #include "base/check_op.h"
  #include "base/hash/md5.h"
- #include "base/macros.h"
- #include "base/memory/aligned_memory.h"
++#include "base/memory/aligned_memory.h"
+ #include "base/memory/free_deleter.h"
 +#include "base/memory/read_only_shared_memory_region.h"
  #include "base/memory/ref_counted.h"
  #include "base/memory/unsafe_shared_memory_region.h"
- #include "base/optional.h"
-@@ -53,6 +54,8 @@ namespace media {
- 
- class MEDIA_EXPORT VideoFrame : public base::RefCountedThreadSafe<VideoFrame> {
-  public:
-+  typedef base::Callback<void(const gfx::Size&)> MmalResizeCB;
-+
-   enum {
-     kFrameSizeAlignment = 16,
-     kFrameSizePadding = 16,
-@@ -509,6 +512,13 @@ class MEDIA_EXPORT VideoFrame : public b
+ #include "base/synchronization/lock.h"
+@@ -519,6 +521,13 @@ class MEDIA_EXPORT VideoFrame : public base::RefCountedThreadSafe<VideoFrame> {
    // mailbox, the caller must wait for the included sync point.
    const gpu::MailboxHolder& mailbox_holder(size_t texture_index) const;
  
@@ -1035,7 +1109,7 @@
  #if defined(OS_LINUX) || defined(OS_CHROMEOS)
    // Returns a vector containing the backing DmaBufs for this frame. The number
    // of returned DmaBufs will be equal or less than the number of planes of
-@@ -626,6 +636,10 @@ class MEDIA_EXPORT VideoFrame : public b
+@@ -638,6 +647,10 @@ class MEDIA_EXPORT VideoFrame : public base::RefCountedThreadSafe<VideoFrame> {
      data_[plane] = ptr;
    }
  
@@ -1044,11 +1118,13 @@
 +  }
 +
   private:
-   static scoped_refptr<VideoFrame> CreateFrameInternal(
-       VideoPixelFormat format,
+   // The constructor of VideoFrame should use IsValidConfigInternal()
+   // instead of the public IsValidConfig() to check the config, because we can
+diff --git a/src/media/base/video_renderer_sink.h b/src/media/base/video_renderer_sink.h
+index b7b034cdd020..1835ce7e1780 100644
 --- a/src/media/base/video_renderer_sink.h
 +++ b/src/media/base/video_renderer_sink.h
-@@ -41,6 +41,8 @@ class MEDIA_EXPORT VideoRendererSink {
+@@ -47,6 +47,8 @@ class MEDIA_EXPORT VideoRendererSink {
      // client.
      virtual base::TimeDelta GetPreferredRenderInterval() = 0;
  
@@ -1057,10 +1133,12 @@
      virtual ~RenderCallback() {}
    };
  
+diff --git a/src/media/base/video_types.h b/src/media/base/video_types.h
+index b0ce5ceeebfd..5f568f5e7b2a 100644
 --- a/src/media/base/video_types.h
 +++ b/src/media/base/video_types.h
-@@ -82,6 +82,13 @@ enum VideoPixelFormat {
-       PIXEL_FORMAT_BGRA,  // Must always be equal to largest entry logged.
+@@ -84,6 +84,13 @@ enum VideoPixelFormat {
+       PIXEL_FORMAT_RGBAF16,  // Must always be equal to largest entry logged.
  };
  
 +
@@ -1071,11 +1149,13 @@
 +
 +
  // Returns the name of a Format as a string.
- MEDIA_EXPORT std::string VideoPixelFormatToString(VideoPixelFormat format);
- 
+ MEDIA_SHMEM_EXPORT std::string VideoPixelFormatToString(
+     VideoPixelFormat format);
+diff --git a/src/media/blink/video_frame_compositor.cc b/src/media/blink/video_frame_compositor.cc
+index 16e48bf22b0b..8a1563749d41 100644
 --- a/src/media/blink/video_frame_compositor.cc
 +++ b/src/media/blink/video_frame_compositor.cc
-@@ -181,6 +181,13 @@ void VideoFrameCompositor::PutCurrentFra
+@@ -185,6 +185,13 @@ void VideoFrameCompositor::PutCurrentFrame() {
    rendered_last_frame_ = true;
  }
  
@@ -1089,9 +1169,11 @@
  bool VideoFrameCompositor::UpdateCurrentFrame(base::TimeTicks deadline_min,
                                                base::TimeTicks deadline_max) {
    DCHECK(task_runner_->BelongsToCurrentThread());
+diff --git a/src/media/blink/video_frame_compositor.h b/src/media/blink/video_frame_compositor.h
+index 2c7c535d5581..5bb086d3719f 100644
 --- a/src/media/blink/video_frame_compositor.h
 +++ b/src/media/blink/video_frame_compositor.h
-@@ -105,6 +105,7 @@ class MEDIA_BLINK_EXPORT VideoFrameCompo
+@@ -104,6 +104,7 @@ class MEDIA_BLINK_EXPORT VideoFrameCompositor : public VideoRendererSink,
    scoped_refptr<VideoFrame> GetCurrentFrame() override;
    void PutCurrentFrame() override;
    base::TimeDelta GetPreferredRenderInterval() override;
@@ -1099,6 +1181,8 @@
  
    // Returns |current_frame_|, without offering a guarantee as to how recently
    // it was updated. In certain applications, one might need to periodically
+diff --git a/src/media/filters/BUILD.gn b/src/media/filters/BUILD.gn
+index 9f7dc8c00369..75d66dbd8179 100644
 --- a/src/media/filters/BUILD.gn
 +++ b/src/media/filters/BUILD.gn
 @@ -2,6 +2,7 @@
@@ -1108,7 +1192,7 @@
 +import("//build/config/linux/rpi/args.gni")
  import("//media/gpu/args.gni")
  import("//media/media_options.gni")
- import("//third_party/libaom/options.gni")
+ 
 @@ -97,6 +98,9 @@ source_set("filters") {
    ]
  
@@ -1135,9 +1219,11 @@
    if (media_use_ffmpeg) {
      deps += [
        "//media/ffmpeg",
+diff --git a/src/media/filters/decoder_stream.cc b/src/media/filters/decoder_stream.cc
+index b683149d459e..fae409c58f91 100644
 --- a/src/media/filters/decoder_stream.cc
 +++ b/src/media/filters/decoder_stream.cc
-@@ -1000,6 +1000,14 @@ void DecoderStream<StreamType>::Complete
+@@ -1000,6 +1000,14 @@ void DecoderStream<StreamType>::CompletePrepare(const Output* output) {
    preparing_output_ = false;
  }
  
@@ -1152,9 +1238,11 @@
  template class DecoderStream<DemuxerStream::VIDEO>;
  template class DecoderStream<DemuxerStream::AUDIO>;
  
+diff --git a/src/media/filters/decoder_stream.h b/src/media/filters/decoder_stream.h
+index 6fe5739c8d37..cb06f33cb3dc 100644
 --- a/src/media/filters/decoder_stream.h
 +++ b/src/media/filters/decoder_stream.h
-@@ -153,6 +153,8 @@ class MEDIA_EXPORT DecoderStream {
+@@ -148,6 +148,8 @@ class MEDIA_EXPORT DecoderStream {
      return decoder_selector_;
    }
  
@@ -1163,7 +1251,7 @@
   private:
    enum State {
      STATE_UNINITIALIZED,
-@@ -318,6 +320,9 @@ bool DecoderStream<DemuxerStream::AUDIO>
+@@ -313,6 +315,9 @@ bool DecoderStream<DemuxerStream::AUDIO>::CanReadWithoutStalling() const;
  template <>
  int DecoderStream<DemuxerStream::AUDIO>::GetMaxDecodeRequests() const;
  
@@ -1173,9 +1261,12 @@
  using VideoDecoderStream = DecoderStream<DemuxerStream::VIDEO>;
  using AudioDecoderStream = DecoderStream<DemuxerStream::AUDIO>;
  
+diff --git a/src/media/filters/mmal_video_decoder.cc b/src/media/filters/mmal_video_decoder.cc
+new file mode 100644
+index 000000000000..2fa70247efb2
 --- /dev/null
 +++ b/src/media/filters/mmal_video_decoder.cc
-@@ -0,0 +1,5307 @@
+@@ -0,0 +1,5306 @@
 +// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -3575,9 +3666,9 @@
 +    LOG(INFO) << __func__ << ": HasTextures: " << HasTextures() << ", this=" << (void*)this << ", desc=" << (void*)frame_desc_;
 +#endif
 +
-+    metadata()->allow_overlay = true;
-+//    metadata()->copy_mode = VideoFrameMetadata::CopyMode::kCopyMailboxesOnly;
-+    metadata()->read_lock_fences_enabled = true;
++    metadata().allow_overlay = true;
++//    metadata().copy_mode = VideoFrameMetadata::CopyMode::kCopyMailboxesOnly;
++    metadata().read_lock_fences_enabled = true;
 +  }
 +
 +public:
@@ -3626,8 +3717,8 @@
 +  const scoped_refptr<MmalVcInit> vc_init_;
 +
 +public:
-+  typedef base::Callback<bool(MMAL_BUFFER_HEADER_T * buffer)> MmalPoolBufferReleaseCB;
-+  typedef base::Callback<void(MMAL_BUFFER_HEADER_T * buffer)> MmalPoolBufferGetCB;
++  typedef base::RepeatingCallback<bool(MMAL_BUFFER_HEADER_T * buffer)> MmalPoolBufferReleaseCB;
++  typedef base::RepeatingCallback<void(MMAL_BUFFER_HEADER_T * buffer)> MmalPoolBufferGetCB;
 +
 +private:
 +  MmalPoolBufferReleaseCB pool_cb_;
@@ -6115,13 +6206,6 @@
 +  }
 +}
 +
-+
-+
-+std::string MmalVideoDecoder::GetDisplayName() const {
-+  return "MmalVideoDecoder";
-+}
-+
-+
 +void MmalVideoDecoder::uninitialise(const MmalDecoderState new_state)
 +{
 +  if (decoder_) {
@@ -6479,10 +6563,19 @@
 +  resizer_->resize(size_req);
 +}
 +
++VideoDecoderType MmalVideoDecoder::GetDecoderType() const
++{
++  return VideoDecoderType::kMmal;
++}
++
++
 +}  // namespace media
 +
 +
 +
+diff --git a/src/media/filters/mmal_video_decoder.h b/src/media/filters/mmal_video_decoder.h
+new file mode 100644
+index 000000000000..8709703261a9
 --- /dev/null
 +++ b/src/media/filters/mmal_video_decoder.h
 @@ -0,0 +1,121 @@
@@ -6575,8 +6668,6 @@
 +  ~MmalVideoDecoder() override;
 +
 +  // VideoDecoder implementation.
-+  std::string GetDisplayName() const override;
-+
 +  void Initialize(const VideoDecoderConfig& config,
 +                          bool low_delay,
 +                          CdmContext* cdm_context,
@@ -6593,6 +6684,8 @@
 +  int GetMaxDecodeRequests() const override;
 +  void TryResizeFrame(uint32_t width, uint32_t height) override;
 +
++  VideoDecoderType GetDecoderType() const override;
++
 +  inline base::WeakPtr<MmalVideoDecoder> GetWeakPtr() {
 +    return weak_factory_.GetWeakPtr();
 +  }
@@ -6607,6 +6700,8 @@
 +#endif  // MEDIA_FILTERS_MMAL_VIDEO_DECODER_H_
 +
 +
+diff --git a/src/media/gpu/BUILD.gn b/src/media/gpu/BUILD.gn
+index 4fba7f3731e6..3e4dd9c2e8c1 100644
 --- a/src/media/gpu/BUILD.gn
 +++ b/src/media/gpu/BUILD.gn
 @@ -19,6 +19,7 @@ buildflag_header("buildflags") {
@@ -6617,6 +6712,8 @@
      "USE_LIBV4L2=$use_v4lplugin",
    ]
  }
+diff --git a/src/media/gpu/args.gni b/src/media/gpu/args.gni
+index 33c49cd2938c..e32ddd41194f 100644
 --- a/src/media/gpu/args.gni
 +++ b/src/media/gpu/args.gni
 @@ -17,6 +17,10 @@ declare_args() {
@@ -6630,11 +6727,13 @@
    # Indicates if VA-API-based hardware acceleration is to be used. This
    # is typically the case on x86-based ChromeOS devices.
    # VA-API should also be compiled by default on x11-using linux devices
+diff --git a/src/media/gpu/gpu_video_decode_accelerator_factory.cc b/src/media/gpu/gpu_video_decode_accelerator_factory.cc
+index 0e55ef47ec66..2cf3aee117f1 100644
 --- a/src/media/gpu/gpu_video_decode_accelerator_factory.cc
 +++ b/src/media/gpu/gpu_video_decode_accelerator_factory.cc
-@@ -26,7 +26,9 @@
- #endif
- #if BUILDFLAG(USE_V4L2_CODEC)
+@@ -29,7 +29,9 @@
+ #include "ui/gl/gl_implementation.h"
+ #elif BUILDFLAG(USE_V4L2_CODEC)
  #include "media/gpu/v4l2/v4l2_device.h"
 +#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
  #include "media/gpu/v4l2/v4l2_slice_video_decode_accelerator.h"
@@ -6642,49 +6741,51 @@
  #include "media/gpu/v4l2/v4l2_video_decode_accelerator.h"
  #include "ui/gl/gl_surface_egl.h"
  #endif
-@@ -63,10 +65,12 @@ gpu::VideoDecodeAcceleratorCapabilities
-   vda_profiles = V4L2VideoDecodeAccelerator::GetSupportedProfiles();
+@@ -64,10 +66,12 @@ gpu::VideoDecodeAcceleratorCapabilities GetDecoderCapabilitiesInternal(
    GpuVideoAcceleratorUtil::InsertUniqueDecodeProfiles(
-       vda_profiles, &capabilities.supported_profiles);
+       V4L2VideoDecodeAccelerator::GetSupportedProfiles(),
+       &capabilities.supported_profiles);
 +#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
-   vda_profiles = V4L2SliceVideoDecodeAccelerator::GetSupportedProfiles();
    GpuVideoAcceleratorUtil::InsertUniqueDecodeProfiles(
-       vda_profiles, &capabilities.supported_profiles);
+       V4L2SliceVideoDecodeAccelerator::GetSupportedProfiles(),
+       &capabilities.supported_profiles);
  #endif
 +#endif
- #if BUILDFLAG(USE_VAAPI)
-   vda_profiles = VaapiVideoDecodeAccelerator::GetSupportedProfiles(workarounds);
-   GpuVideoAcceleratorUtil::InsertUniqueDecodeProfiles(
-@@ -147,8 +151,10 @@ GpuVideoDecodeAcceleratorFactory::Create
- #endif
- #if BUILDFLAG(USE_V4L2_CODEC)
+ #elif defined(OS_MAC)
+   capabilities.supported_profiles =
+       VTVideoDecodeAccelerator::GetSupportedProfiles(workarounds);
+@@ -146,8 +150,10 @@ GpuVideoDecodeAcceleratorFactory::CreateVDA(
+     &GpuVideoDecodeAcceleratorFactory::CreateVaapiVDA,
+ #elif BUILDFLAG(USE_V4L2_CODEC)
      &GpuVideoDecodeAcceleratorFactory::CreateV4L2VDA,
 +#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
-     &GpuVideoDecodeAcceleratorFactory::CreateV4L2SVDA,
+     &GpuVideoDecodeAcceleratorFactory::CreateV4L2SliceVDA,
  #endif
 +#endif
+ 
  #if defined(OS_MAC)
      &GpuVideoDecodeAcceleratorFactory::CreateVTVDA,
- #endif
-@@ -196,6 +202,7 @@ GpuVideoDecodeAcceleratorFactory::Create
+@@ -207,6 +213,7 @@ GpuVideoDecodeAcceleratorFactory::CreateV4L2VDA(
    return decoder;
  }
  
 +#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
  std::unique_ptr<VideoDecodeAccelerator>
- GpuVideoDecodeAcceleratorFactory::CreateV4L2SVDA(
-     const gpu::GpuDriverBugWorkarounds& workarounds,
-@@ -211,6 +218,7 @@ GpuVideoDecodeAcceleratorFactory::Create
+ GpuVideoDecodeAcceleratorFactory::CreateV4L2SliceVDA(
+     const gpu::GpuDriverBugWorkarounds& /*workarounds*/,
+@@ -222,6 +229,7 @@ GpuVideoDecodeAcceleratorFactory::CreateV4L2SliceVDA(
    return decoder;
  }
  #endif
 +#endif
  
- #if BUILDFLAG(USE_VAAPI)
+ #if defined(OS_MAC)
  std::unique_ptr<VideoDecodeAccelerator>
+diff --git a/src/media/gpu/v4l2/BUILD.gn b/src/media/gpu/v4l2/BUILD.gn
+index 755f8bc4caec..6ee58b7f71e4 100644
 --- a/src/media/gpu/v4l2/BUILD.gn
 +++ b/src/media/gpu/v4l2/BUILD.gn
-@@ -28,21 +28,12 @@ source_set("v4l2") {
+@@ -28,23 +28,14 @@ source_set("v4l2") {
      "buffer_affinity_tracker.h",
      "generic_v4l2_device.cc",
      "generic_v4l2_device.h",
@@ -6695,6 +6796,8 @@
      "v4l2_device.h",
      "v4l2_device_poller.cc",
      "v4l2_device_poller.h",
+     "v4l2_framerate_control.cc",
+     "v4l2_framerate_control.h",
 -    "v4l2_h264_accelerator.cc",
 -    "v4l2_h264_accelerator.h",
 -    "v4l2_h264_accelerator_legacy.cc",
@@ -6705,8 +6808,8 @@
 -    "v4l2_slice_video_decode_accelerator.h",
      "v4l2_stateful_workaround.cc",
      "v4l2_stateful_workaround.h",
-     "v4l2_vda_helpers.cc",
-@@ -55,18 +46,32 @@ source_set("v4l2") {
+     "v4l2_utils.cc",
+@@ -59,26 +50,40 @@ source_set("v4l2") {
      "v4l2_video_decoder_backend.h",
      "v4l2_video_decoder_backend_stateful.cc",
      "v4l2_video_decoder_backend_stateful.h",
@@ -6718,6 +6821,8 @@
 -    "v4l2_vp8_accelerator.h",
 -    "v4l2_vp8_accelerator_legacy.cc",
 -    "v4l2_vp8_accelerator_legacy.h",
+-    "v4l2_vp9_accelerator_chromium.cc",
+-    "v4l2_vp9_accelerator_chromium.h",
 -    "v4l2_vp9_accelerator_legacy.cc",
 -    "v4l2_vp9_accelerator_legacy.h",
    ]
@@ -6739,6 +6844,8 @@
 +      "v4l2_vp8_accelerator.h",
 +      "v4l2_vp8_accelerator_legacy.cc",
 +      "v4l2_vp8_accelerator_legacy.h",
++      "v4l2_vp9_accelerator_chromium.cc",
++      "v4l2_vp9_accelerator_chromium.h",
 +      "v4l2_vp9_accelerator_legacy.cc",
 +      "v4l2_vp9_accelerator_legacy.h",
 +    ]
@@ -6747,18 +6854,18 @@
    libs = [
      "EGL",
      "GLESv2",
-@@ -79,7 +84,7 @@ source_set("v4l2") {
-     ]
-   }
+   ]
  
 -  if (use_v4l2_codec_aml) {
 +  if (use_v4l2_codec_aml && !use_v4l2_codec_rpi) {
      sources += [
        "aml_v4l2_device.cc",
        "aml_v4l2_device.h",
+diff --git a/src/media/gpu/v4l2/generic_v4l2_device.cc b/src/media/gpu/v4l2/generic_v4l2_device.cc
+index 1b8d5f4bf595..69be37883269 100644
 --- a/src/media/gpu/v4l2/generic_v4l2_device.cc
 +++ b/src/media/gpu/v4l2/generic_v4l2_device.cc
-@@ -453,7 +453,11 @@ bool GenericV4L2Device::PostSandboxIniti
+@@ -479,7 +479,11 @@ bool GenericV4L2Device::PostSandboxInitialization() {
  }
  
  void GenericV4L2Device::EnumerateDevicesForType(Type type) {
@@ -6770,9 +6877,11 @@
    static const std::string kEncoderDevicePattern = "/dev/video-enc";
    static const std::string kImageProcessorDevicePattern = "/dev/image-proc";
    static const std::string kJpegDecoderDevicePattern = "/dev/jpeg-dec";
+diff --git a/src/media/gpu/v4l2/v4l2_device.cc b/src/media/gpu/v4l2/v4l2_device.cc
+index ba587e592472..f2178e03937a 100644
 --- a/src/media/gpu/v4l2/v4l2_device.cc
 +++ b/src/media/gpu/v4l2/v4l2_device.cc
-@@ -26,6 +26,7 @@
+@@ -25,6 +25,7 @@
  #include "media/base/bind_to_current_loop.h"
  #include "media/base/color_plane_layout.h"
  #include "media/base/video_types.h"
@@ -6780,16 +6889,7 @@
  #include "media/gpu/chromeos/fourcc.h"
  #include "media/gpu/chromeos/platform_video_frame_utils.h"
  #include "media/gpu/macros.h"
-@@ -34,7 +35,7 @@
- #include "ui/gfx/generic_shared_memory_id.h"
- #include "ui/gfx/native_pixmap_handle.h"
- 
--#if defined(ARCH_CPU_ARMEL)
-+#if defined(ARCH_CPU_ARMEL) && !BUILDFLAG(USE_V4L2_CODEC_RPI)
- #include "media/gpu/v4l2/tegra_v4l2_device.h"
- #endif
- #if defined(AML_V4L2)
-@@ -47,8 +48,10 @@ namespace media {
+@@ -43,8 +44,10 @@ namespace media {
  
  namespace {
  
@@ -6800,7 +6900,7 @@
  
  gfx::Rect V4L2RectToGfxRect(const v4l2_rect& rect) {
    return gfx::Rect(rect.left, rect.top, rect.width, rect.height);
-@@ -522,8 +525,10 @@ bool V4L2WritableBufferRef::DoQueue(V4L2
+@@ -536,8 +539,10 @@ bool V4L2WritableBufferRef::DoQueue(V4L2RequestRef* request_ref,
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
    DCHECK(buffer_data_);
  
@@ -6811,7 +6911,7 @@
  
    bool queued = buffer_data_->QueueBuffer(std::move(video_frame));
  
-@@ -784,7 +789,9 @@ void V4L2WritableBufferRef::SetConfigSto
+@@ -798,7 +803,9 @@ void V4L2WritableBufferRef::SetConfigStore(uint32_t config_store) {
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
    DCHECK(buffer_data_);
  
@@ -6821,7 +6921,7 @@
  }
  
  V4L2ReadableBuffer::V4L2ReadableBuffer(const struct v4l2_buffer& v4l2_buffer,
-@@ -916,6 +923,7 @@ V4L2Queue::V4L2Queue(scoped_refptr<V4L2D
+@@ -930,6 +937,7 @@ V4L2Queue::V4L2Queue(scoped_refptr<V4L2Device> dev,
        weak_this_factory_(this) {
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
  
@@ -6829,7 +6929,7 @@
    // Check if this queue support requests.
    struct v4l2_requestbuffers reqbufs;
    memset(&reqbufs, 0, sizeof(reqbufs));
-@@ -931,6 +939,7 @@ V4L2Queue::V4L2Queue(scoped_refptr<V4L2D
+@@ -945,6 +953,7 @@ V4L2Queue::V4L2Queue(scoped_refptr<V4L2Device> dev,
      supports_requests_ = true;
      DVLOGF(4) << "Queue supports request API.";
    }
@@ -6837,16 +6937,7 @@
  }
  
  V4L2Queue::~V4L2Queue() {
-@@ -1442,7 +1451,7 @@ scoped_refptr<V4L2Device> V4L2Device::Cr
- 
-   scoped_refptr<V4L2Device> device;
- 
--#if defined(ARCH_CPU_ARMEL)
-+#if defined(ARCH_CPU_ARMEL) && !BUILDFLAG(USE_V4L2_CODEC_RPI)
-   device = new TegraV4L2Device();
-   if (device->Initialize())
-     return device;
-@@ -1467,23 +1476,34 @@ uint32_t V4L2Device::VideoCodecProfileTo
+@@ -1470,23 +1479,34 @@ uint32_t V4L2Device::VideoCodecProfileToV4L2PixFmt(VideoCodecProfile profile,
                                                     bool slice_based) {
    if (profile >= H264PROFILE_MIN && profile <= H264PROFILE_MAX) {
      if (slice_based)
@@ -6876,15 +6967,15 @@
      else
        return V4L2_PIX_FMT_VP9;
 -  } else {
--    LOG(ERROR) << "Unknown profile: " << GetProfileName(profile);
+-    DVLOGF(1) << "Unsupported profile: " << GetProfileName(profile);
 -    return 0;
    }
 +  LOG(ERROR) << "Unknown profile: " << GetProfileName(profile);
 +  return 0;
  }
  
- // static
-@@ -1581,7 +1601,9 @@ std::vector<VideoCodecProfile> V4L2Devic
+ namespace {
+@@ -1581,7 +1601,9 @@ std::vector<VideoCodecProfile> V4L2Device::V4L2PixFmtToVideoCodecProfiles(
    std::vector<VideoCodecProfile> profiles;
    switch (pix_fmt) {
      case V4L2_PIX_FMT_H264:
@@ -6894,7 +6985,7 @@
        if (!get_supported_profiles(kCodecH264, &profiles)) {
          DLOG(WARNING) << "Driver doesn't support QUERY H264 profiles, "
                        << "use default values, Base, Main, High";
-@@ -1593,11 +1615,15 @@ std::vector<VideoCodecProfile> V4L2Devic
+@@ -1593,11 +1615,15 @@ std::vector<VideoCodecProfile> V4L2Device::V4L2PixFmtToVideoCodecProfiles(
        }
        break;
      case V4L2_PIX_FMT_VP8:
@@ -6910,7 +7001,7 @@
        if (!get_supported_profiles(kCodecVP9, &profiles)) {
          DLOG(WARNING) << "Driver doesn't support QUERY VP9 profiles, "
                        << "use default values, Profile0";
-@@ -2179,6 +2205,7 @@ base::Optional<struct v4l2_event> V4L2De
+@@ -2056,6 +2082,7 @@ absl::optional<struct v4l2_event> V4L2Device::DequeueEvent() {
    return event;
  }
  
@@ -6918,7 +7009,7 @@
  V4L2RequestsQueue* V4L2Device::GetRequestsQueue() {
    DCHECK_CALLED_ON_VALID_SEQUENCE(client_sequence_checker_);
  
-@@ -2199,6 +2226,7 @@ V4L2RequestsQueue* V4L2Device::GetReques
+@@ -2076,6 +2103,7 @@ V4L2RequestsQueue* V4L2Device::GetRequestsQueue() {
  
    return requests_queue_.get();
  }
@@ -6926,7 +7017,7 @@
  
  bool V4L2Device::IsCtrlExposed(uint32_t ctrl_id) {
    DCHECK_CALLED_ON_VALID_SEQUENCE(client_sequence_checker_);
-@@ -2224,8 +2252,10 @@ bool V4L2Device::SetExtCtrls(uint32_t ct
+@@ -2101,8 +2129,10 @@ bool V4L2Device::SetExtCtrls(uint32_t ctrl_class,
    ext_ctrls.count = ctrls.size();
    ext_ctrls.controls = &ctrls[0].ctrl;
  
@@ -6935,10 +7026,10 @@
      request_ref->ApplyCtrls(&ext_ctrls);
 +#endif
  
-   return Ioctl(VIDIOC_S_EXT_CTRLS, &ext_ctrls) == 0;
- }
-@@ -2249,6 +2279,8 @@ base::Optional<struct v4l2_ext_control>
-   return ctrl;
+   const int result = Ioctl(VIDIOC_S_EXT_CTRLS, &ext_ctrls);
+   if (result < 0) {
+@@ -2163,6 +2193,8 @@ bool V4L2Device::SetGOPLength(uint32_t gop_length) {
+   return true;
  }
  
 +#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
@@ -6946,16 +7037,18 @@
  class V4L2Request {
   public:
    // Apply the passed controls to the request.
-@@ -2525,4 +2557,6 @@ void V4L2RequestsQueue::ReturnRequest(V4
+@@ -2439,4 +2471,6 @@ void V4L2RequestsQueue::ReturnRequest(V4L2Request* request) {
      free_requests_.push(request);
  }
  
 +#endif
 +
  }  //  namespace media
+diff --git a/src/media/gpu/v4l2/v4l2_device.h b/src/media/gpu/v4l2/v4l2_device.h
+index 50ddba9fa075..606325f7140d 100644
 --- a/src/media/gpu/v4l2/v4l2_device.h
 +++ b/src/media/gpu/v4l2/v4l2_device.h
-@@ -26,6 +26,7 @@
+@@ -25,6 +25,7 @@
  #include "media/base/video_decoder_config.h"
  #include "media/base/video_frame.h"
  #include "media/base/video_frame_layout.h"
@@ -6998,7 +7091,7 @@
  class V4L2Request;
  
  // Base class for all request related classes.
-@@ -591,6 +613,7 @@ class MEDIA_GPU_EXPORT V4L2RequestsQueue
+@@ -591,6 +613,7 @@ class MEDIA_GPU_EXPORT V4L2RequestsQueue {
    SEQUENCE_CHECKER(sequence_checker_);
    DISALLOW_COPY_AND_ASSIGN(V4L2RequestsQueue);
  };
@@ -7006,9 +7099,9 @@
  
  class MEDIA_GPU_EXPORT V4L2Device
      : public base::RefCountedThreadSafe<V4L2Device> {
-@@ -776,9 +799,11 @@ class MEDIA_GPU_EXPORT V4L2Device
+@@ -760,9 +783,11 @@ class MEDIA_GPU_EXPORT V4L2Device
    // Attempt to dequeue a V4L2 event and return it.
-   base::Optional<struct v4l2_event> DequeueEvent();
+   absl::optional<struct v4l2_event> DequeueEvent();
  
 +#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
    // Returns requests queue to get free requests. A null pointer is returned if
@@ -7018,7 +7111,7 @@
  
    // Check whether the V4L2 control with specified |ctrl_id| is supported.
    bool IsCtrlExposed(uint32_t ctrl_id);
-@@ -824,8 +849,10 @@ class MEDIA_GPU_EXPORT V4L2Device
+@@ -811,8 +836,10 @@ class MEDIA_GPU_EXPORT V4L2Device
    // Indicates whether the request queue creation has been tried once.
    bool requests_queue_creation_called_ = false;
  
@@ -7029,9 +7122,11 @@
  
    SEQUENCE_CHECKER(client_sequence_checker_);
  };
+diff --git a/src/media/gpu/v4l2/v4l2_video_decode_accelerator.cc b/src/media/gpu/v4l2/v4l2_video_decode_accelerator.cc
+index 6ebf5f38b851..5fc885ce74e1 100644
 --- a/src/media/gpu/v4l2/v4l2_video_decode_accelerator.cc
 +++ b/src/media/gpu/v4l2/v4l2_video_decode_accelerator.cc
-@@ -42,6 +42,16 @@
+@@ -43,6 +43,16 @@
  #include "ui/gl/gl_context.h"
  #include "ui/gl/scoped_binders.h"
  
@@ -7048,7 +7143,7 @@
  #define NOTIFY_ERROR(x)                      \
    do {                                       \
      VLOGF(1) << "Setting error state:" << x; \
-@@ -1172,6 +1182,26 @@ bool V4L2VideoDecodeAccelerator::FlushIn
+@@ -1175,6 +1185,26 @@ bool V4L2VideoDecodeAccelerator::FlushInputFrame() {
    return (decoder_state_ != kError);
  }
  
@@ -7075,7 +7170,7 @@
  void V4L2VideoDecodeAccelerator::ServiceDeviceTask(bool event_pending) {
    DVLOGF(4);
    DCHECK(decoder_thread_.task_runner()->BelongsToCurrentThread());
-@@ -1195,11 +1225,11 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1198,11 +1228,11 @@ void V4L2VideoDecodeAccelerator::ServiceDeviceTask(bool event_pending) {
      return;
    }
  
@@ -7090,7 +7185,7 @@
      // Some platforms do not send an initial resolution change event.
      // To work around this, we need to keep checking if the initial resolution
      // is known already by explicitly querying the format after each decode,
-@@ -1212,11 +1242,16 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1215,11 +1245,16 @@ void V4L2VideoDecodeAccelerator::ServiceDeviceTask(bool event_pending) {
      gfx::Size visible_size;
      bool again;
      if (GetFormatInfo(&format, &visible_size, &again) && !again) {
@@ -7108,7 +7203,7 @@
    Dequeue();
    Enqueue();
  
-@@ -1258,7 +1293,7 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1261,7 +1296,7 @@ void V4L2VideoDecodeAccelerator::ServiceDeviceTask(bool event_pending) {
              << buffers_at_client_.size() << "]";
  
    ScheduleDecodeBufferTaskIfNeeded();
@@ -7117,7 +7212,7 @@
      StartResolutionChange();
  }
  
-@@ -1541,8 +1576,11 @@ bool V4L2VideoDecodeAccelerator::Enqueue
+@@ -1544,8 +1579,11 @@ bool V4L2VideoDecodeAccelerator::EnqueueOutputRecord(
    }
  
    if (!ret) {
@@ -7131,7 +7226,7 @@
      return false;
    }
  
-@@ -1701,7 +1739,7 @@ bool V4L2VideoDecodeAccelerator::IsDecod
+@@ -1704,7 +1742,7 @@ bool V4L2VideoDecodeAccelerator::IsDecoderCmdSupported() {
    memset(&cmd, 0, sizeof(cmd));
    cmd.cmd = V4L2_DEC_CMD_STOP;
    if (device_->Ioctl(VIDIOC_TRY_DECODER_CMD, &cmd) != 0) {
@@ -7140,9 +7235,11 @@
      return false;
    }
  
+diff --git a/src/media/gpu/v4l2/v4l2_video_decode_accelerator.h b/src/media/gpu/v4l2/v4l2_video_decode_accelerator.h
+index 6dacbdc5bdc9..376734c94693 100644
 --- a/src/media/gpu/v4l2/v4l2_video_decode_accelerator.h
 +++ b/src/media/gpu/v4l2/v4l2_video_decode_accelerator.h
-@@ -271,6 +271,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
+@@ -271,6 +271,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAccelerator
                        int32_t picture_buffer_id,
                        EGLImageKHR egl_image);
  
@@ -7152,7 +7249,7 @@
    // Service I/O on the V4L2 devices.  This task should only be scheduled from
    // DevicePollTask().  If |event_pending| is true, one or more events
    // on file descriptor are pending.
-@@ -573,6 +576,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
+@@ -573,6 +576,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAccelerator
    // The number of pictures that are sent to PictureReady and will be cleared.
    int picture_clearing_count_;
  
@@ -7162,6 +7259,8 @@
    // Output picture coded size.
    gfx::Size coded_size_;
  
+diff --git a/src/media/gpu/v4l2/v4l2_video_decoder.cc b/src/media/gpu/v4l2/v4l2_video_decoder.cc
+index b9a93a02a223..d5ac69a66f16 100644
 --- a/src/media/gpu/v4l2/v4l2_video_decoder.cc
 +++ b/src/media/gpu/v4l2/v4l2_video_decoder.cc
 @@ -14,12 +14,15 @@
@@ -7180,7 +7279,7 @@
  
  namespace media {
  
-@@ -35,8 +38,17 @@ constexpr size_t kNumInputBuffers = 16;
+@@ -35,8 +38,17 @@ constexpr size_t kNumInputBuffers = 8;
  
  // Input format V4L2 fourccs this class supports.
  constexpr uint32_t kSupportedInputFourccs[] = {
@@ -7200,33 +7299,42 @@
  };
  
  // Number of output buffers to use for each VD stage above what's required by
-@@ -211,10 +223,12 @@ void V4L2VideoDecoder::Initialize(const
+@@ -249,12 +261,17 @@ StatusCode V4L2VideoDecoder::InitializeBackend() {
      backend_ = std::make_unique<V4L2StatefulVideoDecoderBackend>(
-         this, device_, profile, decoder_task_runner_);
-     input_format_fourcc = input_format_fourcc_stateful;
-+#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
-   } else if (input_format_fourcc_stateless) {
-     backend_ = std::make_unique<V4L2StatelessVideoDecoderBackend>(
-         this, device_, profile, decoder_task_runner_);
-     input_format_fourcc = input_format_fourcc_stateless;
-+#endif
+         this, device_, profile_, decoder_task_runner_);
    } else {
-     VLOGF(1) << "No backend capable of taking this profile.";
-     std::move(init_cb).Run(StatusCode::kV4l2FailedResourceAllocation);
++#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
+     DCHECK_EQ(preferred_api_and_format.first, kStateless);
+     VLOGF(1) << "Using a stateless API for profile: "
+              << GetProfileName(profile_)
+              << " and fourcc: " << FourccToString(input_format_fourcc);
+     backend_ = std::make_unique<V4L2StatelessVideoDecoderBackend>(
+         this, device_, profile_, decoder_task_runner_);
++#else
++    VLOGF(1) << "No backend capable of taking this profile.";
++    return StatusCode::kV4l2FailedResourceAllocation;
++#endif
+   }
+ 
+   if (!backend_->Initialize()) {
+diff --git a/src/media/media_options.gni b/src/media/media_options.gni
+index 303b2e323d5a..33075d28599f 100644
 --- a/src/media/media_options.gni
 +++ b/src/media/media_options.gni
-@@ -206,7 +206,7 @@ if (is_chromecast) {
-     "video_decoder",
+@@ -178,7 +178,7 @@ if (is_chromecast) {
    ]
    _default_mojo_media_host = "gpu"
--} else if (is_ash || is_mac || is_win || (is_linux && use_vaapi)) {
-+} else if (is_ash || is_mac || is_win || (is_linux && (use_vaapi || use_v4l2_codec))) {
+ } else if (is_chromeos_ash || is_mac || is_win ||
+-           ((is_linux || is_chromeos_lacros) && use_vaapi)) {
++           ((is_linux || is_chromeos_lacros) && (use_vaapi || use_v4l2_codec))) {
    _default_mojo_media_services = [ "video_decoder" ]
    _default_mojo_media_host = "gpu"
  }
+diff --git a/src/media/renderers/default_decoder_factory.cc b/src/media/renderers/default_decoder_factory.cc
+index 5e242d3623a6..a582d9b51997 100644
 --- a/src/media/renderers/default_decoder_factory.cc
 +++ b/src/media/renderers/default_decoder_factory.cc
-@@ -50,6 +50,10 @@
+@@ -49,6 +49,10 @@
  #include "media/filters/gav1_video_decoder.h"
  #endif
  
@@ -7237,7 +7345,7 @@
  namespace media {
  
  DefaultDecoderFactory::DefaultDecoderFactory(
-@@ -94,6 +98,8 @@ void DefaultDecoderFactory::CreateVideoD
+@@ -141,6 +145,8 @@ void DefaultDecoderFactory::CreateVideoDecoders(
      const gfx::ColorSpace& target_color_space,
      std::vector<std::unique_ptr<VideoDecoder>>* video_decoders) {
    base::AutoLock auto_lock(shutdown_lock_);
@@ -7246,7 +7354,7 @@
    if (is_shutdown_)
      return;
  
-@@ -106,6 +112,8 @@ void DefaultDecoderFactory::CreateVideoD
+@@ -153,6 +159,8 @@ void DefaultDecoderFactory::CreateVideoDecoders(
    // accelerated.
    if (external_decoder_factory_ && gpu_factories &&
        gpu_factories->IsGpuVideoAcceleratorEnabled()) {
@@ -7255,7 +7363,7 @@
      // |gpu_factories_| requires that its entry points be called on its
      // |GetTaskRunner()|. Since |pipeline_| will own decoders created from the
      // factories, require that their message loops are identical.
-@@ -114,6 +122,9 @@ void DefaultDecoderFactory::CreateVideoD
+@@ -161,6 +169,9 @@ void DefaultDecoderFactory::CreateVideoDecoders(
      external_decoder_factory_->CreateVideoDecoders(
          task_runner, gpu_factories, media_log,
          std::move(request_overlay_info_cb), target_color_space, video_decoders);
@@ -7265,7 +7373,7 @@
    }
  
  #if defined(OS_FUCHSIA)
-@@ -143,6 +154,11 @@ void DefaultDecoderFactory::CreateVideoD
+@@ -184,6 +195,11 @@ void DefaultDecoderFactory::CreateVideoDecoders(
    }
  #endif
  
@@ -7277,19 +7385,11 @@
  #if BUILDFLAG(ENABLE_LIBVPX)
    video_decoders->push_back(std::make_unique<OffloadingVpxVideoDecoder>());
  #endif
---- a/src/media/renderers/paint_canvas_video_renderer.cc
-+++ b/src/media/renderers/paint_canvas_video_renderer.cc
-@@ -864,6 +864,7 @@ void PaintCanvasVideoRenderer::Paint(
-   // frame has an unexpected format.
-   if (!video_frame.get() || video_frame->natural_size().IsEmpty() ||
-       !(media::IsYuvPlanar(video_frame->format()) ||
-+        video_frame->format() == media::PIXEL_FORMAT_MMAL_BUFFER ||
-         video_frame->format() == media::PIXEL_FORMAT_Y16 ||
-         video_frame->HasTextures())) {
-     cc::PaintFlags black_with_alpha_flags;
+diff --git a/src/media/renderers/video_renderer_impl.cc b/src/media/renderers/video_renderer_impl.cc
+index 83497d5bdd27..75fea76450cf 100644
 --- a/src/media/renderers/video_renderer_impl.cc
 +++ b/src/media/renderers/video_renderer_impl.cc
-@@ -285,6 +285,12 @@ base::TimeDelta VideoRendererImpl::GetPr
+@@ -289,6 +289,12 @@ base::TimeDelta VideoRendererImpl::GetPreferredRenderInterval() {
    return algorithm_->average_frame_duration();
  }
  
@@ -7302,19 +7402,23 @@
  void VideoRendererImpl::OnVideoDecoderStreamInitialized(bool success) {
    DCHECK(task_runner_->BelongsToCurrentThread());
    base::AutoLock auto_lock(lock_);
+diff --git a/src/media/renderers/video_renderer_impl.h b/src/media/renderers/video_renderer_impl.h
+index 00c4d08743f7..a86b5276d079 100644
 --- a/src/media/renderers/video_renderer_impl.h
 +++ b/src/media/renderers/video_renderer_impl.h
 @@ -91,6 +91,7 @@ class MEDIA_EXPORT VideoRendererImpl
-                                    bool background_rendering) override;
+                                    RenderingMode rendering_mode) override;
    void OnFrameDropped() override;
    base::TimeDelta GetPreferredRenderInterval() override;
 +  void TryResizeFrame(uint32_t width, uint32_t height) override;
  
   private:
    // Callback for |video_decoder_stream_| initialization.
+diff --git a/src/media/renderers/video_resource_updater.cc b/src/media/renderers/video_resource_updater.cc
+index f8af767fb275..e72e321bcce9 100644
 --- a/src/media/renderers/video_resource_updater.cc
 +++ b/src/media/renderers/video_resource_updater.cc
-@@ -40,9 +40,11 @@
+@@ -41,9 +41,11 @@
  #include "gpu/command_buffer/client/shared_image_interface.h"
  #include "gpu/command_buffer/common/shared_image_trace_utils.h"
  #include "gpu/command_buffer/common/shared_image_usage.h"
@@ -7326,7 +7430,7 @@
  #include "third_party/khronos/GLES2/gl2.h"
  #include "third_party/khronos/GLES2/gl2ext.h"
  #include "third_party/khronos/GLES3/gl3.h"
-@@ -100,6 +102,12 @@ VideoFrameResourceType ExternalResourceT
+@@ -101,6 +103,12 @@ VideoFrameResourceType ExternalResourceTypeForHardwarePlanes(
                                : gfx::BufferFormat::RGBA_1010102;
        return VideoFrameResourceType::RGB;
      case PIXEL_FORMAT_I420:
@@ -7339,7 +7443,7 @@
        DCHECK_EQ(num_textures, 3);
        buffer_formats[0] = gfx::BufferFormat::R_8;
        buffer_formats[1] = gfx::BufferFormat::R_8;
-@@ -137,6 +145,9 @@ VideoFrameResourceType ExternalResourceT
+@@ -143,6 +151,9 @@ VideoFrameResourceType ExternalResourceTypeForHardwarePlanes(
        NOTREACHED();
        FALLTHROUGH;
      case PIXEL_FORMAT_YV12:
@@ -7349,7 +7453,7 @@
      case PIXEL_FORMAT_I422:
      case PIXEL_FORMAT_I444:
      case PIXEL_FORMAT_I420A:
-@@ -258,6 +269,7 @@ class VideoResourceUpdater::PlaneResourc
+@@ -264,6 +275,7 @@ class VideoResourceUpdater::PlaneResource {
  
    // Casts |this| to SoftwarePlaneResource for software compositing.
    SoftwarePlaneResource* AsSoftware();
@@ -7357,7 +7461,7 @@
  
    // Casts |this| to HardwarePlaneResource for GPU compositing.
    HardwarePlaneResource* AsHardware();
-@@ -272,12 +284,17 @@ class VideoResourceUpdater::PlaneResourc
+@@ -278,12 +290,17 @@ class VideoResourceUpdater::PlaneResource {
    // Sets the unique identifiers for this resource, may only be called when
    // there is a single reference to the resource (i.e. |ref_count_| == 1).
    void SetUniqueId(int unique_frame_id, size_t plane_index) {
@@ -7376,7 +7480,7 @@
    // Accessors for resource identifiers provided at construction time.
    uint32_t plane_resource_id() const { return plane_resource_id_; }
    const gfx::Size& resource_size() const { return resource_size_; }
-@@ -288,6 +305,8 @@ class VideoResourceUpdater::PlaneResourc
+@@ -294,6 +311,8 @@ class VideoResourceUpdater::PlaneResource {
    void remove_ref() { --ref_count_; }
    void clear_refs() { ref_count_ = 0; }
    bool has_refs() const { return ref_count_ != 0; }
@@ -7385,7 +7489,7 @@
  
   private:
    const uint32_t plane_resource_id_;
-@@ -311,16 +330,43 @@ class VideoResourceUpdater::PlaneResourc
+@@ -317,16 +336,43 @@ class VideoResourceUpdater::PlaneResource {
  
  class VideoResourceUpdater::SoftwarePlaneResource
      : public VideoResourceUpdater::PlaneResource {
@@ -7435,7 +7539,7 @@
      DCHECK(shared_bitmap_reporter_);
  
      // Allocate SharedMemory and notify display compositor of the allocation.
-@@ -331,28 +377,91 @@ class VideoResourceUpdater::SoftwarePlan
+@@ -337,28 +383,91 @@ class VideoResourceUpdater::SoftwarePlaneResource
      shared_bitmap_reporter_->DidAllocateSharedBitmap(std::move(shm.region),
                                                       shared_bitmap_id_);
    }
@@ -7464,8 +7568,8 @@
  
 -  DISALLOW_COPY_AND_ASSIGN(SoftwarePlaneResource);
 +  DISALLOW_COPY_AND_ASSIGN(SoftwarePlaneBitmapResource);
- };
- 
++};
++
 +class VideoResourceUpdater::SoftwarePlaneVideoFrameResource
 +    : public VideoResourceUpdater::SoftwarePlaneResource {
 +
@@ -7527,13 +7631,13 @@
 +  uint32_t stride() const override { return video_frame_->stride(0); }
 +
 +  DISALLOW_COPY_AND_ASSIGN(SoftwarePlaneVideoFrameResource);
-+};
-+
+ };
+ 
 +
  class VideoResourceUpdater::HardwarePlaneResource
      : public VideoResourceUpdater::PlaneResource {
   public:
-@@ -424,7 +533,7 @@ class VideoResourceUpdater::HardwarePlan
+@@ -430,7 +539,7 @@ class VideoResourceUpdater::HardwarePlaneResource
    const gpu::Mailbox& mailbox() const { return mailbox_; }
  
    GLenum texture_target() const { return texture_target_; }
@@ -7542,7 +7646,7 @@
  
   private:
    gpu::SharedImageInterface* SharedImageInterface() {
-@@ -766,7 +875,7 @@ VideoResourceUpdater::PlaneResource* Vid
+@@ -772,7 +881,7 @@ VideoResourceUpdater::PlaneResource* VideoResourceUpdater::AllocateResource(
    if (software_compositor()) {
      DCHECK_EQ(format, viz::ResourceFormat::RGBA_8888);
  
@@ -7551,7 +7655,7 @@
          plane_resource_id, plane_size, shared_bitmap_reporter_));
    } else {
      all_resources_.push_back(std::make_unique<HardwarePlaneResource>(
-@@ -936,6 +1045,12 @@ VideoFrameExternalResources VideoResourc
+@@ -943,6 +1052,12 @@ VideoFrameExternalResources VideoResourceUpdater::CreateForHardwarePlanes(
    return external_resources;
  }
  
@@ -7564,15 +7668,7 @@
  VideoFrameExternalResources VideoResourceUpdater::CreateForSoftwarePlanes(
      scoped_refptr<VideoFrame> video_frame) {
    TRACE_EVENT0("cc", "VideoResourceUpdater::CreateForSoftwarePlanes");
-@@ -945,6 +1060,7 @@ VideoFrameExternalResources VideoResourc
- 
-   // Only YUV and Y16 software video frames are supported.
-   DCHECK(IsYuvPlanar(input_frame_format) ||
-+         input_frame_format == PIXEL_FORMAT_MMAL_BUFFER ||
-          input_frame_format == PIXEL_FORMAT_Y16);
- 
-   viz::ResourceFormat output_resource_format;
-@@ -1008,6 +1124,7 @@ VideoFrameExternalResources VideoResourc
+@@ -1028,6 +1143,7 @@ VideoFrameExternalResources VideoResourceUpdater::CreateForSoftwarePlanes(
            return false;
  
          return resource->resource_format() != output_resource_format ||
@@ -7580,7 +7676,7 @@
                 !base::Contains(outplane_plane_sizes, resource->resource_size());
        };
    base::EraseIf(all_resources_, can_delete_resource_fn);
-@@ -1015,11 +1132,37 @@ VideoFrameExternalResources VideoResourc
+@@ -1035,11 +1151,37 @@ VideoFrameExternalResources VideoResourceUpdater::CreateForSoftwarePlanes(
    // Recycle or allocate resources for each video plane.
    std::vector<PlaneResource*> plane_resources;
    plane_resources.reserve(output_plane_count);
@@ -7623,12 +7719,12 @@
    }
  
    VideoFrameExternalResources external_resources;
-@@ -1061,19 +1204,30 @@ VideoFrameExternalResources VideoResourc
+@@ -1082,19 +1224,30 @@ VideoFrameExternalResources VideoResourceUpdater::CreateForSoftwarePlanes(
                                 media::kNoTransformation, nullptr);
        } else {
          HardwarePlaneResource* hardware_resource = plane_resource->AsHardware();
 -        size_t bytes_per_row = viz::ResourceSizes::CheckedWidthInBytes<size_t>(
--            video_frame->coded_size().width(), viz::ResourceFormat::RGBA_8888);
+-            video_frame->coded_size().width(), output_resource_format);
 -        size_t needed_size = bytes_per_row * video_frame->coded_size().height();
 -        if (upload_pixels_size_ < needed_size) {
 -          // Free the existing data first so that the memory can be reused,
@@ -7636,16 +7732,13 @@
 -          upload_pixels_.reset();
 -          upload_pixels_.reset(new uint8_t[needed_size]);
 -          upload_pixels_size_ = needed_size;
--        }
 +        uint8_t * pixel_data;
- 
--        PaintCanvasVideoRenderer::ConvertVideoFrameToRGBPixels(
--            video_frame.get(), upload_pixels_.get(), bytes_per_row);
++
 +        // No point in converting if already ARGB or XRGB
 +        if (video_frame->format() != PIXEL_FORMAT_ARGB &&
 +            video_frame->format() != PIXEL_FORMAT_XRGB) {
 +          size_t bytes_per_row = viz::ResourceSizes::CheckedWidthInBytes<size_t>(
-+              video_frame->coded_size().width(), viz::ResourceFormat::RGBA_8888);
++              video_frame->coded_size().width(), output_resource_format);
 +          size_t needed_size = bytes_per_row * video_frame->coded_size().height();
 +          if (upload_pixels_size_ < needed_size) {
 +            // Free the existing data first so that the memory can be reused,
@@ -7662,20 +7755,23 @@
 +        else
 +        {
 +          pixel_data = video_frame->data(0);
-+        }
+         }
+-
+-        PaintCanvasVideoRenderer::ConvertVideoFrameToRGBPixels(
+-            video_frame.get(), upload_pixels_.get(), bytes_per_row);
  
          // Copy pixels into texture.
          auto* gl = ContextGL();
-@@ -1085,7 +1239,7 @@ VideoFrameExternalResources VideoResourc
+@@ -1106,7 +1259,7 @@ VideoFrameExternalResources VideoResourceUpdater::CreateForSoftwarePlanes(
            gl->TexSubImage2D(
                hardware_resource->texture_target(), 0, 0, 0, plane_size.width(),
-               plane_size.height(), GLDataFormat(viz::ResourceFormat::RGBA_8888),
--              GLDataType(viz::ResourceFormat::RGBA_8888), upload_pixels_.get());
-+              GLDataType(viz::ResourceFormat::RGBA_8888), pixel_data);
+               plane_size.height(), GLDataFormat(output_resource_format),
+-              GLDataType(output_resource_format), upload_pixels_.get());
++              GLDataType(output_resource_format), pixel_data);
          }
        }
        plane_resource->SetUniqueId(video_frame->unique_id(), 0);
-@@ -1099,6 +1253,8 @@ VideoFrameExternalResources VideoResourc
+@@ -1120,6 +1273,8 @@ VideoFrameExternalResources VideoResourceUpdater::CreateForSoftwarePlanes(
            software_resource->shared_bitmap_id(),
            software_resource->resource_size(),
            plane_resource->resource_format());
@@ -7684,7 +7780,7 @@
      } else {
        HardwarePlaneResource* hardware_resource = plane_resource->AsHardware();
        external_resources.type = VideoFrameResourceType::RGBA;
-@@ -1321,6 +1477,11 @@ void VideoResourceUpdater::DestroyMailbo
+@@ -1342,6 +1497,11 @@ void VideoResourceUpdater::DestroyMailbox(gpu::Mailbox mailbox,
    video_frame->UpdateReleaseSyncToken(&client);
  }
  
@@ -7696,9 +7792,11 @@
  void VideoResourceUpdater::RecycleResource(uint32_t plane_resource_id,
                                             const gpu::SyncToken& sync_token,
                                             bool lost_resource) {
+diff --git a/src/media/renderers/video_resource_updater.h b/src/media/renderers/video_resource_updater.h
+index d2ad861f59a8..6fe979399c74 100644
 --- a/src/media/renderers/video_resource_updater.h
 +++ b/src/media/renderers/video_resource_updater.h
-@@ -140,6 +140,8 @@ class MEDIA_EXPORT VideoResourceUpdater
+@@ -138,6 +138,8 @@ class MEDIA_EXPORT VideoResourceUpdater
    class PlaneResource;
    class HardwarePlaneResource;
    class SoftwarePlaneResource;
@@ -7707,7 +7805,7 @@
  
    // A resource that will be embedded in a DrawQuad in the next CompositorFrame.
    // Each video plane will correspond to one FrameResource.
-@@ -203,6 +205,8 @@ class MEDIA_EXPORT VideoResourceUpdater
+@@ -204,6 +206,8 @@ class MEDIA_EXPORT VideoResourceUpdater
                        const gpu::SyncToken& sync_token,
                        bool lost_resource);
  
@@ -7716,9 +7814,11 @@
    // base::trace_event::MemoryDumpProvider implementation.
    bool OnMemoryDump(const base::trace_event::MemoryDumpArgs& args,
                      base::trace_event::ProcessMemoryDump* pmd) override;
+diff --git a/src/media/video/gpu_memory_buffer_video_frame_pool.cc b/src/media/video/gpu_memory_buffer_video_frame_pool.cc
+index a5327db33cee..8cf23dbb4d26 100644
 --- a/src/media/video/gpu_memory_buffer_video_frame_pool.cc
 +++ b/src/media/video/gpu_memory_buffer_video_frame_pool.cc
-@@ -638,6 +638,11 @@ void GpuMemoryBufferVideoFramePool::Pool
+@@ -653,6 +653,11 @@ void GpuMemoryBufferVideoFramePool::PoolImpl::CreateHardwareFrame(
  #endif
  
    bool passthrough = false;
@@ -7730,9 +7830,12 @@
  #if defined(OS_MAC)
    if (!IOSurfaceCanSetColorSpace(video_frame->ColorSpace()))
      passthrough = true;
+diff --git a/src/pi-util/BUILD.txt b/src/pi-util/BUILD.txt
+new file mode 100644
+index 000000000000..798b99746406
 --- /dev/null
 +++ b/src/pi-util/BUILD.txt
-@@ -0,0 +1,251 @@
+@@ -0,0 +1,250 @@
 +Build notes (cross compile from Ubuntu)
 +=======================================
 +
@@ -7821,11 +7924,11 @@
 +
 +# Remember where we are
 +cat pi-util/pipaths.py
-+OLDTAG=88...
++OLDTAG=91...
 +
 +# Look for where we are going
-+git tag -l "89.*"
-+TAG=89...
++git tag -l "92.*"
++TAG=92...
 +
 +# * Make sure there are no updates required and no untracked files
 +pi-util/gitscan.py status
@@ -7835,19 +7938,18 @@
 +
 +# Tag source & make a patch file - patch file is useful when files are moved
 +# as then git goes all unhelpful
-+pi-util/settag.py -p rpi_1.34
-+# As git stash will reset the brnch switch to a temp branch 1st
-+pi-util/gitscan.py checkout -b stash/88/base
++pi-util/settag.py -p rpi_1.39
++# As git stash will reset the branch switch to a temp branch 1st
++pi-util/gitscan.py checkout -b stash/91/base
 +pi-util/gitscan.py --gitscan-no-src reset {BASE}
 +pi-util/gitscan.py --gitscan-no-src stash -u
 +pi-util/gitscan.py --gitscan-no-src checkout {BASE}
 +
 +# Need to do src separately as the stash will lose pi-utils
-+cat pi-util/pipaths.py
 +git reset $OLDTAG
 +git stash -u
 +
-+git checkout $TAG -b test/89/rpi_1
++git checkout $TAG -b test/92/rpi_1
 +
 +# Clean out old objects
 +rm -rf obj
@@ -7869,7 +7971,7 @@
 +sed "s/src_commit=.*/src_commit=\"$TAG\"/" pi-util/pipaths.py | tee t
 +mv t pi-util/pipaths.py && git add pi-util/pipaths.py
 +chmod 0755 pi-util/*.py pi-util/*.sh
-+pi-util/gitscan.py --gitscan-no-src checkout -b test/89/rpi_1
++pi-util/gitscan.py --gitscan-no-src checkout -b test/92/rpi_1
 +
 +# If running with filemode false then readd pi-util with filemode true
 +git config core.filemode true
@@ -7880,7 +7982,7 @@
 +### Fix conflicts (there will be some)
 +
 +# If building a separated ffmpeg .so (we are not not currrently) then
-+# fix chrome major version for ffmpeg .so in pi-util/cplibs.sh and third_party//ffmpeg/BUILD.gn
++# fix chrome major version for ffmpeg .so in pi-util/cplibs.sh and third_party/ffmpeg/BUILD.gn
 +
 +git commit
 +### run through all other dirs we care about doing the same
@@ -7913,7 +8015,7 @@
 +# Get the rest of the tree
 +gclient sync --with_branch_heads
 +# Checkout our tree and merge the new base into it
-+pi-util/gitscan.py --gitscan-no-src checkout test/88/rpi_1
++pi-util/gitscan.py --gitscan-no-src checkout test/92/rpi_1
 +pi-util/gitscan.py --gitscan-no-src merge --no-edit {BASE}
 +
 +and we should be good to go.  At this point you can either clean build or
@@ -7984,6 +8086,9 @@
 +third_party/libyuv/BUILD.gn:       yes
 +third_party/libyuv/libyuv.gni:     yes
 +third_party/pdfium/skia/BUILD.gn:  unused
+diff --git a/src/pi-util/README.txt b/src/pi-util/README.txt
+new file mode 100644
+index 000000000000..b5523d3301e2
 --- /dev/null
 +++ b/src/pi-util/README.txt
 @@ -0,0 +1,118 @@
@@ -8105,6 +8210,46 @@
 +--mmal-frame-buffers=<n> Set the number of gpu "frame" buffers.
 +Change with care.
 +
+diff --git a/src/pi-util/cpbuild.sh b/src/pi-util/cpbuild.sh
+new file mode 100755
+index 000000000000..f34d8a7a1c5c
+--- /dev/null
++++ b/src/pi-util/cpbuild.sh
+@@ -0,0 +1,31 @@
++set -e
++if [ "$2" == "" ]; then
++  echo "mkzip <zipname> <out/dir>"
++  exit 1
++fi
++
++BASEDIR=`pwd`
++TMPBASE=$BASEDIR/out/tmp
++TMPDIRNAME=$1
++ZIPFILE=$1.zip
++OUTDIR=$BASEDIR/$2
++
++cd $OUTDIR
++D=$TMPBASE/$TMPDIRNAME
++rm -rf $D
++mkdir -p $D
++
++echo "=== Copying"
++cp -r * $D
++cd $D
++
++echo "=== Clean unwanted"
++find . -name obj -exec rm -rf {} +
++rm -rf gen clang_*
++rm -rf *.TOC *_deps *.zip core-* bin test_* toolchain.ninja third_party tools
++cd $TMPBASE
++
++echo "=== Zipping"
++zip -r -q $ZIPFILE $TMPDIRNAME
++
++echo "=== Done: $TMPBASE/$ZIPFILE"
+diff --git a/src/pi-util/cplibs.sh b/src/pi-util/cplibs.sh
+new file mode 100755
+index 000000000000..8cecc5c36bbf
 --- /dev/null
 +++ b/src/pi-util/cplibs.sh
 @@ -0,0 +1,19 @@
@@ -8127,9 +8272,12 @@
 +sudo cp /tmp/$FFNAME $LIBROOT
 +
 +
+diff --git a/src/pi-util/defargs_arm64-bullseye.gn b/src/pi-util/defargs_arm64-bullseye.gn
+new file mode 100644
+index 000000000000..e0388a9075a2
 --- /dev/null
-+++ b/src/pi-util/defargs_arm64.gn
-@@ -0,0 +1,18 @@
++++ b/src/pi-util/defargs_arm64-bullseye.gn
+@@ -0,0 +1,19 @@
 +# Build arguments go here. Examples:
 +#   is_component_build = true
 +#   is_debug = false
@@ -8148,6 +8296,37 @@
 +
 +ffmpeg_branding = "Chrome"
 +proprietary_codecs = true
++
+diff --git a/src/pi-util/defargs_arm64.gn b/src/pi-util/defargs_arm64.gn
+new file mode 100644
+index 000000000000..13ea78c70c13
+--- /dev/null
++++ b/src/pi-util/defargs_arm64.gn
+@@ -0,0 +1,21 @@
++# Build arguments go here. Examples:
++#   is_component_build = true
++#   is_debug = false
++# See "gn args <out_dir> --list" for available build arguments.
++target_cpu = "arm64"
++target_os = "linux"
++
++# We don't actually need this - v4l2 will do better (auto-set by gngen)
++media_use_mmal = false
++
++# Enables screen sharing in hangouts
++enable_hangout_services_extension = true
++
++# We have issues with the lib for this & it is probably for unittest only
++use_gnome_keyring = false
++
++ffmpeg_branding = "Chrome"
++proprietary_codecs = true
++
++rtc_pipewire_version = "0.2"
++
+diff --git a/src/pi-util/defargs_armv6.gn b/src/pi-util/defargs_armv6.gn
+new file mode 100644
+index 000000000000..0d4ff490af07
 --- /dev/null
 +++ b/src/pi-util/defargs_armv6.gn
 @@ -0,0 +1,35 @@
@@ -8186,8 +8365,11 @@
 +# This crashes the compiler!
 +rtc_use_h264 = false
 +
+diff --git a/src/pi-util/defargs_armv7-bullseye.gn b/src/pi-util/defargs_armv7-bullseye.gn
+new file mode 100644
+index 000000000000..4fec2d799aeb
 --- /dev/null
-+++ b/src/pi-util/defargs_armv7.gn
++++ b/src/pi-util/defargs_armv7-bullseye.gn
 @@ -0,0 +1,29 @@
 +# Build arguments go here. Examples:
 +#   is_component_build = true
@@ -8218,6 +8400,45 @@
 +#use_allocator = "none"
 +ffmpeg_branding = "Chrome"
 +proprietary_codecs = true
+diff --git a/src/pi-util/defargs_armv7.gn b/src/pi-util/defargs_armv7.gn
+new file mode 100644
+index 000000000000..01a4a1bac854
+--- /dev/null
++++ b/src/pi-util/defargs_armv7.gn
+@@ -0,0 +1,30 @@
++# Build arguments go here. Examples:
++#   is_component_build = true
++#   is_debug = false
++# See "gn args <out_dir> --list" for available build arguments.
++target_cpu = "arm"
++target_os = "linux"
++
++arm_float_abi = "hard"
++arm_use_neon = true
++# We have lib issues if we enable thumb
++arm_use_thumb = false
++arm_optionally_use_neon = false
++arm_version = 7
++arm_arch = "armv7-a"
++
++media_use_mmal = true
++enable_widevine = true
++
++# Enables screen sharing in hangouts
++enable_hangout_services_extension = true
++
++# We have issues with the lib for this & it is probably for unittest only
++use_gnome_keyring = false
++rtc_pipewire_version = "0.2"
++
++#is_component_ffmpeg = true
++# tcmalloc doesn't like armv6 by default
++#use_allocator = "none"
++ffmpeg_branding = "Chrome"
++proprietary_codecs = true
+diff --git a/src/pi-util/dodiff.py b/src/pi-util/dodiff.py
+new file mode 100755
+index 000000000000..fb86685eb54f
 --- /dev/null
 +++ b/src/pi-util/dodiff.py
 @@ -0,0 +1,35 @@
@@ -8256,6 +8477,9 @@
 +if __name__ == '__main__':
 +    doscan()
 +
+diff --git a/src/pi-util/gitscan.py b/src/pi-util/gitscan.py
+new file mode 100755
+index 000000000000..0da3aaa25d12
 --- /dev/null
 +++ b/src/pi-util/gitscan.py
 @@ -0,0 +1,69 @@
@@ -8328,9 +8552,12 @@
 +    gitscan(sys.argv[1:], nosrc)
 +
 +
+diff --git a/src/pi-util/gngen.py b/src/pi-util/gngen.py
+new file mode 100755
+index 000000000000..9c14d145beef
 --- /dev/null
 +++ b/src/pi-util/gngen.py
-@@ -0,0 +1,73 @@
+@@ -0,0 +1,82 @@
 +#!/usr/bin/env python
 +
 +import os, ast, fileinput, subprocess, sys
@@ -8375,6 +8602,7 @@
 +        dargs.write('ozone_platform_x11 = true\n')
 +        dargs.write('use_v4l2_codec = true\n')
 +        dargs.write('use_v4l2_codec_rpi = true\n')
++
 +    dargs.write('target_sysroot = "' + vars["target_sysroot"] + '"\n')
 +    dargs.write('google_api_key = "' + vars["google_api_key"] + '"\n')
 +    dargs.write('google_default_client_id = "' + vars["google_default_client_id"] + '"\n')
@@ -8396,14 +8624,25 @@
 +    gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_buster_arm-sysroot")
 +
 +    docopy("armv6", gyp_vars, is_ozone=True)
-+#    docopy("armv7", gyp_vars)
-+#    docopy("armv7", gyp_vars, is_debug=True)
++    docopy("armv7", gyp_vars)
++    docopy("armv7", gyp_vars, is_debug=True)
 +    docopy("armv7", gyp_vars, is_ozone=True)
 +
 +    gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_buster_arm64-sysroot")
 +
 +    docopy("arm64", gyp_vars, is_ozone=True)
 +
++    gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm-sysroot")
++
++    docopy("armv7-bullseye", gyp_vars, is_ozone=True)
++
++    gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm64-sysroot")
++
++    docopy("arm64-bullseye", gyp_vars, is_ozone=True)
++
+diff --git a/src/pi-util/makeall.sh b/src/pi-util/makeall.sh
+new file mode 100755
+index 000000000000..5fed29d0d1aa
 --- /dev/null
 +++ b/src/pi-util/makeall.sh
 @@ -0,0 +1,47 @@
@@ -8454,31 +8693,45 @@
 +
 +
 +
+diff --git a/src/pi-util/mksyspatch.sh b/src/pi-util/mksyspatch.sh
+new file mode 100755
+index 000000000000..c848b5e00175
 --- /dev/null
 +++ b/src/pi-util/mksyspatch.sh
-@@ -0,0 +1,16 @@
+@@ -0,0 +1,21 @@
 +#!/bin/bash -e
 +
 +SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
 +TPATCH=/tmp/sysroot.patch
-+PATCHFILE=$SRC_DIR/pi-util/sysroot.patch
++PATCHFILE_PIOS=$SRC_DIR/pi-util/sysroot-pios.patch
++PATCHFILE_BUSTER=$SRC_DIR/pi-util/sysroot-buster.patch
++PATCHFILE_BULLSEYE=$SRC_DIR/pi-util/sysroot-bullseye.patch
 +echo "Making: $PATCHFILE"
 +
 +cd $SRC_DIR
-+diff -u build/linux/sysroot_scripts/sysroot-{creator,creator-pios}.sh > $TPATCH || true
-+diff -u build/linux/sysroot_scripts/sysroot-creator-{sid,pios-buster}.sh >> $TPATCH || true
++diff -u build/linux/sysroot_scripts/sysroot-{creator,creator-pios}.sh > ${TPATCH} || true
 +diff -u build/linux/sysroot_scripts/generate_{debian_archive_unstable,pios}_gpg.sh >> $TPATCH || true
-+awk -f pi-util/patch2nd.awk $TPATCH > $PATCHFILE
++awk -f pi-util/patch2nd.awk $TPATCH > $PATCHFILE_PIOS
++diff -u build/linux/sysroot_scripts/sysroot-creator-{sid,pios-buster}.sh > $TPATCH || true
++awk -f pi-util/patch2nd.awk $TPATCH > $PATCHFILE_BUSTER
++diff -u build/linux/sysroot_scripts/sysroot-creator-{sid,pios-bullseye}.sh > $TPATCH || true
++awk -f pi-util/patch2nd.awk $TPATCH > $PATCHFILE_BULLSEYE
 +
 +echo "Done"
 +
 +
+diff --git a/src/pi-util/patch2nd.awk b/src/pi-util/patch2nd.awk
+new file mode 100644
+index 000000000000..74014a2d074d
 --- /dev/null
 +++ b/src/pi-util/patch2nd.awk
 @@ -0,0 +1,3 @@
 +/^\-\-\-/  { next }
 +/^\+\+\+/ { $1="---"; print; $1="+++"; }
 +{ print }
+diff --git a/src/pi-util/pi-install-dev.sh b/src/pi-util/pi-install-dev.sh
+new file mode 100755
+index 000000000000..4eefca4c04c3
 --- /dev/null
 +++ b/src/pi-util/pi-install-dev.sh
 @@ -0,0 +1,53 @@
@@ -8535,6 +8788,9 @@
 +# bits of the root and fix up the paths.
 +# e.g. ON COMPILE M/C in src dir:
 +# pi-util/syncroot.sh my-pi: raspian_jessie_pi1
+diff --git a/src/pi-util/pipaths.py b/src/pi-util/pipaths.py
+new file mode 100755
+index 000000000000..354cabf01b7a
 --- /dev/null
 +++ b/src/pi-util/pipaths.py
 @@ -0,0 +1,10 @@
@@ -8542,12 +8798,15 @@
 +    "src",
 +    "src/native_client",
 +    "src/third_party/ffmpeg",
-+    "src/third_party/libjpeg_turbo",
 +    "src/third_party/libyuv",
-+    "src/third_party/skia"]
++    "src/third_party/skia",
++    "src/third_party/webrtc"]
 +
 +# Our base tag or commit no
-+src_commit="88.0.4324.187"
++src_commit="92.0.4515.98"
+diff --git a/src/pi-util/pipewire_utils_h.patch b/src/pi-util/pipewire_utils_h.patch
+new file mode 100644
+index 000000000000..433aa8c7fe4c
 --- /dev/null
 +++ b/src/pi-util/pipewire_utils_h.patch
 @@ -0,0 +1,11 @@
@@ -8562,6 +8821,9 @@
 + 
 + 	if (pod == NULL)
 + 		return NULL;
+diff --git a/src/pi-util/rebase_liblinks.py b/src/pi-util/rebase_liblinks.py
+new file mode 100755
+index 000000000000..6a9a33fce217
 --- /dev/null
 +++ b/src/pi-util/rebase_liblinks.py
 @@ -0,0 +1,37 @@
@@ -8602,9 +8864,12 @@
 +
 +
 +
+diff --git a/src/pi-util/rootgen.sh b/src/pi-util/rootgen.sh
+new file mode 100755
+index 000000000000..9ec231381bb6
 --- /dev/null
 +++ b/src/pi-util/rootgen.sh
-@@ -0,0 +1,34 @@
+@@ -0,0 +1,48 @@
 +#!/bin/bash -e
 +
 +SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
@@ -8624,11 +8889,15 @@
 +  cd $SRC_DIR
 +  cp -v build/linux/sysroot_scripts/sysroot-{creator,creator-pios}.sh
 +  cp -v build/linux/sysroot_scripts/sysroot-creator-{sid,pios-buster}.sh
++  cp -v build/linux/sysroot_scripts/sysroot-creator-{sid,pios-bullseye}.sh
 +  cp -v build/linux/sysroot_scripts/generate_{debian_archive_unstable,pios}_gpg.sh
-+  patch -p0 < pi-util/sysroot.patch
++  patch -p0 < pi-util/sysroot-pios.patch
++  patch -p0 < pi-util/sysroot-buster.patch
++  patch -p0 < pi-util/sysroot-bullseye.patch
 +fi
 +
 +rm -rf $SRC_DIR/build/linux/sysroot_scripts/pios_archive.gpg $SRC_DIR/build/linux/pios_*-sysroot
++rm -rf $SRC_DIR/out/sysroot-build
 +
 +cd $SRC_DIR/build/linux/sysroot_scripts
 +./generate_pios_gpg.sh
@@ -8639,6 +8908,19 @@
 +bsdtar xf ../../../out/sysroot-build/buster/pios_buster_arm_sysroot.tar.xz
 +cd ../pios_buster_arm64-sysroot
 +bsdtar xf ../../../out/sysroot-build/buster/pios_buster_arm64_sysroot.tar.xz
++
++cd $SRC_DIR/build/linux/sysroot_scripts
++./sysroot-creator-pios-bullseye.sh BuildSysrootARM
++./sysroot-creator-pios-bullseye.sh BuildSysrootARM64
++mkdir -pv ../pios_bullseye_{arm,arm64}-sysroot
++cd ../pios_bullseye_arm-sysroot
++bsdtar xf ../../../out/sysroot-build/bullseye/pios_bullseye_arm_sysroot.tar.xz
++cd ../pios_bullseye_arm64-sysroot
++bsdtar xf ../../../out/sysroot-build/bullseye/pios_bullseye_arm64_sysroot.tar.xz
++
+diff --git a/src/pi-util/settag.py b/src/pi-util/settag.py
+new file mode 100755
+index 000000000000..d908f6328e04
 --- /dev/null
 +++ b/src/pi-util/settag.py
 @@ -0,0 +1,60 @@
@@ -8702,9 +8984,12 @@
 +        with open(patchpath, "wt") as f:
 +            dodiff.doscan(f)
 +
+diff --git a/src/pi-util/syncroot.sh b/src/pi-util/syncroot.sh
+new file mode 100755
+index 000000000000..a5f7c3fc1394
 --- /dev/null
 +++ b/src/pi-util/syncroot.sh
-@@ -0,0 +1,69 @@
+@@ -0,0 +1,70 @@
 +set -e
 +
 +NEEDSVC=1
@@ -8752,89 +9037,203 @@
 +mkdir -p $DST/usr/bin
 +mkdir -p $DST/usr/share
 +
-+rsync -rl $SRC/lib/$API $DST/lib
++rsync -rl $SRC/lib $DST
 +if [ $NEEDSVC ]; then
 +  #### MUST NOT include /opt/vc/include/*GL*
 +  # Creates conflicts with GL includes inside Chrome
 +  rsync -rl $SRC/opt/vc/lib $DST/opt/vc
 +  rsync -rl $SRC/opt/vc/include/interface $DST/opt/vc/include
 +fi
-+rsync -rl $SRC/usr/lib/$API $DST/usr/lib
-+rsync -rl $SRC/usr/lib/gcc $DST/usr/lib
++rsync -rl --exclude cups/backend $SRC/usr/lib $DST/usr
 +rsync -rl $SRC/usr/include $DST/usr
 +rsync -rl $SRC/usr/share/pkgconfig $DST/usr/share
 +rsync -rl $SRC/usr/share/xcb $DST/usr/share
 +rsync -rl $SRC/usr/bin/cups-config $DST/usr/bin
 +
 +# Fix up pipewire issue
-+sed 's/struct spa_pod \*c/void \* c/' < $DST/usr/include/pipewire/utils.h > u.h
-+mv u.h $DST/usr/include/pipewire/utils.h
++if [ -e $DST/usr/include/pipewire/utils.h ]; then
++  sed 's/struct spa_pod \*c/void \* c/' < $DST/usr/include/pipewire/utils.h > u.h
++  mv u.h $DST/usr/include/pipewire/utils.h
++fi
 +
 +cd $DST/usr/lib/pkgconfig
 +ln -sf ../$API/pkgconfig/* .
 +cd ../../../../../..
 +pi-util/rebase_liblinks.py $DST
+diff --git a/src/pi-util/sysroot-bullseye.patch b/src/pi-util/sysroot-bullseye.patch
+new file mode 100644
+index 000000000000..b6b60f998617
 --- /dev/null
-+++ b/src/pi-util/sysroot.patch
-@@ -0,0 +1,291 @@
-+--- build/linux/sysroot_scripts/sysroot-creator-pios.sh 2021-01-14 12:08:08.823706671 +0000
-++++ build/linux/sysroot_scripts/sysroot-creator-pios.sh 2021-01-14 12:08:08.823706671 +0000
-+@@ -58,7 +58,7 @@
-+ # Package Config
-+ ######################################################################
++++ b/src/pi-util/sysroot-bullseye.patch
+@@ -0,0 +1,160 @@
++--- build/linux/sysroot_scripts/sysroot-creator-pios-bullseye.sh 2021-06-21 10:28:27.370910473 +0100
+++++ build/linux/sysroot_scripts/sysroot-creator-pios-bullseye.sh 2021-06-21 10:28:27.370910473 +0100
++@@ -5,8 +5,8 @@
 + 
-+-readonly PACKAGES_EXT=xz
-++readonly PACKAGES_EXT=gz
-+ readonly RELEASE_FILE="Release"
-+ readonly RELEASE_FILE_GPG="Release.gpg"
++ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 + 
-+@@ -230,7 +230,16 @@
-+   local src_file="$1"
-+   local dst_file="$2"
-+   local repo="$3"
-+-  xzcat "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
-++  local cat_tool
-++  if [ "$PACKAGES_EXT" == "xz" ]; then
-++    cat_tool="xzcat"
-++  elif [ "$PACKAGES_EXT" == "gz" ]; then
-++    cat_tool="zcat"
-++  else
-++    echo "ERROR: No tool to 'cat' archive type: $PACKAGES_EXT"
-++    exit 1
-++  fi
-++  "$cat_tool" "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
-+     sed "s|Filename: |Filename: ${repo}|" > "${dst_file}"
-+ }
++-DISTRO=debian
++-DIST=sid
+++DISTRO=pios
+++DIST=bullseye
 + 
-+@@ -397,6 +406,8 @@
-+   # [1] https://github.com/PipeWire/pipewire/commit/371da358d1580dc06218d18a12a99611cac39e4e
-+   local pipewire_utils_h="${INSTALL_ROOT}/usr/include/pipewire/utils.h"
-+   sed -i 's/malloc/(struct spa_pod*)malloc/' "${pipewire_utils_h}"
++ # Keep the "experimental" repo before the "sid" repo.  There are some packages
++ # that are currently only available in experimental like libgtk-4-1, but if it
++@@ -18,22 +18,34 @@
++ # libgnome-keyring-dev which has since been deprecated and removed from sid.
++ # It will be needed until gnome keyring is removed (http://crbug.com/466975 and
++ # http://crbug.com/355223).
++-ARCHIVE_URL="https://snapshot.debian.org/archive/debian"
++-ARCHIVE_TIMESTAMP=20210309T203820Z
++-APT_SOURCES_LIST="${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ stretch main
++-${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ experimental main
++-${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ sid main"
+++ARCHIVE_TIMESTAMP=latest
 ++
-++  rm -rf "${INSTALL_ROOT}/opt/vc/include/"*GL*
-+ }
+++if [ "$1" = "BuildSysrootARM" ]; then
+++    ARCHIVE_URL="http://snapshot.raspbian.org/"
+++    APT_SOURCES_LIST="${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/raspbian/ $DIST main contrib non-free rpi
+++http://archive.raspberrypi.org/debian/ $DIST main"
+++    HAS_ARCH_ARM=1
+++    HAS_ARCH_ARM64=0
+++elif [ "$1" = "BuildSysrootARM64" ]; then
+++    ARCHIVE_URL="http://deb.debian.org/debian/"
+++    APT_SOURCES_LIST="${ARCHIVE_URL} $DIST main contrib non-free
+++http://deb.debian.org/debian $DIST-updates main contrib non-free
+++http://archive.raspberrypi.org/debian/ $DIST main"
+++    HAS_ARCH_ARM=0
+++    HAS_ARCH_ARM64=1
+++else
+++    echo "Please run with either BuildSysrootARM64 or BuildSysrootARM"
+++    exit 1
+++fi
 + 
++ # gpg keyring file generated using generate_debian_archive_unstable.sh
++-KEYRING_FILE="${SCRIPT_DIR}/debian_archive_unstable.gpg"
+++KEYRING_FILE="${SCRIPT_DIR}/pios_archive.gpg"
 + 
-+@@ -877,14 +888,14 @@
-+   shift
-+   shift
-+   for pkg in $@ ; do
-+-    local pkg_full=$(grep -A 1 " ${pkg}\$" "$input_file" | \
-+-      egrep "pool/.*" | sed 's/.*Filename: //')
-++    local pkg_full=$(grep -A 2 " ${pkg}\$" "$input_file" | \
-++      egrep -m1 "pool/.*" | sed 's/.*Filename: //')
-+     if [ -z "${pkg_full}" ]; then
-+         echo "ERROR: missing package: $pkg"
-+         exit 1
-+     fi
-+     local sha256sum=$(grep -A 4 " ${pkg}\$" "$input_file" | \
-+-      grep ^SHA256: | sed 's/^SHA256: //')
-++      grep -m1 ^SHA256: | sed 's/^SHA256: //')
-+     if [ "${#sha256sum}" -ne "64" ]; then
-+       echo "Bad sha256sum from Packages"
-+       exit 1
-+--- build/linux/sysroot_scripts/sysroot-creator-pios-buster.sh 2021-01-14 12:08:08.823706671 +0000
-++++ build/linux/sysroot_scripts/sysroot-creator-pios-buster.sh 2021-01-14 12:08:08.823706671 +0000
++-HAS_ARCH_AMD64=1
++-HAS_ARCH_I386=1
++-HAS_ARCH_ARM=1
++-HAS_ARCH_ARM64=1
++-HAS_ARCH_ARMEL=1
++-HAS_ARCH_MIPS=1
++-HAS_ARCH_MIPS64EL=1
+++HAS_ARCH_AMD64=0
+++HAS_ARCH_I386=0
+++HAS_ARCH_ARMEL=0
+++HAS_ARCH_MIPS=0
+++HAS_ARCH_MIPS64EL=0
++ 
++ # Sysroot packages: these are the packages needed to build chrome.
++ # NOTE: When DEBIAN_PACKAGES is modified, the packagelist files must be updated
++@@ -41,10 +53,6 @@
++ DEBIAN_PACKAGES="\
++   comerr-dev
++   krb5-multidev
++-  libappindicator-dev
++-  libappindicator1
++-  libappindicator3-1
++-  libappindicator3-dev
++   libasound2
++   libasound2-dev
++   libasyncns0
++@@ -113,7 +121,6 @@
++   libexpat1
++   libexpat1-dev
++   libffi-dev
++-  libffi6
++   libffi7
++   libflac-dev
++   libflac8
++@@ -126,7 +133,7 @@
++   libgbm-dev
++   libgbm1
++   libgcc-10-dev
++-  libgcc1
+++  libgcc-s1
++   libgcrypt20
++   libgcrypt20-dev
++   libgdk-pixbuf-2.0-0
++@@ -146,8 +153,6 @@
++   libglx-dev
++   libglx0
++   libgmp10
++-  libgnome-keyring-dev
++-  libgnome-keyring0
++   libgnutls-dane0
++   libgnutls-openssl27
++   libgnutls28-dev
++@@ -177,8 +182,6 @@
++   libidl-2-0
++   libidn11
++   libidn2-0
++-  libindicator3-7
++-  libindicator7
++   libinput-dev
++   libinput10
++   libjbig0
++@@ -240,7 +243,6 @@
++   libpcre2-32-0
++   libpcre2-8-0
++   libpcre2-dev
++-  libpcre2-posix0
++   libpcre2-posix2
++   libpcre3
++   libpcre3-dev
++@@ -384,10 +386,7 @@
++   speech-dispatcher
++   uuid-dev
++   wayland-protocols
++-  x11proto-composite-dev
++-  x11proto-damage-dev
++   x11proto-dev
++-  x11proto-fixes-dev
++   x11proto-input-dev
++   x11proto-kb-dev
++   x11proto-randr-dev
++@@ -426,9 +425,9 @@
++   libdrm-freedreno1
++   libdrm-omap1
++   libdrm-tegra0
++-  libgtk-4-1
++-  libgtk-4-dev
++   libubsan1
+++  libraspberrypi0
+++  libraspberrypi-dev
++ "
++ 
++ DEBIAN_PACKAGES_ARM64="
++@@ -437,13 +436,13 @@
++   libdrm-freedreno1
++   libdrm-tegra0
++   libgmp10
++-  libgtk-4-1
++-  libgtk-4-dev
++   libitm1
++   liblsan0
++   libthai0
++   libtsan0
++   libubsan1
+++  libraspberrypi0
+++  libraspberrypi-dev
++ "
++ 
++ DEBIAN_PACKAGES_ARMEL="
++@@ -460,4 +459,4 @@
++ DEBIAN_PACKAGES_MIPS64EL="
++ "
++ 
++-. "${SCRIPT_DIR}/sysroot-creator.sh"
+++. "${SCRIPT_DIR}/sysroot-creator-pios.sh"
+diff --git a/src/pi-util/sysroot-buster.patch b/src/pi-util/sysroot-buster.patch
+new file mode 100644
+index 000000000000..ef19dae57e66
+--- /dev/null
++++ b/src/pi-util/sysroot-buster.patch
+@@ -0,0 +1,268 @@
++--- build/linux/sysroot_scripts/sysroot-creator-pios-buster.sh 2021-06-18 12:31:18.605837770 +0100
+++++ build/linux/sysroot_scripts/sysroot-creator-pios-buster.sh 2021-06-18 12:31:18.605837770 +0100
 +@@ -5,8 +5,8 @@
 + 
 + SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -8845,13 +9244,13 @@
 ++DIST=buster
 + 
 + # Keep the "experimental" repo before the "sid" repo.  There are some packages
-+ # that are currently only available in experimental like libgtk-4-0, but if it
++ # that are currently only available in experimental like libgtk-4-1, but if it
 +@@ -18,22 +18,35 @@
-+ # bring back libgnome-keyring-dev which has since been deprecated and removed
-+ # from sid.  It will be needed until gnome keyring is removed
-+ # (http://crbug.com/466975 and http://crbug.com/355223).
++ # libgnome-keyring-dev which has since been deprecated and removed from sid.
++ # It will be needed until gnome keyring is removed (http://crbug.com/466975 and
++ # http://crbug.com/355223).
 +-ARCHIVE_URL="https://snapshot.debian.org/archive/debian"
-+-ARCHIVE_TIMESTAMP=20191212T145612Z
++-ARCHIVE_TIMESTAMP=20210309T203820Z
 +-APT_SOURCES_LIST="${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ stretch main
 +-${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ experimental main
 +-${ARCHIVE_URL}/${ARCHIVE_TIMESTAMP}/ sid main"
@@ -8895,15 +9294,18 @@
 + 
 + # Sysroot packages: these are the packages needed to build chrome.
 + # NOTE: When DEBIAN_PACKAGES is modified, the packagelist files must be updated
-+@@ -94,6 +107,7 @@
-+   libdrm-nouveau2
-+   libdrm-radeon1
-+   libdrm2
-++  libegl-dev
-+   libegl1
-+   libegl1-mesa
-+   libegl1-mesa-dev
-+@@ -103,18 +117,17 @@
++@@ -81,9 +94,9 @@
++   libcups2-dev
++   libcupsimage2
++   libcupsimage2-dev
++-  libdatrie-dev
++   libcurl3-gnutls
++   libcurl4-gnutls-dev
+++  libdatrie-dev
++   libdatrie1
++   libdb5.3
++   libdbus-1-3
++@@ -109,28 +122,27 @@
 +   libepoxy0
 +   libevdev-dev
 +   libevdev2
@@ -8916,31 +9318,30 @@
 +-  libffi7
 +   libflac-dev
 +   libflac8
++-  libfontconfig-dev
 +   libfontconfig1
-+   libfontconfig1-dev
-+   libfreetype6
 +-  libfreetype-dev
+++  libfontconfig1-dev
++   libfreetype6
 ++  libfreetype6-dev
 +   libfribidi-dev
 +   libfribidi0
 +   libgbm-dev
-+@@ -125,20 +138,21 @@
++   libgbm1
++-  libgcc-10-dev
++   libgcc1
+++  libgcc-8-dev
++   libgcrypt20
 +   libgcrypt20-dev
-+   libgdk-pixbuf2.0-0
-+   libgdk-pixbuf2.0-dev
-++  libgl-dev
++-  libgdk-pixbuf-2.0-0
++-  libgdk-pixbuf-2.0-dev
+++  libgdk-pixbuf2.0-0
+++  libgdk-pixbuf2.0-dev
++   libgl-dev
 +   libgl1
 +   libgl1-mesa-dev
-+   libgl1-mesa-glx
-+   libglapi-mesa
-++  libgles-dev
-+   libgles1
-+   libgles2
-+   libglib2.0-0
-+   libglib2.0-dev
-+   libglvnd-dev
-+   libglvnd0
-++  libglx-dev
++@@ -146,8 +158,6 @@
++   libglx-dev
 +   libglx0
 +   libgmp10
 +-  libgnome-keyring-dev
@@ -8948,33 +9349,48 @@
 +   libgnutls-dane0
 +   libgnutls-openssl27
 +   libgnutls28-dev
-+@@ -155,15 +169,13 @@
-+   libgssrpc4
-+   libgtk-3-0
-+   libgtk-3-dev
-+-  libgtk-4-0
-+-  libgtk-4-dev
-+   libgtk2.0-0
-+   libgudev-1.0-0
-+   libharfbuzz-dev
++@@ -170,10 +180,11 @@
 +   libharfbuzz-gobject0
 +   libharfbuzz-icu0
 +   libharfbuzz0b
-+-  libhogweed5
++-  libhogweed6
 ++  libhogweed4
 +   libice6
+++  libicu-dev
 +   libicu-le-hb0
-+   libicu63
-+@@ -198,7 +210,7 @@
-+   libmount-dev
-+   libmount1
-+   libmtdev1
-+-  libnettle7
++-  libicu67
+++  libicu63
++   libidl-2-0
++   libidn11
++   libidn2-0
++@@ -186,11 +197,11 @@
++   libjpeg62-turbo-dev
++   libjson-glib-1.0-0
++   libjsoncpp-dev
++-  libjsoncpp24
+++  libjsoncpp1
++   libk5crypto3
++-  libkadm5clnt-mit12
++-  libkadm5srv-mit12
++-  libkdb5-10
+++  libkadm5clnt-mit11
+++  libkadm5srv-mit11
+++  libkdb5-9
++   libkeyutils1
++   libkrb5-3
++   libkrb5-dev
++@@ -210,9 +221,8 @@
++   libncurses-dev
++   libncurses6
++   libncursesw6
++-  libnettle8
 ++  libnettle6
++   libnghttp2-14
++-  libnsl2
 +   libnspr4
 +   libnspr4-dev
 +   libnss-db
-+@@ -230,7 +242,6 @@
++@@ -241,13 +251,12 @@
 +   libpcre2-8-0
 +   libpcre2-dev
 +   libpcre2-posix0
@@ -8982,56 +9398,234 @@
 +   libpcre3
 +   libpcre3-dev
 +   libpcre32-3
-+@@ -286,7 +297,7 @@
++   libpcrecpp0v5
++-  libpipewire-0.3-0
++-  libpipewire-0.3-dev
+++  libpipewire-0.2-1
+++  libpipewire-0.2-dev
++   libpixman-1-0
++   libpixman-1-dev
++   libpng-dev
++@@ -257,7 +266,7 @@
++   libpulse-dev
++   libpulse-mainloop-glib0
++   libpulse0
++-  libre2-9
+++  libre2-5
++   libre2-dev
++   librest-0.7-0
++   librtmp1
++@@ -272,20 +281,21 @@
++   libsndfile1
++   libsoup-gnome2.4-1
++   libsoup2.4-1
++-  libspa-0.2-dev
+++  libspa-lib-0.1-dev
++   libspeechd-dev
++   libspeechd2
++   libsqlite3-0
++   libssh2-1
++   libssl-dev
++   libssl1.1
++-  libstdc++-10-dev
+++  libstdc++-8-dev
++   libstdc++6
++   libsystemd0
++   libtasn1-6
++   libthai-dev
++   libthai0
++   libtiff5
+++  libtinfo-dev
++   libtinfo6
++   libtirpc3
++   libudev-dev
++@@ -302,7 +312,7 @@
 +   libvorbis0a
 +   libvorbisenc2
 +   libvpx-dev
 +-  libvpx6
 ++  libvpx5
++   libvulkan-dev
 +   libvulkan1
 +   libwacom2
-+   libwayland-client0
-+@@ -320,6 +331,10 @@
-+   libxcb-shm0-dev
-+   libxcb-sync1
-+   libxcb-xfixes0
-++  libxcb-image0
-++  libxcb-image0-dev
-++  libxcb-util0
-++  libxcb-util0-dev
-+   libxcb1
-+   libxcb1-dev
-+   libxcomposite-dev
-+@@ -405,6 +420,8 @@
++@@ -408,7 +418,7 @@
++ "
++ 
++ DEBIAN_PACKAGES_X86="
++-  libasan6
+++  libasan5
++   libcilkrts5
++   libdrm-intel1
++   libgtk-4-1
++@@ -420,30 +430,30 @@
++ "
++ 
++ DEBIAN_PACKAGES_ARM="
++-  libasan6
+++  libasan5
++   libdrm-etnaviv1
++   libdrm-exynos1
++   libdrm-freedreno1
 +   libdrm-omap1
 +   libdrm-tegra0
-+   libubsan0
++-  libgtk-4-1
++-  libgtk-4-dev
++   libubsan1
 ++  libraspberrypi0
 ++  libraspberrypi-dev
 + "
 + 
 + DEBIAN_PACKAGES_ARM64="
-+@@ -418,6 +435,8 @@
++-  libasan6
+++  libasan5
++   libdrm-etnaviv1
++   libdrm-freedreno1
++   libdrm-tegra0
++   libgmp10
++-  libgtk-4-1
++-  libgtk-4-dev
++   libitm1
++   liblsan0
 +   libthai0
 +   libtsan0
-+   libubsan0
++   libubsan1
 ++  libraspberrypi0
 ++  libraspberrypi-dev
 + "
 + 
 + DEBIAN_PACKAGES_ARMEL="
-+@@ -433,4 +452,4 @@
++@@ -460,4 +470,4 @@
 + DEBIAN_PACKAGES_MIPS64EL="
 + "
 + 
 +-. "${SCRIPT_DIR}/sysroot-creator.sh"
 ++. "${SCRIPT_DIR}/sysroot-creator-pios.sh"
-+--- build/linux/sysroot_scripts/generate_pios_gpg.sh 2021-01-14 12:08:08.823706671 +0000
-++++ build/linux/sysroot_scripts/generate_pios_gpg.sh 2021-01-14 12:08:08.823706671 +0000
-+@@ -9,27 +9,17 @@
+diff --git a/src/pi-util/sysroot-pios.patch b/src/pi-util/sysroot-pios.patch
+new file mode 100644
+index 000000000000..874e6008d9db
+--- /dev/null
++++ b/src/pi-util/sysroot-pios.patch
+@@ -0,0 +1,156 @@
++--- build/linux/sysroot_scripts/sysroot-creator-pios.sh 2021-06-22 10:42:30.972478650 +0100
+++++ build/linux/sysroot_scripts/sysroot-creator-pios.sh 2021-06-22 10:42:30.972478650 +0100
++@@ -58,7 +58,7 @@
++ # Package Config
++ ######################################################################
++ 
++-readonly PACKAGES_EXT=xz
+++readonly PACKAGES_EXTS="gz xz"
++ readonly RELEASE_FILE="Release"
++ readonly RELEASE_FILE_GPG="Release.gpg"
++ 
++@@ -125,7 +125,7 @@
++     local temp_file="${2}.partial.$$"
++     # curl --retry doesn't retry when the page gives a 4XX error, so we need to
++     # manually rerun.
++-    for i in {1..10}; do
+++    for i in {1..2}; do
++       # --create-dirs is added in case there are slashes in the filename, as can
++       # happen with the "debian/security" release class.
++       local http_code=$(curl -L "$1" --create-dirs -o "${temp_file}" \
++@@ -138,7 +138,7 @@
++       sleep $i
++     done
++     if [ ! -f "${temp_file}" ]; then
++-      exit 1
+++      return 1
++     fi
++     mv "${temp_file}" $2
++   else
++@@ -230,7 +230,16 @@
++   local src_file="$1"
++   local dst_file="$2"
++   local repo="$3"
++-  xzcat "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
+++  local cat_tool
+++  if [ "$PACKAGES_EXT" == "xz" ]; then
+++    cat_tool="xzcat"
+++  elif [ "$PACKAGES_EXT" == "gz" ]; then
+++    cat_tool="zcat"
+++  else
+++    echo "ERROR: No tool to 'cat' archive type: $PACKAGES_EXT"
+++    exit 1
+++  fi
+++  "$cat_tool" "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
++     sed "s|Filename: |Filename: ${repo}|" > "${dst_file}"
++ }
++ 
++@@ -243,13 +252,20 @@
++ 
++   TMP_PACKAGE_LIST="${BUILD_DIR}/Packages.${dist}_${repo_name}_${arch}"
++   local repo_basedir="${repo}/dists/${dist}"
++-  local package_list="${BUILD_DIR}/Packages.${dist}_${repo_name}_${arch}.${PACKAGES_EXT}"
++-  local package_file_arch="${repo_name}/binary-${arch}/Packages.${PACKAGES_EXT}"
++-  local package_list_arch="${repo_basedir}/${package_file_arch}"
++-
++-  DownloadOrCopyNonUniqueFilename "${package_list_arch}" "${package_list}"
++-  VerifyPackageListing "${package_file_arch}" "${package_list}" ${repo} ${dist}
++-  ExtractPackageXz "${package_list}" "${TMP_PACKAGE_LIST}" ${repo}
+++  for PACKAGES_EXT in $PACKAGES_EXTS FAIL; do
+++    local package_list="${BUILD_DIR}/Packages.${dist}_${repo_name}_${arch}.${PACKAGES_EXT}"
+++    local package_file_arch="${repo_name}/binary-${arch}/Packages.${PACKAGES_EXT}"
+++    local package_list_arch="${repo_basedir}/${package_file_arch}"
+++
+++    DownloadOrCopyNonUniqueFilename "${package_list_arch}" "${package_list}" || continue
+++    VerifyPackageListing "${package_file_arch}" "${package_list}" ${repo} ${dist}
+++    ExtractPackageXz "${package_list}" "${TMP_PACKAGE_LIST}" ${repo}
+++    break
+++  done
+++  if [ "$PACKAGES_EXT" == "FAIL" ]; then
+++    echo "ERROR: Command failed: $0 $@"
+++    exit 1
+++  fi
++ }
++ 
++ GeneratePackageListCommon() {
++@@ -399,6 +415,18 @@
++   mkdir -p ${INSTALL_ROOT}/usr/lib/pkgconfig
++   mv ${INSTALL_ROOT}/usr/lib/${arch}-${os}/pkgconfig/* \
++       ${INSTALL_ROOT}/usr/lib/pkgconfig
+++
+++  # Temporary workaround for invalid implicit conversion from void* in pipewire.
+++  # This is already fixed upstream in [1], so this can be removed once it rolls
+++  # into Debian.
+++  # [1] https://github.com/PipeWire/pipewire/commit/371da358d1580dc06218d18a12a99611cac39e4e
+++  # buster uses 0.2 bullseye 0.3 - the offending file doesn't exist in 0.3
+++  local pipewire_utils_h="${INSTALL_ROOT}/usr/include/pipewire/utils.h"
+++  if [ -e ${pipewire_utils_h} ]; then
+++    sed -i 's/malloc/(struct spa_pod*)malloc/' "${pipewire_utils_h}"
+++  fi
+++
+++  rm -rf "${INSTALL_ROOT}/opt/vc/include/"*GL*
++ }
++ 
++ 
++@@ -880,14 +908,14 @@
++   shift
++   shift
++   for pkg in $@ ; do
++-    local pkg_full=$(grep -A 1 " ${pkg}\$" "$input_file" | \
++-      egrep "pool/.*" | sed 's/.*Filename: //')
+++    local pkg_full=$(grep -A 2 " ${pkg}\$" "$input_file" | \
+++      egrep -m1 "pool/.*" | sed 's/.*Filename: //')
++     if [ -z "${pkg_full}" ]; then
++         echo "ERROR: missing package: $pkg"
++         exit 1
++     fi
++     local sha256sum=$(grep -A 4 " ${pkg}\$" "$input_file" | \
++-      grep ^SHA256: | sed 's/^SHA256: //')
+++      grep -m1 ^SHA256: | sed 's/^SHA256: //')
++     if [ "${#sha256sum}" -ne "64" ]; then
++       echo "Bad sha256sum from Packages"
++       exit 1
++--- build/linux/sysroot_scripts/generate_pios_gpg.sh 2021-06-21 11:13:27.598524694 +0100
+++++ build/linux/sysroot_scripts/generate_pios_gpg.sh 2021-06-21 11:13:27.598524694 +0100
++@@ -9,29 +9,17 @@
 + SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 + 
 + KEYS=(
++-    # Debian Stable Release Key (10/buster)
++-    "DCC9EFBF77E11517"
 +-    # Debian Archive Automatic Signing Key (10/buster)
 +-    "DC30D7C23CBBABEE"
 +-    # Debian Security Archive Automatic Signing Key (10/buster)
@@ -9066,14 +9660,17 @@
 + 
 +-gpg --recv-keys ${KEYS[@]}
 +-gpg --output "${SCRIPT_DIR}/debian_archive_unstable.gpg" --export ${KEYS[@]}
-++gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys ${KEYS[@]}
+++gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys ${KEYS[@]}
 ++gpg --output "${SCRIPT_DIR}/pios_archive.gpg" --export ${KEYS[@]}
+diff --git a/src/sandbox/policy/linux/bpf_gpu_policy_linux.cc b/src/sandbox/policy/linux/bpf_gpu_policy_linux.cc
+index b19668b88007..30c11a51c258 100644
 --- a/src/sandbox/policy/linux/bpf_gpu_policy_linux.cc
 +++ b/src/sandbox/policy/linux/bpf_gpu_policy_linux.cc
-@@ -77,6 +77,27 @@ ResultExpr GpuProcessPolicy::EvaluateSys
+@@ -75,6 +75,27 @@ ResultExpr GpuProcessPolicy::EvaluateSyscall(int sysno) const {
+     // (MAP_LOCKED | MAP_EXECUTABLE | MAP_32BIT)
      case __NR_mmap:
        return Allow();
- #endif
++#endif
 +#if defined(USE_X11) || 1
 +    // Wanted for MESA to fire up happily
 +    // *** Should almost certainly arrange for the offending setup
@@ -9094,10 +9691,11 @@
 +    case __NR_open:
 +#endif
 +    case __NR_close:
-+#endif
+ #endif
      // We also hit this on the linux_chromeos bot but don't yet know what
      // weird flags were involved.
-     case __NR_mprotect:
+diff --git a/src/sandbox/policy/linux/bpf_renderer_policy_linux.cc b/src/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+index f789e92c37c1..f0313074c024 100644
 --- a/src/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 +++ b/src/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 @@ -26,6 +26,9 @@ struct local_dma_buf_sync {
@@ -9131,9 +9729,11 @@
  }
  
  }  // namespace
+diff --git a/src/sandbox/policy/linux/sandbox_linux.h b/src/sandbox/policy/linux/sandbox_linux.h
+index 9054eb62d097..a16dbde4e400 100644
 --- a/src/sandbox/policy/linux/sandbox_linux.h
 +++ b/src/sandbox/policy/linux/sandbox_linux.h
-@@ -62,6 +62,8 @@ class SANDBOX_POLICY_EXPORT SandboxLinux
+@@ -62,6 +62,8 @@ class SANDBOX_POLICY_EXPORT SandboxLinux {
      DEPRECATED_METHOD_GET_STYLE_FOR_STRIKE,
      METHOD_MAKE_SHARED_MEMORY_SEGMENT,
      DEPRECATED_METHOD_MATCH_WITH_FALLBACK,
@@ -9142,9 +9742,11 @@
    };
  
    // These form a bitmask which describes the conditions of the Linux sandbox.
+diff --git a/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc b/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc
+index 53cbd1aaeb30..be82df0ebc13 100644
 --- a/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc
 +++ b/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.cc
-@@ -33,6 +33,7 @@ bool StructTraits<viz::mojom::Transferab
+@@ -36,6 +36,7 @@ bool StructTraits<viz::mojom::TransferableResourceDataView,
    out->is_backed_by_surface_texture = data.is_backed_by_surface_texture();
    out->wants_promotion_hint = data.wants_promotion_hint();
  #endif
@@ -9152,9 +9754,11 @@
    return true;
  }
  
+diff --git a/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h b/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h
+index 0fb32425773c..44dcc7b6f06f 100644
 --- a/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h
 +++ b/src/services/viz/public/cpp/compositing/transferable_resource_mojom_traits.h
-@@ -82,6 +82,9 @@ struct StructTraits<viz::mojom::Transfer
+@@ -89,6 +89,9 @@ struct StructTraits<viz::mojom::TransferableResourceDataView,
        const viz::TransferableResource& resource) {
      return resource.ycbcr_info;
    }
@@ -9164,48 +9768,58 @@
  
    static bool Read(viz::mojom::TransferableResourceDataView data,
                     viz::TransferableResource* out);
+diff --git a/src/services/viz/public/mojom/compositing/compositor_frame_sink.mojom b/src/services/viz/public/mojom/compositing/compositor_frame_sink.mojom
+index ca6fa9ca8ce6..81eaa2c7992b 100644
 --- a/src/services/viz/public/mojom/compositing/compositor_frame_sink.mojom
 +++ b/src/services/viz/public/mojom/compositing/compositor_frame_sink.mojom
-@@ -117,4 +117,8 @@ interface CompositorFrameSinkClient {
- 
-   // Returns resources sent to SubmitCompositorFrame to be reused or freed.
-   ReclaimResources(array<ReturnedResource> resources);
+@@ -121,4 +121,8 @@ interface CompositorFrameSinkClient {
+   // Inform the client that a compositor frame transition directive was fully
+   // processed.
+   OnCompositorFrameTransitionDirectiveProcessed(uint32 sequence_id);
 +
 +  // Frame resized - if we can resize the video to this we should get away
 +  // without later resizing
 +  DidStretchFrame(uint32 width, uint32 height);
  };
+diff --git a/src/services/viz/public/mojom/compositing/transferable_resource.mojom b/src/services/viz/public/mojom/compositing/transferable_resource.mojom
+index 6d95a59074d7..82ae7a4bfe09 100644
 --- a/src/services/viz/public/mojom/compositing/transferable_resource.mojom
 +++ b/src/services/viz/public/mojom/compositing/transferable_resource.mojom
-@@ -48,4 +48,5 @@ struct TransferableResource {
-   bool wants_promotion_hint;
+@@ -28,4 +28,5 @@ struct TransferableResource {
    gfx.mojom.ColorSpace color_space;
+   gfx.mojom.HDRMetadata? hdr_metadata;
    gpu.mojom.VulkanYCbCrInfo ? ycbcr_info;
 +  uint32 stride;
  };
+diff --git a/src/third_party/blink/renderer/platform/graphics/begin_frame_provider.h b/src/third_party/blink/renderer/platform/graphics/begin_frame_provider.h
+index 60a2f5d241b0..97ec12b52e34 100644
 --- a/src/third_party/blink/renderer/platform/graphics/begin_frame_provider.h
 +++ b/src/third_party/blink/renderer/platform/graphics/begin_frame_provider.h
-@@ -58,6 +58,7 @@ class PLATFORM_EXPORT BeginFrameProvider
-       const WTF::Vector<viz::ReturnedResource>& resources) final {
+@@ -62,6 +62,7 @@ class PLATFORM_EXPORT BeginFrameProvider
+       uint32_t sequence_id) final {
      NOTIMPLEMENTED();
    }
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
  
    // viz::mojom::blink::EmbeddedFrameSinkClient implementation.
    void BindSurfaceEmbedder(
+diff --git a/src/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h b/src/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h
+index 212f6aae43ba..b61c47115a41 100644
 --- a/src/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h
 +++ b/src/third_party/blink/renderer/platform/graphics/canvas_resource_dispatcher.h
-@@ -79,6 +79,7 @@ class PLATFORM_EXPORT CanvasResourceDisp
-   void OnBeginFramePausedChanged(bool paused) final {}
-   void ReclaimResources(
-       const WTF::Vector<viz::ReturnedResource>& resources) final;
+@@ -82,6 +82,7 @@ class PLATFORM_EXPORT CanvasResourceDispatcher
+   void ReclaimResources(WTF::Vector<viz::ReturnedResource> resources) final;
+   void OnCompositorFrameTransitionDirectiveProcessed(
+       uint32_t sequence_id) final {}
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
  
    void DidAllocateSharedBitmap(base::ReadOnlySharedMemoryRegion region,
                                 const gpu::Mailbox& id);
+diff --git a/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc b/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc
+index 4d98fc007255..9cdbc9eadd82 100644
 --- a/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc
 +++ b/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.cc
-@@ -291,6 +291,11 @@ void VideoFrameSubmitter::DidDeleteShare
+@@ -299,6 +299,11 @@ void VideoFrameSubmitter::DidDeleteSharedBitmap(const viz::SharedBitmapId& id) {
    compositor_frame_sink_->DidDeleteSharedBitmap(id);
  }
  
@@ -9217,26 +9831,32 @@
  void VideoFrameSubmitter::OnReceivedContextProvider(
      bool use_gpu_compositing,
      scoped_refptr<viz::RasterContextProvider> context_provider) {
+diff --git a/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.h b/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.h
+index a31b403af73e..2c259b43977d 100644
 --- a/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.h
 +++ b/src/third_party/blink/renderer/platform/graphics/video_frame_submitter.h
-@@ -77,6 +77,7 @@ class PLATFORM_EXPORT VideoFrameSubmitte
-   void OnBeginFramePausedChanged(bool paused) override {}
-   void ReclaimResources(
-       const WTF::Vector<viz::ReturnedResource>& resources) override;
+@@ -78,6 +78,7 @@ class PLATFORM_EXPORT VideoFrameSubmitter
+   void ReclaimResources(WTF::Vector<viz::ReturnedResource> resources) override;
+   void OnCompositorFrameTransitionDirectiveProcessed(
+       uint32_t sequence_id) override {}
 +  void DidStretchFrame(uint32_t width, uint32_t height) override;
  
    // viz::SharedBitmapReporter implementation.
    void DidAllocateSharedBitmap(base::ReadOnlySharedMemoryRegion,
+diff --git a/src/third_party/blink/renderer/platform/widget/compositing/android_webview/synchronous_layer_tree_frame_sink.h b/src/third_party/blink/renderer/platform/widget/compositing/android_webview/synchronous_layer_tree_frame_sink.h
+index 4129ecc82b3a..cfd650e1f0d5 100644
 --- a/src/third_party/blink/renderer/platform/widget/compositing/android_webview/synchronous_layer_tree_frame_sink.h
 +++ b/src/third_party/blink/renderer/platform/widget/compositing/android_webview/synchronous_layer_tree_frame_sink.h
-@@ -114,6 +114,7 @@ class SynchronousLayerTreeFrameSink
-   void ReclaimResources(
-       const Vector<viz::ReturnedResource>& resources) override;
+@@ -118,6 +118,7 @@ class SynchronousLayerTreeFrameSink
    void OnBeginFramePausedChanged(bool paused) override;
+   void OnCompositorFrameTransitionDirectiveProcessed(
+       uint32_t sequence_id) override {}
 +  void DidStretchFrame(uint32_t width, uint32_t height) override {}
  
    // viz::ExternalBeginFrameSourceClient overrides.
    void OnNeedsBeginFrames(bool needs_begin_frames) override;
+diff --git a/src/third_party/libdrm/BUILD.gn b/src/third_party/libdrm/BUILD.gn
+index 8c1054b6e8f4..b9c70bfe712a 100644
 --- a/src/third_party/libdrm/BUILD.gn
 +++ b/src/third_party/libdrm/BUILD.gn
 @@ -52,6 +52,7 @@ static_library("libdrm") {
@@ -9247,20 +9867,24 @@
    ]
  
    public_configs = [ ":libdrm_config" ]
+diff --git a/src/third_party/widevine/cdm/widevine.gni b/src/third_party/widevine/cdm/widevine.gni
+index d676aee4f2a3..d7c472188501 100644
 --- a/src/third_party/widevine/cdm/widevine.gni
 +++ b/src/third_party/widevine/cdm/widevine.gni
-@@ -24,7 +24,7 @@ if (is_ash && !is_chromeos_device) {
- # supported via Android MediaDrm API.
+@@ -26,7 +26,7 @@ if (is_chromeos_ash && !is_chromeos_device) {
  library_widevine_cdm_available =
-     (is_chromeos && (target_cpu == "x64" || target_cpu == "arm")) ||
--    (is_linux && (target_cpu == "x86" || target_cpu == "x64")) ||
-+    (is_linux && (target_cpu == "x86" || target_cpu == "x64" || target_cpu == "arm")) ||
+     (is_chromeos_ash && (target_cpu == "x64" || target_cpu == "arm")) ||
+     ((is_linux || is_chromeos_lacros) &&
+-     (target_cpu == "x86" || target_cpu == "x64")) ||
++     (target_cpu == "x86" || target_cpu == "x64" || target_cpu == "arm")) ||
      (is_mac && (target_cpu == "x64" || target_cpu == "arm64")) ||
      (is_win && (target_cpu == "x86" || target_cpu == "x64"))
  
+diff --git a/src/ui/android/delegated_frame_host_android.h b/src/ui/android/delegated_frame_host_android.h
+index d2ae38cca358..bf132ef60a14 100644
 --- a/src/ui/android/delegated_frame_host_android.h
 +++ b/src/ui/android/delegated_frame_host_android.h
-@@ -129,6 +129,8 @@ class UI_ANDROID_EXPORT DelegatedFrameHo
+@@ -140,6 +140,8 @@ class UI_ANDROID_EXPORT DelegatedFrameHostAndroid
    // FrameEvictorClient implementation.
    void EvictDelegatedFrame() override;
  
@@ -9268,10 +9892,12 @@
 +
    // viz::HostFrameSinkClient implementation.
    void OnFirstSurfaceActivation(const viz::SurfaceInfo& surface_info) override;
-   void OnFrameTokenChanged(uint32_t frame_token) override;
+   void OnFrameTokenChanged(uint32_t frame_token,
+diff --git a/src/ui/base/ui_base_features.cc b/src/ui/base/ui_base_features.cc
+index 55c38066699b..d4acec511e4c 100644
 --- a/src/ui/base/ui_base_features.cc
 +++ b/src/ui/base/ui_base_features.cc
-@@ -235,7 +235,7 @@ bool IsSynchronousPageFlipTestingEnabled
+@@ -301,7 +301,7 @@ const base::Feature kResamplingScrollEventsExperimentalPrediction{
  #if defined(USE_X11) || defined(USE_OZONE)
  const base::Feature kUseOzonePlatform {
    "UseOzonePlatform",
@@ -9280,9 +9906,27 @@
        base::FEATURE_DISABLED_BY_DEFAULT
  };
  #else
+diff --git a/src/ui/base/x/x11_gl_egl_utility.cc b/src/ui/base/x/x11_gl_egl_utility.cc
+index 624c6f9483bd..a4e7f1d0092e 100644
+--- a/src/ui/base/x/x11_gl_egl_utility.cc
++++ b/src/ui/base/x/x11_gl_egl_utility.cc
+@@ -53,6 +53,11 @@ void ChoosePlatformCustomAlphaAndBufferSize(EGLint* alpha_size,
+                                                          nullptr, nullptr);
+     *buffer_size = depth;
+     *alpha_size = *buffer_size == 32 ? 8 : 0;
++    if (depth != 24) {
++      LOG(INFO) << "Depth=" << (int)depth << ", kludging to 24 to prevent mismatch with surface";
++      *buffer_size = 24;
++      *alpha_size = 0;
++    }
+   }
+ }
+ 
+diff --git a/src/ui/base/x/x11_software_bitmap_presenter.h b/src/ui/base/x/x11_software_bitmap_presenter.h
+index ac1b951003a5..366e364ff81f 100644
 --- a/src/ui/base/x/x11_software_bitmap_presenter.h
 +++ b/src/ui/base/x/x11_software_bitmap_presenter.h
-@@ -39,6 +39,9 @@ class COMPONENT_EXPORT(UI_BASE_X) X11Sof
+@@ -39,6 +39,9 @@ class COMPONENT_EXPORT(UI_BASE_X) X11SoftwareBitmapPresenter {
    void EndPaint(const gfx::Rect& damage_rect);
    void OnSwapBuffers(SwapBuffersCallback swap_ack_callback);
    int MaxFramesPending() const;
@@ -9292,18 +9936,21 @@
  
   private:
    // Draw |data| over |widget|'s parent-relative background, and write the
+diff --git a/src/ui/gfx/BUILD.gn b/src/ui/gfx/BUILD.gn
+index ffd44dc7946c..657411a16ea3 100644
 --- a/src/ui/gfx/BUILD.gn
 +++ b/src/ui/gfx/BUILD.gn
-@@ -2,6 +2,8 @@
+@@ -2,7 +2,9 @@
  # Use of this source code is governed by a BSD-style license that can be
  # found in the LICENSE file.
  
 +import("//build/buildflag_header.gni")
+ import("//build/config/ozone.gni")
 +import("//build/config/linux/rpi/args.gni")
  import("//build/config/ui.gni")
  import("//device/vr/buildflags/buildflags.gni")
  import("//testing/libfuzzer/fuzzer_test.gni")
-@@ -12,6 +14,13 @@ if (is_android) {
+@@ -13,6 +15,13 @@ if (is_android) {
    import("//build/config/android/rules.gni")
  }
  
@@ -9317,7 +9964,7 @@
  # Several targets want to include this header file, and some of them are
  # child dependencies of "gfx". Therefore, we separate it out here so multiple
  # targets can all have a dependency for header checking purposes without
-@@ -560,6 +569,7 @@ source_set("memory_buffer_sources") {
+@@ -586,6 +595,7 @@ source_set("memory_buffer_sources") {
    public_deps = [ ":buffer_types" ]
  
    deps = [
@@ -9325,7 +9972,7 @@
      ":gfx_switches",
      ":native_widget_types",
      "//base",
-@@ -578,6 +588,15 @@ source_set("memory_buffer_sources") {
+@@ -605,6 +615,15 @@ source_set("memory_buffer_sources") {
      ]
  
      deps += [ "//build/config/linux/libdrm" ]
@@ -9341,6 +9988,9 @@
    }
  
    if (is_linux || is_chromeos || is_android) {
+diff --git a/src/ui/gfx/linux/native_pixmap_vcsm.cc b/src/ui/gfx/linux/native_pixmap_vcsm.cc
+new file mode 100644
+index 000000000000..707a924f0a0c
 --- /dev/null
 +++ b/src/ui/gfx/linux/native_pixmap_vcsm.cc
 @@ -0,0 +1,322 @@
@@ -9666,6 +10316,9 @@
 +
 +}  // namespace gfx
 +
+diff --git a/src/ui/gfx/linux/native_pixmap_vcsm.h b/src/ui/gfx/linux/native_pixmap_vcsm.h
+new file mode 100644
+index 000000000000..bb10403eb8c4
 --- /dev/null
 +++ b/src/ui/gfx/linux/native_pixmap_vcsm.h
 @@ -0,0 +1,31 @@
@@ -9700,10 +10353,12 @@
 +
 +#endif  // UI_GFX_LINUX_NATIVE_PIXMAP_VCSM_H_
 +
+diff --git a/src/ui/gl/init/gl_factory.cc b/src/ui/gl/init/gl_factory.cc
+index c7c0733a59a1..c11c71692867 100644
 --- a/src/ui/gl/init/gl_factory.cc
 +++ b/src/ui/gl/init/gl_factory.cc
-@@ -71,6 +71,15 @@ GLImplementation GetRequestedGLImplement
-     return kGLImplementationNone;
+@@ -77,6 +77,15 @@ GLImplementationParts GetRequestedGLImplementation(
+     return GLImplementationParts(kGLImplementationNone);
    }
  
 +  // RPI: We always want EGL as our preferred render
@@ -9716,11 +10371,13 @@
 +  allowed_impls.insert(allowed_impls.begin(), kGLImplementationEGLGLES2);
 +
    // The default implementation is always the first one in list.
-   GLImplementation impl = allowed_impls[0];
-   *fallback_to_software_gl = false;
+   GLImplementationParts impl = GLImplementationParts(allowed_impls[0]);
+   UMA_HISTOGRAM_ENUMERATION("GPU.PreferredGLImplementation", impl.gl);
+diff --git a/src/native_client/src/include/concurrency_ops.h b/src/native_client/src/include/concurrency_ops.h
+index 82e313c3a..5c04eef5e 100644
 --- a/src/native_client/src/include/concurrency_ops.h
 +++ b/src/native_client/src/include/concurrency_ops.h
-@@ -32,14 +32,13 @@ static INLINE void NaClWriteMemoryBarrie
+@@ -32,14 +32,13 @@ static INLINE void NaClWriteMemoryBarrier(void) {
  #elif NACL_ARCH(NACL_BUILD_ARCH) == NACL_arm
  
  static INLINE void NaClWriteMemoryBarrier(void) {
@@ -9740,9 +10397,11 @@
  }
  
  #elif NACL_ARCH(NACL_BUILD_ARCH) == NACL_mips
+diff --git a/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h b/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
+index d6b1ade890..731bc8d33f 100644
 --- a/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
 +++ b/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
-@@ -40,7 +40,7 @@
+@@ -41,7 +41,7 @@
  #define ARCH_X86_64 0
  #define HAVE_ARMV5TE 1
  #define HAVE_ARMV6 1
@@ -9751,7 +10410,7 @@
  #define HAVE_ARMV8 0
  #define HAVE_NEON 0
  #define HAVE_VFP 1
-@@ -86,7 +86,7 @@
+@@ -87,7 +87,7 @@
  #define HAVE_MMI 0
  #define HAVE_ARMV5TE_EXTERNAL 1
  #define HAVE_ARMV6_EXTERNAL 1
@@ -9760,7 +10419,7 @@
  #define HAVE_ARMV8_EXTERNAL 0
  #define HAVE_NEON_EXTERNAL 0
  #define HAVE_VFP_EXTERNAL 1
-@@ -132,7 +132,7 @@
+@@ -133,7 +133,7 @@
  #define HAVE_MMI_EXTERNAL 0
  #define HAVE_ARMV5TE_INLINE 1
  #define HAVE_ARMV6_INLINE 1
@@ -9769,7 +10428,7 @@
  #define HAVE_ARMV8_INLINE 0
  #define HAVE_NEON_INLINE 0
  #define HAVE_VFP_INLINE 1
-@@ -593,7 +593,7 @@
+@@ -595,7 +595,7 @@
  #define CONFIG_NEON_CLOBBER_TEST 0
  #define CONFIG_OSSFUZZ 0
  #define CONFIG_PIC 1
@@ -9778,22 +10437,11 @@
  #define CONFIG_VALGRIND_BACKTRACE 0
  #define CONFIG_XMM_CLOBBER_TEST 0
  #define CONFIG_BSFS 1
---- a/src/third_party/libjpeg_turbo/simd/arm/arm/jsimd_neon.S
-+++ b/src/third_party/libjpeg_turbo/simd/arm/arm/jsimd_neon.S
-@@ -31,8 +31,8 @@
- #endif
- 
- .text
--.fpu neon
--.arch armv7a
-+.arch armv7-a
-+.fpu neon-vfpv4
- .object_arch armv4
- .arm
- .syntax unified
+diff --git a/src/third_party/libyuv/BUILD.gn b/src/third_party/libyuv/BUILD.gn
+index e1c7c1da..326bc019 100644
 --- a/src/third_party/libyuv/BUILD.gn
 +++ b/src/third_party/libyuv/BUILD.gn
-@@ -208,6 +208,11 @@ if (libyuv_use_neon) {
+@@ -209,6 +209,11 @@ if (libyuv_use_neon) {
  
      if (current_cpu != "arm64") {
        configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
@@ -9805,6 +10453,8 @@
        cflags = [ "-mfpu=neon" ]
      }
    }
+diff --git a/src/third_party/libyuv/source/cpu_id.cc b/src/third_party/libyuv/source/cpu_id.cc
+index fe89452b..aad0ea6d 100644
 --- a/src/third_party/libyuv/source/cpu_id.cc
 +++ b/src/third_party/libyuv/source/cpu_id.cc
 @@ -133,6 +133,18 @@ int GetXCR0() {
@@ -9826,7 +10476,7 @@
  // based on libvpx arm_cpudetect.c
  // For Arm, but public to allow testing on any CPU
  LIBYUV_API SAFEBUFFERS int ArmCpuCaps(const char* cpuinfo_name) {
-@@ -161,6 +173,7 @@ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(co
+@@ -161,6 +173,7 @@ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(const char* cpuinfo_name) {
    fclose(f);
    return 0;
  }
@@ -9834,6 +10484,25 @@
  
  // TODO(fbarchard): Consider read_msa_ir().
  LIBYUV_API SAFEBUFFERS int MipsCpuCaps(const char* cpuinfo_name) {
+diff --git a/src/third_party/skia/include/core/SkSpan.h b/src/third_party/skia/include/core/SkSpan.h
+index b09ec867a0..2317e16924 100644
+--- a/src/third_party/skia/include/core/SkSpan.h
++++ b/src/third_party/skia/include/core/SkSpan.h
+@@ -76,9 +76,9 @@ template <typename T, typename S> inline constexpr SkSpan<T> SkMakeSpan(T* p, S
+     return SkSpan<T>{p, SkTo<size_t>(s)};
+ }
+ 
+-template <size_t N, typename T> inline constexpr SkSpan<T> SkMakeSpan(T (&a)[N]) {
+-    return SkSpan<T>{a, N};
+-}
++//template <size_t N, typename T> inline constexpr SkSpan<T> SkMakeSpan(T (&a)[N]) {
++//    return SkSpan<T>{a, N};
++//}
+ 
+ template <typename Container>
+ inline auto SkMakeSpan(Container& c)
+diff --git a/src/third_party/skia/src/core/SkBitmapProcState.cpp b/src/third_party/skia/src/core/SkBitmapProcState.cpp
+index 6f3d73d6c0..ad47d32b5b 100755
 --- a/src/third_party/skia/src/core/SkBitmapProcState.cpp
 +++ b/src/third_party/skia/src/core/SkBitmapProcState.cpp
 @@ -19,6 +19,7 @@
@@ -9844,7 +10513,7 @@
  // One-stop-shop shader for,
  //   - nearest-neighbor sampling (_nofilter_),
  //   - clamp tiling in X and Y both (Clamp_),
-@@ -74,6 +75,201 @@ static void Clamp_S32_opaque_D32_nofilte
+@@ -74,6 +75,201 @@ static void Clamp_S32_opaque_D32_nofilter_DX_shaderproc(const void* sIn, int x,
          }
      }
  }
@@ -10046,21 +10715,23 @@
  
  static void S32_alpha_D32_nofilter_DX(const SkBitmapProcState& s,
                                        const uint32_t* xy, int count, SkPMColor* colors) {
-@@ -277,7 +473,11 @@ bool SkBitmapProcState::chooseProcs() {
+@@ -272,7 +468,11 @@ bool SkBitmapProcState::chooseProcs() {
+     SkASSERT(fMatrixProc);
  
-     const bool filter = fFilterQuality > kNone_SkFilterQuality;
      if (fInvMatrix.isScaleTranslate()) {
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
-+        fSampleProc32 = filter ? (fAlphaScale == 256 ? SkOpts::S32_opaque_D32_filter_DX : SkOpts::S32_alpha_D32_filter_DX)   : S32_alpha_D32_nofilter_DX  ;
++        fSampleProc32 = fBilerp ? (fAlphaScale == 256 ? SkOpts::S32_opaque_D32_filter_DX : SkOpts::S32_alpha_D32_filter_DX)   : S32_alpha_D32_nofilter_DX  ;
 +#else
-         fSampleProc32 = filter ? SkOpts::S32_alpha_D32_filter_DX   : S32_alpha_D32_nofilter_DX  ;
+         fSampleProc32 = fBilerp ? SkOpts::S32_alpha_D32_filter_DX   : S32_alpha_D32_nofilter_DX  ;
 +#endif
      } else {
-         fSampleProc32 = filter ? SkOpts::S32_alpha_D32_filter_DXDY : S32_alpha_D32_nofilter_DXDY;
+         fSampleProc32 = fBilerp ? SkOpts::S32_alpha_D32_filter_DXDY : S32_alpha_D32_nofilter_DXDY;
      }
+diff --git a/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp b/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
+index 6bf39bf60a..bbdc0be36a 100755
 --- a/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
 +++ b/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
-@@ -247,6 +247,535 @@ static unsigned clamp(SkFixed fx, int ma
+@@ -247,6 +247,535 @@ static unsigned clamp(SkFixed fx, int max) {
      return SkTPin(fx >> 16, 0, max);
  }
  
@@ -10596,7 +11267,7 @@
  static const SkBitmapProcState::MatrixProc ClampX_ClampY_Procs[] = {
      nofilter_scale <clamp, clamp, true>, filter_scale <clamp, clamp, extract_low_bits_clamp_clamp, true>,
      nofilter_affine<clamp, clamp>,       filter_affine<clamp, clamp, extract_low_bits_clamp_clamp>,
-@@ -255,6 +784,9 @@ static const SkBitmapProcState::MatrixPr
+@@ -255,6 +784,9 @@ static const SkBitmapProcState::MatrixProc RepeatX_RepeatY_Procs[] = {
      nofilter_scale <repeat, repeat, false>, filter_scale <repeat, repeat, extract_low_bits_general, false>,
      nofilter_affine<repeat, repeat>,        filter_affine<repeat, repeat, extract_low_bits_general>
  };
@@ -10606,6 +11277,8 @@
  static const SkBitmapProcState::MatrixProc MirrorX_MirrorY_Procs[] = {
      nofilter_scale <mirror, mirror,  false>, filter_scale <mirror, mirror, extract_low_bits_general, false>,
      nofilter_affine<mirror, mirror>,         filter_affine<mirror, mirror, extract_low_bits_general>,
+diff --git a/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp b/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp
+index a67d2e250c..1fe65e1d8e 100644
 --- a/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp
 +++ b/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp
 @@ -11,6 +11,7 @@
@@ -10616,7 +11289,7 @@
  
  static inline int upscale_31_to_32(int value) {
      SkASSERT((unsigned)value <= 31);
-@@ -1184,6 +1185,7 @@ static void drive(SkPMColor* dst, const
+@@ -1184,6 +1185,7 @@ static void drive(SkPMColor* dst, const SkPMColor* src, const uint8_t* cov, int
      }
  }
  
@@ -10624,7 +11297,7 @@
  static void blend_row_A8(SkPMColor* dst, const void* mask, const SkPMColor* src, int n) {
      auto cov = (const uint8_t*)mask;
      drive(dst, src, cov, n, [](U8x4 d, U8x4 s, U8x4 c) {
-@@ -1192,6 +1194,7 @@ static void blend_row_A8(SkPMColor* dst,
+@@ -1192,6 +1194,7 @@ static void blend_row_A8(SkPMColor* dst, const void* mask, const SkPMColor* src,
          return s_aa + skvx::approx_scale(d, 255 - alpha);
      });
  }
@@ -10632,7 +11305,7 @@
  
  static void blend_row_A8_opaque(SkPMColor* dst, const void* mask, const SkPMColor* src, int n) {
      auto cov = (const uint8_t*)mask;
-@@ -1296,7 +1299,8 @@ void SkARGB32_Shader_Blitter::blitMask(c
+@@ -1296,7 +1299,8 @@ void SkARGB32_Shader_Blitter::blitMask(const SkMask& mask, const SkIRect& clip)
          if (mask.fFormat == SkMask::kA8_Format && opaque) {
              blend_row = blend_row_A8_opaque;
          } else if (mask.fFormat == SkMask::kA8_Format) {
@@ -10642,6 +11315,8 @@
          } else if (mask.fFormat == SkMask::kLCD16_Format && opaque) {
              blend_row = blend_row_LCD16_opaque;
          } else if (mask.fFormat == SkMask::kLCD16_Format) {
+diff --git a/src/third_party/skia/src/core/SkOpts.cpp b/src/third_party/skia/src/core/SkOpts.cpp
+index e69bedbfa0..adbb829334 100644
 --- a/src/third_party/skia/src/core/SkOpts.cpp
 +++ b/src/third_party/skia/src/core/SkOpts.cpp
 @@ -58,6 +58,7 @@ namespace SkOpts {
@@ -10664,6 +11339,8 @@
  #undef DEFINE_DEFAULT
  
  #define M(st) (StageFn)SK_OPTS_NS::st,
+diff --git a/src/third_party/skia/src/core/SkOpts.h b/src/third_party/skia/src/core/SkOpts.h
+index 75eeffeb0a..c0aee965ca 100644
 --- a/src/third_party/skia/src/core/SkOpts.h
 +++ b/src/third_party/skia/src/core/SkOpts.h
 @@ -29,6 +29,7 @@ namespace SkOpts {
@@ -10684,20 +11361,11 @@
  #define M(st) +1
      // We can't necessarily express the type of SkJumper stage functions here,
      // so we just use this void(*)(void) as a stand-in.
---- a/src/third_party/skia/src/core/SkSpan.h
-+++ b/src/third_party/skia/src/core/SkSpan.h
-@@ -20,7 +20,7 @@ public:
-     template <typename U, typename = typename std::enable_if<std::is_same<const U, T>::value>::type>
-     constexpr SkSpan(const SkSpan<U>& that) : fPtr(that.data()), fSize{that.size()} {}
-     constexpr SkSpan(const SkSpan& o) = default;
--    template<size_t N> constexpr SkSpan(T(&a)[N]) : SkSpan{a, N} { }
-+//    template<size_t N> constexpr SkSpan(T(&a)[N]) : SkSpan{a, N} { }
-     template<typename Container>
-     constexpr SkSpan(Container& c) : SkSpan{skstd::data(c), skstd::size(c)} { }
- 
+diff --git a/src/third_party/skia/src/opts/SkBitmapProcState_opts.h b/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
+index b8970e9e20..f243d622c9 100644
 --- a/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
 +++ b/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
-@@ -387,6 +387,257 @@ static void decode_packed_coordinates_an
+@@ -387,6 +387,257 @@ static void decode_packed_coordinates_and_weight(U32 packed, Out* v0, Out* v1, O
          }
      }
  
@@ -10955,7 +11623,7 @@
  #else
  
      // The NEON code only actually differs from the portable code in the
-@@ -533,6 +784,203 @@ static void decode_packed_coordinates_an
+@@ -533,6 +784,203 @@ static void decode_packed_coordinates_and_weight(U32 packed, Out* v0, Out* v1, O
                                                         const uint32_t*, int, SkPMColor*) = nullptr;
  #endif
  
@@ -11159,6 +11827,8 @@
  }  // namespace SK_OPTS_NS
  
  #endif
+diff --git a/src/third_party/skia/src/opts/SkBlitMask_opts.h b/src/third_party/skia/src/opts/SkBlitMask_opts.h
+index 93ae81c3e2..949b8ff137 100644
 --- a/src/third_party/skia/src/opts/SkBlitMask_opts.h
 +++ b/src/third_party/skia/src/opts/SkBlitMask_opts.h
 @@ -226,6 +226,322 @@ namespace SK_OPTS_NS {
@@ -11484,6 +12154,8 @@
  }  // namespace SK_OPTS_NS
  
  #endif//SkBlitMask_opts_DEFINED
+diff --git a/src/third_party/skia/src/opts/SkBlitRow_opts.h b/src/third_party/skia/src/opts/SkBlitRow_opts.h
+index fd5cbbacbe..378d45036d 100644
 --- a/src/third_party/skia/src/opts/SkBlitRow_opts.h
 +++ b/src/third_party/skia/src/opts/SkBlitRow_opts.h
 @@ -120,6 +120,10 @@
@@ -11691,7 +12363,7 @@
  namespace SK_OPTS_NS {
  
  /*not static*/
-@@ -187,6 +376,10 @@ inline void blit_row_s32a_opaque(SkPMCol
+@@ -187,6 +376,10 @@ inline void blit_row_s32a_opaque(SkPMColor* dst, const SkPMColor* src, int len,
  #endif
  
  #if defined(SK_ARM_HAS_NEON)
@@ -11702,7 +12374,7 @@
      while (len >= 8) {
          vst4_u8((uint8_t*)dst, SkPMSrcOver_neon8(vld4_u8((const uint8_t*)dst),
                                                   vld4_u8((const uint8_t*)src)));
-@@ -209,6 +402,154 @@ inline void blit_row_s32a_opaque(SkPMCol
+@@ -209,6 +402,154 @@ inline void blit_row_s32a_opaque(SkPMColor* dst, const SkPMColor* src, int len,
          vst1_lane_u32(dst, vreinterpret_u32_u8(result), 0);
      }
      return;
@@ -11857,6 +12529,8 @@
  #endif
  
      while (len --> 0) {
+diff --git a/src/third_party/skia/src/opts/SkUtils_opts.h b/src/third_party/skia/src/opts/SkUtils_opts.h
+index 257d9bf73b..d45e8a8c1e 100644
 --- a/src/third_party/skia/src/opts/SkUtils_opts.h
 +++ b/src/third_party/skia/src/opts/SkUtils_opts.h
 @@ -34,7 +34,81 @@ namespace SK_OPTS_NS {
@@ -11941,3 +12615,30 @@
      }
      /*not static*/ inline void memset64(uint64_t buffer[], uint64_t value, int count) {
          memsetT(buffer, value, count);
+diff --git a/src/third_party/skia/src/sksl/codegen/SkSLVMCodeGenerator.cpp b/src/third_party/skia/src/sksl/codegen/SkSLVMCodeGenerator.cpp
+index dcf052ad77..918c093343 100644
+--- a/src/third_party/skia/src/sksl/codegen/SkSLVMCodeGenerator.cpp
++++ b/src/third_party/skia/src/sksl/codegen/SkSLVMCodeGenerator.cpp
+@@ -1645,7 +1645,7 @@ skvm::Color ProgramToSkVM(const Program& program,
+ 
+     SkVMGenerator generator(
+             program, builder, uniforms, device, local, inputColor, std::move(sampleChild));
+-    generator.writeFunction(function, {args, argSlots}, SkMakeSpan(result));
++    generator.writeFunction(function, {args, argSlots}, SkMakeSpan(result, 4));
+ 
+     return skvm::Color{{builder, result[0]},
+                        {builder, result[1]},
+diff --git a/src/third_party/webrtc/modules/desktop_capture/BUILD.gn b/src/third_party/webrtc/modules/desktop_capture/BUILD.gn
+index 25b92bed45..1bd1405d3c 100644
+--- a/src/third_party/webrtc/modules/desktop_capture/BUILD.gn
++++ b/src/third_party/webrtc/modules/desktop_capture/BUILD.gn
+@@ -14,6 +14,9 @@ import("../../webrtc.gni")
+ if (rtc_use_pipewire) {
+   assert(rtc_pipewire_version == "0.2" || rtc_pipewire_version == "0.3",
+          "Unsupported PipeWire version")
++  if (current_cpu != "arm" && current_cpu != "arm64") {
++    rtc_pipewire_version = "0.3"
++  }
+ }
+ 
+ use_desktop_capture_differ_sse2 = current_cpu == "x86" || current_cpu == "x64"

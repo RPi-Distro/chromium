@@ -1,14 +1,14 @@
 --- a/src/tools/v8_context_snapshot/v8_context_snapshot.gni
 +++ b/src/tools/v8_context_snapshot/v8_context_snapshot.gni
-@@ -10,6 +10,7 @@
- import("//build/config/chromecast_build.gni")
+@@ -11,6 +11,7 @@ import("//build/config/chromecast_build.
+ import("//build/config/chromeos/ui_mode.gni")
  import("//build/config/v8_target_cpu.gni")
  import("//v8/gni/v8.gni")
 +import("//build/config/arm.gni")
  
  declare_args() {
    # TODO(crbug.com/764576): Enable the feature on more environments.
-@@ -29,7 +30,11 @@ declare_args() {
+@@ -31,7 +32,11 @@ declare_args() {
        v8_context_snapshot_filename = "v8_context_snapshot.arm64.bin"
      }
    } else {

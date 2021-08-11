@@ -1,3 +1,10 @@
+chromium-browser (92.0.4515.98~buster-rpt1) buster; urgency=medium
+
+  * Update to 92.0.4515.98
+  * v92.0.4515.98_rpi_1.42.patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Aug 2021 08:00:52 +0100
+
 chromium-browser (88.0.4324.187-rpt1) buster; urgency=medium
 
   * Update to 88.0.4324.187

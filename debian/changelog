@@ -1,3 +1,9 @@
+chromium (97.0.4692.99-2) UNRELEASED; urgency=high
+
+  * Update manpage for package rename and everyone moving to https.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 24 Jan 2022 03:40:43 -0500
+
 chromium (97.0.4692.99-1) unstable; urgency=high
 
   * Add myself as an uploader.

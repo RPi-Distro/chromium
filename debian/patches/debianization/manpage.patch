@@ -43,7 +43,7 @@ forwarded: http://code.google.com/p/chromium/issues/detail?id=73591
 -Bug tracker:
 +Debian bug tracker:
 +.IP
-+http://bugs.debian.org/chromium-browser
++https://bugs.debian.org/chromium
 +.PP
 +Upstream bug tracker:
  .IP
@@ -55,7 +55,7 @@ forwarded: http://code.google.com/p/chromium/issues/detail?id=73591
 +If your bug is specific to Debian, please submit it only to the Debian bug
 +tracker.
 +.IP
-+http://www.debian.org/Bugs/Reporting
++https://www.debian.org/Bugs/Reporting
  
  .SH AUTHOR
  The Chromium team \- <http://www.chromium.org>

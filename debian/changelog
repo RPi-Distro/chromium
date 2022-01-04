@@ -1,3 +1,44 @@
+chromium-browser (95.0.4638.78-rpt5) bullseye; urgency=medium
+
+  * Re-enable armv6 support
+
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 22 Dec 2021 17:39:51 +0000
+
+chromium-browser (95.0.4638.78-rpt4) bullseye; urgency=medium
+
+  * Disable warning about missing API keys
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 13 Dec 2021 15:51:39 +0000
+
+chromium-browser (95.0.4638.78-rpt3) bullseye; urgency=medium
+
+  * Disable field test trials
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 13 Dec 2021 10:22:00 +0000
+
+chromium-browser (95.0.4638.78-rpt2) bullseye; urgency=medium
+
+  * Disable browser sign in feature by default
+
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 10 Dec 2021 16:06:59 +0000
+
+chromium-browser (95.0.4638.78-rpt1) bullseye; urgency=medium
+
+  * Update to 95.0.4638.78
+  * v95.0.4638.78_rpi_2.45.patch
+  * Add libgtk-3-0, libgles2, libpulse0 and libegl1 dependencies
+  * Add Multi-Arch fields to allow armhf install on arm64
+  * Remove LD_PRELOAD for widevine
+    - Unnecessary after appropriate glibc patches
+
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 03 Dec 2021 19:16:58 +0000
+
+chromium-browser (92.0.4515.98-rpt2) bullseye; urgency=medium
+
+  * Rebuild against new raspberrypi-userland
+
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 15 Sep 2021 09:22:31 +0100
+
 chromium-browser (92.0.4515.98-rpt1) bullseye; urgency=medium
 
   * Bullseye build

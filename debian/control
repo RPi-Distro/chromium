@@ -52,18 +52,20 @@ Standards-Version: 4.1.1
 
 Package: chromium-browser
 Architecture: i386 amd64 armhf arm64
+Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.15.6)
 Depends: ${shlibs:Depends}, ${misc:Depends},
 	bash (>= 4),
+	libgtk-3-0,
 	libnss3,
 	xdg-utils,
 	chromium-codecs-ffmpeg-extra (= ${binary:Version}) | chromium-codecs-ffmpeg (= ${binary:Version}),
 	libraspberrypi0,
-	libgl1-mesa-dri
+	libgl1-mesa-dri,
+	libgles2,
+	libegl1,
+	libpulse0
 Recommends: chromium-browser-l10n
-Suggests: webaccounts-chromium-extension,
-	unity-chromium-extension,
-	adobe-flashplugin
 Provides: www-browser, chromium-browser-inspector, exec<usr/bin/chromium-browser>, mime<text/html>, mime<x-scheme-handler/http>, mime<x-scheme-handler/https>,
          chromium
 Replaces: chromium-browser-inspector, chromium
@@ -74,6 +76,7 @@ Description: Chromium web browser, open-source version of Chrome
 
 Package: chromium-browser-l10n
 Architecture: all
+Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.15.6)
 Depends: ${misc:Depends}, chromium-browser (>= ${binary:Version}),
  chromium-browser (<< ${binary:Version}.1~)

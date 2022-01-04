@@ -74,6 +74,12 @@ usage () {
   echo " See 'man chromium-browser' for more details"
 }
 
+if [ "$(uname -m)" != "armv6l" ] && [ -f "$LIBDIR/${APPNAME}-v7" ]; then
+	APPSUFFIX="-v7"
+else
+	APPSUFFIX=""
+fi
+
 if [ -f /etc/$APPNAME/default ] ; then
   . /etc/$APPNAME/default
 fi
@@ -196,10 +202,6 @@ if [ "$(dpkg -l bluealsa | tail -n 1 | cut -d ' ' -f 1)" = "ii" ] ; then
   CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-features=AudioServiceOutOfProcess"
 fi
 
-if [ -f /opt/WidevineCdm/_platform_specific/linux_arm/libwidevinecdm.so ]; then
-  export LD_PRELOAD=/opt/WidevineCdm/_platform_specific/linux_arm/libwidevinecdm.so
-fi
-
 if [ $want_debug -eq 1 ] ; then
   if [ ! -x $GDB ] ; then
     echo "Sorry, can't find usable $GDB. Please install it."
@@ -214,18 +216,18 @@ if [ $want_debug -eq 1 ] ; then
   echo "#            GTK_PATH=$GTK_PATH"
   echo "# CHROMIUM_USER_FLAGS=$CHROMIUM_USER_FLAGS"
   echo "#      CHROMIUM_FLAGS=$CHROMIUM_FLAGS"
-  echo "$GDB $LIBDIR/$APPNAME -x $tmpfile"
-  $GDB "$LIBDIR/$APPNAME" -x $tmpfile
+  echo "$GDB $LIBDIR/$APPNAME$APPSUFFIX -x $tmpfile"
+  $GDB "$LIBDIR/$APPNAME$APPSUFFIX" -x $tmpfile
   if [ $want_temp_profile -eq 1 ] ; then
     rm -rf $TEMP_PROFILE
   fi
   exit $?
 else
   if [ $want_temp_profile -eq 0 ] ; then
-    exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
+    exec $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
   else
     # we can't exec here as we need to clean-up the temporary profile
-    $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
+    $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
     rm -rf $TEMP_PROFILE
   fi
 fi

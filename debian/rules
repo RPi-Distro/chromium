@@ -120,7 +120,7 @@ common_defines += arm_use_neon=false
 common_defines += v8_use_arm_eabi_hardfloat=false
 common_defines += arm_float_abi="soft" arm_use_thumb=false
 else ifeq (armhf,$(DEB_HOST_ARCH))
-main_build="armv7-bullseye-ozone-rel"
+main_build="armv6-bullseye-ozone-rel"
 common_defines += target_cpu="arm"
 common_defines += arm_float_abi="hard"
 common_defines += arm_optionally_use_neon=false
@@ -240,9 +240,23 @@ override_dh_install-arch:
 	mkdir -p                             $(CURDIR)/debian/tmp-std/$(LIB_DIR)
 	mv -v out/$(main_build)-std/libffmpeg.so    $(CURDIR)/debian/tmp-std/$(LIB_DIR)
 
+ifeq (armhf,$(DEB_HOST_ARCH))
+	mkdir -p                             $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/armv7-bullseye-ozone-rel/libffmpeg.so    $(CURDIR)/debian/tmp-extra-v7/$(LIB_DIR)/neon/vfp
+
+	mkdir -p                             $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
+	mv -v out/armv7-bullseye-ozone-rel-std/libffmpeg.so $(CURDIR)/debian/tmp-std-v7/$(LIB_DIR)/neon/vfp
+endif
+
 	mkdir -p $(CURDIR)/debian/tmp/$(LIB_DIR)
 	(cd out/$(main_build) && tar --remove-files $(foreach excl,$(TRASH),--exclude=$(excl) ) --dereference -cf - .;) | (cd debian/tmp/$(LIB_DIR) && tar xvf -;)
 	(cd out/$(main_build) && tar --remove-files -cf - $$(find *locales -type f -name en-US.pak) --dereference;) | (cd debian/tmp/$(LIB_DIR) && tar xvf -;)
+
+ifeq (armhf,$(DEB_HOST_ARCH))
+	mkdir -p $(CURDIR)/debian/tmp-v7/$(LIB_DIR)
+	mv -v out/armv7-bullseye-ozone-rel/chrome                     $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/chrome-v7
+	mv -v out/armv7-bullseye-ozone-rel/v8_context_snapshot_v7.bin $(CURDIR)/debian/tmp-v7/$(LIB_DIR)/
+endif
 
 #
 	# NaCL may be blacklisted.
@@ -263,7 +277,7 @@ override_dh_install-arch:
 
 
 	# Record files that were built, so we can compare later that we installed everything.
-	find debian/tmp debian/tmp-std debian/tmp-extra -type f |cut -d/ -f3- >$(T)/unfiltered-built
+	find debian/tmp debian/tmp-std debian/tmp-extra debian/tmp-v7 debian/tmp-std-v7 debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
 	grep -vE \($(subst $(SPACE),\|,$(BUILT_UNUSED_MATCH))\) $(T)/unfiltered-built $(foreach expr,$(RENAMED_FILE), |sed -r -e $(expr)) |grep -vE \($(subst $(SPACE),\|,$(INDEP_MATCH))\) | LC_ALL=C sort >$(T)/built
 
 	#
@@ -281,6 +295,11 @@ override_dh_install-arch:
 	# the Gnome System Monitor confused with icons
 	install -T -m 555 debian/tmp/$(LIB_DIR)/chrome debian/chromium-browser/$(LIB_DIR)/chromium-browser
 	rm                debian/tmp/$(LIB_DIR)/chrome
+
+ifeq (armhf,$(DEB_HOST_ARCH))
+	install -T -m 555 debian/tmp-v7/$(LIB_DIR)/chrome-v7 debian/chromium-browser/$(LIB_DIR)/chromium-browser-v7
+	rm                debian/tmp-v7/$(LIB_DIR)/chrome-v7
+endif
 
 	# move chromedriver into its own package
 	install    -m 555 debian/tmp/$(LIB_DIR)/chromedriver debian/chromium-chromedriver/usr/bin
@@ -353,7 +372,7 @@ override_dh_install-indep:
 
 	# record built so we can compare later
 	mkdir -p $(T)
-	find debian/tmp debian/tmp-std debian/tmp-extra -type f |cut -d/ -f3- >$(T)/unfiltered-built
+	find debian/tmp debian/tmp-std debian/tmp-v7 debian/tmp-std-v7 debian/tmp-extra debian/tmp-extra-v7 -type f |cut -d/ -f3- >$(T)/unfiltered-built
 	grep -E \($(subst $(SPACE),\|,$(INDEP_MATCH))\) $(T)/unfiltered-built $(foreach expr,$(RENAMED_FILE), |sed -r -e $(expr)) |grep -v /en-US.pak | LC_ALL=C sort >$(T)/built
 
 
@@ -423,6 +442,7 @@ PACKAGED_NOT_FROM_TREE_MATCH += ^etc/chromium/default$$
 RENAMED_FILE := s,^usr/lib/chromium-browser/chrome.1\$$,usr/share/man/man1/chromium-browser.1.gz,
 #  Executable name is different.
 RENAMED_FILE += s,^usr/lib/chromium-browser/chrome$$,usr/lib/chromium-browser/chromium-browser,
+RENAMED_FILE += s,^usr/lib/chromium-browser/chrome-v7$$,usr/lib/chromium-browser/chromium-browser-v7,
 #  chromedriver is moved to /usr/bin (LP: #1667208)
 RENAMED_FILE += s,^usr/lib/chromium-browser/chromedriver$$,usr/bin/chromedriver,
 

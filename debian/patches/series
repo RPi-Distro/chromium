@@ -38,7 +38,6 @@ disable/widevine-cdm-cu.patch
 disable/angle-perftests.patch
 disable/web-ui-tests.patch
 disable/devtools-unittests.patch
-disable/ios.patch
 disable/libaom-arm.patch
 
 warnings/restrict.patch

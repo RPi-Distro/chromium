@@ -2,7 +2,6 @@ debianization/manpage.patch
 debianization/sandbox.patch
 debianization/optimization.patch
 debianization/master-preferences.patch
-debianization/explicit-python2.patch
 
 fixes/gnu-as.patch
 fixes/closure.patch

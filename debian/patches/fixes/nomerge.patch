@@ -1,3 +1,13 @@
+description: fix build error
+
+../../base/check.h:88:3: error: 'nomerge' attribute cannot be applied to a declaration
+  NOMERGE ~CheckError();
+  ^       ~
+../../base/compiler_specific.h:369:19: note: expanded from macro 'NOMERGE'
+#define NOMERGE [[clang::nomerge]]
+                  ^
+1 error generated.
+
 --- a/base/check.h
 +++ b/base/check.h
 @@ -85,7 +85,7 @@ class BASE_EXPORT CheckError {

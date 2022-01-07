@@ -20,7 +20,16 @@ Files-Excluded:
  *jquery*.min.js
  ios
  buildtools
- ui/chromeos
+ ui/chromeos/B*
+ ui/chromeos/D*
+ ui/chromeos/devicetype_utils.cc
+ ui/chromeos/e*
+ ui/chromeos/f*
+ ui/chromeos/r*
+ ui/chromeos/s*
+ ui/chromeos/t*
+ ui/chromeos/ui_chromeos_strings*
+ ui/chromeos/user*
  base/mac
  base/test/data
  base/third_party/nspr

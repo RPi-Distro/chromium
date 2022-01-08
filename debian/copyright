@@ -90,7 +90,8 @@ Files-Excluded:
  third_party/android*
  third_party/tcmalloc
  third_party/lzma_sdk/7zr.exe
- third_party/test_fonts
+ third_party/test_fonts/test_fonts*
+ third_party/test_fonts/README*
  third_party/pyelftools
  third_party/fontconfig
  third_party/depot_tools

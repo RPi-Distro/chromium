@@ -14,6 +14,9 @@ fixes/widevine-locations.patch
 fixes/connection-message.patch
 fixes/nomerge.patch
 
+upstream/skia-freetype-api.patch
+upstream/quiche-include.patch
+
 disable/mojo.patch
 disable/tests.patch
 disable/unrar.patch

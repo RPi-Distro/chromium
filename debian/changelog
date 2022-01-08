@@ -5,6 +5,9 @@ chromium (97.0.4692.71-0.1) UNRELEASED; urgency=high
   * Drop numerous patches related to gcc building, since we just build w/ clang.
   * Use python3 as default instead of relying on python2
     (closes: #942962, #996375).
+  * Enable the ozone backend in the build (closes: #955540).
+  * Automatically detect & enable Wayland support when launching chromium
+    (closes: #861796).
   * New upstream stable release (closes: #995212).
     - CVE-2022-0096: Use after free in Storage. Reported by Yangkang
       (@dnpushme) of 360 ATA

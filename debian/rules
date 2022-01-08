@@ -61,7 +61,6 @@ endif
 # disabled features
 defines+=is_debug=false \
          use_goma=false \
-         use_ozone=false \
          use_sysroot=false \
          use_allocator=\"none\" \
          use_libjpeg_turbo=true \

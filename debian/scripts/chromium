@@ -58,6 +58,10 @@ export CHROME_DESKTOP="chromium.desktop"
 DIST=`cat /etc/debian_version`
 export CHROME_VERSION_EXTRA="built on Debian $BUILD_DIST, running on Debian $DIST"
 
+if [ -n "$WAYLAND_DISPLAY" ]; then
+  CHROMIUM_FLAGS="$CHROMIUM_FLAGS --ozone-platform=wayland"
+fi
+
 want_debug=0
 want_temp_profile=0
 while [ $# -gt 0 ]; do

@@ -3,7 +3,7 @@ origin: https://raw.githubusercontent.com/Eloston/ungoogled-chromium/master/reso
 
 --- a/chrome/browser/ui/webui/signin/inline_login_handler_impl.cc
 +++ b/chrome/browser/ui/webui/signin/inline_login_handler_impl.cc
-@@ -408,17 +408,6 @@ void InlineSigninHelper::OnClientOAuthSuccessAndBrowserOpened(
+@@ -421,17 +421,6 @@ void InlineSigninHelper::OnClientOAuthSu
  
      signin_metrics::LogSigninReason(signin_metrics::Reason::kReauthentication);
    } else {
@@ -23,7 +23,7 @@ origin: https://raw.githubusercontent.com/Eloston/ungoogled-chromium/master/reso
  
 --- a/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -53,9 +53,9 @@ void PrimaryAccountManager::RegisterProfilePrefs(PrefRegistrySimple* registry) {
+@@ -53,9 +53,9 @@ void PrimaryAccountManager::RegisterProf
                                 std::string());
    registry->RegisterStringPref(prefs::kGoogleServicesAccountId, std::string());
    registry->RegisterBooleanPref(prefs::kGoogleServicesConsentedToSync, false);
@@ -32,6 +32,6 @@ origin: https://raw.githubusercontent.com/Eloston/ungoogled-chromium/master/reso
    registry->RegisterListPref(prefs::kReverseAutologinRejectedEmailList);
 -  registry->RegisterBooleanPref(prefs::kSigninAllowed, true);
 +  registry->RegisterBooleanPref(prefs::kSigninAllowed, false);
-   registry->RegisterBooleanPref(prefs::kSigninAllowedByPolicy, true);
    registry->RegisterBooleanPref(prefs::kSignedInWithCredentialProvider, false);
  }
+ 

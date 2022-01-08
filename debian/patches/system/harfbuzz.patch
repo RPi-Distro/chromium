@@ -3,9 +3,9 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/third_party/skia/src/pdf/SkPDFSubsetFont.cpp
 +++ b/third_party/skia/src/pdf/SkPDFSubsetFont.cpp
-@@ -7,6 +7,9 @@
- #include "SkLoadICU.h"
- #endif
+@@ -3,6 +3,9 @@
+ 
+ #include "src/pdf/SkPDFSubsetFont.h"
  
 +#undef SK_PDF_USE_SFNTLY
 +#undef SK_PDF_USE_HARFBUZZ_SUBSET
@@ -35,16 +35,15 @@ author: Michael Gilbert <mgilbert@debian.org>
  #include <memory>
 --- a/components/paint_preview/common/serial_utils.cc
 +++ b/components/paint_preview/common/serial_utils.cc
-@@ -65,12 +65,8 @@ sk_sp<SkData> SerializeTypeface(SkTypefa
-   if (usage_it == context->usage->end())
-     return typeface->serialize(SkTypeface::SerializeBehavior::kDontIncludeData);
+@@ -85,12 +85,8 @@ sk_sp<SkData> SerializeTypeface(SkTypefa
+   }
+ #endif
  
 -  auto subset_data = SubsetFont(typeface, *usage_it->second);
--  // This will fail if the font cannot be subsetted properly. In such cases
--  // all typeface data should be added for portability.
--  if (!subset_data)
-+  if (true)
-     return typeface->serialize(SkTypeface::SerializeBehavior::kDoIncludeData);
+-  if (!subset_data) {
+     return typeface->serialize(
+         SkTypeface::SerializeBehavior::kIncludeDataIfLocal);
+-  }
 -  return subset_data;
  }
  
@@ -62,7 +61,7 @@ author: Michael Gilbert <mgilbert@debian.org>
    ]
 --- a/third_party/skia/BUILD.gn
 +++ b/third_party/skia/BUILD.gn
-@@ -989,7 +989,6 @@ optional("pdf") {
+@@ -1060,7 +1060,6 @@ optional("pdf") {
    sources_when_disabled = [ "src/pdf/SkDocument_PDF_None.cpp" ]
    if (skia_use_icu && skia_use_harfbuzz && skia_pdf_subset_harfbuzz) {
      deps += [ "//third_party/harfbuzz" ]

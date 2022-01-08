@@ -36,7 +36,6 @@ Files-Excluded:
  chrome/installer/gcapi*
  chrome/installer/mini_installer
  chrome/installer/launcher_support
- chrome/common/extensions/docs
  chrome/common/safe_browsing/rar_analyzer.*
  chrome/browser/resources/chromeos
  chrome/browser/resources/default_apps
@@ -54,7 +53,6 @@ Files-Excluded:
  tools/perf/page_sets
  tools/perf/measurements/test_data
  tools/perf/page_sets/maps_perf_test
- tools/perf/page_sets/webrtc_cases/adapter.js
  tools/perf/page_sets/tough_scheduling_cases/*.min.js
  tools/page_cycler/acid3
  tools/resultdb/result_adapter
@@ -65,12 +63,10 @@ Files-Excluded:
  components/test/android
  components/drive/chromeos
  testing/buildbot
- testing/rts
  native_client*
  android_webview
  third_party/re2
  third_party/icu
- third_party/ink
  third_party/opus
  third_party/flac
  third_party/llvm
@@ -83,7 +79,6 @@ Files-Excluded:
  third_party/freetype
  build/config/freetype/freetype.gni
  third_party/android*
- third_party/chromite
  third_party/tcmalloc
  third_party/lzma_sdk/7zr.exe
  third_party/test_fonts
@@ -103,7 +98,7 @@ Files-Excluded:
  third_party/zlib/z*
  third_party/zlib/contrib
  third_party/zlib/patches
- third_party/skia/site/user/api
+ third_party/skia/site/docs/user/api
  third_party/skia/platform_tools
  third_party/skia/resources/icc_profiles
  third_party/skia/tools/perf-canvaskit-puppeteer/path_translate_assets/car.svg
@@ -122,11 +117,9 @@ Files-Excluded:
  third_party/openh264/BUILD.gn
  third_party/expat/src
  third_party/unrar
- third_party/perfetto/infra/perfetto.dev/dist
  third_party/perfetto/ui/src/gen
  third_party/checkstyle
  third_party/swiftshader
- third_party/apache-mac
  third_party/apache-win32
  third_party/apache-portable-runtime
  third_party/instrumented_libraries
@@ -139,7 +132,6 @@ Files-Excluded:
  third_party/blink/renderer/platform/testing/data
  third_party/blink/renderer/platform/text_codec_fuzzer_seed_corpus
  third_party/google_input_tools/src/chrome/os/inputview/_locales/*.js
- v8/third_party/binutils
  v8/third_party/colorama
  v8/third_party/googletest
  v8/third_party/inspector_protocol
@@ -156,7 +148,6 @@ Files-Excluded:
  third_party/webrtc/sdk
  third_party/webrtc/data
  third_party/webrtc/examples
- third_party/pdfium/third_party/eu-strip
  third_party/pdfium/third_party/libpng16
  third_party/pdfium/third_party/libopenjpeg20
  third_party/breakpad/breakpad/src/client/mac
@@ -164,12 +155,11 @@ Files-Excluded:
  third_party/boringssl/src/crypto/cipher_extra/test
  third_party/dom_distiller_js/dist/js/domdistiller_wrapped.js
  third_party/devtools-frontend/src/test
- third_party/devtools-frontend/src/scripts/closure/compiler.jar
  third_party/devtools-frontend/src/node_modules/.bin
- third_party/devtools-frontend/src/back_end/CXXDWARFSymbols/unittests
  third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadata.js
  third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadatalite.js
  third_party/tflite/src/tensorflow/examples/multibox_detector/data/surfers.jpg
+ third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
 
 
 Files: *

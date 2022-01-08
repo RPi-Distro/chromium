@@ -3,7 +3,7 @@ author: Michel Le Bihan <michel@lebihan.pl>
 
 --- a/chrome/test/BUILD.gn
 +++ b/chrome/test/BUILD.gn
-@@ -3391,10 +3391,6 @@ template("performance_test_suite_template") {
+@@ -4275,10 +4275,6 @@ template("performance_test_suite_templat
        data_deps += [ "//third_party/dawn/src/tests:dawn_perf_tests" ]
      }
  
@@ -14,17 +14,6 @@ author: Michel Le Bihan <michel@lebihan.pl>
      if (!is_android && !is_fuchsia) {
        data_deps += [
          "//chrome/test:load_library_perf_tests",
---- a/third_party/angle/BUILD.gn
-+++ b/third_party/angle/BUILD.gn
-@@ -47,7 +47,7 @@ declare_args() {
-   angle_force_context_check_every_call = false
- 
-   # Indicate if the rapidJSON library is available to build with in third_party/.
--  angle_has_rapidjson = angle_has_build
-+  angle_has_rapidjson = false
- }
- 
- if (angle_build_all) {
 --- a/third_party/angle/build_overrides/angle.gni
 +++ b/third_party/angle/build_overrides/angle.gni
 @@ -6,7 +6,7 @@
@@ -48,7 +37,7 @@ author: Michel Le Bihan <michel@lebihan.pl>
  }
  
  if (is_android) {
-@@ -177,7 +177,6 @@ angle_test("angle_unittests") {
+@@ -178,7 +177,6 @@ angle_test("angle_unittests") {
  
    deps = [
      ":angle_test_expectations",
@@ -56,7 +45,7 @@ author: Michel Le Bihan <michel@lebihan.pl>
      "$angle_root:libANGLE",
      "$angle_root:libEGL_static",
      "$angle_root:libGLESv2_static",
-@@ -315,48 +314,7 @@ config("angle_maybe_has_histograms") {
+@@ -337,48 +335,7 @@ config("angle_maybe_has_histograms") {
    }
  }
  
@@ -106,7 +95,7 @@ author: Michel Le Bihan <michel@lebihan.pl>
    import("angle_perftests.gni")
  
    # This test suite is for perf tests that use ANGLE's internals in some direct way.
-@@ -1534,12 +1492,11 @@ group("angle_tests") {
+@@ -1562,12 +1519,11 @@ group("angle_tests") {
    testonly = true
    deps = [
      ":angle_end2end_tests",
@@ -122,9 +111,18 @@ author: Michel Le Bihan <michel@lebihan.pl>
        ":angle_white_box_tests",
 --- a/third_party/angle/gni/angle.gni
 +++ b/third_party/angle/gni/angle.gni
-@@ -173,7 +173,7 @@ declare_args() {
-   # TODO(jdarpinian): Support enabling CGL and EAGL at the same time using the soft linking code. Also support disabling both for Metal-only builds.
-   angle_enable_cgl = angle_enable_gl && !angle_enable_eagl && is_apple
+@@ -83,7 +83,7 @@ declare_args() {
+   }
+ 
+   # Indicate if the rapidJSON library is available to build with in third_party/.
+-  angle_has_rapidjson = angle_has_build
++  angle_has_rapidjson = false
+ }
+ 
+ declare_args() {
+@@ -227,7 +227,7 @@ declare_args() {
+       is_apple &&
+       (angle_enable_glsl || angle_enable_metal || use_fuzzing_engine)
  
 -  angle_has_histograms = angle_has_build
 +  angle_has_histograms = false

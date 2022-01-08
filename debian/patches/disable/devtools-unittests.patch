@@ -205,7 +205,7 @@
  
    deps = [
 -    "../../../../../test/unittests/front_end/helpers",
-     "../../../../panels/emulation/components:bundle",
+     "../../../../panels/settings/emulation/components:bundle",
      "../../../../ui/components/helpers:bundle",
    ]
 --- a/third_party/devtools-frontend/src/front_end/ui/components/docs/webvitals/BUILD.gn
@@ -218,3 +218,43 @@
      "../../../../panels/timeline/components:bundle",
      "../../../../ui/components/helpers:bundle",
    ]
+--- a/third_party/devtools-frontend/src/front_end/ui/components/docs/text_editor/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/ui/components/docs/text_editor/BUILD.gn
+@@ -10,7 +10,6 @@ ts_library("ts") {
+   sources = [ "basic.ts" ]
+
+   deps = [
+-    "../../../../../test/unittests/front_end/helpers",
+     "../../../../ui/components/helpers:bundle",
+     "../../../../ui/components/text_editor:bundle",
+   ]
+--- a/third_party/devtools-frontend/src/front_end/ui/components/docs/text_prompt/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/ui/components/docs/text_prompt/BUILD.gn
+@@ -10,7 +10,6 @@ ts_library("ts") {
+   sources = [ "basic.ts" ]
+
+   deps = [
+-    "../../../../../test/unittests/front_end/helpers",
+     "../../../../ui/components/text_prompt:bundle",
+   ]
+ }
+--- a/third_party/devtools-frontend/src/front_end/ui/components/docs/button/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/ui/components/docs/button/BUILD.gn
+@@ -10,7 +10,6 @@ ts_library("ts") {
+   sources = [ "basic.ts" ]
+
+   deps = [
+-    "../../../../../test/unittests/front_end/helpers",
+     "../../buttons:bundle",
+   ]
+ }
+--- a/third_party/devtools-frontend/src/front_end/ui/components/docs/input/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/ui/components/docs/input/BUILD.gn
+@@ -10,7 +10,6 @@ ts_library("ts") {
+   sources = [ "basic.ts" ]
+
+   deps = [
+-    "../../../../../test/unittests/front_end/helpers",
+     "../../input:bundle",
+   ]
+ }

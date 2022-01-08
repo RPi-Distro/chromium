@@ -13,7 +13,6 @@ fixes/closure.patch
 fixes/ps-print.patch
 fixes/inspector.patch
 fixes/sequence-point.patch
-fixes/missing-includes.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 fixes/connection-message.patch
@@ -43,7 +42,6 @@ disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/angle-perftests.patch
 disable/web-ui-tests.patch
-disable/ozone-unittests.patch
 disable/devtools-unittests.patch
 disable/ios.patch
 disable/libaom-arm.patch
@@ -51,7 +49,6 @@ disable/libaom-arm.patch
 warnings/restrict.patch
 warnings/multichar.patch
 warnings/deprecated.patch
-warnings/gcc-diagnostic.patch
 warnings/null-destination.patch
 warnings/stringop-overflow.patch
 warnings/int-in-bool-context.patch

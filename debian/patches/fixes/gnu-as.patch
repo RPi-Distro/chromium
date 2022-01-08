@@ -3,10 +3,10 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1127,7 +1127,7 @@ config("compiler_deterministic") {
-       "-Xclang",
-       ".",
-     ]
+@@ -1261,7 +1261,7 @@ config("compiler_deterministic") {
+       # and -fcoverage-compilation-dir=.
+       cflags += [ "-ffile-compilation-dir=." ]
+     }
 -    if (!is_win) {
 +    if (false) {
        # We don't use clang -cc1as on Windows (yet? https://crbug.com/762167)

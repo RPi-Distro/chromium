@@ -1,13 +1,11 @@
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1620,10 +1620,6 @@ config("default_warnings") {
+@@ -1687,8 +1687,6 @@ config("no_chromium_code") {
+     ]
+     if (!is_nacl && (current_toolchain == host_toolchain || !use_xcode_clang)) {
+       cflags += [
+-        # Disabled for similar reasons as -Wunused-variable.
+-        "-Wno-unused-but-set-variable",
  
-           # TODO(https://crbug.com/1050281): Clean up, enable.
-           "-Wno-non-c-typedef-for-linkage",
--
--          # TODO(https://crbug.com/1203071): Clean up and enable.
--          "-Wno-unused-but-set-parameter",
--          "-Wno-unused-but-set-variable",
-         ]
- 
-         cflags_c += [
+         # TODO(https://crbug.com/1202159): Clean up and enable.
+         "-Wno-misleading-indentation",

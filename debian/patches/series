@@ -7,7 +7,6 @@ debianization/explicit-python2.patch
 fixes/gnu-as.patch
 fixes/closure.patch
 fixes/ps-print.patch
-fixes/inspector.patch
 fixes/sequence-point.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch

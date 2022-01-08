@@ -143,7 +143,6 @@ Files-Excluded:
  third_party/google_input_tools/src/chrome/os/inputview/_locales/*.js
  v8/third_party/colorama
  v8/third_party/googletest
- v8/third_party/inspector_protocol
  third_party/libxml/mac
  third_party/libxml/linux
  third_party/libxml/win32

@@ -112,15 +112,11 @@ Files-Excluded:
  third_party/skia/platform_tools
  third_party/skia/resources/icc_profiles
  third_party/skia/tools/perf-canvaskit-puppeteer/path_translate_assets/car.svg
- third_party/ffmpeg/BUILD.gn
  third_party/ffmpeg/doc
- third_party/ffmpeg/lib*
  third_party/ffmpeg/tests
  third_party/ffmpeg/tools
  third_party/ffmpeg/fftools
- third_party/ffmpeg/compat
  third_party/ffmpeg/config*
- third_party/ffmpeg/chromium
  third_party/harfbuzz-ng/src
  third_party/harfbuzz-ng/harfbuzz.gni
  third_party/openh264/src

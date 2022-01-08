@@ -51,7 +51,6 @@ system/node.patch
 system/nspr.patch
 system/zlib.patch
 system/event.patch
-system/ffmpeg.patch
 system/jsoncpp.patch
 system/harfbuzz.patch
 system/openjpeg.patch
@@ -61,4 +60,3 @@ system/opus.patch
 system/eu-strip.patch
 
 bullseye/icu-types.patch
-bullseye/ffmpeg.patch

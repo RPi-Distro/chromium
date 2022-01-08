@@ -79,9 +79,13 @@ defines+=is_debug=false \
          angle_has_histograms=false \
          enable_js_type_check=false \
          treat_warnings_as_errors=false \
+         is_cfi=false \
+         use_thin_lto=false \
+         chrome_pgo_phase=0 \
 
 # enabled features
 defines+=use_gio=true \
+         is_official_build=true \
          use_pulseaudio=true \
          link_pulseaudio=true \
          enable_widevine=true \

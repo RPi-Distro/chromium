@@ -30,6 +30,7 @@ disable/catapult.patch
 disable/installer.patch
 disable/font-tests.patch
 disable/swiftshader.patch
+disable/swiftshader-2.patch
 disable/welcome-page.patch
 disable/google-api-warning.patch
 disable/third-party-cookies.patch
@@ -46,6 +47,7 @@ warnings/deprecated.patch
 warnings/unused-but.patch
 
 system/icu.patch
+system/icu-shim.patch
 system/jpeg.patch
 system/node.patch
 system/nspr.patch

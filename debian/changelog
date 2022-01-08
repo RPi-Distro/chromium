@@ -9,6 +9,8 @@ chromium (97.0.4692.71-0.1) UNRELEASED; urgency=high
   * Automatically detect & enable Wayland support when launching chromium
     (closes: #861796).
   * Rename crashpad_handler to chrome_crashpad_handler.
+  * No longer hardcode desktop GL implementation as default - it causes
+    the chromium compositor's draw buffer to fill up & crash on my system.
   * New upstream stable release (closes: #995212).
     - CVE-2022-0096: Use after free in Storage. Reported by Yangkang
       (@dnpushme) of 360 ATA

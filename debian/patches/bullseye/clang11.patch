@@ -1,4 +1,4 @@
-description: clang-11 doesn't support -ffile-compilation-dir
+description: clang-11 doesn't support -ffile-compilation-dir or -fuse-ctor-homing
 author: Andres Salomon <dilinger@debian.org>
 
 Index: chromium-96.0.4664.110/build/config/compiler/BUILD.gn
@@ -15,3 +15,11 @@ Index: chromium-96.0.4664.110/build/config/compiler/BUILD.gn
      }
      if (false) {
        # We don't use clang -cc1as on Windows (yet? https://crbug.com/762167)
+@@ -2337,7 +2337,6 @@ config("symbols") {
+       # by emitting class type info only when constructors are emitted.
+       cflags += [
+         "-Xclang",
+-        "-fuse-ctor-homing",
+       ]
+     }
+   }

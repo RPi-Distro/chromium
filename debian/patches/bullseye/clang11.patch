@@ -1,0 +1,17 @@
+description: clang-11 doesn't support -ffile-compilation-dir
+author: Andres Salomon <dilinger@debian.org>
+
+Index: chromium-96.0.4664.110/build/config/compiler/BUILD.gn
+===================================================================
+--- chromium-96.0.4664.110.orig/build/config/compiler/BUILD.gn
++++ chromium-96.0.4664.110/build/config/compiler/BUILD.gn
+@@ -1259,7 +1259,8 @@ config("compiler_deterministic") {
+     } else {
+       # -ffile-compilation-dir is an alias for both -fdebug-compilation-dir=
+       # and -fcoverage-compilation-dir=.
+-      cflags += [ "-ffile-compilation-dir=." ]
++      #cflags += [ "-ffile-compilation-dir=." ]
++      cflags += [ "-fdebug-compilation-dir=." ]
+     }
+     if (false) {
+       # We don't use clang -cc1as on Windows (yet? https://crbug.com/762167)

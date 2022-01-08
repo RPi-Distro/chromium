@@ -185,14 +185,24 @@ Files-Excluded:
  third_party/node/node_modules/pu*
  third_party/node/node_modules/q*
  third_party/node/node_modules/r*
- third_party/node/node_modules/s*
+ third_party/node/node_modules/sa*
+ third_party/node/node_modules/se*
+ third_party/node/node_modules/shebang*
+ third_party/node/node_modules/si*
+ third_party/node/node_modules/sl*
+ third_party/node/node_modules/so*
+ third_party/node/node_modules/sp*
+ third_party/node/node_modules/st*
+ third_party/node/node_modules/su*
+ third_party/node/node_modules/sv*
  third_party/node/node_modules/ta*
  third_party/node/node_modules/tes*
  third_party/node/node_modules/tex*
  third_party/node/node_modules/to*
  third_party/node/node_modules/tr*
  third_party/node/node_modules/ts*
- third_party/node/node_modules/ty*
+ third_party/node/node_modules/type-*
+ third_party/node/node_modules/typi*
  third_party/node/node_modules/u*
  third_party/node/node_modules/v8*
  third_party/node/node_modules/vl*

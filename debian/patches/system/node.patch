@@ -70,7 +70,7 @@ author: Michael Gilbert <mgilbert@debian.org>
 +}
 --- /dev/null
 +++ b/third_party/node/node_modules.py
-@@ -0,0 +1,12 @@
+@@ -0,0 +1,27 @@
 +#!/usr/bin/python3
 +# Copyright 2016 The Chromium Authors. All rights reserved.
 +# Use of this source code is governed by a BSD-style license that can be
@@ -78,11 +78,26 @@ author: Michael Gilbert <mgilbert@debian.org>
 +
 +from os import path as os_path
 +
++NODE_MODULES = os_path.join(os_path.dirname(__file__), 'node_modules')
++
++def _path_in_node_modules(*args):
++  return os_path.join(NODE_MODULES, *args)
++
 +
 +# Typescript is not approved for general use in Chromium. Email chromium-dev
 +# if you want to use it.
 +def PathToTypescript():
 +  return '/usr/bin/tsc'
++
++def PathToRollup():
++  return '/usr/share/nodejs/rollup/dist/bin/rollup'
++
++def PathToPolymerCssBuild():
++  return _path_in_node_modules('polymer-css-build', 'bin', 'polymer-css-build')
++
++def PathToTerser():
++  return _path_in_node_modules('terser', 'bin', 'terser')
++
 --- /dev/null
 +++ b/third_party/node/node.py
 @@ -0,0 +1,36 @@

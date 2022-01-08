@@ -8,6 +8,7 @@ chromium (97.0.4692.71-0.1) UNRELEASED; urgency=high
   * Enable the ozone backend in the build (closes: #955540).
   * Automatically detect & enable Wayland support when launching chromium
     (closes: #861796).
+  * Rename crashpad_handler to chrome_crashpad_handler.
   * New upstream stable release (closes: #995212).
     - CVE-2022-0096: Use after free in Storage. Reported by Yangkang
       (@dnpushme) of 360 ATA

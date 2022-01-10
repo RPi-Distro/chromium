@@ -1,4 +1,4 @@
-chromium (97.0.4692.71-0.1) UNRELEASED; urgency=high
+chromium (97.0.4692.71-0.1) unstable; urgency=high
 
   * Non-maintainer upload.
   * Stop building chromium's bunded gn and instead build-dep on generate-ninja.
@@ -245,7 +245,7 @@ chromium (97.0.4692.71-0.1) UNRELEASED; urgency=high
     - CVE-2021-37972: Out of bounds read in libjpeg-turbo. Reported by Xu
       Hanyu and Lu Yutao from Panguite-Forensics-Lab of Qianxin
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 06 Jan 2022 17:48:37 -0500
+ -- Andres Salomon <dilinger@debian.org>  Mon, 10 Jan 2022 01:38:13 -0500
 
 chromium (93.0.4577.82-1) unstable; urgency=medium
 

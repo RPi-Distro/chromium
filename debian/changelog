@@ -1,3 +1,10 @@
+chromium-browser (95.0.4638.78-rpt6) bullseye; urgency=medium
+
+  * Fix GL crash on right click
+    - https://github.com/RPi-Distro/chromium-browser/issues/26
+
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 19 Jan 2022 08:30:47 +0000
+
 chromium-browser (95.0.4638.78-rpt5) bullseye; urgency=medium
 
   * Re-enable armv6 support

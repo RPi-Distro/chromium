@@ -1,0 +1,13 @@
+--- a/src/chrome/browser/ui/startup/startup_browser_creator_impl.cc
++++ b/src/chrome/browser/ui/startup/startup_browser_creator_impl.cc
+@@ -695,8 +695,8 @@ void StartupBrowserCreatorImpl::AddInfoB
+     }
+ #endif
+ 
+-    if (!google_apis::HasAPIKeyConfigured())
+-      GoogleApiKeysInfoBarDelegate::Create(infobar_manager);
++    //if (!google_apis::HasAPIKeyConfigured())
++    //  GoogleApiKeysInfoBarDelegate::Create(infobar_manager);
+ 
+     if (ObsoleteSystem::IsObsoleteNowOrSoon()) {
+       PrefService* local_state = g_browser_process->local_state();

@@ -2,6 +2,8 @@ chromium (97.0.4692.99-0.1) UNRELEASED; urgency=high
 
   * Non-maintainer upload.
   * Build-dep on terser | uglifyjs.terser (closes: #1001036).
+  * Revert automatic wayland detection for now (closes: #1003689).
+    We'll try again in chromium v98 or v99.
   * New upstream stable release.
     - CVE-2022-0289: Use after free in Safe browsing.
       Reported by Sergei Glazunov of Google Project Zero.

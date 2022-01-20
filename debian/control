@@ -3,7 +3,7 @@ Section: web
 Priority: optional
 Maintainer: Debian Chromium Team <chromium@packages.debian.org>
 Uploaders: Michael Gilbert <mgilbert@debian.org>,
- Riku Voipio <riku.voipio@linaro.org>,
+ Andres Salomon <dilinger@debian.org>,
  Michel Le Bihan <michel@lebihan.pl>
 Vcs-Git: https://salsa.debian.org/chromium-team/chromium.git
 Vcs-Browser: https://salsa.debian.org/chromium-team/chromium

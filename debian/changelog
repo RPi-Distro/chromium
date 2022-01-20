@@ -1,6 +1,9 @@
-chromium (97.0.4692.99-0.1) UNRELEASED; urgency=high
+chromium (97.0.4692.99-1) unstable; urgency=high
 
-  * Non-maintainer upload.
+  * Add myself as an uploader.
+  * Ack my NMU (closes: #1003440).
+  * Remove Riku Voipio from uploaders at the request of the Debian MIA team -
+    thanks for all your past work on chromium, Riku! (closes: #1001562)
   * Build-dep on terser | uglifyjs.terser (closes: #1001036).
   * Revert automatic wayland detection for now (closes: #1003689).
     We'll try again in chromium v98 or v99.

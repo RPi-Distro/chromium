@@ -1,3 +1,54 @@
+chromium (97.0.4692.99-0.1) UNRELEASED; urgency=high
+
+  * Non-maintainer upload.
+  * New upstream stable release.
+    - CVE-2022-0289: Use after free in Safe browsing.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-0290: Use after free in Site isolation. Reported by
+      Brendon Tiszka and Sergei Glazunov of Google Project Zero.
+    - CVE-2022-0291: Inappropriate implementation in Storage.
+      Reported by Anonymous.
+    - CVE-2022-0292: Inappropriate implementation in Fenced Frames.
+      Reported by Brendon Tiszka.
+    - CVE-2022-0293: Use after free in Web packaging. Reported by
+      Rong Jian and Guang Gong of 360 Alpha Lab.
+    - CVE-2022-0294: Inappropriate implementation in Push messaging.
+      Reported by Rong Jian and Guang Gong of 360 Alpha Lab.
+    - CVE-2022-0295: Use after free in Omnibox. Reported by Weipeng Jiang
+      (@Krace) and Guang Gong of 360 Vulnerability Research Institute.
+    - CVE-2022-0296: Use after free in Printing. Reported by koocola(@alo_cook)
+      and Guang Gong of 360 Vulnerability Research Institute.
+    - CVE-2022-0297: Use after free in Vulkan. Reported by Cassidy Kim of
+      Amber Security Lab, OPPO Mobile Telecommunications Corp. Ltd.
+    - CVE-2022-0298: Use after free in Scheduling.
+      Reported by Yangkang (@dnpushme) of 360 ATA.
+    - CVE-2022-0300: Use after free in Text Input Method Editor. Reported by
+      Rong Jian and Guang Gong of 360 Alpha Lab.
+    - CVE-2022-0301: Heap buffer overflow in DevTools. Reported by
+      Abdulrahman Alqabandi, Microsoft Browser Vulnerability Research.
+    - CVE-2022-0302: Use after free in Omnibox. Reported by Weipeng Jiang
+      (@Krace) and Guang Gong of 360 Vulnerability Research Institute.
+    - CVE-2022-0303: Race in GPU Watchdog.
+      Reported by Yiğit Can YILMAZ (@yilmazcanyigit).
+    - CVE-2022-0304: Use after free in Bookmarks. Reported by Rong Jian and
+      Guang Gong of 360 Alpha Lab.
+    - CVE-2022-0305: Inappropriate implementation in Service Worker API.
+      Reported by @uwu7586.
+    - CVE-2022-0306: Heap buffer overflow in PDFium.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-0307: Use after free in Optimization Guide.
+      Reported by Samet Bekmezci @sametbekmezci.
+    - CVE-2022-0308: Use after free in Data Transfer.
+      Reported by @ginggilBesel.
+    - CVE-2022-0309: Inappropriate implementation in Autofill.
+      Reported by Alesandro Ortiz.
+    - CVE-2022-0310: Heap buffer overflow in Task Manager.
+      Reported by Samet Bekmezci @sametbekmezci.
+    - CVE-2022-0311: Heap buffer overflow in Task Manager.
+      Reported by Samet Bekmezci @sametbekmezci.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 19 Jan 2022 23:53:45 -0500
+
 chromium (97.0.4692.71-0.1) unstable; urgency=high
 
   * Non-maintainer upload.

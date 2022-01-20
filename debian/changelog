@@ -1,6 +1,7 @@
 chromium (97.0.4692.99-0.1) UNRELEASED; urgency=high
 
   * Non-maintainer upload.
+  * Build-dep on terser | uglifyjs.terser (closes: #1001036).
   * New upstream stable release.
     - CVE-2022-0289: Use after free in Safe browsing.
       Reported by Sergei Glazunov of Google Project Zero.

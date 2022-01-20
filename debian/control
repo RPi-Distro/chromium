@@ -32,7 +32,7 @@ Build-Depends:
  bison,
  nodejs,
  node-typescript,
- uglifyjs.terser,
+ terser | uglifyjs.terser,
  rollup,
  node-babel7,
  node-has-ansi,

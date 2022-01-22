@@ -15,6 +15,7 @@ fixes/nomerge.patch
 
 upstream/skia-freetype-api.patch
 upstream/quiche-include.patch
+upstream/restrict.patch
 
 disable/mojo.patch
 disable/tests.patch
@@ -41,7 +42,6 @@ disable/web-ui-tests.patch
 disable/devtools-unittests.patch
 disable/libaom-arm.patch
 
-warnings/restrict.patch
 warnings/multichar.patch
 warnings/deprecated.patch
 warnings/unused-but.patch

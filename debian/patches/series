@@ -3,7 +3,6 @@ debianization/sandbox.patch
 debianization/optimization.patch
 debianization/master-preferences.patch
 
-fixes/gnu-as.patch
 fixes/closure.patch
 fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
@@ -42,8 +41,6 @@ disable/web-ui-tests.patch
 disable/devtools-unittests.patch
 disable/libaom-arm.patch
 
-warnings/multichar.patch
-warnings/deprecated.patch
 warnings/unused-but.patch
 
 system/icu.patch

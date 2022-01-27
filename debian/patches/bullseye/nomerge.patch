@@ -1,4 +1,4 @@
-description: fix build error
+description: fix build error for clang-11
 
 ../../base/check.h:88:3: error: 'nomerge' attribute cannot be applied to a declaration
   NOMERGE ~CheckError();

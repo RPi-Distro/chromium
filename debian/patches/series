@@ -10,7 +10,6 @@ fixes/sequence-point.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 fixes/connection-message.patch
-fixes/nomerge.patch
 
 upstream/skia-freetype-api.patch
 upstream/quiche-include.patch
@@ -41,8 +40,6 @@ disable/web-ui-tests.patch
 disable/devtools-unittests.patch
 disable/libaom-arm.patch
 
-warnings/unused-but.patch
-
 system/icu.patch
 system/icu-shim.patch
 system/jpeg.patch
@@ -58,6 +55,7 @@ system/clang-format.patch
 system/opus.patch
 system/eu-strip.patch
 
+bullseye/nomerge.patch
 bullseye/icu-types.patch
 bullseye/clang11.patch
 bullseye/node-tsc.patch

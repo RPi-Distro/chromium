@@ -14,8 +14,8 @@ upstream/skia-freetype-api.patch
 upstream/quiche-include.patch
 upstream/restrict.patch
 upstream/sequence-point.patch
+upstream/mojo.patch
 
-disable/mojo.patch
 disable/tests.patch
 disable/unrar.patch
 disable/glmark.patch
@@ -24,7 +24,6 @@ disable/signin.patch
 disable/android.patch
 disable/fuzzers.patch
 disable/openh264.patch
-disable/buildbot.patch
 disable/catapult.patch
 disable/installer.patch
 disable/font-tests.patch
@@ -36,7 +35,6 @@ disable/third-party-cookies.patch
 disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/angle-perftests.patch
-disable/web-ui-tests.patch
 disable/devtools-unittests.patch
 disable/libaom-arm.patch
 

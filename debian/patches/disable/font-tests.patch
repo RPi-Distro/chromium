@@ -12,13 +12,15 @@ author: Michael Gilbert <mgilbert@debian.org>
      deps += [ "//third_party/test_fonts" ]
      data_deps += [ "//third_party/test_fonts" ]
    }
---- a/base/test/BUILD.gn
-+++ b/base/test/BUILD.gn
-@@ -198,7 +198,6 @@ static_library("test_support") {
- 
-   if (is_linux || is_chromeos) {
-     sources += [ "test_file_util_linux.cc" ]
--    public_deps += [ "//third_party/test_fonts/fontconfig:test_support" ]
+--- a/third_party/test_fonts/fontconfig/BUILD.gn
++++ b/third_party/test_fonts/fontconfig/BUILD.gn
+@@ -8,9 +8,7 @@ if (is_linux || is_chromeos) {
+   group("test_support") {
+     testonly = true
+     public_deps = [ ":fontconfig_util_linux" ]
+-    data_deps = [ "//third_party/test_fonts" ]
+     if (current_toolchain == host_toolchain) {
+-      data_deps += [ ":do_generate_fontconfig_caches" ]
+     }
    }
  
-   if (is_mac) {

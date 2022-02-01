@@ -1,9 +1,7 @@
 description: In order to build w/ libstdc++ >= 11 and clang, this patch is needed.
 author: https://bugs.gentoo.org/786597#c14
-Index: chromium-96.0.4664.110/sql/recover_module/btree.cc
-===================================================================
---- chromium-96.0.4664.110.orig/sql/recover_module/btree.cc
-+++ chromium-96.0.4664.110/sql/recover_module/btree.cc
+--- a/sql/recover_module/btree.cc
++++ b/sql/recover_module/btree.cc
 @@ -136,16 +136,25 @@ static_assert(std::is_trivially_destruct
                "Move the destructor to the .cc file if it's non-trival");
  #endif  // !DCHECK_IS_ON()
@@ -36,10 +34,8 @@ Index: chromium-96.0.4664.110/sql/recover_module/btree.cc
  bool LeafPageDecoder::TryAdvance() {
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
    DCHECK(CanAdvance());
-Index: chromium-96.0.4664.110/sql/recover_module/btree.h
-===================================================================
---- chromium-96.0.4664.110.orig/sql/recover_module/btree.h
-+++ chromium-96.0.4664.110/sql/recover_module/btree.h
+--- a/sql/recover_module/btree.h
++++ b/sql/recover_module/btree.h
 @@ -103,7 +103,7 @@ class LeafPageDecoder {
    //
    // |db_reader| must have been used to read an inner page of a table B-tree.
@@ -83,10 +79,8 @@ Index: chromium-96.0.4664.110/sql/recover_module/btree.h
  
    // The reader's cursor state.
    //
-Index: chromium-96.0.4664.110/sql/recover_module/cursor.cc
-===================================================================
---- chromium-96.0.4664.110.orig/sql/recover_module/cursor.cc
-+++ chromium-96.0.4664.110/sql/recover_module/cursor.cc
+--- a/sql/recover_module/cursor.cc
++++ b/sql/recover_module/cursor.cc
 @@ -28,7 +28,7 @@ VirtualCursor::~VirtualCursor() {
  int VirtualCursor::First() {
    DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
@@ -148,11 +142,9 @@ Index: chromium-96.0.4664.110/sql/recover_module/cursor.cc
      return;
    }
  
-Index: chromium-96.0.4664.110/sql/recover_module/cursor.h
-===================================================================
---- chromium-96.0.4664.110.orig/sql/recover_module/cursor.h
-+++ chromium-96.0.4664.110/sql/recover_module/cursor.h
-@@ -129,7 +129,7 @@ class VirtualCursor {
+--- a/sql/recover_module/cursor.h
++++ b/sql/recover_module/cursor.h
+@@ -130,7 +130,7 @@ class VirtualCursor {
    std::vector<std::unique_ptr<InnerPageDecoder>> inner_decoders_;
  
    // Decodes the leaf page containing records.
@@ -161,10 +153,8 @@ Index: chromium-96.0.4664.110/sql/recover_module/cursor.h
  
    SEQUENCE_CHECKER(sequence_checker_);
  };
-Index: chromium-96.0.4664.110/sql/recover_module/pager.cc
-===================================================================
---- chromium-96.0.4664.110.orig/sql/recover_module/pager.cc
-+++ chromium-96.0.4664.110/sql/recover_module/pager.cc
+--- a/sql/recover_module/pager.cc
++++ b/sql/recover_module/pager.cc
 @@ -23,8 +23,7 @@ static_assert(DatabasePageReader::kMaxPa
                "ints are not appropriate for representing page IDs");
  
@@ -186,10 +176,8 @@ Index: chromium-96.0.4664.110/sql/recover_module/pager.cc
  
    // |page_id_| needs to be set to kInvalidPageId if the read failed.
    // Otherwise, future ReadPage() calls with the previous |page_id_| value
-Index: chromium-96.0.4664.110/sql/recover_module/pager.h
-===================================================================
---- chromium-96.0.4664.110.orig/sql/recover_module/pager.h
-+++ chromium-96.0.4664.110/sql/recover_module/pager.h
+--- a/sql/recover_module/pager.h
++++ b/sql/recover_module/pager.h
 @@ -5,6 +5,7 @@
  #ifndef SQL_RECOVER_MODULE_PAGER_H_
  #define SQL_RECOVER_MODULE_PAGER_H_
@@ -198,7 +186,7 @@ Index: chromium-96.0.4664.110/sql/recover_module/pager.h
  #include <cstdint>
  #include <memory>
  #include <ostream>
-@@ -71,7 +72,7 @@ class DatabasePageReader {
+@@ -72,7 +73,7 @@ class DatabasePageReader {
      DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
      DCHECK_NE(page_id_, kInvalidPageId)
          << "Successful ReadPage() required before accessing pager state";
@@ -207,7 +195,7 @@ Index: chromium-96.0.4664.110/sql/recover_module/pager.h
    }
  
    // The number of bytes in the page read by the last ReadPage() call.
-@@ -138,7 +139,7 @@ class DatabasePageReader {
+@@ -139,7 +140,7 @@ class DatabasePageReader {
    int page_id_ = kInvalidPageId;
    // Stores the bytes of the last page successfully read by ReadPage().
    // The content is undefined if the last call to ReadPage() did not succeed.
@@ -215,4 +203,4 @@ Index: chromium-96.0.4664.110/sql/recover_module/pager.h
 +  const std::array<uint8_t, kMaxPageSize> page_data_;
    // Raw pointer usage is acceptable because this instance's owner is expected
    // to ensure that the VirtualTable outlives this.
-   VirtualTable* const table_;
+   const raw_ptr<VirtualTable> table_;

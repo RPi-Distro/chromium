@@ -258,3 +258,23 @@
      "../../input:bundle",
    ]
  }
+--- a/third_party/devtools-frontend/src/front_end/ui/components/docs/css_overview/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/ui/components/docs/css_overview/BUILD.gn
+@@ -10,7 +10,6 @@ ts_library("ts") {
+   sources = [ "start_view.ts" ]
+ 
+   deps = [
+-    "../../../../../test/unittests/front_end/helpers",
+     "../../../../panels/css_overview/components:bundle",
+     "../../../../ui/components/helpers:bundle",
+   ]
+--- a/third_party/devtools-frontend/src/front_end/ui/components/docs/panel_feedback/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/ui/components/docs/panel_feedback/BUILD.gn
+@@ -13,7 +13,6 @@ ts_library("ts") {
+   ]
+ 
+   deps = [
+-    "../../../../../test/unittests/front_end/helpers",
+     "../../../../ui/components/helpers:bundle",
+     "../../../components/panel_feedback:bundle",
+   ]

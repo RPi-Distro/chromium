@@ -3,7 +3,7 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -488,7 +488,7 @@ group("gn_all") {
+@@ -521,7 +521,7 @@ group("gn_all") {
      ]
    }
  
@@ -14,16 +14,16 @@ author: Michael Gilbert <mgilbert@debian.org>
    }
 --- a/third_party/angle/gni/angle.gni
 +++ b/third_party/angle/gni/angle.gni
-@@ -123,7 +123,7 @@ declare_args() {
-       (ozone_platform_gbm || !is_linux || (angle_use_x11 && !is_chromeos)) &&
-       !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
+@@ -133,7 +133,7 @@ declare_args() {
+                      !is_linux || (angle_use_x11 && !is_chromeos)) &&
+                     !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
  
 -  angle_enable_vulkan =
 +  angle_enable_vulkan = false &&
        angle_has_build &&
        !(is_android && build_with_chromium && is_official_build) &&
        ((is_win && !angle_is_winuwp) ||
-@@ -408,7 +408,6 @@ if (angle_standalone || build_with_chromium) {
+@@ -432,7 +432,6 @@ if (angle_standalone || build_with_chrom
                        "$angle_root:angle_common",
                        "$angle_root:includes",
                        "$angle_root/src/tests:angle_test_expectations",

@@ -6,7 +6,6 @@ debianization/master-preferences.patch
 fixes/closure.patch
 fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
-fixes/sequence-point.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 fixes/connection-message.patch
@@ -14,6 +13,7 @@ fixes/connection-message.patch
 upstream/skia-freetype-api.patch
 upstream/quiche-include.patch
 upstream/restrict.patch
+upstream/sequence-point.patch
 
 disable/mojo.patch
 disable/tests.patch

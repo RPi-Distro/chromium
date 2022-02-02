@@ -32,7 +32,6 @@ Files-Excluded:
  ui/chromeos/user*
  base/mac
  base/test/data
- base/third_party/nspr
  base/third_party/libevent
  chromeos/third_party
  chrome/android

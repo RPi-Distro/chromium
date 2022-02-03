@@ -14,6 +14,7 @@ upstream/quiche-include.patch
 upstream/restrict.patch
 upstream/sequence-point.patch
 upstream/mojo.patch
+upstream/libdrm.patch
 
 disable/tests.patch
 disable/unrar.patch

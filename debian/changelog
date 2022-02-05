@@ -1,8 +1,45 @@
-chromium (98.0.4758.80-1) UNRELEASED; urgency=high
+chromium (98.0.4758.80-1) unstable; urgency=high
 
   * Update manpage for package rename and everyone moving to https.
+  * Drop libnpsr4-dev versioned dep.
+  * Drop a bunch of patches (changes shouldn't affect chromium users).
+    See https://salsa.debian.org/chromium-team/chromium/-/commits/master/
+    for the dropped patches.
+  * New upstream stable release.
+    - CVE-2022-0452: Use after free in Safe Browsing.
+      Reported by avaue at S.S.L.
+    - CVE-2022-0453: Use after free in Reader Mode.
+      Reported by Rong Jian of VRI.
+    - CVE-2022-0454: Heap buffer overflow in ANGLE.
+      Reported by Seong-Hwan Park (SeHwa).
+    - CVE-2022-0455: Inappropriate implementation in Full Screen Mode.
+      Reported by Irvan Kurniawan (sourc7).
+    - CVE-2022-0456: Use after free in Web Search.
+      Reported by Zhihua Yao of KunLun Lab.
+    - CVE-2022-0457: Type Confusion in V8. Reported by rax of the Group0x58.
+    - CVE-2022-0458: Use after free in Thumbnail Tab Strip.
+      Reported by Anonymous.
+    - CVE-2022-0459: Use after free in Screen Capture.
+      Reported by raven (@raid_akame).
+    - CVE-2022-0460: Use after free in Window Dialog. Reported by 0x74960.
+    - CVE-2022-0461: Policy bypass in COOP. Reported by NDevTK.
+    - CVE-2022-0462: Inappropriate implementation in Scroll.
+      Reported by Youssef Sammouda.
+    - CVE-2022-0463: Use after free in Accessibility.
+      Reported by Zhihua Yao of KunLun Lab.
+    - CVE-2022-0464: Use after free in Accessibility.
+      Reported by Zhihua Yao of KunLun Lab.
+    - CVE-2022-0465: Use after free in Extensions.
+      Reported by Samet Bekmezci @sametbekmezci.
+    - CVE-2022-0466: Inappropriate implementation in Extensions Platform.
+      Reported by David Erceg.
+    - CVE-2022-0467: Inappropriate implementation in Pointer Lock.
+      Reported by Alesandro Ortiz.
+    - CVE-2022-0468: Use after free in Payments. Reported by Krace.
+    - CVE-2022-0469: Use after free in Cast. Reported by Thomas Orlita.
+    - CVE-2022-0470: Out of bounds memory access in V8. Reported by Looben Yang.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 24 Jan 2022 03:40:43 -0500
+ -- Andres Salomon <dilinger@debian.org>  Sat, 05 Feb 2022 01:12:10 -0500
 
 chromium (97.0.4692.99-1) unstable; urgency=high
 
@@ -75,6 +112,7 @@ chromium (97.0.4692.71-0.1) unstable; urgency=high
   * No longer hardcode desktop GL implementation as default - it causes
     the chromium compositor's draw buffer to fill up & crash on my system.
   * Enable official builds.
+  * Switch to using bundled ffmpeg instead of debian's ffmpeg.
   * New upstream stable release (closes: #995212).
     - CVE-2022-0096: Use after free in Storage. Reported by Yangkang
       (@dnpushme) of 360 ATA

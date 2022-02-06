@@ -89,6 +89,7 @@ defines+=use_gio=true \
          symbol_level=0 \
          use_pulseaudio=true \
          link_pulseaudio=true \
+         rtc_use_pipewire=true \
          enable_widevine=true \
          v8_enable_backtrace=true \
          use_system_zlib=true \

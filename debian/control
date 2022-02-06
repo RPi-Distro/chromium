@@ -68,6 +68,7 @@ Build-Depends:
  libexif-dev,
  libflac-dev,
  libudev-dev,
+ libpipewire-0.3-dev,
  libopus-dev,
  libwebp-dev,
  libxtst-dev,

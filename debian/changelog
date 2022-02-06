@@ -1,3 +1,9 @@
+chromium (98.0.4758.80-2) UNRELEASED; urgency=high
+
+  * Enable pipewire support in webrtc (closes: #954824).
+
+ -- Andres Salomon <dilinger@debian.org>  Sat, 05 Feb 2022 23:22:20 -0500
+
 chromium (98.0.4758.80-1) unstable; urgency=high
 
   * Update manpage for package rename and everyone moving to https.

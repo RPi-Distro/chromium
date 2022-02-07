@@ -1,6 +1,9 @@
 chromium (98.0.4758.80-2) UNRELEASED; urgency=high
 
   * Enable pipewire support in webrtc (closes: #954824).
+  * Enable optimize_webui. This was UI speed improvement was originally
+    disabled due to nodejs deps, but recent upstream changes makes those
+    deps necessary either way (closes: #970571).
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 05 Feb 2022 23:22:20 -0500
 

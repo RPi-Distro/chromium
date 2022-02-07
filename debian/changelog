@@ -1,7 +1,7 @@
 chromium (98.0.4758.80-2) UNRELEASED; urgency=high
 
   * Enable pipewire support in webrtc (closes: #954824).
-  * Enable optimize_webui. This was UI speed improvement was originally
+  * Enable optimize_webui. This UI speed improvement was originally
     disabled due to nodejs deps, but recent upstream changes makes those
     deps necessary either way (closes: #970571).
 
@@ -393,7 +393,7 @@ chromium (93.0.4577.82-1) unstable; urgency=medium
       @dnpushme of 360 ATA
     - CVE-2021-30614: Heap buffer overflow in TabStrip. Reported by Huinian
       Yang @vmth6 of Amber Security Lab, OPPO Mobile Telecommunications Corp.
-      Ltd. 
+      Ltd.
     - CVE-2021-30615: Cross-origin data leak in Navigation. Reported by NDevTK
     - CVE-2021-30616: Use after free in Media. Reported by Anonymous
     - CVE-2021-30617: Policy bypass in Blink. Reported by NDevTK
@@ -417,7 +417,7 @@ chromium (93.0.4577.82-1) unstable; urgency=medium
     - CVE-2021-30601: Use after free in Extensions API. Reported by koocola
       @alo_cook and Nan Wang @eternalsakura13 of 360 Alpha Lab
     - CVE-2021-30602: Use after free in WebRTC. Reported by Marcin Towalski of
-      Cisco Talos 
+      Cisco Talos
     - CVE-2021-30603: Race in WebAudio. Reported by Sergei Glazunov of Google
       Project Zero
     - CVE-2021-30604: Use after free in ANGLE. Reported by Seong-Hwan Park

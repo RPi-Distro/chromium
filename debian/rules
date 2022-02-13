@@ -113,6 +113,9 @@ endif
 	dh $@
 
 override_dh_auto_configure:
+	# use system node w/out patching source; upstream hardcodes x64 in path
+	mkdir -p third_party/node/linux/node-linux-x64/bin
+	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin
 	# output compiler information
 	$(CXX) --version
 	# prefer unbundled (system) libraries
@@ -146,6 +149,7 @@ override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_auto_clean:
+	rm -rf third_party/node/linux/node-linux-x64
 	rm -rf out
 	find . -name \*.pyc -execdir rm -f {} \;
 	dh_auto_clean

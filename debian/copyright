@@ -142,70 +142,7 @@ Files-Excluded:
  third_party/libxml/linux
  third_party/libxml/win32
  third_party/libxml/BUILD.gn
- third_party/node/linux
- third_party/node/mac
- third_party/node/win
- third_party/node/node.*
- third_party/node/node_modules.*
- third_party/node/node_modules/@*
- third_party/node/node_modules/a*
- third_party/node/node_modules/b*
- third_party/node/node_modules/call*
- third_party/node/node_modules/ch*
- third_party/node/node_modules/cl*
- third_party/node/node_modules/co*
- third_party/node/node_modules/cr*
- third_party/node/node_modules/css-*
- third_party/node/node_modules/csso
- third_party/node/node_modules/d*
- third_party/node/node_modules/e*
- third_party/node/node_modules/f*
- third_party/node/node_modules/g*
- third_party/node/node_modules/h*
- third_party/node/node_modules/ig*
- third_party/node/node_modules/im*
- third_party/node/node_modules/inf*
- third_party/node/node_modules/inh*
- third_party/node/node_modules/int*
- third_party/node/node_modules/inv*
- third_party/node/node_modules/is*
- third_party/node/node_modules/jse*
- third_party/node/node_modules/json-*
- third_party/node/node_modules/js-*
- third_party/node/node_modules/l*
- third_party/node/node_modules/m*
- third_party/node/node_modules/n*
- third_party/node/node_modules/o*
- third_party/node/node_modules/pa*
- third_party/node/node_modules/pi*
- third_party/node/node_modules/polymer-bundler
- third_party/node/node_modules/pr*
- third_party/node/node_modules/pu*
- third_party/node/node_modules/q*
- third_party/node/node_modules/r*
- third_party/node/node_modules/sa*
- third_party/node/node_modules/se*
- third_party/node/node_modules/shebang*
- third_party/node/node_modules/si*
- third_party/node/node_modules/sl*
- third_party/node/node_modules/so*
- third_party/node/node_modules/sp*
- third_party/node/node_modules/st*
- third_party/node/node_modules/su*
- third_party/node/node_modules/sv*
- third_party/node/node_modules/ta*
- third_party/node/node_modules/tes*
- third_party/node/node_modules/tex*
- third_party/node/node_modules/to*
- third_party/node/node_modules/tr*
- third_party/node/node_modules/ts*
- third_party/node/node_modules/type-*
- third_party/node/node_modules/typi*
- third_party/node/node_modules/u*
- third_party/node/node_modules/v8*
- third_party/node/node_modules/vl*
- third_party/node/node_modules/w*
- third_party/node/node_modules/y*
+ third_party/node/node_modules.tar.gz
  third_party/mocha/mocha.js
  third_party/chaijs/chai.js
  third_party/blanketjs/src/blanket.js

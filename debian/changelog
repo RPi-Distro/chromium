@@ -6,6 +6,8 @@ chromium (98.0.4758.80-2) UNRELEASED; urgency=high
     deps necessary either way (closes: #970571).
   * Switch to using bundled node modules, to deal with (frequent) build
     failures (closes: #1005466).
+  * Manually depend on xdg-desktop-portal-* packages. The file saving
+    dialog needs a UI toolkit (closes: #1005230).
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 05 Feb 2022 23:22:20 -0500
 

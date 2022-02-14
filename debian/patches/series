@@ -18,7 +18,6 @@ upstream/libdrm.patch
 
 disable/tests.patch
 disable/unrar.patch
-disable/glmark.patch
 disable/owners.patch
 disable/signin.patch
 disable/android.patch

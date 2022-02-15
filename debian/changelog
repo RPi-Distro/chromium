@@ -1,4 +1,4 @@
-chromium (98.0.4758.80-2) UNRELEASED; urgency=high
+chromium (98.0.4758.102-1) unstable; urgency=high
 
   * Enable pipewire support in webrtc (closes: #954824).
   * Enable optimize_webui. This UI speed improvement was originally
@@ -8,8 +8,24 @@ chromium (98.0.4758.80-2) UNRELEASED; urgency=high
     failures (closes: #1005466).
   * Manually depend on xdg-desktop-portal-* packages. The file saving
     dialog needs a UI toolkit (closes: #1005230).
+  * New upstream security release.
+    - CVE-2022-0603: Use after free in File Manager.
+      Reported by Chaoyuan Peng (@ret2happy).
+    - CVE-2022-0604: Heap buffer overflow in Tab Groups. Reported by Krace.
+    - CVE-2022-0605: Use after free in Webstore API.
+      Reported by Thomas Orlita.
+    - CVE-2022-0606: Use after free in ANGLE.
+    - CVE-2022-0606: Use after free in ANGLE. Reported by Cassidy Kim of
+      Amber Security Lab, OPPO Mobile Telecommunications Corp. Ltd.
+    - CVE-2022-0607: Use after free in GPU. Reported by 0x74960.
+    - CVE-2022-0608: Integer overflow in Mojo.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-0609: Use after free in Animation. Reported by
+      Adam Weidemann and Clément Lecigne of Google's Threat Analysis Group.
+    - CVE-2022-0610: Inappropriate implementation in Gamepad API.
+      Reported by Anonymous.
 
- -- Andres Salomon <dilinger@debian.org>  Sat, 05 Feb 2022 23:22:20 -0500
+ -- Andres Salomon <dilinger@debian.org>  Tue, 15 Feb 2022 15:37:54 -0500
 
 chromium (98.0.4758.80-1) unstable; urgency=high
 

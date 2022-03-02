@@ -3,7 +3,7 @@ author: Andres Salomon <dilinger@debian.org>
 
 --- a/chrome/BUILD.gn
 +++ b/chrome/BUILD.gn
-@@ -959,6 +959,7 @@ if (is_win) {
+@@ -958,6 +958,7 @@ if (is_win) {
        public_deps = [ "//ui/gl:angle_library_copy" ]
      }
  
@@ -11,7 +11,7 @@ author: Andres Salomon <dilinger@debian.org>
      # Add the SwiftShader .dylibs in the MODULE_DIR of Chromium.app
      bundle_data("swiftshader_binaries") {
        sources = [
-@@ -973,6 +974,7 @@ if (is_win) {
+@@ -972,6 +973,7 @@ if (is_win) {
          "//ui/gl:swiftshader_vk_library_copy",
        ]
      }
@@ -19,7 +19,7 @@ author: Andres Salomon <dilinger@debian.org>
    }
  
    group("angle_library") {
-@@ -981,12 +983,6 @@ if (is_win) {
+@@ -980,12 +982,6 @@ if (is_win) {
      }
    }
  
@@ -32,15 +32,15 @@ author: Andres Salomon <dilinger@debian.org>
    if (bundle_widevine_cdm) {
      bundle_data("widevine_cdm_library_binaries") {
        sources = [ "$root_out_dir/$widevine_cdm_path/libwidevinecdm.dylib" ]
-@@ -1155,7 +1151,6 @@ if (is_win) {
-       ":chrome_framework_plugins",
+@@ -1169,7 +1165,6 @@ if (is_win) {
        ":chrome_framework_resources",
        ":keystone_registration_framework",
+       ":optimization_guide_library",
 -      ":swiftshader_library",
        ":widevine_cdm_library",
        "//chrome/browser/resources/media/mei_preload:component_bundle",
      ]
-@@ -1243,9 +1238,6 @@ if (is_win) {
+@@ -1257,9 +1252,6 @@ if (is_win) {
        "$root_out_dir/chrome_crashpad_handler",
        "$root_out_dir/libEGL.dylib",
        "$root_out_dir/libGLESv2.dylib",
@@ -49,8 +49,8 @@ author: Andres Salomon <dilinger@debian.org>
 -      "$root_out_dir/libvk_swiftshader.dylib",
        _framework_binary_path,
      ]
- 
-@@ -1278,9 +1270,6 @@ if (is_win) {
+     if (build_with_internal_optimization_guide) {
+@@ -1296,9 +1288,6 @@ if (is_win) {
          "//third_party/angle:libEGL",
          "//third_party/angle:libGLESv2",
          "//third_party/breakpad:dump_syms",
@@ -58,9 +58,9 @@ author: Andres Salomon <dilinger@debian.org>
 -        "//third_party/swiftshader/src/OpenGL/libGLESv2:swiftshader_libGLESv2",
 -        "//third_party/swiftshader/src/Vulkan:swiftshader_libvulkan",
        ]
- 
-       foreach(helper_params, chrome_mac_helpers) {
-@@ -1301,9 +1290,6 @@ if (is_win) {
+       if (build_with_internal_optimization_guide) {
+         deps += [ "//components/optimization_guide/internal:optimization_guide_internal" ]
+@@ -1322,9 +1311,6 @@ if (is_win) {
          "$root_out_dir/chrome_crashpad_handler.dSYM",
          "$root_out_dir/libEGL.dylib.dSYM",
          "$root_out_dir/libGLESv2.dylib.dSYM",
@@ -68,9 +68,9 @@ author: Andres Salomon <dilinger@debian.org>
 -        "$root_out_dir/libswiftshader_libGLESv2.dylib.dSYM",
 -        "$root_out_dir/libvk_swiftshader.dylib.dSYM",
        ]
- 
-       deps = [
-@@ -1312,9 +1298,6 @@ if (is_win) {
+       if (build_with_internal_optimization_guide) {
+         _dsyms += [ "$root_out_dir/liboptimization_guide_internal.dylib.dSYM" ]
+@@ -1336,9 +1322,6 @@ if (is_win) {
          "//components/crash/core/app:chrome_crashpad_handler",
          "//third_party/angle:libEGL",
          "//third_party/angle:libGLESv2",
@@ -78,9 +78,9 @@ author: Andres Salomon <dilinger@debian.org>
 -        "//third_party/swiftshader/src/OpenGL/libGLESv2:swiftshader_libGLESv2",
 -        "//third_party/swiftshader/src/Vulkan:swiftshader_libvulkan",
        ]
- 
-       foreach(helper_params, chrome_mac_helpers) {
-@@ -1722,12 +1705,7 @@ if (is_linux || is_chromeos) {
+       if (build_with_internal_optimization_guide) {
+         deps += [ "//components/optimization_guide/internal:optimization_guide_internal" ]
+@@ -1752,12 +1735,7 @@ if (is_linux || is_chromeos) {
          ":angle_gles_symbols",
          ":chrome_crashpad_symbols",
          ":chrome_symbols",
@@ -93,7 +93,7 @@ author: Andres Salomon <dilinger@debian.org>
        if (!is_chromeos) {
          deps += [ ":angle_libvulkan_symbols" ]
        }
-@@ -1756,6 +1734,7 @@ if (is_linux || is_chromeos) {
+@@ -1789,6 +1767,7 @@ if (is_linux || is_chromeos) {
  
        deps = [ "//components/crash/core/app:chrome_crashpad_handler" ]
      }
@@ -101,7 +101,7 @@ author: Andres Salomon <dilinger@debian.org>
      extract_symbols("swiftshader_egl_symbols") {
        binary = "$root_out_dir/swiftshader/libEGL.so"
  
-@@ -1766,8 +1745,6 @@ if (is_linux || is_chromeos) {
+@@ -1799,8 +1778,6 @@ if (is_linux || is_chromeos) {
          symbol_file = "$root_out_dir/swiftshader_libegl.breakpad.$current_cpu"
        }
  
@@ -110,7 +110,7 @@ author: Andres Salomon <dilinger@debian.org>
      }
      extract_symbols("swiftshader_gles_symbols") {
        binary = "$root_out_dir/swiftshader/libGLESv2.so"
-@@ -1795,6 +1772,7 @@ if (is_linux || is_chromeos) {
+@@ -1828,6 +1805,7 @@ if (is_linux || is_chromeos) {
  
        deps = [ "//third_party/swiftshader/src/Vulkan:swiftshader_libvulkan" ]
      }

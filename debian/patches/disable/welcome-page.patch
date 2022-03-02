@@ -8,7 +8,7 @@ bug-debian: http://bugs.debian.org/857767
      profile->GetPrefs()->SetString(prefs::kSupervisedUserId,
                                     supervised_user_id);
    }
--#if !defined(OS_ANDROID)
+-#if !BUILDFLAG(IS_ANDROID)
 +#if 0
    // TODO(pmonette): Fix IsNewProfile() to handle the case where the profile is
    // new even if the "Preferences" file already existed. (For example: The

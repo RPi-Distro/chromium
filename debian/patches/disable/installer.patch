@@ -31,8 +31,8 @@ author: Michael Gilbert <mgilbert@debian.org>
 -#include "chrome/install_static/buildflags.h"
  
  bool ShouldRecordActiveUse(const base::CommandLine& command_line) {
--#if defined(OS_WIN) && !BUILDFLAG(USE_GOOGLE_UPDATE_INTEGRATION)
-+#if defined(OS_WIN)
+-#if BUILDFLAG(IS_WIN) && !BUILDFLAG(USE_GOOGLE_UPDATE_INTEGRATION)
++#if BUILDFLAG(IS_WIN)
    return false;
  #else
    return command_line.GetSwitchValueNative(switches::kTryChromeAgain).empty();

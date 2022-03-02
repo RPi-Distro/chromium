@@ -115,8 +115,6 @@ Files-Excluded:
  third_party/ffmpeg/tools
  third_party/ffmpeg/fftools
  third_party/ffmpeg/config*
- third_party/harfbuzz-ng/src
- third_party/harfbuzz-ng/harfbuzz.gni
  third_party/openh264/src
  third_party/openh264/BUILD.gn
  third_party/expat/src

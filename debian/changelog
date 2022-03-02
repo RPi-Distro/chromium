@@ -3,15 +3,21 @@ chromium (99.0.4844.51-1) UNRELEASED; urgency=high
   * Embed harfbuzz instead of using the system harfbuzz. Debian doesn't
     yet package harfbuzz-subset (see #988781). Once it is packaged, we
     can go back to using it.
+  * Build against Debian's rapidjson-dev package instead of ANGLE's
+    bundled rapidjson.
   * Adjust patches:
     + system/harfbuzz.patch - drop, we're using bundled harfbuzz now.
     + upstream/quiche-include.patch - drop, merged upstream.
     + upstream/restrict.patch - drop, merged upstream.
     + upstream/sequence-point.patch - drop, merged upstream.
-    + disable/installer.patch, disable/unrar.patch, disable/welcome-page.patch,
-      disable/widevine-cdm.cu.patch - use new BUILDFLAG() macro.
+    + disable/installer.patch - use new BUILDFLAG() macro.
+    + disable/unrar.patch - use new BUILDFLAG() macro.
+    + disable/welcome-page.patch - use new BUILDFLAG() macro.
+    + disable/widevine-cdm.cu.patch - use new BUILDFLAG() macro.
     + disable/tests.patch - drop unnecessary parts of the patch (which ends
       up being most of it).
+    + disable/angle-perftests.patch - drop config disabling ANGLE's rapidjson.
+    + disable/swiftshader.patch - drop removal of rapidjson dependency.
   * New upstream stable release.
     - CVE-2022-0789: Heap buffer overflow in ANGLE.
       Reported by SeongHwan Park (SeHwa).

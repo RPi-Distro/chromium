@@ -44,6 +44,7 @@ Build-Depends:
  libgles2-mesa-dev,
  generate-ninja,
  mesa-common-dev,
+ rapidjson-dev,
  libva-dev,
  libxt-dev,
  libre2-dev,

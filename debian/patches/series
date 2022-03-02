@@ -45,6 +45,7 @@ system/convertutf.patch
 system/clang-format.patch
 system/opus.patch
 system/eu-strip.patch
+system/rapidjson.patch
 
 bullseye/nomerge.patch
 bullseye/icu-types.patch

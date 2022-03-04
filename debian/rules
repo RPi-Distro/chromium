@@ -101,7 +101,7 @@ defines+=use_gio=true \
          concurrent_links=1 \
          proprietary_codecs=true \
          ffmpeg_branding=\"Chrome\" \
-         fieldtrial_testing_like_official_build=true \
+         disable_fieldtrial_testing_config=true \
 
 # handle parallel build options
 njobs=1

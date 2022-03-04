@@ -4,6 +4,8 @@ chromium (99.0.4844.51-2) unstable; urgency=low
     libgtk-3-0|xdg-desktop-portal-backend. Some folks don't want all
     the dependencies of the xdg portal packages, and chromium really just
     requires gtk unless runnning under KDE (closes: #1006267).
+  * Disable fieldtrial testing config to fix some sandboxing issues. We
+    used to do this, but the config flag was renamed (closes: #1003622).
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 04 Mar 2022 06:51:11 -0500
 

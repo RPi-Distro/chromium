@@ -6,6 +6,8 @@ chromium (99.0.4844.51-2) unstable; urgency=low
     requires gtk unless runnning under KDE (closes: #1006267).
   * Disable fieldtrial testing config to fix some sandboxing issues. We
     used to do this, but the config flag was renamed (closes: #1003622).
+  * Adjust patches:
+    + system/zlib.patch: drop part of it that is unnecessary.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 04 Mar 2022 06:51:11 -0500
 
@@ -29,6 +31,7 @@ chromium (99.0.4844.51-1) unstable; urgency=high
       up being most of it).
     + disable/angle-perftests.patch - drop config disabling ANGLE's rapidjson.
     + disable/swiftshader.patch - drop removal of rapidjson dependency.
+    + system/rapidjson.patch - add to enable building w/ rapidjson-dev.
   * New upstream stable release.
     - CVE-2022-0789: Heap buffer overflow in ANGLE.
       Reported by SeongHwan Park (SeHwa).

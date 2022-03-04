@@ -99,7 +99,7 @@ Built-Using: ${Built-Using}
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
- xdg-desktop-portal-gtk | xdg-desktop-portal-backend,
+ libgtk-3-0 | xdg-desktop-portal-backend,
  chromium-common (= ${binary:Version}),
 Recommends:
  chromium-sandbox,

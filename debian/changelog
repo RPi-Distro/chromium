@@ -1,3 +1,25 @@
+chromium (99.0.4844.74-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-0971: Use after free in Blink Layout.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-0972: Use after free in Extensions.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-0973: Use after free in Safe Browsing.
+      Reported by avaue and Buff3tts at S.S.L.
+    - CVE-2022-0974 : Use after free in Splitscreen.
+      Reported by @ginggilBesel.
+    - CVE-2022-0975: Use after free in ANGLE.
+      Reported by SeongHwan Park (SeHwa).
+    - CVE-2022-0976: Heap buffer overflow in GPU. Reported by Omair.
+    - CVE-2022-0977: Use after free in Browser UI. Reported by Khalil Zhani.
+    - CVE-2022-0978: Use after free in ANGLE. Reported by Cassidy Kim of
+      Amber Security Lab, OPPO Mobile Telecommunications Corp. Ltd.
+    - CVE-2022-0979: Use after free in Safe Browsing. Reported by anonymous.
+    - CVE-2022-0980: Use after free in New Tab Page. Reported by Krace.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 16 Mar 2022 13:30:00 -0500
+
 chromium (99.0.4844.51-2) unstable; urgency=medium
 
   * Change dependency on xdg-desktop-portal-* packages to be

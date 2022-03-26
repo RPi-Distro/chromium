@@ -1,3 +1,9 @@
+chromium (99.0.4844.84-2) UNRELEASED; urgency=medium
+
+  * Fix debian/watch to find the correct upstream version.
+
+ -- Andres Salomon <dilinger@debian.org>  Sat, 26 Mar 2022 14:21:44 -0400
+
 chromium (99.0.4844.84-1) unstable; urgency=high
 
   * New upstream security ("just *ONE* security hole, that's it?!") release.

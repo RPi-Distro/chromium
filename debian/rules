@@ -184,7 +184,7 @@ get-orig-source:
 	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
 	@echo
 	test ! -e $(origtxz) || rm -f $(origtxz)
-	tar $(options) -cf - $(extract) | xz -6 -T $(njobs) - > $(origtxz)
+	tar $(options) -cf - $(extract) | xz -6 -T0 - > $(origtxz)
 	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
 	@echo
 	rm -rf $(extract)

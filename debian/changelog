@@ -1,7 +1,45 @@
-chromium (99.0.4844.84-2) UNRELEASED; urgency=medium
+chromium (100.0.4896.60-1) UNRELEASED; urgency=high
 
   * Fix debian/watch to find the correct upstream version.
   * Ensure xz uses all available cpu cores when preparing orig.tar.gz
+  * New upstream stable release.
+    - CVE-2022-1125: Use after free in Portals. Reported by Khalil Zhani
+    - CVE-2022-1127: Use after free in QR Code Generator.
+      Reported by anonymous
+    - CVE-2022-1128: Inappropriate implementation in Web Share API.
+      Reported by Abdel Adim (@smaury92) Oisfi of Shielder
+    - CVE-2022-1129: Inappropriate implementation in Full Screen Mode.
+      Reported by Irvan Kurniawan (sourc7)
+    - CVE-2022-1130: Insufficient validation of untrusted input in WebOTP.
+      Reported by Sergey Toshin of Oversecurity Inc.
+    - CVE-2022-1131: Use after free in Cast UI. Reported by
+      Abdulrahman Alqabandi, Microsoft Browser Vulnerability Research
+    - CVE-2022-1132: Inappropriate implementation in Virtual Keyboard.
+      Reported by Andr.Ess
+    - CVE-2022-1133: Use after free in WebRTC. Reported by Anonymous
+    - CVE-2022-1134: Type Confusion in V8.
+      Reported by Man Yue Mo of GitHub Security Lab
+    - CVE-2022-1135: Use after free in Shopping Cart.
+      Reported by Wei Yuan of MoyunSec VLab
+    - CVE-2022-1136: Use after free in Tab Strip . Reported by Krace
+    - CVE-2022-1137: Inappropriate implementation in Extensions.
+      Reported by Thomas Orlita
+    - CVE-2022-1138: Inappropriate implementation in Web Cursor.
+      Reported by Alesandro Ortiz
+    - CVE-2022-1139: Inappropriate implementation in Background Fetch API.
+      Reported by Maurice Dauer
+    - CVE-2022-1141: Use after free in File Manager.
+      Reported by raven at KunLun lab
+    - CVE-2022-1142: Heap buffer overflow in WebUI.
+      Reported by Leecraso and Guang Gong of 360 Alpha Lab
+    - CVE-2022-1143: Heap buffer overflow in WebUI.
+      Reported by Leecraso and Guang Gong of 360 Alpha Lab
+    - CVE-2022-1144: Use after free in WebUI.
+      Reported by Leecraso and Guang Gong of 360 Alpha Lab
+    - CVE-2022-1145: Use after free in Extensions.
+      Reported by Yakun Zhang of Baidu Security
+    - CVE-2022-1146: Inappropriate implementation in Resource Timing.
+      Reported by Sohom Datta
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 26 Mar 2022 14:21:44 -0400
 

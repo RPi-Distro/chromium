@@ -3,7 +3,7 @@
 
 ## Chromium Versioning
 
-Chromium upstream releases come in three flavors - stable, beta, and dev. Each release is defined by the first number in the version string (eg, 99.0.4844.74 is release 99). They publish a [calendar](https://chromiumdash.appspot.com/schedule) for releases that show each major release, the date it will transition from dev to beta ("Beta Promotion"), the date it will transition from beta to stable ("Stable Release"), and sometimes when a stable release will receive a security update.
+Chromium upstream releases come in three flavors - stable, beta, and dev. Each release is defined by the first number in the version string (eg, 99.0.4844.74 is release 99). They publish a [calendar](https://chromiumdash.appspot.com/schedule) for releases that show each major release, the date it will transition from dev to beta ("Beta Promotion"), the date it will transition from beta to stable ("Stable Release"), and sometimes when a stable release will receive a bug/security fix update ("Next Refresh").
 
 Debian sid will only ever have a stable release, but experimental may have a beta or dev release. This git repository contains an experimental branch for that.
 
@@ -15,7 +15,7 @@ If you're updating the Chromium package for a newer upstream version, first crea
 ```
 Otherwise, just use the existing orig.tar.xz that's already in Debian.
 
-Now unpack chromium_<version>.orig.tar.xz and copy the debian/ directory from this git repository into it.
+Now unpack `chromium_<version>.orig.tar.xz` and copy the debian/ directory from this git repository into it.
 ```
 tar Jxvf chromium_<version>.orig.tar.xz
 cp -ra chromium-git/debian chromium-<version>
@@ -59,4 +59,4 @@ This will inform you that the patch has been refreshed, and you should be able t
 ## Problems Building a New Stable Release
 
 Building the first stable release of a new series will likely run into problems applying patches AND build errors. We are actively trying to drop the number of patches carried by our packaging to make this less likely, but it will always be an issue.
-TODO: document checking experimental, grabbing upstream/ diffs, vendoring/unbundling, etc.
+TODO: document checking experimental for patches fixing issues, grabbing upstream/ diffs, vendoring/unbundling, etc.

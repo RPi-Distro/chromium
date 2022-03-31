@@ -5,6 +5,7 @@ Files-Excluded:
  .clang-format
  *.mk
  *.so
+ *.dll
  *.elf
  *.exe
  *.pyc
@@ -12,7 +13,8 @@ Files-Excluded:
  *.swf
  *.ttf
  *.orig
- *fuzz
+ *corpus
+ *corpora
  *testdata
  *config.sub
  *config.guess
@@ -86,7 +88,6 @@ Files-Excluded:
  third_party/freetype
  build/config/freetype/freetype.gni
  third_party/android*
- third_party/tcmalloc
  third_party/lzma_sdk/7zr.exe
  third_party/test_fonts/test_fonts*
  third_party/test_fonts/README*
@@ -130,9 +131,7 @@ Files-Excluded:
  third_party/angle/third_party/VK-GL-CTS
  third_party/chromevox/third_party/sre
  third_party/crashpad/crashpad/handler/win
- third_party/crashpad/crashpad/snapshot/elf/elf_image_reader_fuzzer_corpus
  third_party/blink/renderer/platform/testing/data
- third_party/blink/renderer/platform/text_codec_fuzzer_seed_corpus
  third_party/google_input_tools/src/chrome/os/inputview/_locales/*.js
  v8/third_party/colorama
  v8/third_party/googletest
@@ -161,6 +160,7 @@ Files-Excluded:
  third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadatalite.js
  third_party/tflite/src/tensorflow/examples/multibox_detector/data/surfers.jpg
  third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
+ third_party/devtools-frontend/src/third_party/esbuild/esbuild
 
 
 Files: *

@@ -237,3 +237,13 @@ author: Michael Gilbert <mgilbert@debian.org>
      result = mdstring->CopyIndexAfterObject(out_idx, out, out_size);
      out_idx += out_count;
    }
+--- a/third_party/breakpad/BUILD.gn
++++ b/third_party/breakpad/BUILD.gn
+@@ -666,6 +666,7 @@ if (is_linux || is_chromeos || is_androi
+       "breakpad/src",
+       "breakpad/src/client",
+       "breakpad/src/third_party/linux/include",
++      "../../third_party/icu/source/common",
+     ]
+   }
+ 

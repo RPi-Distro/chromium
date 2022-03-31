@@ -3,7 +3,6 @@ debianization/sandbox.patch
 debianization/optimization.patch
 debianization/master-preferences.patch
 
-fixes/closure.patch
 fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
 fixes/widevine-revision.patch
@@ -33,7 +32,6 @@ disable/angle-perftests.patch
 disable/devtools-unittests.patch
 disable/libaom-arm.patch
 
-system/icu.patch
 system/icu-shim.patch
 system/jpeg.patch
 system/zlib.patch
@@ -47,6 +45,5 @@ system/eu-strip.patch
 system/rapidjson.patch
 
 bullseye/nomerge.patch
-bullseye/icu-types.patch
 bullseye/clang11.patch
 bullseye/blink-constexpr.patch

@@ -1,4 +1,4 @@
-chromium (100.0.4896.60-1) UNRELEASED; urgency=high
+chromium (100.0.4896.60-1) unstable; urgency=high
 
   * Fix debian/watch to find the correct upstream version.
   * Ensure xz uses all available cpu cores when preparing orig.tar.gz
@@ -68,7 +68,7 @@ chromium (100.0.4896.60-1) UNRELEASED; urgency=high
     - CVE-2022-1146: Inappropriate implementation in Resource Timing.
       Reported by Sohom Datta
 
- -- Andres Salomon <dilinger@debian.org>  Sat, 26 Mar 2022 14:21:44 -0400
+ -- Andres Salomon <dilinger@debian.org>  Fri, 01 Apr 2022 15:02:16 -0400
 
 chromium (99.0.4844.84-1) unstable; urgency=high
 

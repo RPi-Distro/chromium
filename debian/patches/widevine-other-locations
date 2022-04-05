@@ -1,6 +1,6 @@
 --- a/src/chrome/common/chrome_paths.cc
 +++ b/src/chrome/common/chrome_paths.cc
-@@ -327,6 +327,10 @@ bool PathProvider(int key, base::FilePat
+@@ -319,6 +319,10 @@ bool PathProvider(int key, base::FilePat
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
      case chrome::DIR_BUNDLED_WIDEVINE_CDM:
@@ -13,7 +13,7 @@
  #if !BUILDFLAG(IS_CHROMEOS_ASH)
 --- a/src/chrome/common/media/cdm_registration.cc
 +++ b/src/chrome/common/media/cdm_registration.cc
-@@ -45,7 +45,7 @@ using Robustness = content::CdmInfo::Rob
+@@ -46,7 +46,7 @@ using Robustness = content::CdmInfo::Rob
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
  #if (BUILDFLAG(BUNDLE_WIDEVINE_CDM) ||            \
@@ -22,7 +22,7 @@
      (defined(OS_LINUX) || defined(OS_CHROMEOS))
  // Create a CdmInfo for a Widevine CDM, using |version|, |cdm_library_path|, and
  // |capability|.
-@@ -88,7 +88,7 @@ std::unique_ptr<content::CdmInfo> Create
+@@ -89,7 +89,7 @@ std::unique_ptr<content::CdmInfo> Create
          // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && (defined(OS_LINUX) ||
          // defined(OS_CHROMEOS))
  
@@ -31,7 +31,7 @@
      (defined(OS_LINUX) || defined(OS_CHROMEOS))
  // On Linux/ChromeOS we have to preload the CDM since it uses the zygote
  // sandbox. On Windows and Mac, the bundled CDM is handled by the component
-@@ -204,7 +204,7 @@ void AddSoftwareSecureWidevine(std::vect
+@@ -205,7 +205,7 @@ void AddSoftwareSecureWidevine(std::vect
    // case both versions will be the same and point to the same directory, so
    // it doesn't matter which one is loaded.
    content::CdmInfo* bundled_widevine = nullptr;

@@ -4,7 +4,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
 
 --- a/src/chrome/BUILD.gn
 +++ b/src/chrome/BUILD.gn
-@@ -305,6 +305,8 @@ if (!is_android && !is_mac) {
+@@ -316,6 +316,8 @@ if (!is_android && !is_mac) {
        if (is_chromeos_lacros) {
          deps += [ "//chromeos/crosapi/mojom" ]
        }
@@ -15,20 +15,20 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
      if (is_chromeos_ash || is_win) {
 --- a/src/tools/v8_context_snapshot/BUILD.gn
 +++ b/src/tools/v8_context_snapshot/BUILD.gn
-@@ -115,6 +115,10 @@ if (use_v8_context_snapshot) {
-       "//v8",
-     ]
+@@ -117,6 +117,10 @@ if (use_v8_context_snapshot) {
+         "//v8",
+       ]
  
-+    if (is_linux) {
-+      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
-+    }
++      if (is_linux) {
++        configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
++      }
 +
-     configs += [
-       "//v8:external_startup_data",
-       ":disable_icf",
+       configs += [
+         "//v8:external_startup_data",
+         ":disable_icf",
 --- a/src/components/nacl/loader/BUILD.gn
 +++ b/src/components/nacl/loader/BUILD.gn
-@@ -126,6 +126,7 @@ if (is_linux || is_chromeos) {
+@@ -112,6 +112,7 @@ if (is_linux || is_chromeos) {
        "nacl_helper_linux.h",
      ]
  

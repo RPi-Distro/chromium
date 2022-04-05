@@ -1,3 +1,11 @@
+chromium-browser (98.0.4758.106-rpt1) bullseye; urgency=medium
+
+  * Update to 98.0.4758.106
+  * v98.0.4758.106_rpi_2.49.patch
+  * Remove armv6 widevine support (no build available)
+
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 17 Feb 2022 10:00:43 +0000
+
 chromium-browser (95.0.4638.78-rpt6) bullseye; urgency=medium
 
   * Fix GL crash on right click

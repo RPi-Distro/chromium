@@ -1,0 +1,16 @@
+Description: Also build aom_ports/arm_cpudetect.c on armhf (no Neon),
+ because RTCD sources unconditionally call aom_arm_cpu_caps().
+Author: Olivier Tilloy <olivier.tilloy@canonical.com>
+
+--- a/src/third_party/libaom/BUILD.gn
++++ b/src/third_party/libaom/BUILD.gn
+@@ -222,6 +222,9 @@ if (enable_libaom) {
+     sources += aom_dsp_common_sources
+     sources += aom_dsp_decoder_sources
+     sources += aom_mem_sources
++    if (cpu_arch_full == "arm") {
++      sources += [ "//third_party/libaom/source/libaom/aom_ports/arm_cpudetect.c" ]
++    }
+     sources += aom_rtcd_sources
+     sources += aom_scale_sources
+     sources += aom_sources

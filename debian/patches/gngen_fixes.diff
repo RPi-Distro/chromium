@@ -1,16 +1,16 @@
 --- a/src/pi-util/defargs_arm64-bullseye.gn
 +++ b/src/pi-util/defargs_arm64-bullseye.gn
-@@ -10,7 +10,3 @@ enable_hangout_services_extension = true
- 
+@@ -11,6 +11,4 @@ enable_hangout_services_extension = true
  # We have issues with the lib for this & it is probably for unittest only
  use_gnome_keyring = false
--
+ 
 -ffmpeg_branding = "Chrome"
 -proprietary_codecs = true
 -
++enable_widevine = true
 --- a/src/pi-util/defargs_armv6-bullseye.gn
 +++ b/src/pi-util/defargs_armv6-bullseye.gn
-@@ -9,10 +9,6 @@ arm_version = 6
+@@ -9,13 +9,10 @@ arm_version = 6
  arm_use_thumb = false
  arm_arch = "armv6z"
  
@@ -21,6 +21,10 @@
  # We have issues with the lib for this & it is probably for unittest only
  use_gnome_keyring = false
  
+ # This crashes the compiler!
+ #rtc_use_h264 = false
+ 
++enable_widevine = false
 --- a/src/pi-util/defargs_armv7-bullseye.gn
 +++ b/src/pi-util/defargs_armv7-bullseye.gn
 @@ -20,6 +20,3 @@ enable_hangout_services_extension = true
@@ -51,7 +55,7 @@
  
      dest_dir = os.path.join("out", name + dir_suffix)
      src_file = os.path.join("pi-util", "defargs_" + name + ".gn")
-@@ -37,16 +40,30 @@ def docopy(name, vars, is_debug=False, i
+@@ -37,16 +40,29 @@ def docopy(name, vars, is_debug=False, i
  
      dargs.write('# -- created by ' + sys.argv[0] + '\n')
      dargs.write('is_debug = ' + deb_str + '\n')
@@ -77,7 +81,6 @@
 +    #dargs.write('google_default_client_secret = "' + vars["google_default_client_secret"] + '"\n')
 +    dargs.write('disable_fieldtrial_testing_config = false\n')
 +    dargs.write('enable_nacl = false\n')
-+    dargs.write('enable_widevine = true\n')
 +    dargs.write('blink_symbol_level = 0\n')
 +    dargs.write('symbol_level = 1\n')
 +    dargs.write('is_official_build = true\n')
@@ -85,7 +88,7 @@
  
      dargs.close()
  
-@@ -64,9 +81,12 @@ if __name__ == '__main__':
+@@ -64,9 +80,12 @@ if __name__ == '__main__':
      gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm-sysroot")
  
      docopy("armv6-bullseye", gyp_vars, is_ozone=True)
@@ -98,3 +101,17 @@
      docopy("arm64-bullseye", gyp_vars, is_ozone=True)
 +    docopy("arm64-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)
  
+--- a/src/pi-util/defargs_arm64.gn
++++ b/src/pi-util/defargs_arm64.gn
+@@ -19,3 +19,4 @@ rtc_use_pipewire = false
+ ffmpeg_branding = "Chrome"
+ proprietary_codecs = true
+ 
++enable_widevine = true
+--- a/src/pi-util/defargs_armv6.gn
++++ b/src/pi-util/defargs_armv6.gn
+@@ -33,3 +33,4 @@ proprietary_codecs = true
+ # This crashes the compiler!
+ rtc_use_h264 = false
+ 
++enable_widevine = false

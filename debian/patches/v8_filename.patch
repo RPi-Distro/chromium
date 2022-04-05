@@ -7,9 +7,9 @@
 +import("//build/config/arm.gni")
  
  declare_args() {
-   # TODO(crbug.com/764576): Enable the feature on more environments.
-@@ -31,7 +32,11 @@ declare_args() {
-       v8_context_snapshot_filename = "v8_context_snapshot.arm64.bin"
+   # If set, both snapshots are included. At this time, this only applicable to
+@@ -51,7 +52,11 @@ declare_args() {
+       v8_context_snapshot_filename = "v8_context_snapshot_64.bin"
      }
    } else {
 -    v8_context_snapshot_filename = "v8_context_snapshot.bin"

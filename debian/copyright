@@ -106,7 +106,6 @@ Files-Excluded:
  third_party/zlib/in*
  third_party/zlib/trees*
  third_party/zlib/z*
- third_party/zlib/contrib
  third_party/zlib/patches
  third_party/skia/site/docs/user/api
  third_party/skia/platform_tools

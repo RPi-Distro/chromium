@@ -1,10 +1,15 @@
 chromium (100.0.4896.75-1) UNRELEASED; urgency=high
 
+  * debian/copyright:
+    - stop dropping third_party/zlib/contrib/, which is just source code
+      with acceptable licenses.
   * debian/patches:
     - upstream/rvo-workaround.patch - added to fix FTBFS w/ clang-11. Pulled
       from upstream git.
     - disable/swiftshader-2.patch - drop most of it that's wrapped in a
       check for windows.
+    - disable/fuzzers.patch - drop it; with the last release modifying
+      fuzzer inclusion, we can now configure the build without this.
   * New upstream security release.
     - CVE-2022-1232: Type Confusion in V8.
       Reported by Sergei Glazunov of Google Project Zero.

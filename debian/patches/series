@@ -17,7 +17,6 @@ disable/unrar.patch
 disable/owners.patch
 disable/signin.patch
 disable/android.patch
-disable/fuzzers.patch
 disable/openh264.patch
 disable/catapult.patch
 disable/installer.patch

@@ -9,6 +9,7 @@ Files-Excluded:
  *.elf
  *.exe
  *.jar
+ *.wasm
  *.pyc
  *.pyd
  *.swf
@@ -94,7 +95,8 @@ Files-Excluded:
  third_party/test_fonts/README*
  third_party/pyelftools
  third_party/fontconfig
- third_party/depot_tools
+ third_party/depot_tools/ninja*
+ third_party/depot_tools/third_party/coverage/htmlfiles/keybd_*.png
  third_party/libjpeg.gni
  third_party/libjpeg_turbo
  third_party/win_build_output
@@ -157,7 +159,7 @@ Files-Excluded:
  third_party/breakpad/breakpad/src/common/convert_UTF.*
  third_party/boringssl/src/crypto/cipher_extra/test
  third_party/dom_distiller_js/dist/js/domdistiller_wrapped.js
- third_party/devtools-frontend/src/test
+ third_party/devtools-frontend/src/test/screenshots/image_diff
  third_party/devtools-frontend/src/node_modules/.bin
  third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadata.js
  third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadatalite.js

@@ -1,13 +1,3 @@
---- a/media/BUILD.gn
-+++ b/media/BUILD.gn
-@@ -166,7 +166,6 @@ test("media_unittests") {
-     "//media/device_monitors:unit_tests",
-     "//media/filters:unit_tests",
-     "//media/formats:unit_tests",
--    "//media/gpu:unit_tests",
-     "//media/learning:unit_tests",
-     "//media/mojo:unit_tests",
-     "//media/muxers:unit_tests",
 --- a/third_party/devtools-frontend/src/BUILD.gn
 +++ b/third_party/devtools-frontend/src/BUILD.gn
 @@ -14,7 +14,6 @@ import("./third_party/blink/public/publi

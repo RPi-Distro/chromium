@@ -1,8 +1,14 @@
 chromium (100.0.4896.75-1) UNRELEASED; urgency=high
 
   * debian/copyright:
-    - stop dropping third_party/zlib/contrib/, which is just source code
+    - Stop dropping third_party/zlib/contrib/, which is just source code
       with acceptable licenses.
+    - Replace the rule that dropped third_party/depot_tools with a more
+      specific rule that drops just the ninja binaries. Also delete some
+      unused png files to work around a bug in our scripts.
+    - Replace a rule that dropped third_party/devtools-frontend/src/test
+      with just dropping all wasm files ('*.wasm'), as well as
+      third_party/devtools-frontend/src/test/screenshots/image_diff/.
   * debian/patches:
     - upstream/rvo-workaround.patch - added to fix FTBFS w/ clang-11. Pulled
       from upstream git.
@@ -10,6 +16,13 @@ chromium (100.0.4896.75-1) UNRELEASED; urgency=high
       check for windows.
     - disable/fuzzers.patch - drop it; with the last release modifying
       fuzzer inclusion, we can now configure the build without this.
+    - disable/owners.patch - drop it; no longer needed with depot_tools
+      remaining in the source tree.
+    - disable/devtools-unittests.patch - drop it; no longer needed if
+      we keep third_party/devtools-frontend/src/test in the source tree.
+    - disable/tests.patch - drop half of it; the media/gpu changes aren't
+      needed, while keeping stuff in third_party/devtools-frontend/src/test
+      from building is still necessary.
   * New upstream security release.
     - CVE-2022-1232: Type Confusion in V8.
       Reported by Sergei Glazunov of Google Project Zero.

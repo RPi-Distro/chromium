@@ -14,7 +14,6 @@ upstream/rvo-workaround.patch
 
 disable/tests.patch
 disable/unrar.patch
-disable/owners.patch
 disable/signin.patch
 disable/android.patch
 disable/openh264.patch
@@ -29,7 +28,6 @@ disable/third-party-cookies.patch
 disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/angle-perftests.patch
-disable/devtools-unittests.patch
 disable/libaom-arm.patch
 
 system/icu-shim.patch

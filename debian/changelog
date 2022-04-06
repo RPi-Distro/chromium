@@ -1,4 +1,4 @@
-chromium (100.0.4896.75-1) UNRELEASED; urgency=high
+chromium (100.0.4896.75-1) unstable; urgency=high
 
   * debian/copyright:
     - Stop dropping third_party/zlib/contrib/, which is just source code
@@ -29,7 +29,7 @@ chromium (100.0.4896.75-1) UNRELEASED; urgency=high
     - CVE-2022-1232: Type Confusion in V8.
       Reported by Sergei Glazunov of Google Project Zero.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 05 Apr 2022 15:32:56 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 06 Apr 2022 04:24:45 -0400
 
 chromium (100.0.4896.60-1) unstable; urgency=high
 

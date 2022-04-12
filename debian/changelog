@@ -1,4 +1,4 @@
-chromium (100.0.4896.88-1) UNRELEASED; urgency=high
+chromium (100.0.4896.88-1) unstable; urgency=high
 
   * New upstream security release.
     - CVE-2022-1305: Use after free in storage. Reported by Anonymous

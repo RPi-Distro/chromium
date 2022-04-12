@@ -1,3 +1,27 @@
+chromium (100.0.4896.88-1) UNRELEASED; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-1305: Use after free in storage. Reported by Anonymous
+    - CVE-2022-1306: Inappropriate implementation in compositing.
+      Reported by Sven Dysthe
+    - CVE-2022-1307: Inappropriate implementation in full screen.
+      Reported by Irvan Kurniawan (sourc7)
+    - CVE-2022-1308: Use after free in BFCache.
+      Reported by Samet Bekmezci @sametbekmezci
+    - CVE-2022-1309: Insufficient policy enforcement in developer tools.
+      Reported by David Erceg
+    - CVE-2022-1310: Use after free in regular expressions.
+      Reported by Brendon Tiszka
+    - CVE-2022-1311: Use after free in Chrome OS shell.
+      Reported by Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
+    - CVE-2022-1312: Use after free in storage. Reported by
+      Leecraso and Guang Gong of 360 Vulnerability Research Institute
+    - CVE-2022-1313: Use after free in tab groups. Reported by Thomas Orlita
+    - CVE-2022-1314: Type Confusion in V8.
+      Reported by Bohan Liu (@P4nda20371774) of Tencent Security Xuanwu Lab
+
+ -- Andres Salomon <dilinger@debian.org>  Mon, 11 Apr 2022 23:45:07 -0400
+
 chromium (100.0.4896.75-1) unstable; urgency=high
 
   * debian/copyright:

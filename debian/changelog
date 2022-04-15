@@ -1,3 +1,11 @@
+chromium (100.0.4896.127-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-1364: Type Confusion in V8.
+      Reported by Clément Lecigne of Google's Threat Analysis Group
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 14 Apr 2022 20:51:15 -0400
+
 chromium (100.0.4896.88-1) unstable; urgency=high
 
   * New upstream security release.

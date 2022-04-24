@@ -6,13 +6,11 @@ Files-Excluded:
  *.mk
  *.so
  *.dll
- *.elf
  *.exe
  *.jar
  *.wasm
  *.pyc
  *.pyd
- *.swf
  *.ttf
  *.orig
  *corpus
@@ -20,7 +18,6 @@ Files-Excluded:
  *testdata
  *config.sub
  *config.guess
- *fsevents.node
  *jquery*.min.js
  ios
  buildtools
@@ -37,7 +34,6 @@ Files-Excluded:
  base/mac
  base/test/data
  base/third_party/libevent
- chromeos/third_party
  chrome/android
  chrome/install_static
  chrome/installer/mac
@@ -96,7 +92,6 @@ Files-Excluded:
  third_party/pyelftools
  third_party/fontconfig
  third_party/depot_tools/ninja*
- third_party/depot_tools/third_party/coverage/htmlfiles/keybd_*.png
  third_party/libjpeg.gni
  third_party/libjpeg_turbo
  third_party/win_build_output
@@ -122,6 +117,7 @@ Files-Excluded:
  third_party/openh264/BUILD.gn
  third_party/expat/src
  third_party/unrar
+ third_party/apache-linux
  third_party/perfetto/ui/src/gen
  third_party/checkstyle
  third_party/swiftshader

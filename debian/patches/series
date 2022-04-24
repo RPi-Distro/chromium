@@ -10,7 +10,6 @@ fixes/widevine-locations.patch
 fixes/connection-message.patch
 
 upstream/mojo.patch
-upstream/rvo-workaround.patch
 
 disable/tests.patch
 disable/unrar.patch

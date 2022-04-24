@@ -10,6 +10,7 @@ fixes/widevine-locations.patch
 fixes/connection-message.patch
 
 upstream/mojo.patch
+upstream/libxml.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -44,3 +45,4 @@ system/rapidjson.patch
 bullseye/nomerge.patch
 bullseye/clang11.patch
 bullseye/blink-constexpr.patch
+bullseye/cast-call.patch

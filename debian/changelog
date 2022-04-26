@@ -1,3 +1,56 @@
+chromium (101.0.4951.41-2) unstable; urgency=high
+
+  * No changes, just the CVE list. The original blog post *did not*
+    have CVEs.  >:(
+    - CVE-2022-1477: Use after free in Vulkan.
+      Reported by SeongHwan Park (SeHwa)
+    - CVE-2022-1478: Use after free in SwiftShader.
+      Reported by SeongHwan Park (SeHwa)
+    - CVE-2022-1479: Use after free in ANGLE.
+      Reported by Jeonghoon Shin of Theori
+    - CVE-2022-1480: Use after free in Device API. Reported by @uwu7586
+    - CVE-2022-1481: Use after free in Sharing. Reported by Weipeng Jiang
+      (@Krace) and Guang Gong of 360 Vulnerability Research Institute
+    - CVE-2022-1482: Inappropriate implementation in WebGL.
+      Reported by Christoph Diehl, Microsoft
+    - CVE-2022-1483: Heap buffer overflow in WebGPU.
+      Reported by Mark Brand of Google Project Zero
+    - CVE-2022-1484: Heap buffer overflow in Web UI Settings.
+      Reported by Chaoyuan Peng (@ret2happy)
+    - CVE-2022-1485: Use after free in File System API.
+    - CVE-2022-1486: Type Confusion in V8. Reported by Brendon Tiszka
+    - CVE-2022-1487: Use after free in Ozone. Reported by Sri
+    - CVE-2022-1488: Inappropriate implementation in Extensions API.
+      Reported by Thomas Beverley from Wavebox.io
+    - CVE-2022-1489: Out of bounds memory access in UI Shelf.
+      Reported by Khalil Zhani
+    - CVE-2022-1490: Use after free in Browser Switcher.
+      Reported by raven at KunLun lab
+    - CVE-2022-1491: Use after free in Bookmarks.
+      Reported by raven at KunLun lab
+    - CVE-2022-1492: Insufficient data validation in Blink Editing.
+      Reported by Michał Bentkowski of Securitum
+    - CVE-2022-1493: Use after free in Dev Tools.
+      Reported by Zhihua Yao of KunLun Lab
+    - CVE-2022-1494: Insufficient data validation in Trusted Types.
+      Reported by Masato Kinugawa
+    - CVE-2022-1495: Incorrect security UI in Downloads.
+      Reported by Umar Farooq
+    - CVE-2022-1496: Use after free in File Manager. Reported by Zhiyi
+      Zhang and Zhunki from Codesafe Team of Legendsec at Qi'anxin Group
+    - CVE-2022-1497: Inappropriate implementation in Input. Reported by
+      Abdulrahman Alqabandi, Microsoft Browser Vulnerability Research
+    - CVE-2022-1498: Inappropriate implementation in HTML Parser.
+      Reported by SeungJu Oh (@real_as3617)
+    - CVE-2022-1499: Inappropriate implementation in WebAuthentication.
+      Reported by Jun Kokatsu, Microsoft Browser Vulnerability Research
+    - CVE-2022-1500: Insufficient data validation in Dev Tools.
+      Reported by Hoang Nguyen
+    - CVE-2022-1501: Inappropriate implementation in iframe.
+      Reported by Oriol Brufau
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 26 Apr 2022 18:06:08 -0400
+
 chromium (101.0.4951.41-1) unstable; urgency=low
 
   * New upstream stable release.

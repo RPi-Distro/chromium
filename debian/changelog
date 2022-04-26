@@ -1,10 +1,10 @@
-chromium (101.0.4951.41-1) experimental; urgency=low
+chromium (101.0.4951.41-1) unstable; urgency=low
 
-  * New upstream beta release.
+  * New upstream stable release.
   * debian/copyright:
     - Delete a bunch of file exclusion lines that no longer exist. That
       png file workaround also goes away.
-    - Add a line to delete a prebuild apache and related modules that
+    - Add a line to delete a prebuilt apache server & related modules that
       upstream now includes for some reason?
   * debian/patches:
     - upstream/rvo-workaround.patch - drop, merged upstream.
@@ -15,7 +15,7 @@ chromium (101.0.4951.41-1) experimental; urgency=low
     - bullseye/cast-call.patch - add a patch to silence unsupported
       flag warnings in clang <= 13.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 20 Apr 2022 23:26:06 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 26 Apr 2022 17:18:09 -0400
 
 chromium (100.0.4896.127-1) unstable; urgency=high
 

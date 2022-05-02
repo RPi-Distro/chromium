@@ -1,7 +1,9 @@
 chromium (101.0.4951.41-3) UNRELEASED; urgency=high
 
-  * Add a check for SSE3 instruction set support, and refuse to run if it's
-    missing. Otherwise we just crash, as described in #1010407.
+  * Depend on sse3-support to ensure that chromium is only installed on
+    machines that support the SSE3 instruction set. Otherwise we crash,
+    as described in #1010407. We can also remove the manual sse2 check now.
+    Upstream describes the SSE3 requirement @ http://crbug.com/1123353
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 30 Apr 2022 22:22:22 -0400
 

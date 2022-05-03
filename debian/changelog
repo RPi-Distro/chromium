@@ -1,11 +1,12 @@
-chromium (101.0.4951.41-3) UNRELEASED; urgency=high
+chromium (101.0.4951.54-1) unstable; urgency=low
 
   * Depend on sse3-support to ensure that chromium is only installed on
     machines that support the SSE3 instruction set. Otherwise we crash,
     as described in #1010407. We can also remove the manual sse2 check now.
     Upstream describes the SSE3 requirement @ http://crbug.com/1123353
+  * New upstream stable release.
 
- -- Andres Salomon <dilinger@debian.org>  Sat, 30 Apr 2022 22:22:22 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 03 May 2022 12:16:07 -0400
 
 chromium (101.0.4951.41-2) unstable; urgency=high
 

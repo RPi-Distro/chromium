@@ -79,7 +79,7 @@
 +    #dargs.write('google_api_key = "' + vars["google_api_key"] + '"\n')
 +    #dargs.write('google_default_client_id = "' + vars["google_default_client_id"] + '"\n')
 +    #dargs.write('google_default_client_secret = "' + vars["google_default_client_secret"] + '"\n')
-+    dargs.write('disable_fieldtrial_testing_config = false\n')
++    dargs.write('disable_fieldtrial_testing_config = true\n')
 +    dargs.write('enable_nacl = false\n')
 +    dargs.write('blink_symbol_level = 0\n')
 +    dargs.write('symbol_level = 1\n')

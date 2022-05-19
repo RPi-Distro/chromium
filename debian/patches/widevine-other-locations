@@ -1,6 +1,6 @@
 --- a/src/chrome/common/chrome_paths.cc
 +++ b/src/chrome/common/chrome_paths.cc
-@@ -319,6 +319,10 @@ bool PathProvider(int key, base::FilePat
+@@ -323,6 +323,10 @@ bool PathProvider(int key, base::FilePat
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
      case chrome::DIR_BUNDLED_WIDEVINE_CDM:
@@ -10,28 +10,30 @@
 +        break;
        if (!GetComponentDirectory(&cur))
          return false;
- #if !BUILDFLAG(IS_CHROMEOS_ASH)
+       cur = cur.AppendASCII(kWidevineCdmBaseDirectory);
 --- a/src/chrome/common/media/cdm_registration.cc
 +++ b/src/chrome/common/media/cdm_registration.cc
-@@ -46,7 +46,7 @@ using Robustness = content::CdmInfo::Rob
+@@ -51,9 +51,7 @@ namespace {
+ using Robustness = content::CdmInfo::Robustness;
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
- #if (BUILDFLAG(BUNDLE_WIDEVINE_CDM) ||            \
+-#if (BUILDFLAG(BUNDLE_WIDEVINE_CDM) ||            \
 -     BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && \
-+     BUILDFLAG(ENABLE_WIDEVINE)) && \
-     (defined(OS_LINUX) || defined(OS_CHROMEOS))
+-    (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
  // Create a CdmInfo for a Widevine CDM, using |version|, |cdm_library_path|, and
  // |capability|.
-@@ -89,7 +89,7 @@ std::unique_ptr<content::CdmInfo> Create
-         // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && (defined(OS_LINUX) ||
-         // defined(OS_CHROMEOS))
+ std::unique_ptr<content::CdmInfo> CreateWidevineCdmInfo(
+@@ -93,7 +91,7 @@ std::unique_ptr<content::CdmInfo> Create
+         // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && (BUILDFLAG(IS_LINUX) ||
+         // BUILDFLAG(IS_CHROMEOS))
  
 -#if BUILDFLAG(BUNDLE_WIDEVINE_CDM) && \
 +#if BUILDFLAG(ENABLE_WIDEVINE) && \
-     (defined(OS_LINUX) || defined(OS_CHROMEOS))
+     (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
  // On Linux/ChromeOS we have to preload the CDM since it uses the zygote
  // sandbox. On Windows and Mac, the bundled CDM is handled by the component
-@@ -205,7 +205,7 @@ void AddSoftwareSecureWidevine(std::vect
+@@ -162,7 +160,7 @@ void AddSoftwareSecureWidevine(std::vect
    // case both versions will be the same and point to the same directory, so
    // it doesn't matter which one is loaded.
    content::CdmInfo* bundled_widevine = nullptr;

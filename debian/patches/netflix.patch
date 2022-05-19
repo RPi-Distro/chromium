@@ -1,6 +1,6 @@
 --- a/src/content/common/user_agent.cc
 +++ b/src/content/common/user_agent.cc
-@@ -201,7 +201,7 @@ std::string GetOSVersion(IncludeAndroidB
+@@ -199,7 +199,7 @@ std::string GetOSVersion(IncludeAndroidB
                        "%s%s", android_version_str.c_str(),
                        android_info_str.c_str()
  #else
@@ -9,12 +9,12 @@
  #endif
    );
    return os_version;
-@@ -235,7 +235,7 @@ std::string BuildOSCpuInfoFromOSVersionA
+@@ -234,7 +234,7 @@ std::string BuildOSCpuInfoFromOSVersionA
    base::StringAppendF(&os_cpu,
- #if defined(OS_MAC)
+ #if BUILDFLAG(IS_MAC)
                        "%s Mac OS X %s", cpu_type.c_str(), os_version.c_str()
--#elif defined(OS_CHROMEOS)
-+#elif defined(OS_CHROMEOS) || defined(OS_POSIX)
+-#elif BUILDFLAG(IS_CHROMEOS)
++#elif BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_POSIX)
                        "CrOS "
                        "%s %s",
                        cpu_type.c_str(),  // e.g. i686

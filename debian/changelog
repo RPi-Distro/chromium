@@ -1,6 +1,48 @@
 chromium (102.0.5005.61-1) UNRELEASED; urgency=low
 
   * New upstream stable release.
+    - CVE-2022-1853: Use after free in Indexed DB. Reported by Anonymous
+    - CVE-2022-1854: Use after free in ANGLE.
+      Reported by SeongHwan Park (SeHwa)
+    - CVE-2022-1855: Use after free in Messaging. Reported by Anonymous
+    - CVE-2022-1856: Use after free in User Education. Reported by
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
+    - CVE-2022-1857: Insufficient policy enforcement in File System API.
+      Reported by Daniel Rhea
+    - CVE-2022-1858: Out of bounds read in DevTools. Reported by EllisVlad
+    - CVE-2022-1859: Use after free in Performance Manager. Reported by
+      Guannan Wang (@Keenan7310) of Tencent Security Xuanwu Lab
+    - CVE-2022-1860: Use after free in UI Foundations.
+      Reported by @ginggilBesel
+    - CVE-2022-1861: Use after free in Sharing. Reported by Khalil Zhani
+    - CVE-2022-1862: Inappropriate implementation in Extensions.
+      Reported by Alesandro Ortiz
+    - CVE-2022-1863: Use after free in Tab Groups. Reported by David Erceg
+    - CVE-2022-1864: Use after free in WebApp Installs.
+      Reported by Yuntao You (@GraVity0) of Bytedance Wuheng Lab
+    - CVE-2022-1865: Use after free in Bookmarks.
+      Reported by Rong Jian of VRI
+    - CVE-2022-1866: Use after free in Tablet Mode.
+      Reported by @ginggilBesel
+    - CVE-2022-1867: Insufficient validation of untrusted input in
+      Data Transfer. Reported by Michał Bentkowski of Securitum
+    - CVE-2022-1868: Inappropriate implementation in Extensions API.
+      Reported by Alesandro Ortiz
+    - CVE-2022-1869: Type Confusion in V8.
+      Reported by Man Yue Mo of GitHub Security Lab
+    - CVE-2022-1870: Use after free in App Service. Reported by
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
+    - CVE-2022-1871: Insufficient policy enforcement in File System API.
+      Reported by Thomas Orlita
+    - CVE-2022-1872: Insufficient policy enforcement in Extensions API.
+      Reported by ChaobinZhang
+    - CVE-2022-1873: Insufficient policy enforcement in COOP.
+      Reported by NDevTK
+    - CVE-2022-1874: Insufficient policy enforcement in Safe Browsing.
+      Reported by hjy79425575
+    - CVE-2022-1875: Inappropriate implementation in PDF. Reported by NDevTK
+    - CVE-2022-1876: Heap buffer overflow in DevTools.
+      Reported by @ginggilBesel
   * debian/patches:
     - system/jpeg.patch - straight refresh.
     - disable/swiftshader.patch - straight refresh.
@@ -12,6 +54,11 @@ chromium (102.0.5005.61-1) UNRELEASED; urgency=low
     - bullseye/clang11.patch - merge cast-call.patch into it, as well as
       dropping additional unsupported clang arguments.
     - bullseye/cast-call.patch - drop.
+    - upstream/dawn-version-fix.patch - add patch to deal w/ FTBFS.
+    - upstream/blink-ftbfs.patch - another FTBFS patch.
+    - upstream/nested-nested-nested-nested-nested-nested-regex-patterns.patch -
+      fix a build failure that only happens with clang + GNU's libstdc++.
+  * Don't build unneccessary dawn build tests.
 
  -- Andres Salomon <dilinger@debian.org>  Mon, 23 May 2022 14:54:11 -0400
 

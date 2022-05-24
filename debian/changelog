@@ -1,3 +1,20 @@
+chromium (102.0.5005.61-1) UNRELEASED; urgency=low
+
+  * New upstream stable release.
+  * debian/patches:
+    - system/jpeg.patch - straight refresh.
+    - disable/swiftshader.patch - straight refresh.
+    - disable/swiftshader-2.patch - refresh for upstream dropping of legacy
+      swiftshader GL stuff; they now use ANGLE.
+    - disable/angle-perftests.patch - refresh.
+    - system/jsoncpp.patch - refresh for jsoncpp_no_deprecated_declarations
+      argument change.
+    - bullseye/clang11.patch - merge cast-call.patch into it, as well as
+      dropping additional unsupported clang arguments.
+    - bullseye/cast-call.patch - drop.
+
+ -- Andres Salomon <dilinger@debian.org>  Mon, 23 May 2022 14:54:11 -0400
+
 chromium (101.0.4951.64-1) unstable; urgency=high
 
   * New upstream security release.

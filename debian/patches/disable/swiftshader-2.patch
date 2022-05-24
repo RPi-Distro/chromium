@@ -3,37 +3,23 @@ author: Andres Salomon <dilinger@debian.org>
 
 --- a/chrome/BUILD.gn
 +++ b/chrome/BUILD.gn
-@@ -1752,12 +1735,7 @@ if (is_linux || is_chromeos) {
-         ":angle_gles_symbols",
-         ":chrome_crashpad_symbols",
+@@ -1709,7 +1709,6 @@ if (is_linux || is_chromeos) {
          ":chrome_symbols",
--        ":swiftshader_egl_symbols",
--        ":swiftshader_gles_symbols",
        ]
--      if (is_linux) {
+       if (is_linux) {
 -        deps += [ ":swiftshader_vk_symbols" ]
--      }
+       }
        if (!is_chromeos) {
          deps += [ ":angle_libvulkan_symbols" ]
-       }
-@@ -1789,6 +1767,7 @@ if (is_linux || is_chromeos) {
+@@ -1742,6 +1741,7 @@ if (is_linux || is_chromeos) {
  
        deps = [ "//components/crash/core/app:chrome_crashpad_handler" ]
      }
 +if (false) {
-     extract_symbols("swiftshader_egl_symbols") {
-       binary = "$root_out_dir/swiftshader/libEGL.so"
+     extract_symbols("swiftshader_vk_symbols") {
+       binary = "$root_out_dir/libvk_swiftshader.so"
  
-@@ -1799,8 +1778,6 @@ if (is_linux || is_chromeos) {
-         symbol_file = "$root_out_dir/swiftshader_libegl.breakpad.$current_cpu"
-       }
- 
--      deps =
--          [ "//third_party/swiftshader/src/OpenGL/libEGL:swiftshader_libEGL" ]
-     }
-     extract_symbols("swiftshader_gles_symbols") {
-       binary = "$root_out_dir/swiftshader/libGLESv2.so"
-@@ -1828,6 +1805,7 @@ if (is_linux || is_chromeos) {
+@@ -1754,6 +1754,7 @@ if (is_linux || is_chromeos) {
  
        deps = [ "//third_party/swiftshader/src/Vulkan:swiftshader_libvulkan" ]
      }

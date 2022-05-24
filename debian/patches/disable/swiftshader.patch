@@ -3,15 +3,15 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -506,7 +506,7 @@ group("gn_all") {
+@@ -520,7 +520,7 @@ group("gn_all") {
      ]
    }
  
 -  if ((is_win || is_mac || is_linux || is_chromeos || is_fuchsia) &&
 +  if (false &&
        (target_cpu == "x86" || target_cpu == "x64")) {
-     deps += [ "//third_party/swiftshader" ]
-   }
+     deps += [
+       "//third_party/swiftshader/src/Vulkan:icd_file",
 --- a/third_party/angle/gni/angle.gni
 +++ b/third_party/angle/gni/angle.gni
 @@ -137,7 +137,7 @@ declare_args() {

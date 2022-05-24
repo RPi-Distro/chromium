@@ -64,7 +64,7 @@ Files-Excluded:
  tools/perf/page_sets/tough_scheduling_cases/*.min.js
  tools/page_cycler/acid3
  tools/resultdb/result_adapter
- tools/resultdb/.versions/result_adapter.cipd_version
+ tools/resultdb/.versions/*.cipd_version
  tools/win
  headless/test/data
  content/browser/android
@@ -162,6 +162,7 @@ Files-Excluded:
  third_party/tflite/src/tensorflow/examples/multibox_detector/data/surfers.jpg
  third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
  third_party/devtools-frontend/src/third_party/esbuild/esbuild
+ third_party/nearby/src/third_party
 
 
 Files: *

@@ -45,4 +45,3 @@ system/rapidjson.patch
 bullseye/nomerge.patch
 bullseye/clang11.patch
 bullseye/blink-constexpr.patch
-bullseye/cast-call.patch

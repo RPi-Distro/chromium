@@ -3,11 +3,17 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/third_party/jsoncpp/BUILD.gn
 +++ b/third_party/jsoncpp/BUILD.gn
-@@ -3,49 +3,14 @@
+@@ -3,6 +3,7 @@
  # found in the LICENSE file.
  
  import("//testing/libfuzzer/fuzzer_test.gni")
 +import("//build/config/linux/pkg_config.gni")
+ 
+ declare_args() {
+   # Allow individual projects to remove the warning suppression
+@@ -11,49 +12,12 @@ declare_args() {
+   jsoncpp_no_deprecated_declarations = true
+ }
  
 -config("jsoncpp_config") {
 -  include_dirs = [ "source/include" ]
@@ -16,7 +22,8 @@ author: Michael Gilbert <mgilbert@debian.org>
 -  # declaration flag.
 -  # This temporary flag allowing clients to update to the new version, and then
 -  # update to the new StreamWriter and CharReader classes.
--  if (!is_win || (is_clang && !is_ios)) {
+-  if (jsoncpp_no_deprecated_declarations &&
+-      (!is_win || (is_clang && !is_ios))) {
 -    cflags_cc = [ "-Wno-deprecated-declarations" ]
 -  }
 +pkg_config("jsoncpp_config") {

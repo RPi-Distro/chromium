@@ -14,6 +14,7 @@ upstream/libxml.patch
 upstream/dawn-version-fix.patch
 upstream/blink-ftbfs.patch
 upstream/nested-nested-nested-nested-nested-nested-regex-patterns.patch
+upstream/byteswap-constexpr.patch
 
 disable/tests.patch
 disable/unrar.patch

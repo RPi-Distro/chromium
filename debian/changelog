@@ -58,6 +58,8 @@ chromium (102.0.5005.61-1) UNRELEASED; urgency=low
     - upstream/blink-ftbfs.patch - another FTBFS patch.
     - upstream/nested-nested-nested-nested-nested-nested-regex-patterns.patch -
       fix a build failure that only happens with clang + GNU's libstdc++.
+    - upstream/byteswap-constexpr.patch - add this to fix bullsye builds on
+      32-bit platforms (closes: #1011096).
   * Don't build unneccessary dawn build tests.
 
  -- Andres Salomon <dilinger@debian.org>  Mon, 23 May 2022 14:54:11 -0400

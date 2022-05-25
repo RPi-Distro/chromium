@@ -1,4 +1,4 @@
-chromium (102.0.5005.61-1) UNRELEASED; urgency=low
+chromium (102.0.5005.61-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2022-1853: Use after free in Indexed DB. Reported by Anonymous
@@ -62,7 +62,7 @@ chromium (102.0.5005.61-1) UNRELEASED; urgency=low
       32-bit platforms (closes: #1011096).
   * Don't build unneccessary dawn build tests.
 
- -- Andres Salomon <dilinger@debian.org>  Mon, 23 May 2022 14:54:11 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 25 May 2022 02:09:10 -0400
 
 chromium (101.0.4951.64-1) unstable; urgency=high
 

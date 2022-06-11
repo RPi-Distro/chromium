@@ -1,3 +1,22 @@
+chromium (102.0.5005.115-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-2007: Use after free in WebGPU. Reported by David Manouchehri
+    - CVE-2022-2008: Out of bounds memory access in WebGL.
+      Reported by khangkito - Tran Van Khang (VinCSS)
+    - CVE-2022-2010: Out of bounds read in compositing.
+      Reported by Mark Brand of Google Project Zero
+    - CVE-2022-2011: Use after free in ANGLE.
+      Reported by SeongHwan Park (SeHwa)
+  * debian/patches:
+    - bullseye/byteswap-constexpr2.patch - additional fix for bullseye
+      builds on 32-bit platforms (closes: #1011096).
+    - debianization/support-i386.patch - re-enable support for i386 builds.
+      Upstream no longer officially supports i386 builds on linux, so we
+      are on our own here.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 10 Jun 2022 02:37:57 +0000
+
 chromium (102.0.5005.61-1) unstable; urgency=high
 
   * New upstream stable release.

@@ -2,6 +2,7 @@ debianization/manpage.patch
 debianization/sandbox.patch
 debianization/optimization.patch
 debianization/master-preferences.patch
+debianization/support-i386.patch
 
 fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
@@ -49,3 +50,4 @@ system/rapidjson.patch
 bullseye/nomerge.patch
 bullseye/clang11.patch
 bullseye/blink-constexpr.patch
+bullseye/byteswap-constexpr2.patch

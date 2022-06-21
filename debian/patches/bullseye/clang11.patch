@@ -9,7 +9,7 @@ error: unknown argument: '-no-opaque-pointers'
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1250,7 +1250,8 @@ config("compiler_deterministic") {
+@@ -1249,7 +1249,8 @@ config("compiler_deterministic") {
      } else {
        # -ffile-compilation-dir is an alias for both -fdebug-compilation-dir=
        # and -fcoverage-compilation-dir=.
@@ -19,19 +19,15 @@ error: unknown argument: '-no-opaque-pointers'
      }
      if (!is_win) {
        # We don't use clang -cc1as on Windows (yet? https://crbug.com/762167)
-@@ -1531,11 +1532,6 @@ config("default_warnings") {
-       ]
+@@ -1531,7 +1532,6 @@ config("default_warnings") {
  
        if (!is_nacl) {
--        # TODO(https://crbug.com/1300731) Clean up and enable.
+         # TODO(https://crbug.com/1300731) Clean up and enable.
 -        cflags += [ "-Wno-unqualified-std-cast-call" ]
--
--        # TODO(https://crbug.com/1314867): Clean up and enable.
--        cflags += [ "-Wno-deprecated-non-prototype" ]
        }
  
        if (!is_nacl && !(is_chromeos ||
-@@ -1543,7 +1539,6 @@ config("default_warnings") {
+@@ -1539,7 +1539,6 @@ config("default_warnings") {
          # TODO(https://crbug.com/1316298): Re-enable once test failure is figured out
          cflags += [
            "-Xclang",
@@ -39,7 +35,7 @@ error: unknown argument: '-no-opaque-pointers'
          ]
        }
  
-@@ -1725,8 +1720,6 @@ config("no_chromium_code") {
+@@ -1721,8 +1720,6 @@ config("no_chromium_code") {
      ]
      if (!is_nacl) {
        cflags += [
@@ -48,7 +44,7 @@ error: unknown argument: '-no-opaque-pointers'
  
          # TODO(https://crbug.com/1202159): Clean up and enable.
          "-Wno-misleading-indentation",
-@@ -2409,7 +2402,6 @@ config("symbols") {
+@@ -2405,7 +2402,6 @@ config("symbols") {
        # by emitting class type info only when constructors are emitted.
        cflags += [
          "-Xclang",

@@ -11,11 +11,6 @@ fixes/widevine-locations.patch
 fixes/connection-message.patch
 
 upstream/mojo.patch
-upstream/libxml.patch
-upstream/dawn-version-fix.patch
-upstream/blink-ftbfs.patch
-upstream/nested-nested-nested-nested-nested-nested-regex-patterns.patch
-upstream/byteswap-constexpr.patch
 
 disable/tests.patch
 disable/unrar.patch

@@ -1,3 +1,22 @@
+chromium (103.0.5060.53-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * debian/patches:
+    - upstream/dawn-version-fix.patch: drop merged upstream.
+    - upstream/blink-ftbfs.patch: drop, merged upstream.
+    - upstream/libxml.patch: drop, merged upstream.
+    - upstream/nested-nested-nested-nested-nested-nested-regex-patterns.patch:
+      drop, merged upstream.
+    - upstream/byteswap-constexpr.patch: drop, merged upstream.
+    - bullseye/byteswap-constexpr2.patch: sys_byteswap.h moved directories.
+    - disable/angle-perftests.patch: simple refresh.
+    - disable/catapult.patch: simple refresh.
+    - bullseye/clang11.patch: minor update for some code dropped upstream.
+    - system/openjpeg.patch: update for libopenjp2-7-dev's 2.4 -> 2.5 path
+      change.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 21 Jun 2022 02:59:01 +0000
+
 chromium (102.0.5005.115-1) unstable; urgency=high
 
   * New upstream security release.

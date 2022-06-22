@@ -4,7 +4,7 @@ chromium (103.0.5060.53-1) unstable; urgency=high
     - CVE-2022-2156: Use after free in Base.
       Reported by Mark Brand of Google Project Zero
     - CVE-2022-2157: Use after free in Interest groups. Reported by
-      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab 
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
     - CVE-2022-2158: Type Confusion in V8. Reported by
       Bohan Liu (@P4nda20371774) of Tencent Security Xuanwu Lab
     - CVE-2022-2160: Insufficient policy enforcement in DevTools.

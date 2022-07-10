@@ -1,3 +1,15 @@
+chromium (103.0.5060.114-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-2294: Heap buffer overflow in WebRTC. Reported by
+      Jan Vojtesek from the Avast Threat Intelligence team
+    - CVE-2022-2295: Type Confusion in V8.
+      Reported by avaue and Buff3tts at S.S.L.
+    - CVE-2022-2296: Use after free in Chrome OS Shell.
+      Reported by Khalil Zhani
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 10 Jul 2022 12:44:03 -0400
+
 chromium (103.0.5060.53-1) unstable; urgency=high
 
   * New upstream stable release.

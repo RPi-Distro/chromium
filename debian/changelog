@@ -1,3 +1,19 @@
+chromium (103.0.5060.134-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-2477 : Use after free in Guest View. Reported by anonymous
+    - CVE-2022-2478 : Use after free in PDF. Reported by triplepwns
+    - CVE-2022-2479 : Insufficient validation of untrusted input in File.
+      Reported by anonymous
+    - CVE-2022-2480 : Use after free in Service Worker API.
+      Reported by Sergei Glazunov of Google Project Zero
+    - CVE-2022-2481: Use after free in Views. Reported by
+      YoungJoo Lee(@ashuu_lee) of CompSecLab at Seoul National University
+    - CVE-2022-2163: Use after free in Cast UI and Toolbar.
+      Reported by Chaoyuan Peng (@ret2happy)
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 20 Jul 2022 00:51:39 -0400
+
 chromium (103.0.5060.114-1) unstable; urgency=high
 
   * New upstream security release.

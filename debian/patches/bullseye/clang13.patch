@@ -1,0 +1,28 @@
+author: Andres Salomon <dilinger@debian.org>
+description: drop various arguments that clang-13 doesn't support
+
+These usually show up as either warnings or actual errors; eg,
+
+warning: unknown warning option '-Wno-deprecated-non-prototype' [-Wunknown-warning-option]
+error: unknown argument: '-no-opaque-pointers'
+
+
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -1531,7 +1532,6 @@ config("default_warnings") {
+ 
+       if (!is_nacl) {
+         # TODO(https://crbug.com/1300731) Clean up and enable.
+-        cflags += [ "-Wno-unqualified-std-cast-call" ]
+       }
+ 
+       if (!is_nacl && !(is_chromeos ||
+@@ -1539,7 +1539,6 @@ config("default_warnings") {
+         # TODO(https://crbug.com/1316298): Re-enable once test failure is figured out
+         cflags += [
+           "-Xclang",
+-          "-no-opaque-pointers",
+         ]
+       }
+ 
+

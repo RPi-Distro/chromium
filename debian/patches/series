@@ -42,7 +42,4 @@ system/opus.patch
 system/eu-strip.patch
 system/rapidjson.patch
 
-bullseye/nomerge.patch
-bullseye/clang11.patch
-bullseye/blink-constexpr.patch
-bullseye/byteswap-constexpr2.patch
+bullseye/clang13.patch

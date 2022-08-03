@@ -118,7 +118,6 @@ Files-Excluded:
  third_party/expat/src
  third_party/unrar
  third_party/apache-linux
- third_party/perfetto/ui/src/gen
  third_party/checkstyle
  third_party/swiftshader
  third_party/apache-win32

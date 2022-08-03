@@ -7,9 +7,11 @@ warning: unknown warning option '-Wno-deprecated-non-prototype' [-Wunknown-warni
 error: unknown argument: '-no-opaque-pointers'
 
 
---- a/build/config/compiler/BUILD.gn
-+++ b/build/config/compiler/BUILD.gn
-@@ -1531,7 +1532,6 @@ config("default_warnings") {
+Index: chromium-104.0.5112.65/build/config/compiler/BUILD.gn
+===================================================================
+--- chromium-104.0.5112.65.orig/build/config/compiler/BUILD.gn
++++ chromium-104.0.5112.65/build/config/compiler/BUILD.gn
+@@ -1537,7 +1537,6 @@ config("default_warnings") {
  
        if (!is_nacl) {
          # TODO(https://crbug.com/1300731) Clean up and enable.
@@ -17,12 +19,11 @@ error: unknown argument: '-no-opaque-pointers'
        }
  
        if (!is_nacl && !(is_chromeos ||
-@@ -1539,7 +1539,6 @@ config("default_warnings") {
-         # TODO(https://crbug.com/1316298): Re-enable once test failure is figured out
+@@ -1545,7 +1544,6 @@ config("default_warnings") {
+         # TODO(https://crbug.com/1322823): Remove flags once potential miscompile is investigated.
          cflags += [
            "-Xclang",
 -          "-no-opaque-pointers",
          ]
        }
  
-

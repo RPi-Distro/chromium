@@ -1,3 +1,61 @@
+chromium (104.0.5112.79-1) unstable; urgency=high
+
+  * New upstream stable release.
+    - CVE-2022-2603: Use after free in Omnibox. Reported by Anonymous
+    - CVE-2022-2604: Use after free in Safe Browsing. Reported by
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
+    - CVE-2022-2605: Out of bounds read in Dawn. Reported by Looben Yang
+    - CVE-2022-2606: Use after free in Managed devices API. Reported by
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
+    - CVE-2022-2607: Use after free in Tab Strip. Reported by @ginggilBesel
+    - CVE-2022-2608: Use after free in Overview Mode.
+      Reported by Khalil Zhani
+    - CVE-2022-2609: Use after free in Nearby Share. Reported by koocola
+      (@alo_cook) and Guang Gong of 360 Vulnerability Research Institute
+    - CVE-2022-2610: Insufficient policy enforcement in Background Fetch.
+      Reported by Maurice Dauer
+    - CVE-2022-2611: Inappropriate implementation in Fullscreen API.
+      Reported by Irvan Kurniawan (sourc7)
+    - CVE-2022-2612: Side-channel information leakage in Keyboard input.
+      Reported by Erik Kraft (erik.kraft5@gmx.at),
+      Martin Schwarzl (martin.schwarzl@iaik.tugraz.at)
+    - CVE-2022-2613: Use after free in Input.
+      Reported by Piotr Tworek (Vewd)
+    - CVE-2022-2614: Use after free in Sign-In Flow.
+      Reported by raven at KunLun lab
+    - CVE-2022-2615: Insufficient policy enforcement in Cookies.
+      Reported by Maurice Dauer
+    - CVE-2022-2616: Inappropriate implementation in Extensions API.
+      Reported by Alesandro Ortiz
+    - CVE-2022-2617: Use after free in Extensions API.
+      Reported by @ginggilBesel
+    - CVE-2022-2618: Insufficient validation of untrusted input in
+      Internals. Reported by asnine
+    - CVE-2022-2619: Insufficient validation of untrusted input in Settings.
+      Reported by Oliver Dunk
+    - CVE-2022-2620: Use after free in WebUI. Reported by
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
+    - CVE-2022-2621: Use after free in Extensions.
+      Reported by Huyna at Viettel Cyber Security
+    - CVE-2022-2622: Insufficient validation of untrusted input in
+      Safe Browsing. Reported by Imre Rad (@ImreRad) and @j00sean
+    - CVE-2022-2623: Use after free in Offline. Reported by
+      raven at KunLun lab
+    - CVE-2022-2624: Heap buffer overflow in PDF. Reported by YU-CHANG
+      CHEN and CHIH-YEN CHANG, working with DEVCORE Internship Program
+  * debian/patches:
+    - bullseye/nomerge.patch: drop, was only needed for clang-11.
+    - bullseye/clang11.patch: drop clang-11 bits, rename to clang13.patch.
+    - bullseye/blink-constexpr.patch: drop, only needed for clang-11.
+    - bullseye/byteswap-constexpr2.patch: drop, only needed for clang-11.
+    - disable/angle-perftests.patch: refresh
+    - disable/catapult.patch: refresh & drop some no longer needed bits.
+    - fixes/tflite.patch: fix a build error.
+  * debian/copyright:
+    - upstream dropped perfetto/ui/src/gen/.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 04 Aug 2022 11:31:44 -0400
+
 chromium (103.0.5060.134-1) unstable; urgency=high
 
   * New upstream security release.

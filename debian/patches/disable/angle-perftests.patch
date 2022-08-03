@@ -1,9 +1,11 @@
 description: Disable ANGLE perftests
 author: Michel Le Bihan <michel@lebihan.pl>
 
---- a/chrome/test/BUILD.gn
-+++ b/chrome/test/BUILD.gn
-@@ -4829,7 +4829,6 @@ template("performance_test_suite_templat
+Index: chromium-104.0.5112.65/chrome/test/BUILD.gn
+===================================================================
+--- chromium-104.0.5112.65.orig/chrome/test/BUILD.gn
++++ chromium-104.0.5112.65/chrome/test/BUILD.gn
+@@ -4859,7 +4859,6 @@ template("performance_test_suite_templat
      }
  
      if (!is_chromeos_lacros) {
@@ -11,8 +13,10 @@ author: Michel Le Bihan <michel@lebihan.pl>
      }
  
      if (!is_android && !is_chromeos_lacros) {
---- a/third_party/angle/src/tests/BUILD.gn
-+++ b/third_party/angle/src/tests/BUILD.gn
+Index: chromium-104.0.5112.65/third_party/angle/src/tests/BUILD.gn
+===================================================================
+--- chromium-104.0.5112.65.orig/third_party/angle/src/tests/BUILD.gn
++++ chromium-104.0.5112.65/third_party/angle/src/tests/BUILD.gn
 @@ -12,8 +12,7 @@ declare_args() {
    build_angle_deqp_tests = false
    build_angle_gles1_conform_tests = false
@@ -81,7 +85,7 @@ author: Michel Le Bihan <michel@lebihan.pl>
    import("angle_perftests.gni")
  
    # This test suite is for perf tests that use ANGLE's internals in some direct way.
-@@ -1606,12 +1563,11 @@ group("angle_tests") {
+@@ -1623,12 +1580,11 @@ group("angle_tests") {
    testonly = true
    deps = [
      ":angle_end2end_tests",
@@ -95,14 +99,16 @@ author: Michel Le Bihan <michel@lebihan.pl>
      deps += [
        ":angle_white_box_perftests",
        ":angle_white_box_tests",
---- a/third_party/angle/gni/angle.gni
-+++ b/third_party/angle/gni/angle.gni
+Index: chromium-104.0.5112.65/third_party/angle/gni/angle.gni
+===================================================================
+--- chromium-104.0.5112.65.orig/third_party/angle/gni/angle.gni
++++ chromium-104.0.5112.65/third_party/angle/gni/angle.gni
 @@ -249,7 +249,7 @@ declare_args() {
        is_apple &&
        (angle_enable_glsl || angle_enable_metal || use_fuzzing_engine)
  
 -  angle_has_histograms = angle_has_build
 +  angle_has_histograms = false
- }
  
- declare_args() {
+   # True if we want to build the ANGLE test suites. On by default in most configs.
+   angle_build_tests = angle_has_build

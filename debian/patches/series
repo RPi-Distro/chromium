@@ -9,6 +9,7 @@ fixes/clang-and-gcc11.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 fixes/connection-message.patch
+fixes/tflite.patch
 
 upstream/mojo.patch
 

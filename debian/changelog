@@ -3,6 +3,8 @@ chromium (104.0.5112.79-2) UNRELEASED; urgency=high
   * Change default search engine to DuckDuckGo for privacy reasons.
     Set a different search engine under Settings -> Search Engine
     (closes: #956012).
+  * Drop a bunch of versioned build-deps that have been satisfied
+    since at least oldoldstable.
   * debian/NEWS.Debian:
     - Document upstream dropping support for older TLSv1 and TLSv1.1
       protocols (closes: #1005808).

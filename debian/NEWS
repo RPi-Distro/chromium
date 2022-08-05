@@ -1,3 +1,22 @@
+chromium-browser (104.0.5112.79-2) unstable; urgency=low
+
+  We've switched the default search engine from Google to DuckDuckGo.
+  To manually override it, just go into Settings, click "Search Engine",
+  and next to "Search engine used in the address bar", select a different
+  search engine from the pull-down.
+
+  Also, catching up on a few upstream changes:
+
+  TLSv1 and TLSv1.1 support have been completely dropped from chromium
+  (as described in https://chromestatus.com/feature/5759116003770368).
+  Support for CPUs that lack SSE3 extensions has also been dropped (as
+  described on
+  https://www.tomshardware.com/news/chrome-stops-working-on-old-processors).
+  Most users shouldn't notice, unless you're using older hardware or
+  "securely" communicating with older hardware.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 05 Aug 2022 00:16:22 -0400
+
 chromium-browser (70.0.3538.54-2) unstable; urgency=medium
 
   The master_preferences files has been moved from /usr/share/chromium to

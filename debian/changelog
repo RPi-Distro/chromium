@@ -1,3 +1,16 @@
+chromium (104.0.5112.79-2) UNRELEASED; urgency=high
+
+  * Change default search engine to DuckDuckGo for privacy reasons.
+    Set a different search engine under Settings -> Search Engine
+    (closes: #956012).
+  * debian/NEWS.Debian:
+    - Document upstream dropping support for older TLSv1 and TLSv1.1
+      protocols (closes: #1005808).
+    - Document upstream dropping support for older x86 CPUs without
+      SSE3 instruction support (closes: #1010407).
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 05 Aug 2022 00:02:03 -0400
+
 chromium (104.0.5112.79-1) unstable; urgency=high
 
   * New upstream stable release.

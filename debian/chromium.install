@@ -18,3 +18,4 @@ debian/etc/apikeys etc/chromium.d
 debian/etc/extensions etc/chromium.d
 debian/etc/default-flags etc/chromium.d
 debian/etc/master_preferences etc/chromium
+debian/etc/duckduckgo.json etc/chromium/policies/recommended

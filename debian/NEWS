@@ -15,7 +15,12 @@ chromium-browser (104.0.5112.79-2) unstable; urgency=low
   Most users shouldn't notice, unless you're using older hardware or
   "securely" communicating with older hardware.
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 05 Aug 2022 00:16:22 -0400
+  Lastly, Chromium 101 changed a setting for host-based authentication.
+  This broke some folks' Kerberos, among other things. "AuthServerWhitelist"
+  was renamed to "AuthServerAllowlist", as described in
+  https://bugs.debian.org/1013268
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 16 Aug 2022 17:29:29 -0400
 
 chromium-browser (70.0.3538.54-2) unstable; urgency=medium
 

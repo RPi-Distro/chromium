@@ -1,5 +1,26 @@
-chromium (104.0.5112.79-2) UNRELEASED; urgency=high
+chromium (104.0.5112.101-1) unstable; urgency=high
 
+  * New upstream security release.
+    - CVE-2022-2852: Use after free in FedCM.
+      Reported by Sergei Glazunov of Google Project Zero
+    - CVE-2022-2854: Use after free in SwiftShader. Reported by Cassidy
+      Kim of Amber Security Lab, OPPO Mobile Telecommunications Corp. Ltd.
+    - CVE-2022-2855: Use after free in ANGLE. Reported by Cassidy Kim
+      of Amber Security Lab, OPPO Mobile Telecommunications Corp. Ltd.
+    - CVE-2022-2857: Use after free in Blink. Reported by Anonymous
+    - CVE-2022-2858: Use after free in Sign-In Flow.
+      Reported by raven at KunLun lab
+    - CVE-2022-2853: Heap buffer overflow in Downloads.
+      Reported by Sergei Glazunov of Google Project Zero
+    - CVE-2022-2856: Insufficient validation of untrusted input in Intents
+      Reported by Ashley Shen and Christian Resell of Google Threat
+      Analysis Group
+    - CVE-2022-2859: Use after free in Chrome OS Shell. Reported by
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Alpha Lab
+    - CVE-2022-2860: Insufficient policy enforcement in Cookies.
+      Reported by Axel Chong
+    - CVE-2022-2861: Inappropriate implementation in Extensions API.
+      Reported by Rong Jian of VRI
   * Change default search engine to DuckDuckGo for privacy reasons.
     Set a different search engine under Settings -> Search Engine
     (closes: #956012).
@@ -10,8 +31,11 @@ chromium (104.0.5112.79-2) UNRELEASED; urgency=high
       protocols (closes: #1005808).
     - Document upstream dropping support for older x86 CPUs without
       SSE3 instruction support (closes: #1010407).
+    - Document the Google to DuckDuckGo change.
+    - Document upstream's config renaming of AuthServerWhitelist to
+      AuthServerAllowlist (closes: #1013268).
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 05 Aug 2022 00:02:03 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 16 Aug 2022 17:29:29 -0400
 
 chromium (104.0.5112.79-1) unstable; urgency=high
 

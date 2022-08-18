@@ -1,3 +1,10 @@
+chromium (104.0.5112.101-2) UNRELEASED; urgency=high
+
+  * Drop workaround for lack of older clang's -ffile-prefix-map. This
+    should make reproducible builds happy.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 18 Aug 2022 14:34:13 -0400
+
 chromium (104.0.5112.101-1) unstable; urgency=high
 
   * New upstream security release.

@@ -3,7 +3,7 @@ debian/scripts/mk-origtargz
 
 Makefile
 
-base/third_party/libevent/BUILD.gn
+third_party/libevent/BUILD.gn
 build/secondary/third_party/libjpeg_turbo/BUILD.gn
 
 third_party/re2/BUILD.gn

@@ -1,11 +1,9 @@
 description: remove dependencies on third_party catapult
 author: Michael Gilbert <mgilbert@debian.org>
 
-Index: chromium-104.0.5112.65/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/BUILD.gn
-+++ chromium-104.0.5112.65/BUILD.gn
-@@ -242,7 +242,6 @@ group("gn_all") {
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -233,7 +233,6 @@ group("gn_all") {
      deps += [
        "//google_apis/gcm:mcs_probe",
        "//media/cast:cast_unittests",
@@ -13,15 +11,15 @@ Index: chromium-104.0.5112.65/BUILD.gn
      ]
      if (!is_android) {
        deps += [ "//chrome/test:telemetry_perf_unittests" ]
-@@ -378,7 +377,6 @@ group("gn_all") {
-       "//net/android:net_junit_tests",
+@@ -367,7 +366,6 @@ group("gn_all") {
        "//services:services_junit_tests",
        "//testing/android/junit:junit_unit_tests",
+       "//third_party/android_build_tools/lint:custom_lint_java",
 -      "//third_party/catapult/devil",
        "//third_party/r8:custom_d8_java",
        "//tools/android:android_tools",
        "//tools/android:memconsumer",
-@@ -1012,7 +1010,6 @@ if (is_chromeos_ash) {
+@@ -1007,7 +1005,6 @@ if (is_chromeos_ash) {
        "//ui/ozone:ozone_integration_tests",
  
        # Blocked on https://github.com/catapult-project/catapult/issues/2297
@@ -29,7 +27,7 @@ Index: chromium-104.0.5112.65/BUILD.gn
        "//tools/perf/clear_system_cache",
        "//ui/ozone/gl:ozone_gl_unittests",
      ]
-@@ -1121,7 +1118,6 @@ if (!is_ios) {
+@@ -1124,7 +1121,6 @@ if (!is_ios) {
          "//chrome:chrome",
          "//chrome/test/chromedriver",
          "//testing:test_scripts_shared",
@@ -37,7 +35,7 @@ Index: chromium-104.0.5112.65/BUILD.gn
        ]
        if (is_win) {
          data_deps += [ "//build/win:copy_cdb_to_output" ]
-@@ -1163,7 +1159,6 @@ if (!is_ios) {
+@@ -1166,7 +1162,6 @@ if (!is_ios) {
        "//third_party/blink/public:blink_devtools_inspector_resources",
        "//third_party/blink/public/mojom:mojom_platform_js_data_deps",
        "//third_party/blink/renderer/core:js_files_for_form_controls_web_tests",
@@ -45,7 +43,7 @@ Index: chromium-104.0.5112.65/BUILD.gn
        "//third_party/hyphenation-patterns:test_data",
        "//third_party/mesa_headers",
        "//tools/imagediff",
-@@ -1244,7 +1239,6 @@ if (!is_ios) {
+@@ -1247,7 +1242,6 @@ if (!is_ios) {
  
      if (is_android) {
        data += [
@@ -53,7 +51,7 @@ Index: chromium-104.0.5112.65/BUILD.gn
          "//build/android/",
        ]
      }
-@@ -1533,10 +1527,6 @@ if (!is_ios) {
+@@ -1600,10 +1594,6 @@ if (!is_ios) {
        "//third_party/blink/web_tests/StaleTestExpectations",
        "//third_party/blink/web_tests/TestExpectations",
        "//third_party/blink/web_tests/VirtualTestSuites",
@@ -64,10 +62,8 @@ Index: chromium-104.0.5112.65/BUILD.gn
        "//third_party/depot_tools/pylint",
        "//third_party/depot_tools/pylint-1.5",
        "//third_party/depot_tools/pylint_main.py",
-Index: chromium-104.0.5112.65/tools/binary_size/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/tools/binary_size/BUILD.gn
-+++ chromium-104.0.5112.65/tools/binary_size/BUILD.gn
+--- a/tools/binary_size/BUILD.gn
++++ b/tools/binary_size/BUILD.gn
 @@ -20,7 +20,6 @@ python_library("sizes_py") {
    pydeps_file = "sizes.pydeps"
    data_deps = [
@@ -76,11 +72,9 @@ Index: chromium-104.0.5112.65/tools/binary_size/BUILD.gn
    ]
  }
  
-Index: chromium-104.0.5112.65/v8/tools/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/v8/tools/BUILD.gn
-+++ chromium-104.0.5112.65/v8/tools/BUILD.gn
-@@ -31,10 +31,6 @@ group("v8_android_test_runner_deps") {
+--- a/v8/tools/BUILD.gn
++++ b/v8/tools/BUILD.gn
+@@ -35,10 +35,6 @@ group("v8_android_test_runner_deps") {
  
    if (is_android && !build_with_chromium) {
      data_deps = [ "//build/android:test_runner_py" ]
@@ -91,11 +85,9 @@ Index: chromium-104.0.5112.65/v8/tools/BUILD.gn
    }
  }
  
-Index: chromium-104.0.5112.65/chrome/test/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/chrome/test/BUILD.gn
-+++ chromium-104.0.5112.65/chrome/test/BUILD.gn
-@@ -10027,8 +10027,6 @@ if (!is_android && !is_fuchsia) {
+--- a/chrome/test/BUILD.gn
++++ b/chrome/test/BUILD.gn
+@@ -10216,8 +10216,6 @@ if (!is_android && !is_fuchsia) {
        "//chrome/test/data/password/captured_sites/",
        "//chrome/test/data/web_page_replay_go_helper_scripts/automation_helper.js",
        "//components/test/data/autofill/web_page_replay_support_files/",
@@ -104,7 +96,7 @@ Index: chromium-104.0.5112.65/chrome/test/BUILD.gn
      ]
  
      if (is_linux || is_chromeos || is_win) {
-@@ -10239,7 +10237,6 @@ if (!is_android) {
+@@ -10428,7 +10426,6 @@ if (!is_android) {
      deps = [ "//tools/perf/chrome_telemetry_build:telemetry_chrome_test" ]
  
      data = [
@@ -112,10 +104,8 @@ Index: chromium-104.0.5112.65/chrome/test/BUILD.gn
        "//tools/perf/run_telemetry_tests",
        "//testing/scripts/run_telemetry_as_googletest.py",
      ]
-Index: chromium-104.0.5112.65/tools/grit/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/tools/grit/BUILD.gn
-+++ chromium-104.0.5112.65/tools/grit/BUILD.gn
+--- a/tools/grit/BUILD.gn
++++ b/tools/grit/BUILD.gn
 @@ -33,7 +33,6 @@ group("grit_python_unittests") {
    data = [
      "//testing/scripts/run_isolated_script_test.py",
@@ -124,10 +114,8 @@ Index: chromium-104.0.5112.65/tools/grit/BUILD.gn
      "//third_party/node/",
      "//third_party/six/src/six.py",
    ]
-Index: chromium-104.0.5112.65/tools/metrics/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/tools/metrics/BUILD.gn
-+++ chromium-104.0.5112.65/tools/metrics/BUILD.gn
+--- a/tools/metrics/BUILD.gn
++++ b/tools/metrics/BUILD.gn
 @@ -45,7 +45,6 @@ group("metrics_python_tests") {
      # The run_isolated_script_test.py script and its dependencies.
      "//testing/scripts/run_isolated_script_test.py",
@@ -136,10 +124,8 @@ Index: chromium-104.0.5112.65/tools/metrics/BUILD.gn
  
      # Scripts we depend on. Their unit tests are also included.
      "//tools/json_comment_eater/json_comment_eater.py",
-Index: chromium-104.0.5112.65/tools/perf/chrome_telemetry_build/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/tools/perf/chrome_telemetry_build/BUILD.gn
-+++ chromium-104.0.5112.65/tools/perf/chrome_telemetry_build/BUILD.gn
+--- a/tools/perf/chrome_telemetry_build/BUILD.gn
++++ b/tools/perf/chrome_telemetry_build/BUILD.gn
 @@ -207,7 +207,6 @@ group("telemetry_chrome_test_without_chr
    ]
    data_deps = [
@@ -156,10 +142,8 @@ Index: chromium-104.0.5112.65/tools/perf/chrome_telemetry_build/BUILD.gn
 -    data_deps += [ "//third_party/catapult/telemetry:bitmaptools" ]
    }
  }
-Index: chromium-104.0.5112.65/tools/polymer/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/tools/polymer/BUILD.gn
-+++ chromium-104.0.5112.65/tools/polymer/BUILD.gn
+--- a/tools/polymer/BUILD.gn
++++ b/tools/polymer/BUILD.gn
 @@ -8,7 +8,6 @@ group("polymer_tools_python_unittests")
    data = [
      "//testing/scripts/run_isolated_script_test.py",
@@ -168,11 +152,9 @@ Index: chromium-104.0.5112.65/tools/polymer/BUILD.gn
    ]
    data_deps = [ "//testing:test_scripts_shared" ]
  }
-Index: chromium-104.0.5112.65/tools/gritsettings/resource_ids.spec
-===================================================================
---- chromium-104.0.5112.65.orig/tools/gritsettings/resource_ids.spec
-+++ chromium-104.0.5112.65/tools/gritsettings/resource_ids.spec
-@@ -752,11 +752,6 @@
+--- a/tools/gritsettings/resource_ids.spec
++++ b/tools/gritsettings/resource_ids.spec
+@@ -768,11 +768,6 @@
      "includes": [3840],
    },
  
@@ -184,11 +166,9 @@ Index: chromium-104.0.5112.65/tools/gritsettings/resource_ids.spec
    # END content/ section.
  
    # START ios/web/ section.
-Index: chromium-104.0.5112.65/content/browser/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/content/browser/BUILD.gn
-+++ chromium-104.0.5112.65/content/browser/BUILD.gn
-@@ -2542,7 +2542,6 @@ source_set("browser") {
+--- a/content/browser/BUILD.gn
++++ b/content/browser/BUILD.gn
+@@ -2560,7 +2560,6 @@ source_set("browser") {
    if (!is_android) {
      deps += [
        "//components/vector_icons",
@@ -196,11 +176,9 @@ Index: chromium-104.0.5112.65/content/browser/BUILD.gn
      ]
      sources += [
        # Non-Android platforms that don't presently support
-Index: chromium-104.0.5112.65/chrome/chrome_paks.gni
-===================================================================
---- chromium-104.0.5112.65.orig/chrome/chrome_paks.gni
-+++ chromium-104.0.5112.65/chrome/chrome_paks.gni
-@@ -168,7 +168,6 @@ template("chrome_extra_paks") {
+--- a/chrome/chrome_paks.gni
++++ b/chrome/chrome_paks.gni
+@@ -169,7 +169,6 @@ template("chrome_extra_paks") {
          "$root_gen_dir/chrome/webui_gallery_resources.pak",
          "$root_gen_dir/chrome/whats_new_resources.pak",
          "$root_gen_dir/content/browser/devtools/devtools_resources.pak",
@@ -208,7 +186,7 @@ Index: chromium-104.0.5112.65/chrome/chrome_paks.gni
        ]
        deps += [
          "//chrome/browser/resources:component_extension_resources",
-@@ -200,7 +199,6 @@ template("chrome_extra_paks") {
+@@ -202,7 +201,6 @@ template("chrome_extra_paks") {
          "//chrome/browser/resources/webui_gallery:resources",
          "//chrome/browser/resources/whats_new:resources",
          "//content/browser/devtools:devtools_resources",
@@ -216,11 +194,9 @@ Index: chromium-104.0.5112.65/chrome/chrome_paks.gni
        ]
        if (is_chrome_branded) {
          sources += [
-Index: chromium-104.0.5112.65/content/shell/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/content/shell/BUILD.gn
-+++ chromium-104.0.5112.65/content/shell/BUILD.gn
-@@ -459,11 +459,6 @@ repack("pak") {
+--- a/content/shell/BUILD.gn
++++ b/content/shell/BUILD.gn
+@@ -460,11 +460,6 @@ repack("pak") {
      "//ui/strings",
    ]
  
@@ -232,9 +208,7 @@ Index: chromium-104.0.5112.65/content/shell/BUILD.gn
    if (shell_use_toolkit_views) {
      deps += [ "//ui/views/resources" ]
      sources +=
-Index: chromium-104.0.5112.65/content/browser/tracing/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/content/browser/tracing/BUILD.gn
+--- a/content/browser/tracing/BUILD.gn
 +++ /dev/null
 @@ -1,39 +0,0 @@
 -# Copyright 2014 The Chromium Authors. All rights reserved.
@@ -276,10 +250,8 @@ Index: chromium-104.0.5112.65/content/browser/tracing/BUILD.gn
 -
 -  deps = [ ":build_grd" ]
 -}
-Index: chromium-104.0.5112.65/content/browser/tracing/tracing_ui.cc
-===================================================================
---- chromium-104.0.5112.65.orig/content/browser/tracing/tracing_ui.cc
-+++ chromium-104.0.5112.65/content/browser/tracing/tracing_ui.cc
+--- a/content/browser/tracing/tracing_ui.cc
++++ b/content/browser/tracing/tracing_ui.cc
 @@ -25,7 +25,6 @@
  #include "base/strings/string_util.h"
  #include "base/trace_event/trace_event.h"
@@ -297,10 +269,8 @@ Index: chromium-104.0.5112.65/content/browser/tracing/tracing_ui.cc
  
    source->SetRequestFilter(base::BindRepeating(OnShouldHandleRequest),
                             base::BindRepeating(OnTracingRequest));
-Index: chromium-104.0.5112.65/testing/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/testing/BUILD.gn
-+++ chromium-104.0.5112.65/testing/BUILD.gn
+--- a/testing/BUILD.gn
++++ b/testing/BUILD.gn
 @@ -45,7 +45,6 @@ group("run_perf_test") {
  
    data_deps = [
@@ -309,10 +279,8 @@ Index: chromium-104.0.5112.65/testing/BUILD.gn
    ]
  
    if (is_android) {
-Index: chromium-104.0.5112.65/mojo/public/tools/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/mojo/public/tools/BUILD.gn
-+++ chromium-104.0.5112.65/mojo/public/tools/BUILD.gn
+--- a/mojo/public/tools/BUILD.gn
++++ b/mojo/public/tools/BUILD.gn
 @@ -17,6 +17,5 @@ group("mojo_python_unittests") {
    ]
    data_deps = [
@@ -320,11 +288,9 @@ Index: chromium-104.0.5112.65/mojo/public/tools/BUILD.gn
 -    "//third_party/catapult/third_party/typ/",
    ]
  }
-Index: chromium-104.0.5112.65/third_party/webrtc/test/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/third_party/webrtc/test/BUILD.gn
-+++ chromium-104.0.5112.65/third_party/webrtc/test/BUILD.gn
-@@ -286,10 +286,6 @@ rtc_library("perf_test") {
+--- a/third_party/webrtc/test/BUILD.gn
++++ b/third_party/webrtc/test/BUILD.gn
+@@ -306,10 +306,6 @@ rtc_library("perf_test") {
    ]
    if (rtc_enable_protobuf) {
      sources += [ "testsupport/perf_test_histogram_writer.cc" ]
@@ -335,7 +301,7 @@ Index: chromium-104.0.5112.65/third_party/webrtc/test/BUILD.gn
    } else {
      sources += [ "testsupport/perf_test_histogram_writer_no_protobuf.cc" ]
    }
-@@ -607,7 +603,6 @@ if (rtc_include_tests && !build_with_chr
+@@ -672,7 +668,6 @@ if (rtc_include_tests && !build_with_chr
  
      if (rtc_enable_protobuf) {
        sources += [ "testsupport/perf_test_histogram_writer_unittest.cc" ]
@@ -343,10 +309,8 @@ Index: chromium-104.0.5112.65/third_party/webrtc/test/BUILD.gn
      }
  
      data = test_support_unittests_resources
-Index: chromium-104.0.5112.65/tools/perf/core/perfetto_binary_roller/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/tools/perf/core/perfetto_binary_roller/BUILD.gn
-+++ chromium-104.0.5112.65/tools/perf/core/perfetto_binary_roller/BUILD.gn
+--- a/tools/perf/core/perfetto_binary_roller/BUILD.gn
++++ b/tools/perf/core/perfetto_binary_roller/BUILD.gn
 @@ -7,7 +7,6 @@ import("//build/util/generate_wrapper.gn
  generate_wrapper("upload_trace_processor") {
    testonly = true
@@ -355,10 +319,8 @@ Index: chromium-104.0.5112.65/tools/perf/core/perfetto_binary_roller/BUILD.gn
      "//third_party/perfetto/src/trace_processor:trace_processor_shell",
    ]
    data = [
-Index: chromium-104.0.5112.65/weblayer/shell/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/weblayer/shell/BUILD.gn
-+++ chromium-104.0.5112.65/weblayer/shell/BUILD.gn
+--- a/weblayer/shell/BUILD.gn
++++ b/weblayer/shell/BUILD.gn
 @@ -183,9 +183,6 @@ repack("support_pak") {
    }
    if (is_android) {

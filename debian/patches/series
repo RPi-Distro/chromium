@@ -12,6 +12,9 @@ fixes/connection-message.patch
 fixes/tflite.patch
 
 upstream/mojo.patch
+upstream/disk-cache.patch
+upstream/browser-finder.patch
+upstream/masklayer-geom.patch
 
 disable/tests.patch
 disable/unrar.patch

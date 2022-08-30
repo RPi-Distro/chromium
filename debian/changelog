@@ -1,7 +1,24 @@
-chromium (104.0.5112.101-2) UNRELEASED; urgency=high
+chromium (105.0.5195.52-1) UNRELEASED; urgency=high
 
   * Drop workaround for lack of older clang's -ffile-prefix-map. This
     should make reproducible builds happy.
+  * debian/copyright:
+    - Update for new libevent location (moved out of base/).
+    - libopenjpeg20 -> libopenjpeg
+  * debian/patches:
+    - debianization/support-i386.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/libaom-arm.patch: refresh.
+    - system/event.patch: update for new libevent location.
+    - system/openjpeg.patch: refresh.
+    - bullseye/clang13.patch: drop part of patch dropped upstream.
+    - upstream/disk-cache.patch: build fix pulled from upstream.
+    - upstream/browser-finder.patch: build fix pulled from upstream.
+    - upstream/masklayer-geom.patch: build fix pulled from upstream.
+  * debian/scripts/unbundle: upstream tripled the number of (previously
+    vendored) libraries that we can use system versions of. Continue
+    using the bundled libs until I have time to go through and verify
+    which of these can use debian system versions.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 18 Aug 2022 14:34:13 -0400
 

@@ -8,7 +8,39 @@ sys.path.append("build/linux/unbundle")
 
 import replace_gn_files
 
-keepers = ('ffmpeg', 'harfbuzz-ng', 'icu', 'libvpx')
+keepers = ('ffmpeg', 'harfbuzz-ng', 'icu', 'libvpx',
+    'absl_algorithm',
+    'absl_base',
+    'absl_cleanup',
+    'absl_container',
+    'absl_debugging',
+    'absl_flags',
+    'absl_functional',
+    'absl_hash',
+    'absl_memory',
+    'absl_meta',
+    'absl_numeric',
+    'absl_random',
+    'absl_status',
+    'absl_strings',
+    'absl_synchronization',
+    'absl_time',
+    'absl_types',
+    'brotli',
+    'crc32c',
+    'dav1d',
+    'double-conversion',
+    'jsoncpp' ,
+    'libaom' ,
+    'libavif' ,
+    'libjxl' ,
+    'libXNVCtrl' ,
+    'libyuv' ,
+    'swiftshader-SPIRV-Headers' ,
+    'swiftshader-SPIRV-Tools' ,
+    'vulkan-SPIRV-Headers' ,
+    'vulkan-SPIRV-Tools' ,
+    'woff2')
 
 for lib,rule in replace_gn_files.REPLACEMENTS.items():
     if lib not in keepers:

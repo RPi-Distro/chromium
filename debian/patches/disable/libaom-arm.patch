@@ -4,8 +4,8 @@
  
  declare_args() {
    # Enable encoding and decoding AV1 video files.
--  enable_libaom = !is_chromeos_lacros && !is_android && !is_chromecast
-+  enable_libaom = current_cpu != "arm" && !is_chromeos_lacros && !is_android && !is_chromecast
+-  enable_libaom = !is_android && !is_castos
++  enable_libaom = current_cpu != "arm" && !is_android && !is_castos
  
    # To be deprecated soon.
    enable_libaom_decoder = false

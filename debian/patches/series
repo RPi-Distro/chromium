@@ -27,7 +27,6 @@ disable/installer.patch
 disable/font-tests.patch
 disable/swiftshader.patch
 disable/swiftshader-2.patch
-disable/welcome-page.patch
 disable/google-api-warning.patch
 disable/third-party-cookies.patch
 disable/driver-chrome-path.patch

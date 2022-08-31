@@ -19,6 +19,9 @@ chromium (105.0.5195.52-1) UNRELEASED; urgency=high
     vendored) libraries that we can use system versions of. Continue
     using the bundled libs until I have time to go through and verify
     which of these can use debian system versions.
+  * Disable optimize_webui, due to a build failure using nodejs from
+    bullseye. I'll reenable this when it either gets fixed or we're done
+    with bullseye security support.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 18 Aug 2022 14:34:13 -0400
 

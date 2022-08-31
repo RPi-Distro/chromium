@@ -22,6 +22,9 @@ chromium (105.0.5195.52-1) UNRELEASED; urgency=high
   * Disable optimize_webui, due to a build failure using nodejs from
     bullseye. I'll reenable this when it either gets fixed or we're done
     with bullseye security support.
+  * Remove sse3-support dependency and just refuse to run if SSE3 is
+    not present. Breaking via preinst script isn't appropriate for
+    packages that might be installed by default (eg, by Debian Edu).
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 18 Aug 2022 14:34:13 -0400
 

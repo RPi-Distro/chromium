@@ -174,7 +174,6 @@ Depends:
  ${shlibs:Depends},
  x11-utils,
  xdg-utils,
- sse3-support [i386 amd64]
 Recommends:
  upower,
  libu2f-udev,

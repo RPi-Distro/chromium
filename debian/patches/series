@@ -10,6 +10,7 @@ fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 fixes/connection-message.patch
 fixes/tflite.patch
+fixes/angle-wayland.patch
 
 upstream/mojo.patch
 upstream/disk-cache.patch

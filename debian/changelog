@@ -16,6 +16,8 @@ chromium (105.0.5195.52-1) UNRELEASED; urgency=high
     - upstream/browser-finder.patch: build fix pulled from upstream.
     - upstream/masklayer-geom.patch: build fix pulled from upstream.
     - system/jsoncpp.patch: drop, merged upstream.
+    - fixes/angle-wayland: build fix due to mismatched wayland headers
+      on sid. Only needed until angle updates its copy of wayland.
   * debian/scripts/unbundle: upstream tripled the number of (previously
     vendored) libraries that we can use system versions of. However,
     the majority of them are either not in bullseye or are too old, so

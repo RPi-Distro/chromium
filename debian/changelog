@@ -15,16 +15,20 @@ chromium (105.0.5195.52-1) UNRELEASED; urgency=high
     - upstream/disk-cache.patch: build fix pulled from upstream.
     - upstream/browser-finder.patch: build fix pulled from upstream.
     - upstream/masklayer-geom.patch: build fix pulled from upstream.
+    - system/jsoncpp.patch: drop, merged upstream.
   * debian/scripts/unbundle: upstream tripled the number of (previously
-    vendored) libraries that we can use system versions of. Continue
-    using the bundled libs until I have time to go through and verify
-    which of these can use debian system versions.
+    vendored) libraries that we can use system versions of. However,
+    the majority of them are either not in bullseye or are too old, so
+    we'll have to wait to use the debian versions for the ones not newly
+    added as build-deps.
   * Disable optimize_webui, due to a build failure using nodejs from
     bullseye. I'll reenable this when it either gets fixed or we're done
     with bullseye security support.
   * Remove sse3-support dependency and just refuse to run if SSE3 is
     not present. Breaking via preinst script isn't appropriate for
     packages that might be installed by default (eg, by Debian Edu).
+  * debian/control: add build-deps for brotli, libdouble-conversion-dev,
+    libwoff-dev, and libxnvctrl-dev (closes: #987292).
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 18 Aug 2022 14:34:13 -0400
 

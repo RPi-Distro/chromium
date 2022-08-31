@@ -26,21 +26,17 @@ keepers = ('ffmpeg', 'harfbuzz-ng', 'icu', 'libvpx',
     'absl_synchronization',
     'absl_time',
     'absl_types',
-    'brotli',
     'crc32c',
     'dav1d',
-    'double-conversion',
-    'jsoncpp' ,
     'libaom' ,
     'libavif' ,
     'libjxl' ,
-    'libXNVCtrl' ,
     'libyuv' ,
     'swiftshader-SPIRV-Headers' ,
     'swiftshader-SPIRV-Tools' ,
     'vulkan-SPIRV-Headers' ,
     'vulkan-SPIRV-Tools' ,
-    'woff2')
+    )
 
 for lib,rule in replace_gn_files.REPLACEMENTS.items():
     if lib not in keepers:

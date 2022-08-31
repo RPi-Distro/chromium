@@ -31,6 +31,11 @@ chromium (105.0.5195.52-1) UNRELEASED; urgency=high
     packages that might be installed by default (eg, by Debian Edu).
   * debian/control: add build-deps for brotli, libdouble-conversion-dev,
     libwoff-dev, and libxnvctrl-dev (closes: #987292).
+  * Rework default search engine stuff. People did not like the "Your
+    browser is managed" and "Your administrator can change your browser
+    setup remotely" messages, which are admittedly alarming.
+    Instead of using /etc/chromium/policies/recommended/duckduckgo.json,
+    delete that and use /etc/chromium/master_preferences instead.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 18 Aug 2022 14:34:13 -0400
 

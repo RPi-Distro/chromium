@@ -14,6 +14,18 @@
      "has_seen_welcome_page" : true,
      "check_default_browser" : false
   },
+  "search_provider_overrides": [{
+     "enabled": true,
+     "encoding": "UTF-8",
+     "favicon_url": "https://duckduckgo.com/favicon.ico",
+     "new_tab_url": "https://duckduckgo.com/chrome_newtab",
+     "id": 2,
+     "keyword": "duckduckgo.com",
+     "name": "DuckDuckGo",
+     "search_url": "https://duckduckgo.com/?q={searchTerms}",
+     "suggest_url": "https://duckduckgo.com/ac/?q={searchTerms}&type=list"
+  }],
+  "search_provider_overrides_version": 1,
   "profile": {
      "default_content_setting_values": {
         "payment_handler": 2

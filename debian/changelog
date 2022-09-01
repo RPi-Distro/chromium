@@ -1,5 +1,51 @@
-chromium (105.0.5195.52-1) UNRELEASED; urgency=high
+chromium (105.0.5195.52-1) unstable; urgency=high
 
+  * New upstream stable release.
+    - CVE-2022-3038: Use after free in Network Service.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-3039: Use after free in WebSQL. Reported by
+      Nan Wang(@eternalsakura13) and Guang Gong of 360 Vulnerability
+      Research Institute.
+    - CVE-2022-3040: Use after free in Layout. Reported by Anonymous.
+    - CVE-2022-3041: Use after free in WebSQL. Reported by Ziling Chen and
+      Nan Wang(@eternalsakura13) of 360 Vulnerability Research Institute.
+    - CVE-2022-3042: Use after free in PhoneHub. Reported by koocola
+      (@alo_cook) and Guang Gong of 360 Vulnerability Research Institute.
+    - CVE-2022-3043: Heap buffer overflow in Screen Capture.
+      Reported by @ginggilBesel.
+    - CVE-2022-3044: Inappropriate implementation in Site Isolation.
+      Reported by Lucas Pinheiro, Microsoft Browser Vulnerability Research
+    - CVE-2022-3045: Insufficient validation of untrusted input in V8.
+      Reported by Ben Noordhuis <info@bnoordhuis.nl>.
+    - CVE-2022-3046: Use after free in Browser Tag.
+      Reported by Rong Jian of VRI.
+    - CVE-2022-3071: Use after free in Tab Strip.
+      Reported by @ginggilBesel.
+    - CVE-2022-3047: Insufficient policy enforcement in Extensions API.
+      Reported by Maurice Dauer.
+    - CVE-2022-3048: Inappropriate implementation in Chrome OS lockscreen.
+      Reported by Andr.Ess.
+    - CVE-2022-3049: Use after free in SplitScreen.
+      Reported by @ginggilBesel.
+    - CVE-2022-3050: Heap buffer overflow in WebUI.
+      Reported by Zhihua Yao of KunLun Lab.
+    - CVE-2022-3051: Heap buffer overflow in Exosphere.
+      Reported by @ginggilBesel.
+    - CVE-2022-3052: Heap buffer overflow in Window Manager.
+      Reported by Khalil Zhani.
+    - CVE-2022-3053: Inappropriate implementation in Pointer Lock.
+      Reported by Jesper van den Ende (Pelican Party Studios).
+    - CVE-2022-3054: Insufficient policy enforcement in DevTools.
+      Reported by Kuilin Li.
+    - CVE-2022-3055: Use after free in Passwords. Reported by Weipeng
+      Jiang (@Krace) and Guang Gong of 360 Vulnerability Research
+      Institute.
+    - CVE-2022-3056: Insufficient policy enforcement in Content
+      Security Policy. Reported by Anonymous.
+    - CVE-2022-3057: Inappropriate implementation in iframe Sandbox.
+      Reported by Gareth Heyes.
+    - CVE-2022-3058: Use after free in Sign-In Flow.
+      Reported by raven at KunLun lab.
   * Drop workaround for lack of older clang's -ffile-prefix-map. This
     should make reproducible builds happy.
   * debian/copyright:
@@ -46,7 +92,7 @@ chromium (105.0.5195.52-1) UNRELEASED; urgency=high
     Instead of using /etc/chromium/policies/recommended/duckduckgo.json,
     delete that and use /etc/chromium/master_preferences instead.
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 18 Aug 2022 14:34:13 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 31 Aug 2022 20:48:11 -0400
 
 chromium (104.0.5112.101-1) unstable; urgency=high
 

@@ -21,6 +21,12 @@ chromium (105.0.5195.52-1) UNRELEASED; urgency=high
     - disable/welcome-page.patch: drop. Upstream fixed the original
       issue some time ago, and this new version finally cleaned up
       the workaround.
+    - fixes/connection-message.patch: drop it. I looked at sending this
+      upstream, but the original extension doesn't exist any more,
+      and chromium properly prints an error if a proxy is unreachable.
+      If you can still reproduce the issue (described in
+      http://bugs.debian.org/864539), let me know so I can get it fixed
+      upstream.
   * debian/scripts/unbundle: upstream tripled the number of (previously
     vendored) libraries that we can use system versions of. However,
     the majority of them are either not in bullseye or are too old, so

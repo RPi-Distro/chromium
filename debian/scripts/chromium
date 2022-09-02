@@ -33,8 +33,8 @@ bug tracking system at http://crbug.com/1123353"
 
 case `uname -m` in
     i386|i586|i686|x86_64)
-        # Check whether this system supports SSE3
-        if ! grep -q sse3 /proc/cpuinfo; then
+        # Check whether this system supports SSE3 (aka PNI)
+        if ! grep -q 'sse3\|pni' /proc/cpuinfo; then
             xmessage "$nosse3"
             exit 1
         fi

@@ -49,10 +49,10 @@ ifeq (amd64,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"x64\" use_vaapi=true
 endif
 ifeq (arm64,$(DEB_HOST_ARCH))
-defines+=host_cpu=\"arm64\" use_vaapi=true
+defines+=host_cpu=\"arm64\" use_v4l2_codec=true use_vaapi=false
 endif
 ifeq (armhf,$(DEB_HOST_ARCH))
-defines+=host_cpu=\"arm\" use_vaapi=false arm_use_neon=false
+defines+=host_cpu=\"arm\" use_v4l2_codec=true use_vaapi=false arm_use_neon=false
 endif
 
 # disabled features

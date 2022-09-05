@@ -1,6 +1,9 @@
 chromium (105.0.5195.52-2) UNRELEASED; urgency=high
 
   * Update the cpu check to allow pni instead of sse3 (closes: #1018937).
+  * Enable v4l2 for arm platforms. This also disables VA-API on arm64, so
+    if that breaks things let me know. Thanks
+    Eschenbacher.Stefan@Scheidt-Bachmann.de for the patch (#1011346).
   * debian/patches:
     - upstream/armhf-ftbfs.patch: fix FTBFS introduced with v105 on armhf.
 

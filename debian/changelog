@@ -1,5 +1,7 @@
-chromium (105.0.5195.52-2) UNRELEASED; urgency=high
+chromium (105.0.5195.102-1) unstable; urgency=high
 
+  * New upstream security release.
+    - CVE-2022-3075: Insufficient data validation in Mojo.
   * Update the cpu check to allow pni instead of sse3 (closes: #1018937).
   * Enable v4l2 for arm platforms. This also disables VA-API on arm64, so
     if that breaks things let me know. Thanks
@@ -7,7 +9,7 @@ chromium (105.0.5195.52-2) UNRELEASED; urgency=high
   * debian/patches:
     - upstream/armhf-ftbfs.patch: fix FTBFS introduced with v105 on armhf.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 31 Aug 2022 20:48:11 -0400
+ -- Andres Salomon <dilinger@debian.org>  Mon, 05 Sep 2022 15:57:26 -0400
 
 chromium (105.0.5195.52-1) unstable; urgency=high
 

@@ -15,6 +15,7 @@ upstream/mojo.patch
 upstream/disk-cache.patch
 upstream/browser-finder.patch
 upstream/masklayer-geom.patch
+upstream/armhf-ftbfs.patch
 
 disable/tests.patch
 disable/unrar.patch

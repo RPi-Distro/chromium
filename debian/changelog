@@ -1,6 +1,8 @@
 chromium (105.0.5195.52-2) UNRELEASED; urgency=high
 
   * Update the cpu check to allow pni instead of sse3 (closes: #1018937).
+  * debian/patches:
+    - upstream/armhf-ftbfs.patch: fix FTBFS introduced with v105 on armhf.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 31 Aug 2022 20:48:11 -0400
 

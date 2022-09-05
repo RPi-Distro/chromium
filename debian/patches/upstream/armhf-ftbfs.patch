@@ -1,0 +1,37 @@
+commit 175e22c61e5834a04c155cbdafc7da8acec027df
+Author: Andres Salomon <dilinger@queued.net>
+Date:   Mon Sep 5 03:44:00 2022 -0400
+
+    Fix ARMEL build failure in blink's WTF code
+    
+    The commit 5863e513ede6d1f7e9a060f13635fd3916a2183c ("Migrate
+    WTF::SafeCast to base::checked_cast.") removed the inclusion of
+    base/numerics/safe_conversions.h from std_lib_extras.h. However,
+    std_lib_extras.h makes use of intptr_t if ARCH_CPU_ARMEL is defined,
+    and intptr_t is declared in stdint.h (or cstdint). It's not manually
+    included anywhere in std_lib_extras.h, and previously stdint.h was only
+    included indirectly in safe_conversions.h via safe_conversions_impl.h.
+    
+    With the above change, Debian armhf builds fail with:
+    
+    In file included from ../../third_party/blink/renderer/platform/cursors.cc:28:
+    ../../third_party/blink/renderer/platform/wtf/std_lib_extras.h:178:29: error: unknown type name 'intptr_t'
+      return !(reinterpret_cast<intptr_t>(ptr) % __alignof__(Type));
+    
+    https://buildd.debian.org/status/fetch.php?pkg=chromium&arch=armhf&ver=105.0.5195.52-1&stamp=1662280031&raw=0
+    contains the full build log.
+    
+    This fix changes std_lib_extras.h to explicitly include cstdint.
+
+diff --git a/third_party/blink/renderer/platform/wtf/std_lib_extras.h b/third_party/blink/renderer/platform/wtf/std_lib_extras.h
+index 260964957c982..3416705451f90 100644
+--- a/third_party/blink/renderer/platform/wtf/std_lib_extras.h
++++ b/third_party/blink/renderer/platform/wtf/std_lib_extras.h
+@@ -27,6 +27,7 @@
+ #define THIRD_PARTY_BLINK_RENDERER_PLATFORM_WTF_STD_LIB_EXTRAS_H_
+ 
+ #include <cstddef>
++#include <cstdint>
+ 
+ #include "base/check.h"
+ #include "base/dcheck_is_on.h"

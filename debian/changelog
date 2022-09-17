@@ -1,3 +1,12 @@
+chromium (105.0.5195.125-2) UNRELEASED; urgency=high
+
+  * debian/patches:
+    - disable/angle-perftests.patch: drop most of patch.
+      build_angle_perftests=false is set in d/rules, so no need to patch
+      it and its dependencies.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 16 Sep 2022 22:42:46 -0400
+
 chromium (105.0.5195.125-1) unstable; urgency=high
 
   * New upstream security release.

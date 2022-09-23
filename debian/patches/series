@@ -8,13 +8,9 @@ fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
-fixes/tflite.patch
 fixes/angle-wayland.patch
 
 upstream/mojo.patch
-upstream/disk-cache.patch
-upstream/browser-finder.patch
-upstream/masklayer-geom.patch
 upstream/armhf-ftbfs.patch
 
 disable/tests.patch

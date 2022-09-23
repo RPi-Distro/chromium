@@ -1,9 +1,17 @@
-chromium (105.0.5195.125-2) UNRELEASED; urgency=high
+chromium (106.0.5249.51-1) UNRELEASED; urgency=high
 
+  * New upstream stable release.
   * debian/patches:
     - disable/angle-perftests.patch: drop most of patch.
       build_angle_perftests=false is set in d/rules, so no need to patch
       it and its dependencies.
+    - upstream/browser-finder.patch: drop, merged upstream.
+    - upstream/disk-cache.patch: drop, merged upstream.
+    - upstream/masklayer-geom.patch: drop, merged upstream.
+    - fixes/tflite.patch: drop, merged upstream.
+    - bullseye/clang13.patch: update for upstream switching from one
+      unsupported clang warning flag to another.
+    - disable/catapult.patch: refresh.
   * Remove mgilbert as an uploader; thanks for all your work on chromium
     packaging!
 

@@ -34,7 +34,6 @@ Files-Excluded:
  base/mac
  base/test/data
  chrome/android
- chrome/install_static
  chrome/installer/mac
  chrome/installer/test
  chrome/installer/tools

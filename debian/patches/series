@@ -19,7 +19,6 @@ disable/signin.patch
 disable/android.patch
 disable/openh264.patch
 disable/catapult.patch
-disable/installer.patch
 disable/font-tests.patch
 disable/swiftshader.patch
 disable/swiftshader-2.patch

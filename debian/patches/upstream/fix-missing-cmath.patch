@@ -1,0 +1,40 @@
+From 0a412dcf0e91092d6ddf4a41276614e8202f8f45 Mon Sep 17 00:00:00 2001
+From: Andres Salomon <dilinger@queued.net>
+Date: Sat, 24 Sep 2022 21:44:02 -0400
+Subject: [PATCH] Fix missing cmath header build failure in renderer extension
+
+Building 106.0.5249.51 on a Debian machine, I hit the following
+build error:
+
+FAILED: obj/extensions/renderer/renderer/argument_spec.o
+clang++ [...] -o obj/extensions/renderer/renderer/argument_spec.o
+../../extensions/renderer/bindings/argument_spec.cc:410:16: error: no member named 'isnan' in namespace 'std'
+      if (std::isnan(double_val) || std::isinf(double_val)) {
+          ~~~~~^
+../../extensions/renderer/bindings/argument_spec.cc:410:42: error: no member named 'isinf' in namespace 'std'
+      if (std::isnan(double_val) || std::isinf(double_val)) {
+                                    ~~~~~^
+2 errors generated.
+
+isnan and isinf are both found in the cmath header, so simply
+including it fixes that build error.
+---
+ extensions/renderer/bindings/argument_spec.cc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/extensions/renderer/bindings/argument_spec.cc b/extensions/renderer/bindings/argument_spec.cc
+index 1e10bf1b561f4..eadd7ec3e3c9d 100644
+--- a/extensions/renderer/bindings/argument_spec.cc
++++ b/extensions/renderer/bindings/argument_spec.cc
+@@ -4,6 +4,8 @@
+ 
+ #include "extensions/renderer/bindings/argument_spec.h"
+ 
++#include <cmath>
++
+ #include "base/check.h"
+ #include "base/strings/string_piece.h"
+ #include "base/strings/string_util.h"
+-- 
+2.30.2
+

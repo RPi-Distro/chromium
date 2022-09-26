@@ -12,6 +12,8 @@ fixes/angle-wayland.patch
 
 upstream/mojo.patch
 upstream/armhf-ftbfs.patch
+upstream/fix-missing-cmath.patch
+upstream/fix-nullptr-qual.patch
 
 disable/tests.patch
 disable/unrar.patch

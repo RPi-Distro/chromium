@@ -17,7 +17,8 @@ chromium (106.0.5249.51-1) UNRELEASED; urgency=high
       actually built on windows.
     - upstream/fix-missing-cmath.patch: added from upstream to fix ftbfs.
     - upstream/fix-nullptr-qual.patch: added from upstream to fix ftbfs.
-  * Stop deleting chrome/install_static in d/copyright.
+  * Stop deleting chrome/install_static in d/copyright, and also start
+    deleting third party libraries that we began linking to in v105.
   * Remove mgilbert as an uploader; thanks for all your work on chromium
     packaging!
 

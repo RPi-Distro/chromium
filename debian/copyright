@@ -65,6 +65,7 @@ Files-Excluded:
  tools/resultdb/result_adapter
  tools/resultdb/.versions/*.cipd_version
  tools/win
+ tools/gn
  headless/test/data
  content/browser/android
  components/test/data

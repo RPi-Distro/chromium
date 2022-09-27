@@ -21,8 +21,10 @@ chromium (106.0.5249.51-1) UNRELEASED; urgency=high
       was currently papered over by disabling libaom on arm. This new
       patch (hopefully) allows libaom to be built for the armhf arch.
     - disable/libaom-arm.patch: drop now that we've fixed libaom on arm.
+    - system/event.patch: remove some old unused bits that patch gn.
   * Stop deleting chrome/install_static in d/copyright, and also start
-    deleting third party libraries that we began linking to in v105.
+    deleting third party libraries that we began linking to in v105 as
+    well as tools/gn.
   * Remove mgilbert as an uploader; thanks for all your work on chromium
     packaging!
 

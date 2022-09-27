@@ -23,14 +23,3 @@ author: Michael Gilbert <mgilbert@debian.org>
  
  #if BUILDFLAG(ENABLE_MESSAGE_PUMP_EPOLL)
  #include "base/message_loop/message_pump_epoll.h"
---- a/tools/gn/build/gen.py
-+++ b/tools/gn/build/gen.py
-@@ -461,6 +461,8 @@ def WriteGNNinja(path, platform, host, o
-       if not options.no_static_libstdcpp:
-         ldflags.append('-static-libstdc++')
- 
-+      libs.append('-levent')
-+
-       if platform.is_mingw() or platform.is_msys():
-         cflags.remove('-std=c++17')
-         cflags.extend([

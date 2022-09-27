@@ -1,6 +1,37 @@
-chromium (106.0.5249.51-1) UNRELEASED; urgency=high
+chromium (106.0.5249.61-1) unstable; urgency=high
 
   * New upstream stable release.
+    - CVE-2022-3304: Use after free in CSS. Reported by Anonymous.
+    - CVE-2022-3201: Insufficient validation of untrusted input in
+      Developer Tools. Reported by NDevTK.
+    - CVE-2022-3305: Use after free in Survey. Reported by Nan
+      Wang(@eternalsakura13) and Guang Gong of 360 Vulnerability
+      Research Institute.
+    - CVE-2022-3306: Use after free in Survey. Reported by Nan
+      Wang(@eternalsakura13) and Guang Gong of 360 Vulnerability
+      Research Institute.
+    - CVE-2022-3307: Use after free in Media.
+      Reported by Anonymous Telecommunications Corp. Ltd.
+    - CVE-2022-3308: Insufficient policy enforcement in Developer Tools.
+      Reported by Andrea Cappa (zi0Black) @ Shielder.
+    - CVE-2022-3309: Use after free in Assistant.
+      Reported by zh1x1an1221 of Ant Group Tianqiong Security Lab.
+    - CVE-2022-3310: Insufficient policy enforcement in Custom Tabs.
+      Reported by Ashwin Agrawal from Optus, Sydney.
+    - CVE-2022-3311: Use after free in Import.
+      Reported by Samet Bekmezci @sametbekmezci.
+    - CVE-2022-3312: Insufficient validation of untrusted input in VPN.
+      Reported by Andr.Ess.
+    - CVE-2022-3313: Incorrect security UI in Full Screen.
+      Reported by Irvan Kurniawan (sourc7).
+    - CVE-2022-3314: Use after free in Logging. Reported by Anonymous.
+    - CVE-2022-3315: Type confusion in Blink. Reported by Anonymous.
+    - CVE-2022-3316: Insufficient validation of untrusted input in Safe
+      Browsing. Reported by Sven Dysthe (@svn_dy).
+    - CVE-2022-3317: Insufficient validation of untrusted input in
+      Intents. Reported by Hafiizh.
+    - CVE-2022-3318: Use after free in ChromeOS Notifications.
+      Reported by GraVity0.
   * debian/patches:
     - disable/angle-perftests.patch: drop most of patch.
       build_angle_perftests=false is set in d/rules, so no need to patch
@@ -28,7 +59,7 @@ chromium (106.0.5249.51-1) UNRELEASED; urgency=high
   * Remove mgilbert as an uploader; thanks for all your work on chromium
     packaging!
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 16 Sep 2022 22:42:46 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 27 Sep 2022 14:14:44 -0400
 
 chromium (105.0.5195.125-1) unstable; urgency=high
 

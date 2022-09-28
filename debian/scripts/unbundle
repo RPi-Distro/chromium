@@ -8,6 +8,9 @@ sys.path.append("build/linux/unbundle")
 
 import replace_gn_files
 
+# Note: libvpx unbundling is currently broken with no easy fix;
+# see https://crbug.com/1307941
+
 keepers = ('ffmpeg', 'harfbuzz-ng', 'icu', 'libvpx',
     'absl_algorithm',
     'absl_base',

@@ -1,0 +1,43 @@
+--- a/third_party/libvpx/generate_gni.sh
++++ b/third_party/libvpx/generate_gni.sh
+@@ -374,7 +374,8 @@ gen_config_files linux/arm-neon-highbd "
+ gen_config_files linux/arm64-highbd "--target=armv8-linux-gcc ${all_platforms} ${HIGHBD}"
+ gen_config_files linux/mipsel "--target=mips32-linux-gcc ${all_platforms}"
+ gen_config_files linux/mips64el "--target=mips64-linux-gcc ${all_platforms}"
+-gen_config_files linux/ppc64 "--target=ppc64le-linux-gcc ${all_platforms}"
++#gen_config_files linux/ppc64 "--target=ppc64le-linux-gcc ${all_platforms}"
++gen_config_files linux/ppc64 "--target=generic-gnu $HIGHBD ${all_platforms}"
+ gen_config_files linux/generic "--target=generic-gnu $HIGHBD ${all_platforms}"
+ gen_config_files win/arm64 "--target=arm64-win64-vs15 ${all_platforms} ${HIGHBD}"
+ gen_config_files win/ia32 "--target=x86-win32-vs14 ${all_platforms} ${x86_platforms}"
+--- a/third_party/libvpx/source/libvpx/build/make/rtcd.pl
++++ b/third_party/libvpx/source/libvpx/build/make/rtcd.pl
+@@ -491,8 +491,9 @@ if ($opts{arch} eq 'x86') {
+   &require("neon");
+   arm;
+ } elsif ($opts{arch} =~ /^ppc/ ) {
+-  @ALL_ARCHS = filter(qw/vsx/);
+-  ppc;
++  #@ALL_ARCHS = filter(qw/vsx/);
++  #ppc;
++  unoptimized;
+ } elsif ($opts{arch} =~ /loongarch/ ) {
+   @ALL_ARCHS = filter(qw/lsx lasx/);
+   loongarch;
+--- a/third_party/libvpx/BUILD.gn
++++ b/third_party/libvpx/BUILD.gn
+@@ -86,6 +86,14 @@ config("libvpx_config") {
+       "-Wno-sign-compare",
+     ]
+   }
++
++  if (current_cpu == "ppc64") {
++    cflags += [
++      "-mcpu=power9",
++      "-maltivec",
++      "-mvsx",
++    ]
++  }
+ }
+ 
+ # This config is applied to targets that depend on libvpx.

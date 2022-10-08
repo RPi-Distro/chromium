@@ -98,7 +98,7 @@ Build-Depends:
  fonts-ipafont-mincho,
 
 Package: chromium
-Architecture: i386 amd64 arm64 armhf
+Architecture: i386 amd64 arm64 armhf ppc64el
 Built-Using: ${Built-Using}
 Depends:
  ${misc:Depends},
@@ -143,7 +143,7 @@ Description: web browser - language packs
  ro, ru, sk, sl, sr, sv, sw, ta, te, th, tr, uk, vi, zh-CN, zh-TW
 
 Package: chromium-shell
-Architecture: i386 amd64 arm64 armhf
+Architecture: i386 amd64 arm64 armhf ppc64el
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
@@ -160,7 +160,7 @@ Description: web browser - minimal shell
  (the content shell).
 
 Package: chromium-driver
-Architecture: i386 amd64 arm64 armhf
+Architecture: i386 amd64 arm64 armhf ppc64el
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
@@ -173,7 +173,7 @@ Description: web browser - WebDriver support
  automatic webdriver.
 
 Package: chromium-common
-Architecture: i386 amd64 arm64 armhf
+Architecture: i386 amd64 arm64 armhf ppc64el
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
@@ -199,7 +199,7 @@ Description: web browser - common resources used by the chromium packages
  packages.
 
 Package: chromium-sandbox
-Architecture: i386 amd64 arm64 armhf
+Architecture: i386 amd64 arm64 armhf ppc64el
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},

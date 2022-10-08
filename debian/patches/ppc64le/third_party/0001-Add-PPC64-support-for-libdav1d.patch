@@ -1,0 +1,30 @@
+From 61dcf0ff9603e8f5b0a859fb0837c51527ebae43 Mon Sep 17 00:00:00 2001
+From: Colin Samples <colin.samples+git@gmail.com>
+Date: Fri, 1 Nov 2019 11:50:52 -0400
+Subject: [PATCH] Add PPC64 support for libdav1d
+
+---
+ third_party/dav1d/BUILD.gn            | 21 ++++++++++++++++++++
+ third_party/dav1d/generate_configs.py | 28 ++-------------------------
+ third_party/dav1d/generate_source.py  |  2 ++
+ 3 files changed, 25 insertions(+), 26 deletions(-)
+
+--- a/third_party/dav1d/generate_configs.py
++++ b/third_party/dav1d/generate_configs.py
+@@ -21,7 +21,7 @@ CHROMIUM_ROOT_DIR = os.path.abspath(os.p
+ sys.path.append(os.path.join(CHROMIUM_ROOT_DIR, 'build'))
+ import gn_helpers
+ 
+-MESON = ['meson.py']
++MESON = ['meson']
+ 
+ DEFAULT_BUILD_ARGS = [
+     '-Denable_tools=false', '-Denable_tests=false', '-Ddefault_library=static',
+@@ -192,6 +192,7 @@ def main():
+     linux_env = os.environ
+     linux_env['CC'] = 'clang'
+ 
++    GenerateConfig('config/linux/ppc64', linux_env)
+     GenerateConfig('config/linux/x64', linux_env)
+     GenerateConfig('config/linux-noasm/x64', linux_env, ['-Denable_asm=false'])
+     GenerateConfig('config/linux-noasm/riscv64', linux_env, ['-Denable_asm=false'])

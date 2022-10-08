@@ -1,0 +1,47 @@
+--- a/third_party/sqlite/src/amalgamation/sqlite3.c
++++ b/third_party/sqlite/src/amalgamation/sqlite3.c
+@@ -14339,7 +14339,8 @@ typedef INT16_TYPE LogEst;
+ # if defined(i386)      || defined(__i386__)      || defined(_M_IX86) ||    \
+      defined(__x86_64)  || defined(__x86_64__)    || defined(_M_X64)  ||    \
+      defined(_M_AMD64)  || defined(_M_ARM)        || defined(__x86)   ||    \
+-     defined(__ARMEL__) || defined(__AARCH64EL__) || defined(_M_ARM64)
++     defined(__ARMEL__) || defined(__AARCH64EL__) || defined(_M_ARM64) ||   \
++     defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+ #   define SQLITE_BYTEORDER    1234
+ # elif defined(sparc)     || defined(__ppc__) || \
+        defined(__ARMEB__) || defined(__AARCH64EB__)
+--- a/third_party/sqlite/src/amalgamation_dev/sqlite3.c
++++ b/third_party/sqlite/src/amalgamation_dev/sqlite3.c
+@@ -14352,7 +14352,8 @@ typedef INT16_TYPE LogEst;
+ # if defined(i386)      || defined(__i386__)      || defined(_M_IX86) ||    \
+      defined(__x86_64)  || defined(__x86_64__)    || defined(_M_X64)  ||    \
+      defined(_M_AMD64)  || defined(_M_ARM)        || defined(__x86)   ||    \
+-     defined(__ARMEL__) || defined(__AARCH64EL__) || defined(_M_ARM64)
++     defined(__ARMEL__) || defined(__AARCH64EL__) || defined(_M_ARM64) ||   \
++     defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+ #   define SQLITE_BYTEORDER    1234
+ # elif defined(sparc)     || defined(__ppc__) || \
+        defined(__ARMEB__) || defined(__AARCH64EB__)
+--- a/third_party/sqlite/src/ext/rtree/rtree.c
++++ b/third_party/sqlite/src/ext/rtree/rtree.c
+@@ -474,7 +474,7 @@ struct RtreeMatchArg {
+ #if defined(i386)     || defined(__i386__)   || defined(_M_IX86) ||    \
+     defined(__x86_64) || defined(__x86_64__) || defined(_M_X64)  ||    \
+     defined(_M_AMD64) || defined(_M_ARM)     || defined(__x86)   ||    \
+-    defined(__arm__)
++    defined(__arm__)  || defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+ # define SQLITE_BYTEORDER    1234
+ #elif defined(sparc)    || defined(__ppc__)
+ # define SQLITE_BYTEORDER    4321
+--- a/third_party/sqlite/src/src/sqliteInt.h
++++ b/third_party/sqlite/src/src/sqliteInt.h
+@@ -904,7 +904,8 @@ typedef INT16_TYPE LogEst;
+ # if defined(i386)      || defined(__i386__)      || defined(_M_IX86) ||    \
+      defined(__x86_64)  || defined(__x86_64__)    || defined(_M_X64)  ||    \
+      defined(_M_AMD64)  || defined(_M_ARM)        || defined(__x86)   ||    \
+-     defined(__ARMEL__) || defined(__AARCH64EL__) || defined(_M_ARM64)
++     defined(__ARMEL__) || defined(__AARCH64EL__) || defined(_M_ARM64) ||   \
++     defined(__powerpc64__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+ #   define SQLITE_BYTEORDER    1234
+ # elif defined(sparc)     || defined(__ppc__) || \
+        defined(__ARMEB__) || defined(__AARCH64EB__)

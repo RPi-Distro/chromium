@@ -1,0 +1,25 @@
+From ea104a841fca1ff4d5430915f1b7c52c6a642f13 Mon Sep 17 00:00:00 2001
+From: Timothy Pearson <tpearson@raptorengineering.com>
+Date: Fri, 21 Sep 2018 21:44:17 -0500
+Subject: [PATCH] Force baseline POWER8 / AltiVec / VSX CPU features when on a
+ PPC64 platform in LE mode
+
+---
+ BUILD.gn | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/v8/BUILD.gn
++++ b/v8/BUILD.gn
+@@ -1251,6 +1251,12 @@ config("toolchain") {
+     }
+     if (host_byteorder == "little") {
+       defines += [ "V8_TARGET_ARCH_PPC_LE" ]
++        cflags += [
++        # Enable usage of AltiVec, VSX, and other POWER9 and higher features
++        "-mcpu=power9",
++        "-maltivec",
++        "-mvsx",
++      ]
+     } else if (host_byteorder == "big") {
+       defines += [ "V8_TARGET_ARCH_PPC_BE" ]
+       if (current_os == "aix") {

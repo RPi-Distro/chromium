@@ -1,0 +1,14 @@
+--- a/third_party/skia/src/opts/SkRasterPipeline_opts.h
++++ b/third_party/skia/src/opts/SkRasterPipeline_opts.h
+@@ -1107,7 +1107,10 @@ static void start_pipeline(size_t dx, si
+     }
+ }
+ 
+-#if __has_cpp_attribute(clang::musttail) && !defined(__EMSCRIPTEN__)
++#if defined(__powerpc64__)
++    // Work around Clang bug 56679 until new Clang binaries available for Debian
++    #define JUMPER_MUSTTAIL
++#elif __has_cpp_attribute(clang::musttail) && !defined(__EMSCRIPTEN__)
+     #define JUMPER_MUSTTAIL [[clang::musttail]]
+ #else
+     #define JUMPER_MUSTTAIL

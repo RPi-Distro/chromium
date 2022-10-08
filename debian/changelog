@@ -1,6 +1,8 @@
 chromium (106.0.5249.103-1) unstable; urgency=high
 
   * New upstream release.
+  * Add ppc64el patches maintained by me, and enable builds for ppc64el
+    (closes #1005083).
 
  -- Timothy Pearson <tpearson@raptorengineering.com>  Fri, 07 Oct 2022 17:54:00 -0500
 

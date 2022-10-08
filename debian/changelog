@@ -1,3 +1,10 @@
+chromium (106.0.5249.103-2) unstable; urgency=low
+
+  * Reduce baseline compatibility for ppc64el builds from POWER9
+    to POWER8.  This matches the current Debian build farm.
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Sat, 08 Oct 2022 14:35:00 -0500
+
 chromium (106.0.5249.103-1) unstable; urgency=medium
 
   * New upstream release.

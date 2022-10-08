@@ -22,11 +22,9 @@ Date:   Mon Aug 22 20:54:52 2022 +0000
     Reviewed-by: Christoph Schwering <schwering@google.com>
     Cr-Commit-Position: refs/heads/main@{#1037932}
 
-diff --git a/chrome/browser/ui/autofill/autofill_popup_controller_impl.h b/chrome/browser/ui/autofill/autofill_popup_controller_impl.h
-index 295a10411a75f..bead3daa688a9 100644
 --- a/chrome/browser/ui/autofill/autofill_popup_controller_impl.h
 +++ b/chrome/browser/ui/autofill/autofill_popup_controller_impl.h
-@@ -178,8 +178,13 @@ class AutofillPopupControllerImpl : public AutofillPopupController {
+@@ -178,8 +178,13 @@ class AutofillPopupControllerImpl : publ
    class AutofillPopupViewPtr {
     public:
      AutofillPopupViewPtr() = default;
@@ -42,7 +40,7 @@ index 295a10411a75f..bead3daa688a9 100644
  
      explicit operator bool() const { return ptr_; }
  
-@@ -228,7 +233,7 @@ class AutofillPopupControllerImpl : public AutofillPopupController {
+@@ -228,7 +233,7 @@ class AutofillPopupControllerImpl : publ
  
    PopupControllerCommon controller_common_;
    raw_ptr<content::WebContents> web_contents_;

@@ -12,7 +12,7 @@ we're on our own with bugs.
 
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -1617,9 +1617,7 @@ if (!is_ios) {
+@@ -1626,9 +1626,7 @@ if (!is_ios) {
  }
  
  # TODO(cassew): Add more OS's that don't support x86.

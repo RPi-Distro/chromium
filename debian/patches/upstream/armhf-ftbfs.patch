@@ -23,8 +23,6 @@ Date:   Mon Sep 5 03:44:00 2022 -0400
     
     This fix changes std_lib_extras.h to explicitly include cstdint.
 
-diff --git a/third_party/blink/renderer/platform/wtf/std_lib_extras.h b/third_party/blink/renderer/platform/wtf/std_lib_extras.h
-index 260964957c982..3416705451f90 100644
 --- a/third_party/blink/renderer/platform/wtf/std_lib_extras.h
 +++ b/third_party/blink/renderer/platform/wtf/std_lib_extras.h
 @@ -27,6 +27,7 @@

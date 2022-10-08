@@ -3,7 +3,7 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -520,7 +520,7 @@ group("gn_all") {
+@@ -521,7 +521,7 @@ group("gn_all") {
      ]
    }
  
@@ -14,7 +14,7 @@ author: Michael Gilbert <mgilbert@debian.org>
        "//third_party/swiftshader/src/Vulkan:icd_file",
 --- a/third_party/angle/gni/angle.gni
 +++ b/third_party/angle/gni/angle.gni
-@@ -137,7 +137,7 @@ declare_args() {
+@@ -157,7 +157,7 @@ declare_args() {
         ((angle_use_x11 && !is_chromeos) || angle_use_wayland)) && !is_fuchsia &&
        !angle_is_winuwp && !is_ggp && !is_win_arm64
  

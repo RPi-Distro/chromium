@@ -1,11 +1,9 @@
 description: Disable ANGLE perftests
 author: Michel Le Bihan <michel@lebihan.pl>
 
-Index: chromium-104.0.5112.65/chrome/test/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/chrome/test/BUILD.gn
-+++ chromium-104.0.5112.65/chrome/test/BUILD.gn
-@@ -4859,7 +4859,6 @@ template("performance_test_suite_templat
+--- a/chrome/test/BUILD.gn
++++ b/chrome/test/BUILD.gn
+@@ -4976,7 +4976,6 @@ template("performance_test_suite_templat
      }
  
      if (!is_chromeos_lacros) {
@@ -13,11 +11,9 @@ Index: chromium-104.0.5112.65/chrome/test/BUILD.gn
      }
  
      if (!is_android && !is_chromeos_lacros) {
-Index: chromium-104.0.5112.65/third_party/angle/src/tests/BUILD.gn
-===================================================================
---- chromium-104.0.5112.65.orig/third_party/angle/src/tests/BUILD.gn
-+++ chromium-104.0.5112.65/third_party/angle/src/tests/BUILD.gn
-@@ -1623,12 +1580,11 @@ group("angle_tests") {
+--- a/third_party/angle/src/tests/BUILD.gn
++++ b/third_party/angle/src/tests/BUILD.gn
+@@ -1672,12 +1672,11 @@ group("angle_tests") {
    testonly = true
    deps = [
      ":angle_end2end_tests",
@@ -31,11 +27,9 @@ Index: chromium-104.0.5112.65/third_party/angle/src/tests/BUILD.gn
      deps += [
        ":angle_white_box_perftests",
        ":angle_white_box_tests",
-Index: chromium-104.0.5112.65/third_party/angle/gni/angle.gni
-===================================================================
---- chromium-104.0.5112.65.orig/third_party/angle/gni/angle.gni
-+++ chromium-104.0.5112.65/third_party/angle/gni/angle.gni
-@@ -249,7 +249,7 @@ declare_args() {
+--- a/third_party/angle/gni/angle.gni
++++ b/third_party/angle/gni/angle.gni
+@@ -268,7 +268,7 @@ declare_args() {
        is_apple &&
        (angle_enable_glsl || angle_enable_metal || use_fuzzing_engine)
  

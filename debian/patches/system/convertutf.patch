@@ -185,7 +185,7 @@ author: Michael Gilbert <mgilbert@debian.org>
  
 --- a/third_party/breakpad/BUILD.gn
 +++ b/third_party/breakpad/BUILD.gn
-@@ -604,8 +604,6 @@ if (is_linux || is_chromeos || is_android) {
+@@ -615,8 +615,6 @@ if (is_linux || is_chromeos || is_androi
        "breakpad/src/client/minidump_file_writer-inl.h",
        "breakpad/src/client/minidump_file_writer.cc",
        "breakpad/src/client/minidump_file_writer.h",
@@ -194,6 +194,14 @@ author: Michael Gilbert <mgilbert@debian.org>
        "breakpad/src/common/linux/breakpad_getcontext.S",
        "breakpad/src/common/linux/elf_core_dump.cc",
        "breakpad/src/common/linux/elf_core_dump.h",
+@@ -662,6 +660,7 @@ if (is_linux || is_chromeos || is_androi
+       "breakpad/src",
+       "breakpad/src/client",
+       "breakpad/src/third_party/linux/include",
++      "../../third_party/icu/source/common",
+     ]
+   }
+ 
 --- a/third_party/breakpad/breakpad/src/client/minidump_file_writer.cc
 +++ b/third_party/breakpad/breakpad/src/client/minidump_file_writer.cc
 @@ -149,11 +149,11 @@ bool MinidumpFileWriter::CopyStringToMDS
@@ -237,13 +245,3 @@ author: Michael Gilbert <mgilbert@debian.org>
      result = mdstring->CopyIndexAfterObject(out_idx, out, out_size);
      out_idx += out_count;
    }
---- a/third_party/breakpad/BUILD.gn
-+++ b/third_party/breakpad/BUILD.gn
-@@ -666,6 +666,7 @@ if (is_linux || is_chromeos || is_androi
-       "breakpad/src",
-       "breakpad/src/client",
-       "breakpad/src/third_party/linux/include",
-+      "../../third_party/icu/source/common",
-     ]
-   }
- 

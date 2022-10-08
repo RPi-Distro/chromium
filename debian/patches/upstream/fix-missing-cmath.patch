@@ -22,8 +22,6 @@ including it fixes that build error.
  extensions/renderer/bindings/argument_spec.cc | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/extensions/renderer/bindings/argument_spec.cc b/extensions/renderer/bindings/argument_spec.cc
-index 1e10bf1b561f4..eadd7ec3e3c9d 100644
 --- a/extensions/renderer/bindings/argument_spec.cc
 +++ b/extensions/renderer/bindings/argument_spec.cc
 @@ -4,6 +4,8 @@
@@ -35,6 +33,3 @@ index 1e10bf1b561f4..eadd7ec3e3c9d 100644
  #include "base/check.h"
  #include "base/strings/string_piece.h"
  #include "base/strings/string_util.h"
--- 
-2.30.2
-

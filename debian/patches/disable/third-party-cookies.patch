@@ -9,7 +9,7 @@ With this patch, we just change the default on a new chromium profile.
 
 --- a/components/content_settings/core/browser/cookie_settings.cc
 +++ b/components/content_settings/core/browser/cookie_settings.cc
-@@ -63,7 +63,7 @@ void CookieSettings::RegisterProfilePref
+@@ -66,7 +66,7 @@ void CookieSettings::RegisterProfilePref
      user_prefs::PrefRegistrySyncable* registry) {
    registry->RegisterIntegerPref(
        prefs::kCookieControlsMode,

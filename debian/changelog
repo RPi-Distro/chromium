@@ -1,4 +1,4 @@
-chromium (106.0.5249.103-1) unstable; urgency=high
+chromium (106.0.5249.103-1) unstable; urgency=medium
 
   * New upstream release.
   * Add ppc64el patches maintained by me, and enable builds for ppc64el

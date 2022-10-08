@@ -56,7 +56,7 @@ diff -ur a/third_party/skia/gn/skia/BUILD.gn b/third_party/skia/gn/skia/BUILD.gn
      ]
      ldflags += [ "-m32" ]
 +  } else if (current_cpu == "ppc64") {
-+    cflags += [ "-mcpu=power9", "-mtune=power9" ]
++    cflags += [ "-mcpu=power8", "-mtune=power8" ]
    }
  
    if (malloc != "" && !is_win) {

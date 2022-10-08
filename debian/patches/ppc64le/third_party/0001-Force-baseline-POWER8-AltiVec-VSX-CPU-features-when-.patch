@@ -15,8 +15,8 @@ Subject: [PATCH] Force baseline POWER8 / AltiVec / VSX CPU features when on a
      if (host_byteorder == "little") {
        defines += [ "V8_TARGET_ARCH_PPC_LE" ]
 +        cflags += [
-+        # Enable usage of AltiVec, VSX, and other POWER9 and higher features
-+        "-mcpu=power9",
++        # Enable usage of AltiVec, VSX, and other POWER8 and higher features
++        "-mcpu=power8",
 +        "-maltivec",
 +        "-mvsx",
 +      ]

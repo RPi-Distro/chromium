@@ -33,7 +33,7 @@
 +
 +  if (current_cpu == "ppc64") {
 +    cflags += [
-+      "-mcpu=power9",
++      "-mcpu=power8",
 +      "-maltivec",
 +      "-mvsx",
 +    ]

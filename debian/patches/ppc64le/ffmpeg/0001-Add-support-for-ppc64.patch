@@ -37,7 +37,7 @@ Subject: [PATCH] Add support for ppc64
 +    elif target_arch == 'ppc64':
 +      configure_flags['Common'].extend([
 +        '--arch=ppc64le',
-+        '--extra-cflags=-mcpu=power9'
++        '--extra-cflags=-mcpu=power8'
 +      ])
      else:
        print(

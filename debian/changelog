@@ -1,3 +1,22 @@
+chromium (106.0.5249.119-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-3445: Use after free in Skia. Reported by Nan Wang
+      (@eternalsakura13) and Yong Liu of 360 Vulnerability Research Institute on
+      2022-09-16
+    - CVE-2022-3446: Heap buffer overflow in WebSQL. Reported by Kaijie Xu
+      (@kaijieguigui) on 2022-09-26
+    - CVE-2022-3447: Inappropriate implementation in Custom Tabs. Reported by
+      Narendra Bhati of Suma Soft Pvt. Ltd. Pune (India) on 2022-09-22
+    - CVE-2022-3448: Use after free in Permissions API. Reported by raven at
+      KunLun lab on 2022-09-13
+    - CVE-2022-3449: Use after free in Safe Browsing. Reported by asnine on
+      2022-09-17
+    - CVE-2022-3450: Use after free in Peer Connection. Reported by Anonymous on
+      2022-09-30
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 11 Oct 2022 19:42:00 -0500
+
 chromium (106.0.5249.103-2) unstable; urgency=low
 
   * Reduce baseline compatibility for ppc64el builds from POWER9

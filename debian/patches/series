@@ -12,9 +12,7 @@ fixes/angle-wayland.patch
 fixes/fix-arm-vfpv3-d16-libaom.patch
 
 upstream/mojo.patch
-upstream/armhf-ftbfs.patch
 upstream/fix-missing-cmath.patch
-upstream/fix-nullptr-qual.patch
 
 disable/tests.patch
 disable/unrar.patch

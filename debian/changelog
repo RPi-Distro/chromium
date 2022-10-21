@@ -1,3 +1,14 @@
+chromium (107.0.5304.62-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * debian/copyright:
+    - delete third_party/dawn/tools/golang binaries.
+  * debian/patches:
+    - upstream/armhf-ftbfs.patch: drop, merged upstream.
+    - upstream/fix-nullptr-qual.patch: drop, merged upstream.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 20 Oct 2022 21:47:39 -0400
+
 chromium (106.0.5249.119-1) unstable; urgency=high
 
   * New upstream security release.

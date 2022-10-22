@@ -15,6 +15,7 @@ chromium (107.0.5304.62-1) UNRELEASED; urgency=high
       to go upstream.
     - ppc64le/workarounds/HACK-debian-clang-disable-skia-musttail.patch:
       drop, upstream skia stopped using clang::musttail.
+    - upstream/re-fix-tflite.patch: re-add a build fix that upstream lost.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 20 Oct 2022 21:47:39 -0400
 

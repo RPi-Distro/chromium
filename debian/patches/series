@@ -13,6 +13,7 @@ fixes/fix-arm-vfpv3-d16-libaom.patch
 
 upstream/mojo.patch
 upstream/fix-missing-cmath.patch
+upstream/re-fix-tflite.patch
 
 disable/tests.patch
 disable/unrar.patch

@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,90 @@
 +;
 +; Copyright (c) 2022, Alliance for Open Media. All rights reserved
 +;
@@ -70,6 +70,7 @@
 +DECODE_HEIGHT_LIMIT equ 16384
 +DECODE_WIDTH_LIMIT equ 16384
 +FORCE_HIGHBITDEPTH_DECODING equ 0
++HAVE_ARM_CRC32 equ 0
 +HAVE_AVX equ 0
 +HAVE_AVX2 equ 0
 +HAVE_DSPR2 equ 0
@@ -108,7 +109,7 @@
 +const char *aom_codec_build_config(void) {return cfg;}
 --- /dev/null
 +++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,94 @@
 +/*
 + * Copyright (c) 2022, Alliance for Open Media. All rights reserved
 + *
@@ -180,6 +181,7 @@
 +#define DECODE_HEIGHT_LIMIT 16384
 +#define DECODE_WIDTH_LIMIT 16384
 +#define FORCE_HIGHBITDEPTH_DECODING 0
++#define HAVE_ARM_CRC32 0
 +#define HAVE_AVX 0
 +#define HAVE_AVX2 0
 +#define HAVE_DSPR2 0
@@ -1784,7 +1786,7 @@
 +#endif
 --- /dev/null
 +++ b/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
-@@ -0,0 +1,102 @@
+@@ -0,0 +1,105 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_SCALE_RTCD_H_
 +#define AOM_SCALE_RTCD_H_
@@ -1803,6 +1805,9 @@
 +
 +void aom_extend_frame_borders_c(struct yv12_buffer_config *ybf, const int num_planes);
 +#define aom_extend_frame_borders aom_extend_frame_borders_c
++
++void aom_extend_frame_borders_plane_row_c(const struct yv12_buffer_config *ybf, int plane, int v_start, int v_end);
++#define aom_extend_frame_borders_plane_row aom_extend_frame_borders_plane_row_c
 +
 +void aom_extend_frame_borders_y_c(struct yv12_buffer_config *ybf);
 +#define aom_extend_frame_borders_y aom_extend_frame_borders_y_c

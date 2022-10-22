@@ -1,11 +1,20 @@
 chromium (107.0.5304.62-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+  * Disable building against QT5 (for now).
+    https://groups.google.com/a/chromium.org/g/chromium-packagers/c/-2VGexQAK6w
   * debian/copyright:
     - delete third_party/dawn/tools/golang binaries.
   * debian/patches:
     - upstream/armhf-ftbfs.patch: drop, merged upstream.
     - upstream/fix-nullptr-qual.patch: drop, merged upstream.
+    - disable/catapult.patch: delete add'l blink reference to catapult.
+    - bullseye/clang13.patch: refresh for minor upstream changes.
+    - ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch: refresh
+    - disable/clang-version-check.patch: added to fix build failure. Needs
+      to go upstream.
+    - ppc64le/workarounds/HACK-debian-clang-disable-skia-musttail.patch:
+      drop, upstream skia stopped using clang::musttail.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 20 Oct 2022 21:47:39 -0400
 

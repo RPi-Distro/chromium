@@ -77,6 +77,7 @@ defines+=is_debug=false \
          build_angle_perftests=false \
          enable_js_type_check=false \
          treat_warnings_as_errors=false \
+         use_qt=false \
          is_cfi=false \
          use_thin_lto=false \
          chrome_pgo_phase=0 \

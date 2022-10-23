@@ -17,6 +17,9 @@ chromium (107.0.5304.62-1) UNRELEASED; urgency=high
       drop, upstream skia stopped using clang::musttail.
     - upstream/re-fix-tflite.patch: re-add a build fix that upstream lost.
 
+  [ Timothy Pearson ]
+  * regenerate libaom configuration on ppc64el systems.
+
  -- Andres Salomon <dilinger@debian.org>  Thu, 20 Oct 2022 21:47:39 -0400
 
 chromium (106.0.5249.119-1) unstable; urgency=high

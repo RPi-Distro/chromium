@@ -1,6 +1,26 @@
 chromium (107.0.5304.62-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+    - CVE-2022-3652: Type Confusion in V8. Reported by srodulv and ZNMchtss at 
+      S.S.L Team.
+    - CVE-2022-3653: Heap buffer overflow in Vulkan. Reported by SeongHwan Park 
+      (SeHwa).
+    - CVE-2022-3654: Use after free in Layout. Reported by Sergei Glazunov of 
+      Google Project Zero.
+    - CVE-2022-3655: Heap buffer overflow in Media Galleries. Reported by 
+      koocola(@alo_cook) and Guang Gong of 360 Vulnerability Research Institute.
+    - CVE-2022-3656: Insufficient data validation in File System. Reported by 
+      Ron Masas, Imperva.
+    - CVE-2022-3657: Use after free in Extensions. Reported by Omri Bushari, 
+      Talon Cyber Security.
+    - CVE-2022-3658: Use after free in Feedback service on Chrome OS. Reported 
+      by Nan Wang(@eternalsakura13) and Guang Gong of 360 Vulnerability Research 
+      Institute.
+    - CVE-2022-3659: Use after free in Accessibility. Reported by @ginggilBesel.
+    - CVE-2022-3660: Inappropriate implementation in Full screen mode. Reported 
+      by Irvan Kurniawan (sourc7).
+    - CVE-2022-3661: Insufficient data validation in Extensions. Reported by 
+      Young Min Kim (@ylemkimon), CompSec Lab at Seoul National University.
   * Disable building against QT5 (for now).
     https://groups.google.com/a/chromium.org/g/chromium-packagers/c/-2VGexQAK6w
   * debian/copyright:

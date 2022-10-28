@@ -1,3 +1,12 @@
+chromium (107.0.5304.87-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-3723: Type Confusion in V8. Reported by Jan Vojtěšek, Milánek,
+      and Przemek Gmerek of Avast.
+  * Revert v4l2 enable for arm platforms until a build error is fixed.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 28 Oct 2022 07:02:02 -0400
+
 chromium (107.0.5304.68-1) unstable; urgency=high
 
   * New upstream stable release.

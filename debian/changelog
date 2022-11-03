@@ -1,3 +1,9 @@
+chromium (107.0.5304.87-2) UNRELEASED; urgency=high
+
+  * Clean up old crash dump files on launch (closes: #1015931).
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 28 Oct 2022 07:02:02 -0400
+
 chromium (107.0.5304.87-1) unstable; urgency=high
 
   * New upstream security release.

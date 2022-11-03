@@ -43,8 +43,8 @@ esac
 
 # Clean up old crash reports (see https://bugs.debian.org/1015931)
 # after 30 days.
-find "$HOME/.config/chromium/Crash Reports/pending/" -name "*.dmp" \
-  -mtime +30 -exec rm \{\} \;
+find "$HOME/.config/chromium/Crash Reports/pending/" -mtime +30 \
+  \( -name "*.meta" -o -name "*.dmp" \) -exec rm \{\} \;
 
 # Source additional settings
 for file in /etc/chromium.d/*; do

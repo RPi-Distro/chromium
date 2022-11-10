@@ -1,3 +1,9 @@
+chromium (107.0.5304.110-2) unstable; urgency=high
+
+  * Fix bullseye/mulodic.patch to actually work right. Sigh.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 10 Nov 2022 13:48:01 -0500
+
 chromium (107.0.5304.110-1) unstable; urgency=high
 
   * New upstream security release.

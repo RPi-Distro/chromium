@@ -13,11 +13,10 @@ or not, we're not seeing it on clang-14.
 
 --- a/third_party/dawn/src/tint/BUILD.gn
 +++ b/third_party/dawn/src/tint/BUILD.gn
-@@ -607,6 +607,15 @@ libtint_source_set("libtint_core_all_src
-   } else {
-     sources += [ "diagnostic/printer_other.cc" ]
+@@ -78,6 +78,15 @@ config("tint_public_config") {
+     defines += [ "TINT_BUILD_GLSL_WRITER=0" ]
    }
-+
+ 
 +  if (current_cpu == "x86" || current_cpu == "arm") {
 +    # dawn uses __builtin_smulll_overflow() to detect 64x64 bit multiply overflow.
 +    # On 32-bit platforms, the compiler implements this with __mulodi4().
@@ -26,6 +25,7 @@ or not, we're not seeing it on clang-14.
 +    # Tracked in b/29412086.
 +    defines += [ "__builtin_smulll_overflow(x,y,p)=(*(p)=(x)*(y), false)" ]
 +  }
- }
- 
- libtint_source_set("libtint_sem_src") {
++
+   include_dirs = [
+     "${tint_root_dir}/",
+     "${tint_root_dir}/include/",

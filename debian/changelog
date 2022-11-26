@@ -1,3 +1,11 @@
+chromium (107.0.5304.121-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-4135: Heap buffer overflow in GPU. Reported by Clement Lecigne
+      of Google's Threat Analysis Group on 2022-11-22
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Sat, 26 Nov 2022 12:34:00 -0600
+
 chromium (107.0.5304.110-2) unstable; urgency=high
 
   * Fix bullseye/mulodic.patch to actually work right. Sigh.

@@ -1,11 +1,10 @@
 --- a/third_party/libvpx/generate_gni.sh
 +++ b/third_party/libvpx/generate_gni.sh
-@@ -385,7 +385,8 @@ gen_config_files linux/arm64-highbd \
-   "--target=armv8-linux-gcc ${all_platforms} ${HIGHBD}"
- gen_config_files linux/mipsel "--target=mips32-linux-gcc ${all_platforms}"
+@@ -405,7 +405,7 @@ gen_config_files linux/mipsel "--target=
  gen_config_files linux/mips64el "--target=mips64-linux-gcc ${all_platforms}"
+ gen_config_files linux/loongarch \
+   "--target=loongarch64-linux-gcc ${all_platforms}"
 -gen_config_files linux/ppc64 "--target=ppc64le-linux-gcc ${all_platforms}"
-+#gen_config_files linux/ppc64 "--target=ppc64le-linux-gcc ${all_platforms}"
 +gen_config_files linux/ppc64 "--target=generic-gnu $HIGHBD ${all_platforms}"
  gen_config_files linux/generic "--target=generic-gnu $HIGHBD ${all_platforms}"
  gen_config_files win/arm64 \
@@ -26,7 +25,7 @@
    loongarch;
 --- a/third_party/libvpx/BUILD.gn
 +++ b/third_party/libvpx/BUILD.gn
-@@ -88,6 +88,14 @@ config("libvpx_config") {
+@@ -90,6 +90,14 @@ config("libvpx_config") {
        "-Wno-sign-compare",
      ]
    }

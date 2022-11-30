@@ -8,11 +8,8 @@ fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
-fixes/angle-wayland.patch
-fixes/fix-arm-vfpv3-d16-libaom.patch
 
 upstream/mojo.patch
-upstream/fix-missing-cmath.patch
 upstream/re-fix-tflite.patch
 
 disable/tests.patch

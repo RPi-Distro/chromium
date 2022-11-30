@@ -1,3 +1,64 @@
+chromium (108.0.5359.71-1) unstable; urgency=high
+
+  * New upstream stable release.
+    - CVE-2022-4174: Type Confusion in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2022-4175: Use after free in Camera Capture.
+      Reported by Leecraso and Guang Gong of 360 Alpha Lab.
+    - CVE-2022-4176: Out of bounds write in Lacros Graphics.
+      Reported by @ginggilBesel.
+    - CVE-2022-4177: Use after free in Extensions.
+      Reported by Chaoyuan Peng (@ret2happy).
+    - CVE-2022-4178: Use after free in Mojo.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-4179: Use after free in Audio.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2022-4180: Use after free in Mojo. Reported by Anonymous.
+    - CVE-2022-4181: Use after free in Forms. Reported by Aviv A.
+    - CVE-2022-4182: Inappropriate implementation in Fenced Frames.
+      Reported by Peter Nemeth.
+    - CVE-2022-4183: Insufficient policy enforcement in Popup Blocker.
+      Reported by David Sievers.
+    - CVE-2022-4184: Insufficient policy enforcement in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2022-4185: Inappropriate implementation in Navigation.
+      Reported by James Lee (@Windowsrcer).
+    - CVE-2022-4186: Insufficient validation of untrusted input in Downloads.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2022-4187: Insufficient policy enforcement in DevTools.
+      Reported by Axel Chong.
+    - CVE-2022-4188: Insufficient validation of untrusted input in CORS.
+      Reported by Philipp Beer (TU Wien).
+    - CVE-2022-4189: Insufficient policy enforcement in DevTools.
+      Reported by NDevTK.
+    - CVE-2022-4190: Insufficient data validation in Directory.
+      Reported by Axel Chong.
+    - CVE-2022-4191: Use after free in Sign-In.
+      Reported by Jaehun Jeong(@n3sk) of Theori.
+    - CVE-2022-4192: Use after free in Live Caption.
+      Reported by Samet Bekmezci @sametbekmezci.
+    - CVE-2022-4193: Insufficient policy enforcement in File System API.
+      Reported by Axel Chong.
+    - CVE-2022-4194: Use after free in Accessibility. Reported by Anonymous.
+    - CVE-2022-4195: Insufficient policy enforcement in Safe Browsing.
+      Reported by Eric Lawrence of Microsoft.
+  * d/copyright:
+    - drop multiple ninja executables from upstream tarball.
+    - Stop deleting chrome/test/data/*, since it's all just empty directories
+      except for one BUILD.gn that is required to build.
+  * d/scripts/unbundle: build against the bundled absl_utility.
+  * d/patches:
+    - upstream/fix-missing-cmath.patch: drop, merged upstream.
+    - fixes/angle-wayland.patch: drop, merged upstream.
+    - fixes/fix-arm-vfpv3-d16-libaom.patch: drop, merged upstream.
+    - disable/unrar.patch: refresh due to 7z support added.
+    - ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch:
+      refresh for loongarch update.
+    - ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch: drop half of
+      patch as upstream removed duplicate code.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 29 Nov 2022 14:25:04 -0500
+
 chromium (107.0.5304.121-1) unstable; urgency=high
 
   * New upstream security release.

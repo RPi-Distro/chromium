@@ -10,7 +10,7 @@ Subject: [PATCH] Add ppc64 target to libaom
 
 --- a/third_party/libaom/BUILD.gn
 +++ b/third_party/libaom/BUILD.gn
-@@ -204,6 +204,18 @@ if (current_cpu == "arm64" || cpu_arch_f
+@@ -208,6 +208,18 @@ if (current_cpu == "arm64" || cpu_arch_f
    }
  }
  
@@ -29,9 +29,9 @@ Subject: [PATCH] Add ppc64 target to libaom
  static_library("libaom") {
    if (!is_debug && is_win) {
      configs -= [ "//build/config/compiler:default_optimization" ]
-@@ -258,6 +270,9 @@ static_library("libaom") {
-     # This is needed by all arm boards due to aom_arm_cpu_caps()
-     sources += [ "//third_party/libaom/source/libaom/aom_ports/arm_cpudetect.c" ]
+@@ -263,6 +275,9 @@ static_library("libaom") {
+     sources +=
+         [ "//third_party/libaom/source/libaom/aom_ports/arm_cpudetect.c" ]
    }
 +  if (current_cpu == "ppc64") {
 +    deps += [ ":libaom_intrinsics_vsx" ]
@@ -41,7 +41,7 @@ Subject: [PATCH] Add ppc64 target to libaom
    }
 --- a/third_party/libaom/cmake_update.sh
 +++ b/third_party/libaom/cmake_update.sh
-@@ -189,6 +189,9 @@ gen_config_files ios/arm-neon "${toolcha
+@@ -194,6 +194,9 @@ gen_config_files ios/arm-neon "${toolcha
  reset_dirs ios/arm64
  gen_config_files ios/arm64 "${toolchain}/arm64-ios.cmake ${all_platforms}"
  

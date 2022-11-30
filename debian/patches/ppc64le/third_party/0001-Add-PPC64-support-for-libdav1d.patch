@@ -27,4 +27,4 @@ Subject: [PATCH] Add PPC64 support for libdav1d
 +    GenerateConfig('config/linux/ppc64', linux_env)
      GenerateConfig('config/linux/x64', linux_env)
      GenerateConfig('config/linux-noasm/x64', linux_env, ['-Denable_asm=false'])
-     GenerateConfig('config/linux-noasm/riscv64', linux_env, ['-Denable_asm=false'])
+     GenerateConfig('config/linux-noasm/generic', linux_env, ['-Denable_asm=false'])

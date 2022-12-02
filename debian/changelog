@@ -56,8 +56,10 @@ chromium (108.0.5359.71-1) unstable; urgency=high
       refresh for loongarch update.
     - ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch: drop half of
       patch as upstream removed duplicate code.
+    - fixes/disable-cxx20.patch: switch clang complication back to the c++17
+      standard, as c++20 breaks linking.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 29 Nov 2022 14:25:04 -0500
+ -- Andres Salomon <dilinger@debian.org>  Thu, 01 Dec 2022 22:23:10 -0500
 
 chromium (107.0.5304.121-1) unstable; urgency=high
 

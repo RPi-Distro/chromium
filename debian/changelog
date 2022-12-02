@@ -1,3 +1,10 @@
+chromium (108.0.5359.71-2) UNRELEASED; urgency=high
+
+  * Fix bullseye/mulodic.patch to actually work right on 32-bit platforms.
+    Again.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 01 Dec 2022 22:23:10 -0500
+
 chromium (108.0.5359.71-1) unstable; urgency=high
 
   * New upstream stable release.

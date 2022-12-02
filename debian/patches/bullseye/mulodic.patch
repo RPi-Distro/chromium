@@ -1,15 +1,15 @@
 author: Andres Salomon <dilinger@debian.org>
-description: hopefully work around FTBFS on clang-13 under armhf & i386
+description: work around FTBFS on clang-13 under armhf & i386
 
 We see the following on 32bit platforms on older clang:
 
 ld.lld-13: error: undefined symbol: __mulodi4
 >>> referenced by const_eval.cc
 
-This is a shim that's used elsewhere in third party libraries. V8 has
-a different implementation. Not sure if this is worth sending upstream
-or not, we're not seeing it on clang-14.
 
+This symbol is in libclang_rt's builtins, but for whatever reason it doesn't
+get included. Not worth sending upstream since this doesn't happen in
+bookworm, only in bullseye.
 
 --- a/third_party/dawn/src/tint/BUILD.gn
 +++ b/third_party/dawn/src/tint/BUILD.gn
@@ -17,13 +17,13 @@ or not, we're not seeing it on clang-14.
      defines += [ "TINT_BUILD_GLSL_WRITER=0" ]
    }
  
-+  if (current_cpu == "x86" || current_cpu == "arm") {
-+    # dawn uses __builtin_smulll_overflow() to detect 64x64 bit multiply overflow.
-+    # On 32-bit platforms, the compiler implements this with __mulodi4().
-+    # I can't quite figure out how to link that here, so instead here's a shim for
-+    # __builtin_smulll_overflow() that multiplies normally assuming no overflow.
-+    # Tracked in b/29412086.
-+    defines += [ "__builtin_smulll_overflow(x,y,p)=(*(p)=(x)*(y), false)" ]
++  # work around a bug with clang not being able to find the __mulodi4 symbol on 32-bit archs
++  if (current_cpu == "x86") {
++    lib_dirs = [ "${sysroot}/usr/lib/llvm-13/lib/clang/13.0.1/lib/linux" ]
++    libs = [ ":libclang_rt.builtins-i386.a" ]
++  } else if (current_cpu == "arm") {
++    lib_dirs = [ "${sysroot}/usr/lib/llvm-13/lib/clang/13.0.1/lib/linux" ]
++    libs = [ ":libclang_rt.builtins-armhf.a" ]
 +  }
 +
    include_dirs = [

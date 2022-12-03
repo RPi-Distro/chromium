@@ -1,3 +1,10 @@
+chromium (108.0.5359.71-3) UNRELEASED; urgency=high
+
+  * Drop bullseye/mulodic.patch from unstable, it's too difficult to get this
+    right between the two distributions. It'll live in the bullseye branch only.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 02 Dec 2022 15:03:21 -0500
+
 chromium (108.0.5359.71-2) unstable; urgency=high
 
   * Fix bullseye/mulodic.patch to actually work right on 32-bit platforms.

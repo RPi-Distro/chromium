@@ -8,7 +8,6 @@ fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
-fixes/disable-cxx20.patch
 
 upstream/mojo.patch
 upstream/re-fix-tflite.patch

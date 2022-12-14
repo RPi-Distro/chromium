@@ -13,14 +13,11 @@ chromium (108.0.5359.124-1) unstable; urgency=high
     - CVE-2022-4440: Use after free in Profiles.
       Reported by Anonymous on 2022-11-09
 
- -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 13 Dec 2022 19:10:00 -0600
-
-chromium (108.0.5359.94-2) UNRELEASED; urgency=high
-
+  [ Andres Salomon ]
   * Drop fixes/disable-cxx20.patch; turned out to be a clang-14 bug
     (https://bugs.debian.org/1025394) causing the issue that is now fixed.
 
- -- Andres Salomon <dilinger@debian.org>  Sun, 04 Dec 2022 23:35:09 -0500
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 13 Dec 2022 19:10:00 -0600
 
 chromium (108.0.5359.94-1) unstable; urgency=high
 

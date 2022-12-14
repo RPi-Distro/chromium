@@ -1,3 +1,20 @@
+chromium (108.0.5359.124-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2022-4436: Use after free in Blink Media.
+      Reported by Anonymous on 2022-11-15
+    - CVE-2022-4437: Use after free in Mojo IPC.
+      Reported by koocola(@alo_cook) and Guang Gong of 360 Vulnerability
+      Research Institute on 2022-11-30
+    - CVE-2022-4438: Use after free in Blink Frames.
+      Reported by Anonymous on 2022-11-07
+    - CVE-2022-4439: Use after free in Aura.
+      Reported by Anonymous on 2022-11-22
+    - CVE-2022-4440: Use after free in Profiles.
+      Reported by Anonymous on 2022-11-09
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 13 Dec 2022 19:10:00 -0600
+
 chromium (108.0.5359.94-2) UNRELEASED; urgency=high
 
   * Drop fixes/disable-cxx20.patch; turned out to be a clang-14 bug

@@ -3,7 +3,7 @@ author: Michel Le Bihan <michel@lebihan.pl>
 
 --- a/chrome/test/BUILD.gn
 +++ b/chrome/test/BUILD.gn
-@@ -4976,7 +4976,6 @@ template("performance_test_suite_templat
+@@ -5120,7 +5120,6 @@ template("performance_test_suite_templat
      }
  
      if (!is_chromeos_lacros) {
@@ -13,15 +13,10 @@ author: Michel Le Bihan <michel@lebihan.pl>
      if (!is_android && !is_chromeos_lacros) {
 --- a/third_party/angle/src/tests/BUILD.gn
 +++ b/third_party/angle/src/tests/BUILD.gn
-@@ -1672,12 +1672,11 @@ group("angle_tests") {
-   testonly = true
-   deps = [
-     ":angle_end2end_tests",
--    ":angle_perftests",
-     ":angle_system_info_test",
-     ":angle_unittests",
-     "capture_replay_tests",
-   ]
+@@ -1744,7 +1744,7 @@ group("angle_tests") {
+   if (is_clang) {
+     deps += [ "capture_replay_tests" ]
+   }
 -  if (!is_fuchsia) {
 +  if (false) {
      deps += [
@@ -29,7 +24,7 @@ author: Michel Le Bihan <michel@lebihan.pl>
        ":angle_white_box_tests",
 --- a/third_party/angle/gni/angle.gni
 +++ b/third_party/angle/gni/angle.gni
-@@ -268,7 +268,7 @@ declare_args() {
+@@ -282,7 +282,7 @@ declare_args() {
        is_apple &&
        (angle_enable_glsl || angle_enable_metal || use_fuzzing_engine)
  

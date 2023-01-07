@@ -1,6 +1,10 @@
 chromium (109.0.5414.74-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+  * d/patches:
+    - upstream/re-fix-tflite.patch: drop, merged upstream.
+    - disable/catapult.patch: refresh
+    - disable/angle-perftests.patch: refresh
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 03 Dec 2022 13:29:49 -0500
 

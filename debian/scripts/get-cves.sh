@@ -16,10 +16,19 @@ echo
 elinks -dump "$1" 2>/dev/null | \
   tr -d '\n' | \
   sed -e 's/[[:space:]]\+/ /g' | \
-  sed -ne 's/CVE-/\n    - CVE-/pg' | \
+  sed -ne 's/CVE-/\n- CVE-/pg' | \
   sed -e 's/ on [0-9][0-9].*$/./' | \
   grep -v 'CVE-[0-9\-]\+ exists in the wild' | \
-  tail -n +2
+  tail -n +2 | \
+  while read ln; do \
+    length=`echo $ln | wc -c`; \
+    if [ $length -lt 78 ]; then \
+      echo "    $ln"; \
+    else \
+      echo -n "    "; \
+      echo $ln|sed 's/.[[:space:]]\+Reported by/.\n      Reported by/'; \
+    fi; \
+  done
 echo
 
 exit 0

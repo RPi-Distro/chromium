@@ -1,8 +1,7 @@
 chromium (109.0.5414.74-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
-    - CVE-2023-0128: Use after free in Overview Mode.
-      Reported by Khalil Zhani.
+    - CVE-2023-0128: Use after free in Overview Mode. Reported by Khalil Zhani.
     - CVE-2023-0129: Heap buffer overflow in Network Service.
       Reported by asnine.
     - CVE-2023-0130: Inappropriate implementation in Fullscreen API.
@@ -20,7 +19,7 @@ chromium (109.0.5414.74-1) UNRELEASED; urgency=high
     - CVE-2023-0136: Inappropriate implementation in Fullscreen API.
       Reported by Axel Chong.
     - CVE-2023-0137: Heap buffer overflow in Platform Apps.
-      Reported by avaue and Buff3tts at S.S.L.
+      Reported by avaue and Buff3tts at S.S.L..
     - CVE-2023-0138: Heap buffer overflow in libphonenumber.
       Reported by Michael Dau.
     - CVE-2023-0139: Insufficient validation of untrusted input in Downloads.

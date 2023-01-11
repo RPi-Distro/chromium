@@ -282,7 +282,7 @@
  // Negate 16-bit integers in a when the corresponding signed 16-bit
  // integer in b is negative.
  static INLINE int16x8_t vec_sign(int16x8_t a, int16x8_t b) {
-@@ -125,19 +147,19 @@ void vpx_quantize_b_vsx(const tran_low_t
+@@ -124,19 +124,19 @@
  
    qcoeff0 =
        quantize_coeff(coeff0, coeff0_abs, round, quant, quant_shift, zero_mask0);
@@ -304,9 +304,9 @@
 -  vec_vsx_st(dqcoeff1, 16, dqcoeff_ptr);
 +  vec_u64_store(dqcoeff1, 16, dqcoeff_ptr);
  
-   eob = vec_max(nonzero_scanindex(qcoeff0, zero_mask0, iscan_ptr, 0),
-                 nonzero_scanindex(qcoeff1, zero_mask1, iscan_ptr, 16));
-@@ -165,17 +187,17 @@ void vpx_quantize_b_vsx(const tran_low_t
+   eob = vec_max(nonzero_scanindex(qcoeff0, iscan_ptr, 0),
+                 nonzero_scanindex(qcoeff1, iscan_ptr, 16));
+@@ -164,17 +164,17 @@
                                 zero_mask1);
        qcoeff2 = quantize_coeff(coeff2, coeff2_abs, round, quant, quant_shift,
                                 zero_mask2);
@@ -328,9 +328,9 @@
 +      vec_u64_store(dqcoeff1, off1, dqcoeff_ptr);
 +      vec_u64_store(dqcoeff2, off2, dqcoeff_ptr);
  
-       eob =
-           vec_max(eob, nonzero_scanindex(qcoeff0, zero_mask0, iscan_ptr, off0));
-@@ -245,12 +267,12 @@ void vpx_quantize_b_32x32_vsx(const tran
+       eob = vec_max(eob, nonzero_scanindex(qcoeff0, iscan_ptr, off0));
+       eob2 = vec_max(nonzero_scanindex(qcoeff1, iscan_ptr, off1),
+@@ -243,12 +243,12 @@
    qcoeff1 = quantize_coeff_32(coeff1, coeff1_abs, round, quant, quant_shift,
                                zero_mask1);
  
@@ -345,9 +345,9 @@
 -  vec_vsx_st(dequantize_coeff_32(qcoeff1, dequant), 16, dqcoeff_ptr);
 +  vec_u64_store(dequantize_coeff_32(qcoeff1, dequant), 16, dqcoeff_ptr);
  
-   eob = vec_max(nonzero_scanindex(qcoeff0, zero_mask0, iscan_ptr, 0),
-                 nonzero_scanindex(qcoeff1, zero_mask1, iscan_ptr, 16));
-@@ -278,13 +300,13 @@ void vpx_quantize_b_32x32_vsx(const tran
+   eob = vec_max(nonzero_scanindex(qcoeff0, iscan_ptr, 0),
+                 nonzero_scanindex(qcoeff1, iscan_ptr, 16));
+@@ -276,13 +276,13 @@
      qcoeff2 = quantize_coeff_32(coeff2, coeff2_abs, round, quant, quant_shift,
                                  zero_mask2);
  
@@ -366,5 +366,6 @@
 +    vec_u64_store(dequantize_coeff_32(qcoeff1, dequant), off1, dqcoeff_ptr);
 +    vec_u64_store(dequantize_coeff_32(qcoeff2, dequant), off2, dqcoeff_ptr);
  
-     eob = vec_max(eob, nonzero_scanindex(qcoeff0, zero_mask0, iscan_ptr, off0));
-     eob2 = vec_max(nonzero_scanindex(qcoeff1, zero_mask1, iscan_ptr, off1),
+     eob = vec_max(eob, nonzero_scanindex(qcoeff0, iscan_ptr, off0));
+     eob2 = vec_max(nonzero_scanindex(qcoeff1, iscan_ptr, off1),
+

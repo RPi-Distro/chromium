@@ -1,10 +1,11 @@
-Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
-===================================================================
+diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm b/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+new file mode 100644
+index 0000000..fdbc23c
 --- /dev/null
-+++ chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
++++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 @@ -0,0 +1,85 @@
 +;
-+; Copyright (c) 2022, Alliance for Open Media. All rights reserved
++; Copyright (c) 2023, Alliance for Open Media. All rights reserved
 +;
 +; This source code is subject to the terms of the BSD 2 Clause License and
 +; the Alliance for Open Media Patent License 1.0. If the BSD 2 Clause License
@@ -88,10 +89,11 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +HAVE_VSX equ 1
 +HAVE_WXWIDGETS equ 0
 +STATIC_LINK_JXL equ 0
-Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
-===================================================================
+diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.c b/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
+new file mode 100644
+index 0000000..f22d720
 --- /dev/null
-+++ chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
++++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 @@ -0,0 +1,13 @@
 +/*
 + * Copyright (c) 2016, Alliance for Open Media. All rights reserved
@@ -106,13 +108,14 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +#include "aom/aom_codec.h"
 +static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_ENCODER=1 -DCONFIG_LIBYUV=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=1 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_MAX_DECODE_PROFILE=0 -DCONFIG_NORMAL_TILE_MODE=1 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
-Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
-===================================================================
+diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.h b/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+new file mode 100644
+index 0000000..a8644ad
 --- /dev/null
-+++ chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
++++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 @@ -0,0 +1,89 @@
 +/*
-+ * Copyright (c) 2022, Alliance for Open Media. All rights reserved
++ * Copyright (c) 2023, Alliance for Open Media. All rights reserved
 + *
 + * This source code is subject to the terms of the BSD 2 Clause License and
 + * the Alliance for Open Media Patent License 1.0. If the BSD 2 Clause License
@@ -200,10 +203,11 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +#define INLINE inline
 +#define STATIC_LINK_JXL 0
 +#endif  // AOM_CONFIG_H_
-Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
-===================================================================
+diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+new file mode 100644
+index 0000000..2ed2006
 --- /dev/null
-+++ chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
++++ b/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 @@ -0,0 +1,1580 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_DSP_RTCD_H_
@@ -631,8 +635,8 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +unsigned int aom_get_mb_ss_c(const int16_t *);
 +#define aom_get_mb_ss aom_get_mb_ss_c
 +
-+void aom_get_sse_sum_8x8_quad_c(const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr, int ref_stride, unsigned int *sse, int *sum);
-+#define aom_get_sse_sum_8x8_quad aom_get_sse_sum_8x8_quad_c
++void aom_get_var_sse_sum_8x8_quad_c(const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr, int ref_stride, uint32_t *sse8x8, int *sum8x8, unsigned int *tot_sse, int *tot_sum, uint32_t *var8x8);
++#define aom_get_var_sse_sum_8x8_quad aom_get_var_sse_sum_8x8_quad_c
 +
 +void aom_h_predictor_16x16_c(uint8_t *dst, ptrdiff_t y_stride, const uint8_t *above, const uint8_t *left);
 +#define aom_h_predictor_16x16 aom_h_predictor_16x16_c
@@ -1785,10 +1789,11 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif
-Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
-===================================================================
+diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+new file mode 100644
+index 0000000..1da220d
 --- /dev/null
-+++ chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
++++ b/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 @@ -0,0 +1,105 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_SCALE_RTCD_H_
@@ -1895,10 +1900,11 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif
-Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
-===================================================================
+diff --git a/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+new file mode 100644
+index 0000000..62a0e70
 --- /dev/null
-+++ chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
++++ b/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 @@ -0,0 +1,491 @@
 +// This file is generated. Do not edit.
 +#ifndef AV1_RTCD_H_
@@ -2319,10 +2325,10 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +void av1_wiener_convolve_add_src_c(const uint8_t *src, ptrdiff_t src_stride, uint8_t *dst, ptrdiff_t dst_stride, const int16_t *filter_x, int x_step_q4, const int16_t *filter_y, int y_step_q4, int w, int h, const ConvolveParams *conv_params);
 +#define av1_wiener_convolve_add_src av1_wiener_convolve_add_src_c
 +
-+void cdef_copy_rect8_16bit_to_16bit_c(uint16_t *dst, int dstride, const uint16_t *src, int sstride, int v, int h);
++void cdef_copy_rect8_16bit_to_16bit_c(uint16_t *dst, int dstride, const uint16_t *src, int sstride, int width, int height);
 +#define cdef_copy_rect8_16bit_to_16bit cdef_copy_rect8_16bit_to_16bit_c
 +
-+void cdef_copy_rect8_8bit_to_16bit_c(uint16_t *dst, int dstride, const uint8_t *src, int sstride, int v, int h);
++void cdef_copy_rect8_8bit_to_16bit_c(uint16_t *dst, int dstride, const uint8_t *src, int sstride, int width, int height);
 +#define cdef_copy_rect8_8bit_to_16bit cdef_copy_rect8_8bit_to_16bit_c
 +
 +void cdef_filter_16_0_c(void *dst16, int dstride, const uint16_t *in, int pri_strength, int sec_strength, int dir, int pri_damping, int sec_damping, int coeff_shift, int block_width, int block_height);
@@ -2391,3 +2397,4 @@ Index: chromium-108.0.5359.71/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif
+

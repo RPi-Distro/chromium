@@ -33,6 +33,10 @@ chromium (109.0.5414.74-1) UNRELEASED; urgency=high
     - disable/catapult.patch: refresh
     - disable/angle-perftests.patch: refresh
 
+  [ Timothy Pearson ]
+  *  d/patches:
+    - Regenerate ppc64le configuration files from source
+
  -- Andres Salomon <dilinger@debian.org>  Sat, 03 Dec 2022 13:29:49 -0500
 
 chromium (108.0.5359.124-1) unstable; urgency=high

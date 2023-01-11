@@ -75,7 +75,9 @@ ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch
 ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch
 ppc64le/libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch
 
+ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch
 ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch
+ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-vsx-files.patch
 ppc64le/third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch
 ppc64le/third_party/0004-third_party-libvpx-work-around-ambiguous-vsx.patch
 

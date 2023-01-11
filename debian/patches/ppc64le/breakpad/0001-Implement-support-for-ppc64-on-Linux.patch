@@ -250,7 +250,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
 +    memcpy(&g_crash_context_.vector_state, uc_ptr->uc_mcontext.v_regs,
 +           sizeof(g_crash_context_.vector_state));
 +  }
- #elif !defined(__ARM_EABI__) && !defined(__mips__)
+ #elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
    // FP state is not part of user ABI on ARM Linux.
 -  // In case of MIPS Linux FP state is already part of ucontext_t
 +  // In case of MIPS, Linux FP state is already part of ucontext_t
@@ -260,9 +260,9 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
 @@ -701,11 +708,19 @@ bool ExceptionHandler::WriteMinidump() {
    }
  #endif
- 
--#if !defined(__ARM_EABI__) && !defined(__aarch64__) && !defined(__mips__)
-+#if !defined(__ARM_EABI__) && !defined(__aarch64__) && !defined(__mips__) \
+
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE && !defined(__aarch64__)
++#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE && !defined(__aarch64__) \
 +    && !defined(__powerpc64__)
    // FPU state is not part of ARM EABI ucontext_t.
    memcpy(&context.float_state, context.context.uc_mcontext.fpregs,
@@ -294,25 +294,25 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
      siginfo_t siginfo;
      pid_t tid;  // the crashing thread.
      ucontext_t context;
--#if !defined(__ARM_EABI__) && !defined(__mips__)
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
 +#if defined(__powerpc64__)
 +    // PPC64's FP state is a part of ucontext_t like MIPS but the vector
 +    // state is not, so a struct is needed.
 +    vstate_t vector_state;
-+#elif !defined(__ARM_EABI__) && !defined(__mips__)
-     // #ifdef this out because FP state is not part of user ABI for Linux ARM.
-     // In case of MIPS Linux FP state is already part of ucontext_t so
-     // 'float_state' is not required.
++#elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
+     fpstate_t float_state;
+ #endif
+   };
 --- a/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler_unittest.cc
 +++ b/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler_unittest.cc
-@@ -307,7 +307,7 @@ TEST(ExceptionHandlerTest, ParallelChild
+@@ -317,7 +317,7 @@
+       ASSERT_EQ(SIGSEGV, WTERMSIG(status));
+       return;
+     } else {
+-      usleep(100000);
++      usleep(200000);
+     }
    }
- 
-   // Wait a while until the child should have crashed.
--  usleep(1000000);
-+  usleep(2000000);
-   // Kill the child if it is still running.
-   kill(child, SIGKILL);
  
 @@ -559,6 +559,8 @@ const unsigned char kIllegalInstruction[
  #if defined(__mips__)
@@ -342,10 +342,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
                    const MicrodumpExtraInfo& microdump_extra_info,
                    LinuxDumper* dumper)
        : ucontext_(context ? &context->context : NULL),
--#if !defined(__ARM_EABI__) && !defined(__mips__)
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
 +#if defined(__powerpc64__)
 +        vector_state_(context ? &context->vector_state : NULL),
-+#elif !defined(__ARM_EABI__) && !defined(__mips__)
++#elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
          float_state_(context ? &context->float_state : NULL),
  #endif
          dumper_(dumper),
@@ -362,10 +362,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    void DumpCPUState() {
      RawContextCPU cpu;
      my_memset(&cpu, 0, sizeof(RawContextCPU));
--#if !defined(__ARM_EABI__) && !defined(__mips__)
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
 +#if defined(__powerpc64__)
 +    UContextReader::FillCPUContext(&cpu, ucontext_, vector_state_);
-+#elif !defined(__ARM_EABI__) && !defined(__mips__)
++#elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
      UContextReader::FillCPUContext(&cpu, ucontext_, float_state_);
  #else
      UContextReader::FillCPUContext(&cpu, ucontext_);
@@ -373,10 +373,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    void* Alloc(unsigned bytes) { return dumper_->allocator()->Alloc(bytes); }
  
    const ucontext_t* const ucontext_;
--#if !defined(__ARM_EABI__) && !defined(__mips__)
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
 +#if defined(__powerpc64__)
 +  const google_breakpad::vstate_t* const vector_state_;
-+#elif !defined(__ARM_EABI__) && !defined(__mips__)
++#elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
    const google_breakpad::fpstate_t* const float_state_;
  #endif
    LinuxDumper* dumper_;
@@ -536,10 +536,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
        : fd_(minidump_fd),
          path_(minidump_path),
          ucontext_(context ? &context->context : NULL),
--#if !defined(__ARM_EABI__) && !defined(__mips__)
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
 +#if defined(__powerpc64__)
 +        vector_state_(context ? &context->vector_state : NULL),
-+#elif !defined(__ARM_EABI__) && !defined(__mips__)
++#elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
          float_state_(context ? &context->float_state : NULL),
  #endif
          dumper_(dumper),
@@ -547,10 +547,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
          if (!cpu.Allocate())
            return false;
          my_memset(cpu.get(), 0, sizeof(RawContextCPU));
--#if !defined(__ARM_EABI__) && !defined(__mips__)
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
 +#if defined(__powerpc64__)
 +        UContextReader::FillCPUContext(cpu.get(), ucontext_, vector_state_);
-+#elif !defined(__ARM_EABI__) && !defined(__mips__)
++#elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
          UContextReader::FillCPUContext(cpu.get(), ucontext_, float_state_);
  #else
          UContextReader::FillCPUContext(cpu.get(), ucontext_);
@@ -578,10 +578,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    const char* path_;  // Path to the file where the minidum should be written.
  
    const ucontext_t* const ucontext_;  // also from the signal handler
--#if !defined(__ARM_EABI__) && !defined(__mips__)
+-#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
 +#if defined(__powerpc64__)
 +  const google_breakpad::vstate_t* const vector_state_;
-+#elif !defined(__ARM_EABI__) && !defined(__mips__)
++#elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
    const google_breakpad::fpstate_t* const float_state_;  // ditto
  #endif
    LinuxDumper* dumper_;

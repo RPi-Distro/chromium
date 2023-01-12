@@ -93,6 +93,7 @@ ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 
 ppc64le/third_party/0001-Add-PPC64-support-for-libdav1d.patch
 ppc64le/third_party/0001-Fix-libdav1d-compilation-on-clang-ppc.patch
+ppc64le/third_party/0005-third_party-dav1d-crash-fix.patch
 # Multiple Clang 11 bugs hit with VSX enabled, including bug #50520 (D103386)
 #ppc64le/third_party/skia-vsx-instructions.patch
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch

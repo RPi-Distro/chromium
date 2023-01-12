@@ -1,0 +1,62 @@
+From: Timothy Pearson <tpearson@raptorengineering.com>
+Subject: [PATCH] Fix stack corruption in v8 on ppc64 systems
+
+The register save code for ppc64 starts at a word offset of 1,
+which results in the last word of the prior stack frame being
+overwritten during register save.  In Chromium 109, the last
+word is the stack canary, resulting in a crash and FTBFS.
+
+Work around this by increasing the register count by one,
+which in turn allocates sufficient space for the prior
+register save code to function correctly.
+---
+
+--- a/v8/src/heap/base/stack.h
++++ b/v8/src/heap/base/stack.h
+@@ -1,4 +1,4 @@
+-// Copyright 2020 the V8 project authors. All rights reserved.
++// Copyright 2020-2023 the V8 project authors. All rights reserved.
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
+@@ -45,10 +45,10 @@
+   static constexpr int NumberOfCalleeSavedRegisters = 8;
+ #elif V8_HOST_ARCH_PPC64
+   // Must be consistent with heap/base/asm/ppc/.
+-  static constexpr int NumberOfCalleeSavedRegisters = 20;
++  static constexpr int NumberOfCalleeSavedRegisters = 21;
+ #elif V8_HOST_ARCH_PPC
+   // Must be consistent with heap/base/asm/ppc/.
+-  static constexpr int NumberOfCalleeSavedRegisters = 20;
++  static constexpr int NumberOfCalleeSavedRegisters = 21;
+ #elif V8_HOST_ARCH_MIPS64
+   // Must be consistent with heap/base/asm/mips64el/.
+   static constexpr int NumberOfCalleeSavedRegisters = 9;
+--- a/v8/src/heap/base/asm/ppc/save_registers_asm.cc
++++ b/v8/src/heap/base/asm/ppc/save_registers_asm.cc
+@@ -1,4 +1,4 @@
+-// Copyright 2020 the V8 project authors. All rights reserved.
++// Copyright 2020-2023 the V8 project authors. All rights reserved.
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
+@@ -21,8 +21,8 @@
+ 
+ #ifdef __PPC64__
+ 
+-// 20 64-bit registers = 20 intprt_t
+-static_assert(heap::base::Stack::NumberOfCalleeSavedRegisters == 20,
++// 20 64-bit registers + 1x 64-bit start offset = 21 intprt_t
++static_assert(heap::base::Stack::NumberOfCalleeSavedRegisters == 21,
+               "Mismatch in the number of callee-saved registers");
+ static_assert(sizeof(intptr_t) == 8, "Mismatch in word size");
+ 
+@@ -65,7 +65,7 @@
+ 
+ #else  // !__PPC64__
+ 
+-// 20 32-bit registers = 20 intprt_t
++// 20 32-bit registers + 1x 32-bit start offset = 21 intprt_t
+ static_assert(heap::base::Stack::NumberOfCalleeSavedRegisters == 20,
+               "Mismatch in the number of callee-saved registers");
+ static_assert(sizeof(intptr_t) == 4, "Mismatch in word size");

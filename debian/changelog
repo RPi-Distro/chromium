@@ -36,6 +36,7 @@ chromium (109.0.5414.74-1) UNRELEASED; urgency=high
   [ Timothy Pearson ]
   *  d/patches:
     - Regenerate ppc64le configuration files from source
+    - Fix register corruption in v8 on ppc64 systems
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 03 Dec 2022 13:29:49 -0500
 

@@ -1,4 +1,4 @@
-chromium (109.0.5414.74-1) UNRELEASED; urgency=high
+chromium (109.0.5414.74-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2023-0128: Use after free in Overview Mode. Reported by Khalil Zhani.
@@ -38,7 +38,7 @@ chromium (109.0.5414.74-1) UNRELEASED; urgency=high
     - Regenerate ppc64le configuration files from source
     - Fix register corruption in v8 on ppc64 systems
 
- -- Andres Salomon <dilinger@debian.org>  Sat, 03 Dec 2022 13:29:49 -0500
+ -- Andres Salomon <dilinger@debian.org>  Thu, 12 Jan 2023 13:01:02 -0500
 
 chromium (108.0.5359.124-1) unstable; urgency=high
 

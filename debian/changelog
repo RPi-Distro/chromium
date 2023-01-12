@@ -1,8 +1,15 @@
-chromium (109.0.5414.74-2) UNRELEASED; urgency=high
+chromium (109.0.5414.74-2) unstable; urgency=high
 
+  [ Andres Salomon ]
+  * d/patches/bullseye/clang13.patch: don't use -gsimple-template-names in
+    clang arguments, as it doesn't work with clang-13.
+
+  [ Timothy Pearson ]
   * Fix crashes in dav1d during video playback on ppc64le
+  * d/patches:
+    - Apply upstream dav1d ppc64le fix from videolan merge request #1464
 
- -- Timothy Pearson <tpearson@raptorengineering.com>  Thu, 12 Jan 2023 14:44:00 -0600
+ -- Andres Salomon <dilinger@debian.org>  Thu, 12 Jan 2023 18:23:51 -0500
 
 chromium (109.0.5414.74-1) unstable; urgency=high
 
@@ -43,7 +50,6 @@ chromium (109.0.5414.74-1) unstable; urgency=high
   *  d/patches:
     - Regenerate ppc64le configuration files from source
     - Fix register corruption in v8 on ppc64 systems
-    - Apply upstream dav1d ppc64le fix from videolan merge request #1464
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 12 Jan 2023 13:01:02 -0500
 

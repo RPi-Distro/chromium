@@ -1,6 +1,7 @@
+Index: b/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
 --- a/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
 +++ b/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
-@@ -82,7 +82,15 @@ static inline void copy4xN(uint16_t *tmp, const ptrdiff_t tmp_stride,
+@@ -89,7 +89,15 @@ static inline void copy4xN(uint16_t *tmp
      vec_st(l0, 0, tmp + (h + 0) * 8);
      vec_st(l1, 0, tmp + (h + 1) * 8);
  
@@ -17,7 +18,7 @@
          u16x8 l = u8h_to_u16(vec_vsx_ld(0, src - 2 + y * src_stride));
          vec_st(l, 0, tmp + y * 8);
      }
-@@ -160,7 +168,18 @@ static inline void copy8xN(uint16_t *tmp, const ptrdiff_t tmp_stride,
+@@ -167,7 +175,18 @@ static inline void copy8xN(uint16_t *tmp
      vec_st(l1h, 0, tmp + (h + 1) * 16);
      vec_st(l1l, 0, tmp + (h + 1) * 16 + 8);
  
@@ -37,18 +38,19 @@
          u8x16 l = vec_vsx_ld(0, src - 2 + y * src_stride);
          u16x8 lh = u8h_to_u16(l);
          u16x8 ll = u8l_to_u16(l);
-@@ -456,7 +475,7 @@ void dav1d_cdef_filter_##w##x##h##_vsx(pixel *const dst, \
-                                        const int damping, \
-                                        const enum CdefEdgeFlags edges) \
+@@ -464,7 +483,7 @@ static void cdef_filter_##w##x##h##_vsx(
+                                         const int damping, \
+                                         const enum CdefEdgeFlags edges) \
  { \
 -    ALIGN_STK_16(uint16_t, tmp_buf, 12 * tmp_stride,); \
 +    ALIGN_STK_16(uint16_t, tmp_buf, 12 * tmp_stride + 8,); \
      uint16_t *tmp = tmp_buf + 2 * tmp_stride + 2; \
      filter_##w##xN(dst, dst_stride, left, top, bottom, w, h, pri_strength, \
                     sec_strength, dir, damping, edges, tmp_stride, tmp); \
+Index: b/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
 --- a/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
 +++ b/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
-@@ -50,12 +50,12 @@ static void wiener_filter_h_vsx(int32_t *hor_ptr,
+@@ -52,12 +52,12 @@ static void wiener_filter_h_vsx(int32_t
                                  const int16_t filterh[8],
                                  const int w, const int h)
  {
@@ -67,7 +69,7 @@
  
      i16x8 filterhvall = vec_vsx_ld(0, filterh);
      i16x8 filterhv0 =  vec_splat( filterhvall, 0);
-@@ -128,8 +128,8 @@ static void wiener_filter_h_vsx(int32_t *hor_ptr,
+@@ -130,8 +130,8 @@ static void wiener_filter_h_vsx(int32_t
  }
  
  static inline i16x8 iclip_u8_vec(i16x8 v) {
@@ -78,7 +80,7 @@
      v = vec_max(zerov, v);
      v = vec_min(maxv, v);
      return v;
-@@ -175,8 +175,8 @@ static inline void wiener_filter_v_vsx(uint8_t *p,
+@@ -177,8 +177,8 @@ static inline void wiener_filter_v_vsx(u
                                         const int16_t filterv[8],
                                         const int w, const int h)
  {

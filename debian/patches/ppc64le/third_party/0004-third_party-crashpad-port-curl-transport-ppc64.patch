@@ -1,3 +1,4 @@
+Index: b/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
 --- a/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
 +++ b/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
 @@ -237,6 +237,12 @@ std::string UserAgent() {

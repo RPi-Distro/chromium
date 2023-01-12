@@ -1,6 +1,7 @@
+Index: b/third_party/dawn/src/dawn/common/Platform.h
 --- a/third_party/dawn/src/dawn/common/Platform.h
 +++ b/third_party/dawn/src/dawn/common/Platform.h
-@@ -124,9 +124,9 @@
+@@ -135,9 +135,9 @@
  #define DAWN_PLATFORM_IS_MIPS64 1
  #endif
  
@@ -12,9 +13,10 @@
  #define DAWN_PLATFORM_IS_S390X 1
  
  #elif defined(__PPC__)
+Index: b/third_party/dawn/src/dawn/common/Assert.cpp
 --- a/third_party/dawn/src/dawn/common/Assert.cpp
 +++ b/third_party/dawn/src/dawn/common/Assert.cpp
-@@ -31,9 +31,9 @@ void BreakPoint() {
+@@ -33,9 +33,9 @@ void BreakPoint() {
      __asm__ __volatile__("ebreak");
  #elif DAWN_PLATFORM_IS(MIPS)
      __asm__ __volatile__("break");

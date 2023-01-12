@@ -1,6 +1,7 @@
+Index: b/third_party/dawn/src/dawn/common/Platform.h
 --- a/third_party/dawn/src/dawn/common/Platform.h
 +++ b/third_party/dawn/src/dawn/common/Platform.h
-@@ -129,10 +129,12 @@
+@@ -140,10 +140,12 @@
  #elif defined(__s390x__)
  #define DAWN_PLATFORM_IS_S390X 1
  

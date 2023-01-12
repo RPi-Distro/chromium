@@ -10,7 +10,7 @@ Subject: [PATCH] Force baseline POWER8 / AltiVec / VSX CPU features when on a
 
 --- a/v8/BUILD.gn
 +++ b/v8/BUILD.gn
-@@ -1251,6 +1251,12 @@ config("toolchain") {
+@@ -1166,6 +1166,12 @@ config("toolchain") {
      }
      if (host_byteorder == "little") {
        defines += [ "V8_TARGET_ARCH_PPC_LE" ]

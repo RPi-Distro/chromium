@@ -1,3 +1,16 @@
+chromium-browser (104.0.5112.105-rpt2) bullseye; urgency=medium
+
+  * Fix inactive tab colour
+
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 25 Aug 2022 12:57:11 +0100
+
+chromium-browser (104.0.5112.105-rpt1) bullseye; urgency=medium
+
+  * Update to 104.0.5112.105
+  * v104.0.5112.105_rpi_2.53.patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 19 Aug 2022 12:14:12 +0100
+
 chromium-browser (101.0.4951.57-rpt2) bullseye; urgency=medium
 
   * Ship Chromium's GL libs

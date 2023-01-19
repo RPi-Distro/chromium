@@ -1,3 +1,9 @@
+chromium (109.0.5414.74-3) UNRELEASED; urgency=high
+
+  * Re-enable v4l2 for arm platforms (closes: #1011346).
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 12 Jan 2023 18:23:51 -0500
+
 chromium (109.0.5414.74-2) unstable; urgency=high
 
   [ Andres Salomon ]

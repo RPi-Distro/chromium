@@ -1,8 +1,16 @@
-chromium (109.0.5414.74-3) UNRELEASED; urgency=high
+chromium (109.0.5414.119-1) unstable; urgency=high
 
+  * New upstream security release.
+    - CVE-2023-0471: Use after free in WebTransport.
+      Reported by chichoo Kim(chichoo) and Cassidy Kim(@cassidy6564).
+    - CVE-2023-0472: Use after free in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-0473: Type Confusion in ServiceWorker API.
+      Reported by raven at KunLun lab.
+    - CVE-2023-0474: Use after free in GuestView. Reported by avaue at S.S.L.
   * Re-enable v4l2 for arm platforms (closes: #1011346).
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 12 Jan 2023 18:23:51 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 25 Jan 2023 01:19:49 -0500
 
 chromium (109.0.5414.74-2) unstable; urgency=high
 

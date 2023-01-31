@@ -21,7 +21,7 @@ Subject: [PATCH 17/22] disable browser sign in feature by default
  // static
 --- a/src/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/src/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -56,7 +56,7 @@ void PrimaryAccountManager::RegisterProf
+@@ -53,7 +53,7 @@ void PrimaryAccountManager::RegisterProf
    registry->RegisterBooleanPref(prefs::kGoogleServicesConsentedToSync, false);
    registry->RegisterBooleanPref(prefs::kAutologinEnabled, true);
    registry->RegisterListPref(prefs::kReverseAutologinRejectedEmailList);

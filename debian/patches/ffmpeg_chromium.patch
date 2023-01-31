@@ -9,7 +9,7 @@
  #define HAVE_ARMV8 0
  #define HAVE_NEON 0
  #define HAVE_VFP 1
-@@ -92,7 +92,7 @@
+@@ -94,7 +94,7 @@
  #define HAVE_LASX 0
  #define HAVE_ARMV5TE_EXTERNAL 1
  #define HAVE_ARMV6_EXTERNAL 1
@@ -18,7 +18,7 @@
  #define HAVE_ARMV8_EXTERNAL 0
  #define HAVE_NEON_EXTERNAL 0
  #define HAVE_VFP_EXTERNAL 1
-@@ -139,7 +139,7 @@
+@@ -143,7 +143,7 @@
  #define HAVE_LASX_EXTERNAL 0
  #define HAVE_ARMV5TE_INLINE 1
  #define HAVE_ARMV6_INLINE 1
@@ -27,7 +27,7 @@
  #define HAVE_ARMV8_INLINE 0
  #define HAVE_NEON_INLINE 0
  #define HAVE_VFP_INLINE 1
-@@ -622,7 +622,7 @@
+@@ -635,7 +635,7 @@
  #define CONFIG_OSSFUZZ 0
  #define CONFIG_PIC 1
  #define CONFIG_PTX_COMPRESSION 0

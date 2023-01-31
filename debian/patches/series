@@ -1,4 +1,4 @@
-v104.0.5112.105_rpi_2.53.patch
+v109.0.5414.112_rpi_2.55.patch
 gngen_fixes.diff
 set-rpath-on-chromium-executables.patch
 search-credit.patch
@@ -12,5 +12,3 @@ master-preferences.patch
 0017-disable-browser-sign-in-feature-by-default.patch
 disable-missing-key-warning.patch
 v8_filename.patch
-libaom-armhf-build-cpudetect.patch
-fix-tab-colour.patch

@@ -14,7 +14,7 @@ Author: Chad Miller <chad.miller@canonical.com>
        "type": "SEARCH_ENGINE_DUCKDUCKGO",
 --- a/src/components/search_engines/template_url_prepopulate_data.cc
 +++ b/src/components/search_engines/template_url_prepopulate_data.cc
-@@ -31,6 +31,7 @@ const PrepopulatedEngine* const engines_
+@@ -32,6 +32,7 @@ const PrepopulatedEngine* const engines_
      &google,
      &bing,
      &yahoo,

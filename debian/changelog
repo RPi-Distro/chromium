@@ -1,3 +1,10 @@
+chromium (110.0.5481.77-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright: libpng16 binaries are gone, no longer need to exclude them.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 25 Jan 2023 01:19:49 -0500
+
 chromium (109.0.5414.119-1) unstable; urgency=high
 
   * New upstream security release.

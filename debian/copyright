@@ -152,7 +152,6 @@ Files-Excluded:
  third_party/webrtc/sdk
  third_party/webrtc/data
  third_party/webrtc/examples
- third_party/pdfium/third_party/libpng16
  third_party/pdfium/third_party/libopenjpeg
  third_party/breakpad/breakpad/src/client/mac
  third_party/breakpad/breakpad/src/common/convert_UTF.*

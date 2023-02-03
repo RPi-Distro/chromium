@@ -1,6 +1,5 @@
 debianization/manpage.patch
 debianization/sandbox.patch
-debianization/optimization.patch
 debianization/master-preferences.patch
 debianization/support-i386.patch
 
@@ -31,7 +30,6 @@ system/icu-shim.patch
 system/jpeg.patch
 system/zlib.patch
 system/event.patch
-system/openjpeg.patch
 system/convertutf.patch
 system/clang-format.patch
 system/opus.patch

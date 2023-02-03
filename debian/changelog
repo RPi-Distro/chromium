@@ -11,6 +11,11 @@ chromium (110.0.5481.77-1) UNRELEASED; urgency=high
     - disable/catapult.patch: refresh.
     - disable/google-api-warning.patch: refresh.
     - system/openjpeg.patch: drop, as upstream merged something similar.
+  * Drop unused use_allocator="none" argument. This was used previously
+    to switch from the default "partition" allocator. Upstream dropped
+    the build flag in chromium v109. So in v109 we switched to the default
+    "partition" allocator and I don't think anyone noticed, so let's just
+    leave it on.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 25 Jan 2023 01:19:49 -0500
 

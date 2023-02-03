@@ -2,6 +2,7 @@ chromium (110.0.5481.77-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
   * d/copyright: libpng16 binaries are gone, no longer need to exclude them.
+  * d/scripts/unbundle: drop libjxl, which is dropped upstream. Add absl_log*.
   * d/patches:
     - debianization/optimization.patch: drop. This is unnecessary, as
       optimization flags can already be overridden multiple ways.

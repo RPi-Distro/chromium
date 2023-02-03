@@ -10,13 +10,12 @@ I'm not sure how much of them are actually needed, but it's easier to
 just copy all of them for now. Hopefully this will be fixed upstream
 shortly.
 
-It's not clear how much these files changes, but this copy is from
-chromium-98.0.4758.80.
+This copy is from chromium 110.0.5481.77.
 
 --- /dev/null
 +++ b/content/test/data/web_ui_test.test-mojom
 @@ -0,0 +1,13 @@
-+// Copyright 2020 The Chromium Authors. All rights reserved.
++// Copyright 2020 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -32,7 +31,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/web_ui_test_types.test-mojom
 @@ -0,0 +1,16 @@
-+// Copyright 2020 The Chromium Authors. All rights reserved.
++// Copyright 2020 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -51,7 +50,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/mojo_bindings_web_test.test-mojom
 @@ -0,0 +1,86 @@
-+// Copyright 2018 The Chromium Authors. All rights reserved.
++// Copyright 2018 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -140,7 +139,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/mojo_bindings_web_test_types.test-mojom
 @@ -0,0 +1,25 @@
-+// Copyright 2020 The Chromium Authors. All rights reserved.
++// Copyright 2020 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -168,7 +167,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/lite_js_test.mojom
 @@ -0,0 +1,67 @@
-+// Copyright 2018 The Chromium Authors. All rights reserved.
++// Copyright 2018 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -238,7 +237,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/mojo_web_test_helper_test.mojom
 @@ -0,0 +1,10 @@
-+// Copyright 2014 The Chromium Authors. All rights reserved.
++// Copyright 2014 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -820,7 +819,7 @@ chromium-98.0.4758.80.
 +</html>
 --- /dev/null
 +++ b/content/test/data/cross_site_iframe_factory.html
-@@ -0,0 +1,298 @@
+@@ -0,0 +1,354 @@
 +<html>
 +<!-- This page can create whatever iframe structure you want, across whatever
 +sites you want. This is useful for testing site isolation.
@@ -862,6 +861,8 @@ chromium-98.0.4758.80.
 +  allowpaymentrequest
 +  allow-{featurename} - Adds {featurename} to the "allow" attribute
 +  sandbox-{flagname} - Adds {flagname} to the "sandbox" attribute
++  with-shared-worker - Creates a shared worker in each frame.
++  with-worker - Creates a dedicated worker in each frame.
 +
 +To make this page work, your browsertest needs a MockHostResolver, like:
 +
@@ -1021,6 +1022,32 @@ chromium-98.0.4758.80.
 +}
 +
 +/**
++ * Determines whether or not the frame should create a worker by checking
++ * whether "with-worker" is among the list of attributes.
++ */
++ function shouldCreateWorker(attributes) {
++  for (var attribute of attributes) {
++    if (attribute == "with-worker") {
++      return true;
++    }
++  }
++  return false;
++}
++
++/**
++ * Determines whether or not the frame should create a shared worker by checking
++ * whether "with-shared-worker" is among the list of attributes.
++ */
++ function shouldCreateSharedWorker(attributes) {
++  for (var attribute of attributes) {
++    if (attribute == "with-shared-worker") {
++      return true;
++    }
++  }
++  return false;
++}
++
++/**
 + * Simple recursive layout heuristic, since frames can't size themselves.
 + * This scribbles .layoutX and .layoutY properties into |tree|.
 + */
@@ -1064,6 +1091,16 @@ chromium-98.0.4758.80.
 +  var currentSite = isUrl(frameTree.value)
 +                      ? frameTree.value
 +                      : canonicalizeSiteAndPort(frameTree.value, "");
++  // If the top-level site doesn't match the hostname, the user is
++  // probably making a mistake, e.g. hostname is "a.test" and it's
++  // likely that subframes are incorrectly being left to default to
++  // ".com". In that case we bail out and refuse to create subframes,
++  // which should hopefully cause the test to fail.
++  if (currentSite != window.location.hostname) {
++    console.error(`The first hostname in the query-string does not match the` +
++      ` hostname of the URL: ${currentSite} != ${window.location.hostname}`);
++    return;
++  }
 +
 +  // Render text unless the attribute "no-text-render" is specified, in which
 +  // case load some bytes anyway in order to trigger histogram recording for
@@ -1071,6 +1108,24 @@ chromium-98.0.4758.80.
 +  if (shouldRenderText(frameTree.attributes)) {
 +      document.getElementById('siteNameHeading').appendChild(
 +          document.createTextNode(currentSite));
++  }
++
++  // Create a worker with matching query-string if the "with-worker" attribute
++  // is specified.
++  if (shouldCreateWorker(frameTree.attributes)) {
++    let worker_url = 'workers/empty.js';
++    worker_url += '?' + queryString;
++    console.log(worker_url);
++    self.worker = new Worker(worker_url);
++  }
++
++  // Create a shared worker with matching query-string if the "with-worker" 
++  // attribute is specified.
++  if (shouldCreateSharedWorker(frameTree.attributes)) {
++    let worker_url = 'workers/empty.js';
++    worker_url += '?' + queryString;
++    console.log(worker_url);
++    self.worker = new SharedWorker(worker_url);
 +  }
 +
 +  // Apply style to the current document.
@@ -3947,7 +4002,7 @@ chromium-98.0.4758.80.
 +</html>
 --- /dev/null
 +++ b/content/test/data/font_src_local_matching.html
-@@ -0,0 +1,136 @@
+@@ -0,0 +1,130 @@
 +<meta charset="utf-8">
 +<style id="fontfaces">
 +</style>
@@ -3968,9 +4023,7 @@ chromium-98.0.4758.80.
 +      ["NotoSansBengali-Bold", "0"],
 +      ["NotoSansBengaliUI-Bold", "0"],
 +      ["NotoSansDevanagari-Bold", "0"],
-+      ["NotoSansDevanagari", "0"],
 +      ["NotoSansDevanagariUI-Bold", "0"],
-+      ["NotoSansDevanagariUI", "0"],
 +      ["NotoSansKannada-Bold", "0"],
 +      ["NotoSansKannada", "0"],
 +      ["NotoSansKannadaUI-Bold", "0"],
@@ -3980,13 +4033,9 @@ chromium-98.0.4758.80.
 +      ["NotoSansLaoUI-Bold", "0"],
 +      ["NotoSansLaoUI", "0"],
 +      ["NotoSansMalayalam-Bold", "0"],
-+      ["NotoSansMalayalam", "0"],
 +      ["NotoSansMalayalamUI-Bold", "0"],
-+      ["NotoSansMalayalamUI", "0"],
 +      ["NotoSansTamil-Bold", "0"],
-+      ["NotoSansTamil", "0"],
 +      ["NotoSansTamilUI-Bold", "0"],
-+      ["NotoSansTamilUI", "0"],
 +      ["NotoSansTelugu-Bold", "0"],
 +      ["NotoSansTelugu", "0"],
 +      ["NotoSansTeluguUI-Bold", "0"],
@@ -6365,7 +6414,7 @@ chromium-98.0.4758.80.
 +</style>
 --- /dev/null
 +++ b/content/test/data/scrollable_page_with_anchor.html
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,34 @@
 +<html>
 +  <head>
 +    <meta name="viewport" content="width=device-width, minimum-scale=1.0">
@@ -6376,6 +6425,9 @@ chromium-98.0.4758.80.
 +        });
 +        document.getElementById("focusableElement2").addEventListener('focus', () => {
 +          window.domAutomationController.send('FocusDone2');
++        });
++        document.getElementById("focusableElement3").addEventListener('focus', () => {
++          window.domAutomationController.send('FocusDone3');
 +        });
 +      });
 +    </script>
@@ -6392,6 +6444,8 @@ chromium-98.0.4758.80.
 +      <a href="#" id="focusableElement1">Test1</a>
 +      Some text
 +      <a href="#" id="focusableElement2">Test2</a>
++      Even more
++      <a href="#" id="focusableElement3">Test3</a>
 +    </p>
 +  </body>
 +</html>
@@ -6622,7 +6676,7 @@ chromium-98.0.4758.80.
 +</html>
 --- /dev/null
 +++ b/content/test/data/simple_links.html
-@@ -0,0 +1,71 @@
+@@ -0,0 +1,81 @@
 +<html>
 +
 + <head><title>Simple links</title>
@@ -6656,6 +6710,14 @@ chromium-98.0.4758.80.
 +    return simulateClick(document.getElementById("same_site_new_window_link"));
 +  }
 +
++  function clickSameSiteNewWindowWithNoopenerLink() {
++    return simulateClick(document.getElementById("same_site_new_window_with_noopener_link"));
++  }
++
++  function clickSameSiteNewWindowWithOpenerLink() {
++    return simulateClick(document.getElementById("same_site_new_window_with_opener_link"));
++  }
++
 +  function clickCrossSiteLink() {
 +    return simulateClick(document.getElementById("cross_site_link"));
 +  }
@@ -6685,7 +6747,9 @@ chromium-98.0.4758.80.
 +<a href="title2.html" id="same_site_link">same-site</a><br>
 +<a href="http://foo.com/title2.html" id="cross_site_link">cross-site</a><br>
 +<a href="view-source:about:blank" id="view_source_link">view-source:</a><br>
-+<a href="title2.html" id="same_site_new_window_link" rel="opener" target="_blank">same-site new window</a>
++<a href="title2.html" id="same_site_new_window_link" target="_blank">same-site new window</a>
++<a href="title2.html" id="same_site_new_window_with_noopener_link" rel="noopener" target="_blank">same-site new window with noopener</a>
++<a href="title2.html" id="same_site_new_window_with_opener_link" rel="opener" target="_blank">same-site new window with opener</a>
 +<a href="http://foo.com/title2.html" id="cross_site_new_window_link" rel="opener" target="_blank">cross-site new window</a>
 +<a href="http://foo.com/title2.html" id="cross_site_new_window_no_opener_link" rel="noopener" target="_blank">cross-site new window no opener</a>
 +<a href="" id="linkToSelf" rel="opener" target="_blank">self new window</a>
@@ -7133,7 +7197,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/fetch_event_octet_stream.js
 @@ -0,0 +1,13 @@
-+// Copyright 2018 The Chromium Authors. All rights reserved.
++// Copyright 2018 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7149,7 +7213,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/fetch_event_passthrough.js
 @@ -0,0 +1,5 @@
-+// Copyright 2018 The Chromium Authors. All rights reserved.
++// Copyright 2018 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7157,7 +7221,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/fetch_event_respond_with_fetch.js
 @@ -0,0 +1,5 @@
-+// Copyright 2018 The Chromium Authors. All rights reserved.
++// Copyright 2018 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7165,7 +7229,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/result_queue.js
 @@ -0,0 +1,52 @@
-+// Copyright 2017 The Chromium Authors. All rights reserved.
++// Copyright 2017 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7220,15 +7284,15 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/stale-script.js
 @@ -0,0 +1,5 @@
-+// Copyright 2018 The Chromium Authors. All rights reserved.
++// Copyright 2018 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
 +// nothing to see here.
 --- /dev/null
 +++ b/content/test/data/tree_parser_util.js
-@@ -0,0 +1,222 @@
-+// Copyright 2015 The Chromium Authors. All rights reserved.
+@@ -0,0 +1,223 @@
++// Copyright 2015 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7356,8 +7420,9 @@ chromium-98.0.4758.80.
 +    // cross_site_iframe_factory.html as leaf node locations. Colon is for port
 +    // numbers, which may also be specified. Semicolon and equals are for cookie
 +    // strings, which may sometimes be provided in URL query strings such as for
-+    // the EmbeddedTestServer default handler /set-cookie.
-+    const re = new RegExp('^[a-zA-Z0-9\\/_?&;:.=-]+$');
++    // the EmbeddedTestServer default handler /set-cookie. Percent is for
++    // allowing escaped squences in the URL, like %2F.
++    const re = new RegExp('^[a-zA-Z0-9\\/%_?&;:.=-]+$');
 +    if (!token.match(re))
 +      throw new Error('Expected an identifier, but found "' + token + '".');
 +    return token;
@@ -7453,7 +7518,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/web_ui_dedicated_worker.js
 @@ -0,0 +1,9 @@
-+// Copyright 2021 The Chromium Authors. All rights reserved.
++// Copyright 2021 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7465,7 +7530,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/web_ui_mojo_native.js
 @@ -0,0 +1,14 @@
-+// Copyright 2017 The Chromium Authors. All rights reserved.
++// Copyright 2017 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +'use strict';
@@ -7482,7 +7547,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/web_ui_mojo_test.js
 @@ -0,0 +1,46 @@
-+// Copyright 2020 The Chromium Authors. All rights reserved.
++// Copyright 2020 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7531,7 +7596,7 @@ chromium-98.0.4758.80.
 --- /dev/null
 +++ b/content/test/data/web_ui_shared_worker.js
 @@ -0,0 +1,12 @@
-+// Copyright 2020 The Chromium Authors. All rights reserved.
++// Copyright 2020 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
@@ -7543,3 +7608,440 @@ chromium-98.0.4758.80.
 +    }
 +  };
 +};
+--- /dev/null
++++ b/content/test/data/content-disposition-attachment.html
+@@ -0,0 +1,3 @@
++<html>
++<body><p>A page with `content-Disposition: attachment`</p></body>
++</html>
+--- /dev/null
++++ b/content/test/data/content-sniffer-test5.not-html
+@@ -0,0 +1,5 @@
++<html>
++<head><title>Content Sniffer Test 5</title></head>
++<body>We should not sniff this content as HTML,
++    when read as a file URL.</body>
++</html>
+--- /dev/null
++++ b/content/test/data/cross_site_scroll_into_view_factory.html
+@@ -0,0 +1,293 @@
++<!DOCTYPE html>
++<html class="rootScroller">
++<!-- This file is based on cross_site_iframe_factory.html. See comments in that
++file as well as tree_parser_util.js for more details and syntax information.
++
++This page creates a nested, non-branching, frame tree with each child frame being
++fully outside of its embedder's initial viewport. The inner-most frame will
++create a <input> box, also outside the frame's initial viewport.
++
++See window.Attributes map for supported attributes.
++
++Usage Example:
++
++  cross_site_scroll_into_view_factory
++      .html?siteA{MobileViewport,RTL}(siteB(siteC{TouchActionNone}))
++
++ -->
++<head>
++<title>Cross-site scroll-into-view frame tree factory</title>
++<script>
++  window.Attributes = {
++    // Make's a frame's document "dir=rtl" to support testing right-to-left
++    // writing modes.
++    RTL: 0,
++    // Adds a viewport meta tag to a frame, making it "mobile friendly". This
++    // occurs for subframes as well but only has an effect in the root frame.
++    MobileViewport: 1,
++    // Adds a viewport meta tag to a frame, making it
++    // "mobile friendly" and also limiting minimum-zoom. This occurs for
++    // subframes as well but only has an effect in the root frame.
++    MobileViewportNoZoom: 2,
++    // Adds a `touch-action: none` style to the inner-most
++    // frame's <input> box. No-op in other frames.
++    TouchActionNone: 3,
++    // Uses a <fencedframe> element rather than an <iframe> for the child
++    // frame.
++    FencedFrame: 4,
++    // Puts the <input> box into a root scroller element.
++    RootScroller: 5,
++
++    // Keep this up to date with last enum.
++    MAX_VALUE: 5
++  }
++</script>
++<style>
++  html,body {
++    width: 100%;
++    height: 100%;
++  }
++  html {
++    overflow: hidden;
++  }
++  .rootScroller {
++    overflow: auto;
++  }
++  iframe, fencedframe {
++    position: absolute;
++    /* 4 screens worth of inset, to make sure this is off screen on Android
++     * where minimum scale on load is 0.25 */
++    inset-inline-start: 400%;
++    inset-block-start: 400%;
++    width: 60%;
++    height: 60%;
++  }
++  input {
++    position: absolute;
++    inset-inline-start: 400%;
++    inset-block-start: 400%;
++    width: 50%;
++  }
++  div.rootScroller {
++    position: fixed;
++    left: 0;
++    right: 0;
++    top: 0;
++    bottom: 0;
++    background-color: coral;
++  }
++  .spacer {
++    /* make the document scrollable */
++    position: absolute;
++    inset-inline-start: 0;
++    inset-block-start: 0;
++    width: 1200%;
++    height: 1200%;
++  }
++
++  .touchActionNone {
++    touch-action: none;
++  }
++
++  .layoutViewport {
++    /* Used to let the test measure the size of the layout viewport; needed when
++     * testing desktop page on mobile where ICB size doesn't match layout
++     * viewport size (i.e. the "shrinks viewport contents to fit" setting) */
++    position: fixed;
++    left: 0;
++    top: 0;
++    right: 0;
++    bottom: 0;
++    visibility: hidden;
++  }
++</style>
++</head>
++<body>
++<div class="layoutViewport"></div>
++<h2 id='siteNameHeading'></h2>
++<div class="spacer"></div>
++
++
++<script src='tree_parser_util.js'></script>
++<script>
++
++function backgroundColorForSite(site) {
++  var lightness = 0.75;
++
++  // The site names will be of the form siteA, siteB, etc so map the fifth
++  // character to an index. This could be negative, we don't really care.
++  var index = site.charCodeAt(4) - 'a'.charCodeAt(0);
++
++  // If the first character is 'a', this will the the starting color.
++  var hueOfA = 200;  // Spoiler alert: it's blue.
++
++  // Color palette generation articles suggest that spinning the hue wheel by
++  // the golden ratio yields a magically nice color distribution. Something
++  // about sunflower seeds. I am skeptical of the rigor of that claim (probably
++  // any irrational number at a slight offset from 2/3 would do) but it does
++  // look pretty.
++  var phi = 2 / (1 + Math.pow(5, .5));
++  var hue = Math.round((360 * index * phi + hueOfA) % 360);
++  return 'hsl(' + hue + ', 60%, ' + Math.round(100 * lightness) + '%)';
++}
++
++function isUrl(siteString) {
++  try {
++    var url = new URL(siteString);
++  } catch (e) {
++    if (e instanceof TypeError)
++      return false;
++  }
++  return true;
++}
++
++/**
++ * Extract the specified port number, if any. Returns empty string if not
++ * specified.
++ */
++function sitePortNumber(siteString) {
++  let index = siteString.indexOf(':');
++  if (index == -1)
++    return ""
++  return siteString.substring(index + 1);
++}
++
++/**
++ * Adds ".test" to an argument if it doesn't already have a top level domain.
++ * Converts "siteA" to "a.test" to match test host names defined in test SSL
++ * certificate.  Adds the specified port number, if any, or the default port
++ * otherwise.
++ */
++function canonicalizeSiteAndPort(siteString, defaultPort) {
++  var portNumber = sitePortNumber(siteString) || defaultPort;
++  var hostName = siteString.split(':')[0];
++  if (hostName !== "localhost" && hostName.indexOf('.') == -1)
++    hostName = hostName + '.test';
++
++  if (hostName.startsWith('site'))
++    hostName = hostName.substring('site'.length).toLowerCase();
++
++  return hostName + (portNumber ? ':' + portNumber : "");
++}
++
++function hasAttribute(attribute) {
++  if (!Number.isInteger(attribute) || attribute < 0
++      || attribute > Attributes.MAX_VALUE) {
++    throw new Error("hasAttribute parameter invalid: " + attribute);
++  }
++
++  for (var frame_attribute of frame_attributes) {
++    if (frame_attribute == attribute) {
++      return true;
++    }
++  }
++
++  return false;
++}
++
++function processFrameAttributes(frameTree) {
++  window.frame_attributes = [];
++  for (var attribute of frameTree.attributes) {
++    if (!Attributes.hasOwnProperty(attribute))
++      throw new Error("Invalid specified attribute: " + attribute);
++
++    frame_attributes.push(Attributes[attribute]);
++  }
++}
++
++function main() {
++  var goCrossSite = !window.location.protocol.startsWith('file');
++  var queryString = decodeURIComponent(window.location.search.substring(1));
++  var frameTree = TreeParserUtil.parse(queryString);
++  var currentSite = isUrl(frameTree.value)
++                      ? frameTree.value
++                      : canonicalizeSiteAndPort(frameTree.value, "");
++
++  processFrameAttributes(frameTree);
++
++  if (hasAttribute(Attributes.RTL)) {
++    document.documentElement.setAttribute('dir', 'rtl')
++  }
++
++  if (hasAttribute(Attributes.MobileViewport)) {
++    const meta = document.createElement('meta');
++    meta.setAttribute('name', 'viewport');
++    meta.setAttribute('content', 'width=device-width');
++    document.head.appendChild(meta);
++  }
++
++  if (hasAttribute(Attributes.MobileViewportNoZoom)) {
++    const meta = document.createElement('meta');
++    meta.setAttribute('name', 'viewport');
++    meta.setAttribute('content', 'width=device-width,minimum-scale=1');
++    document.head.appendChild(meta);
++  }
++
++  if (hasAttribute(Attributes.RootScroller)) {
++    const html = document.documentElement;
++    const kMaxOffset = 1000000;
++    html.scrollLeft = kMaxOffset;
++    html.scrollTop = kMaxOffset;
++
++    html.classList.remove('rootScroller');
++
++    const rootScroller = document.createElement('div');
++    rootScroller.classList.add('rootScroller');
++
++    const spacer = document.createElement('div');
++    spacer.classList.add('spacer');
++    spacer.innerText = "Root Scroller";
++    rootScroller.appendChild(spacer);
++
++    document.body.appendChild(rootScroller);
++  }
++
++  document.getElementById('siteNameHeading').appendChild(
++      document.createTextNode(currentSite));
++
++  // Apply style to the current document.
++  document.body.style.backgroundColor = backgroundColorForSite(currentSite);
++
++  if (frameTree.children.length == 0) {
++    let input = document.createElement('input');
++
++    if (hasAttribute(Attributes.TouchActionNone))
++      input.classList.add('touchActionNone');
++
++    if (document.documentElement.classList.contains('rootScroller'))
++      document.body.appendChild(input);
++    else
++      document.querySelector('.rootScroller').appendChild(input);
++
++    return;
++  }
++
++  // ScrollIntoView tests don't need multiple children and we don't support it.
++  console.assert(frameTree.children.length == 1);
++
++  // Compute the URL for this child frame.
++  let url = frameTree.children[0].value;
++  let siteAndPort = url;
++  if (!isUrl(url)) {
++    siteAndPort = canonicalizeSiteAndPort(url, window.location.port);
++    const subtreeString = TreeParserUtil.flatten(frameTree.children[0]);
++    url = '';
++    url += window.location.protocol + '//';              // scheme (preserved)
++    url += goCrossSite ? siteAndPort : window.location.host;    // host and port
++    url += window.location.pathname;                     // path (preserved)
++    url += '?' + encodeURIComponent(subtreeString);      // query
++  }
++
++  // Construct the child frame.
++  var elementType = hasAttribute(Attributes.FencedFrame) ? 'fencedframe' : 'iframe';
++  var frame = document.createElement(elementType);
++  frame.src = url;
++  frame.id = "childframe";
++
++  // Add the child frame to the document.
++  document.body.appendChild(frame);
++}
++
++main();
++</script>
++</body></html>
+--- /dev/null
++++ b/content/test/data/file_input_webkitdirectory.html
+@@ -0,0 +1 @@
++<input type="file" id="fileinput" webkitdirectory />
+--- /dev/null
++++ b/content/test/data/page_with_credentialless_iframe.html
+@@ -0,0 +1,5 @@
++<iframe credentialless
++        src="title1.html"
++        id="test_iframe"
++        name="test_iframe">
++</iframe>
+--- /dev/null
++++ b/content/test/data/page_with_stop_iframe.html
+@@ -0,0 +1,5 @@
++<html>
++<body>
++<iframe src="stop.html"></iframe>
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/stop.html
+@@ -0,0 +1,3 @@
++<html>
++<script>stop();</script>
++</html>
+--- /dev/null
++++ b/content/test/data/web_ui_mojo_ts_test.html
+@@ -0,0 +1,8 @@
++<html>
++<head>
++  <script src="web_ui_mojo_ts_test.js" type="module"></script>
++</head>
++<body>
++  x
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/web_ui_ts_test.test-mojom
+@@ -0,0 +1,13 @@
++// Copyright 2022 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++module content.mojom;
++
++import "content/test/data/web_ui_ts_test_types.test-mojom";
++import "url/mojom/url.mojom";
++
++interface WebUITsMojoTestCache {
++  Put(url.mojom.Url url, string contents);
++  GetAll() => (array<TsCacheItem> items);
++};
+--- /dev/null
++++ b/content/test/data/web_ui_ts_test_types.test-mojom
+@@ -0,0 +1,16 @@
++// Copyright 2022 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++module content.mojom;
++
++import "url/mojom/url.mojom";
++
++// This struct is imported by web_ui_ts_test.test-mojom and is used to provide
++// test coverage of non-shared WebUI mojom JS modules importing other
++// non-shared WebUI mojom JS modules.
++struct TsCacheItem {
++  url.mojom.Url url;
++  string contents;
++};
++
+--- /dev/null
++++ b/content/test/data/web_ui_mojo_ts_test.ts
+@@ -0,0 +1,52 @@
++// Copyright 2022 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++import {WebUITsMojoTestCache} from './web_ui_ts_test.test-mojom-webui.js';
++
++const TEST_DATA: Array<{url: string, contents: string}> = [
++  { url: 'https://google.com/', contents: 'i am in fact feeling lucky' },
++  { url: 'https://youtube.com/', contents: 'probably cat videos?' },
++  { url: 'https://example.com/', contents: 'internets wow' },
++];
++
++async function doTest(): Promise<boolean> {
++  const cache = WebUITsMojoTestCache.getRemote();
++  for (const entry of TEST_DATA) {
++    cache.put({ url: entry.url }, entry.contents);
++  }
++
++  const {items} = await cache.getAll();
++  if (items.length != TEST_DATA.length) {
++    return false;
++  }
++
++  const entries: {[key: string]: string } = {};
++  for (const item of items) {
++    entries[item.url.url] = item.contents;
++  }
++
++  for (const entry of TEST_DATA) {
++    if (!(entry.url in entries)) {
++      return false;
++    }
++    if (entries[entry.url] != entry.contents) {
++      return false;
++    }
++  }
++
++  return true;
++}
++
++type WindowWithDomAutomationController = Window & {
++  domAutomationController: {
++    send: (success: boolean) => void;
++  }
++};
++
++async function runTest() {
++  (window as unknown as WindowWithDomAutomationController)
++      .domAutomationController.send(await doTest());
++}
++
++Object.assign(window, {runTest});

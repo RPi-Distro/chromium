@@ -10,6 +10,8 @@ fixes/widevine-locations.patch
 
 upstream/mojo.patch
 upstream/clamp.patch
+upstream/pwman-const.patch
+upstream/move-stack-to-isolate.patch
 
 disable/tests.patch
 disable/unrar.patch

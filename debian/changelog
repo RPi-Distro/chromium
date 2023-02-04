@@ -19,6 +19,12 @@ chromium (110.0.5481.77-1) UNRELEASED; urgency=high
     "partition" allocator and I don't think anyone noticed, so let's just
     leave it on.
 
+  [ Timothy Pearson ]
+  * d/patches:
+    - Refresh ppc64le patches for v110
+    - Add upstream patches to fix build errors when use_custom_libcxx=false
+    - Drop stack smashing fix patch for ppc64le due to fix included upstream
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 25 Jan 2023 01:19:49 -0500
 
 chromium (109.0.5414.119-1) unstable; urgency=high

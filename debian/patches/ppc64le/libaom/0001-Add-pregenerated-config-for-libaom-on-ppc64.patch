@@ -1,8 +1,7 @@
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm b/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
-new file mode 100644
-index 0000000..fdbc23c
+Index: chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
++++ chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 @@ -0,0 +1,85 @@
 +;
 +; Copyright (c) 2023, Alliance for Open Media. All rights reserved
@@ -89,11 +88,10 @@ index 0000000..fdbc23c
 +HAVE_VSX equ 1
 +HAVE_WXWIDGETS equ 0
 +STATIC_LINK_JXL equ 0
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.c b/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
-new file mode 100644
-index 0000000..f22d720
+Index: chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
++++ chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 @@ -0,0 +1,13 @@
 +/*
 + * Copyright (c) 2016, Alliance for Open Media. All rights reserved
@@ -108,11 +106,10 @@ index 0000000..f22d720
 +#include "aom/aom_codec.h"
 +static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_ENCODER=1 -DCONFIG_LIBYUV=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=1 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_MAX_DECODE_PROFILE=0 -DCONFIG_NORMAL_TILE_MODE=1 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.h b/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
-new file mode 100644
-index 0000000..a8644ad
+Index: chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
++++ chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 @@ -0,0 +1,89 @@
 +/*
 + * Copyright (c) 2023, Alliance for Open Media. All rights reserved
@@ -203,12 +200,11 @@ index 0000000..a8644ad
 +#define INLINE inline
 +#define STATIC_LINK_JXL 0
 +#endif  // AOM_CONFIG_H_
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
-new file mode 100644
-index 0000000..2ed2006
+Index: chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
-@@ -0,0 +1,1580 @@
++++ chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+@@ -0,0 +1,1631 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_DSP_RTCD_H_
 +#define AOM_DSP_RTCD_H_
@@ -635,6 +631,9 @@ index 0000000..2ed2006
 +unsigned int aom_get_mb_ss_c(const int16_t *);
 +#define aom_get_mb_ss aom_get_mb_ss_c
 +
++void aom_get_var_sse_sum_16x16_dual_c(const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr, int ref_stride, uint32_t *sse16x16, unsigned int *tot_sse, int *tot_sum, uint32_t *var16x16);
++#define aom_get_var_sse_sum_16x16_dual aom_get_var_sse_sum_16x16_dual_c
++
 +void aom_get_var_sse_sum_8x8_quad_c(const uint8_t *src_ptr, int source_stride, const uint8_t *ref_ptr, int ref_stride, uint32_t *sse8x8, int *sum8x8, unsigned int *tot_sse, int *tot_sum, uint32_t *var8x8);
 +#define aom_get_var_sse_sum_8x8_quad aom_get_var_sse_sum_8x8_quad_c
 +
@@ -1052,6 +1051,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad128x128_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad128x128_avg aom_sad128x128_avg_c
 +
++void aom_sad128x128x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad128x128x3d aom_sad128x128x3d_c
++
 +void aom_sad128x128x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad128x128x4d aom_sad128x128x4d_c
 +
@@ -1063,6 +1065,9 @@ index 0000000..2ed2006
 +
 +unsigned int aom_sad128x64_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad128x64_avg aom_sad128x64_avg_c
++
++void aom_sad128x64x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad128x64x3d aom_sad128x64x3d_c
 +
 +void aom_sad128x64x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad128x64x4d aom_sad128x64x4d_c
@@ -1079,6 +1084,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad16x16_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad16x16_avg aom_sad16x16_avg_c
 +
++void aom_sad16x16x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad16x16x3d aom_sad16x16x3d_c
++
 +void aom_sad16x16x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad16x16x4d aom_sad16x16x4d_c
 +
@@ -1091,6 +1099,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad16x32_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad16x32_avg aom_sad16x32_avg_c
 +
++void aom_sad16x32x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad16x32x3d aom_sad16x32x3d_c
++
 +void aom_sad16x32x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad16x32x4d aom_sad16x32x4d_c
 +
@@ -1102,6 +1113,9 @@ index 0000000..2ed2006
 +
 +unsigned int aom_sad16x8_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad16x8_avg aom_sad16x8_avg_c
++
++void aom_sad16x8x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad16x8x3d aom_sad16x8x3d_c
 +
 +void aom_sad16x8x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad16x8x4d aom_sad16x8x4d_c
@@ -1118,6 +1132,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad32x16_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad32x16_avg aom_sad32x16_avg_c
 +
++void aom_sad32x16x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad32x16x3d aom_sad32x16x3d_c
++
 +void aom_sad32x16x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad32x16x4d aom_sad32x16x4d_c
 +
@@ -1130,6 +1147,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad32x32_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad32x32_avg aom_sad32x32_avg_c
 +
++void aom_sad32x32x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad32x32x3d aom_sad32x32x3d_c
++
 +void aom_sad32x32x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad32x32x4d aom_sad32x32x4d_c
 +
@@ -1141,6 +1161,9 @@ index 0000000..2ed2006
 +
 +unsigned int aom_sad32x64_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad32x64_avg aom_sad32x64_avg_c
++
++void aom_sad32x64x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad32x64x3d aom_sad32x64x3d_c
 +
 +void aom_sad32x64x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad32x64x4d aom_sad32x64x4d_c
@@ -1157,6 +1180,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad4x4_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad4x4_avg aom_sad4x4_avg_c
 +
++void aom_sad4x4x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad4x4x3d aom_sad4x4x3d_c
++
 +void aom_sad4x4x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad4x4x4d aom_sad4x4x4d_c
 +
@@ -1168,6 +1194,9 @@ index 0000000..2ed2006
 +
 +unsigned int aom_sad4x8_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad4x8_avg aom_sad4x8_avg_c
++
++void aom_sad4x8x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad4x8x3d aom_sad4x8x3d_c
 +
 +void aom_sad4x8x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad4x8x4d aom_sad4x8x4d_c
@@ -1184,6 +1213,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad64x128_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad64x128_avg aom_sad64x128_avg_c
 +
++void aom_sad64x128x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad64x128x3d aom_sad64x128x3d_c
++
 +void aom_sad64x128x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad64x128x4d aom_sad64x128x4d_c
 +
@@ -1196,6 +1228,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad64x32_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad64x32_avg aom_sad64x32_avg_c
 +
++void aom_sad64x32x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad64x32x3d aom_sad64x32x3d_c
++
 +void aom_sad64x32x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad64x32x4d aom_sad64x32x4d_c
 +
@@ -1207,6 +1242,9 @@ index 0000000..2ed2006
 +
 +unsigned int aom_sad64x64_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad64x64_avg aom_sad64x64_avg_c
++
++void aom_sad64x64x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad64x64x3d aom_sad64x64x3d_c
 +
 +void aom_sad64x64x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad64x64x4d aom_sad64x64x4d_c
@@ -1223,6 +1261,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad8x16_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad8x16_avg aom_sad8x16_avg_c
 +
++void aom_sad8x16x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad8x16x3d aom_sad8x16x3d_c
++
 +void aom_sad8x16x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad8x16x4d aom_sad8x16x4d_c
 +
@@ -1235,6 +1276,9 @@ index 0000000..2ed2006
 +unsigned int aom_sad8x4_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad8x4_avg aom_sad8x4_avg_c
 +
++void aom_sad8x4x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad8x4x3d aom_sad8x4x3d_c
++
 +void aom_sad8x4x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad8x4x4d aom_sad8x4x4d_c
 +
@@ -1246,6 +1290,9 @@ index 0000000..2ed2006
 +
 +unsigned int aom_sad8x8_avg_c(const uint8_t *src_ptr, int src_stride, const uint8_t *ref_ptr, int ref_stride, const uint8_t *second_pred);
 +#define aom_sad8x8_avg aom_sad8x8_avg_c
++
++void aom_sad8x8x3d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
++#define aom_sad8x8x3d aom_sad8x8x3d_c
 +
 +void aom_sad8x8x4d_c(const uint8_t *src_ptr, int src_stride, const uint8_t * const ref_ptr[4], int ref_stride, uint32_t sad_array[4]);
 +#define aom_sad8x8x4d aom_sad8x8x4d_c
@@ -1789,11 +1836,10 @@ index 0000000..2ed2006
 +#endif
 +
 +#endif
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
-new file mode 100644
-index 0000000..1da220d
+Index: chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
++++ chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 @@ -0,0 +1,105 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_SCALE_RTCD_H_
@@ -1900,12 +1946,11 @@ index 0000000..1da220d
 +#endif
 +
 +#endif
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
-new file mode 100644
-index 0000000..62a0e70
+Index: chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
-@@ -0,0 +1,491 @@
++++ chromium-110.0.5481.77/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+@@ -0,0 +1,488 @@
 +// This file is generated. Do not edit.
 +#ifndef AV1_RTCD_H_
 +#define AV1_RTCD_H_
@@ -2029,14 +2074,11 @@ index 0000000..62a0e70
 +int64_t av1_calc_frame_error_c(const uint8_t *const ref, int stride, const uint8_t *const dst, int p_width, int p_height, int p_stride);
 +#define av1_calc_frame_error av1_calc_frame_error_c
 +
-+void av1_calc_indices_dim1_c(const int *data, const int *centroids, uint8_t *indices, int n, int k);
++void av1_calc_indices_dim1_c(const int16_t *data, const int16_t *centroids, uint8_t *indices, int64_t *total_dist, int n, int k);
 +#define av1_calc_indices_dim1 av1_calc_indices_dim1_c
 +
-+void av1_calc_indices_dim2_c(const int *data, const int *centroids, uint8_t *indices, int n, int k);
++void av1_calc_indices_dim2_c(const int16_t *data, const int16_t *centroids, uint8_t *indices, int64_t *total_dist, int n, int k);
 +#define av1_calc_indices_dim2 av1_calc_indices_dim2_c
-+
-+double av1_compute_cross_correlation_c(unsigned char *im1, int stride1, int x1, int y1, unsigned char *im2, int stride2, int x2, int y2);
-+#define av1_compute_cross_correlation av1_compute_cross_correlation_c
 +
 +void av1_convolve_2d_scale_c(const uint8_t *src, int src_stride, uint8_t *dst, int dst_stride, int w, int h, const InterpFilterParams *filter_params_x, const InterpFilterParams *filter_params_y, const int subpel_x_qn, const int x_step_qn, const int subpel_y_qn, const int y_step_qn, ConvolveParams *conv_params);
 +#define av1_convolve_2d_scale av1_convolve_2d_scale_c
@@ -2397,4 +2439,3 @@ index 0000000..62a0e70
 +#endif
 +
 +#endif
-

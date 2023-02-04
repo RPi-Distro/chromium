@@ -7,8 +7,10 @@ Subject: [PATCH] third_party/boringssl: Properly detect ppc64le in BUILD.gn
  third_party/boringssl/BUILD.gn | 7 +++++++
  1 file changed, 7 insertions(+)
 
---- a/third_party/boringssl/BUILD.gn
-+++ b/third_party/boringssl/BUILD.gn
+Index: chromium-110.0.5481.77/third_party/boringssl/BUILD.gn
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/boringssl/BUILD.gn
++++ chromium-110.0.5481.77/third_party/boringssl/BUILD.gn
 @@ -101,6 +101,13 @@ if (is_win && !is_msan && current_cpu !=
        } else {
          public_configs = [ ":no_asm_config" ]

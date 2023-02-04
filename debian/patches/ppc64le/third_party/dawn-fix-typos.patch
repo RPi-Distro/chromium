@@ -1,6 +1,7 @@
-Index: b/third_party/dawn/src/dawn/common/Platform.h
---- a/third_party/dawn/src/dawn/common/Platform.h
-+++ b/third_party/dawn/src/dawn/common/Platform.h
+Index: chromium-110.0.5481.77/third_party/dawn/src/dawn/common/Platform.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/dawn/src/dawn/common/Platform.h
++++ chromium-110.0.5481.77/third_party/dawn/src/dawn/common/Platform.h
 @@ -135,9 +135,9 @@
  #define DAWN_PLATFORM_IS_MIPS64 1
  #endif
@@ -13,9 +14,10 @@ Index: b/third_party/dawn/src/dawn/common/Platform.h
  #define DAWN_PLATFORM_IS_S390X 1
  
  #elif defined(__PPC__)
-Index: b/third_party/dawn/src/dawn/common/Assert.cpp
---- a/third_party/dawn/src/dawn/common/Assert.cpp
-+++ b/third_party/dawn/src/dawn/common/Assert.cpp
+Index: chromium-110.0.5481.77/third_party/dawn/src/dawn/common/Assert.cpp
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/dawn/src/dawn/common/Assert.cpp
++++ chromium-110.0.5481.77/third_party/dawn/src/dawn/common/Assert.cpp
 @@ -33,9 +33,9 @@ void BreakPoint() {
      __asm__ __volatile__("ebreak");
  #elif DAWN_PLATFORM_IS(MIPS)

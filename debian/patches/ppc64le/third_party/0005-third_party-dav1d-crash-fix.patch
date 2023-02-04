@@ -1,6 +1,7 @@
-Index: b/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
---- a/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
-+++ b/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
+Index: chromium-110.0.5481.77/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
++++ chromium-110.0.5481.77/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
 @@ -89,7 +89,15 @@ static inline void copy4xN(uint16_t *tmp
      vec_st(l0, 0, tmp + (h + 0) * 8);
      vec_st(l1, 0, tmp + (h + 1) * 8);
@@ -47,9 +48,10 @@ Index: b/third_party/dav1d/libdav1d/src/ppc/cdef_init_tmpl.c
      uint16_t *tmp = tmp_buf + 2 * tmp_stride + 2; \
      filter_##w##xN(dst, dst_stride, left, top, bottom, w, h, pri_strength, \
                     sec_strength, dir, damping, edges, tmp_stride, tmp); \
-Index: b/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
---- a/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
-+++ b/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
+Index: chromium-110.0.5481.77/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
++++ chromium-110.0.5481.77/third_party/dav1d/libdav1d/src/ppc/looprestoration_init_tmpl.c
 @@ -52,12 +52,12 @@ static void wiener_filter_h_vsx(int32_t
                                  const int16_t filterh[8],
                                  const int w, const int h)

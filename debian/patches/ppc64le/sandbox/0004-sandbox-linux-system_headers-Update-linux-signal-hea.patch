@@ -8,8 +8,10 @@ Subject: [PATCH 4/4] sandbox/linux/system_headers: Update linux signal header
  sandbox/linux/system_headers/linux_signal.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sandbox/linux/system_headers/linux_signal.h
-+++ b/sandbox/linux/system_headers/linux_signal.h
+Index: chromium-110.0.5481.77/sandbox/linux/system_headers/linux_signal.h
+===================================================================
+--- chromium-110.0.5481.77.orig/sandbox/linux/system_headers/linux_signal.h
++++ chromium-110.0.5481.77/sandbox/linux/system_headers/linux_signal.h
 @@ -13,7 +13,7 @@
  // (not undefined, but defined different values and in different memory
  // layouts). So, fill the gap here.

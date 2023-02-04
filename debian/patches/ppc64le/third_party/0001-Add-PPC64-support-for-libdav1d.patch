@@ -9,8 +9,10 @@ Subject: [PATCH] Add PPC64 support for libdav1d
  third_party/dav1d/generate_source.py  |  2 ++
  3 files changed, 25 insertions(+), 26 deletions(-)
 
---- a/third_party/dav1d/generate_configs.py
-+++ b/third_party/dav1d/generate_configs.py
+Index: chromium-110.0.5481.77/third_party/dav1d/generate_configs.py
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/dav1d/generate_configs.py
++++ chromium-110.0.5481.77/third_party/dav1d/generate_configs.py
 @@ -21,7 +21,7 @@ CHROMIUM_ROOT_DIR = os.path.abspath(os.p
  sys.path.append(os.path.join(CHROMIUM_ROOT_DIR, 'build'))
  import gn_helpers

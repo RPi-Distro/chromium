@@ -40,15 +40,19 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  util/misc/capture_context_test_util_linux.cc  |   6 +
  36 files changed, 932 insertions(+), 12 deletions(-)
 
---- a/third_party/crashpad/crashpad/CONTRIBUTORS
-+++ b/third_party/crashpad/crashpad/CONTRIBUTORS
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/CONTRIBUTORS
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/CONTRIBUTORS
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/CONTRIBUTORS
 @@ -13,3 +13,4 @@ Mark Mentovai <mark@chromium.org>
  Robert Sesek <rsesek@chromium.org>
  Scott Graham <scottmg@chromium.org>
  Joshua Peraza <jperaza@chromium.org>
 +Shawn Anastasio <shawn@anastas.io>
---- a/third_party/crashpad/crashpad/minidump/minidump_context.h
-+++ b/third_party/crashpad/crashpad/minidump/minidump_context.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/minidump/minidump_context.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context.h
 @@ -637,6 +637,70 @@ struct MinidumpContextMIPS64 {
    uint64_t fir;
  };
@@ -120,8 +124,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  }  // namespace crashpad
  
  #endif  // CRASHPAD_MINIDUMP_MINIDUMP_CONTEXT_H_
---- a/third_party/crashpad/crashpad/minidump/minidump_context_writer.cc
-+++ b/third_party/crashpad/crashpad/minidump/minidump_context_writer.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context_writer.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/minidump/minidump_context_writer.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context_writer.cc
 @@ -102,6 +102,13 @@ MinidumpContextWriter::CreateFromSnapsho
        break;
      }
@@ -185,8 +191,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
 +}
  
  }  // namespace crashpad
---- a/third_party/crashpad/crashpad/minidump/minidump_context_writer.h
-+++ b/third_party/crashpad/crashpad/minidump/minidump_context_writer.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context_writer.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/minidump/minidump_context_writer.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context_writer.h
 @@ -369,6 +369,49 @@ class MinidumpContextMIPS64Writer final
    MinidumpContextMIPS64 context_;
  };
@@ -237,8 +245,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  }  // namespace crashpad
  
  #endif  // CRASHPAD_MINIDUMP_MINIDUMP_CONTEXT_WRITER_H_
---- a/third_party/crashpad/crashpad/minidump/minidump_context_writer_test.cc
-+++ b/third_party/crashpad/crashpad/minidump/minidump_context_writer_test.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context_writer_test.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/minidump/minidump_context_writer_test.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_context_writer_test.cc
 @@ -268,6 +268,21 @@ TYPED_TEST(MinidumpContextWriter, MIPS64
                     TypeParam>(context, ExpectMinidumpContextMIPS64, kSeed);
  }
@@ -261,8 +271,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  }  // namespace
  }  // namespace test
  }  // namespace crashpad
---- a/third_party/crashpad/crashpad/minidump/minidump_misc_info_writer.cc
-+++ b/third_party/crashpad/crashpad/minidump/minidump_misc_info_writer.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_misc_info_writer.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/minidump/minidump_misc_info_writer.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/minidump_misc_info_writer.cc
 @@ -175,6 +175,8 @@ std::string MinidumpMiscInfoDebugBuildSt
    static constexpr char kCPU[] = "mips";
  #elif defined(ARCH_CPU_MIPS64EL)
@@ -272,8 +284,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error define kCPU for this CPU
  #endif
---- a/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.cc
-+++ b/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.cc
 @@ -272,6 +272,40 @@ void InitializeMinidumpContextMIPS64(Min
    context->dsp_control = value++;
  }
@@ -354,8 +368,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
 +
  }  // namespace test
  }  // namespace crashpad
---- a/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.h
-+++ b/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/minidump/test/minidump_context_test_util.h
 @@ -85,6 +85,9 @@ void ExpectMinidumpContextMIPS(uint32_t
  void ExpectMinidumpContextMIPS64(uint32_t expect_seed,
                                   const MinidumpContextMIPS64* observed,
@@ -366,8 +382,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  //! \}
  
  }  // namespace test
---- a/third_party/crashpad/crashpad/snapshot/capture_memory.cc
-+++ b/third_party/crashpad/crashpad/snapshot/capture_memory.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/capture_memory.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/capture_memory.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/capture_memory.cc
 @@ -117,6 +117,11 @@ void CaptureMemory::PointedToByContext(c
    for (size_t i = 0; i < std::size(context.mipsel->regs); ++i) {
      MaybeCaptureMemoryAround(delegate, context.mipsel->regs[i]);
@@ -380,8 +398,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif
---- a/third_party/crashpad/crashpad/snapshot/cpu_architecture.h
-+++ b/third_party/crashpad/crashpad/snapshot/cpu_architecture.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/cpu_architecture.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/cpu_architecture.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/cpu_architecture.h
 @@ -43,7 +43,10 @@ enum CPUArchitecture {
    kCPUArchitectureMIPSEL,
  
@@ -394,8 +414,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  };
  
  }  // namespace crashpad
---- a/third_party/crashpad/crashpad/snapshot/cpu_context.cc
-+++ b/third_party/crashpad/crashpad/snapshot/cpu_context.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/cpu_context.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/cpu_context.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/cpu_context.cc
 @@ -170,6 +170,8 @@ uint64_t CPUContext::InstructionPointer(
        return arm->pc;
      case kCPUArchitectureARM64:
@@ -422,8 +444,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
        return true;
      case kCPUArchitectureX86:
      case kCPUArchitectureARM:
---- a/third_party/crashpad/crashpad/snapshot/cpu_context.h
-+++ b/third_party/crashpad/crashpad/snapshot/cpu_context.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/cpu_context.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/cpu_context.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/cpu_context.h
 @@ -362,6 +362,24 @@ struct CPUContextMIPS64 {
    uint64_t fir;
  };
@@ -457,8 +481,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
    };
  };
  
---- a/third_party/crashpad/crashpad/snapshot/linux/cpu_context_linux.h
-+++ b/third_party/crashpad/crashpad/snapshot/linux/cpu_context_linux.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/cpu_context_linux.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/cpu_context_linux.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/cpu_context_linux.h
 @@ -15,6 +15,7 @@
  #ifndef CRASHPAD_SNAPSHOT_LINUX_CPU_CONTEXT_LINUX_H_
  #define CRASHPAD_SNAPSHOT_LINUX_CPU_CONTEXT_LINUX_H_
@@ -546,8 +572,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  }  // namespace internal
  }  // namespace crashpad
  
---- a/third_party/crashpad/crashpad/snapshot/linux/debug_rendezvous_test.cc
-+++ b/third_party/crashpad/crashpad/snapshot/linux/debug_rendezvous_test.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/debug_rendezvous_test.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/debug_rendezvous_test.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/debug_rendezvous_test.cc
 @@ -195,12 +195,15 @@ void TestAgainstTarget(PtraceConnection*
                device == 0 && inode == 0 && mapping_name == "[vdso]";
  #if defined(ARCH_CPU_X86)
@@ -565,8 +593,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
          },
          module_mapping->name,
          module_mapping->device,
---- a/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.cc
-+++ b/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.cc
 @@ -325,6 +325,69 @@ bool ExceptionSnapshotLinux::ReadContext
        reader, context_address, context_.mips64);
  }
@@ -637,8 +667,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #endif  // ARCH_CPU_X86_FAMILY
  
  bool ExceptionSnapshotLinux::Initialize(
---- a/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.h
-+++ b/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux.h
 @@ -89,6 +89,8 @@ class ExceptionSnapshotLinux final : pub
  #elif defined(ARCH_CPU_MIPS_FAMILY)
      CPUContextMIPS mipsel;
@@ -648,8 +680,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #endif
    } context_union_;
    CPUContext context_;
---- a/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux_test.cc
-+++ b/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux_test.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux_test.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux_test.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/exception_snapshot_linux_test.cc
 @@ -297,7 +297,28 @@ void ExpectContext(const CPUContext& act
              0);
  #undef CPU_ARCH_NAME
@@ -679,8 +713,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif
---- a/third_party/crashpad/crashpad/snapshot/linux/process_reader_linux.cc
-+++ b/third_party/crashpad/crashpad/snapshot/linux/process_reader_linux.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/process_reader_linux.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/process_reader_linux.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/process_reader_linux.cc
 @@ -127,6 +127,8 @@ void ProcessReaderLinux::Thread::Initial
  #elif defined(ARCH_CPU_MIPS_FAMILY)
    stack_pointer = reader->Is64Bit() ? thread_info.thread_context.t64.regs[29]
@@ -690,8 +726,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif
---- a/third_party/crashpad/crashpad/snapshot/linux/signal_context.h
-+++ b/third_party/crashpad/crashpad/snapshot/linux/signal_context.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/signal_context.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/signal_context.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/signal_context.h
 @@ -422,6 +422,89 @@ static_assert(offsetof(UContext<ContextT
                "context offset mismatch");
  #endif
@@ -782,8 +820,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif  // ARCH_CPU_X86_FAMILY
---- a/third_party/crashpad/crashpad/snapshot/linux/system_snapshot_linux.cc
-+++ b/third_party/crashpad/crashpad/snapshot/linux/system_snapshot_linux.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/system_snapshot_linux.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/system_snapshot_linux.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/system_snapshot_linux.cc
 @@ -205,6 +205,8 @@ CPUArchitecture SystemSnapshotLinux::Get
  #elif defined(ARCH_CPU_MIPS_FAMILY)
    return process_reader_->Is64Bit() ? kCPUArchitectureMIPS64EL
@@ -823,8 +863,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif  // ARCH_CPU_X86_FAMILY
---- a/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.cc
-+++ b/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.cc
 @@ -190,6 +190,14 @@ bool ThreadSnapshotLinux::Initialize(
          thread.thread_info.float_context.f32,
          context_.mipsel);
@@ -840,8 +882,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif
---- a/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.h
-+++ b/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/linux/thread_snapshot_linux.h
 @@ -74,6 +74,8 @@ class ThreadSnapshotLinux final : public
  #elif defined(ARCH_CPU_MIPS_FAMILY)
      CPUContextMIPS mipsel;
@@ -851,8 +895,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif  // ARCH_CPU_X86_FAMILY
---- a/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.cc
-+++ b/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.cc
 @@ -295,5 +295,38 @@ void InitializeCPUContextMIPS64(CPUConte
    mips64->dsp_control = value++;
  }
@@ -892,8 +938,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
 +
  }  // namespace test
  }  // namespace crashpad
---- a/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.h
-+++ b/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/snapshot/test/test_cpu_context.h
 @@ -63,6 +63,7 @@ void InitializeCPUContextARM(CPUContext*
  void InitializeCPUContextARM64(CPUContext* context, uint32_t seed);
  void InitializeCPUContextMIPS(CPUContext* context, uint32_t seed);
@@ -902,8 +950,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  //! \}
  
  }  // namespace test
---- a/third_party/crashpad/crashpad/test/linux/get_tls.cc
-+++ b/third_party/crashpad/crashpad/test/linux/get_tls.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/test/linux/get_tls.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/test/linux/get_tls.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/test/linux/get_tls.cc
 @@ -49,6 +49,8 @@ LinuxVMAddress GetTLS() {
        : "=r"(tls)
        :
@@ -913,8 +963,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  #else
  #error Port.
  #endif  // ARCH_CPU_ARMEL
---- a/third_party/crashpad/crashpad/test/multiprocess_posix.cc
-+++ b/third_party/crashpad/crashpad/test/multiprocess_posix.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/test/multiprocess_posix.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/test/multiprocess_posix.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/test/multiprocess_posix.cc
 @@ -162,7 +162,8 @@ void Multiprocess::SetExpectedChildTermi
  }
  
@@ -925,8 +977,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
    SetExpectedChildTermination(kTerminationSignal, SIGTRAP);
  #else
    SetExpectedChildTermination(kTerminationSignal, SIGILL);
---- a/third_party/crashpad/crashpad/util/linux/auxiliary_vector.cc
-+++ b/third_party/crashpad/crashpad/util/linux/auxiliary_vector.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/linux/auxiliary_vector.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/linux/auxiliary_vector.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/linux/auxiliary_vector.cc
 @@ -56,6 +56,11 @@ bool AuxiliaryVector::Read(PtraceConnect
      if (type == AT_IGNORE) {
        continue;
@@ -939,8 +993,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
      if (!MapInsertOrReplace(&values_, type, value, nullptr)) {
        LOG(ERROR) << "duplicate auxv entry";
        return false;
---- a/third_party/crashpad/crashpad/util/linux/ptracer.cc
-+++ b/third_party/crashpad/crashpad/util/linux/ptracer.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/linux/ptracer.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/linux/ptracer.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/linux/ptracer.cc
 @@ -398,6 +398,64 @@ bool GetThreadArea64(pid_t tid,
    return true;
  }
@@ -1016,8 +1072,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
             GetThreadArea64(tid,
                             info->thread_context,
                             &info->thread_specific_data_address,
---- a/third_party/crashpad/crashpad/util/linux/thread_info.h
-+++ b/third_party/crashpad/crashpad/util/linux/thread_info.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/linux/thread_info.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/linux/thread_info.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/linux/thread_info.h
 @@ -28,6 +28,10 @@
  #include <android/api-level.h>
  #endif
@@ -1136,8 +1194,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
    //! \brief The thread-local storage address for the thread.
    LinuxVMAddress thread_specific_data_address;
  };
---- a/third_party/crashpad/crashpad/util/misc/capture_context.h
-+++ b/third_party/crashpad/crashpad/util/misc/capture_context.h
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/misc/capture_context.h
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context.h
 @@ -69,6 +69,7 @@ using NativeCPUContext = ucontext_t;
  //!     macOS/Linux/Fuchsia | x86_64       | `%%rdi`
  //!     Linux               | ARM/ARM64    | `r0`/`x0`
@@ -1146,8 +1206,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
  //!
  //!     Additionally, the value `LR` on ARM/ARM64 will be the return address of
  //!     this function.
---- a/third_party/crashpad/crashpad/util/misc/capture_context_linux.S
-+++ b/third_party/crashpad/crashpad/util/misc/capture_context_linux.S
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context_linux.S
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/misc/capture_context_linux.S
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context_linux.S
 @@ -30,7 +30,7 @@
    .globl CAPTURECONTEXT_SYMBOL2
  #if defined(__i386__) || defined(__x86_64__)
@@ -1372,8 +1434,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
 +
 +  blr
  #endif  // __i386__
---- a/third_party/crashpad/crashpad/util/misc/capture_context_test.cc
-+++ b/third_party/crashpad/crashpad/util/misc/capture_context_test.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context_test.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/misc/capture_context_test.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context_test.cc
 @@ -57,7 +57,7 @@ void TestCaptureContext() {
    uintptr_t pc = ProgramCounterFromContext(context_1);
  
@@ -1383,8 +1447,10 @@ This patch implements support for the PPC64 architecture on Linux hosts.
    // Sanitizers can cause enough code bloat that the “nearby” check would
    // likely fail.
    const uintptr_t kReferencePC =
---- a/third_party/crashpad/crashpad/util/misc/capture_context_test_util_linux.cc
-+++ b/third_party/crashpad/crashpad/util/misc/capture_context_test_util_linux.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context_test_util_linux.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/misc/capture_context_test_util_linux.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/misc/capture_context_test_util_linux.cc
 @@ -35,6 +35,8 @@ void SanityCheckContext(const NativeCPUC
    EXPECT_EQ(context.uc_mcontext.regs[0], FromPointerCast<uintptr_t>(&context));
  #elif defined(ARCH_CPU_MIPS_FAMILY)

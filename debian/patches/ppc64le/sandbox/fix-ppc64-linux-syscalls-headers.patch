@@ -1,5 +1,7 @@
---- a/sandbox/linux/system_headers/ppc64_linux_syscalls.h
-+++ b/sandbox/linux/system_headers/ppc64_linux_syscalls.h
+Index: chromium-110.0.5481.77/sandbox/linux/system_headers/ppc64_linux_syscalls.h
+===================================================================
+--- chromium-110.0.5481.77.orig/sandbox/linux/system_headers/ppc64_linux_syscalls.h
++++ chromium-110.0.5481.77/sandbox/linux/system_headers/ppc64_linux_syscalls.h
 @@ -8,5 +8,18 @@
  #include <asm/unistd.h>
  

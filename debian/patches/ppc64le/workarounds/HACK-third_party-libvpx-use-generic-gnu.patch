@@ -1,5 +1,7 @@
---- a/third_party/libvpx/generate_gni.sh
-+++ b/third_party/libvpx/generate_gni.sh
+Index: chromium-110.0.5481.77/third_party/libvpx/generate_gni.sh
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/libvpx/generate_gni.sh
++++ chromium-110.0.5481.77/third_party/libvpx/generate_gni.sh
 @@ -405,7 +405,7 @@ gen_config_files linux/mipsel "--target=
  gen_config_files linux/mips64el "--target=mips64-linux-gcc ${all_platforms}"
  gen_config_files linux/loongarch \
@@ -9,10 +11,12 @@
  gen_config_files linux/generic "--target=generic-gnu $HIGHBD ${all_platforms}"
  gen_config_files win/arm64 \
    "--target=arm64-win64-vs15 ${all_platforms} ${HIGHBD}"
---- a/third_party/libvpx/source/libvpx/build/make/rtcd.pl
-+++ b/third_party/libvpx/source/libvpx/build/make/rtcd.pl
-@@ -491,8 +491,9 @@ if ($opts{arch} eq 'x86') {
-   &require("neon");
+Index: chromium-110.0.5481.77/third_party/libvpx/source/libvpx/build/make/rtcd.pl
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/libvpx/source/libvpx/build/make/rtcd.pl
++++ chromium-110.0.5481.77/third_party/libvpx/source/libvpx/build/make/rtcd.pl
+@@ -492,8 +492,9 @@ if ($opts{arch} eq 'x86') {
+   &require(@REQUIRES);
    arm;
  } elsif ($opts{arch} =~ /^ppc/ ) {
 -  @ALL_ARCHS = filter(qw/vsx/);
@@ -23,8 +27,10 @@
  } elsif ($opts{arch} =~ /loongarch/ ) {
    @ALL_ARCHS = filter(qw/lsx lasx/);
    loongarch;
---- a/third_party/libvpx/BUILD.gn
-+++ b/third_party/libvpx/BUILD.gn
+Index: chromium-110.0.5481.77/third_party/libvpx/BUILD.gn
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/libvpx/BUILD.gn
++++ chromium-110.0.5481.77/third_party/libvpx/BUILD.gn
 @@ -90,6 +90,14 @@ config("libvpx_config") {
        "-Wno-sign-compare",
      ]

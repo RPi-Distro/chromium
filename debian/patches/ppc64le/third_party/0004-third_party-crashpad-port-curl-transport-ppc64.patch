@@ -1,6 +1,7 @@
-Index: b/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
---- a/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
-+++ b/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
+Index: chromium-110.0.5481.77/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
++++ chromium-110.0.5481.77/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
 @@ -237,6 +237,12 @@ std::string UserAgent() {
  #elif defined(ARCH_CPU_BIG_ENDIAN)
      static constexpr char arch[] = "aarch64_be";

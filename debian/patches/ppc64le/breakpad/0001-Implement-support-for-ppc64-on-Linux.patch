@@ -54,24 +54,28 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  src/tools/linux/md2core/minidump-2-core.cc    | 45 +++++++++++++++
  25 files changed, 281 insertions(+), 35 deletions(-)
 
---- a/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/raw_context_cpu.h
-+++ b/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/raw_context_cpu.h
-@@ -44,6 +44,8 @@ typedef MDRawContextARM RawContextCPU;
- typedef MDRawContextARM64_Old RawContextCPU;
- #elif defined(__mips__)
- typedef MDRawContextMIPS RawContextCPU;
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/raw_context_cpu.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/raw_context_cpu.h
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/raw_context_cpu.h
+@@ -51,6 +51,8 @@ typedef MDRawContextRISCV64 RawContextCP
+ # else
+ #  error "Unexpected __riscv_xlen"
+ # endif
 +#elif defined(__powerpc64__)
 +typedef MDRawContextPPC64 RawContextCPU;
  #else
  #error "This code has not been ported to your platform yet."
  #endif
---- a/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.cc
-@@ -270,7 +270,42 @@ void ThreadInfo::FillCPUContext(RawConte
-   out->float_save.fir = mcontext.fpc_eir;
- #endif
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.cc
+@@ -336,7 +336,42 @@ void ThreadInfo::FillCPUContext(RawConte
+ #  error "Unexpected __riscv_flen"
+ # endif
  }
--#endif  // __mips__
+-#endif  // __riscv
 +
 +#elif defined(__powerpc64__)
 +
@@ -111,10 +115,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  
  void ThreadInfo::GetGeneralPurposeRegisters(void** gp_regs, size_t* size) {
    assert(gp_regs || size);
-@@ -279,6 +314,11 @@ void ThreadInfo::GetGeneralPurposeRegist
-     *gp_regs = mcontext.gregs;
+@@ -350,6 +385,11 @@ void ThreadInfo::GetGeneralPurposeRegist
+     *gp_regs = mcontext.__gregs;
    if (size)
-     *size = sizeof(mcontext.gregs);
+     *size = sizeof(mcontext.__gregs);
 +#elif defined(__powerpc64__)
 +  if (gp_regs)
 +    *gp_regs = mcontext.gp_regs;
@@ -123,10 +127,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #else
    if (gp_regs)
      *gp_regs = &regs;
-@@ -294,6 +334,11 @@ void ThreadInfo::GetFloatingPointRegiste
-     *fp_regs = &mcontext.fpregs;
-   if (size)
-     *size = sizeof(mcontext.fpregs);
+@@ -384,6 +424,11 @@ void ThreadInfo::GetFloatingPointRegiste
+ # else
+ #  error "Unexpected __riscv_flen"
+ # endif
 +#elif defined(__powerpc64__)
 +  if (fp_regs)
 +    *fp_regs = &mcontext.fp_regs;
@@ -135,7 +139,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #else
    if (fp_regs)
      *fp_regs = &fpregs;
-@@ -302,4 +347,13 @@ void ThreadInfo::GetFloatingPointRegiste
+@@ -392,4 +437,13 @@ void ThreadInfo::GetFloatingPointRegiste
  #endif
  }
  
@@ -149,9 +153,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
 +#endif
 +
  }  // namespace google_breakpad
---- a/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.h
-+++ b/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.h
-@@ -68,6 +68,10 @@ struct ThreadInfo {
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.h
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/thread_info.h
+@@ -67,6 +67,10 @@ struct ThreadInfo {
    // Use the structures defined in <sys/user.h>
    struct user_regs_struct regs;
    struct user_fpsimd_struct fpregs;
@@ -159,10 +165,10 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
 +  // Use the structures defined in <sys/ucontext.h>.
 +  mcontext_t mcontext;
 +  struct _libc_vrstate vregs;
- #elif defined(__mips__)
+ #elif defined(__mips__) || defined(__riscv)
    // Use the structure defined in <sys/ucontext.h>.
    mcontext_t mcontext;
-@@ -84,6 +88,11 @@ struct ThreadInfo {
+@@ -83,6 +87,11 @@ struct ThreadInfo {
  
    // Returns the pointer and size of float point register area.
    void GetFloatingPointRegisters(void** fp_regs, size_t* size);
@@ -174,11 +180,13 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  };
  
  }  // namespace google_breakpad
---- a/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc
-@@ -254,6 +254,48 @@ void UContextReader::FillCPUContext(RawC
-   out->float_save.fir = uc->uc_mcontext.fpc_eir;  // Unused.
- #endif
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.cc
+@@ -322,6 +322,48 @@ void UContextReader::FillCPUContext(RawC
+   out->float_save.fpcsr = uc->uc_mcontext.__fpregs.__q.__fcsr;
+ # endif
  }
 +
 +#elif defined(__powerpc64__)
@@ -225,9 +233,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #endif
  
  }  // namespace google_breakpad
---- a/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h
-+++ b/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h
-@@ -55,6 +55,9 @@ struct UContextReader {
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/dump_writer_common/ucontext_reader.h
+@@ -54,6 +54,9 @@ struct UContextReader {
  #elif defined(__aarch64__)
    static void FillCPUContext(RawContextCPU* out, const ucontext_t* uc,
                               const struct fpsimd_context* fpregs);
@@ -237,9 +247,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #else
    static void FillCPUContext(RawContextCPU* out, const ucontext_t* uc);
  #endif
---- a/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc
-@@ -461,9 +461,16 @@ bool ExceptionHandler::HandleSignal(int
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.cc
+@@ -460,6 +460,13 @@ bool ExceptionHandler::HandleSignal(int
      memcpy(&g_crash_context_.float_state, fp_ptr,
             sizeof(g_crash_context_.float_state));
    }
@@ -251,20 +263,15 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
 +           sizeof(g_crash_context_.vector_state));
 +  }
  #elif GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE
-   // FP state is not part of user ABI on ARM Linux.
--  // In case of MIPS Linux FP state is already part of ucontext_t
-+  // In case of MIPS, Linux FP state is already part of ucontext_t
-   // and 'float_state' is not a member of CrashContext.
    ucontext_t* uc_ptr = (ucontext_t*)uc;
    if (uc_ptr->uc_mcontext.fpregs) {
-@@ -701,11 +708,19 @@ bool ExceptionHandler::WriteMinidump() {
+@@ -697,10 +704,18 @@ bool ExceptionHandler::WriteMinidump() {
    }
  #endif
-
+ 
 -#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE && !defined(__aarch64__)
 +#if GOOGLE_BREAKPAD_CRASH_CONTEXT_HAS_FLOAT_STATE && !defined(__aarch64__) \
 +    && !defined(__powerpc64__)
-   // FPU state is not part of ARM EABI ucontext_t.
    memcpy(&context.float_state, context.context.uc_mcontext.fpregs,
           sizeof(context.float_state));
  #endif
@@ -278,19 +285,21 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    context.tid = sys_gettid();
  
    // Add an exception stream to the minidump for better reporting.
-@@ -726,6 +741,9 @@ bool ExceptionHandler::WriteMinidump() {
+@@ -721,6 +736,9 @@ bool ExceptionHandler::WriteMinidump() {
  #elif defined(__mips__)
    context.siginfo.si_addr =
        reinterpret_cast<void*>(context.context.uc_mcontext.pc);
 +#elif defined(__powerpc64__)
 +  context.siginfo.si_addr =
 +      reinterpret_cast<void*>(context.context.uc_mcontext.gp_regs[PT_NIP]);
- #else
- #error "This code has not been ported to your platform yet."
- #endif
---- a/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h
-+++ b/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h
-@@ -192,7 +192,11 @@ class ExceptionHandler {
+ #elif defined(__riscv)
+   context.siginfo.si_addr =
+       reinterpret_cast<void*>(context.context.uc_mcontext.__gregs[REG_PC]);
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler.h
+@@ -200,7 +200,11 @@ class ExceptionHandler {
      siginfo_t siginfo;
      pid_t tid;  // the crashing thread.
      ucontext_t context;
@@ -303,9 +312,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
      fpstate_t float_state;
  #endif
    };
---- a/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler_unittest.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler_unittest.cc
-@@ -317,7 +317,7 @@
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler_unittest.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler_unittest.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/handler/exception_handler_unittest.cc
+@@ -317,7 +317,7 @@ TEST(ExceptionHandlerTest, ParallelChild
        ASSERT_EQ(SIGSEGV, WTERMSIG(status));
        return;
      } else {
@@ -314,7 +325,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
      }
    }
  
-@@ -559,6 +559,8 @@ const unsigned char kIllegalInstruction[
+@@ -572,6 +572,8 @@ const unsigned char kIllegalInstruction[
  #if defined(__mips__)
    // mfc2 zero,Impl - usually illegal in userspace.
    0x48, 0x00, 0x00, 0x48
@@ -323,7 +334,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #else
    // This crashes with SIGILL on x86/x86-64/arm.
    0xff, 0xff, 0xff, 0xff
-@@ -754,10 +756,10 @@ TEST(ExceptionHandlerTest, InstructionPo
+@@ -767,10 +769,10 @@ TEST(ExceptionHandlerTest, InstructionPo
  
    // These are defined here so the parent can use them to check the
    // data from the minidump afterwards.
@@ -336,9 +347,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    const int kOffset = kMemorySize - sizeof(kIllegalInstruction);
  
    const pid_t child = fork();
---- a/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc
-@@ -138,7 +138,9 @@ class MicrodumpWriter {
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer.cc
+@@ -137,7 +137,9 @@ class MicrodumpWriter {
                    const MicrodumpExtraInfo& microdump_extra_info,
                    LinuxDumper* dumper)
        : ucontext_(context ? &context->context : NULL),
@@ -349,16 +362,16 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
          float_state_(context ? &context->float_state : NULL),
  #endif
          dumper_(dumper),
-@@ -337,6 +339,8 @@ class MicrodumpWriter {
+@@ -344,6 +346,8 @@ class MicrodumpWriter {
  # else
- #  error "This mips ABI is currently not supported (n32)"
- #endif
+ #  error "Unexpected __riscv_xlen"
+ # endif
 +#elif defined(__powerpc64__)
 +    const char kArch[] = "ppc64";
  #else
- #error "This code has not been ported to your platform yet"
+ # error "This code has not been ported to your platform yet"
  #endif
-@@ -409,7 +413,9 @@ class MicrodumpWriter {
+@@ -416,7 +420,9 @@ class MicrodumpWriter {
    void DumpCPUState() {
      RawContextCPU cpu;
      my_memset(&cpu, 0, sizeof(RawContextCPU));
@@ -369,7 +382,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
      UContextReader::FillCPUContext(&cpu, ucontext_, float_state_);
  #else
      UContextReader::FillCPUContext(&cpu, ucontext_);
-@@ -605,7 +611,9 @@ class MicrodumpWriter {
+@@ -612,7 +618,9 @@ class MicrodumpWriter {
    void* Alloc(unsigned bytes) { return dumper_->allocator()->Alloc(bytes); }
  
    const ucontext_t* const ucontext_;
@@ -380,9 +393,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    const google_breakpad::fpstate_t* const float_state_;
  #endif
    LinuxDumper* dumper_;
---- a/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer_unittest.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer_unittest.cc
-@@ -279,10 +279,19 @@ TEST(MicrodumpWriterTest, BasicWithMappi
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer_unittest.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer_unittest.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/microdump_writer/microdump_writer_unittest.cc
+@@ -278,10 +278,19 @@ TEST(MicrodumpWriterTest, BasicWithMappi
    CrashAndGetMicrodump(mappings, MicrodumpExtraInfo(), &buf);
    ASSERT_TRUE(ContainsMicrodump(buf));
  
@@ -405,19 +420,21 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #else
    ASSERT_NE(std::string::npos,
              buf.find("M 00001000 0000002A 00001000 "
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_core_dumper.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_core_dumper.cc
-@@ -112,6 +112,9 @@ bool LinuxCoreDumper::GetThreadInfoByInd
- #elif defined(__mips__)
-   stack_pointer =
-       reinterpret_cast<uint8_t*>(info->mcontext.gregs[MD_CONTEXT_MIPS_REG_SP]);
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_core_dumper.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_core_dumper.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_core_dumper.cc
+@@ -114,6 +114,9 @@ bool LinuxCoreDumper::GetThreadInfoByInd
+ #elif defined(__riscv)
+     stack_pointer = reinterpret_cast<uint8_t*>(
+         info->mcontext.__gregs[MD_CONTEXT_RISCV_REG_SP]);
 +#elif defined(__powerpc64__)
 +  stack_pointer =
 +      reinterpret_cast<uint8_t*>(info->mcontext.gp_regs[MD_CONTEXT_PPC64_REG_SP]);
  #else
- #error "This code hasn't been ported to your platform yet."
+ # error "This code hasn't been ported to your platform yet."
  #endif
-@@ -207,7 +210,10 @@ bool LinuxCoreDumper::EnumerateThreads()
+@@ -209,7 +212,10 @@ bool LinuxCoreDumper::EnumerateThreads()
          memset(&info, 0, sizeof(ThreadInfo));
          info.tgid = status->pr_pgrp;
          info.ppid = status->pr_ppid;
@@ -426,12 +443,14 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
 +        for (int i = 0; i < 31; i++)
 +            info.mcontext.gp_regs[i] = status->pr_reg[i];
 +#elif defined(__mips__)
- #if defined(__ANDROID__)
+ # if defined(__ANDROID__)
          for (int i = EF_R0; i <= EF_R31; i++)
            info.mcontext.gregs[i - EF_R0] = status->pr_reg[i];
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.cc
-@@ -767,7 +767,9 @@ bool LinuxDumper::GetStackInfo(const voi
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.cc
+@@ -766,7 +766,9 @@ bool LinuxDumper::GetStackInfo(const voi
        reinterpret_cast<uint8_t*>(int_stack_pointer & ~(page_size - 1));
  
    // The number of bytes of stack which we try to capture.
@@ -442,32 +461,38 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  
    const MappingInfo* mapping = FindMapping(stack_pointer);
    if (!mapping)
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.h
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.h
-@@ -63,7 +63,8 @@ namespace google_breakpad {
-  (defined(__mips__) && _MIPS_SIM == _ABIO32)
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.h
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper.h
+@@ -64,7 +64,8 @@ namespace google_breakpad {
  typedef Elf32_auxv_t elf_aux_entry;
  #elif defined(__x86_64) || defined(__aarch64__) || \
--     (defined(__mips__) && _MIPS_SIM != _ABIO32)
-+     (defined(__mips__) && _MIPS_SIM != _ABIO32) || \
+      (defined(__mips__) && _MIPS_SIM != _ABIO32) || \
+-     (defined(__riscv) && __riscv_xlen == 64)
++     (defined(__riscv) && __riscv_xlen == 64) || \
 +     defined(__powerpc64__)
  typedef Elf64_auxv_t elf_aux_entry;
  #endif
  
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper_unittest_helper.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper_unittest_helper.cc
-@@ -51,6 +51,8 @@
- #define TID_PTR_REGISTER "rcx"
- #elif defined(__mips__)
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper_unittest_helper.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper_unittest_helper.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_dumper_unittest_helper.cc
+@@ -52,6 +52,8 @@
  #define TID_PTR_REGISTER "$1"
+ #elif defined(__riscv)
+ #define TID_PTR_REGISTER "x4"
 +#elif defined(__powerpc64__)
 +#define TID_PTR_REGISTER "r8"
  #else
  #error This test has not been ported to this platform.
  #endif
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper.cc
-@@ -149,19 +149,27 @@ bool LinuxPtraceDumper::CopyFromProcess(
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper.cc
+@@ -148,19 +148,27 @@ bool LinuxPtraceDumper::CopyFromProcess(
    return true;
  }
  
@@ -499,40 +524,44 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    return true;
  #else
    return false;
-@@ -298,6 +306,9 @@ bool LinuxPtraceDumper::GetThreadInfoByI
- #elif defined(__mips__)
-   stack_pointer =
-       reinterpret_cast<uint8_t*>(info->mcontext.gregs[MD_CONTEXT_MIPS_REG_SP]);
+@@ -300,6 +308,9 @@ bool LinuxPtraceDumper::GetThreadInfoByI
+ #elif defined(__riscv)
+   stack_pointer = reinterpret_cast<uint8_t*>(
+       info->mcontext.__gregs[MD_CONTEXT_RISCV_REG_SP]);
 +#elif defined(__powerpc64__)
 +  stack_pointer =
 +      reinterpret_cast<uint8_t*>(info->mcontext.gp_regs[MD_CONTEXT_PPC64_REG_SP]);
  #else
- #error "This code hasn't been ported to your platform yet."
+ # error "This code hasn't been ported to your platform yet."
  #endif
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper_unittest.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper_unittest.cc
-@@ -464,6 +464,9 @@ TEST(LinuxPtraceDumperTest, VerifyStackR
- #elif defined(__mips__)
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper_unittest.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper_unittest.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/linux_ptrace_dumper_unittest.cc
+@@ -466,6 +466,9 @@ TEST(LinuxPtraceDumperTest, VerifyStackR
+ #elif defined(__riscv)
      pid_t* process_tid_location =
-         reinterpret_cast<pid_t*>(one_thread.mcontext.gregs[1]);
+         reinterpret_cast<pid_t*>(one_thread.mcontext.__gregs[4]);
 +#elif defined(__powerpc64__)
 +    pid_t* process_tid_location =
 +        reinterpret_cast<pid_t*>(one_thread.mcontext.gp_regs[8]);
  #else
  #error This test has not been ported to this platform.
  #endif
-@@ -561,6 +564,8 @@ TEST_F(LinuxPtraceDumperTest, SanitizeSt
-   uintptr_t heap_addr = thread_info.regs.rcx;
- #elif defined(__mips__)
+@@ -565,6 +568,8 @@ TEST_F(LinuxPtraceDumperTest, SanitizeSt
    uintptr_t heap_addr = thread_info.mcontext.gregs[1];
+ #elif defined(__riscv)
+   uintptr_t heap_addr = thread_info.mcontext.__gregs[4];
 +#elif defined(__powerpc64__)
 +  uintptr_t heap_addr = thread_info.mcontext.gp_regs[8];
  #else
  #error This test has not been ported to this platform.
  #endif
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc
-@@ -141,7 +141,9 @@ class MinidumpWriter {
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.cc
+@@ -140,7 +140,9 @@ class MinidumpWriter {
        : fd_(minidump_fd),
          path_(minidump_path),
          ucontext_(context ? &context->context : NULL),
@@ -543,7 +572,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
          float_state_(context ? &context->float_state : NULL),
  #endif
          dumper_(dumper),
-@@ -473,7 +475,9 @@ class MinidumpWriter {
+@@ -472,7 +474,9 @@ class MinidumpWriter {
          if (!cpu.Allocate())
            return false;
          my_memset(cpu.get(), 0, sizeof(RawContextCPU));
@@ -554,7 +583,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
          UContextReader::FillCPUContext(cpu.get(), ucontext_, float_state_);
  #else
          UContextReader::FillCPUContext(cpu.get(), ucontext_);
-@@ -950,7 +954,7 @@ class MinidumpWriter {
+@@ -949,7 +953,7 @@ class MinidumpWriter {
      dirent->location.rva = 0;
    }
  
@@ -563,7 +592,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    bool WriteCPUInformation(MDRawSystemInfo* sys_info) {
      char vendor_id[sizeof(sys_info->cpu.x86_cpu_info.vendor_id) + 1] = {0};
      static const char vendor_id_name[] = "vendor_id";
-@@ -970,7 +974,9 @@ class MinidumpWriter {
+@@ -969,7 +973,9 @@ class MinidumpWriter {
  
      // processor_architecture should always be set, do this first
      sys_info->processor_architecture =
@@ -574,7 +603,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  # if _MIPS_SIM == _ABIO32
          MD_CPU_ARCHITECTURE_MIPS;
  # elif _MIPS_SIM == _ABI64
-@@ -1386,7 +1392,9 @@ class MinidumpWriter {
+@@ -1436,7 +1442,9 @@ class MinidumpWriter {
    const char* path_;  // Path to the file where the minidum should be written.
  
    const ucontext_t* const ucontext_;  // also from the signal handler
@@ -585,9 +614,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    const google_breakpad::fpstate_t* const float_state_;  // ditto
  #endif
    LinuxDumper* dumper_;
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.h
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.h
-@@ -48,6 +48,8 @@ class ExceptionHandler;
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.h
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.h
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer.h
+@@ -47,6 +47,8 @@ class ExceptionHandler;
  
  #if defined(__aarch64__)
  typedef struct fpsimd_context fpstate_t;
@@ -596,11 +627,13 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #elif !defined(__ARM_EABI__) && !defined(__mips__)
  typedef std::remove_pointer<fpregset_t>::type fpstate_t;
  #endif
---- a/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer_unittest.cc
-+++ b/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer_unittest.cc
-@@ -717,6 +717,9 @@ TEST(MinidumpWriterTest, InvalidStackPoi
- #elif defined(__mips__)
-   context.context.uc_mcontext.gregs[MD_CONTEXT_MIPS_REG_SP] =
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer_unittest.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer_unittest.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/client/linux/minidump_writer/minidump_writer_unittest.cc
+@@ -719,6 +719,9 @@ TEST(MinidumpWriterTest, InvalidStackPoi
+ #elif defined(__riscv)
+   context.context.uc_mcontext.__gregs[MD_CONTEXT_RISCV_REG_SP] =
        invalid_stack_pointer;
 +#elif defined(__powerpc64__)
 +  context.context.uc_mcontext.gp_regs[MD_CONTEXT_PPC64_REG_SP] =
@@ -608,21 +641,25 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #else
  # error "This code has not been ported to your platform yet."
  #endif
---- a/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file.cc
-+++ b/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file.cc
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file.cc
 @@ -65,8 +65,7 @@ bool MemoryMappedFile::Map(const char* p
-   }
  
  #if defined(__x86_64__) || defined(__aarch64__) || \
--   (defined(__mips__) && _MIPS_SIM == _ABI64)
+    (defined(__mips__) && _MIPS_SIM == _ABI64) || \
+-   (defined(__riscv) && __riscv_xlen == 64)
 -
-+   (defined(__mips__) && _MIPS_SIM == _ABI64) || defined(__powerpc64__)
++      (defined(__riscv) && __riscv_xlen == 64) || defined(__powerpc64__)
    struct kernel_stat st;
    if (sys_fstat(fd, &st) == -1 || st.st_size < 0) {
  #else
---- a/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file_unittest.cc
-+++ b/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file_unittest.cc
-@@ -176,9 +176,10 @@ TEST_F(MemoryMappedFileTest, RemapAfterM
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file_unittest.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file_unittest.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/common/linux/memory_mapped_file_unittest.cc
+@@ -175,9 +175,10 @@ TEST_F(MemoryMappedFileTest, RemapAfterM
  TEST_F(MemoryMappedFileTest, MapWithOffset) {
    // Put more data in the test file this time. Offsets can only be
    // done on page boundaries, so we need a two page file to test this.
@@ -636,9 +673,11 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    for (size_t i = 0; i < data1_size; ++i) {
      data1[i] = i & 0x7f;
    }
---- a/third_party/breakpad/breakpad/src/common/memory_allocator_unittest.cc
-+++ b/third_party/breakpad/breakpad/src/common/memory_allocator_unittest.cc
-@@ -57,8 +57,9 @@ TEST(PageAllocatorTest, LargeObject) {
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/common/memory_allocator_unittest.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/common/memory_allocator_unittest.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/common/memory_allocator_unittest.cc
+@@ -56,8 +56,9 @@ TEST(PageAllocatorTest, LargeObject) {
  
    EXPECT_EQ(0U, allocator.pages_allocated());
    uint8_t* p = reinterpret_cast<uint8_t*>(allocator.Alloc(10000));
@@ -649,92 +688,21 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
    for (unsigned i = 1; i < 10; ++i) {
      uint8_t* p = reinterpret_cast<uint8_t*>(allocator.Alloc(i));
      ASSERT_FALSE(p == NULL);
---- a/third_party/breakpad/breakpad/src/processor/exploitability_linux.cc
-+++ b/third_party/breakpad/breakpad/src/processor/exploitability_linux.cc
-@@ -202,12 +202,14 @@ bool ExploitabilityLinux::EndedOnIllegal
-   // Check architecture and set architecture variable to corresponding flag
-   // in objdump.
-   switch (context->GetContextCPU()) {
-+#if defined(__i386) || defined(__x86_64)
-     case MD_CONTEXT_X86:
-       architecture = "i386";
-       break;
-     case MD_CONTEXT_AMD64:
-       architecture = "i386:x86-64";
-       break;
-+#endif
-     default:
-       // Unsupported architecture. Note that ARM architectures are not
-       // supported because objdump does not support ARM.
---- a/third_party/breakpad/breakpad/src/processor/exploitability_unittest.cc
-+++ b/third_party/breakpad/breakpad/src/processor/exploitability_unittest.cc
-@@ -105,6 +105,8 @@ ExploitabilityFor(const string& filename
- }
- 
- TEST(ExploitabilityTest, TestWindowsEngine) {
-+// The following tests are only executable on an x86-class linux machine.
-+#if !defined(_WIN32) && (defined(__i386) || defined(__x86_64))
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_HIGH,
-             ExploitabilityFor("ascii_read_av.dmp"));
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_HIGH,
-@@ -137,9 +139,12 @@ TEST(ExploitabilityTest, TestWindowsEngi
-             ExploitabilityFor("read_av_clobber_write.dmp"));
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_LOW,
-             ExploitabilityFor("read_av_conditional.dmp"));
-+#endif
- }
- 
- TEST(ExploitabilityTest, TestLinuxEngine) {
-+// The following tests are only executable on an x86-class linux machine.
-+#if defined(__i386) || defined(__x86_64)
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_INTERESTING,
-             ExploitabilityFor("linux_null_read_av.dmp"));
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_HIGH,
-@@ -172,7 +177,8 @@ TEST(ExploitabilityTest, TestLinuxEngine
-             ExploitabilityFor("linux_executable_heap.dmp"));
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_HIGH,
-             ExploitabilityFor("linux_jmp_to_module_not_exe_region.dmp"));
--#ifndef _WIN32
-+#endif
-+#if !defined(_WIN32) && (defined(__i386) || defined(__x86_64))
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_HIGH,
-             ExploitabilityFor("linux_write_to_nonwritable_module.dmp"));
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_HIGH,
-@@ -183,10 +189,10 @@ TEST(ExploitabilityTest, TestLinuxEngine
-             ExploitabilityFor("linux_write_to_outside_module_via_math.dmp"));
-   ASSERT_EQ(google_breakpad::EXPLOITABILITY_INTERESTING,
-             ExploitabilityFor("linux_write_to_under_4k.dmp"));
--#endif  // _WIN32
-+#endif  // !defined(_WIN32) && (!defined(__i386) && !defined(__x86_64))
- }
- 
--#ifndef _WIN32
-+#if !defined(_WIN32) && (defined(__i386) || defined(__x86_64))
- TEST(ExploitabilityLinuxUtilsTest, DisassembleBytesTest) {
-   ASSERT_FALSE(ExploitabilityLinuxTest::DisassembleBytes("", NULL, 0, 5, NULL));
-   uint8_t bytes[6] = {0xc7, 0x0, 0x5, 0x0, 0x0, 0x0};
-@@ -300,6 +306,7 @@ TEST(ExploitabilityLinuxUtilsTest, Calcu
-                                                          context,
-                                                          &write_address));
- }
--#endif  // _WIN32
-+#endif  // !defined(_WIN32) && (defined(__i386) || defined(__x86_64))
-+
- 
- }  // namespace
---- a/third_party/breakpad/breakpad/src/tools/linux/md2core/minidump-2-core.cc
-+++ b/third_party/breakpad/breakpad/src/tools/linux/md2core/minidump-2-core.cc
-@@ -77,6 +77,8 @@
-   #define ELF_ARCH  EM_MIPS
- #elif defined(__aarch64__)
+Index: chromium-110.0.5481.77/third_party/breakpad/breakpad/src/tools/linux/md2core/minidump-2-core.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/third_party/breakpad/breakpad/src/tools/linux/md2core/minidump-2-core.cc
++++ chromium-110.0.5481.77/third_party/breakpad/breakpad/src/tools/linux/md2core/minidump-2-core.cc
+@@ -78,6 +78,8 @@
    #define ELF_ARCH  EM_AARCH64
+ #elif defined(__riscv)
+   #define ELF_ARCH  EM_RISCV
 +#elif defined(__powerpc64__)
 +  #define ELF_ARCH  EM_PPC64
  #endif
  
  #if defined(__arm__)
-@@ -87,6 +89,8 @@ typedef user_regs user_regs_struct;
- #elif defined (__mips__)
+@@ -88,6 +90,8 @@ typedef user_regs user_regs_struct;
+ #elif defined (__mips__) || defined(__riscv)
  // This file-local typedef simplifies the source code.
  typedef gregset_t user_regs_struct;
 +#elif defined(__powerpc64__)
@@ -742,7 +710,7 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #endif
  
  using google_breakpad::MDTypeHelper;
-@@ -320,6 +324,9 @@ struct CrashedProcess {
+@@ -321,6 +325,9 @@ struct CrashedProcess {
  #if defined(__aarch64__)
      user_fpsimd_struct fpregs;
  #endif
@@ -752,9 +720,9 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
      uintptr_t stack_addr;
      const uint8_t* stack;
      size_t stack_length;
-@@ -533,6 +540,38 @@ ParseThreadRegisters(CrashedProcess::Thr
-   thread->mcontext.fpc_eir = rawregs->float_save.fir;
- #endif
+@@ -599,6 +606,38 @@ ParseThreadRegisters(CrashedProcess::Thr
+ #  error "Unexpected __riscv_flen"
+ # endif
  }
 +#elif defined(__powerpc64__)
 +static void
@@ -791,9 +759,9 @@ https://wiki.raptorcs.com/wiki/Porting/Chromium
  #else
  #error "This code has not been ported to your platform yet"
  #endif
-@@ -622,6 +661,12 @@ ParseSystemInfo(const Options& options,
+@@ -704,6 +743,12 @@ ParseSystemInfo(const Options& options,
  # else
- #  error "This mips ABI is currently not supported (n32)"
+ #  error "Unexpected __riscv_xlen"
  # endif
 +#elif defined(__powerpc64__)
 +  if (sysinfo->processor_architecture != MD_CPU_ARCHITECTURE_PPC64) {

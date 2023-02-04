@@ -1,6 +1,8 @@
---- a/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
-+++ b/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
-@@ -359,7 +359,9 @@ bool SyscallSets::IsAllowedSignalHandlin
+Index: chromium-110.0.5481.77/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+===================================================================
+--- chromium-110.0.5481.77.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
++++ chromium-110.0.5481.77/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+@@ -374,7 +374,9 @@ bool SyscallSets::IsAllowedSignalHandlin
  #if defined(__i386__) || defined(__arm__) || \
      (defined(ARCH_CPU_MIPS_FAMILY) && defined(ARCH_CPU_32_BITS)) || \
      defined(__powerpc64__)

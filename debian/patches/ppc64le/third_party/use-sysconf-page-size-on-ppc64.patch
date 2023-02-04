@@ -1,6 +1,7 @@
-Index: b/base/allocator/partition_allocator/page_allocator_constants.h
---- a/base/allocator/partition_allocator/page_allocator_constants.h
-+++ b/base/allocator/partition_allocator/page_allocator_constants.h
+Index: chromium-110.0.5481.77/base/allocator/partition_allocator/page_allocator_constants.h
+===================================================================
+--- chromium-110.0.5481.77.orig/base/allocator/partition_allocator/page_allocator_constants.h
++++ chromium-110.0.5481.77/base/allocator/partition_allocator/page_allocator_constants.h
 @@ -161,7 +161,11 @@ SystemPageBaseMask() {
    return ~SystemPageOffsetMask();
  }
@@ -13,9 +14,10 @@ Index: b/base/allocator/partition_allocator/page_allocator_constants.h
  constexpr size_t kPageMetadataSize = 1 << kPageMetadataShift;
  
  }  // namespace partition_alloc::internal
-Index: b/base/allocator/partition_allocator/partition_page.h
---- a/base/allocator/partition_allocator/partition_page.h
-+++ b/base/allocator/partition_allocator/partition_page.h
+Index: chromium-110.0.5481.77/base/allocator/partition_allocator/partition_page.h
+===================================================================
+--- chromium-110.0.5481.77.orig/base/allocator/partition_allocator/partition_page.h
++++ chromium-110.0.5481.77/base/allocator/partition_allocator/partition_page.h
 @@ -150,6 +150,12 @@ struct SlotSpanMetadata {
    // so we use the 16 kiB maximum (64 kiB will crash).
    static constexpr size_t kMaxSlotsPerSlotSpan =

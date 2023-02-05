@@ -13,6 +13,7 @@ chromium (110.0.5481.77-1) UNRELEASED; urgency=high
     - upstream/mojo.patch: refresh w/ what's in 110.
     - system/openjpeg.patch: completely rework due to upstream changes.
     - upstream/clamp.patch: backport a build fix.
+    - upstream/blink-dbl-float.patch: another build fix.
   * Drop unused use_allocator="none" argument. This was used previously
     to switch from the default "partition" allocator. Upstream dropped
     the build flag in chromium v109. So in v109 we switched to the default

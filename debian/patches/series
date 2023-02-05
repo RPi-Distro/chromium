@@ -12,6 +12,7 @@ upstream/mojo.patch
 upstream/clamp.patch
 upstream/pwman-const.patch
 upstream/move-stack-to-isolate.patch
+upstream/blink-dbl-float.patch
 
 disable/tests.patch
 disable/unrar.patch

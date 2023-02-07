@@ -1,6 +1,25 @@
 chromium (110.0.5481.77-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+    - CVE-2023-0696: Type Confusion in V8.
+      Reported by Haein Lee at KAIST Hacking Lab.
+    - CVE-2023-0697: Inappropriate implementation in Full screen mode.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-0698: Out of bounds read in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-0699: Use after free in GPU.
+      Reported by 7o8v and Cassidy Kim(@cassidy6564).
+    - CVE-2023-0700: Inappropriate implementation in Download.
+      Reported by Axel Chong.
+    - CVE-2023-0701: Heap buffer overflow in WebUI.
+      Reported by Sumin Hwang of SSD Labs.
+    - CVE-2023-0702: Type Confusion in Data Transfer. Reported by Sri.
+    - CVE-2023-0703: Type Confusion in DevTools.
+      Reported by raven at KunLun lab.
+    - CVE-2023-0704: Insufficient policy enforcement in DevTools.
+      Reported by Rhys Elsmore and Zac Sims of the Canva security team.
+    - CVE-2023-0705: Integer overflow in Core.
+      Reported by SorryMybad (@S0rryMybad) of Kunlun Lab.
   * d/copyright: libpng16 binaries are gone, no longer need to exclude them.
   * d/scripts/unbundle: drop libjxl, which is dropped upstream. Add absl_log*.
   * d/patches:

@@ -1,5 +1,6 @@
-chromium (110.0.5481.77-1) UNRELEASED; urgency=high
+chromium (110.0.5481.77-1) unstable; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
     - CVE-2023-0696: Type Confusion in V8.
       Reported by Haein Lee at KAIST Hacking Lab.
@@ -24,7 +25,7 @@ chromium (110.0.5481.77-1) UNRELEASED; urgency=high
   * d/scripts/unbundle: drop libjxl, which is dropped upstream. Add absl_log*.
   * d/patches:
     - debianization/optimization.patch: drop. This is unnecessary, as
-      optimization flags can already be overridden multiple ways.
+      Debian's optimization flags override Chromium's by default.
     - disable/android.patch: upstream removed android_crazy_linker, so we can
       remove half of this patch.
     - disable/catapult.patch: refresh.
@@ -37,7 +38,7 @@ chromium (110.0.5481.77-1) UNRELEASED; urgency=high
     to switch from the default "partition" allocator. Upstream dropped
     the build flag in chromium v109. So in v109 we switched to the default
     "partition" allocator and I don't think anyone noticed, so let's just
-    leave it on.
+    leave it on. Report issues if you notice any.
 
   [ Timothy Pearson ]
   * d/patches:
@@ -45,7 +46,7 @@ chromium (110.0.5481.77-1) UNRELEASED; urgency=high
     - Add upstream patches to fix build errors when use_custom_libcxx=false
     - Drop stack smashing fix patch for ppc64le due to fix included upstream
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 25 Jan 2023 01:19:49 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 08 Feb 2023 00:20:01 -0500
 
 chromium (109.0.5414.119-1) unstable; urgency=high
 

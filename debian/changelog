@@ -1,8 +1,8 @@
-chromium (110.0.5481.77-2) UNRELEASED; urgency=high
+chromium (110.0.5481.77-2) unstable; urgency=high
 
   * Fix build failure on arm* platforms with upstream/v4l2-fix.patch.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 08 Feb 2023 00:20:01 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 08 Feb 2023 15:20:57 -0500
 
 chromium (110.0.5481.77-1) unstable; urgency=high
 

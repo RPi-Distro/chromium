@@ -13,6 +13,7 @@ upstream/clamp.patch
 upstream/pwman-const.patch
 upstream/move-stack-to-isolate.patch
 upstream/blink-dbl-float.patch
+upstream/v4l2-fix.patch
 
 disable/tests.patch
 disable/unrar.patch

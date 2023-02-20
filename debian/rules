@@ -402,6 +402,7 @@ debian/chromium-browser.sh: debian/chromium-browser.sh.in
     -e 's/@BUILD_DIST_NAME@/$(DEBIAN_DIST_NAME)/g' \
     -e 's/@BUILD_DIST_VERSION@/$(DEBIAN_DIST_VERSION)/g' \
     -e 's/@UPSTREAM_VERSION@/$(DEBIAN_UPSTREAM_VERSION)/g' \
+    -e 's/@DEB_HOST_ARCH@/$(DEB_HOST_ARCH)/g' \
     $< > $@
 
 

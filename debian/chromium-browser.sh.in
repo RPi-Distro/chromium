@@ -202,6 +202,10 @@ if [ "$(dpkg -l bluealsa | tail -n 1 | cut -d ' ' -f 1)" = "ii" ] ; then
   CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-features=AudioServiceOutOfProcess"
 fi
 
+if [ -f /opt/WidevineCdm/_platform_specific/linux_@DEB_HOST_ARCH@/libgcc_hide.so ]; then
+  export LD_PRELOAD=/opt/WidevineCdm/_platform_specific/linux_@DEB_HOST_ARCH@/libgcc_hide.so
+fi
+
 if [ $want_debug -eq 1 ] ; then
   if [ ! -x $GDB ] ; then
     echo "Sorry, can't find usable $GDB. Please install it."

@@ -1,3 +1,23 @@
+chromium (110.0.5481.177-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-0941: Use after free in Prompts. Reported by Anonymous.
+    - CVE-2023-0927: Use after free in Web Payments API.
+      Reported by Rong Jian of VRI.
+    - CVE-2023-0928: Use after free in SwiftShader. Reported by Anonymous.
+    - CVE-2023-0929: Use after free in Vulkan.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-0930: Heap buffer overflow in Video.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-0931: Use after free in Video.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-0932: Use after free in WebRTC.
+      Reported by Omri Bushari (Talon Cyber Security).
+    - CVE-2023-0933: Integer overflow in PDF. Reported by
+      Zhiyi Zhang from Codesafe Team of Legendsec at QI-ANXIN Group.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 22 Feb 2023 16:11:07 -0500
+
 chromium (110.0.5481.77-2) unstable; urgency=high
 
   * Fix build failure on arm* platforms with upstream/v4l2-fix.patch.

@@ -15,6 +15,14 @@ entry bar to a selected search provider, can be disabled by setting
 
 chrome://settings/searchEngines
 
+Search Engines
+==============
+The chromium debian package specifically defaults to DuckDuckGo as the
+default search engine instead of Google. To change this, go into
+chrome://settings/ (or click Settings in the menu), click on "Search engine",
+and then select a different search engine for
+"Search engine used in the address bar."
+
 Built-in Extensions
 ===================
 

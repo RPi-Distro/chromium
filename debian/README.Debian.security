@@ -1,0 +1,12 @@
+Notes about security support for Chromium in Debian
+
+==============================================
+
+Due to the high frequency of security releases and large amount
+of effort required, Debian's Chromium packages will only receive
+6 months of security support in the oldstable distribution
+(instead of the typical 12 months).
+
+The 6 months of oldstable security support begins when a
+distribution, beginning with Debian 11 'bullseye', transitions
+from stable to oldstable.

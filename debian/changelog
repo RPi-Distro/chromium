@@ -1,5 +1,7 @@
-chromium (110.0.5481.177-2) UNRELEASED; urgency=high
+chromium (111.0.5563.50-1) UNRELEASED; urgency=high
 
+  * New upstream stable release.
+    - XXX: CVEs here
   * Document upcoming security support in README.Debian.security.
   * Document switching the default search engine in README.debian.
 

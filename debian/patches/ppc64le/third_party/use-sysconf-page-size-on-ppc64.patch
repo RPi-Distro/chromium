@@ -1,7 +1,5 @@
-Index: chromium-110.0.5481.77/base/allocator/partition_allocator/page_allocator_constants.h
-===================================================================
---- chromium-110.0.5481.77.orig/base/allocator/partition_allocator/page_allocator_constants.h
-+++ chromium-110.0.5481.77/base/allocator/partition_allocator/page_allocator_constants.h
+--- a/base/allocator/partition_allocator/page_allocator_constants.h
++++ b/base/allocator/partition_allocator/page_allocator_constants.h
 @@ -161,7 +161,11 @@ SystemPageBaseMask() {
    return ~SystemPageOffsetMask();
  }
@@ -14,10 +12,8 @@ Index: chromium-110.0.5481.77/base/allocator/partition_allocator/page_allocator_
  constexpr size_t kPageMetadataSize = 1 << kPageMetadataShift;
  
  }  // namespace partition_alloc::internal
-Index: chromium-110.0.5481.77/base/allocator/partition_allocator/partition_page.h
-===================================================================
---- chromium-110.0.5481.77.orig/base/allocator/partition_allocator/partition_page.h
-+++ chromium-110.0.5481.77/base/allocator/partition_allocator/partition_page.h
+--- a/base/allocator/partition_allocator/partition_page.h
++++ b/base/allocator/partition_allocator/partition_page.h
 @@ -150,6 +150,12 @@ struct SlotSpanMetadata {
    // so we use the 16 kiB maximum (64 kiB will crash).
    static constexpr size_t kMaxSlotsPerSlotSpan =
@@ -33,7 +29,7 @@ Index: chromium-110.0.5481.77/base/allocator/partition_allocator/partition_page.
    // larger, so it doesn't have as many slots.
 @@ -157,7 +163,11 @@ struct SlotSpanMetadata {
        PartitionPageSize() / kSmallestBucket;
- #endif  // defined(PA_HAS_64_BITS_POINTERS) && BUILDFLAG(IS_APPLE)
+ #endif  // PA_CONFIG(HAS_64_BITS_POINTERS) && BUILDFLAG(IS_APPLE)
    // The maximum number of bits needed to cover all currently supported OSes.
 +#if defined(ARCH_CPU_PPC64)
 +  static constexpr size_t kMaxSlotsPerSlotSpanBits = 15;

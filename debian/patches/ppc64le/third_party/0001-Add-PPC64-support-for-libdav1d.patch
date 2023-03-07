@@ -9,10 +9,8 @@ Subject: [PATCH] Add PPC64 support for libdav1d
  third_party/dav1d/generate_source.py  |  2 ++
  3 files changed, 25 insertions(+), 26 deletions(-)
 
-Index: chromium-110.0.5481.77/third_party/dav1d/generate_configs.py
-===================================================================
---- chromium-110.0.5481.77.orig/third_party/dav1d/generate_configs.py
-+++ chromium-110.0.5481.77/third_party/dav1d/generate_configs.py
+--- a/third_party/dav1d/generate_configs.py
++++ b/third_party/dav1d/generate_configs.py
 @@ -21,7 +21,7 @@ CHROMIUM_ROOT_DIR = os.path.abspath(os.p
  sys.path.append(os.path.join(CHROMIUM_ROOT_DIR, 'build'))
  import gn_helpers
@@ -22,11 +20,11 @@ Index: chromium-110.0.5481.77/third_party/dav1d/generate_configs.py
  
  DEFAULT_BUILD_ARGS = [
      '-Denable_tools=false', '-Denable_tests=false', '-Ddefault_library=static',
-@@ -192,6 +192,7 @@ def main():
+@@ -205,6 +205,7 @@ def main():
      linux_env = os.environ
      linux_env['CC'] = 'clang'
  
 +    GenerateConfig('config/linux/ppc64', linux_env)
      GenerateConfig('config/linux/x64', linux_env)
-     GenerateConfig('config/linux-noasm/x64', linux_env, ['-Denable_asm=false'])
-     GenerateConfig('config/linux-noasm/generic', linux_env, ['-Denable_asm=false'])
+ 
+     noasm_dir = 'config/linux-noasm/x64'

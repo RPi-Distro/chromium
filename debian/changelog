@@ -1,7 +1,52 @@
-chromium (111.0.5563.64-1) UNRELEASED; urgency=high
+chromium (111.0.5563.64-1) unstable; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
-    - XXX: CVEs here
+    - CVE-2023-1213: Use after free in Swiftshader.
+      Reported by Jaehun Jeong(@n3sk) of Theori.
+    - CVE-2023-1214: Type Confusion in V8.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2023-1215: Type Confusion in CSS. Reported by Anonymous.
+    - CVE-2023-1216: Use after free in DevTools.
+      Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
+    - CVE-2023-1217: Stack buffer overflow in Crash reporting.
+      Reported by sunburst of Ant Group Tianqiong Security Lab.
+    - CVE-2023-1218: Use after free in WebRTC. Reported by Anonymous.
+    - CVE-2023-1219: Heap buffer overflow in Metrics.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2023-1220: Heap buffer overflow in UMA.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2023-1221: Insufficient policy enforcement in Extensions API.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-1222: Heap buffer overflow in Web Audio API.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-1223: Insufficient policy enforcement in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-1224: Insufficient policy enforcement in Web Payments API.
+      Reported by Thomas Orlita.
+    - CVE-2023-1225: Insufficient policy enforcement in Navigation.
+      Reported by Roberto Ffrench-Davis @Lihaft.
+    - CVE-2023-1226: Insufficient policy enforcement in Web Payments API.
+      Reported by Anonymous.
+    - CVE-2023-1227: Use after free in Core. Reported by @ginggilBesel.
+    - CVE-2023-1228: Insufficient policy enforcement in Intents.
+      Reported by Axel Chong.
+    - CVE-2023-1229: Inappropriate implementation in Permission prompts.
+      Reported by Thomas Orlita.
+    - CVE-2023-1230: Inappropriate implementation in WebApp Installs.
+      Reported by Axel Chong.
+    - CVE-2023-1231: Inappropriate implementation in Autofill.
+      Reported by Yan Zhu, Brave.
+    - CVE-2023-1232: Insufficient policy enforcement in Resource Timing.
+      Reported by Sohom Datta.
+    - CVE-2023-1233: Insufficient policy enforcement in Resource Timing.
+      Reported by Soroush Karami.
+    - CVE-2023-1234: Inappropriate implementation in Intents.
+      Reported by Axel Chong.
+    - CVE-2023-1235: Type Confusion in DevTools.
+      Reported by raven at KunLun lab.
+    - CVE-2023-1236: Inappropriate implementation in Internals.
+      Reported by Alesandro Ortiz.
   * Document upcoming security support in README.Debian.security.
   * Document switching the default search engine in README.debian.
   * d/patches:
@@ -12,6 +57,9 @@ chromium (111.0.5563.64-1) UNRELEASED; urgency=high
     - upstream/v4l2-fix.patch: drop, merged upstream.
     - disable/catapult.patch: refresh & remove unnecessary android bits.
     - disable/google-api-warning.patch: refresh.
+
+  [ Timothy Pearson ]
+   * d/patches:
     - ppc64le/third_party/0005-third_party-dav1d-crash-fix.patch: drop,
           merged upstream
     - ppc64le/workarounds/HACK-debian-clang-disable-skia-musttail.patch:
@@ -19,7 +67,7 @@ chromium (111.0.5563.64-1) UNRELEASED; urgency=high
           contining Clang bugs
     - ppc64le: refresh libaom configuration
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 22 Feb 2023 16:11:07 -0500
+ -- Andres Salomon <dilinger@debian.org>  Tue, 07 Mar 2023 18:12:37 -0500
 
 chromium (110.0.5481.177-1) unstable; urgency=high
 

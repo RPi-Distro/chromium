@@ -4,6 +4,14 @@ chromium (111.0.5563.50-1) UNRELEASED; urgency=high
     - XXX: CVEs here
   * Document upcoming security support in README.Debian.security.
   * Document switching the default search engine in README.debian.
+  * d/patches:
+    - upstream/clamp.patch: drop, merged upstream.
+    - upstream/pwman-const.patch: drop, merged upstream.
+    - upstream/move-stack-to-isolate.patch: drop, merged upstream.
+    - upstream/blink-dbl-float.patch: drop, merged upstream.
+    - upstream/v4l2-fix.patch: drop, merged upstream.
+    - disable/catapult.patch: refresh & remove unnecessary android bits.
+    - disable/google-api-warning.patch: refresh.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 22 Feb 2023 16:11:07 -0500
 

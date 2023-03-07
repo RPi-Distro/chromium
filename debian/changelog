@@ -12,6 +12,12 @@ chromium (111.0.5563.64-1) UNRELEASED; urgency=high
     - upstream/v4l2-fix.patch: drop, merged upstream.
     - disable/catapult.patch: refresh & remove unnecessary android bits.
     - disable/google-api-warning.patch: refresh.
+    - ppc64le/third_party/0005-third_party-dav1d-crash-fix.patch: drop,
+          merged upstream
+    - ppc64le/workarounds/HACK-debian-clang-disable-skia-musttail.patch:
+          skia musttail is back in upstream, disable on ppc64le due to
+          contining Clang bugs
+    - ppc64le: refresh libaom configuration
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 22 Feb 2023 16:11:07 -0500
 

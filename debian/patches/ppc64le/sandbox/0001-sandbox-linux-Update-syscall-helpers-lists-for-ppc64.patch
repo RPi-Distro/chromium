@@ -112,7 +112,7 @@ Index: chromium-110.0.5481.77/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
                F_SETLKW,
                F_GETLK,
                F_DUPFD,
--              F_DUPFD_CLOEXEC),
+-              F_DUPFD_CLOEXEC},
 -             Allow())
 +              F_DUPFD_CLOEXEC
 +#if defined(__powerpc64__)
@@ -123,7 +123,7 @@ Index: chromium-110.0.5481.77/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
 +              6, /* F_SETLK (32) */
 +              7  /* F_SETLKW (32) */
 +#endif
-+              ),
++              },
 +            Allow())
        .Case(F_SETFL,
              If((long_arg & ~kAllowedMask) == 0, Allow()).Else(CrashSIGSYS()))
@@ -140,7 +140,7 @@ Index: chromium-110.0.5481.77/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
 @@ -443,7 +468,7 @@ ResultExpr RestrictPtrace() {
  #endif
    return Switch(request)
-       .CASES((
+       .Cases({
 -#if !defined(__aarch64__)
 +#if !defined(__aarch64__) && !defined(__powerpc64__)
                   PTRACE_GETREGS, PTRACE_GETFPREGS, PTRACE_GET_THREAD_AREA,
@@ -328,15 +328,6 @@ Index: chromium-110.0.5481.77/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_vfork:
  #endif
      default:
-@@ -505,7 +517,7 @@ bool SyscallSets::IsAllowedGetOrModifySo
-       return true;
-     default:
- #if defined(__x86_64__) || defined(__arm__) || defined(__mips__) || \
--    defined(__aarch64__)
-+    defined(__aarch64__) || defined(__powerpc64__)
-     case __NR_socketpair:  // We will want to inspect its argument.
- #endif
-       return false;
 @@ -515,7 +527,7 @@ bool SyscallSets::IsAllowedGetOrModifySo
  bool SyscallSets::IsDeniedGetOrModifySocket(int sysno) {
    switch (sysno) {

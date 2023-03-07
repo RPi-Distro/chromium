@@ -70,6 +70,7 @@ ppc64le/crashpad/0002-Include-cstddef-to-fix-build.patch
 ppc64le/third_party/0004-third_party-crashpad-port-curl-transport-ppc64.patch
 
 ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch
+ppc64le/workarounds/HACK-debian-clang-disable-skia-musttail.patch
 
 ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch
 ppc64le/libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch
@@ -91,7 +92,6 @@ ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 
 ppc64le/third_party/0001-Add-PPC64-support-for-libdav1d.patch
 ppc64le/third_party/0001-Fix-libdav1d-compilation-on-clang-ppc.patch
-ppc64le/third_party/0005-third_party-dav1d-crash-fix.patch
 # Multiple Clang 11 bugs hit with VSX enabled, including bug #50520 (D103386)
 #ppc64le/third_party/skia-vsx-instructions.patch
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch

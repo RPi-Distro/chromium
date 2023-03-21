@@ -23,6 +23,18 @@ chrome://settings/ (or click Settings in the menu), click on "Search engine",
 and then select a different search engine for
 "Search engine used in the address bar."
 
+Native Wayland Support
+======================
+By default Chromium will use its X11 backend, even if you're running it in a
+Wayland session. Modifying the "Preferred Ozone platform" flag will cause
+it to use the Wayland backend instead, but there are sometimes bugs.
+
+First, try running Chromium with the argument --ozone-platform=wayland. If
+everything works properly, then type chrome://flags into the address bar,
+and change "Preferred Ozone platform" to "Auto". After that, Chromium will
+automatically detect a Wayland session and use its native Wayland backend
+without requiring any command-line arguments.
+
 Built-in Extensions
 ===================
 

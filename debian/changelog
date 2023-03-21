@@ -14,6 +14,8 @@ chromium (111.0.5563.110-1) UNRELEASED; urgency=high
       Reported by Weipeng Jiang (@Krace) of VRI.
     - CVE-2023-1534: Out of bounds read in ANGLE.
       Reported by Jann Horn and Mark Brand of Google Project Zero.
+  * Document how to properly enable Wayland support in README.Debian
+    (closes: #1033223).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 07 Mar 2023 18:12:37 -0500
 

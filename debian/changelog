@@ -1,4 +1,4 @@
-chromium (111.0.5563.110-1) UNRELEASED; urgency=high
+chromium (111.0.5563.110-1) unstable; urgency=high
 
   * New upstream security release.
     - CVE-2023-1528: Use after free in Passwords.
@@ -20,7 +20,7 @@ chromium (111.0.5563.110-1) UNRELEASED; urgency=high
     - Disable lto flags (closes: #1015367).
     - don't clobber LDFLAGS from dpkg-buildflags (closes: #1033015).
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 07 Mar 2023 18:12:37 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 22 Mar 2023 03:17:36 -0400
 
 chromium (111.0.5563.64-1) unstable; urgency=high
 

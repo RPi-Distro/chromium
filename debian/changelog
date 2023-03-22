@@ -16,6 +16,9 @@ chromium (111.0.5563.110-1) UNRELEASED; urgency=high
       Reported by Jann Horn and Mark Brand of Google Project Zero.
   * Document how to properly enable Wayland support in README.Debian
     (closes: #1033223).
+  * d/rules patch from "Daniel Richard G." <skunk@iSKUNK.ORG>:
+    - Disable lto flags (closes: #1015367).
+    - don't clobber LDFLAGS from dpkg-buildflags (closes: #1033015).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 07 Mar 2023 18:12:37 -0500
 

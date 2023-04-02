@@ -1,3 +1,20 @@
+chromium (112.0.5615.49-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright: change location for deleted image_diff directory.
+  * d/patches:
+    - disable/unrar.patch: update for stuff dropped upstream.
+    - disable/swiftshader.patch: straight refresh.
+    - bullseye/clang13.patch: straight refresh.
+    - ppc64le/third_party/0001-third_party-angle-Include-missing-header-cstddef-in-.patch:
+      straight refresh.
+    - ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch: straight
+      refresh.
+    - debian/patches/ppc64le/third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      change is_mac to is_apple.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 22 Mar 2023 03:17:36 -0400
+
 chromium (111.0.5563.110-1) unstable; urgency=high
 
   * New upstream security release.

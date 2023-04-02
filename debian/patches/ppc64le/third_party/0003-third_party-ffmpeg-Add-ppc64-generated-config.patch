@@ -8983,7 +8983,7 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/ffmpeg_generated.gni
 +  ]
 +}
 +
- if ((is_mac && current_cpu == "x64" && ffmpeg_branding == "Chrome") || (is_win && current_cpu == "x64" && ffmpeg_branding == "Chrome") || (is_win && current_cpu == "x86" && ffmpeg_branding == "Chrome") || (use_linux_config && current_cpu == "x64" && ffmpeg_branding == "Chrome") || (use_linux_config && current_cpu == "x64" && ffmpeg_branding == "ChromeOS") || (use_linux_config && current_cpu == "x86" && ffmpeg_branding == "Chrome") || (use_linux_config && current_cpu == "x86" && ffmpeg_branding == "ChromeOS")) {
+ if ((is_apple && current_cpu == "x64" && ffmpeg_branding == "Chrome") || (is_win && current_cpu == "x64" && ffmpeg_branding == "Chrome") || (is_win && current_cpu == "x86" && ffmpeg_branding == "Chrome") || (use_linux_config && current_cpu == "x64" && ffmpeg_branding == "Chrome") || (use_linux_config && current_cpu == "x64" && ffmpeg_branding == "ChromeOS") || (use_linux_config && current_cpu == "x86" && ffmpeg_branding == "Chrome") || (use_linux_config && current_cpu == "x86" && ffmpeg_branding == "ChromeOS")) {
    ffmpeg_c_sources += [
      "libavcodec/x86/h264_qpel.c",
 Index: chromium-110.0.5481.77/third_party/ffmpeg/libavcodec/ppc/h264dsp_ppc.c

@@ -14,7 +14,7 @@
  }  // namespace partition_alloc::internal
 --- a/base/allocator/partition_allocator/partition_page.h
 +++ b/base/allocator/partition_allocator/partition_page.h
-@@ -150,6 +150,12 @@ struct SlotSpanMetadata {
+@@ -149,6 +149,12 @@ struct SlotSpanMetadata {
    // so we use the 16 kiB maximum (64 kiB will crash).
    static constexpr size_t kMaxSlotsPerSlotSpan =
        4 * (1 << 14) / kSmallestBucket;
@@ -27,9 +27,9 @@
  #else
    // A slot span can "span" multiple PartitionPages, but then its slot size is
    // larger, so it doesn't have as many slots.
-@@ -157,7 +163,11 @@ struct SlotSpanMetadata {
+@@ -156,7 +162,11 @@ struct SlotSpanMetadata {
        PartitionPageSize() / kSmallestBucket;
- #endif  // PA_CONFIG(HAS_64_BITS_POINTERS) && BUILDFLAG(IS_APPLE)
+ #endif  // BUILDFLAG(HAS_64_BIT_POINTERS) && BUILDFLAG(IS_APPLE)
    // The maximum number of bits needed to cover all currently supported OSes.
 +#if defined(ARCH_CPU_PPC64)
 +  static constexpr size_t kMaxSlotsPerSlotSpanBits = 15;
@@ -39,7 +39,7 @@
    static_assert(kMaxSlotsPerSlotSpan < (1 << kMaxSlotsPerSlotSpanBits), "");
  
    // |marked_full| isn't equivalent to being full. Slot span is marked as full
-@@ -171,7 +181,11 @@ struct SlotSpanMetadata {
+@@ -170,7 +180,11 @@ struct SlotSpanMetadata {
   private:
    const uint32_t can_store_raw_size_ : 1;
    uint32_t freelist_is_sorted_ : 1;

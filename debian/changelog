@@ -1,6 +1,33 @@
-chromium (112.0.5615.49-1) UNRELEASED; urgency=high
+chromium (112.0.5615.49-1) unstable; urgency=high
 
   * New upstream stable release.
+    - CVE-2023-1810: Heap buffer overflow in Visuals.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2023-1811: Use after free in Frames. Reported by Thomas Orlita.
+    - CVE-2023-1812: Out of bounds memory access in DOM Bindings.
+      Reported by Shijiang Yu.
+    - CVE-2023-1813: Inappropriate implementation in Extensions.
+      Reported by Axel Chong.
+    - CVE-2023-1814: Insufficient validation of untrusted input in
+      Safe Browsing. Reported by Young Min Kim (@ylemkimon),
+      CompSec Lab at Seoul National University.
+    - CVE-2023-1815: Use after free in Networking APIs. Reported by DDV_UA.
+    - CVE-2023-1816: Incorrect security UI in Picture In Picture.
+      Reported by NDevTK.
+    - CVE-2023-1817: Insufficient policy enforcement in Intents.
+      Reported by Axel Chong.
+    - CVE-2023-1818: Use after free in Vulkan. Reported by Abdulrahman
+      Alqabandi, Microsoft Browser Vulnerability Research, Eric Lawrence,
+      Microsoft, Patrick Walker (@HomeSen), & Kirtikumar Anandrao Ramchandani.
+    - CVE-2023-1819: Out of bounds read in Accessibility.
+      Reported by Microsoft Edge Team.
+    - CVE-2023-1820: Heap buffer overflow in Browser History.
+      Reported by raven at KunLun lab.
+    - CVE-2023-1821: Inappropriate implementation in WebShare.
+      Reported by Axel Chong.
+    - CVE-2023-1822: Incorrect security UI in Navigation. Reported by 강우진.
+    - CVE-2023-1823: Inappropriate implementation in FedCM.
+      Reported by Jasper Rebane (popstonia).
   * d/copyright: change location for deleted image_diff directory.
   * d/patches:
     - disable/unrar.patch: update for stuff dropped upstream.
@@ -13,7 +40,7 @@ chromium (112.0.5615.49-1) UNRELEASED; urgency=high
     - debian/patches/ppc64le/third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
       change is_mac to is_apple.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 22 Mar 2023 03:17:36 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 04 Apr 2023 18:44:47 -0400
 
 chromium (111.0.5563.110-1) unstable; urgency=high
 

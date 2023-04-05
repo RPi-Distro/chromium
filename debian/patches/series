@@ -1,7 +1,6 @@
 debianization/manpage.patch
 debianization/sandbox.patch
 debianization/master-preferences.patch
-debianization/support-i386.patch
 
 fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
@@ -38,6 +37,10 @@ system/eu-strip.patch
 system/rapidjson.patch
 
 bullseye/clang13.patch
+
+# i386 support
+i386/support-i386.patch
+i386/angle-lockfree.patch
 
 # POWER support
 ppc64le/sandbox/0001-linux-seccomp-bpf-ppc64-glibc-workaround-in-SIGSYS-h.patch

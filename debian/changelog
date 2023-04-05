@@ -1,3 +1,11 @@
+chromium (112.0.5615.49-2) UNRELEASED; urgency=high
+
+  * Add d/patches/i386/angle-lockfree.patch to fix FTBFS on i386. Also create
+    & populate that d/patches/i386/ directory, since we now have multiple
+    i386 patches.
+
+  -- Andres Salomon <dilinger@debian.org>  Tue, 04 Apr 2023 18:44:47 -0400
+
 chromium (112.0.5615.49-1) unstable; urgency=high
 
   * New upstream stable release.

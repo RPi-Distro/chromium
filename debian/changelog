@@ -4,6 +4,12 @@ chromium (112.0.5615.49-2) UNRELEASED; urgency=high
     & populate that d/patches/i386/ directory, since we now have multiple
     i386 patches.
 
+  [ Timothy Pearson ]
+   * d/patches:   
+    - Re-add boringssl support for ppc64le (dropped by Google upstream)
+    - Add ppc64le detection to partition allocator build
+    - Regenerate 0003-third_party-ffmpeg-Add-ppc64-generated-config.patch
+
   -- Andres Salomon <dilinger@debian.org>  Tue, 04 Apr 2023 18:44:47 -0400
 
 chromium (112.0.5615.49-1) unstable; urgency=high

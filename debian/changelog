@@ -1,8 +1,10 @@
 chromium (112.0.5615.49-2) UNRELEASED; urgency=high
 
+  [ Andres Salomon ]
   * Add d/patches/i386/angle-lockfree.patch to fix FTBFS on i386. Also create
     & populate that d/patches/i386/ directory, since we now have multiple
     i386 patches.
+  * Remove enable_js_type_check=false build arg; upstream dropped it.
 
   [ Timothy Pearson ]
    * d/patches:   

@@ -33,6 +33,7 @@ Build-Depends:
  bison,
  brotli,
  nodejs,
+ rollup,
  valgrind,
  xz-utils,
  x11-apps,

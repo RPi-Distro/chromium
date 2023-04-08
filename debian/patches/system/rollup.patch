@@ -1,0 +1,24 @@
+author: Andres Salomon <dilinger@debian.org>
+description: include debian node libs (needed for rollup)
+
+This is strictly just needed for bullseye's rollup , but may be useful
+later on when we drop more nodejs stuff.
+
+Index: chromium-112.0.5615.49/third_party/node/node_modules.py
+===================================================================
+--- chromium-112.0.5615.49.orig/third_party/node/node_modules.py
++++ chromium-112.0.5615.49/third_party/node/node_modules.py
+@@ -4,10 +4,13 @@
+ # found in the LICENSE file.
+ 
+ from os import path as os_path
++import os
+ 
+ 
+ NODE_MODULES = os_path.join(os_path.dirname(__file__), 'node_modules')
+ 
++os.environ['NODE_PATH'] = '/usr/share/nodejs'
++
+ 
+ def _path_in_node_modules(*args):
+   return os_path.join(NODE_MODULES, *args)

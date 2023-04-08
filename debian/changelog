@@ -1,3 +1,11 @@
+chromium (112.0.5615.49-3) UNRELEASED; urgency=high
+
+  * Build-dep on rollup.
+  * Delete the bundled acorn & rollup node modules, and build using the
+    debian packaged version of those and other modules.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 07 Apr 2023 03:40:50 -0400
+
 chromium (112.0.5615.49-2) unstable; urgency=high
 
   [ Andres Salomon ]

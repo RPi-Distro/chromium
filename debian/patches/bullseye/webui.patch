@@ -1,0 +1,16 @@
+author: Andres Salomon <dilinger@debian.org>
+description: work around build failure with optimize_webui enabled on bullseye
+
+Can be dropped post-bullseye.
+
+--- a/tools/polymer/html_minifier.js
++++ b/tools/polymer/html_minifier.js
+@@ -14,7 +14,7 @@ const minify =
+         .minify;
+ 
+ const path = require('path');
+-const fs = require('fs/promises');
++const fs = require('fs').promises;
+ 
+ // Regex to extract the CSS contents out of the HTML string. It matches anything
+ // that is wrapped by a '<style>...</style>' pair.

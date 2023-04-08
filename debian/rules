@@ -66,7 +66,6 @@ defines+=is_debug=false \
          use_libjpeg_turbo=true \
          use_custom_libcxx=false \
          use_gnome_keyring=false \
-         optimize_webui=false \
          use_unofficial_version_number=false \
          enable_vr=false \
          enable_nacl=false \

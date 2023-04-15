@@ -1,12 +1,15 @@
-chromium (112.0.5615.49-3) UNRELEASED; urgency=high
+chromium (112.0.5615.121-1) unstable; urgency=high
 
+  * New upstream security release.
+    - CVE-2023-2033: Type Confusion in V8.
+      Reported by Clément Lecigne of Google's Threat Analysis Group.
   * Build-dep on rollup.
   * Delete the bundled acorn & rollup node modules, and build using the
     debian packaged version of those and other modules.
   * (Re-)enable optimize_webui.
   * Add d/patches/upstream/protobuf.patch to fix FTBFS due to race.
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 07 Apr 2023 03:40:50 -0400
+ -- Andres Salomon <dilinger@debian.org>  Sat, 15 Apr 2023 00:24:54 -0400
 
 chromium (112.0.5615.49-2) unstable; urgency=high
 

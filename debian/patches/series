@@ -8,7 +8,6 @@ fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 
 upstream/mojo.patch
-upstream/protobuf.patch
 
 disable/tests.patch
 disable/unrar.patch

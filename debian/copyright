@@ -35,6 +35,7 @@ Files-Excluded:
  base/test/data
  base/third_party/double_conversion
  chrome/android
+ chrome/build
  chrome/installer/mac
  chrome/installer/test
  chrome/installer/tools
@@ -47,6 +48,7 @@ Files-Excluded:
  chrome/browser/resources/chromeos
  chrome/browser/resources/default_apps
  chrome/chrome_cleaner/test/resources/signed_dll
+ fuchsia*
  tools/emacs
  tools/luci-go
  tools/android

@@ -1,6 +1,8 @@
 chromium (112.0.5615.138-2) UNRELEASED; urgency=high
 
   * Remove Michel from Uploaders.
+  * Drop fuchsia* and chrome/build directories from tarball; both large and
+    useless for us (the latter directory is PGO optmizations that we don't use).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 18 Apr 2023 22:00:00 -0500
 

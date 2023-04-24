@@ -3,6 +3,9 @@ chromium (112.0.5615.138-2) UNRELEASED; urgency=high
   * Remove Michel from Uploaders.
   * Drop fuchsia* and chrome/build directories from tarball; both large and
     useless for us (the latter directory is PGO optmizations that we don't use).
+  * d/patches:
+    - debianization/master-preferences.patch: check for initial_preferences or
+      master_preferences, rather than just for the latter (closes: #992178).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 18 Apr 2023 22:00:00 -0500
 

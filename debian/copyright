@@ -169,6 +169,7 @@ Files-Excluded:
  third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
  third_party/devtools-frontend/src/third_party/esbuild/esbuild
  third_party/nearby/src/third_party
+ third_party/updater
 
 
 Files: *

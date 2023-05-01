@@ -1,0 +1,27 @@
+description: fix ftbfs errors due to missing typename
+author: Andres Salomon <dilinger@debian.org>
+
+I think this is also a clang-14 thing?
+
+--- a/ui/base/interaction/interactive_test_internal.h
++++ b/ui/base/interaction/interactive_test_internal.h
+@@ -333,7 +333,7 @@ struct ArgsExtractor<R(Args...)> {
+ };
+ 
+ template <typename F>
+-using ReturnTypeOf = MaybeBindTypeHelper<F>::ReturnType;
++using ReturnTypeOf = typename MaybeBindTypeHelper<F>::ReturnType;
+ 
+ template <size_t N, typename F>
+ using NthArgumentOf = std::tuple_element_t<
+--- a/chrome/browser/download/bubble/download_bubble_update_service.h
++++ b/chrome/browser/download/bubble/download_bubble_update_service.h
+@@ -209,7 +209,7 @@ class DownloadBubbleUpdateService
+   // Removes item if we already have the iterator to it. Returns next iterator.
+   template <typename Id, typename Item>
+   SortedItems<Item>::iterator RemoveItemFromCacheByIter(
+-      SortedItems<Item>::iterator iter,
++      typename SortedItems<Item>::iterator iter,
+       SortedItems<Item>& cache,
+       IterMap<Id, Item>& iter_map);
+ 

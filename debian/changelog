@@ -20,6 +20,11 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
     - bookworm/typename.patch: add another build fix for missing typename.
     - bookworm/lamba-bug.patch: add to work around compiler bug (clang < 16).
 
+  [ Timothy Pearson ]
+   * d/patches:
+     - Refresh ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch
+     - Add fixes for new Highway library on ppc64
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 18 Apr 2023 22:00:00 -0500
 
 chromium (112.0.5615.138-1) unstable; urgency=high

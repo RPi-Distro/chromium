@@ -102,6 +102,7 @@ ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.pa
 ppc64le/fixes/fix-breakpad-compile.patch
 ppc64le/fixes/fix-partition-alloc-compile.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
+ppc64le/third_party/0001-Fix-highway-ppc-hwcap.patch
 
 ppc64le/third_party/0001-Add-PPC64-support-for-libdav1d.patch
 ppc64le/third_party/0001-Fix-libdav1d-compilation-on-clang-ppc.patch
@@ -113,3 +114,9 @@ ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
 
 ppc64le/third_party/dawn-fix-typos.patch
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
+
+# Needed on Debian while POWER8 remains the build target
+# POWER9 enables hardware 128 bit vector support (ISA 3.0),
+# and Highway gets confused when building in POWER8 mode
+# (POWER8 compiler flags) on POWER9 hosts.
+ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch

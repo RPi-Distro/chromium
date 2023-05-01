@@ -1,0 +1,12 @@
+--- a/third_party/highway/BUILD.gn
++++ b/third_party/highway/BUILD.gn
+@@ -13,6 +13,9 @@
+     # explicitly disabling AVX2 and AVX3 targets.
+     defines += [ "HWY_BROKEN_TARGETS=(HWY_AVX2|HWY_AVX3)" ]
+   }
++  if (target_cpu == "ppc64") {
++    defines += [ "TOOLCHAIN_MISS_ASM_HWCAP_H" ]
++  }
+ }
+ 
+ source_set("libhwy") {

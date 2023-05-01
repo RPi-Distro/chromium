@@ -40,6 +40,7 @@ system/rollup.patch
 
 bookworm/clang-attribs.patch
 bookworm/typename.patch
+bookworm/lambda-bug.patch
 
 bullseye/clang13.patch
 

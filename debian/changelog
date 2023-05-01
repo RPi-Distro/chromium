@@ -17,6 +17,7 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
     - bookworm/clang-attribs.patch: build fix for clang-14 to keep from
       generating hundreds of warnings per compilation unit.
     - bookworm/typename.patch: add another build fix for missing typename.
+    - bookworm/lamba-bug.patch: add to work around compiler bug (clang < 16).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 18 Apr 2023 22:00:00 -0500
 

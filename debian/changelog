@@ -24,6 +24,7 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
    * d/patches:
      - Refresh ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch
      - Add fixes for new Highway library on ppc64
+     - Suppress harmless warning messages from compiler during ppc64 builds
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 18 Apr 2023 22:00:00 -0500
 

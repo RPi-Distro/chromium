@@ -1,0 +1,33 @@
+--- ./build/config/compiler/BUILD.gn
++++ ./build/config/compiler/BUILD.gn
+@@ -1565,7 +1565,7 @@
+ 
+       # -Wno-class-memaccess warns about hash table and vector in blink.
+       # But the violation is intentional.
+-      if (!is_nacl) {
++      if ((!is_nacl) && (current_cpu != "ppc64")) {
+         cflags_cc += [ "-Wno-class-memaccess" ]
+       }
+ 
+@@ -1575,7 +1575,9 @@
+ 
+       # Don't warn about "maybe" uninitialized. Clang doesn't include this
+       # in -Wall but gcc does, and it gives false positives.
+-      cflags += [ "-Wno-maybe-uninitialized" ]
++      if (current_cpu != "ppc64") {
++        cflags += [ "-Wno-maybe-uninitialized" ]
++      }
+       cflags += [ "-Wno-deprecated-declarations" ]
+ 
+       # -Wcomment gives too many false positives in the case a
+@@ -1586,7 +1588,9 @@
+ 
+       # -Wpacked-not-aligned complains all generated mojom-shared-internal.h
+       # files.
+-      cflags += [ "-Wno-packed-not-aligned" ]
++      if (current_cpu != "ppc64") {
++        cflags += [ "-Wno-packed-not-aligned" ]
++      }
+     }
+   }
+ 

@@ -45,7 +45,7 @@ Files-Excluded:
  chrome/installer/mini_installer
  chrome/installer/launcher_support
  chrome/common/safe_browsing/rar_analyzer.*
- chrome/browser/resources/chromeos
+ chrome/browser/resources/chromeos/[^a]*
  chrome/browser/resources/default_apps
  chrome/chrome_cleaner/test/resources/signed_dll
  fuchsia*

@@ -2,10 +2,11 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
   * Remove Michel from Uploaders.
-  * Drop more stuff from the upstream tarball:
-    - fuchsia*: entirely different OS.
-    - chrome/build: PGO optimizations for official chrome builds; quite large.
-    - third_party/updater: normally small but upstream included update binary.
+  * d/copyright:
+    - drop fuchsia*: entirely different OS.
+    - drop chrome/build: 200MB of PGO optimizations for official chrome builds.
+    - drop third_party/updater: upstream included update binary.
+    - re-add part of chrome/browser/resources/chromeos/ to fix build error.
   * d/patches:
     - debianization/master-preferences.patch: check for initial_preferences or
       master_preferences, rather than just for the latter (closes: #992178).

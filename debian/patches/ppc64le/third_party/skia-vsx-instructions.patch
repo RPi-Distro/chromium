@@ -1,71 +1,66 @@
-diff -ur a/third_party/skia/BUILD.gn b/third_party/skia/BUILD.gn
---- a/third_party/skia/BUILD.gn	2022-01-28 11:01:18.000000000 -0600
-+++ b/third_party/skia/BUILD.gn	2022-01-28 11:15:22.270835089 -0600
-@@ -151,7 +151,8 @@
- is_x86 = current_cpu == "x64" || current_cpu == "x86"
- 
- opts("none") {
--  enabled = !is_x86 && current_cpu != "arm" && current_cpu != "arm64"
-+  enabled = !is_x86 && current_cpu != "arm" && current_cpu != "arm64" &&
-+      current_cpu != "ppc64"
-   sources = skia_opts.none_sources
-   cflags = []
- }
-@@ -253,6 +254,11 @@
+Index: chromium-113.0.5672.63/third_party/skia/BUILD.gn
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/BUILD.gn
++++ chromium-113.0.5672.63/third_party/skia/BUILD.gn
+@@ -282,6 +282,12 @@ opts("skx") {
    }
  }
  
 +opts("vsx") {
 +  enabled = current_cpu == "ppc64"
 +  sources = skia_opts.vsx_sources
++  cflags = [ "-mcpu=power9", "-mtune=power9" ]
 +}
 +
  # Any feature of Skia that requires third-party code should be optional and use this template.
  template("optional") {
    if (invoker.enabled) {
-@@ -1277,6 +1283,7 @@
-     ":sse41",
+@@ -1495,6 +1501,7 @@ skia_component("skia") {
+     ":skx",
      ":sse42",
      ":ssse3",
 +    ":vsx",
      ":webp_decode",
      ":webp_encode",
      ":wuffs",
-@@ -1454,6 +1461,7 @@
-     ":sse41",
+@@ -1672,6 +1679,7 @@ skia_static_library("pathkit") {
+     ":hsw",
      ":sse42",
      ":ssse3",
 +    ":vsx",
    ]
  
    sources = []
-diff -ur a/third_party/skia/gn/shared_sources.gni b/third_party/skia/gn/shared_sources.gni
---- a/third_party/skia/gn/shared_sources.gni	2022-01-20 04:37:51.000000000 -0600
-+++ b/third_party/skia/gn/shared_sources.gni	2022-01-28 11:16:01.506171346 -0600
-@@ -28,4 +28,5 @@
+Index: chromium-113.0.5672.63/third_party/skia/gn/shared_sources.gni
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/gn/shared_sources.gni
++++ chromium-113.0.5672.63/third_party/skia/gn/shared_sources.gni
+@@ -23,4 +23,5 @@ skia_opts = {
    avx_sources = avx
    hsw_sources = hsw
    skx_sources = skx
 +  vsx_sources = ssse3
  }
-diff -ur a/third_party/skia/gn/skia/BUILD.gn b/third_party/skia/gn/skia/BUILD.gn
---- a/third_party/skia/gn/skia/BUILD.gn	2022-01-20 04:37:51.000000000 -0600
-+++ b/third_party/skia/gn/skia/BUILD.gn	2022-01-28 11:15:22.274834613 -0600
-@@ -162,6 +162,8 @@
+Index: chromium-113.0.5672.63/third_party/skia/gn/skia/BUILD.gn
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/gn/skia/BUILD.gn
++++ chromium-113.0.5672.63/third_party/skia/gn/skia/BUILD.gn
+@@ -163,6 +163,8 @@ config("default") {
        "-mfpmath=sse",
      ]
      ldflags += [ "-m32" ]
 +  } else if (current_cpu == "ppc64") {
-+    cflags += [ "-mcpu=power8", "-mtune=power8" ]
++    cflags += [ "-mcpu=power9", "-mtune=power9" ]
    }
  
    if (malloc != "" && !is_win) {
-diff -ur a/third_party/skia/include/core/SkTypes.h b/third_party/skia/include/core/SkTypes.h
---- a/third_party/skia/include/core/SkTypes.h	2022-01-20 04:37:51.000000000 -0600
-+++ b/third_party/skia/include/core/SkTypes.h	2022-01-28 11:15:22.282833662 -0600
-@@ -161,6 +161,42 @@
-     #define SK_ARM_HAS_CRC32
- #endif
+Index: chromium-113.0.5672.63/third_party/skia/include/core/SkTypes.h
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/include/core/SkTypes.h
++++ chromium-113.0.5672.63/third_party/skia/include/core/SkTypes.h
+@@ -193,5 +193,41 @@ static constexpr uint32_t SK_InvalidGenI
+ */
+ static constexpr uint32_t SK_InvalidUniqueID = 0;
  
 +//////////////////////////////////////////////////////////////////////
 +// PPC defines
@@ -104,55 +99,11 @@ diff -ur a/third_party/skia/include/core/SkTypes.h b/third_party/skia/include/co
 +#endif
 +
  
- // DLL/.so exports.
- #if !defined(SKIA_IMPLEMENTATION)
-diff -ur a/third_party/skia/include/private/SkVx.h b/third_party/skia/include/private/SkVx.h
---- a/third_party/skia/include/private/SkVx.h	2022-01-20 04:37:51.000000000 -0600
-+++ b/third_party/skia/include/private/SkVx.h	2022-01-28 11:18:08.031132989 -0600
-@@ -32,6 +32,15 @@
-     #include <immintrin.h>
- #elif defined(__ARM_NEON)
-     #include <arm_neon.h>
-+#elif defined(__POWER8_VECTOR__) && defined(__has_include)
-+    #if (__has_include(<emmintrin.h>) && !defined(__clang__)) || \
-+         __has_include(<ppc_wrappers/emmintrin.h>)
-+        #define HAS_PPC64_SSE_COMPAT
-+        #ifndef NO_WARN_X86_INTRINSICS
-+            #define NO_WARN_X86_INTRINSICS
-+        #endif
-+        #include <emmintrin.h>
-+    #endif
- #elif defined(__wasm_simd128__)
-     #include <wasm_simd128.h>
  #endif
-@@ -612,7 +621,7 @@
-         return unchecked_bit_pun<Vec<N,int>>(_mm256_cvtps_epi32(unchecked_bit_pun<__m256>(x)));
-     }
- #endif
--#if defined(__SSE__)
-+#if defined(__SSE__) || defined(HAS_PPC64_SSE_COMPAT)
-     if /*constexpr*/ (N == 4) {
-         return unchecked_bit_pun<Vec<N,int>>(_mm_cvtps_epi32(unchecked_bit_pun<__m128>(x)));
-     }
-@@ -860,7 +869,7 @@
- IMPL_LOAD4_TRANSPOSED(16, int8_t, vld4q_s8);
- IMPL_LOAD4_TRANSPOSED(4, float, vld4q_f32);
- #undef IMPL_LOAD4_TRANSPOSED
--#elif defined(__SSE__)
-+#elif defined(__SSE__) || defined(HAS_PPC64_SSE_COMPAT)
- SI void strided_load4(const float* v,
-                       Vec<4,float>& a,
-                       Vec<4,float>& b,
-@@ -926,5 +935,6 @@
- #undef SIT
- #undef SI
- #undef SKVX_ALWAYS_INLINE
-+#undef HAS_PPC64_SSE_COMPAT
- 
- #endif//SKVX_DEFINED
-diff -ur a/third_party/skia/src/core/SkSpinlock.cpp b/third_party/skia/src/core/SkSpinlock.cpp
---- a/third_party/skia/src/core/SkSpinlock.cpp	2022-01-20 04:37:52.000000000 -0600
-+++ b/third_party/skia/src/core/SkSpinlock.cpp	2022-01-28 11:15:22.286833187 -0600
+Index: chromium-113.0.5672.63/third_party/skia/src/core/SkSpinlock.cpp
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/src/core/SkSpinlock.cpp
++++ chromium-113.0.5672.63/third_party/skia/src/core/SkSpinlock.cpp
 @@ -31,7 +31,8 @@
  #endif
  
@@ -163,23 +114,29 @@ diff -ur a/third_party/skia/src/core/SkSpinlock.cpp b/third_party/skia/src/core/
      #include <emmintrin.h>
      static void do_pause() { _mm_pause(); }
  #else
-diff -ur a/third_party/skia/src/opts/SkBitmapProcState_opts.h b/third_party/skia/src/opts/SkBitmapProcState_opts.h
---- a/third_party/skia/src/opts/SkBitmapProcState_opts.h	2022-01-20 04:37:52.000000000 -0600
-+++ b/third_party/skia/src/opts/SkBitmapProcState_opts.h	2022-01-28 11:15:22.286833187 -0600
-@@ -21,7 +21,9 @@
+Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkBitmapProcState_opts.h
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkBitmapProcState_opts.h
++++ chromium-113.0.5672.63/third_party/skia/src/opts/SkBitmapProcState_opts.h
+@@ -21,7 +21,13 @@
  // The rest are scattershot at the moment but I want to get them
  // all migrated to be normal code inside SkBitmapProcState.cpp.
  
 -#if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE2
 +#if defined(SK_PPC64_HAS_SSE_COMPAT)
-+    #include <emmintrin.h>
++    #if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSSE3
++        #include <tmmintrin.h>
++    #else
++        #include <emmintrin.h>
++    #endif
 +#elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE2
      #include <immintrin.h>
  #elif defined(SK_ARM_HAS_NEON)
      #include <arm_neon.h>
-diff -ur a/third_party/skia/src/opts/SkBlitRow_opts.h b/third_party/skia/src/opts/SkBlitRow_opts.h
---- a/third_party/skia/src/opts/SkBlitRow_opts.h	2022-01-20 04:37:52.000000000 -0600
-+++ b/third_party/skia/src/opts/SkBlitRow_opts.h	2022-01-28 11:19:00.584887121 -0600
+Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkBlitRow_opts.h
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkBlitRow_opts.h
++++ chromium-113.0.5672.63/third_party/skia/src/opts/SkBlitRow_opts.h
 @@ -100,7 +100,7 @@
  #endif
  
@@ -189,10 +146,11 @@ diff -ur a/third_party/skia/src/opts/SkBlitRow_opts.h b/third_party/skia/src/opt
  
      static inline __m128i SkPMSrcOver_SSE2(const __m128i& src, const __m128i& dst) {
          __m128i scale = _mm_sub_epi32(_mm_set1_epi32(256),
-diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/src/opts/SkRasterPipeline_opts.h
---- a/third_party/skia/src/opts/SkRasterPipeline_opts.h	2022-01-20 04:37:52.000000000 -0600
-+++ b/third_party/skia/src/opts/SkRasterPipeline_opts.h	2022-01-28 11:21:09.609554124 -0600
-@@ -69,6 +69,8 @@
+Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
++++ chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
+@@ -48,6 +48,8 @@ using NoCtx = const void*;
      #define JUMPER_IS_SCALAR
  #elif defined(SK_ARM_HAS_NEON)
      #define JUMPER_IS_NEON
@@ -201,7 +159,7 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
  #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SKX
      #define JUMPER_IS_SKX
  #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_AVX2
-@@ -101,6 +103,8 @@
+@@ -80,6 +82,8 @@ using NoCtx = const void*;
      #include <math.h>
  #elif defined(JUMPER_IS_NEON)
      #include <arm_neon.h>
@@ -210,7 +168,7 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
  #else
      #include <immintrin.h>
  #endif
-@@ -690,7 +694,7 @@
+@@ -719,7 +723,7 @@ namespace SK_OPTS_NS {
          }
      }
  
@@ -219,16 +177,16 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
  template <typename T> using V = T __attribute__((ext_vector_type(4)));
      using F   = V<float   >;
      using I32 = V< int32_t>;
-@@ -733,6 +737,8 @@
+@@ -791,6 +795,8 @@ template <typename T> using V = T __attr
      SI F floor_(F v) {
-     #if defined(JUMPER_IS_SSE41)
+     #if defined(JUMPER_IS_SSE41) || defined(JUMPER_IS_AVX)
          return _mm_floor_ps(v);
 +    #elif defined(JUMPER_IS_VSX)
 +        return vec_floor(v);
      #else
          F roundtrip = _mm_cvtepi32_ps(_mm_cvttps_epi32(v));
          return roundtrip - if_then_else(roundtrip > v, 1, 0);
-@@ -1004,6 +1010,13 @@
+@@ -1079,6 +1085,13 @@ SI F from_half(U16 h) {
  #elif defined(JUMPER_IS_HSW) || defined(JUMPER_IS_SKX)
      return _mm256_cvtph_ps(h);
  
@@ -242,7 +200,7 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
  #else
      // Remember, a half is 1-5-10 (sign-exponent-mantissa) with 15 exponent bias.
      U32 sem = expand(h),
-@@ -1025,6 +1038,13 @@
+@@ -1100,6 +1113,13 @@ SI U16 to_half(F f) {
  #elif defined(JUMPER_IS_HSW) || defined(JUMPER_IS_SKX)
      return _mm256_cvtps_ph(f, _MM_FROUND_CUR_DIRECTION);
  
@@ -256,7 +214,7 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
  #else
      // Remember, a float is 1-8-23 (sign-exponent-mantissa) with 127 exponent bias.
      U32 sem = sk_bit_cast<U32>(f),
-@@ -1058,7 +1078,7 @@
+@@ -1133,7 +1153,7 @@ static constexpr size_t N = sizeof(F) /
      // instead of {b,a} on the stack.  Narrow stages work best for __vectorcall.
      #define ABI __vectorcall
      #define JUMPER_NARROW_STAGES 1
@@ -265,7 +223,7 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
      // These platforms are ideal for wider stages, and their default ABI is ideal.
      #define ABI
      #define JUMPER_NARROW_STAGES 0
-@@ -3159,7 +3179,8 @@
+@@ -4517,7 +4537,8 @@ SI F sqrt_(F x) {
      __m256 lo,hi;
      split(x, &lo,&hi);
      return join<F>(_mm256_sqrt_ps(lo), _mm256_sqrt_ps(hi));
@@ -275,7 +233,7 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
      __m128 lo,hi;
      split(x, &lo,&hi);
      return join<F>(_mm_sqrt_ps(lo), _mm_sqrt_ps(hi));
-@@ -3198,6 +3219,10 @@
+@@ -4556,6 +4577,10 @@ SI F floor_(F x) {
      __m128 lo,hi;
      split(x, &lo,&hi);
      return join<F>(_mm_floor_ps(lo), _mm_floor_ps(hi));
@@ -286,11 +244,12 @@ diff -ur a/third_party/skia/src/opts/SkRasterPipeline_opts.h b/third_party/skia/
  #else
      F roundtrip = cast<F>(cast<I32>(x));
      return roundtrip - if_then_else(roundtrip > x, F(1), F(0));
-diff -ur a/third_party/skia/src/opts/SkSwizzler_opts.h b/third_party/skia/src/opts/SkSwizzler_opts.h
---- a/third_party/skia/src/opts/SkSwizzler_opts.h	2022-01-20 04:37:52.000000000 -0600
-+++ b/third_party/skia/src/opts/SkSwizzler_opts.h	2022-01-28 11:15:22.290832712 -0600
+Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkSwizzler_opts.h
+===================================================================
+--- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkSwizzler_opts.h
++++ chromium-113.0.5672.63/third_party/skia/src/opts/SkSwizzler_opts.h
 @@ -12,7 +12,9 @@
- #include "include/private/SkVx.h"
+ #include "src/base/SkVx.h"
  #include <utility>
  
 -#if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSSE3
@@ -300,83 +259,3 @@ diff -ur a/third_party/skia/src/opts/SkSwizzler_opts.h b/third_party/skia/src/op
      #include <immintrin.h>
  #elif defined(SK_ARM_HAS_NEON)
      #include <arm_neon.h>
-diff -ur a/third_party/skia/third_party/skcms/skcms.cc b/third_party/skia/third_party/skcms/skcms.cc
---- a/third_party/skia/third_party/skcms/skcms.cc	2022-01-20 04:37:53.000000000 -0600
-+++ b/third_party/skia/third_party/skcms/skcms.cc	2022-01-28 11:15:22.290832712 -0600
-@@ -30,6 +30,8 @@
-         #include <avx512fintrin.h>
-         #include <avx512dqintrin.h>
-     #endif
-+#elif defined(__POWER8_VECTOR__)
-+    #include <altivec.h>
- #endif
- 
- static bool runtime_cpu_detection = true;
-diff -ur a/third_party/skia/third_party/skcms/src/Transform_inl.h b/third_party/skia/third_party/skcms/src/Transform_inl.h
---- a/third_party/skia/third_party/skcms/src/Transform_inl.h	2022-01-20 04:37:53.000000000 -0600
-+++ b/third_party/skia/third_party/skcms/src/Transform_inl.h	2022-01-28 11:15:22.294832236 -0600
-@@ -44,6 +44,9 @@
- #if !defined(USING_AVX512F)  && N == 16 && defined(__AVX512F__)
-     #define  USING_AVX512F
- #endif
-+#if !defined(USING_VSX)      && defined(__POWER8_VECTOR__)
-+    #define  USING_VSX
-+#endif
- 
- // Similar to the AVX+ features, we define USING_NEON and USING_NEON_F16C.
- // This is more for organizational clarity... skcms.cc doesn't force these.
-@@ -165,6 +168,22 @@
- #elif defined(USING_AVX_F16C)
-     typedef int16_t __attribute__((vector_size(16))) I16;
-     return __builtin_ia32_vcvtph2ps256((I16)half);
-+#elif defined(USING_VSX) && __has_builtin(__builtin_vsx_xvcvhpsp)
-+    #if defined(__LITTLE_ENDIAN__)
-+        return __builtin_vsx_xvcvhpsp({
-+            half[0], 0,
-+            half[1], 0,
-+            half[2], 0,
-+            half[3], 0
-+        });
-+    #else
-+        return __builtin_vsx_xvcvhpsp({
-+            0, half[0],
-+            0, half[1],
-+            0, half[2],
-+            0, half[3]
-+        });
-+    #endif
- #else
-     U32 wide = cast<U32>(half);
-     // A half is 1-5-10 sign-exponent-mantissa, with 15 exponent bias.
-@@ -193,6 +212,13 @@
-     return (U16)_mm512_cvtps_ph((__m512 )f, _MM_FROUND_CUR_DIRECTION );
- #elif defined(USING_AVX_F16C)
-     return (U16)__builtin_ia32_vcvtps2ph256(f, 0x04/*_MM_FROUND_CUR_DIRECTION*/);
-+#elif defined(JUMPER_IS_VSX) && __has_builtin(__builtin_vsx_xvcvsphp)
-+    __vector unsigned short v = __builtin_vsx_xvcvsphp(f);
-+    #if defined(__LITTLE_ENDIAN__)
-+        return U16{v[0], v[2], v[4], v[6]};
-+    #else
-+        return U16{v[1], v[3], v[5], v[7]};
-+    #endif
- #else
-     // A float is 1-8-23 sign-exponent-mantissa, with 127 exponent bias.
-     U32 sem = bit_pun<U32>(f),
-@@ -249,6 +275,8 @@
-     return __builtin_ia32_roundps256(x, 0x01/*_MM_FROUND_FLOOR*/);
- #elif defined(__SSE4_1__)
-     return _mm_floor_ps(x);
-+#elif defined(USING_VSX)
-+    return vec_floor(x);
- #else
-     // Round trip through integers with a truncating cast.
-     F roundtrip = cast<F>(cast<I32>(x));
-@@ -1603,5 +1631,8 @@
- #if defined(USING_NEON_FP16)
-     #undef  USING_NEON_FP16
- #endif
-+#if defined(USING_VSX)
-+    #undef  USING_VSX
-+#endif
- 
- #undef FALLTHROUGH

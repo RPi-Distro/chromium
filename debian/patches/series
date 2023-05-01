@@ -123,3 +123,7 @@ ppc64le/fixes/fix-unknown-warning-option-messages.diff
 # and Highway gets confused when building in POWER8 mode
 # (POWER8 compiler flags) on POWER9 hosts.
 ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch
+
+# These patches enable full POWER ISA 3.0 (POWER9) acceleration when applied
+# They will not work on POWER8 (ISA 2.07) or below
+patches/ppc64le/core/baseline-isa-3-0.patch

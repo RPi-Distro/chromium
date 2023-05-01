@@ -1,0 +1,33 @@
+--- build/config/compiler/BUILD.gn
++++ build/config/compiler/BUILD.gn
+@@ -1250,7 +1250,7 @@
+         cflags += [ "-maix64" ]
+         ldflags += [ "-maix64" ]
+       } else {
+-        cflags += [ "-m64" ]
++        cflags += [ "-m64", "-mcpu=power9", "-mtune=power9" ]
+         ldflags += [ "-m64" ]
+       }
+     } else if (current_cpu == "riscv64") {
+--- third_party/libvpx/BUILD.gn
++++ third_party/libvpx/BUILD.gn
+@@ -93,7 +93,7 @@
+ 
+   if (current_cpu == "ppc64") {
+     cflags += [
+-      "-mcpu=power8",
++      "-mcpu=power9",
+       "-maltivec",
+       "-mvsx",
+     ]
+--- v8/BUILD.gn
++++ v8/BUILD.gn
+@@ -1251,7 +1251,7 @@
+       defines += [ "V8_TARGET_ARCH_PPC_LE" ]
+         cflags += [
+         # Enable usage of AltiVec, VSX, and other POWER8 and higher features
+-        "-mcpu=power8",
++        "-mcpu=power9",
+         "-maltivec",
+         "-mvsx",
+       ]

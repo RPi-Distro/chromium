@@ -13,6 +13,8 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
     - disable/unrar.patch: adjust for upstream's nested archive changes.
     - disable/catapult.patch: refresh.
     - upstream/webview-cstr.patch: add simple build fix from upstream.
+    - bookworm/clang-attribs.patch: build fix for clang-14 to keep from
+      generating hundreds of warnings per compilation unit.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 18 Apr 2023 22:00:00 -0500
 

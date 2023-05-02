@@ -1,6 +1,25 @@
 chromium (113.0.5672.63-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+    - CVE-2023-2459: Inappropriate implementation in Prompts.
+      Reported by Rong Jian of VRI.
+    - CVE-2023-2460: Insufficient validation of untrusted input in Extensions.
+      Reported by Martin Bajanik, Fingerprint[.]com.
+    - CVE-2023-2461: Use after free in OS Inputs. Reported by @ginggilBesel.
+    - CVE-2023-2462: Inappropriate implementation in Prompts.
+      Reported by Alesandro Ortiz.
+    - CVE-2023-2463: Inappropriate implementation in Full Screen Mode.
+      Reported by Irvan Kurniawan (sourc7).
+    - CVE-2023-2464: Inappropriate implementation in PictureInPicture.
+      Reported by Thomas Orlita.
+    - CVE-2023-2465: Inappropriate implementation in CORS.
+      Reported by @kunte_ctf.
+    - CVE-2023-2466: Inappropriate implementation in Prompts.
+      Reported by Jasper Rebane (popstonia).
+    - CVE-2023-2467: Inappropriate implementation in Prompts.
+      Reported by Thomas Orlita.
+    - CVE-2023-2468: Inappropriate implementation in PictureInPicture.
+      Reported by Alesandro Ortiz.
   * Remove Michel from Uploaders.
   * d/copyright:
     - drop fuchsia*: entirely different OS.

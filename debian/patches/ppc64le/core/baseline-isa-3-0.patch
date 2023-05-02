@@ -1,5 +1,5 @@
---- build/config/compiler/BUILD.gn
-+++ build/config/compiler/BUILD.gn
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
 @@ -1250,7 +1250,7 @@
          cflags += [ "-maix64" ]
          ldflags += [ "-maix64" ]
@@ -9,8 +9,8 @@
          ldflags += [ "-m64" ]
        }
      } else if (current_cpu == "riscv64") {
---- third_party/libvpx/BUILD.gn
-+++ third_party/libvpx/BUILD.gn
+--- a/third_party/libvpx/BUILD.gn
++++ b/third_party/libvpx/BUILD.gn
 @@ -93,7 +93,7 @@
  
    if (current_cpu == "ppc64") {
@@ -20,8 +20,8 @@
        "-maltivec",
        "-mvsx",
      ]
---- v8/BUILD.gn
-+++ v8/BUILD.gn
+--- a/v8/BUILD.gn
++++ b/v8/BUILD.gn
 @@ -1251,7 +1251,7 @@
        defines += [ "V8_TARGET_ARCH_PPC_LE" ]
          cflags += [

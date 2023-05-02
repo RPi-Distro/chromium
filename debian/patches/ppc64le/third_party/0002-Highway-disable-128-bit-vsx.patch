@@ -1,5 +1,5 @@
---- third_party/highway/src/hwy/ops/ppc_vsx-inl.h.orig	2023-04-26 21:47:31.000000000 +0000
-+++ third_party/highway/src/hwy/ops/ppc_vsx-inl.h	2023-05-01 07:55:55.165968505 +0000
+--- a/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
++++ b/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
 @@ -36,6 +36,8 @@
  
  #include "hwy/ops/shared-inl.h"

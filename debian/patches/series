@@ -15,7 +15,6 @@ disable/tests.patch
 disable/unrar.patch
 disable/signin.patch
 disable/android.patch
-disable/openh264.patch
 disable/catapult.patch
 disable/font-tests.patch
 disable/swiftshader.patch

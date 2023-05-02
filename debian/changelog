@@ -21,6 +21,7 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
     - CVE-2023-2468: Inappropriate implementation in PictureInPicture.
       Reported by Alesandro Ortiz.
   * Remove Michel from Uploaders.
+  * Build against libopenh264-dev (closes: #1031352).
   * d/copyright:
     - drop fuchsia*: entirely different OS.
     - drop chrome/build: 200MB of PGO optimizations for official chrome builds.
@@ -38,7 +39,10 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
       generating hundreds of warnings per compilation unit.
     - bookworm/typename.patch: add another build fix for missing typename.
     - bookworm/lamba-bug.patch: add to work around compiler bug (clang < 16).
-    - bullseye/constexpr.patch: work around build failure w/ bullseye's clang/libstdc++.
+    - bullseye/constexpr.patch: work around build failure w/ bullseye's
+      clang/libstdc++.
+    - disable/openh264.patch -> bullseye/openh264.patch, and stop using it
+      for sid & bookworm.
 
   [ Timothy Pearson ]
    * d/patches:

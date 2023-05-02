@@ -19,6 +19,7 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
       generating hundreds of warnings per compilation unit.
     - bookworm/typename.patch: add another build fix for missing typename.
     - bookworm/lamba-bug.patch: add to work around compiler bug (clang < 16).
+    - bullseye/constexpr.patch: work around build failure w/ bullseye's clang/libstdc++.
 
   [ Timothy Pearson ]
    * d/patches:

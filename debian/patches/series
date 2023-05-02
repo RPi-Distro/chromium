@@ -44,6 +44,7 @@ bookworm/typename.patch
 bookworm/lambda-bug.patch
 
 bullseye/clang13.patch
+bullseye/constexpr.patch
 
 # i386 support
 i386/support-i386.patch

@@ -42,6 +42,11 @@ export CDPATH=
 export GLOBIGNORE=
 export BASH_XTRACEFD=
 
+if [ "$(uname -m)" == "armv6l" ]; then
+	zenity --error --no-wrap --text="Chromium is not supported on $(cat /proc/device-tree/model | sed 's/ Rev .*//')"
+	exit 0
+fi
+
 if grep -E -w ^Features\\s\*:.\*neon /proc/cpuinfo >/dev/null; then
 	export CPU_FEATURE_NEON=1
 fi
@@ -73,12 +78,6 @@ usage () {
   MANWIDTH=80 man chromium-browser | sed -e '1,/OPTIONS/d; /ENVIRONMENT/,$d'
   echo " See 'man chromium-browser' for more details"
 }
-
-if [ "$(uname -m)" != "armv6l" ] && [ -f "$LIBDIR/${APPNAME}-v7" ]; then
-	APPSUFFIX="-v7"
-else
-	APPSUFFIX=""
-fi
 
 if [ -f /etc/$APPNAME/default ] ; then
   . /etc/$APPNAME/default
@@ -202,10 +201,6 @@ if [ "$(dpkg -l bluealsa | tail -n 1 | cut -d ' ' -f 1)" = "ii" ] ; then
   CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-features=AudioServiceOutOfProcess"
 fi
 
-if [ -f /opt/WidevineCdm/_platform_specific/linux_@DEB_HOST_ARCH@/libgcc_hide.so ]; then
-  export LD_PRELOAD=/opt/WidevineCdm/_platform_specific/linux_@DEB_HOST_ARCH@/libgcc_hide.so
-fi
-
 if [ $want_debug -eq 1 ] ; then
   if [ ! -x $GDB ] ; then
     echo "Sorry, can't find usable $GDB. Please install it."
@@ -220,18 +215,18 @@ if [ $want_debug -eq 1 ] ; then
   echo "#            GTK_PATH=$GTK_PATH"
   echo "# CHROMIUM_USER_FLAGS=$CHROMIUM_USER_FLAGS"
   echo "#      CHROMIUM_FLAGS=$CHROMIUM_FLAGS"
-  echo "$GDB $LIBDIR/$APPNAME$APPSUFFIX -x $tmpfile"
-  $GDB "$LIBDIR/$APPNAME$APPSUFFIX" -x $tmpfile
+  echo "$GDB $LIBDIR/$APPNAME -x $tmpfile"
+  $GDB "$LIBDIR/$APPNAME" -x $tmpfile
   if [ $want_temp_profile -eq 1 ] ; then
     rm -rf $TEMP_PROFILE
   fi
   exit $?
 else
   if [ $want_temp_profile -eq 0 ] ; then
-    exec $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
+    exec $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
   else
     # we can't exec here as we need to clean-up the temporary profile
-    $LIBDIR/$APPNAME$APPSUFFIX $CHROMIUM_FLAGS "$@"
+    $LIBDIR/$APPNAME $CHROMIUM_FLAGS "$@"
     rm -rf $TEMP_PROFILE
   fi
 fi

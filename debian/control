@@ -65,7 +65,8 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
 	libgl1-mesa-dri,
 	libgles2,
 	libegl1,
-	libpulse0
+	libpulse0,
+	zenity [armhf]
 Recommends: chromium-browser-l10n
 Provides: www-browser, chromium-browser-inspector, exec<usr/bin/chromium-browser>, mime<text/html>, mime<x-scheme-handler/http>, mime<x-scheme-handler/https>,
          chromium

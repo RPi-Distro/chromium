@@ -1,2 +1,1 @@
 debian/tmp-std/usr/lib/chromium-browser/libffmpeg.so usr/lib/chromium-browser
-debian/tmp-std-v7/usr/lib/chromium-browser/neon/vfp/libffmpeg.so usr/lib/chromium-browser/neon/vfp

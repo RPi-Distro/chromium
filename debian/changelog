@@ -1,3 +1,11 @@
+chromium-browser (113.0.5672.59-rpt1) bullseye; urgency=medium
+
+  * Drop armv6 support
+  * Update to 113.0.5672.59
+  * v113.0.5672.59_rpi_2.57.patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 11 Apr 2023 16:10:59 +0100
+
 chromium-browser (109.0.5414.112-rpt2) bullseye; urgency=medium
 
   * Add arm64 widevine support

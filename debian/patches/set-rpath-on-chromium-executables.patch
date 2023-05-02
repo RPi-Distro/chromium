@@ -4,18 +4,18 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
 
 --- a/src/chrome/BUILD.gn
 +++ b/src/chrome/BUILD.gn
-@@ -337,6 +337,8 @@ if (!is_android && !is_mac) {
-           "//ui/base",
+@@ -397,6 +397,8 @@ if (!is_android && !is_mac) {
+           "app/chrome_main_linux.h",
          ]
        }
 +
 +      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
      }
- 
-     if (is_chromeos_ash || is_win) {
+   }
+   _chrome_exe("chrome_initial") {
 --- a/src/tools/v8_context_snapshot/BUILD.gn
 +++ b/src/tools/v8_context_snapshot/BUILD.gn
-@@ -111,6 +111,10 @@ if (use_v8_context_snapshot) {
+@@ -89,6 +89,10 @@ if (use_v8_context_snapshot) {
          "//v8",
        ]
  
@@ -28,7 +28,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
          ":disable_icf",
 --- a/src/components/nacl/loader/BUILD.gn
 +++ b/src/components/nacl/loader/BUILD.gn
-@@ -113,6 +113,7 @@ if ((is_linux || is_chromeos) && current
+@@ -114,6 +114,7 @@ if ((is_linux || is_chromeos) && current
        "nacl_helper_linux.h",
      ]
  

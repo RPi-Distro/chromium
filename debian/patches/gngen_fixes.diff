@@ -1,39 +1,27 @@
 --- a/src/pi-util/defargs_arm64-bullseye.gn
 +++ b/src/pi-util/defargs_arm64-bullseye.gn
-@@ -11,6 +11,4 @@ enable_hangout_services_extension = true
+@@ -11,9 +11,6 @@ enable_hangout_services_extension = true
  # We have issues with the lib for this & it is probably for unittest only
  use_gnome_keyring = false
  
 -ffmpeg_branding = "Chrome"
 -proprietary_codecs = true
 -
-+enable_widevine = true
---- a/src/pi-util/defargs_armv6-bullseye.gn
-+++ b/src/pi-util/defargs_armv6-bullseye.gn
-@@ -9,13 +9,10 @@ arm_version = 6
- arm_use_thumb = false
- arm_arch = "armv6z"
+ enable_widevine = true
  
--# We want H.264 in ffmpeg
--ffmpeg_branding = "Chrome"
--proprietary_codecs = true
--
- # We have issues with the lib for this & it is probably for unittest only
- use_gnome_keyring = false
- 
- # This crashes the compiler!
- #rtc_use_h264 = false
- 
-+enable_widevine = false
+ # We don't have the required GL extensions to enable GL passthrough so must
 --- a/src/pi-util/defargs_armv7-bullseye.gn
 +++ b/src/pi-util/defargs_armv7-bullseye.gn
-@@ -20,6 +20,3 @@ enable_hangout_services_extension = true
+@@ -25,9 +25,6 @@ use_gnome_keyring = false
+ # enable the validating decode otherwise we get a fatal GPU error
+ enable_validating_command_decoder = true
  
- # We have issues with the lib for this & it is probably for unittest only
- use_gnome_keyring = false
--
 -ffmpeg_branding = "Chrome"
 -proprietary_codecs = true
+-
+ disable_fieldtrial_testing_config = true
+ enable_nacl = false
+ blink_symbol_level = 0
 --- a/src/pi-util/gngen.py
 +++ b/src/pi-util/gngen.py
 @@ -2,7 +2,7 @@
@@ -88,30 +76,14 @@
  
      dargs.close()
  
-@@ -64,9 +80,12 @@ if __name__ == '__main__':
+@@ -64,8 +80,9 @@ if __name__ == '__main__':
      gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm-sysroot")
  
-     docopy("armv6-bullseye", gyp_vars, is_ozone=True)
-+    docopy("armv6-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)
      docopy("armv7-bullseye", gyp_vars, is_ozone=True)
 +    docopy("armv7-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)
  
      gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm64-sysroot")
  
      docopy("arm64-bullseye", gyp_vars, is_ozone=True)
+-
 +    docopy("arm64-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)
- 
---- a/src/pi-util/defargs_arm64.gn
-+++ b/src/pi-util/defargs_arm64.gn
-@@ -19,3 +19,4 @@ rtc_use_pipewire = false
- ffmpeg_branding = "Chrome"
- proprietary_codecs = true
- 
-+enable_widevine = true
---- a/src/pi-util/defargs_armv6.gn
-+++ b/src/pi-util/defargs_armv6.gn
-@@ -33,3 +33,4 @@ proprietary_codecs = true
- # This crashes the compiler!
- rtc_use_h264 = false
- 
-+enable_widevine = false

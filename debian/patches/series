@@ -1,8 +1,7 @@
-v109.0.5414.112_rpi_2.55.patch
+v113.0.5672.59_rpi_2.57.patch
 gngen_fixes.diff
 set-rpath-on-chromium-executables.patch
 search-credit.patch
-ffmpeg_chromium.patch
 widevine-enable-version-string.patch
 widevine-other-locations
 title-bar-default-system.patch-v35
@@ -11,4 +10,3 @@ netflix.patch
 master-preferences.patch
 0017-disable-browser-sign-in-feature-by-default.patch
 disable-missing-key-warning.patch
-v8_filename.patch

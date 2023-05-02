@@ -11,7 +11,7 @@ chromium (113.0.5672.63-1) UNRELEASED; urgency=high
   * d/patches:
     - debianization/master-preferences.patch: check for initial_preferences or
       master_preferences, rather than just for the latter (closes: #992178).
-    - disable/unrar.patch: adjust for upstream's nested archive changes.
+    - disable/unrar.patch: complete rewrite for upstream's nested archive changes.
     - disable/catapult.patch: refresh.
     - upstream/webview-cstr.patch: add simple build fix from upstream.
     - upstream/monostate.patch: add simple build fix from upstream.

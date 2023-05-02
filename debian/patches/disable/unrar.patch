@@ -1,5 +1,5 @@
 description: disable support for safe browsing inspection of rar files
-author: Michael Gilbert <mgilbert@debian.org>
+author: Andres Salomon <dilinger@debian.org>
 bug: http://bugs.debian.org/914487
 
 --- a/chrome/common/safe_browsing/BUILD.gn
@@ -23,36 +23,31 @@ bug: http://bugs.debian.org/914487
      if (is_linux) {
 --- a/chrome/browser/safe_browsing/download_protection/file_analyzer.cc
 +++ b/chrome/browser/safe_browsing/download_protection/file_analyzer.cc
-@@ -78,7 +78,7 @@ void FileAnalyzer::Start(const base::Fil
+@@ -78,7 +78,10 @@ void FileAnalyzer::Start(const base::Fil
    if (inspection_type == DownloadFileType::ZIP) {
      StartExtractZipFeatures();
    } else if (inspection_type == DownloadFileType::RAR) {
 -    StartExtractRarFeatures();
-+    LOG(WARNING) << "Safebrowser inspection of rar files is disabled in this build";
++    LOG(ERROR) << "Safebrowser checking of rar files is disabled, open at your own risk!";
++    results_.archive_summary.set_parser_status(
++        ClientDownloadRequest::ArchiveSummary::PARSER_TIMED_OUT);
++    std::move(callback_).Run(std::move(results_));
  #if BUILDFLAG(IS_MAC)
    } else if (inspection_type == DownloadFileType::DMG) {
      StartExtractDmgFeatures();
 --- a/chrome/services/file_util/safe_archive_analyzer.cc
 +++ b/chrome/services/file_util/safe_archive_analyzer.cc
-@@ -67,15 +67,12 @@ void SafeArchiveAnalyzer::AnalyzeRarFile
-   AnalysisFinishedCallback analysis_finished_callback =
-       base::BindOnce(&SafeArchiveAnalyzer::AnalysisFinished,
-                      weak_factory_.GetWeakPtr(), base::FilePath());
--  base::RepeatingCallback<void(GetTempFileCallback callback)>
--      temp_file_getter_callback =
--          base::BindRepeating(&SafeArchiveAnalyzer::RequestTemporaryFile,
--                              weak_factory_.GetWeakPtr());
--  timeout_timer_.Start(FROM_HERE, kArchiveAnalysisTimeout, this,
--                       &SafeArchiveAnalyzer::Timeout);
+@@ -73,9 +73,10 @@ void SafeArchiveAnalyzer::AnalyzeRarFile
+                               weak_factory_.GetWeakPtr());
+   timeout_timer_.Start(FROM_HERE, kArchiveAnalysisTimeout, this,
+                        &SafeArchiveAnalyzer::Timeout);
 -  rar_analyzer_.Init(std::move(rar_file), base::FilePath(),
 -                     std::move(analysis_finished_callback),
 -                     std::move(temp_file_getter_callback), &results_);
-+
-+  LOG(FATAL) << "AnalyzeRarFile is disabled in this build";
-+  //SetResultsForTesting(ArchiveAnalyzerResults* results);
-+  //results_->success = false;
-+  //results_->analysis_result = ArchiveAnalysisResult::kUnknown;
-+  std::move(analysis_finished_callback).Run();
++  LOG(ERROR) << "AnalyzeRarFile is disabled in this build";
++  results_.success = false;
++  results_.analysis_result = safe_browsing::ArchiveAnalysisResult::kFailedToOpen;
++  std::move(callback_).Run(results_);
  }
  
  void SafeArchiveAnalyzer::AnalyzeSevenZipFile(
@@ -94,7 +89,7 @@ bug: http://bugs.debian.org/914487
 -                               std::move(nested_analysis_finished_callback),
 -                               get_temp_file_callback_, results_);
 -    return true;
-+    LOG(FATAL) << "AnalyzeRarFile is disabled in this build";
++    LOG(ERROR) << "AnalyzeRarFile is disabled in this build";
 +    return false;
    }
    return false;

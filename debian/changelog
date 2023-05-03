@@ -1,3 +1,9 @@
+chromium (113.0.5672.63-2) unstable; urgency=low
+  * d/patches:
+    - Set baseline ppc64 CPU back to POWER ISA 2.07 (POWER8)
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Wed, 03 May 2023 10:47:00 -0500
+
 chromium (113.0.5672.63-1) unstable; urgency=high
 
   * New upstream stable release.

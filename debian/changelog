@@ -1,4 +1,4 @@
-chromium (113.0.5672.63-1) UNRELEASED; urgency=high
+chromium (113.0.5672.63-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2023-2459: Inappropriate implementation in Prompts.

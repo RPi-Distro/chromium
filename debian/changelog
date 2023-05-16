@@ -1,3 +1,10 @@
+chromium-browser (113.0.5672.95-rpt1) bullseye; urgency=medium
+
+  * Update to 113.0.5672.95
+  * v113.0.5672.95_rpi_2.58.patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 15 May 2023 11:34:53 +0100
+
 chromium-browser (113.0.5672.59-rpt1) bullseye; urgency=medium
 
   * Drop armv6 support

@@ -49,6 +49,7 @@ Files-Excluded:
  chrome/browser/resources/chromeos/ac*
  chrome/browser/resources/chromeos/s*
  chrome/browser/resources/chromeos/l*
+ chrome/browser/resources/chromeos/n*
  chrome/browser/resources/default_apps
  chrome/chrome_cleaner/test/resources/signed_dll
  fuchsia*

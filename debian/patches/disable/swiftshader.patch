@@ -3,18 +3,18 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -503,7 +503,7 @@ group("gn_all") {
-     ]
-   }
+@@ -495,7 +495,7 @@ group("gn_all") {
+       ]
+     }
  
--  if ((is_win || is_mac || is_linux || is_chromeos || is_fuchsia) &&
-+  if (false &&
-       (target_cpu == "x86" || target_cpu == "x64")) {
-     deps += [
-       "//third_party/swiftshader/src/Vulkan:icd_file",
+-    if ((is_win || is_mac || is_linux || is_chromeos || is_fuchsia) &&
++    if (false &&
+         (target_cpu == "x86" || target_cpu == "x64")) {
+       deps += [
+         "//third_party/swiftshader/src/Vulkan:icd_file",
 --- a/third_party/angle/gni/angle.gni
 +++ b/third_party/angle/gni/angle.gni
-@@ -170,7 +170,7 @@ declare_args() {
+@@ -171,7 +171,7 @@ declare_args() {
         ((angle_use_x11 && !is_chromeos) || angle_use_wayland || is_castos)) &&
        !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
  

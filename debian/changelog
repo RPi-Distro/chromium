@@ -6,6 +6,10 @@ chromium (114.0.5735.45-1) UNRELEASED; urgency=high
     - fixes/clang-and-gcc11.patch: refresh.
     - upstream/webview-cstr.patch: drop, merged upstream.
     - upstream/monostate.patch: drop, merged upstream.
+    - disable/unrar.patch: additional upstream changes required more reworking.
+    - disable/android.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/swiftshader.patch: refresh.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 May 2023 16:25:03 -0400
 

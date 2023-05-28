@@ -24,7 +24,6 @@ Files-Excluded:
  ui/chromeos/B*
  ui/chromeos/D*
  ui/chromeos/devicetype_utils.cc
- ui/chromeos/e*
  ui/chromeos/f*
  ui/chromeos/r*
  ui/chromeos/s*
@@ -34,7 +33,9 @@ Files-Excluded:
  base/mac
  base/test/data
  base/third_party/double_conversion
- chrome/android/[^m]*
+ chrome/android/j*
+ chrome/android/f*
+ chrome/android/w*
  chrome/build
  chrome/installer/mac
  chrome/installer/test
@@ -45,7 +46,9 @@ Files-Excluded:
  chrome/installer/mini_installer
  chrome/installer/launcher_support
  chrome/common/safe_browsing/rar_analyzer.*
- chrome/browser/resources/chromeos/[^a]*
+ chrome/browser/resources/chromeos/ac*
+ chrome/browser/resources/chromeos/s*
+ chrome/browser/resources/chromeos/l*
  chrome/browser/resources/default_apps
  chrome/chrome_cleaner/test/resources/signed_dll
  fuchsia*
@@ -79,6 +82,7 @@ Files-Excluded:
  third_party/opus
  third_party/flac
  third_party/llvm
+ third_party/libei
  third_party/webgl
  third_party/libpng
  third_party/libdrm

@@ -2,6 +2,10 @@ chromium (114.0.5735.45-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
   * d/copyright: properly delete some android & chromeos stuff.
+  * d/patches:
+    - fixes/clang-and-gcc11.patch: refresh.
+    - upstream/webview-cstr.patch: drop, merged upstream.
+    - upstream/monostate.patch: drop, merged upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 May 2023 16:25:03 -0400
 

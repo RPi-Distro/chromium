@@ -8,8 +8,6 @@ fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 
 upstream/mojo.patch
-upstream/webview-cstr.patch
-upstream/monostate.patch
 
 disable/tests.patch
 disable/unrar.patch

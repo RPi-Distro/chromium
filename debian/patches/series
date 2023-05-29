@@ -8,6 +8,7 @@ fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 
 upstream/mojo.patch
+upstream/sizet.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -38,7 +39,7 @@ system/rollup.patch
 
 bookworm/clang-attribs.patch
 bookworm/typename.patch
-bookworm/lambda-bug.patch
+#bookworm/lambda-bug.patch
 
 bullseye/clang13.patch
 bullseye/constexpr.patch

@@ -13,6 +13,7 @@ chromium (114.0.5735.45-1) UNRELEASED; urgency=high
     - disable/angle-perftest.patch: refresh.
     - system/jpeg.patch: refresh.
     - upstream/mojo.patch: regenerate from git.
+    - upstream/sizet.patch: add an upstream build fix.
   * Add build-dep on libevdev-dev - now required by upstream.
 
 

@@ -1,0 +1,25 @@
+commit 091a1ec77ba6eae7b3a1339a873ff53cc0abfa5b
+Author: Jose Dapena Paz <jdapena@igalia.com>
+Date:   Wed May 3 11:38:24 2023 +0000
+
+    IWYU: use of size_t in address_tracker_linux_text_util.h requires include
+    
+    Bug: 957519
+    Change-Id: I5404ed4b2a4470d4dfe0a518cd33a8070d2e4ea2
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4498136
+    Commit-Queue: José Dapena Paz <jdapena@igalia.com>
+    Reviewed-by: Eric Orth <ericorth@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1138868}
+
+diff --git a/net/base/address_tracker_linux_test_util.h b/net/base/address_tracker_linux_test_util.h
+index a78892e1c165c..9d3fa324434ba 100644
+--- a/net/base/address_tracker_linux_test_util.h
++++ b/net/base/address_tracker_linux_test_util.h
+@@ -9,6 +9,7 @@
+ #include <linux/rtnetlink.h>
+ #include <stdint.h>
+ 
++#include <cstddef>
+ #include <vector>
+ 
+ bool operator==(const struct ifaddrmsg& lhs, const struct ifaddrmsg& rhs);

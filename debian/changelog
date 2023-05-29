@@ -10,6 +10,11 @@ chromium (114.0.5735.45-1) UNRELEASED; urgency=high
     - disable/android.patch: refresh.
     - disable/catapult.patch: refresh.
     - disable/swiftshader.patch: refresh.
+    - disable/angle-perftest.patch: refresh.
+    - system/jpeg.patch: refresh.
+    - upstream/mojo.patch: regenerate from git.
+  * Add build-dep on libevdev-dev - now required by upstream.
+
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 May 2023 16:25:03 -0400
 

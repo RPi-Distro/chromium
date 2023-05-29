@@ -10,7 +10,7 @@ I'm not sure how much of them are actually needed, but it's easier to
 just copy all of them for now. Hopefully this will be fixed upstream
 shortly.
 
-This copy is from chromium 110.0.5481.77.
+This copy is from chromium 114.0.5735.45.
 
 --- /dev/null
 +++ b/content/test/data/web_ui_test.test-mojom
@@ -1535,21 +1535,30 @@ This copy is from chromium 110.0.5481.77.
 +</html>
 --- /dev/null
 +++ b/content/test/data/fetch-keepalive.html
-@@ -0,0 +1,16 @@
+@@ -0,0 +1,25 @@
 +<!doctype html>
++<!--
++  This page loads the given number of fetch keepalive requests, and then waits for their responses.
++-->
 +<title>Fetching</title>
 +<script>
-+const params = new URL(location.href).searchParams;
-+const numRequests = params.has('requests') ? Number(params.get('requests')) : 1;
++const PARAMS = new URL(location.href).searchParams;
++const NUM_REQUESTS= PARAMS.has('requests') ? Number(PARAMS.get('requests')) : 1;
++const METHOD = PARAMS.get('method') || 'GET';
++
 +const promises = [];
-+for (let i = 0; i < numRequests; i += 1) {
-+    promises.push(fetch('/beacon', {keepalive: true, cache: 'no-store'}));
++for (let i = 0; i < NUM_REQUESTS; i += 1) {
++  promises.push(fetch('/beacon', {
++    keepalive: true,
++    cache: 'no-store',
++    method: METHOD
++  }));
 +}
 +document.title = 'Waiting';
 +Promise.all(promises).then(() => {
-+    document.title = 'Resolved';
++  document.title = 'Resolved';
 +}, () => {
-+    document.title = 'Rejected';
++  document.title = 'Rejected';
 +});
 +</script>
 --- /dev/null
@@ -4524,7 +4533,7 @@ This copy is from chromium 110.0.5481.77.
 +</html>
 --- /dev/null
 +++ b/content/test/data/iframe_out_of_view.html
-@@ -0,0 +1,117 @@
+@@ -0,0 +1,120 @@
 +<!DOCTYPE html>
 +<html>
 +<body>
@@ -4558,7 +4567,7 @@ This copy is from chromium 110.0.5481.77.
 +  <p> Iframe should be positioned way above </p>
 +  <script>
 +  window.loaded = false;
-+  window.notifyBrowser = false;
++  window.notifyBrowser = null;
 +  const kInfinity = 1000000;
 +  const kMarginOfError = 1;
 +  const tinyTimeout = 50;
@@ -4567,15 +4576,19 @@ This copy is from chromium 110.0.5481.77.
 +    document.scrollingElement.scrollTop = kInfinity;
 +    document.scrollingElement.scrollLeft = kInfinity;
 +    window.loaded = true;
-+    if (window.notifyBrowser)
-+      notifyWhenLoaded();
++    if (window.notifyBrowser) {
++      window.notifyBrowser("LOADED");
++      window.notifyBrowser = null;
++    }
 +  });
 +
 +  function notifyWhenLoaded() {
-+    if (loaded)
-+      window.domAutomationController.send("LOADED");
-+    else
-+      window.notifyBrowser = true;
++    return new Promise(resolve => {
++      if (loaded)
++        resolve("LOADED");
++      else
++        window.notifyBrowser = resolve;
++    });
 +  }
 +
 +  // Waits until the |visualViewport| reaches the given size (approximately).
@@ -4630,14 +4643,13 @@ This copy is from chromium 110.0.5481.77.
 +  }
 +
 +  // Waits until the given element is inside the |visualViewport|.
-+  function notifyWhenVisible(el) {
-+    if (intersect(el.getBoundingClientRect(), visualViewportAsRect())) {
-+      window.domAutomationController.send("VISIBLE");
-+    } else {
-+      window.setTimeout(() => {
-+        notifyWhenVisible(el);
-+      }, tinyTimeout);
++  async function notifyWhenVisible(el) {
++    while (!intersect(el.getBoundingClientRect(), visualViewportAsRect())) {
++      await new Promise(resolve => {
++        window.setTimeout(resolve, tinyTimeout);
++      });
 +    }
++    return "VISIBLE";
 +  }
 +  </script>
 +</body>
@@ -4703,7 +4715,7 @@ This copy is from chromium 110.0.5481.77.
 +</html>
 --- /dev/null
 +++ b/content/test/data/input_in_iframe.html
-@@ -0,0 +1,42 @@
+@@ -0,0 +1,43 @@
 +<!DOCTYPE html>
 +<html>
 +<head>
@@ -4726,17 +4738,18 @@ This copy is from chromium 110.0.5481.77.
 +  </style>
 +  <script>
 +    loaded = false;
-+    notifyBrowser = false;
++    notifyBrowser = null;
 +    function notifyWhenLoaded() {
 +      if (loaded)
-+        window.domAutomationController.send("OUTER_LOADED");
-+      else
-+        window.notifyBrowser = true;
++        return "OUTER_LOADED";
++      return new Promise(resolve => {
++        window.notifyBrowser = resolve;
++      });
 +    }
 +    window.addEventListener('load', () => {
 +      window.loaded = true;
 +      if (window.notifyBrowser)
-+        notifyWhenLoaded();
++        window.notifyBrowser('OUTER_LOADED');
 +    });
 +  </script>
 +</head>
@@ -4909,41 +4922,37 @@ This copy is from chromium 110.0.5481.77.
 +</body>
 --- /dev/null
 +++ b/content/test/data/net_info.html
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,34 @@
 +<html>
 +<head></head>
 +<script>
 +
 +function getType() {
-+  sendValueToTest(navigator.connection.type);
++  return navigator.connection.type;
 +}
 +
 +function getDownlinkMax() {
-+  sendValueToTest(navigator.connection.downlinkMax);
++  return navigator.connection.downlinkMax;
 +}
 +
 +function getOnLine() {
-+  sendValueToTest(navigator.onLine);
++  return navigator.onLine;
 +}
 +
 +function getEffectiveType() {
-+  sendValueToTest(navigator.connection.effectiveType);
++  return navigator.connection.effectiveType;
 +}
 +
 +function getRtt() {
-+  sendValueToTest(navigator.connection.rtt);
++  return navigator.connection.rtt;
 +}
 +
 +function getDownlink() {
-+  sendValueToTest(navigator.connection.downlink);
++  return navigator.connection.downlink;
 +}
 +
 +function getSaveData() {
-+  sendValueToTest(navigator.connection.saveData);
-+}
-+
-+function sendValueToTest(value) {
-+  window.domAutomationController.send(value);
++  return navigator.connection.saveData;
 +}
 +
 +</script>
@@ -5216,18 +5225,6 @@ This copy is from chromium 110.0.5481.77.
 +  </body>
 +</html>
 --- /dev/null
-+++ b/content/test/data/page_with_anonymous_iframe.html
-@@ -0,0 +1,9 @@
-+<html>
-+<head></head>
-+<body>
-+  <img src="image.jpg"/>
-+  <p>This page has an anonymous iframe. Yay for iframes!
-+  <p><iframe src="title1.html" id="test_iframe" name="test_iframe" anonymous>
-+    </iframe>
-+</body>
-+</html>
---- /dev/null
 +++ b/content/test/data/page_with_blank_iframe.html
 @@ -0,0 +1,7 @@
 +<html>
@@ -5437,15 +5434,19 @@ This copy is from chromium 110.0.5481.77.
 \ No newline at end of file
 --- /dev/null
 +++ b/content/test/data/page_with_input_field.html
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,57 @@
 +<!DOCTYPE html>
 +<html>
 +<head>
++<script src="./result_queue.js"></script>
 +<script>
++
++var resultQueue = new ResultQueue();
 +
 +function focusInputField() {
 +  var inputField = document.getElementById("text-field");
 +  inputField.focus();
++  return resultQueue.pop();
 +}
 +
 +function getInputFieldText() {
@@ -5453,12 +5454,30 @@ This copy is from chromium 110.0.5481.77.
 +  return inputField.value;
 +}
 +
++async function waitForBlur() {
++  while (true) {
++    const result = await resultQueue.pop();
++    if (result == "input-blur") {
++      return true;
++    }
++  }
++}
++
++async function waitForInput() {
++  while (true) {
++    const result = await resultQueue.pop();
++    if (result != "input-focus" && result != "input-blur") {
++      return result;
++    }
++  }
++}
++
 +function onInputFocus() {
-+  domAutomationController.send("input-focus");
++  resultQueue.push("input-focus");
 +}
 +
 +function onInputBlur() {
-+  domAutomationController.send("input-blur");
++  resultQueue.push("input-blur");
 +}
 +
 +</script>
@@ -5555,7 +5574,7 @@ This copy is from chromium 110.0.5481.77.
 +</html>
 --- /dev/null
 +++ b/content/test/data/page_with_object_fallback.html
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,38 @@
 +<!doctype html>
 +<html>
 +<head>
@@ -5567,34 +5586,29 @@ This copy is from chromium 110.0.5481.77.
 +</object>
 +<p>Some text so the document is ready for input.</p>
 +<script>
-+  var send_object_load = false;
 +  var fallback = document.getElementById("fallback-content");
 +  var object = document.querySelector("object");
 +
-+  object.addEventListener("load", () => {
-+    if (send_object_load)
-+      window.domAutomationController.send("OBJECT_LOAD");
-+  });
-+
-+  function setUrl(url, send_load) {
-+    send_object_load = send_load;
-+    object.data = url;
++  function setUrl(url) {
++    return new Promise(resolve => {
++      object.addEventListener("load", () => {
++        resolve("OBJECT_LOAD");
++      }, {once: true});
++      object.data = url;
++    });
 +  }
 +
-+  function fallbackVisible(alsoNotifyBrowser) {
++  function fallbackVisible() {
 +    let rect = fallback.getBoundingClientRect();
 +    let hasLayout = (rect.width * rect.height) > 0;
-+    if (alsoNotifyBrowser) {
-+      window.domAutomationController.send(hasLayout);
-+    }
 +    return hasLayout;
 +  }
 +
-+  function notifyWhenFallbackShown() {
-+    if (!fallbackVisible(false)) {
-+      return window.setTimeout(notifyWhenFallbackShown, 10);
++  async function notifyWhenFallbackShown() {
++    while (!fallbackVisible()) {
++      await new Promise(resolve => window.setTimeout(resolve, 10));
 +    }
-+    fallbackVisible(true);
++    return true;
 +  }
 +</script>
 +</body>
@@ -5728,7 +5742,7 @@ This copy is from chromium 110.0.5481.77.
 +<body>
 +  <img src="image.jpg" />
 +  <p>This page has an iframe. Yay for iframes!
-+    <p><iframe sandbox="allow-scripts" src="title1.html" id="test_iframe"></iframe>
++    <p><iframe sandbox="allow-scripts" allow="private-state-token-issuance" src="title1.html" id="test_iframe"></iframe>
 +</body>
 +
 +</html>
@@ -6528,7 +6542,7 @@ This copy is from chromium 110.0.5481.77.
 +</script>
 --- /dev/null
 +++ b/content/test/data/simple_database.html
-@@ -0,0 +1,145 @@
+@@ -0,0 +1,160 @@
 +<html>
 +<script>
 +
@@ -6544,42 +6558,47 @@ This copy is from chromium 110.0.5481.77.
 +}
 +
 +// Creates a table named "table1" with one text column named "data".
-+function createTable() {
++async function createTable() {
 +  if (!g_db)
 +    return;
-+  g_db.transaction(
-+      function(tx) {
-+        tx.executeSql("CREATE TABLE table1 (data TEXT)");
-+      },
-+      function(error) {
-+        sendValueToTest(error);
-+      },
-+      function() {
-+        sendValueToTest("done");
-+      });
++  try {
++    await new Promise((resolve, reject) => {
++      g_db.transaction(
++        function(tx) {
++          tx.executeSql("CREATE TABLE table1 (data TEXT)");
++        },
++        reject, resolve);
++    });
++    return "done";
++  } catch (error) {
++    return error;
++  }
 +}
 +
 +// Inserts a record into the database.
-+function insertRecord(text) {
-+  g_db.transaction(
++async function insertRecord(text) {
++  try {
++    await new Promise((resolve, reject) => {
++      g_db.transaction(
 +      function(tx) {
 +        tx.executeSql("INSERT INTO table1 VALUES (?)", [text]);
-+      },
-+      function(error) {
-+        sendValueToTest(error);
-+      },
-+      function() {
-+        sendValueToTest("done");
-+      });
++      }, reject, resolve);
++    });
++    return "done";
++  } catch (error) {
++    return error;
++  }
 +}
 +
 +
 +// Updates a record at the given index with the given text. The indices are
 +// 0-based and are ordered from oldest record, to newest record.
-+function updateRecord(index, text) {
++async function updateRecord(index, text) {
 +  var didUpdate = false;
-+  findId(index, function(rowId) {
-+    g_db.transaction(
++  try {
++    const rowId = await findId(index);
++    return new Promise((resolve, reject) => {
++      g_db.transaction(
 +        function(tx) {
 +          tx.executeSql(
 +              "UPDATE table1 SET data=? WHERE ROWID=?",
@@ -6588,84 +6607,94 @@ This copy is from chromium 110.0.5481.77.
 +                if (result.rowsAffected == 1)
 +                  didUpdate = true;
 +                else if (result.rowsAffected == 0)
-+                  sendValueToTest("could not update index: " + index);
++                  reject("could not update index: " + index);
 +                else
-+                  sendValueToTest("multiple rows with index: " + index);
++                  reject("multiple rows with index: " + index);
 +              });
 +        },
 +        function(error) {
-+          sendValueToTest("update error: " + error);
++          reject("update error: " + error);
 +        },
 +        function() {
 +          if (didUpdate)
-+            sendValueToTest("done");
++            resolve("done");
 +        });
-+  });
++    });
++  } catch (error) {
++    return error;
++  }
 +}
 +
 +// Deletes a record at the given index.
-+function deleteRecord(index) {
-+  findId(index, function(rowId) {
-+    g_db.transaction(
++async function deleteRecord(index) {
++  try {
++    const rowId = await findId(index);
++    await new Promise((resolve, reject) => {
++      g_db.transaction(
 +        function(tx) {
 +          tx.executeSql("DELETE FROM table1 WHERE ROWID=?", [rowId]);
 +        },
 +        function(error) {
-+          sendValueToTest("delete error: " + error);
-+        },
-+        function() {
-+          sendValueToTest("done");
-+        });
-+  });
++          reject("delete error: " + error);
++        }, resolve);
++      });
++    return "done";
++  } catch (error) {
++    return error;
++  }
 +}
 +
 +// Gets all the records in the database, ordered by their age.
-+function getRecords() {
-+  g_db.readTransaction(function(tx) {
-+    tx.executeSql(
-+        "SELECT data FROM table1 ORDER BY ROWID",
-+        [],
-+        function(tx, result) {
-+          items = "";
-+          for (var i = 0; i < result.rows.length; i++) {
-+            if (items != "")
-+              items += ", ";
-+            items += result.rows.item(i).data;
-+          }
-+          sendValueToTest(items);
-+        },
-+        function(tx, error) {
-+          sendValueToTest("getRecords error: " + error);
-+        });
-+  });
++async function getRecords() {
++  try {
++    const result = await new Promise((resolve, reject) => {
++      g_db.readTransaction(function(tx) {
++      tx.executeSql(
++          "SELECT data FROM table1 ORDER BY ROWID",
++          [],
++          function(tx, result) {
++            resolve(result);
++          },
++          function(tx, error) {
++            reject("getRecords error: " + error);
++          });
++      });
++    });
++    let items = "";
++    for (var i = 0; i < result.rows.length; i++) {
++      if (items != "")
++        items += ", ";
++      items += result.rows.item(i).data;
++    }
++    return items;
++  } catch (error) {
++    return error;
++  }
 +}
 +
 +// Helper function that finds the ID for a record based on a given index.
-+function findId(index, callback) {
-+  g_db.readTransaction(function(tx) {
-+    // |ROWID| is a special sqlite column. It is unique and is incremented
-+    // automatically when a new record is created.
-+    // |LIMIT| is a nonstandard clause supported by sqlite that lets us pick
-+    // rows from the database by index. E.g., LIMIT 2,10 will give us 10 records
-+    // starting at offset 2.
-+    tx.executeSql(
++async function findId(index) {
++  return new Promise((resolve, reject) => {
++    g_db.readTransaction(function(tx) {
++      // |ROWID| is a special sqlite column. It is unique and is incremented
++      // automatically when a new record is created.
++      // |LIMIT| is a nonstandard clause supported by sqlite that lets us pick
++      // rows from the database by index. E.g., LIMIT 2,10 will give us 10 records
++      // starting at offset 2.
++      tx.executeSql(
 +        "SELECT ROWID AS id FROM table1 ORDER BY ROWID LIMIT ?,1",
 +        [index],
 +        function(tx, result) {
 +          if (result.rows.length >= 1)
-+            callback(result.rows.item(0).id);
++            resolve(result.rows.item(0).id);
 +          else
-+            sendValueToTest("could not find row with index: " + index);
++            reject("could not find row with index: " + index);
 +        },
 +        function(tx, error) {
-+        sendValueToTest("findId error: " + error);
++          reject("findId error: " + error);
 +        });
++    });
 +  });
-+}
-+
-+function sendValueToTest(value) {
-+  //alert(value);
-+  window.domAutomationController.send(value);
 +}
 +
 +</script>
@@ -6676,7 +6705,7 @@ This copy is from chromium 110.0.5481.77.
 +</html>
 --- /dev/null
 +++ b/content/test/data/simple_links.html
-@@ -0,0 +1,81 @@
+@@ -0,0 +1,87 @@
 +<html>
 +
 + <head><title>Simple links</title>
@@ -6735,7 +6764,11 @@ This copy is from chromium 110.0.5481.77.
 +  }
 +
 +  function clickLinkToSelf() {
-+    return simulateClick(document.getElementById("linkToSelf"));
++    return simulateClick(document.getElementById("link_to_self_opener"));
++  }
++
++  function clickLinkToSelfNoOpener() {
++    return simulateClick(document.getElementById("link_to_self_no_opener"));
 +  }
 +
 +  function clickGoogleChromeLink() {
@@ -6752,9 +6785,11 @@ This copy is from chromium 110.0.5481.77.
 +<a href="title2.html" id="same_site_new_window_with_opener_link" rel="opener" target="_blank">same-site new window with opener</a>
 +<a href="http://foo.com/title2.html" id="cross_site_new_window_link" rel="opener" target="_blank">cross-site new window</a>
 +<a href="http://foo.com/title2.html" id="cross_site_new_window_no_opener_link" rel="noopener" target="_blank">cross-site new window no opener</a>
-+<a href="" id="linkToSelf" rel="opener" target="_blank">self new window</a>
++<a href="" id="link_to_self_opener" rel="opener" target="_blank">self new window_opener</a>
++<a href="" id="link_to_self_no_opener" rel="noopener" target="_blank">self new window_noopener</a>
 +<script>
-+  document.getElementById("linkToSelf").href = window.location.toString();
++  document.getElementById("link_to_self_opener").href = window.location.toString();
++  document.getElementById("link_to_self_no_opener").href = window.location.toString();
 +</script>
 +<a href="googlechrome://" id="google_chrome_link">googlechrome:</a></br>
 +</html>
@@ -7056,15 +7091,15 @@ This copy is from chromium 110.0.5481.77.
 +    x: rect.left + 8,
 +    y: rect.top + 8
 +  };
-+  window.domAutomationController.send(JSON.stringify(point));
++  return JSON.stringify(point);
 +}
 +
 +function get_point_inside_text() {
-+  get_point_inside(document.getElementById('textDiv'));
++  return get_point_inside(document.getElementById('textDiv'));
 +}
 +
 +function get_point_inside_textfield() {
-+  get_point_inside(document.getElementById('textfield'));
++  return get_point_inside(document.getElementById('textfield'));
 +}
 +
 +</script>
@@ -7228,7 +7263,7 @@ This copy is from chromium 110.0.5481.77.
 +self.addEventListener('fetch', e => { e.respondWith(fetch(e.request)) });
 --- /dev/null
 +++ b/content/test/data/result_queue.js
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,44 @@
 +// Copyright 2017 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -7236,50 +7271,42 @@ This copy is from chromium 110.0.5481.77.
 +// Queue storing asynchronous results received from the Service Worker. Results
 +// are sent to the test when requested.
 +function ResultQueue() {
-+  // Invariant: this.queue.length == 0 || this.pendingGets == 0
++  // Invariant: this.queue.length == 0 || this.pendingGets.length == 0
 +  this.queue = [];
-+  this.pendingGets = 0;
++  this.pendingGets = [];
 +}
 +
 +// Adds a data item to the queue. Will be sent to the test if there are
 +// pendingGets.
 +ResultQueue.prototype.push = function(data) {
-+  if (this.pendingGets > 0) {
-+    this.pendingGets--;
-+    sendResultToTest(data);
++  if (this.pendingGets.length > 0) {
++    const resolve = this.pendingGets.pop();
++    resolve(String(data));
 +  } else {
-+    this.queue.unshift(data);
++    this.queue.unshift(String(data));
 +  }
 +};
 +
 +// Called by native. Sends the next data item to the test if it is available.
 +// Otherwise increments pendingGets so it will be delivered when received.
 +ResultQueue.prototype.pop = function() {
-+  if (this.queue.length) {
-+    sendResultToTest(this.queue.pop());
-+  } else {
-+    this.pendingGets++;
-+  }
++  return new Promise((resolve) => {
++    if (this.queue.length) {
++      resolve(this.queue.pop());
++    } else {
++      this.pendingGets.unshift(resolve);
++    }
++  });
 +};
 +
 +// Called by native. Immediately sends the next data item to the test if it is
 +// available, otherwise sends null.
 +ResultQueue.prototype.popImmediately = function() {
-+  sendResultToTest(this.queue.length ? this.queue.pop() : null);
++  return this.queue.length ? this.queue.pop() : null;
 +};
 +
-+// Sends data back to the test. This must be in response to an earlier
-+// request, but it's ok to respond asynchronously. The request blocks until
-+// the response is sent.
-+function sendResultToTest(result) {
-+  console.log('sendResultToTest: ' + result);
-+  if (window.domAutomationController) {
-+    domAutomationController.send('' + result);
-+  }
-+}
-+
-+function sendErrorToTest(error) {
-+  sendResultToTest(error.name + ' - ' + error.message);
++function formatError(error) {
++  return error.name + ' - ' + error.message;
 +}
 --- /dev/null
 +++ b/content/test/data/stale-script.js
@@ -7591,7 +7618,7 @@ This copy is from chromium 110.0.5481.77.
 +}
 +
 +window.runTest = async function() {
-+  window.domAutomationController.send(await doTest());
++  return doTest();
 +}
 --- /dev/null
 +++ b/content/test/data/web_ui_shared_worker.js
@@ -7624,7 +7651,7 @@ This copy is from chromium 110.0.5481.77.
 +</html>
 --- /dev/null
 +++ b/content/test/data/cross_site_scroll_into_view_factory.html
-@@ -0,0 +1,293 @@
+@@ -0,0 +1,297 @@
 +<!DOCTYPE html>
 +<html class="rootScroller">
 +<!-- This file is based on cross_site_iframe_factory.html. See comments in that
@@ -7908,7 +7935,11 @@ This copy is from chromium 110.0.5481.77.
 +  // Construct the child frame.
 +  var elementType = hasAttribute(Attributes.FencedFrame) ? 'fencedframe' : 'iframe';
 +  var frame = document.createElement(elementType);
-+  frame.src = url;
++  if (elementType == "fencedframe") {
++    frame.config = new FencedFrameConfig(url);
++  } else {
++    frame.src = url;
++  }
 +  frame.id = "childframe";
 +
 +  // Add the child frame to the document.
@@ -7992,7 +8023,7 @@ This copy is from chromium 110.0.5481.77.
 +
 --- /dev/null
 +++ b/content/test/data/web_ui_mojo_ts_test.ts
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,45 @@
 +// Copyright 2022 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -8033,15 +8064,84 @@ This copy is from chromium 110.0.5481.77.
 +  return true;
 +}
 +
-+type WindowWithDomAutomationController = Window & {
-+  domAutomationController: {
-+    send: (success: boolean) => void;
-+  }
-+};
-+
-+async function runTest() {
-+  (window as unknown as WindowWithDomAutomationController)
-+      .domAutomationController.send(await doTest());
++async function runTest(): Promise<boolean> {
++  return doTest();
 +}
 +
 +Object.assign(window, {runTest});
+--- /dev/null
++++ b/content/test/data/cacheable.js
+@@ -0,0 +1,5 @@
++// Copyright 2023 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++/* empty */
+--- /dev/null
++++ b/content/test/data/cacheable2.js
+@@ -0,0 +1,5 @@
++// Copyright 2023 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++/* empty */
+--- /dev/null
++++ b/content/test/data/web_ui_managed_interface_test.html
+@@ -0,0 +1,10 @@
++<!--
++Copyright 2023 The Chromium Authors
++Use of this source code is governed by a BSD-style license that can be
++found in the LICENSE file.
++-->
++
++<html>
++<title>Foo</title>
++<script src="/web_ui_managed_interface_test.js" type="module"></script>
++</html>
+--- /dev/null
++++ b/content/test/data/web_ui_managed_interface_test.js
+@@ -0,0 +1,9 @@
++// Copyright 2023 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++import {BarCallbackRouter, BazCallbackRouter, FooRemote, TestWebUIJsBridge} from '/web_ui_managed_interface_test.test-mojom-webui.js';
++
++Object.assign(
++    window,
++    {BarCallbackRouter, BazCallbackRouter, FooRemote, TestWebUIJsBridge});
+--- /dev/null
++++ b/content/test/data/web_ui_managed_interface_test.test-mojom
+@@ -0,0 +1,32 @@
++// Copyright 2023 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++module content.mojom;
++
++interface Foo {
++  GetFoo() => (string value);
++};
++
++interface Bar {
++  GetBar() => (string value);
++};
++
++interface Baz {
++  GetBaz() => (string value);
++};
++
++// A bridge (aka Factory) interface that is used for binding other
++// interfaces.
++interface TestWebUIJsBridge {
++  // The WebUI calls this method to bind a Foo remote.
++  BindFoo(pending_receiver<Foo> foo);
++
++  // The WebUI calls this method to bind a Foo remote and provide the
++  // browser with a Bar remote.
++  BindFooBar(pending_receiver<Foo> foo,
++             pending_remote<Bar> bar);
++
++  // The WebUI calls this method to provide the browser with a Baz remote.
++  BindBaz(pending_remote<Baz> baz);
++};

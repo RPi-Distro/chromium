@@ -7,13 +7,14 @@ chromium (114.0.5735.45-1) UNRELEASED; urgency=high
     - upstream/webview-cstr.patch: drop, merged upstream.
     - upstream/monostate.patch: drop, merged upstream.
     - disable/unrar.patch: additional upstream changes required more reworking.
-    - disable/android.patch: refresh.
+    - disable/android.patch: refresh, & add one more build fix.
     - disable/catapult.patch: refresh.
     - disable/swiftshader.patch: refresh.
     - disable/angle-perftest.patch: refresh.
     - system/jpeg.patch: refresh.
     - upstream/mojo.patch: regenerate from git.
     - upstream/sizet.patch: add an upstream build fix.
+    - bookworm/typename.patch: include some more build fixes.
   * Add build-dep on libevdev-dev - now required by upstream.
 
 

@@ -33,9 +33,7 @@ Files-Excluded:
  base/mac
  base/test/data
  base/third_party/double_conversion
- chrome/android/j*
- chrome/android/f*
- chrome/android/w*
+ chrome/android
  chrome/build
  chrome/installer/mac
  chrome/installer/test

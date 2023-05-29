@@ -50,3 +50,14 @@ I think this is also a clang-14 thing?
      SortedItems<Item>& cache,
      IterMap<Id, Item>& iter_map) {
    CHECK(iter != cache.end());
+--- a/chrome/browser/printing/print_backend_service_manager.h
++++ b/chrome/browser/printing/print_backend_service_manager.h
+@@ -587,7 +587,7 @@ class PrintBackendServiceManager {
+   template <class... T>
+   void RunSavedCallbacks(RemoteSavedCallbacks<T...>& saved_callbacks,
+                          const RemoteId& remote_id,
+-                         std::remove_reference<T>::type... result);
++                         typename std::remove_reference<T>::type... result);
+ 
+   // Test support for client ID management.
+   static void SetClientsForTesting(

@@ -15,6 +15,8 @@ chromium (114.0.5735.45-1) UNRELEASED; urgency=high
     - upstream/mojo.patch: regenerate from git.
     - upstream/sizet.patch: add an upstream build fix.
     - bookworm/typename.patch: include some more build fixes.
+    - bookworm/lambda-bug.patch -> bookworm/structured-binding-scope-bug.patch,
+      and add another place it's happening (turns out it's not just lambdas).
   * Add build-dep on libevdev-dev - now required by upstream.
 
 

@@ -1,4 +1,4 @@
-chromium (114.0.5735.90-2) UNRELEASED; urgency=low
+chromium (114.0.5735.90-2) unstable; urgency=high
 
   * d/patches:
     - Add upstream/feature-list-static.patch

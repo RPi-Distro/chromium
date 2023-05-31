@@ -1,7 +1,7 @@
-Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
+Index: chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
++++ chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
 @@ -0,0 +1,346 @@
 +// This file is generated. Do not edit.
 +#ifndef VP8_RTCD_H_
@@ -349,11 +349,11 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vp8_r
 +#endif
 +
 +#endif
-Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
+Index: chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
-@@ -0,0 +1,271 @@
++++ chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
+@@ -0,0 +1,272 @@
 +// This file is generated. Do not edit.
 +#ifndef VP9_RTCD_H_
 +#define VP9_RTCD_H_
@@ -412,6 +412,7 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +int vp9_diamond_search_sad_c(const struct macroblock* x,
 +                             const struct search_site_config* cfg,
 +                             struct mv* ref_mv,
++                             uint32_t start_mv_sad,
 +                             struct mv* best_mv,
 +                             int search_param,
 +                             int sad_per_bit,
@@ -625,10 +626,10 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +#endif
 +
 +#endif
-Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
+Index: chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
 ===================================================================
 --- /dev/null
-+++ chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
++++ chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
 @@ -0,0 +1,102 @@
 +@ This file was created from a .asm file
 +@  using the ads2gas.pl script.
@@ -716,7 +717,6 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +.equ CONFIG_MULTI_RES_ENCODING ,  1
 +.equ CONFIG_TEMPORAL_DENOISING ,  1
 +.equ CONFIG_VP9_TEMPORAL_DENOISING ,  1
-+.equ CONFIG_CONSISTENT_RECODE ,  0
 +.equ CONFIG_COEFFICIENT_RANGE_CHECKING ,  0
 +.equ CONFIG_VP9_HIGHBITDEPTH ,  1
 +.equ CONFIG_BETTER_HW_COMPATIBILITY ,  0
@@ -729,13 +729,14 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +.equ CONFIG_EMULATE_HARDWARE ,  0
 +.equ CONFIG_NON_GREEDY_MV ,  0
 +.equ CONFIG_RATE_CTRL ,  0
++.equ CONFIG_COLLECT_COMPONENT_TIMING ,  0
 +.equ DECODE_WIDTH_LIMIT ,  16384
 +.equ DECODE_HEIGHT_LIMIT ,  16384
 +    .section .note.GNU-stack,"",%progbits
-Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
+Index: chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
 ===================================================================
 --- /dev/null
-+++ chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
++++ chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
 @@ -0,0 +1,10 @@
 +/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
 +/*  */
@@ -747,10 +748,10 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#include "vpx/vpx_codec.h"
 +static const char* const cfg = "--target=generic-gnu --enable-vp9-highbitdepth --enable-external-build --enable-postproc --enable-multi-res-encoding --enable-temporal-denoising --enable-vp9-temporal-denoising --enable-vp9-postproc --size-limit=16384x16384 --enable-realtime-only --disable-install-docs --disable-libyuv";
 +const char *vpx_codec_build_config(void) {return cfg;}
-Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
+Index: chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
 ===================================================================
 --- /dev/null
-+++ chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
++++ chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
 @@ -0,0 +1,111 @@
 +/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
 +/*  */
@@ -847,7 +848,6 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define CONFIG_MULTI_RES_ENCODING 1
 +#define CONFIG_TEMPORAL_DENOISING 1
 +#define CONFIG_VP9_TEMPORAL_DENOISING 1
-+#define CONFIG_CONSISTENT_RECODE 0
 +#define CONFIG_COEFFICIENT_RANGE_CHECKING 0
 +#define CONFIG_VP9_HIGHBITDEPTH 1
 +#define CONFIG_BETTER_HW_COMPATIBILITY 0
@@ -860,14 +860,15 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define CONFIG_EMULATE_HARDWARE 0
 +#define CONFIG_NON_GREEDY_MV 0
 +#define CONFIG_RATE_CTRL 0
++#define CONFIG_COLLECT_COMPONENT_TIMING 0
 +#define DECODE_WIDTH_LIMIT 16384
 +#define DECODE_HEIGHT_LIMIT 16384
 +#endif /* VPX_CONFIG_H */
-Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+Index: chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
-@@ -0,0 +1,3787 @@
++++ chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+@@ -0,0 +1,3782 @@
 +// This file is generated. Do not edit.
 +#ifndef VPX_DSP_RTCD_H_
 +#define VPX_DSP_RTCD_H_
@@ -885,6 +886,10 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +#include "vpx/vpx_integer.h"
 +#include "vpx_dsp/vpx_dsp_common.h"
 +#include "vpx_dsp/vpx_filter.h"
++#if CONFIG_VP9_ENCODER
++struct macroblock_plane;
++struct ScanOrder;
++#endif
 +
 +#ifdef __cplusplus
 +extern "C" {
@@ -3296,18 +3301,14 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +                             const int16_t* iscan);
 +#define vpx_highbd_quantize_b vpx_highbd_quantize_b_c
 +
-+void vpx_highbd_quantize_b_32x32_c(const tran_low_t* coeff_ptr,
-+                                   intptr_t n_coeffs,
-+                                   const int16_t* zbin_ptr,
-+                                   const int16_t* round_ptr,
-+                                   const int16_t* quant_ptr,
-+                                   const int16_t* quant_shift_ptr,
-+                                   tran_low_t* qcoeff_ptr,
-+                                   tran_low_t* dqcoeff_ptr,
-+                                   const int16_t* dequant_ptr,
-+                                   uint16_t* eob_ptr,
-+                                   const int16_t* scan,
-+                                   const int16_t* iscan);
++void vpx_highbd_quantize_b_32x32_c(
++    const tran_low_t* coeff_ptr,
++    const struct macroblock_plane* const mb_plane,
++    tran_low_t* qcoeff_ptr,
++    tran_low_t* dqcoeff_ptr,
++    const int16_t* dequant_ptr,
++    uint16_t* eob_ptr,
++    const struct ScanOrder* const scan_order);
 +#define vpx_highbd_quantize_b_32x32 vpx_highbd_quantize_b_32x32_c
 +
 +unsigned int vpx_highbd_sad16x16_c(const uint8_t* src_ptr,
@@ -3880,17 +3881,12 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +#define vpx_quantize_b vpx_quantize_b_c
 +
 +void vpx_quantize_b_32x32_c(const tran_low_t* coeff_ptr,
-+                            intptr_t n_coeffs,
-+                            const int16_t* zbin_ptr,
-+                            const int16_t* round_ptr,
-+                            const int16_t* quant_ptr,
-+                            const int16_t* quant_shift_ptr,
++                            const struct macroblock_plane* const mb_plane,
 +                            tran_low_t* qcoeff_ptr,
 +                            tran_low_t* dqcoeff_ptr,
 +                            const int16_t* dequant_ptr,
 +                            uint16_t* eob_ptr,
-+                            const int16_t* scan,
-+                            const int16_t* iscan);
++                            const struct ScanOrder* const scan_order);
 +#define vpx_quantize_b_32x32 vpx_quantize_b_32x32_c
 +
 +unsigned int vpx_sad16x16_c(const uint8_t* src_ptr,
@@ -4655,10 +4651,10 @@ Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +#endif
 +
 +#endif
-Index: chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
+Index: chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-110.0.5481.77/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
++++ chromium-114.0.5735.45/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
 @@ -0,0 +1,96 @@
 +// This file is generated. Do not edit.
 +#ifndef VPX_SCALE_RTCD_H_

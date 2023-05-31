@@ -19,6 +19,9 @@ chromium (114.0.5735.45-1) UNRELEASED; urgency=high
       and add another place it's happening (turns out it's not just lambdas).
   * Add build-dep on libevdev-dev - now required by upstream.
 
+  [ Timothy Pearson ]
+   * d/patches:
+     - Refresh ppc64le patches
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 May 2023 16:25:03 -0400
 

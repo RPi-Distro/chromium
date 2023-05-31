@@ -1,6 +1,32 @@
-chromium (114.0.5735.45-1) UNRELEASED; urgency=high
+chromium (114.0.5735.90-1) UNRELEASED; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2023-2929: Out of bounds write in Swiftshader.
+      Reported by Jaehun Jeong(@n3sk) of Theori.
+    - CVE-2023-2930: Use after free in Extensions. Reported by asnine.
+    - CVE-2023-2931: Use after free in PDF.
+      Reported by Huyna at Viettel Cyber Security.
+    - CVE-2023-2932: Use after free in PDF.
+      Reported by Huyna at Viettel Cyber Security.
+    - CVE-2023-2933: Use after free in PDF. Reported by
+      Quang Nguyễn (@quangnh89) of Viettel Cyber Security and Nguyen Phuong.
+    - CVE-2023-2934: Out of bounds memory access in Mojo.
+      Reported by Mark Brand of Google Project Zero.
+    - CVE-2023-2935: Type Confusion in V8.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2023-2936: Type Confusion in V8.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2023-2937: Inappropriate implementation in Picture In Picture.
+      Reported by NDevTK.
+    - CVE-2023-2938: Inappropriate implementation in Picture In Picture.
+      Reported by Alesandro Ortiz.
+    - CVE-2023-2939: Insufficient data validation in Installer.
+      Reported by ycdxsb from VARAS@IIE.
+    - CVE-2023-2940: Inappropriate implementation in Downloads.
+      Reported by Axel Chong.
+    - CVE-2023-2941: Inappropriate implementation in Extensions API.
+      Reported by Jasper Rebane.
   * d/copyright: properly delete some android & chromeos stuff.
   * d/patches:
     - fixes/clang-and-gcc11.patch: refresh.

@@ -1,4 +1,4 @@
-chromium (114.0.5735.90-1) UNRELEASED; urgency=high
+chromium (114.0.5735.90-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -49,7 +49,7 @@ chromium (114.0.5735.90-1) UNRELEASED; urgency=high
    * d/patches:
      - Refresh ppc64le patches
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 16 May 2023 16:25:03 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 31 May 2023 03:06:35 -0400
 
 chromium (113.0.5672.126-1) unstable; urgency=low
 

@@ -94,6 +94,9 @@ ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch
 ppc64le/third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch
 ppc64le/third_party/0004-third_party-libvpx-work-around-ambiguous-vsx.patch
 
+# Enable VSX acceleration in Skia.  Requires POWER8 or higher.
+ppc64le/third_party/skia-vsx-instructions.patch
+
 ppc64le/ffmpeg/0001-Add-support-for-ppc64.patch
 ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch
 ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch
@@ -125,6 +128,3 @@ ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch
 # These patches enable full POWER ISA 3.0 (POWER9) acceleration when applied
 # They will not work on POWER8 (ISA 2.07) or below
 #ppc64le/core/baseline-isa-3-0.patch
-# Attempting to build with POWER8 support in Skia will yield the following error:
-# 'fatal error: error in backend: Cannot select: intrinsic %llvm.ppc.vsx.xvcvhpsp'
-#ppc64le/third_party/skia-vsx-instructions.patch

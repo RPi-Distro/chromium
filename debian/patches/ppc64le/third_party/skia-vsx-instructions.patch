@@ -1,8 +1,8 @@
-Index: chromium-113.0.5672.63/third_party/skia/BUILD.gn
+Index: chromium-114.0.5735.90/third_party/skia/BUILD.gn
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/BUILD.gn
-+++ chromium-113.0.5672.63/third_party/skia/BUILD.gn
-@@ -282,6 +282,12 @@ opts("skx") {
+--- chromium-114.0.5735.90.orig/third_party/skia/BUILD.gn
++++ chromium-114.0.5735.90/third_party/skia/BUILD.gn
+@@ -285,6 +285,12 @@ opts("skx") {
    }
  }
  
@@ -15,15 +15,15 @@ Index: chromium-113.0.5672.63/third_party/skia/BUILD.gn
  # Any feature of Skia that requires third-party code should be optional and use this template.
  template("optional") {
    if (invoker.enabled) {
-@@ -1495,6 +1501,7 @@ skia_component("skia") {
+@@ -1507,6 +1513,7 @@ skia_component("skia") {
      ":skx",
      ":sse42",
      ":ssse3",
 +    ":vsx",
      ":webp_decode",
-     ":webp_encode",
      ":wuffs",
-@@ -1672,6 +1679,7 @@ skia_static_library("pathkit") {
+     ":xml",
+@@ -1694,6 +1701,7 @@ skia_static_library("pathkit") {
      ":hsw",
      ":sse42",
      ":ssse3",
@@ -31,20 +31,20 @@ Index: chromium-113.0.5672.63/third_party/skia/BUILD.gn
    ]
  
    sources = []
-Index: chromium-113.0.5672.63/third_party/skia/gn/shared_sources.gni
+Index: chromium-114.0.5735.90/third_party/skia/gn/shared_sources.gni
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/gn/shared_sources.gni
-+++ chromium-113.0.5672.63/third_party/skia/gn/shared_sources.gni
-@@ -23,4 +23,5 @@ skia_opts = {
+--- chromium-114.0.5735.90.orig/third_party/skia/gn/shared_sources.gni
++++ chromium-114.0.5735.90/third_party/skia/gn/shared_sources.gni
+@@ -24,4 +24,5 @@ skia_opts = {
    avx_sources = avx
    hsw_sources = hsw
    skx_sources = skx
 +  vsx_sources = ssse3
  }
-Index: chromium-113.0.5672.63/third_party/skia/gn/skia/BUILD.gn
+Index: chromium-114.0.5735.90/third_party/skia/gn/skia/BUILD.gn
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/gn/skia/BUILD.gn
-+++ chromium-113.0.5672.63/third_party/skia/gn/skia/BUILD.gn
+--- chromium-114.0.5735.90.orig/third_party/skia/gn/skia/BUILD.gn
++++ chromium-114.0.5735.90/third_party/skia/gn/skia/BUILD.gn
 @@ -163,6 +163,8 @@ config("default") {
        "-mfpmath=sse",
      ]
@@ -54,10 +54,10 @@ Index: chromium-113.0.5672.63/third_party/skia/gn/skia/BUILD.gn
    }
  
    if (malloc != "" && !is_win) {
-Index: chromium-113.0.5672.63/third_party/skia/include/core/SkTypes.h
+Index: chromium-114.0.5735.90/third_party/skia/include/core/SkTypes.h
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/include/core/SkTypes.h
-+++ chromium-113.0.5672.63/third_party/skia/include/core/SkTypes.h
+--- chromium-114.0.5735.90.orig/third_party/skia/include/core/SkTypes.h
++++ chromium-114.0.5735.90/third_party/skia/include/core/SkTypes.h
 @@ -193,5 +193,41 @@ static constexpr uint32_t SK_InvalidGenI
  */
  static constexpr uint32_t SK_InvalidUniqueID = 0;
@@ -100,10 +100,10 @@ Index: chromium-113.0.5672.63/third_party/skia/include/core/SkTypes.h
 +
  
  #endif
-Index: chromium-113.0.5672.63/third_party/skia/src/core/SkSpinlock.cpp
+Index: chromium-114.0.5735.90/third_party/skia/src/core/SkSpinlock.cpp
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/src/core/SkSpinlock.cpp
-+++ chromium-113.0.5672.63/third_party/skia/src/core/SkSpinlock.cpp
+--- chromium-114.0.5735.90.orig/third_party/skia/src/core/SkSpinlock.cpp
++++ chromium-114.0.5735.90/third_party/skia/src/core/SkSpinlock.cpp
 @@ -31,7 +31,8 @@
  #endif
  
@@ -114,10 +114,10 @@ Index: chromium-113.0.5672.63/third_party/skia/src/core/SkSpinlock.cpp
      #include <emmintrin.h>
      static void do_pause() { _mm_pause(); }
  #else
-Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkBitmapProcState_opts.h
+Index: chromium-114.0.5735.90/third_party/skia/src/opts/SkBitmapProcState_opts.h
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkBitmapProcState_opts.h
-+++ chromium-113.0.5672.63/third_party/skia/src/opts/SkBitmapProcState_opts.h
+--- chromium-114.0.5735.90.orig/third_party/skia/src/opts/SkBitmapProcState_opts.h
++++ chromium-114.0.5735.90/third_party/skia/src/opts/SkBitmapProcState_opts.h
 @@ -21,7 +21,13 @@
  // The rest are scattershot at the moment but I want to get them
  // all migrated to be normal code inside SkBitmapProcState.cpp.
@@ -133,10 +133,10 @@ Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkBitmapProcState_opts.h
      #include <immintrin.h>
  #elif defined(SK_ARM_HAS_NEON)
      #include <arm_neon.h>
-Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkBlitRow_opts.h
+Index: chromium-114.0.5735.90/third_party/skia/src/opts/SkBlitRow_opts.h
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkBlitRow_opts.h
-+++ chromium-113.0.5672.63/third_party/skia/src/opts/SkBlitRow_opts.h
+--- chromium-114.0.5735.90.orig/third_party/skia/src/opts/SkBlitRow_opts.h
++++ chromium-114.0.5735.90/third_party/skia/src/opts/SkBlitRow_opts.h
 @@ -100,7 +100,7 @@
  #endif
  
@@ -146,11 +146,18 @@ Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkBlitRow_opts.h
  
      static inline __m128i SkPMSrcOver_SSE2(const __m128i& src, const __m128i& dst) {
          __m128i scale = _mm_sub_epi32(_mm_set1_epi32(256),
-Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
+Index: chromium-114.0.5735.90/third_party/skia/src/opts/SkRasterPipeline_opts.h
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
-+++ chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
-@@ -48,6 +48,8 @@ using NoCtx = const void*;
+--- chromium-114.0.5735.90.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
++++ chromium-114.0.5735.90/third_party/skia/src/opts/SkRasterPipeline_opts.h
+@@ -1,5 +1,6 @@
+ /*
+  * Copyright 2018 Google Inc.
++ * Copyright 2023 Raptor Engineering, LLC
+  *
+  * Use of this source code is governed by a BSD-style license that can be
+  * found in the LICENSE file.
+@@ -52,6 +53,8 @@ using NoCtx = const void*;
      #define JUMPER_IS_SCALAR
  #elif defined(SK_ARM_HAS_NEON)
      #define JUMPER_IS_NEON
@@ -159,7 +166,7 @@ Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SKX
      #define JUMPER_IS_SKX
  #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_AVX2
-@@ -80,6 +82,8 @@ using NoCtx = const void*;
+@@ -84,6 +87,8 @@ using NoCtx = const void*;
      #include <math.h>
  #elif defined(JUMPER_IS_NEON)
      #include <arm_neon.h>
@@ -168,29 +175,279 @@ Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #else
      #include <immintrin.h>
  #endif
-@@ -719,7 +723,7 @@ namespace SK_OPTS_NS {
-         }
+@@ -184,6 +189,256 @@ namespace SK_OPTS_NS {
+         ptr[3] = a;
      }
  
--#elif defined(JUMPER_IS_SSE2) || defined(JUMPER_IS_SSE41) || defined(JUMPER_IS_AVX)
-+#elif defined(JUMPER_IS_SSE2) || defined(JUMPER_IS_SSE41) || defined(JUMPER_IS_AVX) || defined(JUMPER_IS_VSX)
- template <typename T> using V = T __attribute__((ext_vector_type(4)));
-     using F   = V<float   >;
-     using I32 = V< int32_t>;
-@@ -791,6 +795,8 @@ template <typename T> using V = T __attr
-     SI F floor_(F v) {
-     #if defined(JUMPER_IS_SSE41) || defined(JUMPER_IS_AVX)
-         return _mm_floor_ps(v);
-+    #elif defined(JUMPER_IS_VSX)
-+        return vec_floor(v);
-     #else
-         F roundtrip = _mm_cvtepi32_ps(_mm_cvttps_epi32(v));
-         return roundtrip - if_then_else(roundtrip > v, 1, 0);
-@@ -1079,6 +1085,13 @@ SI F from_half(U16 h) {
++#elif defined(JUMPER_IS_VSX)
++    // Since we know we're using Clang, we can use its vector extensions.
++    template <typename T> using V = T __attribute__((ext_vector_type(4)));
++    using F   = V<float   >;
++    using I32 = V< int32_t>;
++    using U64 = V<uint64_t>;
++    using U32 = V<uint32_t>;
++    using U16 = V<uint16_t>;
++    using U8  = V<uint8_t >;
++
++    // We polyfill a few routines that Clang doesn't build into ext_vector_types.
++    SI F   min(F a, F b)     { return vec_min(a,b); }
++    SI I32 min(I32 a, I32 b) { return vec_min(a,b); }
++    SI U32 min(U32 a, U32 b) { return vec_min(a,b); }
++    SI F   max(F a, F b)     { return vec_max(a,b); }
++    SI I32 max(I32 a, I32 b) { return vec_max(a,b); }
++    SI U32 max(U32 a, U32 b) { return vec_max(a,b); }
++
++    SI F   abs_  (F v)   { return vec_abs(v); }
++    SI I32 abs_  (I32 v) { return vec_abs(v); }
++    SI F   rcp_fast(F v) { return vec_re(v); }
++    SI F   rcp_precise (F v) { F e = rcp_fast(v); return e * (2.0f - v * e); }
++    SI F   rsqrt (F v)   { return vec_rsqrte(v); }
++
++    SI U16 pack(U32 v)       { return __builtin_convertvector(v, U16); }
++    SI U8  pack(U16 v)       { return __builtin_convertvector(v,  U8); }
++
++    SI F if_then_else(I32 c, F t, F e) {
++        return vec_or((vector float)vec_and((vector float)c, (vector float)t), (vector float)vec_andc((vector float)e, (vector float)c));
++    }
++
++    // In both AltiVec and SSE there is no horizontal element compare, unlike ARM.  Fall back to scalar operations here...
++    SI bool any(I32 c) {
++        if (vec_extract((U32)c, 0) != 0) return 1;
++        if (vec_extract((U32)c, 1) != 0) return 1;
++        if (vec_extract((U32)c, 2) != 0) return 1;
++        if (vec_extract((U32)c, 3) != 0) return 1;
++        return 0;
++    }
++    SI bool all(I32 c) {
++        if (vec_extract((U32)c, 0) == 0) return 0;
++        if (vec_extract((U32)c, 1) == 0) return 0;
++        if (vec_extract((U32)c, 2) == 0) return 0;
++        if (vec_extract((U32)c, 3) == 0) return 0;
++        return 1;
++    }
++
++    SI F     mad(F f, F m, F a) { return vec_madd(f,m,a); }
++    SI F  floor_(F v) { return vec_floor(v); }
++    SI F   ceil_(F v) { return vec_ceil(v); }
++    SI F   sqrt_(F v) { return vec_sqrt(v); }
++    SI U32 round(F v, F scale) { return vec_cts((vector float)vec_rint(v*scale), 0); }
++
++    template <typename T>
++    SI V<T> gather(const T* p, U32 ix) {
++        return {p[ix[0]], p[ix[1]], p[ix[2]], p[ix[3]]};
++    }
++    template <typename V, typename S>
++    SI void scatter_masked(V src, S* dst, U32 ix, I32 mask) {
++        V before = gather(dst, ix);
++        V after = if_then_else(mask, src, before);
++        dst[ix[0]] = after[0];
++        dst[ix[1]] = after[1];
++        dst[ix[2]] = after[2];
++        dst[ix[3]] = after[3];
++    }
++
++    // TODO
++    // Finish converting these functions from the SSE translation layer to native AltiVec / VSX
++    SI void load2(const uint16_t* ptr, size_t tail, U16* r, U16* g) {
++        __m128i _01;
++        if (__builtin_expect(tail,0)) {
++            _01 = _mm_setzero_si128();
++            if (tail > 1) {
++                _01 = _mm_loadl_pd(_01, (const double*)ptr);            // r0 g0 r1 g1 00 00 00 00
++                if (tail > 2) {
++                  _01 = _mm_insert_epi16(_01, *(ptr+4), 4);             // r0 g0 r1 g1 r2 00 00 00
++                  _01 = _mm_insert_epi16(_01, *(ptr+5), 5);             // r0 g0 r1 g1 r2 g2 00 00
++                }
++            } else {
++                _01 = _mm_cvtsi32_si128(*(const uint32_t*)ptr);         // r0 g0 00 00 00 00 00 00
++            }
++        } else {
++            _01 = _mm_loadu_si128(((__m128i*)ptr) + 0);  // r0 g0 r1 g1 r2 g2 r3 g3
++        }
++        auto rg01_23 = _mm_shufflelo_epi16(_01, 0xD8);      // r0 r1 g0 g1 r2 g2 r3 g3
++        auto rg      = _mm_shufflehi_epi16(rg01_23, 0xD8);  // r0 r1 g0 g1 r2 r3 g2 g3
++
++        auto R = _mm_shuffle_epi32(rg, 0x88);  // r0 r1 r2 r3 r0 r1 r2 r3
++        auto G = _mm_shuffle_epi32(rg, 0xDD);  // g0 g1 g2 g3 g0 g1 g2 g3
++        *r = sk_unaligned_load<U16>(&R);
++        *g = sk_unaligned_load<U16>(&G);
++    }
++
++    SI void store2(uint16_t* ptr, size_t tail, U16 r, U16 g) {
++        U32 rg = _mm_unpacklo_epi16(widen_cast<__m128i>(r), widen_cast<__m128i>(g));
++        if (__builtin_expect(tail, 0)) {
++            if (tail > 1) {
++                _mm_storel_epi64((__m128i*)ptr, rg);
++                if (tail > 2) {
++                    int32_t rgpair = rg[2];
++                    memcpy(ptr + 4, &rgpair, sizeof(rgpair));
++                }
++            } else {
++                int32_t rgpair = rg[0];
++                memcpy(ptr, &rgpair, sizeof(rgpair));
++            }
++        } else {
++            _mm_storeu_si128((__m128i*)ptr + 0, rg);
++        }
++    }
++
++    SI void load3(const uint16_t* ptr, size_t tail, U16* r, U16* g, U16* b) {
++        __m128i _0, _1, _2, _3;
++        if (__builtin_expect(tail,0)) {
++            _1 = _2 = _3 = _mm_setzero_si128();
++            auto load_rgb = [](const uint16_t* src) {
++                auto v = _mm_cvtsi32_si128(*(const uint32_t*)src);
++                return _mm_insert_epi16(v, src[2], 2);
++            };
++            if (  true  ) { _0 = load_rgb(ptr + 0); }
++            if (tail > 1) { _1 = load_rgb(ptr + 3); }
++            if (tail > 2) { _2 = load_rgb(ptr + 6); }
++        } else {
++            // Load slightly weirdly to make sure we don't load past the end of 4x48 bits.
++            auto _01 =                _mm_loadu_si128((const __m128i*)(ptr + 0))    ,
++                 _23 = _mm_srli_si128(_mm_loadu_si128((const __m128i*)(ptr + 4)), 4);
++
++            // Each _N holds R,G,B for pixel N in its lower 3 lanes (upper 5 are ignored).
++            _0 = _01;
++            _1 = _mm_srli_si128(_01, 6);
++            _2 = _23;
++            _3 = _mm_srli_si128(_23, 6);
++        }
++
++        // De-interlace to R,G,B.
++        auto _02 = _mm_unpacklo_epi16(_0, _2),  // r0 r2 g0 g2 b0 b2 xx xx
++             _13 = _mm_unpacklo_epi16(_1, _3);  // r1 r3 g1 g3 b1 b3 xx xx
++
++        auto R = _mm_unpacklo_epi16(_02, _13),  // r0 r1 r2 r3 g0 g1 g2 g3
++             G = _mm_srli_si128(R, 8),
++             B = _mm_unpackhi_epi16(_02, _13);  // b0 b1 b2 b3 xx xx xx xx
++
++        *r = sk_unaligned_load<U16>(&R);
++        *g = sk_unaligned_load<U16>(&G);
++        *b = sk_unaligned_load<U16>(&B);
++    }
++
++    SI void load4(const uint16_t* ptr, size_t tail, U16* r, U16* g, U16* b, U16* a) {
++        __m128i _01, _23;
++        if (__builtin_expect(tail,0)) {
++            _01 = _23 = _mm_setzero_si128();
++            auto src = (const double*)ptr;
++            if (  true  ) { _01 = _mm_loadl_pd(_01, src + 0); } // r0 g0 b0 a0 00 00 00 00
++            if (tail > 1) { _01 = _mm_loadh_pd(_01, src + 1); } // r0 g0 b0 a0 r1 g1 b1 a1
++            if (tail > 2) { _23 = _mm_loadl_pd(_23, src + 2); } // r2 g2 b2 a2 00 00 00 00
++        } else {
++            _01 = _mm_loadu_si128(((__m128i*)ptr) + 0); // r0 g0 b0 a0 r1 g1 b1 a1
++            _23 = _mm_loadu_si128(((__m128i*)ptr) + 1); // r2 g2 b2 a2 r3 g3 b3 a3
++        }
++
++        auto _02 = _mm_unpacklo_epi16(_01, _23),  // r0 r2 g0 g2 b0 b2 a0 a2
++             _13 = _mm_unpackhi_epi16(_01, _23);  // r1 r3 g1 g3 b1 b3 a1 a3
++
++        auto rg = _mm_unpacklo_epi16(_02, _13),  // r0 r1 r2 r3 g0 g1 g2 g3
++             ba = _mm_unpackhi_epi16(_02, _13);  // b0 b1 b2 b3 a0 a1 a2 a3
++
++        *r = sk_unaligned_load<U16>((uint16_t*)&rg + 0);
++        *g = sk_unaligned_load<U16>((uint16_t*)&rg + 4);
++        *b = sk_unaligned_load<U16>((uint16_t*)&ba + 0);
++        *a = sk_unaligned_load<U16>((uint16_t*)&ba + 4);
++    }
++
++    SI void store4(uint16_t* ptr, size_t tail, U16 r, U16 g, U16 b, U16 a) {
++        auto rg = _mm_unpacklo_epi16(widen_cast<__m128i>(r), widen_cast<__m128i>(g)),
++             ba = _mm_unpacklo_epi16(widen_cast<__m128i>(b), widen_cast<__m128i>(a));
++
++        if (__builtin_expect(tail, 0)) {
++            auto dst = (double*)ptr;
++            if (  true  ) { _mm_storel_pd(dst + 0, _mm_unpacklo_epi32(rg, ba)); }
++            if (tail > 1) { _mm_storeh_pd(dst + 1, _mm_unpacklo_epi32(rg, ba)); }
++            if (tail > 2) { _mm_storel_pd(dst + 2, _mm_unpackhi_epi32(rg, ba)); }
++        } else {
++            _mm_storeu_si128((__m128i*)ptr + 0, _mm_unpacklo_epi32(rg, ba));
++            _mm_storeu_si128((__m128i*)ptr + 1, _mm_unpackhi_epi32(rg, ba));
++        }
++    }
++
++    SI void load2(const float* ptr, size_t tail, F* r, F* g) {
++        F _01, _23;
++        if (__builtin_expect(tail, 0)) {
++            _01 = _23 = _mm_setzero_si128();
++            if (  true  ) { _01 = _mm_loadl_pi(_01, (__m64 const*)(ptr + 0)); }
++            if (tail > 1) { _01 = _mm_loadh_pi(_01, (__m64 const*)(ptr + 2)); }
++            if (tail > 2) { _23 = _mm_loadl_pi(_23, (__m64 const*)(ptr + 4)); }
++        } else {
++            _01 = _mm_loadu_ps(ptr + 0);
++            _23 = _mm_loadu_ps(ptr + 4);
++        }
++        *r = _mm_shuffle_ps(_01, _23, 0x88);
++        *g = _mm_shuffle_ps(_01, _23, 0xDD);
++    }
++
++    SI void store2(float* ptr, size_t tail, F r, F g) {
++        F _01 = _mm_unpacklo_ps(r, g),
++          _23 = _mm_unpackhi_ps(r, g);
++        if (__builtin_expect(tail, 0)) {
++            if (  true  ) { _mm_storel_pi((__m64*)(ptr + 0), _01); }
++            if (tail > 1) { _mm_storeh_pi((__m64*)(ptr + 2), _01); }
++            if (tail > 2) { _mm_storel_pi((__m64*)(ptr + 4), _23); }
++        } else {
++            _mm_storeu_ps(ptr + 0, _01);
++            _mm_storeu_ps(ptr + 4, _23);
++        }
++    }
++
++    SI void load4(const float* ptr, size_t tail, F* r, F* g, F* b, F* a) {
++        F _0, _1, _2, _3;
++        if (__builtin_expect(tail, 0)) {
++            _1 = _2 = _3 = _mm_setzero_si128();
++            if (  true  ) { _0 = _mm_loadu_ps(ptr + 0); }
++            if (tail > 1) { _1 = _mm_loadu_ps(ptr + 4); }
++            if (tail > 2) { _2 = _mm_loadu_ps(ptr + 8); }
++        } else {
++            _0 = _mm_loadu_ps(ptr + 0);
++            _1 = _mm_loadu_ps(ptr + 4);
++            _2 = _mm_loadu_ps(ptr + 8);
++            _3 = _mm_loadu_ps(ptr +12);
++        }
++        _MM_TRANSPOSE4_PS(_0,_1,_2,_3);
++        *r = _0;
++        *g = _1;
++        *b = _2;
++        *a = _3;
++    }
++
++    SI void store4(float* ptr, size_t tail, F r, F g, F b, F a) {
++        _MM_TRANSPOSE4_PS(r,g,b,a);
++        if (__builtin_expect(tail, 0)) {
++            if (  true  ) { _mm_storeu_ps(ptr + 0, r); }
++            if (tail > 1) { _mm_storeu_ps(ptr + 4, g); }
++            if (tail > 2) { _mm_storeu_ps(ptr + 8, b); }
++        } else {
++            _mm_storeu_ps(ptr + 0, r);
++            _mm_storeu_ps(ptr + 4, g);
++            _mm_storeu_ps(ptr + 8, b);
++            _mm_storeu_ps(ptr +12, a);
++        }
++    }
++
+ #elif defined(JUMPER_IS_NEON)
+     // Since we know we're using Clang, we can use its vector extensions.
+     template <typename T> using V = T __attribute__((ext_vector_type(4)));
+@@ -1026,7 +1281,7 @@ SI V if_then_else(I32 c, V t, V e) {
+ }
+ 
+ SI U16 bswap(U16 x) {
+-#if defined(JUMPER_IS_SSE2) || defined(JUMPER_IS_SSE41)
++#if defined(JUMPER_IS_SSE2) || defined(JUMPER_IS_SSE41) || defined(JUMPER_IS_VSX)
+     // Somewhat inexplicably Clang decides to do (x<<8) | (x>>8) in 32-bit lanes
+     // when generating code for SSE2 and SSE4.1.  We'll do it manually...
+     auto v = widen_cast<__m128i>(x);
+@@ -1083,6 +1338,15 @@ SI F from_half(U16 h) {
  #elif defined(JUMPER_IS_HSW) || defined(JUMPER_IS_SKX)
      return _mm256_cvtph_ps(h);
  
-+#elif defined(JUMPER_IS_VSX) && __has_builtin(__builtin_vsx_xvcvhpsp)
++// Disabled for now as this is not a particularly hot function
++// and there is no good reason to lock Chromium to POWER9+ yet.
++#elif 0 && defined(JUMPER_IS_VSX) && __has_builtin(__builtin_vsx_xvcvhpsp)
 +    #if defined(SK_CPU_LENDIAN)
 +        return __builtin_vsx_xvcvhpsp({h[0], 0, h[1], 0, h[2], 0, h[3], 0});
 +    #else
@@ -200,21 +457,24 @@ Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #else
      // Remember, a half is 1-5-10 (sign-exponent-mantissa) with 15 exponent bias.
      U32 sem = expand(h),
-@@ -1100,6 +1113,13 @@ SI U16 to_half(F f) {
+@@ -1104,6 +1368,16 @@ SI U16 to_half(F f) {
  #elif defined(JUMPER_IS_HSW) || defined(JUMPER_IS_SKX)
      return _mm256_cvtps_ph(f, _MM_FROUND_CUR_DIRECTION);
  
-+#elif defined(JUMPER_IS_VSX) && __has_builtin(__builtin_vsx_xvcvsphp)
++// Disabled for now as this is not a particularly hot function
++// and there is no good reason to lock Chromium to POWER9+ yet.
++#elif 0 && defined(JUMPER_IS_VSX) && __has_builtin(__builtin_vsx_xvcvsphp)
 +    __vector unsigned short v = __builtin_vsx_xvcvsphp(f);
 +    #if defined(SK_CPU_LENDIAN)
 +        return U16{v[0], v[2], v[4], v[6]};
 +    #else
 +        return U16{v[1], v[3], v[5], v[7]};
 +    #endif
++
  #else
      // Remember, a float is 1-8-23 (sign-exponent-mantissa) with 127 exponent bias.
      U32 sem = sk_bit_cast<U32>(f),
-@@ -1133,7 +1153,7 @@ static constexpr size_t N = sizeof(F) /
+@@ -1137,7 +1411,7 @@ static constexpr size_t N = sizeof(F) /
      // instead of {b,a} on the stack.  Narrow stages work best for __vectorcall.
      #define ABI __vectorcall
      #define JUMPER_NARROW_STAGES 1
@@ -223,31 +483,135 @@ Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkRasterPipeline_opts.h
      // These platforms are ideal for wider stages, and their default ABI is ideal.
      #define ABI
      #define JUMPER_NARROW_STAGES 0
-@@ -4517,7 +4537,8 @@ SI F sqrt_(F x) {
-     __m256 lo,hi;
+@@ -4752,6 +5026,10 @@ SI F sqrt_(F x) {
+     float32x4_t lo,hi;
      split(x, &lo,&hi);
-     return join<F>(_mm256_sqrt_ps(lo), _mm256_sqrt_ps(hi));
--#elif defined(JUMPER_IS_SSE2) || defined(JUMPER_IS_SSE41) || defined(JUMPER_IS_AVX)
-+#elif defined(JUMPER_IS_SSE2) || defined(JUMPER_IS_SSE41) \
-+  || defined(JUMPER_IS_AVX) || defined(JUMPER_IS_VSX)
-     __m128 lo,hi;
-     split(x, &lo,&hi);
-     return join<F>(_mm_sqrt_ps(lo), _mm_sqrt_ps(hi));
-@@ -4556,6 +4577,10 @@ SI F floor_(F x) {
+     return join<F>(sqrt(lo), sqrt(hi));
++#elif defined(JUMPER_IS_VSX)
++    vector float lo,hi;
++    split(x, &lo,&hi);
++    return join<F>(vec_sqrt(lo), vec_sqrt(hi));
+ #else
+     return F{
+         sqrtf(x[0]), sqrtf(x[1]), sqrtf(x[2]), sqrtf(x[3]),
+@@ -4773,6 +5051,10 @@ SI F floor_(F x) {
      __m128 lo,hi;
      split(x, &lo,&hi);
      return join<F>(_mm_floor_ps(lo), _mm_floor_ps(hi));
 +#elif defined(JUMPER_IS_VSX)
-+    __m128 lo,hi;
++    vector float lo,hi;
 +    split(x, &lo,&hi);
 +    return join<F>(vec_floor(lo), vec_floor(hi));
  #else
      F roundtrip = cast<F>(cast<I32>(x));
      return roundtrip - if_then_else(roundtrip > x, F(1), F(0));
-Index: chromium-113.0.5672.63/third_party/skia/src/opts/SkSwizzler_opts.h
+@@ -4784,6 +5066,7 @@ SI F floor_(F x) {
+ //     (2 * a * b + (1 << 15)) >> 16
+ // The result is a number on [-1, 1).
+ // Note: on neon this is a saturating multiply while the others are not.
++// Note: for POWER, the code below was borrowed from emmintrin.h
+ SI I16 scaled_mult(I16 a, I16 b) {
+ #if defined(JUMPER_IS_HSW) || defined(JUMPER_IS_SKX)
+     return _mm256_mulhrs_epi16(a, b);
+@@ -4793,6 +5076,22 @@ SI I16 scaled_mult(I16 a, I16 b) {
+     return vqrdmulhq_s16(a, b);
+ #elif defined(JUMPER_IS_NEON)
+     return vqrdmulhq_s16(a, b);
++#elif defined(JUMPER_IS_VSX)
++    const vector unsigned int shift = vec_splats((unsigned int)14);
++    const vector int ones = vec_splats((signed int)1);
++    vector int c = vec_unpackh((vector short)a);
++    vector int d = vec_unpackh((vector short)b);
++    vector int e = vec_unpackl((vector short)b);
++    c = vec_mul(c, d);
++    d = vec_unpackl((vector short)a);
++    d = vec_mul(d, e);
++    c = vec_sr(c, shift);
++    d = vec_sr(d, shift);
++    c = vec_add(c, ones);
++    c = vec_sr(c,(vector unsigned int)ones);
++    d = vec_add(d, ones);
++    d = vec_sr(d,(vector unsigned int)ones);
++    return vec_pack(c, d);
+ #else
+     const I32 roundingTerm = 1 << 14;
+     return cast<I16>((cast<I32>(a) * cast<I32>(b) + roundingTerm) >> 15);
+@@ -4814,7 +5113,26 @@ SI U16 constrained_add(I16 a, U16 b) {
+             SkASSERT(-ib <= ia && ia <= 65535 - ib);
+         }
+     #endif
++
++    // Technically, trying to add a signed and unsigned vector invokes undefined behavior
++    // Just because it sort of seems to work on Intel/ARM on Clang doesn't mean it works everywhere...
++    // FIXME: For added fun, the existing Skia unit tests do NOT properly test for issues in the
++    // lowp bilerp path.  Investigate and write an appropriate test case...
++#if defined(JUMPER_IS_VSX)
++    // Most POWER compilers end up doing some kind of width promotion that causes memory corruption
++    // and/or incorrect results.  This shows up as snow and general graphics corruption, especially
++    // noticeable when trying to display a PNG at less than 50% size (resize the browser window down
++    // until the artifacts appear).
++    // Take the (likely invisible) loss of precision, convert b to a signed int immediately, and do
++    // a proper saturated add here.  This seems to fully resolve the issue for all test cases Raptor
++    // has seen so far...
++    // In half precision mode, this function expects both input arguments to have been divided by
++    // two prior to being called, and returns the output without being multiplied back up by two
++    return vec_adds(a, (I16)b);
++#else
++    // Hic Sunt Dragones!
+     return b + a;
++#endif
+ }
+ 
+ SI F fract(F x) { return x - floor_(x); }
+@@ -5704,8 +6022,14 @@ STAGE_GP(bilerp_clamp_8888, const SkRast
+     //         2^-8 * v = 2^-9 * (tx*(R - L) + (R + L))
+     //                v = 1/2 * (tx*(R - L) + (R + L))
+     auto lerpX = [&](U16 left, U16 right) -> U16 {
++#if defined(JUMPER_IS_VSX)
++	// constrained_add() on POWER is run in half precision mode to avoid undefined behavior
++        I16 width  = (I16)(right - left) << 6;
++        U16 middle = (right + left) << 6;
++#else
+         I16 width  = (I16)(right - left) << 7;
+         U16 middle = (right + left) << 7;
++#endif
+         // The constrained_add is the most subtle part of lerp. The first term is on the interval
+         // [-1, 1), and the second term is on the interval is on the interval [0, 1) because
+         // both terms are too high by a factor of 2 which will be handled below. (Both R and L are
+@@ -5717,7 +6041,12 @@ STAGE_GP(bilerp_clamp_8888, const SkRast
+         U16 v2  = constrained_add(scaled_mult(tx, width), middle) + 1;
+         // Divide by 2 to calculate v and at the same time bring the intermediate value onto the
+         // interval [0, 1/2] to set up for the lerpY.
++#if defined(JUMPER_IS_VSX)
++	// constrained_add() on POWER is run in half precision mode to avoid undefined behavior
++        return v2;
++#else
+         return v2 >> 1;
++#endif
+     };
+ 
+     const uint32_t* ptr;
+@@ -5751,9 +6080,15 @@ STAGE_GP(bilerp_clamp_8888, const SkRast
+         I16 width  = (I16)bottom - top;
+         U16 middle = bottom + top;
+         // Add + 0x80 for rounding.
++#if defined(JUMPER_IS_VSX)
++	// constrained_add() on POWER is run in half precision mode to avoid undefined behavior
++        U16 blend  = constrained_add(scaled_mult(ty, width) / 2, middle / 2) + (0x80 / 2);
++        return blend >> 7;
++#else
+         U16 blend  = constrained_add(scaled_mult(ty, width), middle) + 0x80;
+-
+         return blend >> 8;
++#endif
++
+     };
+ 
+     r = lerpY(topR, bottomR);
+Index: chromium-114.0.5735.90/third_party/skia/src/opts/SkSwizzler_opts.h
 ===================================================================
---- chromium-113.0.5672.63.orig/third_party/skia/src/opts/SkSwizzler_opts.h
-+++ chromium-113.0.5672.63/third_party/skia/src/opts/SkSwizzler_opts.h
+--- chromium-114.0.5735.90.orig/third_party/skia/src/opts/SkSwizzler_opts.h
++++ chromium-114.0.5735.90/third_party/skia/src/opts/SkSwizzler_opts.h
 @@ -12,7 +12,9 @@
  #include "src/base/SkVx.h"
  #include <utility>

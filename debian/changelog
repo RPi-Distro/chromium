@@ -1,4 +1,4 @@
-chromium (114.0.5735.106-1) UNRELEASED; urgency=high
+chromium (114.0.5735.106-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2023-3079: Type Confusion in V8.
@@ -7,7 +7,7 @@ chromium (114.0.5735.106-1) UNRELEASED; urgency=high
     - ppc64le/third_party/skia-vsx-instructions.patch: rewrite for POWER8
       compatibility, fix graphics corruption, and enable in builds
 
- -- Timothy Pearson <tpearson@raptorengineering.com>  Mon, 05 Jun 2023 16:03:00 -0500
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Mon, 05 Jun 2023 21:38:00 -0500
 
 chromium (114.0.5735.90-2) unstable; urgency=high
 

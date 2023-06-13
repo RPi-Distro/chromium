@@ -1,3 +1,15 @@
+chromium (114.0.5735.133-1~deb12u1) bookworm-security; urgency=high
+
+    - CVE-2023-3214: Use after free in Autofill payments.
+      Reported by Rong Jian of VRI.
+    - CVE-2023-3215: Use after free in WebRTC. Reported by asnine.
+    - CVE-2023-3216: Type Confusion in V8.
+      Reported by 5n1p3r0010 from Topsec ChiXiao Lab.
+    - CVE-2023-3217: Use after free in WebXR.
+      Reported by Sergei Glazunov of Google Project Zero.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 13 Jun 2023 13:31:55 -0400
+
 chromium (114.0.5735.106-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.

@@ -1,5 +1,17 @@
+chromium (114.0.5735.198-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-3420: Type Confusion in V8.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2023-3421: Use after free in Media.
+      Reported by Piotr Bania of Cisco Talos.
+    - CVE-2023-3422: Use after free in Guest View. Reported by asnine.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 27 Jun 2023 02:21:12 -0400
+
 chromium (114.0.5735.133-1~deb12u1) bookworm-security; urgency=high
 
+  * New upstream security release.
     - CVE-2023-3214: Use after free in Autofill payments.
       Reported by Rong Jian of VRI.
     - CVE-2023-3215: Use after free in WebRTC. Reported by asnine.

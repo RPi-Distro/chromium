@@ -175,7 +175,7 @@ Index: chromium-115.0.5790.56/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #else
      #include <immintrin.h>
  #endif
-@@ -183,6 +188,256 @@ namespace SK_OPTS_NS {
+@@ -183,6 +188,257 @@ namespace SK_OPTS_NS {
          ptr[3] = a;
      }
  
@@ -230,6 +230,7 @@ Index: chromium-115.0.5790.56/third_party/skia/src/opts/SkRasterPipeline_opts.h
 +    SI F  floor_(F v) { return vec_floor(v); }
 +    SI F   ceil_(F v) { return vec_ceil(v); }
 +    SI F   sqrt_(F v) { return vec_sqrt(v); }
++    SI U32 round(F v) { return vec_cts((vector float)vec_rint(v), 0); }
 +    SI U32 round(F v, F scale) { return vec_cts((vector float)vec_rint(v*scale), 0); }
 +
 +    template <typename T>

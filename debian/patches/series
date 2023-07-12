@@ -6,6 +6,8 @@ fixes/ps-print.patch
 fixes/clang-and-gcc11.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
+fixes/cmath.patch
+fixes/vector.patch
 
 upstream/mojo.patch
 upstream/feature-list-static.patch

@@ -9,7 +9,7 @@ Index: chromium-115.0.5790.56/base/allocator/partition_allocator/partition_alloc
    has_64_bit_pointers = false
  } else if (current_cpu == "x64" || current_cpu == "arm64" ||
 -           current_cpu == "loong64" || current_cpu == "riscv64") {
-+           current_cpu == "loong64" || current_cpu == "riscv64") ||
++           current_cpu == "loong64" || current_cpu == "riscv64" ||
 +           current_cpu == "ppc64") {
    has_64_bit_pointers = true
  } else if (current_cpu == "x86" || current_cpu == "arm") {

@@ -5077,7 +5077,7 @@ index 41754c6fb..cb1ee7d51 100644
 +    // bug on ppc64le. glibc may implement pthread locks by wrapping user code
 +    // in a hardware transaction, but, on some older versions of glibc and the
 +    // kernel, syscalls made with |syscall| did not abort the transaction.
-     CRYPTO_STATIC_MUTEX_lock_read(state_clear_all_lock_bss_get());
+     CRYPTO_MUTEX_lock_read(&state->clear_drbg_lock);
  #endif
      if (!CTR_DRBG_reseed(&state->drbg, seed, reseed_additional_data,
 diff --git a/third_party/boringssl/src/crypto/fipsmodule/sha/internal.h b/third_party/boringssl/src/crypto/fipsmodule/sha/internal.h

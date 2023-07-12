@@ -43,7 +43,7 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
 -      "//third_party/catapult/devil/",
 -      "//third_party/catapult/dependency_manager/",
 -      "//third_party/catapult/third_party/typ/",
-       "//third_party/depot_tools/pylint-1.5",
+       "//third_party/depot_tools/pylint-2.7",
        "//third_party/depot_tools/pylint_main.py",
        "//third_party/depot_tools/pylintrc",
 --- a/tools/binary_size/BUILD.gn
@@ -126,13 +126,13 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
 --- a/tools/gritsettings/resource_ids.spec
 +++ b/tools/gritsettings/resource_ids.spec
 @@ -941,11 +941,6 @@
-     "includes": [3840],
+     "includes": [6340],
    },
  
 -  # This file is generated during the build.
 -  "<(SHARED_INTERMEDIATE_DIR)/content/browser/tracing/tracing_resources.grd": {
 -    "META": {"sizes": {"includes": [20],}},
--    "includes": [3860],
+-    "includes": [6360],
 -  },
    # END content/ section.
  
@@ -176,9 +176,9 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
 -    sources += [ "$root_gen_dir/content/browser/tracing/tracing_resources.pak" ]
 -  }
 -
-   if (shell_use_toolkit_views) {
-     deps += [ "//ui/views/resources" ]
-     sources +=
+   if (is_ios) {
+     sources += [
+       "$root_gen_dir/device/bluetooth/strings/bluetooth_strings_en-US.pak",
 --- a/content/browser/tracing/BUILD.gn
 +++ /dev/null
 @@ -1,39 +0,0 @@

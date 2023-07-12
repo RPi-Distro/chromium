@@ -8,7 +8,6 @@ fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 
 upstream/mojo.patch
-upstream/sizet.patch
 upstream/feature-list-static.patch
 
 disable/tests.patch

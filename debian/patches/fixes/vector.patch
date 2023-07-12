@@ -1,5 +1,5 @@
---- net/cert/pki/verify_name_match.h.orig	2023-06-28 16:41:26.000000000 +0000
-+++ net/cert/pki/verify_name_match.h	2023-07-12 19:53:43.712629198 +0000
+--- a/net/cert/pki/verify_name_match.h
++++ b/net/cert/pki/verify_name_match.h
 @@ -6,6 +6,7 @@
  #define NET_CERT_PKI_VERIFY_NAME_MATCH_H_
  

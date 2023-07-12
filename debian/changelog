@@ -3,14 +3,14 @@ chromium (115.0.5790.84-1) UNRELEASED; urgency=high
   * New upstream release
 
   * d/patches:
-    - debian/patches/debianization/master-preferences.patch: upstream variable renamed
-    - upstream/sizet.patch: drop, merged upstream
+    - debianization/master-preferences.patch: upstream variable renamed
     - disable/unrar.patch: upstream changes required reworking
-    - debian/patches/disable/catapult.patch: upstream changes required reworking
-    - debian/patches/ppc64le/fixes/fix-partition-alloc-compile.patch: refresh for upstream changes
-    - debian/patches/ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
-    - debian/patches/ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for upstream changes
-    - debian/patches/ppc64le/third_party/skia-vsx-instructions.patch: refresh for upstream changes
+    - disable/catapult.patch: upstream changes required reworking
+    - upstream/sizet.patch: drop, merged upstream
+    - ppc64le/fixes/fix-partition-alloc-compile.patch: refresh for upstream changes
+    - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
+    - ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for upstream changes
+    - ppc64le/third_party/skia-vsx-instructions.patch: refresh for upstream changes
 
  -- Timothy Pearson <tpearson@raptorengineering.com>  Wed, 12 Jun 2023 11:57:00 -0500
 

@@ -43,7 +43,7 @@ Files-Excluded:
  chrome/installer/gcapi*
  chrome/installer/mini_installer
  chrome/installer/launcher_support
- chrome/common/safe_browsing/rar_analyzer.*
+ chrome/utility/safe_browsing/rar_analyzer.*
  chrome/browser/resources/chromeos/ac*
  chrome/browser/resources/chromeos/s*
  chrome/browser/resources/chromeos/l*

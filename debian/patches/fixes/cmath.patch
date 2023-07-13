@@ -1,5 +1,5 @@
---- skia/ext/skcolorspace_trfn.cc.orig	2023-06-28 16:41:28.000000000 +0000
-+++ skia/ext/skcolorspace_trfn.cc	2023-07-12 19:43:02.966337945 +0000
+--- a/skia/ext/skcolorspace_trfn.cc.orig	2023-06-28 16:41:28.000000000 +0000
++++ b/skia/ext/skcolorspace_trfn.cc	2023-07-12 19:43:02.966337945 +0000
 @@ -4,6 +4,8 @@
  
  #include "skia/ext/skcolorspace_trfn.h"

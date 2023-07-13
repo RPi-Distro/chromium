@@ -20,9 +20,11 @@ chromium (115.0.5790.90-1) UNRELEASED; urgency=high
     - ppc64le/third_party/skia-vsx-instructions.patch: refresh for upstream changes
 
   [ Andres Salomon ]
-    - bookworm/typename.patch: drop parts that were merged upstream.
+    - bookworm/typename.patch: drop parts that were merged upstream, and add
+      new build fix
     - bookworm/structured-binding-scope-bug.patch: drop most of it & refresh.
     - bullseye/constexpr.patch: refresh for string -> StringPiece change.
+    - fixes/brandversion-construct.patch: add to fix build failure.
 
  -- Timothy Pearson <tpearson@raptorengineering.com>  Wed, 12 Jun 2023 11:57:00 -0500
 

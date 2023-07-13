@@ -19,6 +19,11 @@ chromium (115.0.5790.90-1) UNRELEASED; urgency=high
     - ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch: regenerate configs from upstream source
     - ppc64le/third_party/skia-vsx-instructions.patch: refresh for upstream changes
 
+  [ Andres Salomon ]
+    - bookworm/typename.patch: drop parts that were merged upstream.
+    - bookworm/structured-binding-scope-bug.patch: drop most of it & refresh.
+    - bullseye/constexpr.patch: refresh for string -> StringPiece change.
+
  -- Timothy Pearson <tpearson@raptorengineering.com>  Wed, 12 Jun 2023 11:57:00 -0500
 
 chromium (114.0.5735.198-1) unstable; urgency=high

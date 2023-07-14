@@ -21,10 +21,11 @@ chromium (115.0.5790.90-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
     - bookworm/typename.patch: drop parts that were merged upstream, and add
-      new build fix
-    - bookworm/structured-binding-scope-bug.patch: drop most of it & refresh.
+      new build fixes.
+    - bookworm/structured-binding-scope-bug.patch: drop some of it, add new bits
     - bullseye/constexpr.patch: refresh for string -> StringPiece change.
     - fixes/brandversion-construct.patch: add to fix build failure.
+    - fixes/SkColor4f-init.patch: another missing struct constructor fix.
     - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh.
     - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
     - ppc64le/third_party/0002-third-party-boringssl-add-generated-files.patch: refresh.

@@ -46,3 +46,15 @@ workaround is to define the variable not in a structured binding.
  
    const bool is_for_columns = track_direction == kForColumns;
    const bool has_non_definite_track =
+--- a/content/browser/service_worker/service_worker_context_wrapper.cc
++++ b/content/browser/service_worker/service_worker_context_wrapper.cc
+@@ -1393,7 +1393,8 @@ void ServiceWorkerContextWrapper::MaybeP
+     return;
+   }
+ 
+-  auto [document_url, key, callback] = std::move(*request);
++  auto [d_u, key, callback] = std::move(*request);
++  auto document_url = std::move(d_u);
+ 
+   DCHECK(document_url.is_valid());
+   TRACE_EVENT1("ServiceWorker",

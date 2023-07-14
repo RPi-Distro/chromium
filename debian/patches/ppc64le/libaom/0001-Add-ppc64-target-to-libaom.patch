@@ -8,10 +8,8 @@ Subject: [PATCH] Add ppc64 target to libaom
  third_party/libaom/cmake_update.sh |  3 +++
  2 files changed, 15 insertions(+)
 
-Index: chromium-110.0.5481.77/third_party/libaom/BUILD.gn
-===================================================================
---- chromium-110.0.5481.77.orig/third_party/libaom/BUILD.gn
-+++ chromium-110.0.5481.77/third_party/libaom/BUILD.gn
+--- a/third_party/libaom/BUILD.gn
++++ b/third_party/libaom/BUILD.gn
 @@ -208,6 +208,18 @@ if (current_cpu == "arm64" || cpu_arch_f
    }
  }
@@ -41,13 +39,11 @@ Index: chromium-110.0.5481.77/third_party/libaom/BUILD.gn
    if (is_android) {
      deps += [ "//third_party/android_ndk:cpu_features" ]
    }
-Index: chromium-110.0.5481.77/third_party/libaom/cmake_update.sh
-===================================================================
---- chromium-110.0.5481.77.orig/third_party/libaom/cmake_update.sh
-+++ chromium-110.0.5481.77/third_party/libaom/cmake_update.sh
-@@ -194,6 +194,9 @@ gen_config_files ios/arm-neon "${toolcha
- reset_dirs ios/arm64
- gen_config_files ios/arm64 "${toolchain}/arm64-ios.cmake ${all_platforms}"
+--- a/third_party/libaom/cmake_update.sh
++++ b/third_party/libaom/cmake_update.sh
+@@ -201,6 +201,9 @@ gen_config_files ios/arm64 \
+   "${toolchain}/arm64-ios.cmake -DCMAKE_INSTALL_NAME_TOOL=no-such-command \
+    ${all_platforms}"
  
 +reset_dirs linux/ppc64
 +gen_config_files linux/ppc64 "${toolchain}/ppc-linux-gcc.cmake ${all_platforms}"

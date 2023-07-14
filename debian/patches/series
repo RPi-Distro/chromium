@@ -10,6 +10,7 @@ fixes/cmath.patch
 fixes/vector.patch
 fixes/brandversion-construct.patch
 fixes/SkColor4f-init.patch
+fixes/cookieresult.patch
 
 upstream/mojo.patch
 upstream/feature-list-static.patch

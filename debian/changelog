@@ -29,6 +29,7 @@ chromium (115.0.5790.90-1) UNRELEASED; urgency=high
     - fixes/SkColor4f-init.patch: another missing struct constructor fix.
     - fixes/cookieresult.patch: another struct ctor build fix.
     - fixes/gcc13-with-clang14.patch: fix FTBFS with gcc-13 (closes: #1037604).
+    - fixes/gcc13-headers.patch: fix a bunch of missing includes which gcc-13 wants
     - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh.
     - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
     - ppc64le/third_party/0002-third-party-boringssl-add-generated-files.patch: refresh.

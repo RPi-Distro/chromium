@@ -1,0 +1,86 @@
+Fix a bunch of build errors with gcc-13's libstdc++ headers.
+
+These are technically correct and should go upstream.
+
+
+--- a/third_party/perfetto/src/trace_processor/sqlite/query_constraints.h
++++ b/third_party/perfetto/src/trace_processor/sqlite/query_constraints.h
+@@ -19,6 +19,7 @@
+ 
+ #include <limits>
+ #include <vector>
++#include <stdint.h>
+ 
+ #include "perfetto/ext/base/scoped_file.h"
+ 
+--- a/third_party/ruy/src/ruy/profiler/instrumentation.h
++++ b/third_party/ruy/src/ruy/profiler/instrumentation.h
+@@ -16,6 +16,8 @@ limitations under the License.
+ #ifndef RUY_RUY_PROFILER_INSTRUMENTATION_H_
+ #define RUY_RUY_PROFILER_INSTRUMENTATION_H_
+ 
++#include <string>
++
+ #ifdef RUY_PROFILER
+ #include <cstdio>
+ #include <mutex>
+--- a/third_party/tflite/src/tensorflow/lite/kernels/internal/spectrogram.cc
++++ b/third_party/tflite/src/tensorflow/lite/kernels/internal/spectrogram.cc
+@@ -17,6 +17,7 @@ limitations under the License.
+ 
+ #include <assert.h>
+ #include <math.h>
++#include <stdint.h>
+ 
+ #include "third_party/fft2d/fft.h"
+ 
+--- a/third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
++++ b/third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
+@@ -2389,6 +2389,7 @@ VMA_CALL_PRE void VMA_CALL_POST vmaFreeV
+ #undef VMA_IMPLEMENTATION
+ 
+ #include <cstdint>
++#include <cstdio>
+ #include <cstdlib>
+ #include <cstring>
+ #include <utility>
+--- a/third_party/perfetto/include/perfetto/trace_processor/read_trace.h
++++ b/third_party/perfetto/include/perfetto/trace_processor/read_trace.h
+@@ -19,6 +19,7 @@
+ 
+ #include <functional>
+ #include <vector>
++#include <stdint.h>
+ 
+ #include "perfetto/base/export.h"
+ #include "perfetto/trace_processor/status.h"
+--- a/third_party/perfetto/src/trace_processor/read_trace_internal.h
++++ b/third_party/perfetto/src/trace_processor/read_trace_internal.h
+@@ -19,6 +19,7 @@
+ 
+ #include <functional>
+ #include <vector>
++#include <cstdint>
+ 
+ #include "perfetto/base/export.h"
+ #include "perfetto/trace_processor/status.h"
+--- a/third_party/maldoca/src/maldoca/ole/header.h
++++ b/third_party/maldoca/src/maldoca/ole/header.h
+@@ -44,6 +44,7 @@
+ #define MALDOCA_OLE_HEADER_H_
+ 
+ #include "absl/strings/string_view.h"
++#include <cstdint>
+ 
+ namespace maldoca {
+ 
+--- a/net/third_party/quiche/src/quiche/quic/core/qpack/qpack_stream_sender_delegate.h
++++ b/net/third_party/quiche/src/quiche/quic/core/qpack/qpack_stream_sender_delegate.h
+@@ -7,6 +7,7 @@
+ 
+ #include "absl/strings/string_view.h"
+ #include "quiche/quic/platform/api/quic_export.h"
++#include <cstdint>
+ 
+ namespace quic {
+ 

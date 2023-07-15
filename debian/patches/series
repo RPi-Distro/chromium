@@ -12,6 +12,7 @@ fixes/brandversion-construct.patch
 fixes/SkColor4f-init.patch
 fixes/cookieresult.patch
 fixes/gcc13-with-clang14.patch
+fixes/gcc13-headers.patch
 
 upstream/mojo.patch
 upstream/feature-list-static.patch

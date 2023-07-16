@@ -21,6 +21,7 @@ chromium (115.0.5790.90-1) UNRELEASED; urgency=high
     - ppc64le/third_party/skia-vsx-instructions.patch: refresh for upstream changes
 
   [ Andres Salomon ]
+    - fixes/clang-and-gcc11.patch: drop, (a different version) merged upstream.
     - bookworm/typename.patch: drop parts that were merged upstream, and add
       new build fixes.
     - bookworm/structured-binding-scope-bug.patch: drop some of it, add new bits

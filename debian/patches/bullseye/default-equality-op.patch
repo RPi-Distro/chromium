@@ -43,113 +43,30 @@ to the class declarations. This isn't necessary with clang-14.
    };
  
    AffiliationFetcherInterface() = default;
---- a/printing/page_setup.cc
-+++ b/printing/page_setup.cc
-@@ -49,8 +49,6 @@ PageMargins::PageMargins(int header,
-       top(top),
-       bottom(bottom) {}
- 
--bool PageMargins::operator==(const PageMargins& other) const = default;
--
- void PageMargins::Clear() {
-   header = 0;
-   footer = 0;
-@@ -77,8 +75,6 @@ PageSetup::PageSetup(const PageSetup& ot
- 
- PageSetup::~PageSetup() = default;
- 
--bool PageSetup::operator==(const PageSetup& other) const = default;
--
- // static
- gfx::Rect PageSetup::GetSymmetricalPrintableArea(
-     const gfx::Size& page_size,
---- a/printing/page_setup.h
-+++ b/printing/page_setup.h
-@@ -16,7 +16,7 @@ class COMPONENT_EXPORT(PRINTING) PageMar
-   PageMargins();
-   PageMargins(int header, int footer, int left, int right, int top, int bottom);
- 
--  bool operator==(const PageMargins& other) const;
-+  bool operator==(const PageMargins& other) const = default;
- 
-   void Clear();
- 
-@@ -44,7 +44,7 @@ class COMPONENT_EXPORT(PRINTING) PageSet
-   PageSetup(const PageSetup& other);
-   ~PageSetup();
- 
--  bool operator==(const PageSetup& other) const;
-+  bool operator==(const PageSetup& other) const = default;
- 
-   // Gets a symmetrical printable area.
-   static gfx::Rect GetSymmetricalPrintableArea(const gfx::Size& page_size,
---- a/printing/print_settings.cc
-+++ b/printing/print_settings.cc
-@@ -266,8 +266,6 @@ absl::optional<bool> IsColorModelSelecte
-   // all ColorModel values are determinantly handled.
- }
- 
--bool PrintSettings::RequestedMedia::operator==(
--    const PrintSettings::RequestedMedia& other) const = default;
- 
- // Global SequenceNumber used for generating unique cookie values.
- static base::AtomicSequenceNumber cookie_seq;
-@@ -325,7 +323,6 @@ PrintSettings& PrintSettings::operator=(
- 
- PrintSettings::~PrintSettings() = default;
- 
--bool PrintSettings::operator==(const PrintSettings& other) const = default;
- 
- void PrintSettings::Clear() {
-   ranges_.clear();
---- a/printing/print_settings.h
-+++ b/printing/print_settings.h
-@@ -63,7 +63,7 @@ class COMPONENT_EXPORT(PRINTING) PrintSe
-   // Media properties requested by the user. Default instance represents
-   // default media selection.
-   struct RequestedMedia {
--    bool operator==(const RequestedMedia& other) const;
-+    bool operator==(const RequestedMedia& other) const = default;
-     bool IsDefault() const {
-       return size_microns.IsEmpty() && vendor_id.empty();
-     }
-@@ -83,7 +83,7 @@ class COMPONENT_EXPORT(PRINTING) PrintSe
-   PrintSettings& operator=(const PrintSettings&);
-   ~PrintSettings();
- 
--  bool operator==(const PrintSettings& other) const;
-+  bool operator==(const PrintSettings& other) const = default;
- 
-   // Reinitialize the settings to the default values.
-   void Clear();
 --- a/components/password_manager/core/browser/password_form.cc
 +++ b/components/password_manager/core/browser/password_form.cc
-@@ -225,9 +225,6 @@ AlternativeElement& AlternativeElement::
- AlternativeElement& AlternativeElement::operator=(AlternativeElement&& rhs) =
-     default;
- AlternativeElement::~AlternativeElement() = default;
--bool AlternativeElement::operator==(const AlternativeElement&) const = default;
--std::strong_ordering AlternativeElement::operator<=>(
--    const AlternativeElement&) const = default;
+@@ -230,7 +230,6 @@ AlternativeElement& AlternativeElement::
  
- std::ostream& operator<<(std::ostream& os, const AlternativeElement& element) {
-   base::Value::Dict element_json;
+ AlternativeElement::~AlternativeElement() = default;
+ 
+-bool AlternativeElement::operator==(const AlternativeElement&) const = default;
+ 
+ bool AlternativeElement::operator<(const AlternativeElement& other) const {
+   return std::tie(value, field_renderer_id, name) <
 --- a/components/password_manager/core/browser/password_form.h
 +++ b/components/password_manager/core/browser/password_form.h
-@@ -44,8 +44,8 @@ struct AlternativeElement {
+@@ -44,7 +44,7 @@ struct AlternativeElement {
    AlternativeElement& operator=(AlternativeElement&& rhs);
    ~AlternativeElement();
  
 -  bool operator==(const AlternativeElement&) const;
--  std::strong_ordering operator<=>(const AlternativeElement&) const;
 +  bool operator==(const AlternativeElement&) const = default;
-+  std::strong_ordering operator<=>(const AlternativeElement&) const = default;
+   bool operator<(const AlternativeElement&) const;
  
    // The value of the field.
-   std::u16string value;
 --- a/components/password_manager/core/browser/passkey_credential.cc
 +++ b/components/password_manager/core/browser/passkey_credential.cc
-@@ -46,7 +46,5 @@ int PasskeyCredential::GetAuthenticatorL
+@@ -81,7 +81,5 @@ int PasskeyCredential::GetAuthenticatorL
    }
  }
  
@@ -159,7 +76,7 @@ to the class declarations. This isn't necessary with clang-14.
  }  // namespace password_manager
 --- a/components/password_manager/core/browser/passkey_credential.h
 +++ b/components/password_manager/core/browser/passkey_credential.h
-@@ -75,7 +75,6 @@ class PasskeyCredential {
+@@ -84,7 +84,6 @@ class PasskeyCredential {
    std::string display_name_;
  };
  
@@ -167,3 +84,24 @@ to the class declarations. This isn't necessary with clang-14.
  
  }  // namespace password_manager
  
+--- a/net/cert/x509_cert_types.cc
++++ b/net/cert/x509_cert_types.cc
+@@ -17,7 +17,6 @@ CertPrincipal::CertPrincipal(CertPrincip
+ 
+ CertPrincipal::~CertPrincipal() = default;
+ 
+-bool CertPrincipal::operator==(const CertPrincipal& other) const = default;
+ 
+ bool CertPrincipal::EqualsForTesting(const CertPrincipal& other) const {
+   return *this == other;
+--- a/net/cert/x509_cert_types.h
++++ b/net/cert/x509_cert_types.h
+@@ -54,7 +54,7 @@ struct NET_EXPORT CertPrincipal {
+  private:
+   // Comparison operator is private and only defined for use by
+   // EqualsForTesting, see comment there for more details.
+-  bool operator==(const CertPrincipal& other) const;
++  bool operator==(const CertPrincipal& other) const = default;
+ };
+ 
+ }  // namespace net

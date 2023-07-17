@@ -1,0 +1,18 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Build fix for bullseye - I think bullseye's libre2-dev is older and doesn't
+support direct conversion between re2::StringPiece and base::StringPiece.
+So we have to convert to std::string first (via as_sring()), and then that
+can be converted to base::StringPiece.
+
+--- a/components/feedback/redaction_tool/redaction_tool.cc
++++ b/components/feedback/redaction_tool/redaction_tool.cc
+@@ -891,7 +891,7 @@ std::string RedactionTool::RedactCreditC
+     }
+ 
+     std::string number;
+-    base::RemoveChars(base::StringPiece(sequence), "- ", &number);
++    base::RemoveChars(base::StringPiece(sequence.as_string()), "- ", &number);
+ 
+     const auto cc_it = credit_cards_.find(number);
+     if (cc_it != credit_cards_.cend()) {

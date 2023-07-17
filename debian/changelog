@@ -26,6 +26,7 @@ chromium (115.0.5790.90-1) UNRELEASED; urgency=high
       new build fixes.
     - bookworm/structured-binding-scope-bug.patch: drop some of it, add new bits
     - bullseye/constexpr.patch: refresh for string -> StringPiece change.
+    - bullseye/stringpiece.patch: add to work around older libre2.
     - bullseye/default-equality-op.patch: add more workarounds for older compilers
     - fixes/brandversion-construct.patch: add to fix build failure.
     - fixes/SkColor4f-init.patch: another missing struct constructor fix.

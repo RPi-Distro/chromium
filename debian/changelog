@@ -1,6 +1,27 @@
 chromium (115.0.5790.98-1) UNRELEASED; urgency=high
 
   * New upstream release
+    - CVE-2023-3727: Use after free in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-3728: Use after free in WebRTC.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2023-3730: Use after free in Tab Groups. Reported by @ginggilBesel.
+    - CVE-2023-3732: Out of bounds memory access in Mojo.
+      Reported by Mark Brand of Google Project Zero.
+    - CVE-2023-3733: Inappropriate implementation in WebApp Installs.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-3734: Inappropriate implementation in Picture In Picture.
+      Reported by Thomas Orlita.
+    - CVE-2023-3735: Inappropriate implementation in Web API Permission Prompts.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-3736: Inappropriate implementation in Custom Tabs.
+      Reported by Philipp Beer (TU Wien).
+    - CVE-2023-3737: Inappropriate implementation in Notifications.
+      Reported by Narendra Bhati of Suma Soft Pvt. Ltd. Pune (India) .
+    - CVE-2023-3738: Inappropriate implementation in Autofill.
+      Reported by Hafiizh.
+    - CVE-2023-3740: Insufficient validation of untrusted input in Themes.
+      Reported by Fardeen Siddiqui.
 
   * d/rules:
     - use system rustc installation

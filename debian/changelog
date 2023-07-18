@@ -66,7 +66,7 @@ chromium (115.0.5790.98-1) unstable; urgency=high
     - ppc64le/third_party/0002-third-party-boringssl-add-generated-files.patch:
       refresh.
 
- -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 18 Jun 2023 17:50:00 -0500
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 18 Jul 2023 17:50:00 -0500
 
 chromium (114.0.5735.198-1) unstable; urgency=high
 

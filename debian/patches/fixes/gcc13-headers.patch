@@ -84,3 +84,13 @@ These are technically correct and should go upstream.
  
  namespace quic {
  
+--- a/base/cpu.h
++++ b/base/cpu.h
+@@ -5,6 +5,7 @@
+ #ifndef BASE_CPU_H_
+ #define BASE_CPU_H_
+ 
++#include <cstdint>
+ #include <string>
+ 
+ #include "base/base_export.h"

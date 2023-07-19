@@ -3,12 +3,15 @@ debianization/sandbox.patch
 debianization/master-preferences.patch
 
 fixes/ps-print.patch
-fixes/clang-and-gcc11.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
+fixes/cmath.patch
+fixes/vector.patch
+fixes/brandversion-construct.patch
+fixes/SkColor4f-init.patch
+fixes/cookieresult.patch
 
 upstream/mojo.patch
-upstream/sizet.patch
 upstream/feature-list-static.patch
 
 disable/tests.patch
@@ -44,6 +47,7 @@ bookworm/structured-binding-scope-bug.patch
 
 bullseye/clang13.patch
 bullseye/constexpr.patch
+bullseye/stringpiece.patch
 
 # i386 support
 i386/support-i386.patch

@@ -14,61 +14,61 @@ constexpr std::string GetProductName() {
 
 --- a/components/version_info/version_info.h
 +++ b/components/version_info/version_info.h
-@@ -27,18 +27,18 @@ const std::string GetProductNameAndVersi
+@@ -28,18 +28,18 @@ const std::string GetProductNameAndVersi
      const std::string& build_version);
  
  // Returns the product name, e.g. "Chromium" or "Google Chrome".
--constexpr std::string GetProductName() {
-+static const std::string GetProductName() {
+-constexpr base::StringPiece GetProductName() {
++static const base::StringPiece GetProductName() {
    return PRODUCT_NAME;
  }
  
  // Returns the version number, e.g. "6.0.490.1".
--constexpr std::string GetVersionNumber() {
-+static const std::string GetVersionNumber() {
+-constexpr base::StringPiece GetVersionNumber() {
++static const base::StringPiece GetVersionNumber() {
    return PRODUCT_VERSION;
  }
  
  // Returns the product name and version information for the User-Agent header,
  // in the format: Chrome/<major_version>.<minor_version>.<build>.<patch>.
--constexpr std::string GetProductNameAndVersionForUserAgent() {
-+static const std::string GetProductNameAndVersionForUserAgent() {
-   return "Chrome/" + GetVersionNumber();
+-constexpr base::StringPiece GetProductNameAndVersionForUserAgent() {
++static const base::StringPiece GetProductNameAndVersionForUserAgent() {
+   return "Chrome/" PRODUCT_VERSION;
  }
  
-@@ -53,7 +53,7 @@ std::string GetMajorVersionNumber();
+@@ -54,7 +54,7 @@ std::string GetMajorVersionNumber();
  const base::Version& GetVersion();
  
  // Returns a version control specific identifier of this release.
--constexpr std::string GetLastChange() {
-+static const std::string GetLastChange() {
+-constexpr base::StringPiece GetLastChange() {
++static const base::StringPiece GetLastChange() {
    return LAST_CHANGE;
  }
  
-@@ -65,7 +65,7 @@ constexpr bool IsOfficialBuild() {
+@@ -66,7 +66,7 @@ constexpr bool IsOfficialBuild() {
  }
  
  // Returns the OS type, e.g. "Windows", "Linux", "FreeBSD", ...
--constexpr std::string GetOSType() {
-+static const std::string GetOSType() {
+-constexpr base::StringPiece GetOSType() {
++static const base::StringPiece GetOSType() {
  #if BUILDFLAG(IS_WIN)
    return "Windows";
  #elif BUILDFLAG(IS_IOS)
-@@ -97,7 +97,7 @@ constexpr std::string GetOSType() {
+@@ -98,7 +98,7 @@ constexpr base::StringPiece GetOSType()
  
  // Returns a string equivalent of |channel|, independent of whether the build
  // is branded or not and without any additional modifiers.
--constexpr std::string GetChannelString(Channel channel) {
-+static const std::string GetChannelString(Channel channel) {
+-constexpr base::StringPiece GetChannelString(Channel channel) {
++static const base::StringPiece GetChannelString(Channel channel) {
    switch (channel) {
      case Channel::STABLE:
        return "stable";
-@@ -114,7 +114,7 @@ constexpr std::string GetChannelString(C
+@@ -115,7 +115,7 @@ constexpr base::StringPiece GetChannelSt
  }
  
  // Returns a list of sanitizers enabled in this build.
--constexpr std::string GetSanitizerList() {
-+static const std::string GetSanitizerList() {
+-constexpr base::StringPiece GetSanitizerList() {
++static const base::StringPiece GetSanitizerList() {
    return ""
  #if defined(ADDRESS_SANITIZER)
           "address "

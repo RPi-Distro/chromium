@@ -1,13 +1,16 @@
-Index: chromium-114.0.5735.45/base/allocator/partition_allocator/partition_alloc.gni
+kIndex: chromium-114.0.5735.45/base/allocator/partition_allocator/partition_alloc.gni
 ===================================================================
---- chromium-114.0.5735.45.orig/base/allocator/partition_allocator/partition_alloc.gni
-+++ chromium-114.0.5735.45/base/allocator/partition_allocator/partition_alloc.gni
-@@ -15,7 +15,7 @@ if (is_nacl) {
+Index: chromium-115.0.5790.56/base/allocator/partition_allocator/partition_alloc.gni
+===================================================================
+--- chromium-115.0.5790.56.orig/base/allocator/partition_allocator/partition_alloc.gni
++++ chromium-115.0.5790.56/base/allocator/partition_allocator/partition_alloc.gni
+@@ -16,7 +16,8 @@ if (is_nacl) {
    # NaCl targets don't use 64-bit pointers.
    has_64_bit_pointers = false
  } else if (current_cpu == "x64" || current_cpu == "arm64" ||
--           current_cpu == "loong64") {
-+           current_cpu == "loong64" || current_cpu == "ppc64") {
+-           current_cpu == "loong64" || current_cpu == "riscv64") {
++           current_cpu == "loong64" || current_cpu == "riscv64" ||
++           current_cpu == "ppc64") {
    has_64_bit_pointers = true
  } else if (current_cpu == "x86" || current_cpu == "arm") {
    has_64_bit_pointers = false

@@ -40,6 +40,11 @@ export CXXFLAGS+=-fno-delete-null-pointer-checks
 # disable clang plugins
 defines=clang_use_chrome_plugins=false
 
+# use system rust
+defines+=rust_sysroot_absolute=\"/usr\"
+defines+=rustc_version=\"rustc 1.66.0\"
+defines+=use_chromium_rust_toolchain=false
+
 # build using system toolchain
 defines+=host_toolchain=\"//build/toolchain/linux/unbundle:default\"
 defines+=custom_toolchain=\"//build/toolchain/linux/unbundle:default\"

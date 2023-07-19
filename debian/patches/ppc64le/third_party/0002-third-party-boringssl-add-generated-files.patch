@@ -1,15 +1,14 @@
-diff -ur a/third_party/boringssl/BUILD.generated.gni b/third_party/boringssl/BUILD.generated.gni
 --- a/third_party/boringssl/BUILD.generated.gni
 +++ b/third_party/boringssl/BUILD.generated.gni
-@@ -93,6 +93,7 @@
-   "src/crypto/cpu_arm_linux.c",
+@@ -95,6 +95,7 @@ crypto_sources = [
    "src/crypto/cpu_arm_linux.h",
+   "src/crypto/cpu_arm_openbsd.c",
    "src/crypto/cpu_intel.c",
 +  "src/crypto/cpu_ppc64le.c",
    "src/crypto/crypto.c",
    "src/crypto/curve25519/curve25519.c",
    "src/crypto/curve25519/curve25519_tables.h",
-@@ -548,6 +549,12 @@
+@@ -556,6 +557,12 @@ crypto_sources_linux_arm = [
    "src/crypto/poly1305/poly1305_arm_asm.S",
  ]
  
@@ -22,10 +21,9 @@ diff -ur a/third_party/boringssl/BUILD.generated.gni b/third_party/boringssl/BUI
  crypto_sources_linux_x86 = [
    "linux-x86/crypto/chacha/chacha-x86-linux.S",
    "linux-x86/crypto/fipsmodule/aesni-x86-linux.S",
-diff -ur a/third_party/boringssl/BUILD.gn b/third_party/boringssl/BUILD.gn
 --- a/third_party/boringssl/BUILD.gn
 +++ b/third_party/boringssl/BUILD.gn
-@@ -101,6 +101,13 @@
+@@ -155,6 +155,13 @@ if (is_win && !is_msan && current_cpu !=
        } else {
          public_configs = [ ":no_asm_config" ]
        }
@@ -39,7 +37,7 @@ diff -ur a/third_party/boringssl/BUILD.gn b/third_party/boringssl/BUILD.gn
      } else {
        public_configs = [ ":no_asm_config" ]
      }
---- a/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
+--- /dev/null
 +++ b/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
 @@ -0,0 +1,3673 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
@@ -3715,7 +3713,7 @@ diff -ur a/third_party/boringssl/BUILD.gn b/third_party/boringssl/BUILD.gn
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
---- a/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
+--- /dev/null
 +++ b/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
 @@ -0,0 +1,590 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
@@ -4308,7 +4306,7 @@ diff -ur a/third_party/boringssl/BUILD.gn b/third_party/boringssl/BUILD.gn
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
---- a/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
+--- /dev/null
 +++ b/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
 @@ -0,0 +1,1413 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL

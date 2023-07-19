@@ -1,3 +1,70 @@
+chromium (115.0.5790.98-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream release
+    - CVE-2023-3727: Use after free in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-3728: Use after free in WebRTC.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2023-3730: Use after free in Tab Groups. Reported by @ginggilBesel.
+    - CVE-2023-3732: Out of bounds memory access in Mojo.
+      Reported by Mark Brand of Google Project Zero.
+    - CVE-2023-3733: Inappropriate implementation in WebApp Installs.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-3734: Inappropriate implementation in Picture In Picture.
+      Reported by Thomas Orlita.
+    - CVE-2023-3735: Inappropriate implementation in Web API Permission Prompts.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-3736: Inappropriate implementation in Custom Tabs.
+      Reported by Philipp Beer (TU Wien).
+    - CVE-2023-3737: Inappropriate implementation in Notifications.
+      Reported by Narendra Bhati of Suma Soft Pvt. Ltd. Pune (India) .
+    - CVE-2023-3738: Inappropriate implementation in Autofill.
+      Reported by Hafiizh.
+    - CVE-2023-3740: Insufficient validation of untrusted input in Themes.
+      Reported by Fardeen Siddiqui.
+
+  * d/rules:
+    - use system rustc installation
+  * Add build-dep on rustc.
+  * d/patches:
+    - debianization/master-preferences.patch: upstream variable renamed
+    - disable/catapult.patch: upstream changes required reworking
+    - disable/tests.patch: remove new upstream puffin test data file
+      dependencies
+    - disable/unrar.patch: upstream changes required reworking
+    - fixes/cmath.patch: add missing header include for skia
+    - fixes/vector.patch: add missing header include for net
+    - upstream/sizet.patch: drop, merged upstream
+    - ppc64le/fixes/fix-partition-alloc-compile.patch: refresh for upstream
+      changes
+    - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh
+      for upstream changes
+    - ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
+      regenerate configs from upstream source
+    - ppc64le/third_party/skia-vsx-instructions.patch: refresh for upstream
+      changes
+
+  [ Andres Salomon ]
+    - fixes/clang-and-gcc11.patch: drop, (a different version) merged upstream.
+    - bookworm/typename.patch: drop parts that were merged upstream, and add
+      new build fixes.
+    - bookworm/structured-binding-scope-bug.patch: drop some of it, add new bits
+    - bullseye/constexpr.patch: refresh for string -> StringPiece change.
+    - bullseye/stringpiece.patch: add to work around older libre2.
+    - bullseye/default-equality-op.patch: add more workarounds for older
+      compilers
+    - fixes/brandversion-construct.patch: add to fix build failure.
+    - fixes/SkColor4f-init.patch: another missing struct constructor fix.
+    - fixes/cookieresult.patch: another struct ctor build fix.
+    - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh.
+    - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
+    - ppc64le/third_party/0002-third-party-boringssl-add-generated-files.patch:
+      refresh.
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 18 Jul 2023 17:50:00 -0500
+
 chromium (114.0.5735.198-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

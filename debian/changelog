@@ -1,8 +1,8 @@
-chromium (115.0.5790.98-2) UNRELEASED; urgency=high
+chromium (115.0.5790.98-2) unstable; urgency=high
 
   * Add build fix for gcc13 on arm64.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 13 Jun 2023 13:31:55 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 19 Jul 2023 22:23:08 -0400
 
 chromium (115.0.5790.98-1) unstable; urgency=high
 

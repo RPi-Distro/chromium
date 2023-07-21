@@ -1,3 +1,10 @@
+chromium (115.0.5790.102-1) unstable; urgency=high
+
+  * New upstream stable release.
+  * debian/patches/upstream/statelessV4L2.patch: add v4l2 build fix.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 21 Jul 2023 02:36:46 -0400
+
 chromium (115.0.5790.98-2) unstable; urgency=high
 
   * Add build fix for gcc13 on arm64.

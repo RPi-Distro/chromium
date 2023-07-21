@@ -1,0 +1,29 @@
+commit 2a854e4d817ef40ca93b600485c8dbf6be71cb72
+Author: Chen-Yu Tsai <wenst@chromium.org>
+Date:   Wed Jul 5 16:35:41 2023 +0000
+
+    media/gpu/v4l2: Include contains.h header for V4L2StatefulVideoDecoder
+    
+    base::Contains is used somewhere in V4L2StatefulVideoDecoder, however
+    its header is not directly included. This seems to build on ChromeOS
+    due to it being indirectly included, but not on Linux.
+    
+    Include the header explicitly so that is builds on Linux.
+    
+    Bug: b:258331312, b:27998015
+    Change-Id: Idea9343c854978c9d3ba24fb0b00707af0c55de0
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4664328
+    Commit-Queue: Miguel Casas-Sanchez <mcasas@chromium.org>
+    Reviewed-by: Miguel Casas-Sanchez <mcasas@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1165981}
+
+--- a/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
++++ b/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
+@@ -7,6 +7,7 @@
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+ 
++#include "base/containers/contains.h"
+ #include "base/files/file_util.h"
+ #include "base/memory/ptr_util.h"
+ #include "base/posix/eintr_wrapper.h"

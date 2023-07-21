@@ -15,6 +15,7 @@ fixes/gcc13-headers.patch
 
 upstream/mojo.patch
 upstream/feature-list-static.patch
+upstream/statelessV4L2.patch
 
 disable/tests.patch
 disable/unrar.patch

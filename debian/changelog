@@ -1,8 +1,8 @@
-chromium (115.0.5790.102-2) UNRELEASED; urgency=high
+chromium (115.0.5790.102-2) unstable; urgency=high
 
   * debian/patches/upstream/contains.patch:Yet Another v4l2 ARM build fix.
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 21 Jul 2023 18:12:33 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 25 Jul 2023 18:25:50 -0400
 
 chromium (115.0.5790.102-1) unstable; urgency=high
 

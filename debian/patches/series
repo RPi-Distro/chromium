@@ -13,6 +13,8 @@ fixes/cookieresult.patch
 
 upstream/mojo.patch
 upstream/feature-list-static.patch
+upstream/statelessV4L2.patch
+upstream/contains.patch
 
 disable/tests.patch
 disable/unrar.patch

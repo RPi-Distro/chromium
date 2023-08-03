@@ -1,3 +1,49 @@
+chromium (115.0.5790.170-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-4068: Type Confusion in V8. Reported by Jerry.
+    - CVE-2023-4069: Type Confusion in V8.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2023-4070: Type Confusion in V8. Reported by Jerry.
+    - CVE-2023-4071: Heap buffer overflow in Visuals.
+      Reported by Guang and Weipeng Jiang of VRI.
+    - CVE-2023-4072: Out of bounds read and write in WebGL.
+      Reported by Apple Security Engineering and Architecture (SEAR).
+    - CVE-2023-4073: Out of bounds memory access in ANGLE.
+      Reported by Jaehun Jeong(@n3sk) of Theori.
+    - CVE-2023-4074: Use after free in Blink Task Scheduling.
+      Reported by Anonymous.
+    - CVE-2023-4075: Use after free in Cast.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-4076: Use after free in WebRTC.
+      Reported by Natalie Silvanovich of Google Project Zero.
+    - CVE-2023-4077: Insufficient data validation in Extensions.
+      Reported by Anonymous.
+    - CVE-2023-4078: Inappropriate implementation in Extensions.
+      Reported by Anonymous.
+  * debian/patches/disable/driver-chrome-path.patch: refresh for minor changes.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Aug 2023 19:26:52 -0400
+
+chromium (115.0.5790.102-2) unstable; urgency=high
+
+  * debian/patches/upstream/contains.patch:Yet Another v4l2 ARM build fix.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 25 Jul 2023 18:25:50 -0400
+
+chromium (115.0.5790.102-1) unstable; urgency=high
+
+  * New upstream stable release.
+  * debian/patches/upstream/statelessV4L2.patch: add v4l2 build fix.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 21 Jul 2023 02:36:46 -0400
+
+chromium (115.0.5790.98-2) unstable; urgency=high
+
+  * Add build fix for gcc13 on arm64.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 19 Jul 2023 22:23:08 -0400
+
 chromium (115.0.5790.98-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream release

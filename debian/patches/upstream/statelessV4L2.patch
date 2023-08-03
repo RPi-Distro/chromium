@@ -1,0 +1,50 @@
+commit 0ee099f045a847246057145f5c3429b5c2a69740
+Author: Chen-Yu Tsai <wenst@chromium.org>
+Date:   Thu Jul 6 09:02:20 2023 +0000
+
+    media/gpu/v4l2: Do not restrict new V4L2 decoders to ARM or ChromeOS
+    
+    V4L2 decoders use the standard V4L2 interfaces present on all Linux
+    systems. There is no reason to limit this to just ARM or ChromeOS.
+    Indeed we already allow building the code for standard Linux.
+    
+    Also, limiting it to ARM causes build issues when cross compiling on x86
+    to ARM on Linux, as the v8 snapshot tools are built for x86.
+    
+    Allow usage of the new V4L2 feature flags on ChromeOS and Linux, and
+    drop the limit to ARM platforms.
+    
+    Bug: b:258331312, b:278935312, b:279980150
+    Change-Id: I2c767d178d5b21d328ac427e926d12f27e5a2071
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4664329
+    Reviewed-by: Fritz Koenig <frkoenig@chromium.org>
+    Reviewed-by: Dale Curtis <dalecurtis@chromium.org>
+    Commit-Queue: Chen-Yu Tsai <wenst@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1166391}
+
+--- a/media/base/media_switches.cc
++++ b/media/base/media_switches.cc
+@@ -795,7 +795,7 @@ BASE_FEATURE(kVaapiVp9kSVCHWEncoding,
+              "VaapiVp9kSVCHWEncoding",
+              base::FEATURE_ENABLED_BY_DEFAULT);
+ #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
+-#if defined(ARCH_CPU_ARM_FAMILY) && BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
+ // Enables the new V4L2StatefulVideoDecoder instead of V4L2VideoDecoder.
+ BASE_FEATURE(kV4L2FlatStatelessVideoDecoder,
+              "V4L2FlatStatelessVideoDecoder",
+--- a/media/base/media_switches.h
++++ b/media/base/media_switches.h
+@@ -308,10 +308,10 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapiVp8TemporalLayerHWEncoding);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapiVp9kSVCHWEncoding);
+ #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
+-#if defined(ARCH_CPU_ARM_FAMILY) && BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kV4L2FlatStatelessVideoDecoder);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kV4L2FlatStatefulVideoDecoder);
+-#endif  // defined(ARCH_CPU_ARM_FAMILY) && BUILDFLAG(IS_CHROMEOS)
++#endif  // BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVideoBlitColorAccuracy);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVp9kSVCHWDecoding);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kWebContentsCaptureHiDpi);

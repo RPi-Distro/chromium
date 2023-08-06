@@ -1,3 +1,19 @@
+chromium (116.0.5845.62-1) UNRELEASED; urgency=high
+
+  * New upstream beta release.
+  * d/patches:
+   - fixes/cmath.patch: drop, merged upstream.
+   - fixes/vector.patch: drop, merged upstream.
+   - fixes/cookieresult.patch: drop, merged upstream.
+   - fixes/gcc13-headers.patch: drop portions which have been merged upstream.
+   - upstream/feature-list-static.patch: drop, merged upstream.
+   - disable/catapult.patch: refresh.
+   - upstream/statelessV4L2.patch: refresh.
+   - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh.
+   - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Aug 2023 19:26:52 -0400
+
 chromium (115.0.5790.170-1) unstable; urgency=high
 
   * New upstream security release.

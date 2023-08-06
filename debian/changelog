@@ -11,6 +11,9 @@ chromium (116.0.5845.62-1) UNRELEASED; urgency=high
    - upstream/statelessV4L2.patch: refresh.
    - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh.
    - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
+   - fixes/rust-clanglib.patch: add patch to handle new clang deps for rust.
+  * d/rules: automatically detect rust/clang versions & add needed rust args.
+  * d/control: add build-dep on libclang-rt-dev for rust.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 02 Aug 2023 19:26:52 -0400
 

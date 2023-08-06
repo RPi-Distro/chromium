@@ -16,6 +16,7 @@ Build-Depends:
  lld,
  clang,
  clang-format,
+ libclang-rt-dev,
  rustc,
  python3,
  pkg-config,

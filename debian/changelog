@@ -15,6 +15,15 @@ chromium (116.0.5845.62-1) UNRELEASED; urgency=high
   * d/rules: automatically detect rust/clang versions & add needed rust args.
   * d/control: add build-dep on libclang-rt-dev for rust.
 
+  [ Timothy Pearson ]
+   * d/patches/ppc64le:
+     - database/0001-Properly-detect-little-endian-PPC64-systems.patch: refresh
+       for upstream changes
+     - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+       refresh for upstream changes
+     - third_party/use-sysconf-page-size-on-ppc64.patch: refresh for upstream
+       changes
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 02 Aug 2023 19:26:52 -0400
 
 chromium (115.0.5790.170-1) unstable; urgency=high

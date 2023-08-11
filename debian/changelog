@@ -17,6 +17,7 @@ chromium (116.0.5845.82-1) UNRELEASED; urgency=high
    - fixes/variant.patch: add a missing header that libstdc++ needs.
    - fixes/vector.patch: add a missing header that libstdc++ needs.
    - fixes/null.patch: fix missing namespace for nullptr_t + header fix.
+   - bookworm/brotli.patch: revert upstream change that requires newer brotli.
   * d/rules: automatically detect rust/clang versions & add needed rust args.
   * d/control: add build-dep on libclang-rt-dev for rust.
   * Switch to building with clang-15 (instead of 14).

@@ -1,0 +1,434 @@
+
+Revert the commit below. Current bookworm can't handle the implicit
+conversion between chromium's base::StringPiece and re2's
+re2::StringPiece. Maybe fixed in a newer re2? I'm unsure.
+
+
+commit 1727ad241d9f1b0f37602a0a4342c8c767550227
+Author: David Benjamin <davidben@chromium.org>
+Date:   Thu Jun 15 05:42:02 2023 +0000
+
+    Rely on much simpler re2::StringPiece <-> base::StringPiece conversions
+    
+    base::StringPiece implicitly converts to/from std::string_view and
+    re2::StringPiece is now the same as absl::string_view which, in
+    Chromium, is the same as std::string_view. All the code which converted
+    by hand can mostly not worry about it.
+    
+    Ideally we'd also remove references to re2::StringPiece in favor of
+    std::string_view, but that'll bump into the current std::string_view
+    presubmit, so I'm leaving this alone for now. I'm also leaving alone for
+    now other issues in the surrounding code, such as pointer arithmetic
+    that would be better done with the bounds-checked substr() method, etc.
+    But all those should also be fixed up.
+    
+    Bug: 1447090
+    Change-Id: If9de189f4cd85c1391894d9ab027e37da7144e44
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4604580
+    Code-Coverage: Findit <findit-for-me@appspot.gserviceaccount.com>
+    Reviewed-by: Nico Weber <thakis@chromium.org>
+    Auto-Submit: David Benjamin <davidben@chromium.org>
+    Commit-Queue: David Benjamin <davidben@chromium.org>
+    Reviewed-by: Xiaohan Wang <xhwang@chromium.org>
+    Reviewed-by: Brandon Jones <bajones@chromium.org>
+    Reviewed-by: danakj <danakj@chromium.org>
+    Reviewed-by: Dominic Battre <battre@chromium.org>
+    Reviewed-by: Tao Wu <wutao@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1157951}
+
+
+--- a/chrome/browser/browser_switcher/browser_switcher_sitelist.cc
++++ b/chrome/browser/browser_switcher/browser_switcher_sitelist.cc
+@@ -47,7 +47,8 @@ const char* StringFindInsensitiveASCII(b
+ // expected parts that are allowed to be omitted (e.g. "https://").
+ bool IsValidPrefix(base::StringPiece prefix) {
+   static re2::LazyRE2 re = {"(https?|file):(//)?"};
+-  return prefix.empty() || re2::RE2::FullMatch(prefix, *re);
++  re2::StringPiece converted_prefix(prefix.data(), prefix.size());
++  return (prefix.empty() || re2::RE2::FullMatch(converted_prefix, *re));
+ }
+ 
+ // Checks whether |patterns| contains a pattern that matches |url|, and returns
+--- a/chrome/browser/cart/cart_service.cc
++++ b/chrome/browser/cart/cart_service.cc
+@@ -913,7 +913,8 @@ void CartService::OnLoadCarts(CartDB::Lo
+                      }),
+       proto_pairs.end());
+   for (auto proto_pair : proto_pairs) {
+-    if (RE2::FullMatch(proto_pair.first, GetSkipCartExtractionPattern())) {
++    if (RE2::FullMatch(re2::StringPiece(proto_pair.first),
++                       GetSkipCartExtractionPattern())) {
+       proto_pair.second.clear_product_image_urls();
+       cart_db_->AddCart(proto_pair.first, proto_pair.second,
+                         base::BindOnce(&CartService::OnOperationFinished,
+@@ -1021,7 +1022,8 @@ void CartService::OnAddCart(const GURL&
+   }
+ 
+   // Skip extracting the block list.
+-  if (RE2::FullMatch(domain, GetSkipCartExtractionPattern())) {
++  if (RE2::FullMatch(re2::StringPiece(domain),
++                     GetSkipCartExtractionPattern())) {
+     proto.clear_product_image_urls();
+     proto.clear_product_infos();
+     cart_db_->AddCart(domain, std::move(proto),
+--- a/chrome/renderer/cart/commerce_hint_agent.cc
++++ b/chrome/renderer/cart/commerce_hint_agent.cc
+@@ -345,6 +345,10 @@ void OnWillSendRequest(content::RenderFr
+   observer->OnWillSendRequest(is_addtocart);
+ }
+ 
++bool PartialMatch(base::StringPiece str, const re2::RE2& re) {
++  return RE2::PartialMatch(re2::StringPiece(str.data(), str.size()), re);
++}
++
+ const re2::RE2& GetAddToCartPattern() {
+   auto* pattern_from_component =
+       commerce_heuristics::CommerceHeuristicsData::GetInstance()
+@@ -471,7 +475,8 @@ bool GetProductIdFromRequest(base::Strin
+   re2::RE2::Options options;
+   options.set_case_sensitive(false);
+   static base::NoDestructor<re2::RE2> re("(product_id|pr1id)=(\\w+)", options);
+-  return RE2::PartialMatch(request, *re, nullptr, product_id);
++  return RE2::PartialMatch(re2::StringPiece(request.data(), request.size()),
++                           *re, nullptr, product_id);
+ }
+ 
+ bool IsSameDomainXHR(const std::string& host,
+@@ -700,15 +705,14 @@ CommerceHintAgent::~CommerceHintAgent()
+ 
+ bool CommerceHintAgent::IsAddToCart(base::StringPiece str,
+                                     bool skip_length_limit) {
+-  return RE2::PartialMatch(
+-      skip_length_limit ? str : str.substr(0, kLengthLimit),
+-      GetAddToCartPattern());
++  return PartialMatch(skip_length_limit ? str : str.substr(0, kLengthLimit),
++                      GetAddToCartPattern());
+ }
+ 
+ bool CommerceHintAgent::IsAddToCartForDomBasedHeuristics(
+     base::StringPiece str) {
+-  return RE2::PartialMatch(str.substr(0, kLengthLimit),
+-                           GetDOMBasedAddToCartPattern());
++  return PartialMatch(str.substr(0, kLengthLimit),
++                      GetDOMBasedAddToCartPattern());
+ }
+ 
+ // TODO(crbug.com/1310422): Remove below two APIs and move all related unit
+@@ -725,7 +729,7 @@ bool CommerceHintAgent::IsPurchase(const
+   auto* pattern = GetVisitPurchasePattern(url);
+   if (!pattern)
+     return false;
+-  return RE2::PartialMatch(CanonicalURL(url).substr(0, kLengthLimit), *pattern);
++  return PartialMatch(CanonicalURL(url).substr(0, kLengthLimit), *pattern);
+ }
+ 
+ bool CommerceHintAgent::IsPurchase(const GURL& url,
+@@ -736,7 +740,7 @@ bool CommerceHintAgent::IsPurchase(const
+       purchase_regex_map;
+   std::string domain = eTLDPlusOne(url);
+   if (purchase_string_map.find(domain) == purchase_string_map.end()) {
+-    return RE2::PartialMatch(button_text, GetPurchaseTextPattern());
++    return PartialMatch(button_text, GetPurchaseTextPattern());
+   }
+   static re2::RE2::Options options;
+   options.set_case_sensitive(false);
+@@ -745,12 +749,11 @@ bool CommerceHintAgent::IsPurchase(const
+         {domain,
+          std::make_unique<re2::RE2>(purchase_string_map.at(domain), options)});
+   }
+-  return RE2::PartialMatch(button_text, *purchase_regex_map->at(domain));
++  return PartialMatch(button_text, *purchase_regex_map->at(domain));
+ }
+ 
+ bool CommerceHintAgent::ShouldSkip(base::StringPiece product_name) {
+-  return RE2::PartialMatch(product_name.substr(0, kLengthLimit),
+-                           GetSkipPattern());
++  return PartialMatch(product_name.substr(0, kLengthLimit), GetSkipPattern());
+ }
+ 
+ const std::vector<std::string> CommerceHintAgent::ExtractButtonTexts(
+@@ -1257,8 +1260,7 @@ bool CommerceHintAgent::ShouldSkipAddToC
+       commerce_heuristics::CommerceHeuristicsData::GetInstance()
+           .GetSkipAddToCartPatternForDomain(navigation_domain);
+   if (pattern) {
+-    return RE2::PartialMatch(request_url.spec().substr(0, kLengthLimit),
+-                             *pattern);
++    return PartialMatch(request_url.spec().substr(0, kLengthLimit), *pattern);
+   }
+   const std::map<std::string, std::string>& skip_string_map =
+       GetSkipAddToCartMapping();
+@@ -1275,7 +1277,7 @@ bool CommerceHintAgent::ShouldSkipAddToC
+          std::make_unique<re2::RE2>(skip_string_map.at(navigation_domain),
+                                     options)});
+   }
+-  return RE2::PartialMatch(request_url.spec().substr(0, kLengthLimit),
+-                           *skip_regex_map->at(navigation_domain));
++  return PartialMatch(request_url.spec().substr(0, kLengthLimit),
++                      *skip_regex_map->at(navigation_domain));
+ }
+ }  // namespace cart
+--- a/components/autofill/core/browser/address_rewriter.cc
++++ b/components/autofill/core/browser/address_rewriter.cc
+@@ -64,8 +64,8 @@ void CompileRulesFromData(const std::str
+   size_t token_end = 0;
+   while (!data.empty()) {
+     token_end = data.find('\t');
+-    auto pattern =
+-        std::make_unique<re2::RE2>(data.substr(0, token_end), options);
++    re2::StringPiece pattern_re2(data.data(), token_end);
++    auto pattern = std::make_unique<re2::RE2>(pattern_re2, options);
+     data.remove_prefix(token_end + 1);
+ 
+     token_end = data.find('\n');
+--- a/components/commerce/core/commerce_feature_list.cc
++++ b/components/commerce/core/commerce_feature_list.cc
+@@ -371,11 +371,17 @@ bool IsPartnerMerchant(const GURL& url)
+ }
+ 
+ bool IsRuleDiscountPartnerMerchant(const GURL& url) {
+-  return RE2::PartialMatch(url.spec(), GetRulePartnerMerchantPattern());
++  const std::string& url_string = url.spec();
++  return RE2::PartialMatch(
++      re2::StringPiece(url_string.data(), url_string.size()),
++      GetRulePartnerMerchantPattern());
+ }
+ 
+ bool IsCouponDiscountPartnerMerchant(const GURL& url) {
+-  return RE2::PartialMatch(url.spec(), GetCouponPartnerMerchantPattern());
++  const std::string& url_string = url.spec();
++  return RE2::PartialMatch(
++      re2::StringPiece(url_string.data(), url_string.size()),
++      GetCouponPartnerMerchantPattern());
+ }
+ 
+ bool IsCartDiscountFeatureEnabled() {
+--- a/components/commerce/core/heuristics/commerce_heuristics_provider.cc
++++ b/components/commerce/core/heuristics/commerce_heuristics_provider.cc
+@@ -150,6 +150,10 @@ const re2::RE2* GetVisitCheckoutPattern(
+   return checkout_regex_map->at(domain).get();
+ }
+ 
++bool PartialMatch(base::StringPiece str, const re2::RE2& re) {
++  return RE2::PartialMatch(re2::StringPiece(str.data(), str.size()), re);
++}
++
+ std::string CanonicalURL(const GURL& url) {
+   return base::JoinString({url.scheme_piece(), "://", url.host_piece(),
+                            url.path_piece().substr(0, kLengthLimit)},
+@@ -162,14 +166,14 @@ bool IsVisitCart(const GURL& url) {
+   auto* pattern = GetVisitCartPattern(url);
+   if (!pattern)
+     return false;
+-  return RE2::PartialMatch(CanonicalURL(url).substr(0, kLengthLimit), *pattern);
++  return PartialMatch(CanonicalURL(url).substr(0, kLengthLimit), *pattern);
+ }
+ 
+ bool IsVisitCheckout(const GURL& url) {
+   auto* pattern = GetVisitCheckoutPattern(url);
+   if (!pattern)
+     return false;
+-  return RE2::PartialMatch(url.spec().substr(0, kLengthLimit), *pattern);
++  return PartialMatch(url.spec().substr(0, kLengthLimit), *pattern);
+ }
+ 
+ bool IsAddToCartButtonSpec(int height, int width) {
+@@ -202,7 +206,7 @@ bool IsAddToCartButtonText(const std::st
+   options.set_case_sensitive(false);
+   static base::NoDestructor<re2::RE2> instance(
+       commerce::kAddToCartButtonTextPattern.Get(), options);
+-  return RE2::PartialMatch(text.substr(0, kLengthLimit), *instance);
++  return PartialMatch(text.substr(0, kLengthLimit), *instance);
+ }
+ 
+ bool ShouldUseDOMBasedHeuristics(const GURL& url) {
+@@ -213,7 +217,7 @@ bool ShouldUseDOMBasedHeuristics(const G
+   options.set_case_sensitive(false);
+   static base::NoDestructor<re2::RE2> instance(
+       commerce::kSkipHeuristicsDomainPattern.Get(), options);
+-  return !RE2::PartialMatch(eTLDPlusOne(url), *instance);
++  return !PartialMatch(eTLDPlusOne(url), *instance);
+ }
+ 
+ }  // namespace commerce_heuristics
+--- a/components/feedback/redaction_tool/redaction_tool.cc
++++ b/components/feedback/redaction_tool/redaction_tool.cc
+@@ -499,7 +499,7 @@ bool FindAndConsumeAndGetSkippedN(re2::S
+ 
+   if (skipped_input && result) {
+     size_t bytes_skipped = args[0]->data() - old_input.data();
+-    *skipped_input = old_input.substr(0, bytes_skipped);
++    *skipped_input = re2::StringPiece(old_input.data(), bytes_skipped);
+   }
+   return result;
+ }
+@@ -686,9 +686,9 @@ std::string RedactionTool::RedactMACAddr
+   while (FindAndConsumeAndGetSkipped(&text, *mac_re, &skipped, &oui, &nic)) {
+     // Look up the MAC address in the hash. Force the separator to be a colon
+     // so that the same MAC with a different format will match in all cases.
+-    std::string oui_string = base::ToLowerASCII(oui);
++    std::string oui_string = base::ToLowerASCII(std::string(oui));
+     base::ReplaceChars(oui_string, kMacSeparatorChars, ":", &oui_string);
+-    std::string nic_string = base::ToLowerASCII(nic);
++    std::string nic_string = base::ToLowerASCII(std::string(nic));
+     base::ReplaceChars(nic_string, kMacSeparatorChars, ":", &nic_string);
+     std::string mac = oui_string + ":" + nic_string;
+     std::string replacement_mac = mac_addresses_[mac];
+@@ -748,8 +748,10 @@ std::string RedactionTool::RedactHashes(
+     }
+ 
+     // Look up the hash value address in the map of replacements.
+-    std::string hash_prefix_string = base::ToLowerASCII(hash_prefix);
+-    std::string hash = hash_prefix_string + base::ToLowerASCII(hash_suffix);
++    std::string hash_prefix_string =
++        base::ToLowerASCII(std::string(hash_prefix));
++    std::string hash =
++        hash_prefix_string + base::ToLowerASCII(std::string(hash_suffix));
+     std::string replacement_hash = hashes_[hash];
+     if (replacement_hash.empty()) {
+       // If not found, build up a replacement value.
+@@ -813,7 +815,8 @@ std::string RedactionTool::RedactAndroid
+     // - Otherwise, remove all the characters in the component but the first
+     //   one.
+     // - If the original component has 2 or more bytes, add '_'.
+-    const base::FilePath path(app_specific);
++    const base::FilePath path(
++        std::string(app_specific.data(), app_specific.size()));
+     std::vector<std::string> components = path.GetComponents();
+     DCHECK(!components.empty());
+ 
+@@ -828,7 +831,8 @@ std::string RedactionTool::RedactAndroid
+       }
+     }
+     if (detected != nullptr) {
+-      (*detected)[PIIType::kAndroidAppStoragePath].emplace(app_specific);
++      (*detected)[PIIType::kAndroidAppStoragePath].insert(
++          std::string(app_specific.data(), app_specific.size()));
+     }
+     RecordPIIRedactedHistogram(PIIType::kAndroidAppStoragePath);
+   }
+@@ -955,7 +959,7 @@ std::string RedactionTool::RedactIbans(
+ 
+     // Remove the separating characters.
+     std::string stripped;
+-    base::RemoveChars(iban, " -", &stripped);
++    base::RemoveChars(std::string(iban.data(), iban.size()), " -", &stripped);
+ 
+     if (const auto previous_iban = ibans_.find(stripped);
+         previous_iban != ibans_.end()) {
+--- a/extensions/browser/api/web_request/form_data_parser.cc
++++ b/extensions/browser/api/web_request/form_data_parser.cc
+@@ -384,10 +384,12 @@ bool FormDataParserUrlEncoded::GetNextNa
+     result->set_name(unescaped_name);
+     std::string unescaped_value =
+         base::UnescapeBinaryURLComponent(value_, kUnescapeRules);
+-    if (base::IsStringUTF8(unescaped_value)) {
++    const base::StringPiece unescaped_data(unescaped_value.data(),
++                                           unescaped_value.length());
++    if (base::IsStringUTF8(unescaped_data)) {
+       result->SetStringValue(std::move(unescaped_value));
+     } else {
+-      result->SetBinaryValue(unescaped_value);
++      result->SetBinaryValue(unescaped_data);
+     }
+   }
+   if (source_.length() > 0) {
+@@ -402,7 +404,7 @@ bool FormDataParserUrlEncoded::GetNextNa
+ bool FormDataParserUrlEncoded::SetSource(base::StringPiece source) {
+   if (source_set_)
+     return false;  // We do not allow multiple sources for this parser.
+-  source_ = source;
++  source_ = re2::StringPiece(source.data(), source.size());
+   source_set_ = true;
+   source_malformed_ = false;
+   return true;
+@@ -442,8 +444,8 @@ bool FormDataParserMultipart::FinishRead
+       return false;
+     }
+     // Return the data consumed, minus two bytes for the trailing "\r\n".
+-    orig.remove_suffix(source_.size() + 2);
+-    *data = orig;
++    const char *data_start = source_.data();
++    *data = base::StringPiece(data_start, source_.data() - data_start - 2);
+   }
+ 
+   // Finally, read the dash-boundary and either skip to the next body part, or
+@@ -517,7 +519,7 @@ bool FormDataParserMultipart::GetNextNam
+ bool FormDataParserMultipart::SetSource(base::StringPiece source) {
+   if (source.data() == nullptr || !source_.empty())
+     return false;
+-  source_ = source;
++  source_ = re2::StringPiece(source.data(), source.size());
+ 
+   switch (state_) {
+     case STATE_INIT:
+@@ -580,12 +582,12 @@ bool FormDataParserMultipart::TryReadHea
+     state_ = STATE_ERROR;
+     return true;  // See (*) for why true.
+   }
+-  *name = groups[1];
++  *name = base::StringPiece(groups[1].data(), groups[1].size());
+ 
+   if (value_pattern().Match(header,
+                             kContentDispositionLength, header.size(),
+                             RE2::UNANCHORED, groups, 2)) {
+-    *value = groups[1];
++    *value = base::StringPiece(groups[1].data(), groups[1].size());
+     *value_assigned = true;
+   }
+   return true;
+--- a/gpu/command_buffer/service/program_manager.cc
++++ b/gpu/command_buffer/service/program_manager.cc
+@@ -614,8 +614,7 @@ std::string Program::ProcessLogInfo(cons
+       output += hashed_name;
+   }
+ 
+-  output.append(input);
+-  return output;
++  return output + std::string(input);
+ }
+ 
+ void Program::UpdateLogInfo() {
+--- a/media/formats/hls/types.cc
++++ b/media/formats/hls/types.cc
+@@ -20,6 +20,14 @@
+ namespace media::hls::types {
+ 
+ namespace {
++re2::StringPiece to_re2(base::StringPiece str) {
++  return re2::StringPiece(str.data(), str.size());
++}
++
++re2::StringPiece to_re2(SourceString str) {
++  return to_re2(str.Str());
++}
++
+ bool IsOneOf(char c, base::StringPiece set) {
+   return base::Contains(set, c);
+ }
+@@ -105,7 +113,7 @@ ParseStatus::Or<DecimalInteger> ParseDec
+   // NOTE: It may be useful to split this into a separate function which
+   // extracts the range containing valid characters from a given
+   // base::StringPiece. For now that's the caller's responsibility.
+-  if (!RE2::FullMatch(str, *decimal_integer_regex)) {
++  if (!RE2::FullMatch(to_re2(str), *decimal_integer_regex)) {
+     return ParseStatusCode::kFailedToParseDecimalInteger;
+   }
+ 
+@@ -145,7 +153,7 @@ ParseStatus::Or<SignedDecimalFloatingPoi
+ 
+   // Check that the set of characters is allowed: - . 0-9
+   // `base::StringToDouble` is not as strict as the HLS spec
+-  if (!re2::RE2::FullMatch(str, *decimal_floating_point_regex)) {
++  if (!re2::RE2::FullMatch(to_re2(str), *decimal_floating_point_regex)) {
+     return ParseStatusCode::kFailedToParseSignedDecimalFloatingPoint;
+   }
+ 
+@@ -393,7 +401,7 @@ ParseStatus::Or<VariableName> VariableNa
+       "[a-zA-Z0-9_-]+");
+ 
+   // This source_str must match completely
+-  if (!re2::RE2::FullMatch(source_str.Str(), *variable_name_regex)) {
++  if (!re2::RE2::FullMatch(to_re2(source_str), *variable_name_regex)) {
+     return ParseStatusCode::kMalformedVariableName;
+   }
+ 

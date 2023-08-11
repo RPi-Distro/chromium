@@ -18,6 +18,11 @@ chromium (116.0.5845.82-1) UNRELEASED; urgency=high
    - fixes/vector.patch: add a missing header that libstdc++ needs.
    - fixes/null.patch: fix missing namespace for nullptr_t + header fix.
    - bookworm/brotli.patch: revert upstream change that requires newer brotli.
+   - bookworm/stringpiece.patch, bookworm/stringpiece2.patch: work around
+     the mess that is implicit conversions between string classes in
+     chromium, re2, and absl.
+   - bookworm/struct-ctor.patch: add a bunch of explicit struct constructors
+     to make clang-15 happy.
   * d/rules: automatically detect rust/clang versions & add needed rust args.
   * d/control: add build-dep on libclang-rt-dev for rust.
   * Switch to building with clang-15 (instead of 14).

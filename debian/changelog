@@ -1,4 +1,4 @@
-chromium (116.0.5845.62-1) UNRELEASED; urgency=high
+chromium (116.0.5845.82-1) UNRELEASED; urgency=high
 
   * New upstream beta release.
   * d/patches:
@@ -12,8 +12,10 @@ chromium (116.0.5845.62-1) UNRELEASED; urgency=high
    - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh.
    - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
    - fixes/rust-clanglib.patch: add patch to handle new clang deps for rust.
+   - debianization/clang-15.patch: add patch to use lld-15.
   * d/rules: automatically detect rust/clang versions & add needed rust args.
   * d/control: add build-dep on libclang-rt-dev for rust.
+  * Switch to building with clang-15 (instead of 14).
 
   [ Timothy Pearson ]
    * d/patches/ppc64le:

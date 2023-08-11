@@ -11,6 +11,9 @@ fixes/SkColor4f-init.patch
 fixes/gcc13-with-clang14.patch
 fixes/gcc13-headers.patch
 fixes/rust-clanglib.patch
+fixes/vector.patch
+fixes/variant.patch
+fixes/null.patch
 
 upstream/mojo.patch
 upstream/statelessV4L2.patch

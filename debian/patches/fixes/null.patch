@@ -1,0 +1,34 @@
+author: Andres Salomon <dilinger@debian.org>
+
+More simple build fixes needed by libstdc++-dev 13
+
+--- a/third_party/perfetto/src/trace_processor/prelude/functions/create_function.cc
++++ b/third_party/perfetto/src/trace_processor/prelude/functions/create_function.cc
+@@ -135,7 +135,7 @@ struct StoredSqlValue {
+   // the destructors run correctly for non-trivial members of the
+   // union.
+   using Data =
+-      std::variant<int64_t, double, OwnedString, OwnedBytes, nullptr_t>;
++      std::variant<int64_t, double, OwnedString, OwnedBytes, std::nullptr_t>;
+ 
+   StoredSqlValue(SqlValue value) {
+     switch (value.type) {
+@@ -160,7 +160,7 @@ struct StoredSqlValue {
+   }
+ 
+   SqlValue AsSqlValue() {
+-    if (std::holds_alternative<nullptr_t>(data)) {
++    if (std::holds_alternative<std::nullptr_t>(data)) {
+       return SqlValue();
+     } else if (std::holds_alternative<int64_t>(data)) {
+       return SqlValue::Long(std::get<int64_t>(data));
+--- a/third_party/perfetto/src/trace_processor/sqlite/sqlite_tokenizer.h
++++ b/third_party/perfetto/src/trace_processor/sqlite/sqlite_tokenizer.h
+@@ -19,6 +19,7 @@
+ 
+ #include <optional>
+ #include <string_view>
++#include <cstdint>
+ 
+ namespace perfetto {
+ namespace trace_processor {

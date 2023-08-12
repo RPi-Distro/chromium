@@ -8,8 +8,6 @@ fixes/widevine-revision.patch
 fixes/widevine-locations.patch
 fixes/brandversion-construct.patch
 fixes/SkColor4f-init.patch
-fixes/gcc13-with-clang14.patch
-fixes/gcc13-headers.patch
 fixes/rust-clanglib.patch
 fixes/vector.patch
 fixes/variant.patch

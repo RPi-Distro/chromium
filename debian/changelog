@@ -5,7 +5,6 @@ chromium (116.0.5845.82-1~deb12u1) UNRELEASED; urgency=high
    - fixes/cmath.patch: drop, merged upstream.
    - fixes/vector.patch: drop, merged upstream.
    - fixes/cookieresult.patch: drop, merged upstream.
-   - fixes/gcc13-headers.patch: drop portions which have been merged upstream.
    - upstream/feature-list-static.patch: drop, merged upstream.
    - disable/catapult.patch: refresh.
    - upstream/statelessV4L2.patch: refresh.

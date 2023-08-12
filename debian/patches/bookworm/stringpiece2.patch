@@ -1,0 +1,60 @@
+author: Andres Salomon <dilinger@debian.org>
+description: Additional fixes for being unable to implicitly convert StringPieces
+
+--- a/third_party/tensorflow-text/src/tensorflow_text/core/kernels/regex_split.cc
++++ b/third_party/tensorflow-text/src/tensorflow_text/core/kernels/regex_split.cc
+@@ -26,13 +26,13 @@ void RegexSplitImpl(absl::string_view in
+                     std::vector<absl::string_view>* tokens,
+                     std::vector<T>* begin_offsets,
+                     std::vector<T>* end_offsets) {
+-  absl::string_view leftover = input;
+-  absl::string_view last_end = leftover;
++  re2::StringPiece leftover(input.data());
++  re2::StringPiece last_end = leftover;
+ 
+   // Keep looking for split points until we have reached the end of the input.
+-  absl::string_view extracted_delim_token;
++  re2::StringPiece extracted_delim_token;
+   while (RE2::FindAndConsume(&leftover, re2, &extracted_delim_token)) {
+-    absl::string_view token(last_end.data(),
++    re2::StringPiece token(last_end.data(),
+                             extracted_delim_token.data() - last_end.data());
+     bool has_non_empty_token = token.length() > 0;
+     bool should_include_delim =
+--- a/third_party/tflite_support/src/tensorflow_lite_support/cc/text/tokenizers/regex_tokenizer.cc
++++ b/third_party/tflite_support/src/tensorflow_lite_support/cc/text/tokenizers/regex_tokenizer.cc
+@@ -61,13 +61,13 @@ RegexTokenizer::RegexTokenizer(const std
+ }
+ 
+ TokenizerResult RegexTokenizer::Tokenize(const std::string& input) {
+-  absl::string_view leftover(input.data());
++  re2::StringPiece leftover(input.data());
+   absl::string_view last_end = leftover;
+ 
+   TokenizerResult result;
+ 
+   // Keep looking for split points until we have reached the end of the input.
+-  absl::string_view extracted_delim_token;
++  re2::StringPiece extracted_delim_token;
+   while (RE2::FindAndConsume(&leftover, delim_re_, &extracted_delim_token)) {
+     absl::string_view token(last_end.data(),
+                             extracted_delim_token.data() - last_end.data());
+--- a/components/commerce/core/commerce_feature_list.cc
++++ b/components/commerce/core/commerce_feature_list.cc
+@@ -473,6 +473,7 @@ base::TimeDelta GetDiscountFetchDelay()
+ }
+ 
+ bool IsNoDiscountMerchant(const GURL& url) {
++  const auto host_string = url.host_piece();
+   auto* pattern_from_component =
+       commerce_heuristics::CommerceHeuristicsData::GetInstance()
+           .GetNoDiscountMerchantPattern();
+@@ -480,7 +481,7 @@ bool IsNoDiscountMerchant(const GURL& ur
+   // considered to have no discounts by default.
+   if (!pattern_from_component)
+     return true;
+-  return RE2::PartialMatch(url.host_piece(), *pattern_from_component);
++  return RE2::PartialMatch(re2::StringPiece(host_string.data(), host_string.size()), *pattern_from_component);
+ }
+ #endif
+ }  // namespace commerce

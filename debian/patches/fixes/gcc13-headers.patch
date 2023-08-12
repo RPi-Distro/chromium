@@ -24,16 +24,6 @@ These are technically correct and should go upstream.
  #ifdef RUY_PROFILER
  #include <cstdio>
  #include <mutex>
---- a/third_party/tflite/src/tensorflow/lite/kernels/internal/spectrogram.cc
-+++ b/third_party/tflite/src/tensorflow/lite/kernels/internal/spectrogram.cc
-@@ -17,6 +17,7 @@ limitations under the License.
- 
- #include <assert.h>
- #include <math.h>
-+#include <stdint.h>
- 
- #include "third_party/fft2d/fft.h"
- 
 --- a/third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
 +++ b/third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
 @@ -2389,6 +2389,7 @@ VMA_CALL_PRE void VMA_CALL_POST vmaFreeV
@@ -84,13 +74,4 @@ These are technically correct and should go upstream.
  
  namespace quic {
  
---- a/base/cpu.h
-+++ b/base/cpu.h
-@@ -5,6 +5,7 @@
- #ifndef BASE_CPU_H_
- #define BASE_CPU_H_
- 
-+#include <cstdint>
- #include <string>
- 
- #include "base/base_export.h"
+

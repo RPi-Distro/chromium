@@ -1,18 +1,21 @@
 debianization/manpage.patch
 debianization/sandbox.patch
 debianization/master-preferences.patch
+debianization/clang-15.patch
 
 fixes/ps-print.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
-fixes/cmath.patch
-fixes/vector.patch
 fixes/brandversion-construct.patch
 fixes/SkColor4f-init.patch
-fixes/cookieresult.patch
+fixes/gcc13-with-clang14.patch
+fixes/gcc13-headers.patch
+fixes/rust-clanglib.patch
+fixes/vector.patch
+fixes/variant.patch
+fixes/null.patch
 
 upstream/mojo.patch
-upstream/feature-list-static.patch
 upstream/statelessV4L2.patch
 upstream/contains.patch
 
@@ -46,6 +49,10 @@ system/rollup.patch
 bookworm/clang-attribs.patch
 bookworm/typename.patch
 bookworm/structured-binding-scope-bug.patch
+bookworm/brotli.patch
+bookworm/stringpiece.patch
+bookworm/stringpiece2.patch
+bookworm/struct-ctor.patch
 
 bullseye/clang13.patch
 bullseye/constexpr.patch

@@ -10,7 +10,7 @@ Subject: [PATCH] Add ppc64 target to libaom
 
 --- a/third_party/libaom/BUILD.gn
 +++ b/third_party/libaom/BUILD.gn
-@@ -208,6 +208,18 @@ if (current_cpu == "arm64" || cpu_arch_f
+@@ -209,6 +209,18 @@ if (current_cpu == "arm64" || cpu_arch_f
    }
  }
  
@@ -27,9 +27,9 @@ Subject: [PATCH] Add ppc64 target to libaom
 +}
 +
  static_library("libaom") {
+   check_includes = false
    if (!is_debug && is_win) {
-     configs -= [ "//build/config/compiler:default_optimization" ]
-@@ -263,6 +275,9 @@ static_library("libaom") {
+@@ -265,6 +277,9 @@ static_library("libaom") {
      sources +=
          [ "//third_party/libaom/source/libaom/aom_ports/arm_cpudetect.c" ]
    }
@@ -37,11 +37,11 @@ Subject: [PATCH] Add ppc64 target to libaom
 +    deps += [ ":libaom_intrinsics_vsx" ]
 +  }
    if (is_android) {
-     deps += [ "//third_party/android_ndk:cpu_features" ]
+     deps += [ "//third_party/cpu_features:ndk_compat" ]
    }
 --- a/third_party/libaom/cmake_update.sh
 +++ b/third_party/libaom/cmake_update.sh
-@@ -201,6 +201,9 @@ gen_config_files ios/arm64 \
+@@ -204,6 +204,9 @@ gen_config_files ios/arm64 \
    "${toolchain}/arm64-ios.cmake -DCMAKE_INSTALL_NAME_TOOL=no-such-command \
     ${all_platforms}"
  

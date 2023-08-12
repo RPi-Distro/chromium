@@ -14,19 +14,6 @@
  }  // namespace partition_alloc::internal
 --- a/base/allocator/partition_allocator/partition_page.h
 +++ b/base/allocator/partition_allocator/partition_page.h
-@@ -149,6 +149,12 @@ struct SlotSpanMetadata {
-   // so we use the 16 kiB maximum (64 kiB will crash).
-   static constexpr size_t kMaxSlotsPerSlotSpan =
-       4 * (1 << 14) / kSmallestBucket;
-+#elif BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_PPC64)
-+  // System page size is not a constant on OpenPOWER systems, but is either 4kiB
-+  // or 64kiB (1 << 12 or 1 << 16)
-+  // And PartitionPageSize() is 4 times the OS page size.
-+  static constexpr size_t kMaxSlotsPerSlotSpan =
-+      4 * (1 << 16) / kSmallestBucket;
- #else
-   // A slot span can "span" multiple PartitionPages, but then its slot size is
-   // larger, so it doesn't have as many slots.
 @@ -156,7 +162,11 @@ struct SlotSpanMetadata {
        PartitionPageSize() / kSmallestBucket;
  #endif  // BUILDFLAG(HAS_64_BIT_POINTERS) && BUILDFLAG(IS_APPLE)
@@ -51,3 +38,17 @@
    // If |in_empty_cache_|==1, |empty_cache_index| is undefined and mustn't be
    // used.
    uint16_t in_empty_cache_ : 1;
+--- a/base/allocator/partition_allocator/partition_page_constants.h
++++ b/base/allocator/partition_allocator/partition_page_constants.h
+@@ -21,6 +21,11 @@
+ // currently (kMaxSlotsPerSlotSpanBits == 13) not supported by the code,
+ // so we use the 16 kiB maximum (64 kiB will crash).
+ static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 14) / kSmallestBucket;
++#elif BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_PPC64)
++// System page size is not a constant on OpenPOWER systems, but is either 4kiB
++// or 64kiB (1 << 12 or 1 << 16)
++// And PartitionPageSize() is 4 times the OS page size.
++static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 16) / kSmallestBucket;
+ #else
+ // A slot span can "span" multiple PartitionPages, but then its slot size is
+ // larger, so it doesn't have as many slots.

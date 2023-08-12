@@ -15,8 +15,8 @@ export DEB_RULES_REQUIRES_ROOT=no
 # compile with clang (gcc is currently not supported)
 export AR=ar
 export NM=nm
-export CC=clang
-export CXX=clang++
+export CC=clang-15
+export CXX=clang++-15
 
 # initial flags from dpkg-buildflags
 export DEB_CXXFLAGS_MAINT_STRIP=-g
@@ -41,9 +41,12 @@ export CXXFLAGS+=-fno-delete-null-pointer-checks
 defines=clang_use_chrome_plugins=false
 
 # use system rust
+export CLANG_VERS="$(shell $(CC) --version| sed -n 's/Debian clang version //p')"
 defines+=rust_sysroot_absolute=\"/usr\"
-defines+=rustc_version=\"rustc 1.66.0\"
-defines+=use_chromium_rust_toolchain=false
+defines+=rustc_version=\"$(shell rustc --version)\"
+defines+=enable_rust=false
+defines+=clang_base_path=\"/usr/lib/llvm-$(shell echo $(CLANG_VERS) | cut -d. -f1)\"
+defines+=clang_version=\"$(CLANG_VERS)\"
 
 # build using system toolchain
 defines+=host_toolchain=\"//build/toolchain/linux/unbundle:default\"

@@ -20,7 +20,7 @@
      add_perlasm_target("${dest}-linux.S" ${src} elf -fPIC -DOPENSSL_IA32_SSE2)
 --- a/third_party/boringssl/src/crypto/CMakeLists.txt
 +++ b/third_party/boringssl/src/crypto/CMakeLists.txt
-@@ -23,6 +23,7 @@ perlasm(CRYPTO_SOURCES aarch64 cipher_ex
+@@ -25,6 +25,7 @@ perlasm(CRYPTO_SOURCES aarch64 cipher_ex
  perlasm(CRYPTO_SOURCES aarch64 test/trampoline-armv8 test/asm/trampoline-armv8.pl)
  perlasm(CRYPTO_SOURCES arm chacha/chacha-armv4 chacha/asm/chacha-armv4.pl)
  perlasm(CRYPTO_SOURCES arm test/trampoline-armv4 test/asm/trampoline-armv4.pl)
@@ -28,14 +28,14 @@
  perlasm(CRYPTO_SOURCES x86 chacha/chacha-x86 chacha/asm/chacha-x86.pl)
  perlasm(CRYPTO_SOURCES x86 test/trampoline-x86 test/asm/trampoline-x86.pl)
  perlasm(CRYPTO_SOURCES x86_64 chacha/chacha-x86_64 chacha/asm/chacha-x86_64.pl)
-@@ -135,6 +136,7 @@ add_library(
+@@ -137,6 +138,7 @@ add_library(
    cpu_arm_linux.c
    cpu_arm.c
    cpu_intel.c
 +  cpu_ppc64le.c
    crypto.c
    curve25519/curve25519.c
-   curve25519/spake25519.c
+   curve25519/curve25519_64_adx.c
 --- a/third_party/boringssl/src/crypto/abi_self_test.cc
 +++ b/third_party/boringssl/src/crypto/abi_self_test.cc
 @@ -521,3 +521,289 @@ TEST(ABITest, AArch64) {
@@ -5447,7 +5447,7 @@
  // OPENSSL_cpuid_setup initializes the platform-specific feature cache.
  void OPENSSL_cpuid_setup(void);
  #endif
-@@ -1413,6 +1413,16 @@ OPENSSL_INLINE int CRYPTO_is_ARMv8_PMULL
+@@ -1419,6 +1419,16 @@ OPENSSL_INLINE int CRYPTO_is_ARMv8_PMULL
  
  #endif  // OPENSSL_ARM || OPENSSL_AARCH64
  
@@ -8813,7 +8813,7 @@
      ('linux', 'x86', 'elf', ['-fPIC', '-DOPENSSL_IA32_SSE2'], 'S'),
      ('linux', 'x86_64', 'elf', [], 'S'),
      ('win', 'x86', 'win32n', ['-DOPENSSL_IA32_SSE2'], 'asm'),
-@@ -144,7 +145,7 @@ class Android(object):
+@@ -150,7 +151,7 @@ class Android(object):
      if asm_outputs:
        blueprint.write('    target: {\n')
        for ((osname, arch), asm_files) in asm_outputs:

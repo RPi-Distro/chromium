@@ -1,0 +1,161 @@
+author: Andres Salomon <dilinger@debian.org>
+description: add constructors to various structs
+
+clang-15 and older can't seem to handle implicit struct constructors
+in some cases; this fixes build errors by adding explicit constructors
+that initialize (or don't, in some cases) the members of the struct.
+
+
+
+--- a/ui/base/wayland/color_manager_util.h
++++ b/ui/base/wayland/color_manager_util.h
+@@ -23,32 +23,37 @@ constexpr uint32_t kDefaultSinceVersion
+ struct TransferFnVersion {
+   skcms_TransferFunction transfer_fn;
+   uint32_t version;
++  TransferFnVersion(auto tf, auto v) : transfer_fn(tf), version(v) { }
+ };
+ 
+ struct TransferVersion {
+   gfx::ColorSpace::TransferID transfer;
+   uint32_t version;
++  TransferVersion(auto t, auto v) : transfer(t), version(v) { }
+ };
+ 
+ struct PrimaryVersion {
+   gfx::ColorSpace::PrimaryID primary;
+   uint32_t version;
++  PrimaryVersion(auto p, auto v) : primary(p), version(v) { }
+ };
+ 
+ struct MatrixVersion {
+   gfx::ColorSpace::MatrixID matrix;
+   uint32_t version;
++  MatrixVersion(auto m, auto v) : matrix(m), version(v) { }
+ };
+ 
+ struct RangeVersion {
+   gfx::ColorSpace::RangeID range;
+   uint32_t version;
++  RangeVersion(auto r, auto v) : range(r), version(v) { }
+ };
+ 
+ // A map from the zcr_color_manager_v1 chromaticity_names enum values
+ // representing well-known chromaticities, to their equivalent PrimaryIDs.
+ // See components/exo/wayland/protocol/chrome-color-management.xml
+-constexpr auto kChromaticityMap = base::MakeFixedFlatMap<
++static const auto kChromaticityMap = base::MakeFixedFlatMap<
+     zcr_color_manager_v1_chromaticity_names,
+     PrimaryVersion>(
+     {{ZCR_COLOR_MANAGER_V1_CHROMATICITY_NAMES_BT601_525_LINE,
+@@ -103,7 +108,7 @@ constexpr auto kChromaticityMap = base::
+ // A map from the zcr_color_manager_v1 eotf_names enum values
+ // representing well-known EOTFs, to their equivalent TransferIDs.
+ // See components/exo/wayland/protocol/chrome-color-management.xml
+-constexpr auto kEotfMap = base::MakeFixedFlatMap<
++static const auto kEotfMap = base::MakeFixedFlatMap<
+     zcr_color_manager_v1_eotf_names,
+     TransferVersion>({
+     {ZCR_COLOR_MANAGER_V1_EOTF_NAMES_LINEAR,
+@@ -171,7 +176,7 @@ constexpr auto kEotfMap = base::MakeFixe
+ // A map from the SDR zcr_color_manager_v1 eotf_names enum values
+ // representing well-known EOTFs, to their equivalent transfer functions.
+ // See components/exo/wayland/protocol/chrome-color-management.xml
+-constexpr auto kTransferMap =
++static const auto kTransferMap =
+     base::MakeFixedFlatMap<zcr_color_manager_v1_eotf_names, TransferFnVersion>({
+         {ZCR_COLOR_MANAGER_V1_EOTF_NAMES_LINEAR,
+          TransferFnVersion(SkNamedTransferFn::kLinear, kDefaultSinceVersion)},
+@@ -191,7 +196,7 @@ constexpr auto kTransferMap =
+ // A map from the HDR zcr_color_manager_v1 eotf_names enum values
+ // representing well-known EOTFs, to their equivalent transfer functions.
+ // See components/exo/wayland/protocol/chrome-color-management.xml
+-constexpr auto kHDRTransferMap =
++static const auto kHDRTransferMap =
+     base::MakeFixedFlatMap<zcr_color_manager_v1_eotf_names, TransferFnVersion>(
+         {{ZCR_COLOR_MANAGER_V1_EOTF_NAMES_LINEAR,
+           TransferFnVersion(SkNamedTransferFn::kLinear, kDefaultSinceVersion)},
+@@ -209,7 +214,7 @@ constexpr auto kHDRTransferMap =
+ 
+ // A map from zcr_color_manager_v1 matrix_names enum values to
+ // gfx::ColorSpace::MatrixIDs.
+-constexpr auto kMatrixMap =
++static const auto kMatrixMap =
+     base::MakeFixedFlatMap<zcr_color_manager_v1_matrix_names, MatrixVersion>(
+         {{ZCR_COLOR_MANAGER_V1_MATRIX_NAMES_RGB,
+           MatrixVersion(gfx::ColorSpace::MatrixID::RGB, kDefaultSinceVersion)},
+@@ -246,7 +251,7 @@ constexpr auto kMatrixMap =
+ 
+ // A map from zcr_color_manager_v1 range_names enum values to
+ // gfx::ColorSpace::RangeIDs.
+-constexpr auto kRangeMap =
++static const auto kRangeMap =
+     base::MakeFixedFlatMap<zcr_color_manager_v1_range_names, RangeVersion>(
+         {{ZCR_COLOR_MANAGER_V1_RANGE_NAMES_LIMITED,
+           RangeVersion(gfx::ColorSpace::RangeID::LIMITED,
+@@ -278,4 +283,4 @@ zcr_color_manager_v1_eotf_names ToColorM
+ 
+ }  // namespace ui::wayland
+ 
+-#endif  // UI_BASE_WAYLAND_COLOR_MANAGER_UTIL_H_
+\ No newline at end of file
++#endif  // UI_BASE_WAYLAND_COLOR_MANAGER_UTIL_H_
+--- a/net/dns/host_resolver_cache.h
++++ b/net/dns/host_resolver_cache.h
+@@ -120,6 +120,7 @@ class NET_EXPORT HostResolverCache final
+   struct Key {
+     std::string domain_name;
+     NetworkAnonymizationKey network_anonymization_key;
++    Key(auto dn, auto nak) : domain_name(dn), network_anonymization_key(nak) { }
+   };
+ 
+   struct KeyRef {
+--- a/third_party/skia/include/core/SkSize.h
++++ b/third_party/skia/include/core/SkSize.h
+@@ -16,6 +16,9 @@ struct SkISize {
+     int32_t fWidth;
+     int32_t fHeight;
+ 
++    constexpr SkISize(auto w, auto h) : fWidth(w), fHeight(h) { }
++    SkISize() : fWidth(0), fHeight(0) { }
++
+     static constexpr SkISize Make(int32_t w, int32_t h) { return {w, h}; }
+ 
+     static constexpr SkISize MakeEmpty() { return {0, 0}; }
+--- a/chrome/browser/ui/location_bar/location_bar.h
++++ b/chrome/browser/ui/location_bar/location_bar.h
+@@ -38,6 +38,11 @@ class LocationBar {
+     base::TimeTicks match_selection_timestamp;
+     bool url_typed_without_scheme;
+     bool url_typed_with_http_scheme;
++
++    NavigationParams(auto du, auto d, auto t, auto mst, auto urws, auto utwhs) :
++        destination_url(du), disposition(d), transition(t), match_selection_timestamp(mst),
++        url_typed_without_scheme(urws), url_typed_with_http_scheme(utwhs) { }
++    NavigationParams() { }
+   };
+ 
+   explicit LocationBar(CommandUpdater* command_updater)
+--- a/third_party/blink/renderer/platform/fonts/font_palette.h
++++ b/third_party/blink/renderer/platform/fonts/font_palette.h
+@@ -35,6 +35,9 @@ class PLATFORM_EXPORT FontPalette : publ
+     int index;
+     Color color;
+ 
++    FontPaletteOverride(auto i, auto c) : index(i), color(c) { }
++    FontPaletteOverride() { }
++
+     bool operator==(const FontPaletteOverride& other) const {
+       return index == other.index && color == other.color;
+     }
+--- a/chrome/browser/content_settings/one_time_permission_provider.h
++++ b/chrome/browser/content_settings/one_time_permission_provider.h
+@@ -86,6 +86,8 @@ class OneTimePermissionProvider
+     ContentSettingsType type;
+     ContentSettingsPattern primary_pattern;
+     ContentSettingsPattern secondary_pattern;
++
++    ContentSettingEntry(auto t, auto pp, auto sp) : type(t), primary_pattern(pp), secondary_pattern(sp) { }
+   };
+ 
+   void DeleteEntriesAndNotify(

@@ -16,7 +16,6 @@ Build-Depends:
  lld-15,
  clang-15,
  clang-format-15,
- libclang-rt-15-dev,
  rustc,
  python3,
  pkg-config,

@@ -25,7 +25,6 @@ chromium (116.0.5845.82-1~deb12u1) UNRELEASED; urgency=high
      to make clang-15 happy.
   * d/rules: automatically detect rust/clang versions & add needed rust args.
     But also disable rust for now.
-  * d/control: add build-dep on libclang-rt-dev for rust.
   * Switch to building with clang-15 (instead of 14).
 
   [ Timothy Pearson ]

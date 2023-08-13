@@ -12,6 +12,7 @@ fixes/rust-clanglib.patch
 fixes/vector.patch
 fixes/variant.patch
 fixes/null.patch
+fixes/size.patch
 
 upstream/mojo.patch
 upstream/statelessV4L2.patch

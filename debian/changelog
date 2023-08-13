@@ -27,6 +27,9 @@ chromium (116.0.5845.82-1~deb12u1) UNRELEASED; urgency=high
   * d/rules: automatically detect rust/clang versions & add needed rust args.
     But also disable rust for now.
   * Switch to building with clang-15 (instead of 14).
+  * Use bundled re2 (for now) instead of libre2-dev due to random crashes
+    we're seeing. Adjust build-deps, Files-Excluded, d/clean,
+    and d/scripts/unbundle accordingly.
 
   [ Timothy Pearson ]
    * d/patches/ppc64le:

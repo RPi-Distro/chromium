@@ -27,6 +27,9 @@ chromium (116.0.5845.82-1) UNRELEASED; urgency=high
     But also disable rust for now.
   * d/control: add build-dep on libclang-rt-dev for rust.
   * Switch to building with clang-15 (instead of 14).
+  * Use bundled re2 (for now) instead of libre2-dev due to random crashes
+    we're seeing. Adjust build-deps, Files-Excluded, d/clean,
+    and d/scripts/unbundle accordingly.
 
   [ Timothy Pearson ]
    * d/patches/ppc64le:

@@ -52,7 +52,6 @@ Build-Depends:
  rapidjson-dev,
  libva-dev,
  libxt-dev,
- libre2-dev,
  libgbm-dev,
  libpng-dev,
  libxss-dev,

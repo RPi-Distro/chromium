@@ -77,7 +77,6 @@ Files-Excluded:
  third_party/woff2
  third_party/brotli
  third_party/angle/src/third_party/libXNVCtrl
- third_party/re2
  third_party/opus
  third_party/flac
  third_party/llvm

@@ -51,13 +51,10 @@ bookworm/clang-attribs.patch
 bookworm/typename.patch
 bookworm/structured-binding-scope-bug.patch
 bookworm/brotli.patch
-bookworm/stringpiece.patch
-bookworm/stringpiece2.patch
 bookworm/struct-ctor.patch
 
 bullseye/clang13.patch
 bullseye/constexpr.patch
-bullseye/stringpiece.patch
 
 # i386 support
 i386/support-i386.patch

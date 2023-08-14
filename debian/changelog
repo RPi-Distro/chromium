@@ -37,8 +37,11 @@ chromium (116.0.5845.82-1) UNRELEASED; urgency=high
        for upstream changes
      - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
        refresh for upstream changes
+     - third_party/0002-third-party-boringssl-add-generated-files.patch:
+       refresh, no changes
      - third_party/use-sysconf-page-size-on-ppc64.patch: refresh for upstream
        changes
+     - third_party/skia-vsx-instructions.patch: refresh for upstream changes
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 02 Aug 2023 19:26:52 -0400
 

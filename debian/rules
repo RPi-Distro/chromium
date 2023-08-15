@@ -15,8 +15,8 @@ export DEB_RULES_REQUIRES_ROOT=no
 # compile with clang (gcc is currently not supported)
 export AR=ar
 export NM=nm
-export CC=clang-15
-export CXX=clang++-15
+export CC=clang-14
+export CXX=clang++-14
 
 # initial flags from dpkg-buildflags
 export DEB_CXXFLAGS_MAINT_STRIP=-g
@@ -73,7 +73,6 @@ defines+=is_debug=false \
          use_sysroot=false \
          use_libjpeg_turbo=true \
          use_custom_libcxx=false \
-         use_gnome_keyring=false \
          use_unofficial_version_number=false \
          enable_vr=false \
          enable_nacl=false \

@@ -13,9 +13,9 @@ Rules-Requires-Root: no
 Build-Depends:
  debhelper (>= 11),
  devscripts,
- lld-15,
- clang-15,
- clang-format-15,
+ lld-14,
+ clang-14,
+ clang-format-14,
  rustc,
  python3,
  pkg-config,

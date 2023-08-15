@@ -1,7 +1,7 @@
 debianization/manpage.patch
 debianization/sandbox.patch
 debianization/master-preferences.patch
-debianization/clang-15.patch
+debianization/clang-version.patch
 
 fixes/ps-print.patch
 fixes/widevine-revision.patch

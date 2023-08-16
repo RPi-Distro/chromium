@@ -1,3 +1,50 @@
+chromium (116.0.5845.96-2) unstable; urgency=high
+
+  * d/patches/upstream/limits.patch: Add a build fix for arm64.
+  * The follow CVEs were fixed in the prior release and I forgot them.
+    - CVE-2023-2312: Use after free in Offline. Reported by avaue at S.S.L..
+    - CVE-2023-4349: Use after free in Device Trust Connectors.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2023-4350: Inappropriate implementation in Fullscreen.
+      Reported by Khiem Tran (@duckhiem).
+    - CVE-2023-4351: Use after free in Network.
+      Reported by Guang and Weipeng Jiang of VRI.
+    - CVE-2023-4352: Type Confusion in V8.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2023-4353: Heap buffer overflow in ANGLE.
+      Reported by Christoph Diehl / Microsoft Vulnerability Research.
+    - CVE-2023-4354: Heap buffer overflow in Skia.
+      Reported by Mark Brand of Google Project Zero.
+    - CVE-2023-4355: Out of bounds memory access in V8.
+      Reported by Sergei Glazunov of Google Project Zero.
+    - CVE-2023-4356: Use after free in Audio.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2023-4357: Insufficient validation of untrusted input in XML.
+      Reported by Igor Sak-Sakovskii.
+    - CVE-2023-4358: Use after free in DNS.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2023-4359: Inappropriate implementation in App Launcher.
+      Reported by @retsew0x01.
+    - CVE-2023-4360: Inappropriate implementation in Color.
+      Reported by Axel Chong.
+    - CVE-2023-4361: Inappropriate implementation in Autofill.
+      Reported by Thomas Orlita.
+    - CVE-2023-4362: Heap buffer overflow in Mojom IDL.
+      Reported by Zhao Hai of NanJing Cyberpeace TianYu Lab.
+    - CVE-2023-4363: Inappropriate implementation in WebShare.
+      Reported by Alesandro Ortiz.
+    - CVE-2023-4364: Inappropriate implementation in Permission Prompts.
+      Reported by Jasper Rebane.
+    - CVE-2023-4365: Inappropriate implementation in Fullscreen.
+      Reported by Hafiizh.
+    - CVE-2023-4366: Use after free in Extensions. Reported by asnine.
+    - CVE-2023-4367: Insufficient policy enforcement in Extensions API.
+      Reported by Axel Chong.
+    - CVE-2023-4368: Insufficient policy enforcement in Extensions API.
+      Reported by Axel Chong.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 16 Aug 2023 04:48:02 -0400
+
 chromium (116.0.5845.96-1) unstable; urgency=high
 
   * New upstream stable release.

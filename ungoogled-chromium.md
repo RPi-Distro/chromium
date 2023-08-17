@@ -41,6 +41,13 @@ That being said - the Ungoogled Chromium project also has some really useful pat
  - [ ] core/ungoogled-chromium/disable-signin.patch
  - [ ] core/ungoogled-chromium/toggle-translation-via-switch.patch
  - [ ] core/ungoogled-chromium/disable-untraceable-urls.patch
+
+   This feature (which does a ping to a "financial" server?) is already disabled on linux in rlz/buildflags/buildflags.gni , but can also be forced off with enable_rlz=false. Thus, windows/mac-only patch.
+
+ - [X] core/disable-web-environment-integrity.patch
+
+   WEI is awful, disable this in debian.
+
  - [ ] core/ungoogled-chromium/disable-profile-avatar-downloading.patch
  - [ ] core/ungoogled-chromium/disable-gcm.patch
  - [ ] core/ungoogled-chromium/disable-domain-reliability.patch

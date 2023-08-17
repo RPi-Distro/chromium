@@ -1,3 +1,9 @@
+chromium (116.0.5845.96-3) UNRELEASED; urgency=high
+
+  * d/patches/upstream hvec.patch: add arm* v4l2 build fix.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 17 Aug 2023 13:49:46 -0400
+
 chromium (116.0.5845.96-2) unstable; urgency=high
 
   * d/patches/upstream/limits.patch: Add a build fix for arm64.

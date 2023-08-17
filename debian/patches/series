@@ -20,6 +20,7 @@ upstream/mojo.patch
 upstream/statelessV4L2.patch
 upstream/contains.patch
 upstream/limits.patch
+upstream/hvec.patch
 
 disable/tests.patch
 disable/unrar.patch

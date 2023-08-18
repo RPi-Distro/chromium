@@ -1,6 +1,7 @@
 chromium (116.0.5845.96-3) UNRELEASED; urgency=high
 
   * d/patches/upstream hvec.patch: add arm* v4l2 build fix.
+  * d/rules: FTBFS if we're uploading to -security distribution w/out CVEs.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 17 Aug 2023 13:49:46 -0400
 

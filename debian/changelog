@@ -1,3 +1,9 @@
+chromium (116.0.5845.110-2) unstable; urgency=high
+
+  * Remove Bullseye-specific workarounds from debian/rules (closes: #1038679).
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Wed, 23 Aug 2023 13:25:00 -0500
+
 chromium (116.0.5845.110-1) unstable; urgency=high
 
   [ Timothy Pearson ]

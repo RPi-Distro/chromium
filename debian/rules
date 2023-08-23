@@ -136,10 +136,10 @@ override_dh_auto_configure:
 	# use system rollup
 	cp -ra /usr/share/nodejs/rollup third_party/node/node_modules/
 	# bullseye workarounds; delete this post-bullseye
-	cp -ra /usr/share/nodejs/acorn  third_party/node/node_modules/
-	cp -ra /usr/share/nodejs/acorn-walk third_party/node/node_modules/walk
-	sed -i -e "s#'acorn-walk'#'walk'#" third_party/node/node_modules/rollup/dist/es/shared/rollup.js
-	sed -i -e "s#'acorn-walk'#'walk'#" third_party/node/node_modules/rollup/dist/shared/rollup.js
+	#cp -ra /usr/share/nodejs/acorn  third_party/node/node_modules/
+	#cp -ra /usr/share/nodejs/acorn-walk third_party/node/node_modules/walk
+	#sed -i -e "s#'acorn-walk'#'walk'#" third_party/node/node_modules/rollup/dist/es/shared/rollup.js
+	#sed -i -e "s#'acorn-walk'#'walk'#" third_party/node/node_modules/rollup/dist/shared/rollup.js
 	# output compiler information
 	$(CXX) --version
 	# prefer unbundled (system) libraries

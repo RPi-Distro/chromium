@@ -17,9 +17,6 @@ chromium (116.0.5845.110-1) unstable; urgency=high
       Reported by Sergei Glazunov of Google Project Zero.
     - CVE-2023-4431: Out of bounds memory access in Fonts.
       Reported by Microsoft Security Researcher.
-    - CVE-2023-4074 Use after free in Blink Task Scheduling [53]1450899 High 
-    - CVE-2023-3732 Out of bounds memory access in Mojo [54]1459124 High 
-    - CVE-2023-4076 Use after free in WebRTC Giuliana Pritchard
 
   [ Andres Salomon ]
   * d/patches/upstream hvec.patch: add arm* v4l2 build fix.

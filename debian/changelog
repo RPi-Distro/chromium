@@ -1,3 +1,14 @@
+chromium (116.0.5845.140-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-4572: Use after free in MediaStream.
+      Reported by fwnfwn(@_fwnfwn).
+  * Drop d/chromium.conffiles; it's been a year (and major debian release)
+    since started deleting /etc/chromium/policies/recommended/duckduckgo.json
+    (closes: #1024981).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 30 Aug 2023 04:14:41 -0400
+
 chromium (116.0.5845.110-1~deb12u1) bookworm-security; urgency=high
 
   [ Timothy Pearson ]

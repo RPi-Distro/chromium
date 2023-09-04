@@ -1,3 +1,11 @@
+chromium (116.0.5845.140-2) UNRELEASED; urgency=low
+
+  * d/patches/ppc64le:
+    - 0001-Add-PPC64-support-for-boringssl.patch: Fix incorrect function call
+      parameter types in gmult_func() and ghash_func() implementations
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Mon, 04 Sep 2023 12:41:00 -0500
+
 chromium (116.0.5845.140-1) unstable; urgency=high
 
   * New upstream security release.

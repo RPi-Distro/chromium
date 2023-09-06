@@ -1,3 +1,20 @@
+chromium (116.0.5845.180-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon]
+  * New upstream security release.
+    - CVE-2023-4761: Out of bounds memory access in FedCM. Reported by DarkNavy.
+    - CVE-2023-4762: Type Confusion in V8. Reported by Rong Jian of VRI.
+    - CVE-2023-4763: Use after free in Networks. Reported by anonymous.
+    - CVE-2023-4764: Incorrect security UI in BFCache.
+      Reported by Irvan Kurniawan (sourc7).
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - 0001-Add-PPC64-support-for-boringssl.patch: Fix incorrect function call
+      parameter types in gmult_func() and ghash_func() implementations
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 05 Sep 2023 19:10:10 -0400
+
 chromium (116.0.5845.140-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

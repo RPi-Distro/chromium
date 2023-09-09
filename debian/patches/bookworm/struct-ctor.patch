@@ -102,8 +102,8 @@ that initialize (or don't, in some cases) the members of the struct.
 +#endif  // UI_BASE_WAYLAND_COLOR_MANAGER_UTIL_H_
 --- a/net/dns/host_resolver_cache.h
 +++ b/net/dns/host_resolver_cache.h
-@@ -120,6 +120,7 @@ class NET_EXPORT HostResolverCache final
-   struct Key {
+@@ -122,6 +122,7 @@ class NET_EXPORT HostResolverCache final
+ 
      std::string domain_name;
      NetworkAnonymizationKey network_anonymization_key;
 +    Key(auto dn, auto nak) : domain_name(dn), network_anonymization_key(nak) { }
@@ -150,7 +150,7 @@ that initialize (or don't, in some cases) the members of the struct.
      }
 --- a/chrome/browser/content_settings/one_time_permission_provider.h
 +++ b/chrome/browser/content_settings/one_time_permission_provider.h
-@@ -86,6 +86,8 @@ class OneTimePermissionProvider
+@@ -92,6 +92,8 @@ class OneTimePermissionProvider
      ContentSettingsType type;
      ContentSettingsPattern primary_pattern;
      ContentSettingsPattern secondary_pattern;

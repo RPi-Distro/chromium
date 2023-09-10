@@ -44,7 +44,6 @@ system/rollup.patch
 bookworm/clang-attribs.patch
 bookworm/typename.patch
 bookworm/structured-binding-scope-bug.patch
-bookworm/brotli.patch
 bookworm/struct-ctor.patch
 
 bullseye/clang13.patch

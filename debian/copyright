@@ -75,7 +75,6 @@ Files-Excluded:
  android_webview
  third_party/jsoncpp
  third_party/woff2
- third_party/brotli
  third_party/angle/src/third_party/libXNVCtrl
  third_party/opus
  third_party/flac

@@ -3,18 +3,18 @@ chromium (117.0.5938.48-1) unstable; urgency=high
   * New upstream stable release.
   * d/copyright: drop rust, llvm, siso, & cargo binaries.
   * d/patches:
-   - fixes/size.patch: drop, merged upstream.
-   - fixes/variant.patch: drop, merged upstream.
-   - fixes/vector.patch: drop, merged upstream.
-   - upstream/contains.patch: drop, merged upstream.
-   - upstream/hvec.patch: drop, merged upstream.
-   - upstream/limits.patch: drop, merged upstream.
-   - upstream/statelessV4L2.patch: drop, merged upstream.
-   - fixes/widevine-locations.patch: refresh for minor upstream changes.
-   - disable/android.patch: drop half the patch.
-   - disable/catapult.patch: refresh for minor upstream changes.
-   - disable/tests.patch: refresh for minor upstream changes.
-   - disable/unrar.patch: refresh for minor upstream changes.
+    - fixes/size.patch: drop, merged upstream.
+    - fixes/variant.patch: drop, merged upstream.
+    - fixes/vector.patch: drop, merged upstream.
+    - upstream/contains.patch: drop, merged upstream.
+    - upstream/hvec.patch: drop, merged upstream.
+    - upstream/limits.patch: drop, merged upstream.
+    - upstream/statelessV4L2.patch: drop, merged upstream.
+    - fixes/widevine-locations.patch: refresh for minor upstream changes.
+    - disable/android.patch: drop half the patch.
+    - disable/catapult.patch: refresh for minor upstream changes.
+    - disable/tests.patch: refresh for minor upstream changes.
+    - disable/unrar.patch: refresh for minor upstream changes.
     - fixes/material-utils.patch: build fix for clang w/ libstdc++.
     - rename fixes/null.patch to fixes/perfetto.patch.
     - upstream/memory.patch: build fix for missing header.

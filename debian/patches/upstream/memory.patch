@@ -1,0 +1,24 @@
+commit 5a8dfcaf84b5af5aeb738702651e98bfc43d6d45
+Author: Stephan Hartmann <stha09@googlemail.com>
+Date:   Wed Aug 9 15:36:26 2023 +0000
+
+    IWYU: add memory for std::unique_ptr in //third_party/ipcz
+    
+    Bug: 957519
+    Change-Id: I600f415a59206da283046b638a4f68eda0892ac7
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/4754274
+    Commit-Queue: Stephan Hartmann <stha09@googlemail.com>
+    Reviewed-by: Robert Sesek <rsesek@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1181503}
+
+
+--- a/third_party/ipcz/src/ipcz/router_link.h
++++ b/third_party/ipcz/src/ipcz/router_link.h
+@@ -7,6 +7,7 @@
+ 
+ #include <cstddef>
+ #include <functional>
++#include <memory>
+ #include <string>
+ #include <utility>
+ 

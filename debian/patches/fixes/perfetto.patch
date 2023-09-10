@@ -2,9 +2,19 @@ author: Andres Salomon <dilinger@debian.org>
 
 More simple build fixes needed by libstdc++-dev 13
 
---- a/third_party/perfetto/src/trace_processor/prelude/functions/create_function.cc
-+++ b/third_party/perfetto/src/trace_processor/prelude/functions/create_function.cc
-@@ -135,7 +135,7 @@ struct StoredSqlValue {
+--- a/third_party/perfetto/src/trace_processor/sqlite/sql_source.h
++++ b/third_party/perfetto/src/trace_processor/sqlite/sql_source.h
+@@ -17,6 +17,7 @@
+ #ifndef SRC_TRACE_PROCESSOR_SQLITE_SQL_SOURCE_H_
+ #define SRC_TRACE_PROCESSOR_SQLITE_SQL_SOURCE_H_
+ 
++#include <cstdint>
+ #include <optional>
+ #include <string>
+ #include <string_view>
+--- a/third_party/perfetto/src/trace_processor/perfetto_sql/engine/created_function.cc
++++ b/third_party/perfetto/src/trace_processor/perfetto_sql/engine/created_function.cc
+@@ -107,7 +107,7 @@ struct StoredSqlValue {
    // the destructors run correctly for non-trivial members of the
    // union.
    using Data =
@@ -13,7 +23,7 @@ More simple build fixes needed by libstdc++-dev 13
  
    StoredSqlValue(SqlValue value) {
      switch (value.type) {
-@@ -160,7 +160,7 @@ struct StoredSqlValue {
+@@ -132,7 +132,7 @@ struct StoredSqlValue {
    }
  
    SqlValue AsSqlValue() {
@@ -22,13 +32,3 @@ More simple build fixes needed by libstdc++-dev 13
        return SqlValue();
      } else if (std::holds_alternative<int64_t>(data)) {
        return SqlValue::Long(std::get<int64_t>(data));
---- a/third_party/perfetto/src/trace_processor/sqlite/sqlite_tokenizer.h
-+++ b/third_party/perfetto/src/trace_processor/sqlite/sqlite_tokenizer.h
-@@ -19,6 +19,7 @@
- 
- #include <optional>
- #include <string_view>
-+#include <cstdint>
- 
- namespace perfetto {
- namespace trace_processor {

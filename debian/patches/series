@@ -11,8 +11,11 @@ fixes/SkColor4f-init.patch
 fixes/gcc13-with-clang14.patch
 fixes/gcc13-headers.patch
 fixes/rust-clanglib.patch
+fixes/material-utils.patch
+fixes/perfetto.patch
 
 upstream/mojo.patch
+upstream/memory.patch
 
 disable/tests.patch
 disable/unrar.patch

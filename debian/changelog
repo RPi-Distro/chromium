@@ -18,6 +18,16 @@ chromium (117.0.5938.48-1) unstable; urgency=high
     - fixes/material-utils.patch: build fix for clang w/ libstdc++.
     - rename fixes/null.patch to fixes/perfetto.patch.
     - upstream/memory.patch: build fix for missing header.
+    - bookworm/struct-ctor.patch: add a bunch more build workarounds for
+      clang-14.
+    - bookworm/stringpiece3.patch: another clang-14 StringPiece to
+      std::string explicit conversion.
+    - bookworm/typename.patch: add more explicit typename declarations for
+      clang-14.
+    - bookworm/structured-binding-scope-bug.patch: add more clang-14 binding
+      scope workarounds.
+    - bookworm/initialize-const-ctor.patch: clang-14 workaround to init a
+      const member inside a struct.
   * Switch to using bundled brotli, as the version in debian is too old.
     And so we can drop d/patches/bookworm/brotli.patch, too.
 

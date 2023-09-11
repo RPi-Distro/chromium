@@ -46,8 +46,10 @@ system/rollup.patch
 
 bookworm/clang-attribs.patch
 bookworm/typename.patch
-bookworm/structured-binding-scope-bug.patch
 bookworm/struct-ctor.patch
+bookworm/structured-binding-scope-bug.patch
+bookworm/stringpiece3.patch
+bookworm/initialize-const-ctor.patch
 
 bullseye/clang13.patch
 bullseye/constexpr.patch

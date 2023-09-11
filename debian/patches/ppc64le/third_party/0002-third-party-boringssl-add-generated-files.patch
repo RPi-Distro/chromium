@@ -1,8 +1,8 @@
-Index: chromium-116.0.5845.82/third_party/boringssl/BUILD.generated.gni
+Index: chromium-117.0.5938.48/third_party/boringssl/BUILD.generated.gni
 ===================================================================
---- chromium-116.0.5845.82.orig/third_party/boringssl/BUILD.generated.gni
-+++ chromium-116.0.5845.82/third_party/boringssl/BUILD.generated.gni
-@@ -95,6 +95,7 @@ crypto_sources = [
+--- chromium-117.0.5938.48.orig/third_party/boringssl/BUILD.generated.gni
++++ chromium-117.0.5938.48/third_party/boringssl/BUILD.generated.gni
+@@ -96,6 +96,7 @@ crypto_sources = [
    "src/crypto/cpu_arm_linux.h",
    "src/crypto/cpu_arm_openbsd.c",
    "src/crypto/cpu_intel.c",
@@ -10,41 +10,20 @@ Index: chromium-116.0.5845.82/third_party/boringssl/BUILD.generated.gni
    "src/crypto/crypto.c",
    "src/crypto/curve25519/curve25519.c",
    "src/crypto/curve25519/curve25519_64_adx.c",
-@@ -734,6 +735,12 @@ crypto_sources_linux_arm = [
-   "src/crypto/poly1305/poly1305_arm_asm.S",
- ]
- 
-+crypto_sources_linux_ppc64le = [
+@@ -390,6 +391,9 @@ crypto_sources_asm = [
+   "linux-arm/crypto/fipsmodule/sha512-armv4-linux.S",
+   "linux-arm/crypto/fipsmodule/vpaes-armv7-linux.S",
+   "linux-arm/crypto/test/trampoline-armv4-linux.S",
 +  "linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S",
 +  "linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S",
 +  "linux-ppc64le/crypto/test/trampoline-ppc-linux.S",
-+]
-+
- crypto_sources_linux_x86 = [
    "linux-x86/crypto/chacha/chacha-x86-linux.S",
    "linux-x86/crypto/fipsmodule/aesni-x86-linux.S",
-Index: chromium-116.0.5845.82/third_party/boringssl/BUILD.gn
-===================================================================
---- chromium-116.0.5845.82.orig/third_party/boringssl/BUILD.gn
-+++ chromium-116.0.5845.82/third_party/boringssl/BUILD.gn
-@@ -155,6 +155,13 @@ if (is_win && !is_msan && current_cpu !=
-       } else {
-         public_configs = [ ":no_asm_config" ]
-       }
-+    } else if (current_cpu == "ppc64") {
-+      if (is_linux) {
-+        # TODO: ppc64 (be) check
-+        sources += crypto_sources_linux_ppc64le
-+      } else {
-+        public_configs = [ ":no_asm_config" ]
-+      }
-     } else {
-       public_configs = [ ":no_asm_config" ]
-     }
-Index: chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
+   "linux-x86/crypto/fipsmodule/bn-586-linux.S",
+Index: chromium-117.0.5938.48/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
++++ chromium-117.0.5938.48/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
 @@ -0,0 +1,3673 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -3719,10 +3698,10 @@ Index: chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/fipsmod
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-Index: chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
+Index: chromium-117.0.5938.48/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
++++ chromium-117.0.5938.48/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
 @@ -0,0 +1,590 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -4314,10 +4293,10 @@ Index: chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/fipsmod
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-Index: chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
+Index: chromium-117.0.5938.48/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-116.0.5845.82/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
++++ chromium-117.0.5938.48/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
 @@ -0,0 +1,1413 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.

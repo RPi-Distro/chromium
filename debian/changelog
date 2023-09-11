@@ -1,5 +1,6 @@
 chromium (117.0.5938.48-1) unstable; urgency=high
 
+  [ Andres Salomon]
   * New upstream stable release.
   * d/copyright: drop rust, llvm, siso, & cargo binaries.
   * d/patches:
@@ -31,6 +32,20 @@ chromium (117.0.5938.48-1) unstable; urgency=high
   * Switch to using bundled brotli, as the version in debian is too old.
     And so we can drop d/patches/bookworm/brotli.patch, too.
   * Switch from clang-14 to clang-16.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - 0001-Implement-support-for-PPC64-on-Linux.patch: refresh for upstream
+       changes
+    - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
+    - 0002-third-party-boringssl-add-generated-files.patch: refresh for
+       upstream changes
+    - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
+       upstream changes
+    - 0004-third_party-crashpad-port-curl-transport-ppc64.patch: refresh for
+       upstream changes
+    - skia-vsx-instructions.patch: refresh for upstream changes
+    - 0001-third_party-boringssl-Properly-detect-ppc64le-in-BUI.patch: drop
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 08 Sep 2023 19:03:54 -0400
 

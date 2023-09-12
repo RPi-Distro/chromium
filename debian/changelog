@@ -1,7 +1,27 @@
-chromium (117.0.5938.48-1) unstable; urgency=high
+chromium (117.0.5938.62-1) unstable; urgency=high
 
   [ Andres Salomon]
   * New upstream stable release.
+    - CVE-2023-4900: Inappropriate implementation in Custom Tabs.
+      Reported by Levit Nudi from Kenya.
+    - CVE-2023-4901: Inappropriate implementation in Prompts.
+      Reported by Kang Ali.
+    - CVE-2023-4902: Inappropriate implementation in Input.
+      Reported by Axel Chong.
+    - CVE-2023-4903: Inappropriate implementation in Custom Mobile Tabs.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-4904: Insufficient policy enforcement in Downloads.
+      Reported by Tudor Enache @tudorhacks.
+    - CVE-2023-4905: Inappropriate implementation in Prompts.
+      Reported by Hafiizh.
+    - CVE-2023-4906: Insufficient policy enforcement in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-4907: Inappropriate implementation in Intents.
+      Reported by Mohit Raj (shadow2639) .
+    - CVE-2023-4908: Inappropriate implementation in Picture in Picture.
+      Reported by Axel Chong.
+    - CVE-2023-4909: Inappropriate implementation in Interstitials.
+      Reported by Axel Chong.
   * d/copyright: drop rust, llvm, siso, & cargo binaries.
   * d/patches:
     - fixes/size.patch: drop, merged upstream.

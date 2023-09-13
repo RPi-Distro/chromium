@@ -50,9 +50,11 @@ chromium (117.0.5938.62-1) unstable; urgency=high
     - bookworm/initialize-const-ctor.patch: clang-14 workaround to init a
       const member inside a struct.
     - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
+    - disable/wei.patch: Ensure the "Web Environment Integrity" trial
+      defaults to off (closes: #1042111).
   * Switch to using bundled brotli, as the version in debian is too old.
     And so we can drop d/patches/bookworm/brotli.patch, too.
-  * Switch from clang-14 to clang-16.
+  * Switch from clang-14 to clang-16 (closes: #1051355).
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

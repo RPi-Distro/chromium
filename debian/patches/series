@@ -31,6 +31,7 @@ disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/angle-perftests.patch
 disable/clang-version-check.patch
+disable/wei.patch
 
 system/icu-shim.patch
 system/jpeg.patch

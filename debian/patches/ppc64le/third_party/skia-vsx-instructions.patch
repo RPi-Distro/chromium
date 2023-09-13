@@ -613,13 +613,14 @@ Index: chromium-117.0.5938.48/third_party/skia/src/opts/SkSwizzler_opts.h
 ===================================================================
 --- chromium-117.0.5938.48.orig/third_party/skia/src/opts/SkSwizzler_opts.h
 +++ chromium-117.0.5938.48/third_party/skia/src/opts/SkSwizzler_opts.h
-@@ -12,7 +12,9 @@
+@@ -12,7 +12,10 @@
  #include "src/base/SkVx.h"
  #include <utility>
  
 -#if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSSE3
 +#if defined(SK_PPC64_HAS_SSE_COMPAT)
 +    #include <emmintrin.h>
++    #include <tmmintrin.h>
 +#elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSSE3
      #include <immintrin.h>
  #elif defined(SK_ARM_HAS_NEON)

@@ -66,6 +66,7 @@ chromium (117.0.5938.62-1) unstable; urgency=high
     - 0004-third_party-crashpad-port-curl-transport-ppc64.patch: refresh for
        upstream changes
     - skia-vsx-instructions.patch: refresh for upstream changes
+    - 0003-third_party-ffmpeg-Add-ppc64-generated-config.patch: regenerate
     - 0001-third_party-boringssl-Properly-detect-ppc64le-in-BUI.patch: drop
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 08 Sep 2023 19:03:54 -0400

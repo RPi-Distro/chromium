@@ -10,7 +10,7 @@ Subject: [PATCH] Add ppc64 target to libaom
 
 --- a/third_party/libaom/BUILD.gn
 +++ b/third_party/libaom/BUILD.gn
-@@ -209,6 +209,18 @@ if (current_cpu == "arm64" || cpu_arch_f
+@@ -250,6 +250,18 @@ if (current_cpu == "arm64") {
    }
  }
  
@@ -29,9 +29,9 @@ Subject: [PATCH] Add ppc64 target to libaom
  static_library("libaom") {
    check_includes = false
    if (!is_debug && is_win) {
-@@ -265,6 +277,9 @@ static_library("libaom") {
-     sources +=
-         [ "//third_party/libaom/source/libaom/aom_ports/arm_cpudetect.c" ]
+@@ -314,6 +326,9 @@ static_library("libaom") {
+     # This is needed by all arm boards due to aom_arm_cpu_caps()
+     sources += [ "source/libaom/aom_ports/aarch32_cpudetect.c" ]
    }
 +  if (current_cpu == "ppc64") {
 +    deps += [ ":libaom_intrinsics_vsx" ]
@@ -41,7 +41,7 @@ Subject: [PATCH] Add ppc64 target to libaom
    }
 --- a/third_party/libaom/cmake_update.sh
 +++ b/third_party/libaom/cmake_update.sh
-@@ -204,6 +204,9 @@ gen_config_files ios/arm64 \
+@@ -206,6 +206,9 @@ gen_config_files ios/arm64 \
    "${toolchain}/arm64-ios.cmake -DCMAKE_INSTALL_NAME_TOOL=no-such-command \
     ${all_platforms}"
  
@@ -49,5 +49,5 @@ Subject: [PATCH] Add ppc64 target to libaom
 +gen_config_files linux/ppc64 "${toolchain}/ppc-linux-gcc.cmake ${all_platforms}"
 +
  # Copy linux configurations and modify for Windows.
- reset_dirs win/arm64
- cp "${CFG}/linux/arm64/config"/* "${CFG}/win/arm64/config/"
+ reset_dirs win/arm64-cpu-detect
+ cp "${CFG}/linux/arm64-cpu-detect/config"/* \

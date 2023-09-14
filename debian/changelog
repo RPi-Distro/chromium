@@ -50,6 +50,8 @@ chromium (117.0.5938.62-1) unstable; urgency=high
     - bookworm/initialize-const-ctor.patch: clang-14 workaround to init a
       const member inside a struct.
     - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
+    - disable/privacy-sandbox.patch: ensure Privacy Sandbox "features" are
+      off by default.
   * Switch to using bundled brotli, as the version in debian is too old.
     And so we can drop d/patches/bookworm/brotli.patch, too.
   * Switch from clang-14 to clang-16 (closes: #1051355).
@@ -72,7 +74,7 @@ chromium (117.0.5938.62-1) unstable; urgency=high
     - core/ungoogled-chromium/disable-web-environment-integrity.patch: disable
       "Web Environment Integrity" trial and remove from build (closes: #1042111)
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 08 Sep 2023 19:03:54 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 13 Sep 2023 22:26:10 -0400
 
 chromium (116.0.5845.180-1) unstable; urgency=high
 

@@ -1,0 +1,36 @@
+Disable Privacy Sandbox by default, based on
+https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/core/ungoogled-chromium/disable-privacy-sandbox.patch
+
+--- a/components/privacy_sandbox/privacy_sandbox_prefs.cc
++++ b/components/privacy_sandbox/privacy_sandbox_prefs.cc
+@@ -11,7 +11,7 @@ namespace privacy_sandbox {
+ 
+ void RegisterProfilePrefs(PrefRegistrySimple* registry) {
+   registry->RegisterBooleanPref(
+-      prefs::kPrivacySandboxApisEnabled, true,
++      prefs::kPrivacySandboxApisEnabled, false,
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+   registry->RegisterBooleanPref(prefs::kPrivacySandboxApisEnabledV2, false);
+   registry->RegisterBooleanPref(prefs::kPrivacySandboxM1ConsentDecisionMade,
+--- a/content/browser/aggregation_service/aggregation_service_features.cc
++++ b/content/browser/aggregation_service/aggregation_service_features.cc
+@@ -9,7 +9,7 @@ namespace content {
+ // Enables the Aggregation Service. See crbug.com/1207974.
+ BASE_FEATURE(kPrivacySandboxAggregationService,
+              "PrivacySandboxAggregationService",
+-             base::FEATURE_ENABLED_BY_DEFAULT);
++             base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ const base::FeatureParam<std::string>
+     kPrivacySandboxAggregationServiceTrustedServerUrlAwsParam{
+--- a/third_party/blink/common/features.cc
++++ b/third_party/blink/common/features.cc
+@@ -544,7 +544,7 @@ BASE_FEATURE(kContentCaptureConstantStre
+ // Controls whether the Conversion Measurement API infrastructure is enabled.
+ BASE_FEATURE(kConversionMeasurement,
+              "ConversionMeasurement",
+-             base::FEATURE_ENABLED_BY_DEFAULT);
++             base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ BASE_FEATURE(kCorrectFloatExtensionTestForWebGL,
+              "CorrectFloatExtensionTestForWebGL",

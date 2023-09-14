@@ -9,16 +9,11 @@ fixes/widevine-locations.patch
 fixes/brandversion-construct.patch
 fixes/SkColor4f-init.patch
 fixes/rust-clanglib.patch
-fixes/vector.patch
-fixes/variant.patch
-fixes/null.patch
-fixes/size.patch
+fixes/material-utils.patch
+fixes/perfetto.patch
 
 upstream/mojo.patch
-upstream/statelessV4L2.patch
-upstream/contains.patch
-upstream/limits.patch
-upstream/hvec.patch
+upstream/memory.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -34,6 +29,7 @@ disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/angle-perftests.patch
 disable/clang-version-check.patch
+disable/privacy-sandbox.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -49,9 +45,11 @@ system/rollup.patch
 
 bookworm/clang-attribs.patch
 bookworm/typename.patch
-bookworm/structured-binding-scope-bug.patch
-bookworm/brotli.patch
 bookworm/struct-ctor.patch
+bookworm/structured-binding-scope-bug.patch
+bookworm/stringpiece3.patch
+bookworm/initialize-const-ctor.patch
+bookworm/generate-ninja.patch
 
 bullseye/clang13.patch
 bullseye/constexpr.patch
@@ -80,7 +78,6 @@ ppc64le/sandbox/0008-sandbox-fix-ppc64le-glibc234.patch
 
 ppc64le/third_party/0001-third_party-angle-Include-missing-header-cstddef-in-.patch
 ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
-ppc64le/third_party/0001-third_party-boringssl-Properly-detect-ppc64le-in-BUI.patch
 ppc64le/third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
 ppc64le/third_party/0001-third_party-lss-Don-t-look-for-mmap2-on-ppc64.patch
 ppc64le/third_party/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
@@ -139,3 +136,6 @@ ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch
 # These patches enable full POWER ISA 3.0 (POWER9) acceleration when applied
 # They will not work on POWER8 (ISA 2.07) or below
 #ppc64le/core/baseline-isa-3-0.patch
+
+# Ungoogled Chromium
+ungoogled/core/ungoogled-chromium/disable-web-environment-integrity.patch

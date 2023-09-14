@@ -41,7 +41,7 @@ export CXXFLAGS+=-fno-delete-null-pointer-checks
 defines=clang_use_chrome_plugins=false
 
 # use system rust
-export CLANG_VERS="$(shell $(CC) --version| sed -n 's/Debian clang version //p')"
+export CLANG_VERS="$(shell $(CC) --version| sed -n 's/Debian clang version //p' | sed 's/ (.*)//')"
 defines+=rust_sysroot_absolute=\"/usr\"
 defines+=rustc_version=\"$(shell rustc --version)\"
 defines+=enable_rust=false

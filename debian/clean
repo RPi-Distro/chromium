@@ -27,7 +27,6 @@ build/config/freetype/freetype.gni
 third_party/yasm/run_yasm.py
 
 third_party/jsoncpp/BUILD.gn
-third_party/brotli/BUILD.gn
 base/third_party/double_conversion/BUILD.gn
 third_party/angle/src/third_party/libXNVCtrl/BUILD.gn
 third_party/woff2/BUILD.gn

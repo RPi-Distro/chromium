@@ -1,3 +1,81 @@
+chromium (117.0.5938.62-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon]
+  * New upstream stable release.
+    - CVE-2023-4900: Inappropriate implementation in Custom Tabs.
+      Reported by Levit Nudi from Kenya.
+    - CVE-2023-4901: Inappropriate implementation in Prompts.
+      Reported by Kang Ali.
+    - CVE-2023-4902: Inappropriate implementation in Input.
+      Reported by Axel Chong.
+    - CVE-2023-4903: Inappropriate implementation in Custom Mobile Tabs.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-4904: Insufficient policy enforcement in Downloads.
+      Reported by Tudor Enache @tudorhacks.
+    - CVE-2023-4905: Inappropriate implementation in Prompts.
+      Reported by Hafiizh.
+    - CVE-2023-4906: Insufficient policy enforcement in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-4907: Inappropriate implementation in Intents.
+      Reported by Mohit Raj (shadow2639) .
+    - CVE-2023-4908: Inappropriate implementation in Picture in Picture.
+      Reported by Axel Chong.
+    - CVE-2023-4909: Inappropriate implementation in Interstitials.
+      Reported by Axel Chong.
+  * d/copyright: drop rust, llvm, siso, & cargo binaries.
+  * d/patches:
+    - fixes/size.patch: drop, merged upstream.
+    - fixes/variant.patch: drop, merged upstream.
+    - fixes/vector.patch: drop, merged upstream.
+    - upstream/contains.patch: drop, merged upstream.
+    - upstream/hvec.patch: drop, merged upstream.
+    - upstream/limits.patch: drop, merged upstream.
+    - upstream/statelessV4L2.patch: drop, merged upstream.
+    - fixes/widevine-locations.patch: refresh for minor upstream changes.
+    - disable/android.patch: drop half the patch.
+    - disable/catapult.patch: refresh for minor upstream changes.
+    - disable/tests.patch: refresh for minor upstream changes.
+    - disable/unrar.patch: refresh for minor upstream changes.
+    - fixes/material-utils.patch: build fix for clang w/ libstdc++.
+    - rename fixes/null.patch to fixes/perfetto.patch.
+    - upstream/memory.patch: build fix for missing header.
+    - bookworm/struct-ctor.patch: add a bunch more build workarounds for
+      clang-14.
+    - bookworm/stringpiece3.patch: another clang-14 StringPiece to
+      std::string explicit conversion.
+    - bookworm/typename.patch: add more explicit typename declarations for
+      clang-14.
+    - bookworm/structured-binding-scope-bug.patch: add more clang-14 binding
+      scope workarounds.
+    - bookworm/initialize-const-ctor.patch: clang-14 workaround to init a
+      const member inside a struct.
+    - ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch: refresh.
+    - disable/privacy-sandbox.patch: ensure Privacy Sandbox "features" are
+      off by default.
+    - bookworm/generate-ninja.patch: fix build failure w/ bookworm's older gn.
+  * Switch to using bundled brotli, as the version in debian is too old.
+    And so we can drop d/patches/bookworm/brotli.patch, too.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - 0001-Implement-support-for-PPC64-on-Linux.patch: refresh for upstream
+       changes
+    - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
+    - 0002-third-party-boringssl-add-generated-files.patch: refresh for
+       upstream changes
+    - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
+       upstream changes
+    - 0004-third_party-crashpad-port-curl-transport-ppc64.patch: refresh for
+       upstream changes
+    - skia-vsx-instructions.patch: refresh for upstream changes
+    - 0003-third_party-ffmpeg-Add-ppc64-generated-config.patch: regenerate
+    - 0001-third_party-boringssl-Properly-detect-ppc64le-in-BUI.patch: drop
+  * d/patches/ungoogled:
+    - core/ungoogled-chromium/disable-web-environment-integrity.patch: disable
+      "Web Environment Integrity" trial and remove from build (closes: #1042111)
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 13 Sep 2023 22:26:10 -0400
+
 chromium (116.0.5845.180-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon]

@@ -1,0 +1,24 @@
+author: Andres Salomon <dilinger@debian.org>
+
+./../content/browser/interest_group/header_direct_from_seller_signals.h:43:3: warning: explicitly defaulted default constructor is implicitly deleted [-Wdefaulted-function-deleted]
+  HeaderDirectFromSellerSignals() = default;
+  ^
+../../content/browser/interest_group/header_direct_from_seller_signals.h:89:37: note: default constructor of 'HeaderDirectFromSellerSignals' is implicitly deleted because field 'seller_signals_' of const-qualified type 'const absl::optional<std::string>' (aka 'const optional<basic_string<char>>') would not be initialized
+  const absl::optional<std::string> seller_signals_;
+                                    ^
+
+So we need to explicitly initialize the const class members in every constructor.
+
+
+--- a/content/browser/interest_group/header_direct_from_seller_signals.cc
++++ b/content/browser/interest_group/header_direct_from_seller_signals.cc
+@@ -187,7 +187,8 @@ void OnJsonDecoded(std::unique_ptr<const
+ 
+ }  // namespace
+ 
+-HeaderDirectFromSellerSignals::HeaderDirectFromSellerSignals() = default;
++HeaderDirectFromSellerSignals::HeaderDirectFromSellerSignals() :
++  seller_signals_(absl::nullopt), auction_signals_(absl::nullopt) { }
+ 
+ HeaderDirectFromSellerSignals::~HeaderDirectFromSellerSignals() = default;
+ 

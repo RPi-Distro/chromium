@@ -102,8 +102,8 @@ that initialize (or don't, in some cases) the members of the struct.
 +#endif  // UI_BASE_WAYLAND_COLOR_MANAGER_UTIL_H_
 --- a/net/dns/host_resolver_cache.h
 +++ b/net/dns/host_resolver_cache.h
-@@ -120,6 +120,7 @@ class NET_EXPORT HostResolverCache final
-   struct Key {
+@@ -122,6 +122,7 @@ class NET_EXPORT HostResolverCache final
+ 
      std::string domain_name;
      NetworkAnonymizationKey network_anonymization_key;
 +    Key(auto dn, auto nak) : domain_name(dn), network_anonymization_key(nak) { }
@@ -150,7 +150,7 @@ that initialize (or don't, in some cases) the members of the struct.
      }
 --- a/chrome/browser/content_settings/one_time_permission_provider.h
 +++ b/chrome/browser/content_settings/one_time_permission_provider.h
-@@ -86,6 +86,8 @@ class OneTimePermissionProvider
+@@ -92,6 +92,8 @@ class OneTimePermissionProvider
      ContentSettingsType type;
      ContentSettingsPattern primary_pattern;
      ContentSettingsPattern secondary_pattern;
@@ -159,3 +159,74 @@ that initialize (or don't, in some cases) the members of the struct.
    };
  
    void DeleteEntriesAndNotify(
+--- a/base/trace_event/trace_log.h
++++ b/base/trace_event/trace_log.h
+@@ -422,6 +422,8 @@ class BASE_EXPORT TraceLog :
+     uint32_t internal_instance_index;
+     perfetto::DataSourceConfig config;
+     perfetto::BackendType backend_type = perfetto::kUnspecifiedBackend;
++    TrackEventSession(auto iii, auto c, auto bt) : internal_instance_index(iii),
++      config(c), backend_type(bt) { }
+   };
+   std::vector<TrackEventSession> GetTrackEventSessions() const;
+ 
+--- a/components/download/public/common/download_save_item_data.h
++++ b/components/download/public/common/download_save_item_data.h
+@@ -27,6 +27,7 @@ class COMPONENTS_DOWNLOAD_EXPORT Downloa
+     // The referrer url for this file. (In case of a package download this is
+     // the main page for the other resources.)
+     GURL referrer_url;
++    ItemInfo(auto fp, u, ru) : file_path(fp), url(u), referrer_url(ru) { }
+   };
+ 
+   explicit DownloadSaveItemData(std::vector<ItemInfo>&& item_infos);
+--- a/content/browser/fenced_frame/fenced_frame_reporter.h
++++ b/content/browser/fenced_frame/fenced_frame_reporter.h
+@@ -42,6 +42,7 @@ class RenderFrameHostImpl;
+ struct DestinationEnumEvent {
+   std::string type;
+   std::string data;
++  DestinationEnumEvent(auto t, auto d) : type(t), data(d) { }
+ };
+ 
+ // An event to be sent to a custom url.
+@@ -49,6 +50,7 @@ struct DestinationEnumEvent {
+ // TODO(gtanzer): Macros are substituted using the `ReportingMacroMap`.
+ struct DestinationURLEvent {
+   GURL url;
++  DestinationURLEvent(auto u) : url(u) { }
+ };
+ 
+ // Class that receives report events from fenced frames, and uses a
+--- a/third_party/blink/renderer/platform/fonts/font_palette.h
++++ b/third_party/blink/renderer/platform/fonts/font_palette.h
+@@ -69,6 +69,8 @@ class PLATFORM_EXPORT FontPalette : publ
+       return start == other.start && end == other.end;
+       ;
+     }
++    NonNormalizedPercentages(auto s, auto e) : start(s), end(e) { }
++    NonNormalizedPercentages() : start(0.0), end(0.0) { }
+   };
+ 
+   static scoped_refptr<FontPalette> Create() {
+--- a/ui/linux/linux_ui.h
++++ b/ui/linux/linux_ui.h
+@@ -68,6 +68,7 @@ struct DisplayGeometry {
+ 
+   gfx::Rect bounds_px;
+   float scale;
++  DisplayGeometry(auto bp, auto s) : bounds_px(bp), scale(s) { }
+ };
+ 
+ struct DisplayConfig {
+--- a/chrome/browser/enterprise/profile_management/profile_management_navigation_throttle.cc
++++ b/chrome/browser/enterprise/profile_management/profile_management_navigation_throttle.cc
+@@ -50,6 +50,8 @@ struct SAMLProfileAttributes {
+   std::string name;
+   std::string domain;
+   std::string token;
++  SAMLProfileAttributes(auto n, auto d, auto t) : name(n), domain(d), token(t) { }
++  SAMLProfileAttributes() { }
+ };
+ 
+ constexpr char kNameAttributeKey[] = "name";

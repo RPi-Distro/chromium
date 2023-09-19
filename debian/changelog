@@ -1,3 +1,10 @@
+chromium (117.0.5938.62-1~deb12u2) UNRELEASED; urgency=high
+
+  * d/patches:
+    - bookworm/i386-lock-free.patch: add to fix i386 build failure.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 13 Sep 2023 22:26:10 -0400
+
 chromium (117.0.5938.62-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon]

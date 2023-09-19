@@ -1,0 +1,28 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Clang less than v15 has issues with
+std:atomic<uint64_t>::is_always_lock_free on i386 (and only on i386).
+On 15 and above, it's true, but below that it is false. So instead,
+rely on a runtime is_lock_free() check.
+
+--- a/services/network/restricted_cookie_manager.cc
++++ b/services/network/restricted_cookie_manager.cc
+@@ -347,6 +347,7 @@ RestrictedCookieManager::RestrictedCooki
+   DCHECK(cookie_store);
+   DCHECK(!cookie_setting_overrides_.Has(
+       net::CookieSettingOverride::kStorageAccessGrantEligible));
++  ASSERT(SharedVersionType.is_lock_free());
+   if (role == mojom::RestrictedCookieManagerRole::SCRIPT) {
+       CHECK(origin_.IsSameOriginWith(isolation_info_.frame_origin().value()));
+   }
+--- a/services/network/restricted_cookie_manager.h
++++ b/services/network/restricted_cookie_manager.h
+@@ -182,8 +182,6 @@ class COMPONENT_EXPORT(NETWORK_SERVICE)
+ 
+  private:
+   using SharedVersionType = std::atomic<uint64_t>;
+-  static_assert(SharedVersionType::is_always_lock_free,
+-                "Usage of SharedVersionType across processes might be unsafe");
+ 
+   // Function to be called when an event is known to potentially invalidate
+   // cookies the other side could have cached.

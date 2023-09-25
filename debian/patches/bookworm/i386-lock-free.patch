@@ -7,11 +7,20 @@ rely on a runtime is_lock_free() check.
 
 --- a/services/network/restricted_cookie_manager.cc
 +++ b/services/network/restricted_cookie_manager.cc
-@@ -347,6 +347,7 @@ RestrictedCookieManager::RestrictedCooki
+@@ -4,6 +4,7 @@
+ 
+ #include "services/network/restricted_cookie_manager.h"
+ 
++#include <cassert>
+ #include <memory>
+ #include <utility>
+ #include <vector>
+@@ -347,6 +348,8 @@ RestrictedCookieManager::RestrictedCooki
    DCHECK(cookie_store);
    DCHECK(!cookie_setting_overrides_.Has(
        net::CookieSettingOverride::kStorageAccessGrantEligible));
-+  ASSERT(SharedVersionType.is_lock_free());
++  SharedVersionType svt;
++  assert(svt.is_lock_free() && "SharedVersionType must be lock free!");
    if (role == mojom::RestrictedCookieManagerRole::SCRIPT) {
        CHECK(origin_.IsSameOriginWith(isolation_info_.frame_origin().value()));
    }

@@ -64,7 +64,7 @@ ifeq (arm64,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"arm64\" use_v4l2_codec=true use_vaapi=false
 endif
 ifeq (armhf,$(DEB_HOST_ARCH))
-defines+=host_cpu=\"arm\" use_v4l2_codec=true use_vaapi=false arm_use_neon=false
+defines+=host_cpu=\"arm\" use_v4l2_codec=true use_vaapi=false arm_use_neon=true
 endif
 
 # disabled features
@@ -122,7 +122,17 @@ DIST := $(shell dpkg-parsechangelog -l debian/changelog  | sed -n 's/^Distributi
 %:
 	dh $@
 
-override_dh_auto_configure:
+
+# don't build armhf on build systems that lack NEON
+test_armhf_neon:
+	if [ `uname -m` = "armv7l" ]; then \
+		grep -q 'neon\|asimd' /proc/cpuinfo || { \
+			echo "No NEON extension detected on armhf, refusing to build" 1>&2; \
+			false; \
+		}; \
+	fi
+
+override_dh_auto_configure: test_armhf_neon
 	# verify that we're not accidentally uploading to stable-security without CVEs
 	@echo "$(DIST)" | grep -q -- '-security' && { \
 		dpkg-parsechangelog -l debian/changelog | grep -q 'CVE-' || { \

@@ -1,11 +1,12 @@
-chromium (117.0.5938.62-2) UNRELEASED; urgency=high
+chromium (117.0.5938.92-1) unstable; urgency=high
 
+  * New upstream stable release.
   * Enable NEON on armhf. See
     <https://lists.debian.org/debian-devel/2023/09/msg00175.html>.
   * Add check in d/rules & chromium wrapper to ensure we don't build or
     run on non-NEON armhf machines.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 13 Sep 2023 22:26:10 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 27 Sep 2023 01:00:07 -0400
 
 chromium (117.0.5938.62-1) unstable; urgency=high
 

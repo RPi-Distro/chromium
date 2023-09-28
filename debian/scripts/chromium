@@ -41,6 +41,26 @@ case `uname -m` in
         ;;
 esac
 
+noneon="\
+The hardware on this system lacks support for NEON SIMD extensions.
+We now require NEON or equivalent architecture extensions on ARM-based
+machines. See https://lists.debian.org/debian-devel/2023/09/msg00175.html
+for more information."
+
+case `uname -m` in
+    armv7l)
+        # Check whether this system supports NEON or ASIMD. Even though there
+        # could be ARMv8 systems without ASIMD, we're far more likely to hit
+        # v8 hardware emulating v7 systems with buggy VMs; so don't even
+        # bother checking armv8l for now. If we do check in the future, they
+        # advertise 'asimd' instead of 'neon'.
+        if ! grep -q 'neon\|asimd' /proc/cpuinfo; then
+            xmessage "$noneon"
+            exit 1
+        fi
+        ;;
+esac
+
 # Clean up old crash reports (see https://bugs.debian.org/1015931)
 # after 30 days.
 find "$HOME/.config/chromium/Crash Reports/pending/" -mtime +30 \

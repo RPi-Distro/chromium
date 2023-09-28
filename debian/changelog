@@ -1,11 +1,26 @@
-chromium (117.0.5938.62-1~deb12u2) UNRELEASED; urgency=high
+chromium (117.0.5938.132-1~deb12u1) bookworm-security; urgency=high
 
+  * New upstream security release.
+    - CVE-2023-5217: Heap buffer overflow in vp8 encoding in libvpx.
+      Reported by Clément Lecigne of Google's Threat Analysis Group.
+    - CVE-2023-5186: Use after free in Passwords. Reported by [pwn2car].
+    - CVE-2023-5187: Use after free in Extensions. Reported by Thomas Orlita.
   * d/patches:
     - bookworm/i386-lock-free.patch: add to fix i386 build failure.
     - bookworm/freetype-COLRV1.patch: disable using freetype's COLRV1
       (closes: #1053142).
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 13 Sep 2023 22:26:10 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 28 Sep 2023 00:41:20 -0400
+
+chromium (117.0.5938.92-1) unstable; urgency=high
+
+  * New upstream stable release.
+  * Enable NEON on armhf. See
+    <https://lists.debian.org/debian-devel/2023/09/msg00175.html>.
+  * Add check in d/rules & chromium wrapper to ensure we don't build or
+    run on non-NEON armhf machines.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 27 Sep 2023 01:00:07 -0400
 
 chromium (117.0.5938.62-1~deb12u1) bookworm-security; urgency=high
 

@@ -2,6 +2,8 @@ chromium (117.0.5938.62-1~deb12u2) UNRELEASED; urgency=high
 
   * d/patches:
     - bookworm/i386-lock-free.patch: add to fix i386 build failure.
+    - bookworm/freetype-COLRV1.patch: disable using freetype's COLRV1
+      (closes: #1053142).
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 13 Sep 2023 22:26:10 -0400
 

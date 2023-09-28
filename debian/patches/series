@@ -51,6 +51,7 @@ bookworm/stringpiece3.patch
 bookworm/initialize-const-ctor.patch
 bookworm/generate-ninja.patch
 bookworm/i386-lock-free.patch
+bookworm/freetype-COLRV1.patch
 
 bullseye/clang13.patch
 bullseye/constexpr.patch

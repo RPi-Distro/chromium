@@ -1,0 +1,41 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Upstream bug: https://bugs.chromium.org/p/chromium/issues/detail?id=1487855
+
+The upstream commit https://chromium-review.googlesource.com/c/v8/v8/+/4753150
+introduced a build failure on armhf. I suspect this is what was intended,
+but we'll see what upstream says.
+
+--- a/v8/src/maglev/maglev-code-generator.cc
++++ b/v8/src/maglev/maglev-code-generator.cc
+@@ -418,12 +418,14 @@ class ParallelMoveResolver {
+ 
+   void EmitMovesFromSource(RegisterT source_reg, GapMoveTargets&& targets) {
+     DCHECK(moves_from_register_[source_reg.code()].is_empty());
++#ifdef V8_COMPRESS_POINTERS
+     if constexpr (DecompressIfNeeded) {
+       static_assert(COMPRESS_POINTERS_BOOL);
+       if (targets.needs_decompression == kNeedsDecompression) {
+         __ DecompressTagged(source_reg, source_reg);
+       }
+     }
++#endif
+     for (RegisterT target_reg : targets.registers) {
+       DCHECK(moves_from_register_[target_reg.code()].is_empty());
+       __ Move(target_reg, source_reg);
+@@ -459,6 +461,7 @@ class ParallelMoveResolver {
+     DCHECK(register_with_slot_value.is_valid());
+     DCHECK(moves_from_register_[register_with_slot_value.code()].is_empty());
+     __ Move(register_with_slot_value, StackSlot{source_slot});
++#ifdef V8_COMPRESS_POINTERS
+     // Decompress after the first move, subsequent moves reuse this register so
+     // they're guaranteed to be decompressed.
+     if constexpr (DecompressIfNeeded) {
+@@ -468,6 +471,7 @@ class ParallelMoveResolver {
+         targets.needs_decompression = kDoesNotNeedDecompression;
+       }
+     }
++#endif
+     EmitMovesFromSource(register_with_slot_value, std::move(targets));
+   }
+ 

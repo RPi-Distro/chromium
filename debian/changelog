@@ -1,3 +1,9 @@
+chromium (117.0.5938.132-2) UNRELEASED; urgency=high
+
+  * d/patches/fixes/v8-compressed-ptrs.patch: fix another armhf FTBFS.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 28 Sep 2023 00:41:20 -0400
+
 chromium (117.0.5938.132-1) unstable; urgency=high
 
   * New upstream security release.

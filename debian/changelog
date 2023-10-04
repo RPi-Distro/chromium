@@ -1,3 +1,16 @@
+chromium (117.0.5938.149-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-5346: Type Confusion in V8. Reported by Amit Kumar.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
+
+chromium (117.0.5938.132-2) unstable; urgency=high
+
+  * d/patches/fixes/v8-compressed-ptrs.patch: fix another armhf FTBFS.
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 01 Oct 2023 15:46:49 -0400
+
 chromium (117.0.5938.132-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

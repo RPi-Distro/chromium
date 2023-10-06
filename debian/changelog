@@ -1,3 +1,12 @@
+chromium (118.0.5993.54-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright:
+    - blanket.js is gone, no need to remove it any more.
+    - delete some khronos images marked executable.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
+
 chromium (117.0.5938.149-1) unstable; urgency=high
 
   * New upstream security release.

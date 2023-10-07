@@ -1,6 +1,6 @@
 --- a/chrome/browser/BUILD.gn
 +++ b/chrome/browser/BUILD.gn
-@@ -3445,7 +3445,6 @@ static_library("browser") {
+@@ -3434,7 +3434,6 @@ static_library("browser") {
        "//components/embedder_support/android:util",
        "//components/embedder_support/android:web_contents_delegate",
        "//components/endpoint_fetcher:endpoint_fetcher",
@@ -56,6 +56,17 @@
  #include "third_party/blink/public/mojom/feature_observer/feature_observer.mojom.h"
  #include "third_party/blink/public/mojom/file/file_utilities.mojom.h"
  #include "third_party/blink/public/mojom/file_system_access/file_system_access_manager.mojom.h"
+@@ -1147,10 +1146,6 @@ void PopulateBinderMapWithContext(
+     map->Add<blink::mojom::BrowsingTopicsDocumentService>(
+         base::BindRepeating(&BrowsingTopicsDocumentHost::CreateMojoService));
+   }
+-  if (base::FeatureList::IsEnabled(blink::features::kWebEnvironmentIntegrity)) {
+-    map->Add<blink::mojom::EnvironmentIntegrityService>(base::BindRepeating(
+-        &EmptyBinderForFrame<blink::mojom::EnvironmentIntegrityService>));
+-  }
+   if (base::FeatureList::IsEnabled(
+           net::features::kCookieDeprecationFacilitatedTestingLabels)) {
+     map->Add<blink::mojom::CookieDeprecationLabelDocumentService>(
 --- a/third_party/blink/public/mojom/BUILD.gn
 +++ b/third_party/blink/public/mojom/BUILD.gn
 @@ -66,7 +66,6 @@ mojom("mojom_platform") {

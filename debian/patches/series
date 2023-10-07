@@ -16,7 +16,7 @@ fixes/perfetto.patch
 fixes/v8-compressed-ptrs.patch
 
 upstream/mojo.patch
-upstream/memory.patch
+upstream/sensor-reading.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -52,9 +52,6 @@ bookworm/struct-ctor.patch
 bookworm/structured-binding-scope-bug.patch
 bookworm/stringpiece3.patch
 bookworm/initialize-const-ctor.patch
-
-bullseye/clang13.patch
-bullseye/constexpr.patch
 
 # i386 support
 i386/support-i386.patch

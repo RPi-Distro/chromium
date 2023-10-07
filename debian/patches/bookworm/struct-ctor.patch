@@ -148,6 +148,15 @@ that initialize (or don't, in some cases) the members of the struct.
      bool operator==(const FontPaletteOverride& other) const {
        return index == other.index && color == other.color;
      }
+@@ -66,6 +69,8 @@ class PLATFORM_EXPORT FontPalette : publ
+       return start == other.start && end == other.end;
+       ;
+     }
++    NonNormalizedPercentages(auto s, auto e) : start(s), end(e) { }
++    NonNormalizedPercentages() : start(0.0), end(0.0) { }
+   };
+ 
+   static scoped_refptr<FontPalette> Create() {
 --- a/chrome/browser/content_settings/one_time_permission_provider.h
 +++ b/chrome/browser/content_settings/one_time_permission_provider.h
 @@ -92,6 +92,8 @@ class OneTimePermissionProvider
@@ -161,7 +170,7 @@ that initialize (or don't, in some cases) the members of the struct.
    void DeleteEntriesAndNotify(
 --- a/base/trace_event/trace_log.h
 +++ b/base/trace_event/trace_log.h
-@@ -422,6 +422,8 @@ class BASE_EXPORT TraceLog :
+@@ -423,6 +423,8 @@ class BASE_EXPORT TraceLog :
      uint32_t internal_instance_index;
      perfetto::DataSourceConfig config;
      perfetto::BackendType backend_type = perfetto::kUnspecifiedBackend;
@@ -191,24 +200,13 @@ that initialize (or don't, in some cases) the members of the struct.
  
  // An event to be sent to a custom url.
 @@ -49,6 +50,7 @@ struct DestinationEnumEvent {
- // TODO(gtanzer): Macros are substituted using the `ReportingMacroMap`.
+ // Macros are substituted using the `ReportingMacros`.
  struct DestinationURLEvent {
    GURL url;
 +  DestinationURLEvent(auto u) : url(u) { }
  };
  
  // Class that receives report events from fenced frames, and uses a
---- a/third_party/blink/renderer/platform/fonts/font_palette.h
-+++ b/third_party/blink/renderer/platform/fonts/font_palette.h
-@@ -69,6 +69,8 @@ class PLATFORM_EXPORT FontPalette : publ
-       return start == other.start && end == other.end;
-       ;
-     }
-+    NonNormalizedPercentages(auto s, auto e) : start(s), end(e) { }
-+    NonNormalizedPercentages() : start(0.0), end(0.0) { }
-   };
- 
-   static scoped_refptr<FontPalette> Create() {
 --- a/ui/linux/linux_ui.h
 +++ b/ui/linux/linux_ui.h
 @@ -68,6 +68,7 @@ struct DisplayGeometry {

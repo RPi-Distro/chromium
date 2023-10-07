@@ -4,6 +4,16 @@ chromium (118.0.5993.54-1) UNRELEASED; urgency=high
   * d/copyright:
     - blanket.js is gone, no need to remove it any more.
     - delete some khronos images marked executable.
+  * d/patches:
+    - upstream/memory.patch: drop, merged upstream.
+    - upstream/sensor-reading.patch: add, build fix from upstream.
+    - disable/unrar.patch: update for minor upstream changes.
+    - bookworm/struct-ctor.patch: refresh.
+    - bookworm/structured-binding-scope-bug.patch: drop part of the patch.
+    - bullseye/clang13.patch: drop bullseye patches from sid.
+    - bullseye/constexpr.patch: drop bullseye patches from sid.
+    - ungoogled/.../disable-web-environment-integrity.patch: update for
+      minor upstream changes.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
 

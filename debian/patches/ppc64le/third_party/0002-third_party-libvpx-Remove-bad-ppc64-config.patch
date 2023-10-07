@@ -1,6 +1,7 @@
-Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
-===================================================================
---- chromium-117.0.5938.48.orig/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
+deleted file mode 100644
+index 225647f..0000000
+--- a/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
 +++ /dev/null
 @@ -1,320 +0,0 @@
 -// This file is generated. Do not edit.
@@ -323,11 +324,12 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vp8_r
 -#endif
 -
 -#endif
-Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
-===================================================================
---- chromium-117.0.5938.48.orig/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
+deleted file mode 100644
+index d0ceec1..0000000
+--- a/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
 +++ /dev/null
-@@ -1,199 +0,0 @@
+@@ -1,193 +0,0 @@
 -// This file is generated. Do not edit.
 -#ifndef VP9_RTCD_H_
 -#define VP9_RTCD_H_
@@ -351,7 +353,9 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vp9_r
 -
 -/* Encoder forward decls */
 -struct macroblock;
+-struct macroblock_plane;
 -struct vp9_sad_table;
+-struct ScanOrder;
 -struct search_site_config;
 -struct mv;
 -union int_mv;
@@ -462,46 +466,38 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vp9_r
 -
 -void vp9_quantize_fp_c(const tran_low_t* coeff_ptr,
 -                       intptr_t n_coeffs,
--                       const int16_t* round_ptr,
--                       const int16_t* quant_ptr,
+-                       const struct macroblock_plane* const mb_plane,
 -                       tran_low_t* qcoeff_ptr,
 -                       tran_low_t* dqcoeff_ptr,
 -                       const int16_t* dequant_ptr,
 -                       uint16_t* eob_ptr,
--                       const int16_t* scan,
--                       const int16_t* iscan);
+-                       const struct ScanOrder* const scan_order);
 -void vp9_quantize_fp_vsx(const tran_low_t* coeff_ptr,
 -                         intptr_t n_coeffs,
--                         const int16_t* round_ptr,
--                         const int16_t* quant_ptr,
+-                         const struct macroblock_plane* const mb_plane,
 -                         tran_low_t* qcoeff_ptr,
 -                         tran_low_t* dqcoeff_ptr,
 -                         const int16_t* dequant_ptr,
 -                         uint16_t* eob_ptr,
--                         const int16_t* scan,
--                         const int16_t* iscan);
+-                         const struct ScanOrder* const scan_order);
 -#define vp9_quantize_fp vp9_quantize_fp_vsx
 -
 -void vp9_quantize_fp_32x32_c(const tran_low_t* coeff_ptr,
 -                             intptr_t n_coeffs,
--                             const int16_t* round_ptr,
--                             const int16_t* quant_ptr,
+-                             const struct macroblock_plane* const mb_plane,
 -                             tran_low_t* qcoeff_ptr,
 -                             tran_low_t* dqcoeff_ptr,
 -                             const int16_t* dequant_ptr,
 -                             uint16_t* eob_ptr,
--                             const int16_t* scan,
--                             const int16_t* iscan);
+-                             const struct ScanOrder* const scan_order);
 -void vp9_quantize_fp_32x32_vsx(const tran_low_t* coeff_ptr,
 -                               intptr_t n_coeffs,
--                               const int16_t* round_ptr,
--                               const int16_t* quant_ptr,
+-                               const struct macroblock_plane* const mb_plane,
 -                               tran_low_t* qcoeff_ptr,
 -                               tran_low_t* dqcoeff_ptr,
 -                               const int16_t* dequant_ptr,
 -                               uint16_t* eob_ptr,
--                               const int16_t* scan,
--                               const int16_t* iscan);
+-                               const struct ScanOrder* const scan_order);
 -#define vp9_quantize_fp_32x32 vp9_quantize_fp_32x32_vsx
 -
 -void vp9_scale_and_extend_frame_c(const struct yv12_buffer_config* src,
@@ -527,9 +523,10 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vp9_r
 -#endif
 -
 -#endif
-Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
-===================================================================
---- chromium-117.0.5938.48.orig/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm b/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
+deleted file mode 100644
+index c9130f6..0000000
+--- a/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
 +++ /dev/null
 @@ -1,104 +0,0 @@
 -@ This file was created from a .asm file
@@ -636,9 +633,10 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_c
 -.equ DECODE_WIDTH_LIMIT ,  16384
 -.equ DECODE_HEIGHT_LIMIT ,  16384
 -    .section .note.GNU-stack,"",%progbits
-Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
-===================================================================
---- chromium-117.0.5938.48.orig/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.c b/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
+deleted file mode 100644
+index 9b870e7..0000000
+--- a/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
 +++ /dev/null
 @@ -1,10 +0,0 @@
 -/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
@@ -651,9 +649,10 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_c
 -#include "vpx/vpx_codec.h"
 -static const char* const cfg = "--target=ppc64le-linux-gcc --enable-external-build --enable-postproc --enable-multi-res-encoding --enable-temporal-denoising --enable-vp9-temporal-denoising --enable-vp9-postproc --size-limit=16384x16384 --enable-realtime-only --disable-install-docs --disable-libyuv";
 -const char *vpx_codec_build_config(void) {return cfg;}
-Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
-===================================================================
---- chromium-117.0.5938.48.orig/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.h b/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
+deleted file mode 100644
+index 8adf823..0000000
+--- a/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
 +++ /dev/null
 @@ -1,113 +0,0 @@
 -/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
@@ -769,11 +768,12 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_c
 -#define DECODE_WIDTH_LIMIT 16384
 -#define DECODE_HEIGHT_LIMIT 16384
 -#endif /* VPX_CONFIG_H */
-Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
-===================================================================
---- chromium-117.0.5938.48.orig/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+deleted file mode 100644
+index f7c747e..0000000
+--- a/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
 +++ /dev/null
-@@ -1,2128 +0,0 @@
+@@ -1,2120 +0,0 @@
 -// This file is generated. Do not edit.
 -#ifndef VPX_DSP_RTCD_H_
 -#define VPX_DSP_RTCD_H_
@@ -1714,44 +1714,36 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_d
 -
 -void vpx_quantize_b_c(const tran_low_t* coeff_ptr,
 -                      intptr_t n_coeffs,
--                      const int16_t* zbin_ptr,
--                      const int16_t* round_ptr,
--                      const int16_t* quant_ptr,
--                      const int16_t* quant_shift_ptr,
+-                      const struct macroblock_plane* const mb_plane,
 -                      tran_low_t* qcoeff_ptr,
 -                      tran_low_t* dqcoeff_ptr,
 -                      const int16_t* dequant_ptr,
 -                      uint16_t* eob_ptr,
--                      const int16_t* scan,
--                      const int16_t* iscan);
+-                      const struct ScanOrder* const scan_order);
 -void vpx_quantize_b_vsx(const tran_low_t* coeff_ptr,
 -                        intptr_t n_coeffs,
--                        const int16_t* zbin_ptr,
--                        const int16_t* round_ptr,
--                        const int16_t* quant_ptr,
--                        const int16_t* quant_shift_ptr,
+-                        const struct macroblock_plane* const mb_plane,
 -                        tran_low_t* qcoeff_ptr,
 -                        tran_low_t* dqcoeff_ptr,
 -                        const int16_t* dequant_ptr,
 -                        uint16_t* eob_ptr,
--                        const int16_t* scan,
--                        const int16_t* iscan);
+-                        const struct ScanOrder* const scan_order);
 -#define vpx_quantize_b vpx_quantize_b_vsx
 -
 -void vpx_quantize_b_32x32_c(const tran_low_t* coeff_ptr,
--                            const struct macroblock_plane* mb_plane,
+-                            const struct macroblock_plane* const mb_plane,
 -                            tran_low_t* qcoeff_ptr,
 -                            tran_low_t* dqcoeff_ptr,
 -                            const int16_t* dequant_ptr,
 -                            uint16_t* eob_ptr,
--                            const struct ScanOrder* scan_order);
+-                            const struct ScanOrder* const scan_order);
 -void vpx_quantize_b_32x32_vsx(const tran_low_t* coeff_ptr,
--                              const struct macroblock_plane* mb_plane,
+-                              const struct macroblock_plane* const mb_plane,
 -                              tran_low_t* qcoeff_ptr,
 -                              tran_low_t* dqcoeff_ptr,
 -                              const int16_t* dequant_ptr,
 -                              uint16_t* eob_ptr,
--                              const struct ScanOrder* scan_order);
+-                              const struct ScanOrder* const scan_order);
 -#define vpx_quantize_b_32x32 vpx_quantize_b_32x32_vsx
 -
 -unsigned int vpx_sad16x16_c(const uint8_t* src_ptr,
@@ -2902,9 +2894,10 @@ Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_d
 -#endif
 -
 -#endif
-Index: chromium-117.0.5938.48/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
-===================================================================
---- chromium-117.0.5938.48.orig/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
+deleted file mode 100644
+index 37be459..0000000
+--- a/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
 +++ /dev/null
 @@ -1,100 +0,0 @@
 -// This file is generated. Do not edit.

@@ -8891,12 +8891,3 @@ Index: chromium-117.0.5938.48/third_party/boringssl/src/util/generate_build_file
      ('linux', 'x86', 'elf', ['-fPIC', '-DOPENSSL_IA32_SSE2'], 'S'),
      ('linux', 'x86_64', 'elf', [], 'S'),
      ('win', 'x86', 'win32n', ['-DOPENSSL_IA32_SSE2'], 'asm'),
-@@ -136,7 +137,7 @@ class Android(object):
-       # TODO(crbug.com/boringssl/542): Migrate users to the combined asm source
-       # lists, so we don't need to generate both sets.
-       for ((osname, arch), asm_files) in asm_outputs:
--        if osname != 'linux':
-+        if osname != 'linux' or arch == 'ppc64le':
-           continue
-         self.PrintVariableSection(
-             makefile, '%s_%s_sources' % (osname, arch), asm_files)

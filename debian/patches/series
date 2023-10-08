@@ -19,6 +19,7 @@ upstream/mojo.patch
 upstream/sensor-reading.patch
 upstream/lweight.patch
 upstream/freetype.patch
+upstream/sizet.patch
 
 disable/tests.patch
 disable/unrar.patch

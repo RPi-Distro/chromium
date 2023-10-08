@@ -22,6 +22,8 @@ chromium (118.0.5993.54-1) UNRELEASED; urgency=high
        upstream changes
     - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
     - skia-vsx-instructions.patch: refresh for upstream changes
+    - ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
+      regenerate configs from upstream source
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
 

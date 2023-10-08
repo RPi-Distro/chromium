@@ -1,8 +1,9 @@
-Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
-===================================================================
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
+new file mode 100644
+index 0000000..7719e1c
 --- /dev/null
-+++ chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
-@@ -0,0 +1,346 @@
++++ b/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
+@@ -0,0 +1,316 @@
 +// This file is generated. Do not edit.
 +#ifndef VP8_RTCD_H_
 +#define VP8_RTCD_H_
@@ -63,36 +64,6 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp8_r
 +                               unsigned char* dst_ptr,
 +                               int dst_pitch);
 +#define vp8_bilinear_predict8x8 vp8_bilinear_predict8x8_c
-+
-+void vp8_blend_b_c(unsigned char* y,
-+                   unsigned char* u,
-+                   unsigned char* v,
-+                   int y_1,
-+                   int u_1,
-+                   int v_1,
-+                   int alpha,
-+                   int stride);
-+#define vp8_blend_b vp8_blend_b_c
-+
-+void vp8_blend_mb_inner_c(unsigned char* y,
-+                          unsigned char* u,
-+                          unsigned char* v,
-+                          int y_1,
-+                          int u_1,
-+                          int v_1,
-+                          int alpha,
-+                          int stride);
-+#define vp8_blend_mb_inner vp8_blend_mb_inner_c
-+
-+void vp8_blend_mb_outer_c(unsigned char* y,
-+                          unsigned char* u,
-+                          unsigned char* v,
-+                          int y_1,
-+                          int u_1,
-+                          int v_1,
-+                          int alpha,
-+                          int stride);
-+#define vp8_blend_mb_outer vp8_blend_mb_outer_c
 +
 +int vp8_block_error_c(short* coeff, short* dqcoeff);
 +#define vp8_block_error vp8_block_error_c
@@ -349,11 +320,12 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp8_r
 +#endif
 +
 +#endif
-Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
-===================================================================
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
+new file mode 100644
+index 0000000..ee9940a
 --- /dev/null
-+++ chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
-@@ -0,0 +1,272 @@
++++ b/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
+@@ -0,0 +1,267 @@
 +// This file is generated. Do not edit.
 +#ifndef VP9_RTCD_H_
 +#define VP9_RTCD_H_
@@ -377,7 +349,9 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +
 +/* Encoder forward decls */
 +struct macroblock;
++struct macroblock_plane;
 +struct vp9_sad_table;
++struct ScanOrder;
 +struct search_site_config;
 +struct mv;
 +union int_mv;
@@ -531,26 +505,23 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +
 +void vp9_highbd_quantize_fp_c(const tran_low_t* coeff_ptr,
 +                              intptr_t n_coeffs,
-+                              const int16_t* round_ptr,
-+                              const int16_t* quant_ptr,
++                              const struct macroblock_plane* const mb_plane,
 +                              tran_low_t* qcoeff_ptr,
 +                              tran_low_t* dqcoeff_ptr,
 +                              const int16_t* dequant_ptr,
 +                              uint16_t* eob_ptr,
-+                              const int16_t* scan,
-+                              const int16_t* iscan);
++                              const struct ScanOrder* const scan_order);
 +#define vp9_highbd_quantize_fp vp9_highbd_quantize_fp_c
 +
-+void vp9_highbd_quantize_fp_32x32_c(const tran_low_t* coeff_ptr,
-+                                    intptr_t n_coeffs,
-+                                    const int16_t* round_ptr,
-+                                    const int16_t* quant_ptr,
-+                                    tran_low_t* qcoeff_ptr,
-+                                    tran_low_t* dqcoeff_ptr,
-+                                    const int16_t* dequant_ptr,
-+                                    uint16_t* eob_ptr,
-+                                    const int16_t* scan,
-+                                    const int16_t* iscan);
++void vp9_highbd_quantize_fp_32x32_c(
++    const tran_low_t* coeff_ptr,
++    intptr_t n_coeffs,
++    const struct macroblock_plane* const mb_plane,
++    tran_low_t* qcoeff_ptr,
++    tran_low_t* dqcoeff_ptr,
++    const int16_t* dequant_ptr,
++    uint16_t* eob_ptr,
++    const struct ScanOrder* const scan_order);
 +#define vp9_highbd_quantize_fp_32x32 vp9_highbd_quantize_fp_32x32_c
 +
 +void vp9_highbd_temporal_filter_apply_c(const uint8_t* frame1,
@@ -585,26 +556,22 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +
 +void vp9_quantize_fp_c(const tran_low_t* coeff_ptr,
 +                       intptr_t n_coeffs,
-+                       const int16_t* round_ptr,
-+                       const int16_t* quant_ptr,
++                       const struct macroblock_plane* const mb_plane,
 +                       tran_low_t* qcoeff_ptr,
 +                       tran_low_t* dqcoeff_ptr,
 +                       const int16_t* dequant_ptr,
 +                       uint16_t* eob_ptr,
-+                       const int16_t* scan,
-+                       const int16_t* iscan);
++                       const struct ScanOrder* const scan_order);
 +#define vp9_quantize_fp vp9_quantize_fp_c
 +
 +void vp9_quantize_fp_32x32_c(const tran_low_t* coeff_ptr,
 +                             intptr_t n_coeffs,
-+                             const int16_t* round_ptr,
-+                             const int16_t* quant_ptr,
++                             const struct macroblock_plane* const mb_plane,
 +                             tran_low_t* qcoeff_ptr,
 +                             tran_low_t* dqcoeff_ptr,
 +                             const int16_t* dequant_ptr,
 +                             uint16_t* eob_ptr,
-+                             const int16_t* scan,
-+                             const int16_t* iscan);
++                             const struct ScanOrder* const scan_order);
 +#define vp9_quantize_fp_32x32 vp9_quantize_fp_32x32_c
 +
 +void vp9_scale_and_extend_frame_c(const struct yv12_buffer_config* src,
@@ -626,16 +593,19 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +#endif
 +
 +#endif
-Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
-===================================================================
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm b/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
+new file mode 100644
+index 0000000..95f0f81
 --- /dev/null
-+++ chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
-@@ -0,0 +1,102 @@
++++ b/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
+@@ -0,0 +1,104 @@
 +@ This file was created from a .asm file
 +@  using the ads2gas.pl script.
 +.syntax unified
 +.equ VPX_ARCH_ARM ,  0
 +.equ ARCH_ARM ,  0
++.equ VPX_ARCH_AARCH64 ,  0
++.equ ARCH_AARCH64 ,  0
 +.equ VPX_ARCH_MIPS ,  0
 +.equ ARCH_MIPS ,  0
 +.equ VPX_ARCH_X86 ,  0
@@ -733,10 +703,11 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +.equ DECODE_WIDTH_LIMIT ,  16384
 +.equ DECODE_HEIGHT_LIMIT ,  16384
 +    .section .note.GNU-stack,"",%progbits
-Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
-===================================================================
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.c b/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
+new file mode 100644
+index 0000000..8aad25f
 --- /dev/null
-+++ chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
++++ b/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
 @@ -0,0 +1,10 @@
 +/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
 +/*  */
@@ -748,11 +719,12 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#include "vpx/vpx_codec.h"
 +static const char* const cfg = "--target=generic-gnu --enable-vp9-highbitdepth --enable-external-build --enable-postproc --enable-multi-res-encoding --enable-temporal-denoising --enable-vp9-temporal-denoising --enable-vp9-postproc --size-limit=16384x16384 --enable-realtime-only --disable-install-docs --disable-libyuv";
 +const char *vpx_codec_build_config(void) {return cfg;}
-Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
-===================================================================
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.h b/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
+new file mode 100644
+index 0000000..c7a9f52
 --- /dev/null
-+++ chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
-@@ -0,0 +1,111 @@
++++ b/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
+@@ -0,0 +1,113 @@
 +/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
 +/*  */
 +/* Use of this source code is governed by a BSD-style license */
@@ -767,6 +739,8 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define INLINE      inline
 +#define VPX_ARCH_ARM 0
 +#define ARCH_ARM 0
++#define VPX_ARCH_AARCH64 0
++#define ARCH_AARCH64 0
 +#define VPX_ARCH_MIPS 0
 +#define ARCH_MIPS 0
 +#define VPX_ARCH_X86 0
@@ -864,11 +838,12 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define DECODE_WIDTH_LIMIT 16384
 +#define DECODE_HEIGHT_LIMIT 16384
 +#endif /* VPX_CONFIG_H */
-Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
-===================================================================
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+new file mode 100644
+index 0000000..6b75621
 --- /dev/null
-+++ chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
-@@ -0,0 +1,4120 @@
++++ b/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+@@ -0,0 +1,4112 @@
 +// This file is generated. Do not edit.
 +#ifndef VPX_DSP_RTCD_H_
 +#define VPX_DSP_RTCD_H_
@@ -3289,16 +3264,12 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +
 +void vpx_highbd_quantize_b_c(const tran_low_t* coeff_ptr,
 +                             intptr_t n_coeffs,
-+                             const int16_t* zbin_ptr,
-+                             const int16_t* round_ptr,
-+                             const int16_t* quant_ptr,
-+                             const int16_t* quant_shift_ptr,
++                             const struct macroblock_plane* const mb_plane,
 +                             tran_low_t* qcoeff_ptr,
 +                             tran_low_t* dqcoeff_ptr,
 +                             const int16_t* dequant_ptr,
 +                             uint16_t* eob_ptr,
-+                             const int16_t* scan,
-+                             const int16_t* iscan);
++                             const struct ScanOrder* const scan_order);
 +#define vpx_highbd_quantize_b vpx_highbd_quantize_b_c
 +
 +void vpx_highbd_quantize_b_32x32_c(
@@ -4037,16 +4008,12 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +
 +void vpx_quantize_b_c(const tran_low_t* coeff_ptr,
 +                      intptr_t n_coeffs,
-+                      const int16_t* zbin_ptr,
-+                      const int16_t* round_ptr,
-+                      const int16_t* quant_ptr,
-+                      const int16_t* quant_shift_ptr,
++                      const struct macroblock_plane* const mb_plane,
 +                      tran_low_t* qcoeff_ptr,
 +                      tran_low_t* dqcoeff_ptr,
 +                      const int16_t* dequant_ptr,
 +                      uint16_t* eob_ptr,
-+                      const int16_t* scan,
-+                      const int16_t* iscan);
++                      const struct ScanOrder* const scan_order);
 +#define vpx_quantize_b vpx_quantize_b_c
 +
 +void vpx_quantize_b_32x32_c(const tran_low_t* coeff_ptr,
@@ -4989,10 +4956,11 @@ Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +#endif
 +
 +#endif
-Index: chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
-===================================================================
+diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
+new file mode 100644
+index 0000000..c5196db
 --- /dev/null
-+++ chromium-115.0.5790.56/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
++++ b/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
 @@ -0,0 +1,96 @@
 +// This file is generated. Do not edit.
 +#ifndef VPX_SCALE_RTCD_H_

@@ -5,17 +5,19 @@ std:atomic<uint64_t>::is_always_lock_free on i386 (and only on i386).
 On 15 and above, it's true, but below that it is false. So instead,
 rely on a runtime is_lock_free() check.
 
---- a/services/network/restricted_cookie_manager.cc
-+++ b/services/network/restricted_cookie_manager.cc
+Index: chromium-118.0.5993.54/services/network/restricted_cookie_manager.cc
+===================================================================
+--- chromium-118.0.5993.54.orig/services/network/restricted_cookie_manager.cc
++++ chromium-118.0.5993.54/services/network/restricted_cookie_manager.cc
 @@ -4,6 +4,7 @@
  
  #include "services/network/restricted_cookie_manager.h"
  
 +#include <cassert>
+ #include <cstdint>
  #include <memory>
  #include <utility>
- #include <vector>
-@@ -347,6 +348,8 @@ RestrictedCookieManager::RestrictedCooki
+@@ -351,6 +352,8 @@ RestrictedCookieManager::RestrictedCooki
    DCHECK(cookie_store);
    DCHECK(!cookie_setting_overrides_.Has(
        net::CookieSettingOverride::kStorageAccessGrantEligible));
@@ -24,8 +26,10 @@ rely on a runtime is_lock_free() check.
    if (role == mojom::RestrictedCookieManagerRole::SCRIPT) {
        CHECK(origin_.IsSameOriginWith(isolation_info_.frame_origin().value()));
    }
---- a/services/network/restricted_cookie_manager.h
-+++ b/services/network/restricted_cookie_manager.h
+Index: chromium-118.0.5993.54/services/network/restricted_cookie_manager.h
+===================================================================
+--- chromium-118.0.5993.54.orig/services/network/restricted_cookie_manager.h
++++ chromium-118.0.5993.54/services/network/restricted_cookie_manager.h
 @@ -182,8 +182,6 @@ class COMPONENT_EXPORT(NETWORK_SERVICE)
  
   private:

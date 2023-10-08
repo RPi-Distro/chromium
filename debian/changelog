@@ -1,3 +1,33 @@
+chromium (118.0.5993.54-1~deb12u1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright:
+    - blanket.js is gone, no need to remove it any more.
+    - delete some khronos images marked executable.
+  * d/patches:
+    - upstream/memory.patch: drop, merged upstream.
+    - upstream/sensor-reading.patch: add, gcc13 build fix from upstream.
+    - upstream/lweight.patch: add, gcc13 build fix from upstream.
+    - upstream/freetype.patch: add, fix freetype header inclusion FTBFS.
+    - disable/unrar.patch: update for minor upstream changes.
+    - bookworm/struct-ctor.patch: refresh.
+    - bookworm/structured-binding-scope-bug.patch: drop part of the patch.
+    - bullseye/clang13.patch: drop bullseye patches from bookworm.
+    - bullseye/constexpr.patch: drop bullseye patches from bookworm.
+    - ungoogled/.../disable-web-environment-integrity.patch: sync with
+      ungoogled-chromium for upstream changes.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
+       upstream changes
+    - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
+    - skia-vsx-instructions.patch: refresh for upstream changes
+    - ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
+      regenerate configs from upstream source
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
+
 chromium (117.0.5938.149-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

@@ -14,7 +14,9 @@ fixes/perfetto.patch
 fixes/v8-compressed-ptrs.patch
 
 upstream/mojo.patch
-upstream/memory.patch
+upstream/sensor-reading.patch
+upstream/lweight.patch
+upstream/freetype.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -53,9 +55,6 @@ bookworm/initialize-const-ctor.patch
 bookworm/generate-ninja.patch
 bookworm/i386-lock-free.patch
 bookworm/freetype-COLRV1.patch
-
-bullseye/clang13.patch
-bullseye/constexpr.patch
 
 # i386 support
 i386/support-i386.patch

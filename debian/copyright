@@ -154,7 +154,6 @@ Files-Excluded:
  third_party/rust-src
  third_party/chaijs/chai.js
  third_party/siso/siso
- third_party/blanketjs/src/blanket.js
  third_party/accessibility-audit/axs_testing.js
  third_party/catapult
  third_party/webrtc/sdk
@@ -175,6 +174,8 @@ Files-Excluded:
  third_party/nearby/src/third_party
  third_party/updater
  third_party/zstd/src/build/single_file_libs/examples
+ third_party/dawn/third_party/khronos/OpenGL-Registry/ABI/new.gif
+ third_party/dawn/third_party/khronos/EGL-Registry/sdk
 
 
 Files: *

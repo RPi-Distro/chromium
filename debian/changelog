@@ -12,8 +12,7 @@ chromium (118.0.5993.54-1~deb12u1) UNRELEASED; urgency=high
     - disable/unrar.patch: update for minor upstream changes.
     - bookworm/struct-ctor.patch: refresh.
     - bookworm/structured-binding-scope-bug.patch: drop part of the patch.
-    - bullseye/clang13.patch: drop bullseye patches from bookworm.
-    - bullseye/constexpr.patch: drop bullseye patches from bookworm.
+    - bullseye/constexpr.patch: drop bullseye patch from bookworm.
     - ungoogled/.../disable-web-environment-integrity.patch: sync with
       ungoogled-chromium for upstream changes.
     - bookworm/i386-lock-free.patch: refresh.

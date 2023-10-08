@@ -56,6 +56,8 @@ bookworm/generate-ninja.patch
 bookworm/i386-lock-free.patch
 bookworm/freetype-COLRV1.patch
 
+bullseye/clang13.patch
+
 # i386 support
 i386/support-i386.patch
 i386/angle-lockfree.patch

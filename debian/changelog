@@ -8,6 +8,7 @@ chromium (118.0.5993.54-1) UNRELEASED; urgency=high
     - upstream/memory.patch: drop, merged upstream.
     - upstream/sensor-reading.patch: add, gcc13 build fix from upstream.
     - upstream/lweight.patch: add, gcc13 build fix from upstream.
+    - upstream/freetype.patch: add, fix freetype header inclusion FTBFS.
     - disable/unrar.patch: update for minor upstream changes.
     - bookworm/struct-ctor.patch: refresh.
     - bookworm/structured-binding-scope-bug.patch: drop part of the patch.

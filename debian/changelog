@@ -11,7 +11,7 @@ chromium (118.0.5993.54-1) UNRELEASED; urgency=high
     - upstream/freetype.patch: add, fix freetype header inclusion FTBFS.
     - upstream/sizet.patch: add, libstdc++ build fix from upstream.
     - disable/unrar.patch: update for minor upstream changes.
-    - bookworm/struct-ctor.patch: refresh.
+    - bookworm/struct-ctor.patch: add various new workarounds for clang-14.
     - bookworm/structured-binding-scope-bug.patch: drop part of the patch.
     - bullseye/clang13.patch: drop bullseye patches from sid.
     - bullseye/constexpr.patch: drop bullseye patches from sid.

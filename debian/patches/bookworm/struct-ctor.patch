@@ -7,8 +7,10 @@ that initialize (or don't, in some cases) the members of the struct.
 
 
 
---- a/ui/base/wayland/color_manager_util.h
-+++ b/ui/base/wayland/color_manager_util.h
+Index: chromium-118.0.5993.54/ui/base/wayland/color_manager_util.h
+===================================================================
+--- chromium-118.0.5993.54.orig/ui/base/wayland/color_manager_util.h
++++ chromium-118.0.5993.54/ui/base/wayland/color_manager_util.h
 @@ -23,32 +23,37 @@ constexpr uint32_t kDefaultSinceVersion
  struct TransferFnVersion {
    skcms_TransferFunction transfer_fn;
@@ -100,8 +102,10 @@ that initialize (or don't, in some cases) the members of the struct.
 -#endif  // UI_BASE_WAYLAND_COLOR_MANAGER_UTIL_H_
 \ No newline at end of file
 +#endif  // UI_BASE_WAYLAND_COLOR_MANAGER_UTIL_H_
---- a/net/dns/host_resolver_cache.h
-+++ b/net/dns/host_resolver_cache.h
+Index: chromium-118.0.5993.54/net/dns/host_resolver_cache.h
+===================================================================
+--- chromium-118.0.5993.54.orig/net/dns/host_resolver_cache.h
++++ chromium-118.0.5993.54/net/dns/host_resolver_cache.h
 @@ -122,6 +122,7 @@ class NET_EXPORT HostResolverCache final
  
      std::string domain_name;
@@ -110,8 +114,10 @@ that initialize (or don't, in some cases) the members of the struct.
    };
  
    struct KeyRef {
---- a/third_party/skia/include/core/SkSize.h
-+++ b/third_party/skia/include/core/SkSize.h
+Index: chromium-118.0.5993.54/third_party/skia/include/core/SkSize.h
+===================================================================
+--- chromium-118.0.5993.54.orig/third_party/skia/include/core/SkSize.h
++++ chromium-118.0.5993.54/third_party/skia/include/core/SkSize.h
 @@ -16,6 +16,9 @@ struct SkISize {
      int32_t fWidth;
      int32_t fHeight;
@@ -122,8 +128,10 @@ that initialize (or don't, in some cases) the members of the struct.
      static constexpr SkISize Make(int32_t w, int32_t h) { return {w, h}; }
  
      static constexpr SkISize MakeEmpty() { return {0, 0}; }
---- a/chrome/browser/ui/location_bar/location_bar.h
-+++ b/chrome/browser/ui/location_bar/location_bar.h
+Index: chromium-118.0.5993.54/chrome/browser/ui/location_bar/location_bar.h
+===================================================================
+--- chromium-118.0.5993.54.orig/chrome/browser/ui/location_bar/location_bar.h
++++ chromium-118.0.5993.54/chrome/browser/ui/location_bar/location_bar.h
 @@ -38,6 +38,11 @@ class LocationBar {
      base::TimeTicks match_selection_timestamp;
      bool url_typed_without_scheme;
@@ -136,8 +144,10 @@ that initialize (or don't, in some cases) the members of the struct.
    };
  
    explicit LocationBar(CommandUpdater* command_updater)
---- a/third_party/blink/renderer/platform/fonts/font_palette.h
-+++ b/third_party/blink/renderer/platform/fonts/font_palette.h
+Index: chromium-118.0.5993.54/third_party/blink/renderer/platform/fonts/font_palette.h
+===================================================================
+--- chromium-118.0.5993.54.orig/third_party/blink/renderer/platform/fonts/font_palette.h
++++ chromium-118.0.5993.54/third_party/blink/renderer/platform/fonts/font_palette.h
 @@ -35,6 +35,9 @@ class PLATFORM_EXPORT FontPalette : publ
      int index;
      Color color;
@@ -157,8 +167,10 @@ that initialize (or don't, in some cases) the members of the struct.
    };
  
    static scoped_refptr<FontPalette> Create() {
---- a/chrome/browser/content_settings/one_time_permission_provider.h
-+++ b/chrome/browser/content_settings/one_time_permission_provider.h
+Index: chromium-118.0.5993.54/chrome/browser/content_settings/one_time_permission_provider.h
+===================================================================
+--- chromium-118.0.5993.54.orig/chrome/browser/content_settings/one_time_permission_provider.h
++++ chromium-118.0.5993.54/chrome/browser/content_settings/one_time_permission_provider.h
 @@ -92,6 +92,8 @@ class OneTimePermissionProvider
      ContentSettingsType type;
      ContentSettingsPattern primary_pattern;
@@ -168,8 +180,10 @@ that initialize (or don't, in some cases) the members of the struct.
    };
  
    void DeleteEntriesAndNotify(
---- a/base/trace_event/trace_log.h
-+++ b/base/trace_event/trace_log.h
+Index: chromium-118.0.5993.54/base/trace_event/trace_log.h
+===================================================================
+--- chromium-118.0.5993.54.orig/base/trace_event/trace_log.h
++++ chromium-118.0.5993.54/base/trace_event/trace_log.h
 @@ -423,6 +423,8 @@ class BASE_EXPORT TraceLog :
      uint32_t internal_instance_index;
      perfetto::DataSourceConfig config;
@@ -179,8 +193,10 @@ that initialize (or don't, in some cases) the members of the struct.
    };
    std::vector<TrackEventSession> GetTrackEventSessions() const;
  
---- a/components/download/public/common/download_save_item_data.h
-+++ b/components/download/public/common/download_save_item_data.h
+Index: chromium-118.0.5993.54/components/download/public/common/download_save_item_data.h
+===================================================================
+--- chromium-118.0.5993.54.orig/components/download/public/common/download_save_item_data.h
++++ chromium-118.0.5993.54/components/download/public/common/download_save_item_data.h
 @@ -27,6 +27,7 @@ class COMPONENTS_DOWNLOAD_EXPORT Downloa
      // The referrer url for this file. (In case of a package download this is
      // the main page for the other resources.)
@@ -189,8 +205,10 @@ that initialize (or don't, in some cases) the members of the struct.
    };
  
    explicit DownloadSaveItemData(std::vector<ItemInfo>&& item_infos);
---- a/content/browser/fenced_frame/fenced_frame_reporter.h
-+++ b/content/browser/fenced_frame/fenced_frame_reporter.h
+Index: chromium-118.0.5993.54/content/browser/fenced_frame/fenced_frame_reporter.h
+===================================================================
+--- chromium-118.0.5993.54.orig/content/browser/fenced_frame/fenced_frame_reporter.h
++++ chromium-118.0.5993.54/content/browser/fenced_frame/fenced_frame_reporter.h
 @@ -42,6 +42,7 @@ class RenderFrameHostImpl;
  struct DestinationEnumEvent {
    std::string type;
@@ -207,8 +225,10 @@ that initialize (or don't, in some cases) the members of the struct.
  };
  
  // Class that receives report events from fenced frames, and uses a
---- a/ui/linux/linux_ui.h
-+++ b/ui/linux/linux_ui.h
+Index: chromium-118.0.5993.54/ui/linux/linux_ui.h
+===================================================================
+--- chromium-118.0.5993.54.orig/ui/linux/linux_ui.h
++++ chromium-118.0.5993.54/ui/linux/linux_ui.h
 @@ -68,6 +68,7 @@ struct DisplayGeometry {
  
    gfx::Rect bounds_px;
@@ -217,8 +237,10 @@ that initialize (or don't, in some cases) the members of the struct.
  };
  
  struct DisplayConfig {
---- a/chrome/browser/enterprise/profile_management/profile_management_navigation_throttle.cc
-+++ b/chrome/browser/enterprise/profile_management/profile_management_navigation_throttle.cc
+Index: chromium-118.0.5993.54/chrome/browser/enterprise/profile_management/profile_management_navigation_throttle.cc
+===================================================================
+--- chromium-118.0.5993.54.orig/chrome/browser/enterprise/profile_management/profile_management_navigation_throttle.cc
++++ chromium-118.0.5993.54/chrome/browser/enterprise/profile_management/profile_management_navigation_throttle.cc
 @@ -50,6 +50,8 @@ struct SAMLProfileAttributes {
    std::string name;
    std::string domain;
@@ -228,3 +250,90 @@ that initialize (or don't, in some cases) the members of the struct.
  };
  
  constexpr char kNameAttributeKey[] = "name";
+Index: chromium-118.0.5993.54/components/autofill/core/browser/profile_token_quality.h
+===================================================================
+--- chromium-118.0.5993.54.orig/components/autofill/core/browser/profile_token_quality.h
++++ chromium-118.0.5993.54/components/autofill/core/browser/profile_token_quality.h
+@@ -213,6 +213,8 @@ class ProfileTokenQuality {
+     // Getters expose unknown values as `kUnknown`.
+     std::underlying_type_t<ObservationType> type;
+     FormSignatureHash form_hash = FormSignatureHash(0);
++
++    Observation(auto t, auto fh) : type(t), form_hash(fh) { }
+   };
+ 
+   // Returns a low-entry hash of the `form_signature`.
+Index: chromium-118.0.5993.54/components/autofill/core/browser/webdata/autofill_table.h
+===================================================================
+--- chromium-118.0.5993.54.orig/components/autofill/core/browser/webdata/autofill_table.h
++++ chromium-118.0.5993.54/components/autofill/core/browser/webdata/autofill_table.h
+@@ -55,6 +55,7 @@ struct ServerCvc {
+   const std::u16string cvc;
+   // The timestamp of the most recent update to the data entry.
+   const base::Time last_updated_timestamp;
++  ServerCvc(auto ii, auto c, auto lut) : instrument_id(ii), cvc(c), last_updated_timestamp(lut) { }
+ };
+ 
+ // This class manages the various Autofill tables within the SQLite database
+Index: chromium-118.0.5993.54/components/autofill/core/browser/webdata/autofill_table.cc
+===================================================================
+--- chromium-118.0.5993.54.orig/components/autofill/core/browser/webdata/autofill_table.cc
++++ chromium-118.0.5993.54/components/autofill/core/browser/webdata/autofill_table.cc
+@@ -745,10 +745,10 @@ std::unique_ptr<CreditCard> CreditCardFr
+ std::unique_ptr<ServerCvc> ServerCvcFromStatement(
+     sql::Statement& s,
+     const AutofillTableEncryptor& encryptor) {
+-  return std::make_unique<ServerCvc>(ServerCvc{
+-      .instrument_id = s.ColumnInt64(0),
+-      .cvc = UnencryptValueFromColumn(s, 1, encryptor),
+-      .last_updated_timestamp = base::Time::FromTimeT(s.ColumnInt64(2))});
++  return std::make_unique<ServerCvc>(ServerCvc(
++      s.ColumnInt64(0),
++      UnencryptValueFromColumn(s, 1, encryptor),
++      base::Time::FromTimeT(s.ColumnInt64(2))));
+ }
+ 
+ std::unique_ptr<Iban> IbanFromStatement(
+Index: chromium-118.0.5993.54/components/autofill/core/browser/profile_token_quality.cc
+===================================================================
+--- chromium-118.0.5993.54.orig/components/autofill/core/browser/profile_token_quality.cc
++++ chromium-118.0.5993.54/components/autofill/core/browser/profile_token_quality.cc
+@@ -241,10 +241,10 @@ bool ProfileTokenQuality::AddObservation
+     }
+     possible_observations.emplace_back(
+         stored_type,
+-        Observation{.type = base::to_underlying(GetObservationTypeFromField(
++        Observation(base::to_underlying(GetObservationTypeFromField(
+                         field, form_data.fields[i].value, other_profiles,
+                         pdm.app_locale())),
+-                    .form_hash = hash});
++                    hash));
+   }
+   return AddSubsetOfObservations(std::move(possible_observations)) > 0;
+ }
+@@ -387,10 +387,10 @@ void ProfileTokenQuality::LoadSerialized
+   for (size_t i = 0; i + 1 < serialized_data.size(); i += 2) {
+     AddObservation(
+         type,
+-        Observation{
+-            .type = std::min(serialized_data[i],
++        Observation(
++            std::min(serialized_data[i],
+                              base::to_underlying(ObservationType::kMaxValue)),
+-            .form_hash = FormSignatureHash(serialized_data[i + 1])});
++            FormSignatureHash(serialized_data[i + 1])));
+   }
+ }
+ 
+Index: chromium-118.0.5993.54/content/browser/webid/idp_network_request_manager.h
+===================================================================
+--- chromium-118.0.5993.54.orig/content/browser/webid/idp_network_request_manager.h
++++ chromium-118.0.5993.54/content/browser/webid/idp_network_request_manager.h
+@@ -119,6 +119,7 @@ class CONTENT_EXPORT IdpNetworkRequestMa
+   struct IdentityCredentialTokenError {
+     int code;
+     GURL url;
++    IdentityCredentialTokenError(auto c, auto u) : code(c), url(u) { }
+   };
+ 
+   struct CONTENT_EXPORT TokenResult {

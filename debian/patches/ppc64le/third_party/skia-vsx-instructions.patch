@@ -23,16 +23,16 @@ Index: chromium-118.0.5993.54/third_party/skia/BUILD.gn
      ":webp_decode",
      ":wuffs",
      ":xml",
-@@ -1665,7 +1665,10 @@ skia_static_library("pathkit") {
+@@ -1658,7 +1665,10 @@ skia_static_library("pathkit") {
    public_configs = [ ":skia_public" ]
    configs = skia_library_configs
-
+ 
 -  deps = [ ":hsw" ]
 +  deps = [
 +    ":hsw",
 +    ":vsx",
 +  ]
-
+ 
    sources = []
    sources += skia_pathops_sources
 Index: chromium-118.0.5993.54/third_party/skia/gn/skia/BUILD.gn
@@ -726,10 +726,10 @@ Index: chromium-118.0.5993.54/third_party/skia/src/core/SkBitmapProcState_opts_s
 @@ -8,7 +8,7 @@
  #include "include/private/base/SkFeatures.h"
  #include "src/core/SkOptsTargets.h"
-
+ 
 -#if defined(SK_CPU_X86) && !defined(SK_ENABLE_OPTIMIZE_SIZE)
 +#if (defined(SK_CPU_X86) || defined(SK_CPU_PPC64)) && !defined(SK_ENABLE_OPTIMIZE_SIZE)
-
+ 
  // The order of these includes is important:
  // 1) Select the target CPU architecture by defining SK_OPTS_TARGET and including SkOpts_SetTarget
 Index: chromium-118.0.5993.54/third_party/skia/include/private/base/SkFeatures.h

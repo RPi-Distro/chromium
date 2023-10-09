@@ -24,8 +24,30 @@ chromium (118.0.5993.54-1) UNRELEASED; urgency=high
        upstream changes
     - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
     - skia-vsx-instructions.patch: refresh for upstream changes
-    - ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
+    - third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
       regenerate configs from upstream source
+    - database/0001-Properly-detect-little-endian-PPC64-systems.patch:
+      refresh
+    - ffmpeg/0001-Add-support-for-ppc64.patch: refresh
+    - fixes/fix-breakpad-compile.patch: refresh
+    - fixes/fix-unknown-warning-option-messages.diff: refresh
+    - libaom/0001-Add-ppc64-target-to-libaom.patch: refresh
+    - sandbox/0001-sandbox-linux-Update-IsSyscallAllowed-in-broker_proc.patch:
+      refresh
+    - sandbox/0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch:
+      refresh
+    - sandbox/0008-sandbox-fix-ppc64le-glibc234.patch: refresh
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh
+    - third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch:
+      refresh
+    - third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch:
+      refresh
+    - third_party/0002-third-party-boringssl-add-generated-files.patch: refresh
+    - third_party/dawn-fix-ppc64le-detection.patch: refresh
+    - third_party/dawn-fix-typos.patch: refresh
+    - third_party/skia-vsx-instructions.patch: refresh
+    - third_party/use-sysconf-page-size-on-ppc64.patch: refresh
+    - workarounds/HACK-third_party-libvpx-use-generic-gnu.patch: refresh
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
 

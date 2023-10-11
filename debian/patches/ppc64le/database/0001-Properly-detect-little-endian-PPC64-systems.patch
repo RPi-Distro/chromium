@@ -1,8 +1,8 @@
-Index: chromium-110.0.5481.77/third_party/sqlite/src/amalgamation/sqlite3.c
+Index: chromium-118.0.5993.54/third_party/sqlite/src/amalgamation/sqlite3.c
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/sqlite/src/amalgamation/sqlite3.c
-+++ chromium-110.0.5481.77/third_party/sqlite/src/amalgamation/sqlite3.c
-@@ -14390,7 +14390,8 @@ typedef INT16_TYPE LogEst;
+--- chromium-118.0.5993.54.orig/third_party/sqlite/src/amalgamation/sqlite3.c
++++ chromium-118.0.5993.54/third_party/sqlite/src/amalgamation/sqlite3.c
+@@ -14576,7 +14576,8 @@ typedef INT16_TYPE LogEst;
  # if defined(i386)      || defined(__i386__)      || defined(_M_IX86) ||    \
       defined(__x86_64)  || defined(__x86_64__)    || defined(_M_X64)  ||    \
       defined(_M_AMD64)  || defined(_M_ARM)        || defined(__x86)   ||    \
@@ -12,11 +12,11 @@ Index: chromium-110.0.5481.77/third_party/sqlite/src/amalgamation/sqlite3.c
  #   define SQLITE_BYTEORDER    1234
  # elif defined(sparc)     || defined(__ppc__) || \
         defined(__ARMEB__) || defined(__AARCH64EB__)
-Index: chromium-110.0.5481.77/third_party/sqlite/src/amalgamation_dev/sqlite3.c
+Index: chromium-118.0.5993.54/third_party/sqlite/src/amalgamation_dev/sqlite3.c
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/sqlite/src/amalgamation_dev/sqlite3.c
-+++ chromium-110.0.5481.77/third_party/sqlite/src/amalgamation_dev/sqlite3.c
-@@ -14403,7 +14403,8 @@ typedef INT16_TYPE LogEst;
+--- chromium-118.0.5993.54.orig/third_party/sqlite/src/amalgamation_dev/sqlite3.c
++++ chromium-118.0.5993.54/third_party/sqlite/src/amalgamation_dev/sqlite3.c
+@@ -14589,7 +14589,8 @@ typedef INT16_TYPE LogEst;
  # if defined(i386)      || defined(__i386__)      || defined(_M_IX86) ||    \
       defined(__x86_64)  || defined(__x86_64__)    || defined(_M_X64)  ||    \
       defined(_M_AMD64)  || defined(_M_ARM)        || defined(__x86)   ||    \
@@ -26,10 +26,10 @@ Index: chromium-110.0.5481.77/third_party/sqlite/src/amalgamation_dev/sqlite3.c
  #   define SQLITE_BYTEORDER    1234
  # elif defined(sparc)     || defined(__ppc__) || \
         defined(__ARMEB__) || defined(__AARCH64EB__)
-Index: chromium-110.0.5481.77/third_party/sqlite/src/ext/rtree/rtree.c
+Index: chromium-118.0.5993.54/third_party/sqlite/src/ext/rtree/rtree.c
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/sqlite/src/ext/rtree/rtree.c
-+++ chromium-110.0.5481.77/third_party/sqlite/src/ext/rtree/rtree.c
+--- chromium-118.0.5993.54.orig/third_party/sqlite/src/ext/rtree/rtree.c
++++ chromium-118.0.5993.54/third_party/sqlite/src/ext/rtree/rtree.c
 @@ -474,7 +474,8 @@ struct RtreeMatchArg {
  # if defined(i386)      || defined(__i386__)      || defined(_M_IX86) ||    \
       defined(__x86_64)  || defined(__x86_64__)    || defined(_M_X64)  ||    \
@@ -40,11 +40,11 @@ Index: chromium-110.0.5481.77/third_party/sqlite/src/ext/rtree/rtree.c
  #   define SQLITE_BYTEORDER    1234
  # elif defined(sparc)     || defined(__ppc__) || \
         defined(__ARMEB__) || defined(__AARCH64EB__)
-Index: chromium-110.0.5481.77/third_party/sqlite/src/src/sqliteInt.h
+Index: chromium-118.0.5993.54/third_party/sqlite/src/src/sqliteInt.h
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/sqlite/src/src/sqliteInt.h
-+++ chromium-110.0.5481.77/third_party/sqlite/src/src/sqliteInt.h
-@@ -904,7 +904,8 @@ typedef INT16_TYPE LogEst;
+--- chromium-118.0.5993.54.orig/third_party/sqlite/src/src/sqliteInt.h
++++ chromium-118.0.5993.54/third_party/sqlite/src/src/sqliteInt.h
+@@ -905,7 +905,8 @@ typedef INT16_TYPE LogEst;
  # if defined(i386)      || defined(__i386__)      || defined(_M_IX86) ||    \
       defined(__x86_64)  || defined(__x86_64__)    || defined(_M_X64)  ||    \
       defined(_M_AMD64)  || defined(_M_ARM)        || defined(__x86)   ||    \

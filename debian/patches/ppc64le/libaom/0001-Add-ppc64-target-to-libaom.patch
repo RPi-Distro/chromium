@@ -8,9 +8,11 @@ Subject: [PATCH] Add ppc64 target to libaom
  third_party/libaom/cmake_update.sh |  3 +++
  2 files changed, 15 insertions(+)
 
---- a/third_party/libaom/BUILD.gn
-+++ b/third_party/libaom/BUILD.gn
-@@ -250,6 +250,18 @@ if (current_cpu == "arm64") {
+Index: chromium-118.0.5993.54/third_party/libaom/BUILD.gn
+===================================================================
+--- chromium-118.0.5993.54.orig/third_party/libaom/BUILD.gn
++++ chromium-118.0.5993.54/third_party/libaom/BUILD.gn
+@@ -248,6 +248,18 @@ if (current_cpu == "arm64") {
    }
  }
  
@@ -29,7 +31,7 @@ Subject: [PATCH] Add ppc64 target to libaom
  static_library("libaom") {
    check_includes = false
    if (!is_debug && is_win) {
-@@ -314,6 +326,9 @@ static_library("libaom") {
+@@ -312,6 +324,9 @@ static_library("libaom") {
      # This is needed by all arm boards due to aom_arm_cpu_caps()
      sources += [ "source/libaom/aom_ports/aarch32_cpudetect.c" ]
    }
@@ -39,10 +41,12 @@ Subject: [PATCH] Add ppc64 target to libaom
    if (is_android) {
      deps += [ "//third_party/cpu_features:ndk_compat" ]
    }
---- a/third_party/libaom/cmake_update.sh
-+++ b/third_party/libaom/cmake_update.sh
-@@ -206,6 +206,9 @@ gen_config_files ios/arm64 \
-   "${toolchain}/arm64-ios.cmake -DCMAKE_INSTALL_NAME_TOOL=no-such-command \
+Index: chromium-118.0.5993.54/third_party/libaom/cmake_update.sh
+===================================================================
+--- chromium-118.0.5993.54.orig/third_party/libaom/cmake_update.sh
++++ chromium-118.0.5993.54/third_party/libaom/cmake_update.sh
+@@ -193,6 +193,9 @@ gen_config_files linux/arm64-cpu-detect
+   "${toolchain}/arm64-linux-gcc.cmake -DCONFIG_RUNTIME_CPU_DETECT=1 \
     ${all_platforms}"
  
 +reset_dirs linux/ppc64

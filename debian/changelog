@@ -1,6 +1,61 @@
-chromium (118.0.5993.54-1~deb12u1) UNRELEASED; urgency=high
+chromium (118.0.5993.70-1~deb12u1) unstable; urgency=high
 
   * New upstream stable release.
+    - CVE-2023-5218: Use after free in Site Isolation.
+      Reported by @18楼梦想改造家.
+    - CVE-2023-5487: Inappropriate implementation in Fullscreen.
+      Reported by Anonymous.
+    - CVE-2023-5484: Inappropriate implementation in Navigation.
+      Reported by Thomas Orlita.
+    - CVE-2023-5475: Inappropriate implementation in DevTools.
+      Reported by Axel Chong.
+    - CVE-2023-5483: Inappropriate implementation in Intents.
+      Reported by Axel Chong.
+    - CVE-2023-5481: Inappropriate implementation in Downloads.
+      Reported by Om Apip.
+    - CVE-2023-5476: Use after free in Blink History. Reported by Yunqin Sun.
+    - CVE-2023-5474: Heap buffer overflow in PDF. Reported by [pwn2car].
+    - CVE-2023-5479: Inappropriate implementation in Extensions API.
+      Reported by Axel Chong.
+    - CVE-2023-5485: Inappropriate implementation in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-5478: Inappropriate implementation in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-5477: Inappropriate implementation in Installer.
+      Reported by Bahaa Naamneh of Crosspoint Labs.
+    - CVE-2023-5486: Inappropriate implementation in Input. Reported by Hafiizh.
+    - CVE-2023-5473: Use after free in Cast. Reported by DarkNavy.
+  * d/patches/ppc64le:
+    - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
+       upstream changes
+    - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
+    - skia-vsx-instructions.patch: refresh for upstream changes
+    - third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
+      regenerate configs from upstream source
+    - database/0001-Properly-detect-little-endian-PPC64-systems.patch:
+      refresh
+    - ffmpeg/0001-Add-support-for-ppc64.patch: refresh
+    - fixes/fix-breakpad-compile.patch: refresh
+    - fixes/fix-unknown-warning-option-messages.diff: refresh
+    - libaom/0001-Add-ppc64-target-to-libaom.patch: refresh
+    - sandbox/0001-sandbox-linux-Update-IsSyscallAllowed-in-broker_proc.patch:
+      refresh
+    - sandbox/0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch:
+      refresh
+    - sandbox/0008-sandbox-fix-ppc64le-glibc234.patch: refresh
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh
+    - third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch:
+      refresh
+    - third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch:
+      refresh
+    - third_party/0002-third-party-boringssl-add-generated-files.patch: refresh
+    - third_party/dawn-fix-ppc64le-detection.patch: refresh
+    - third_party/dawn-fix-typos.patch: refresh
+    - third_party/skia-vsx-instructions.patch: refresh
+    - third_party/use-sysconf-page-size-on-ppc64.patch: refresh
+    - workarounds/HACK-third_party-libvpx-use-generic-gnu.patch: refresh
+
+  [ Andres Salomon]
   * d/copyright:
     - blanket.js is gone, no need to remove it any more.
     - delete some khronos images marked executable.
@@ -18,16 +73,7 @@ chromium (118.0.5993.54-1~deb12u1) UNRELEASED; urgency=high
       ungoogled-chromium for upstream changes.
     - bookworm/i386-lock-free.patch: refresh.
 
-  [ Timothy Pearson ]
-  * d/patches/ppc64le:
-    - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
-       upstream changes
-    - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
-    - skia-vsx-instructions.patch: refresh for upstream changes
-    - ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
-      regenerate configs from upstream source
-
- -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 10 Oct 2023 22:03:00 -0500
 
 chromium (117.0.5938.149-1~deb12u1) bookworm-security; urgency=high
 

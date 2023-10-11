@@ -10,11 +10,11 @@ Subject: [PATCH] Add support for ppc64
  chromium/scripts/generate_gn_unittest.py | 10 ++++++++--
  4 files changed, 19 insertions(+), 6 deletions(-)
 
-Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
+Index: chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
-+++ chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
-@@ -40,7 +40,7 @@ BRANDINGS = [
+--- chromium-118.0.5993.54.orig/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
++++ chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
+@@ -43,7 +43,7 @@ BRANDINGS = [
  ARCH_MAP = {
      'android': ['ia32', 'x64', 'arm-neon', 'arm64'],
      'linux': [
@@ -23,7 +23,7 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/build_ffmpeg.p
      ],
      'mac': ['x64', 'arm64'],
      'win': ['ia32', 'x64', 'arm64'],
-@@ -142,6 +142,8 @@ def DetermineHostOsAndArch():
+@@ -145,6 +145,8 @@ def DetermineHostOsAndArch():
      host_arch = 'mips64el'
    elif platform.machine().startswith('arm'):
      host_arch = 'arm'
@@ -32,7 +32,7 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/build_ffmpeg.p
    else:
      return None
  
-@@ -911,6 +913,11 @@ def ConfigureAndBuild(target_arch, targe
+@@ -923,6 +925,11 @@ def ConfigureAndBuild(target_arch, targe
              '--extra-cflags=--target=mips64el-linux-gnuabi64',
              '--extra-ldflags=--target=mips64el-linux-gnuabi64',
          ])
@@ -44,10 +44,10 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/build_ffmpeg.p
      else:
        print(
            'Error: Unknown target arch %r for target OS %r!' % (target_arch,
-Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/copy_config.sh
+Index: chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/copy_config.sh
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/ffmpeg/chromium/scripts/copy_config.sh
-+++ chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/copy_config.sh
+--- chromium-118.0.5993.54.orig/third_party/ffmpeg/chromium/scripts/copy_config.sh
++++ chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/copy_config.sh
 @@ -10,7 +10,7 @@ for os in android linux linux-noasm mac
      # Copy config files for various architectures:
      #   - ia32/x64 have config.asm, config.h
@@ -57,11 +57,11 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/copy_config.sh
        # Don't waste time on non-existent configs, if no config.h then skip.
        [ ! -e "build.$arch.$os/$target/config.h" ] && continue
        for f in config.h config_components.h config.asm libavutil/avconfig.h libavutil/ffversion.h libavcodec/bsf_list.c libavcodec/codec_list.c libavcodec/parser_list.c libavformat/demuxer_list.c libavformat/muxer_list.c libavformat/protocol_list.c; do
-Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn.py
+Index: chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/generate_gn.py
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/ffmpeg/chromium/scripts/generate_gn.py
-+++ chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn.py
-@@ -78,7 +78,7 @@ _Attrs = ('ARCHITECTURE', 'TARGET', 'PLA
+--- chromium-118.0.5993.54.orig/third_party/ffmpeg/chromium/scripts/generate_gn.py
++++ chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/generate_gn.py
+@@ -82,7 +82,7 @@ _Attrs = ('ARCHITECTURE', 'TARGET', 'PLA
  Attr = collections.namedtuple('Attr', _Attrs)(*_Attrs)
  SUPPORT_MATRIX = {
      Attr.ARCHITECTURE:
@@ -70,11 +70,11 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn.py
      Attr.TARGET:
          set(['Chromium', 'Chrome', 'ChromeOS']),
      Attr.PLATFORM:
-Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
+Index: chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
-+++ chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
-@@ -323,6 +323,10 @@ class SourceSetUnittest(unittest.TestCas
+--- chromium-118.0.5993.54.orig/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
++++ chromium-118.0.5993.54/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
+@@ -329,6 +329,10 @@ class SourceSetUnittest(unittest.TestCas
      f = SourceSet(
          set(['common', 'arm-neon', 'chrome', 'chromeos']),
          set([SourceListCondition('arm-neon', 'ChromeOS', 'linux')]))
@@ -85,7 +85,7 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn_un
  
      expected = set()
      expected.add(
-@@ -334,7 +338,8 @@ class SourceSetUnittest(unittest.TestCas
+@@ -340,7 +344,8 @@ class SourceSetUnittest(unittest.TestCas
                  SourceListCondition('x64', 'Chromium', 'linux'),
                  SourceListCondition('x64', 'Chrome', 'linux'),
                  SourceListCondition('arm', 'Chromium', 'linux'),
@@ -95,7 +95,7 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn_un
              ])))
      expected.add(
          SourceSet(
-@@ -362,7 +367,7 @@ class SourceSetUnittest(unittest.TestCas
+@@ -368,7 +373,7 @@ class SourceSetUnittest(unittest.TestCas
              set(['arm-neon', 'chromeos']),
              set([SourceListCondition('arm-neon', 'ChromeOS', 'linux')])))
  
@@ -104,7 +104,7 @@ Index: chromium-110.0.5481.77/third_party/ffmpeg/chromium/scripts/generate_gn_un
      self.assertEqualSourceSets(expected, set(source_sets))
  
    def testReduceConditions(self):
-@@ -375,6 +380,7 @@ class SourceSetUnittest(unittest.TestCas
+@@ -381,6 +386,7 @@ class SourceSetUnittest(unittest.TestCas
              SourceListCondition('arm', 'Chromium', 'linux'),
              SourceListCondition('arm64', 'Chromium', 'linux'),
              SourceListCondition('arm-neon', 'Chromium', 'linux'),

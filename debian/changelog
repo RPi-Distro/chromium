@@ -73,7 +73,7 @@ chromium (118.0.5993.70-1) unstable; urgency=high
     - ungoogled/.../disable-web-environment-integrity.patch: sync with
       ungoogled-chromium for upstream changes.
 
- -- Timothy Pearson <tpearson@raptorengineering.com> Tue, 10 Oct 2023 22:03:00 -0500
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 10 Oct 2023 22:03:00 -0500
 
 chromium (117.0.5938.149-1) unstable; urgency=high
 

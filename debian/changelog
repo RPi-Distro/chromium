@@ -1,24 +1,30 @@
-chromium (118.0.5993.54-1) UNRELEASED; urgency=high
+chromium (118.0.5993.70-1) unstable; urgency=high
 
   * New upstream stable release.
-  * d/copyright:
-    - blanket.js is gone, no need to remove it any more.
-    - delete some khronos images marked executable.
-  * d/patches:
-    - upstream/memory.patch: drop, merged upstream.
-    - upstream/sensor-reading.patch: add, gcc13 build fix from upstream.
-    - upstream/lweight.patch: add, gcc13 build fix from upstream.
-    - upstream/freetype.patch: add, fix freetype header inclusion FTBFS.
-    - upstream/sizet.patch: add, libstdc++ build fix from upstream.
-    - disable/unrar.patch: update for minor upstream changes.
-    - bookworm/struct-ctor.patch: add various new workarounds for clang-14.
-    - bookworm/structured-binding-scope-bug.patch: drop part of the patch.
-    - bullseye/clang13.patch: drop bullseye patches from sid.
-    - bullseye/constexpr.patch: drop bullseye patches from sid.
-    - ungoogled/.../disable-web-environment-integrity.patch: sync with
-      ungoogled-chromium for upstream changes.
-
-  [ Timothy Pearson ]
+    - CVE-2023-5218: Use after free in Site Isolation.
+      Reported by @18楼梦想改造家.
+    - CVE-2023-5487: Inappropriate implementation in Fullscreen.
+      Reported by Anonymous.
+    - CVE-2023-5484: Inappropriate implementation in Navigation.
+      Reported by Thomas Orlita.
+    - CVE-2023-5475: Inappropriate implementation in DevTools.
+      Reported by Axel Chong.
+    - CVE-2023-5483: Inappropriate implementation in Intents.
+      Reported by Axel Chong.
+    - CVE-2023-5481: Inappropriate implementation in Downloads.
+      Reported by Om Apip.
+    - CVE-2023-5476: Use after free in Blink History. Reported by Yunqin Sun.
+    - CVE-2023-5474: Heap buffer overflow in PDF. Reported by [pwn2car].
+    - CVE-2023-5479: Inappropriate implementation in Extensions API.
+      Reported by Axel Chong.
+    - CVE-2023-5485: Inappropriate implementation in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-5478: Inappropriate implementation in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-5477: Inappropriate implementation in Installer.
+      Reported by Bahaa Naamneh of Crosspoint Labs.
+    - CVE-2023-5486: Inappropriate implementation in Input. Reported by Hafiizh.
+    - CVE-2023-5473: Use after free in Cast. Reported by DarkNavy.
   * d/patches/ppc64le:
     - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
        upstream changes
@@ -49,7 +55,25 @@ chromium (118.0.5993.54-1) UNRELEASED; urgency=high
     - third_party/use-sysconf-page-size-on-ppc64.patch: refresh
     - workarounds/HACK-third_party-libvpx-use-generic-gnu.patch: refresh
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 03 Oct 2023 19:31:26 -0400
+  [ Andres Salomon]
+  * d/copyright:
+    - blanket.js is gone, no need to remove it any more.
+    - delete some khronos images marked executable.
+  * d/patches:
+    - upstream/memory.patch: drop, merged upstream.
+    - upstream/sensor-reading.patch: add, gcc13 build fix from upstream.
+    - upstream/lweight.patch: add, gcc13 build fix from upstream.
+    - upstream/freetype.patch: add, fix freetype header inclusion FTBFS.
+    - upstream/sizet.patch: add, libstdc++ build fix from upstream.
+    - disable/unrar.patch: update for minor upstream changes.
+    - bookworm/struct-ctor.patch: add various new workarounds for clang-14.
+    - bookworm/structured-binding-scope-bug.patch: drop part of the patch.
+    - bullseye/clang13.patch: drop bullseye patches from sid.
+    - bullseye/constexpr.patch: drop bullseye patches from sid.
+    - ungoogled/.../disable-web-environment-integrity.patch: sync with
+      ungoogled-chromium for upstream changes.
+
+ -- Timothy Pearson <tpearson@raptorengineering.com> Tue, 10 Oct 2023 22:03:00 -0500
 
 chromium (117.0.5938.149-1) unstable; urgency=high
 

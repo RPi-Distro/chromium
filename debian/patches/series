@@ -47,12 +47,6 @@ system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
 
-bookworm/clang-attribs.patch
-bookworm/typename.patch
-bookworm/struct-ctor.patch
-bookworm/structured-binding-scope-bug.patch
-bookworm/stringpiece3.patch
-bookworm/initialize-const-ctor.patch
 bookworm/generate-ninja.patch
 bookworm/i386-lock-free.patch
 bookworm/freetype-COLRV1.patch

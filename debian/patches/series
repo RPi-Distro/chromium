@@ -49,13 +49,6 @@ system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
 
-bookworm/clang-attribs.patch
-bookworm/typename.patch
-bookworm/struct-ctor.patch
-bookworm/structured-binding-scope-bug.patch
-bookworm/stringpiece3.patch
-bookworm/initialize-const-ctor.patch
-
 # i386 support
 i386/support-i386.patch
 i386/angle-lockfree.patch

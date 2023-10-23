@@ -1,3 +1,17 @@
+chromium (118.0.5993.70-2) UNRELEASED; urgency=high
+
+  * d/patches:
+    - bookworm/clang-attribs.patch: drop, now that we've switched to clang-16.
+    - bookworm/typename.patch: drop, now that we've switched to clang-16.
+    - bookworm/struct-ctor.patch: drop, now that we've switched to clang-16.
+    - bookworm/structured-binding-scope-bug.patch: drop, now that we've
+      switched to clang-16.
+    - bookworm/stringpiece3.patch: drop, now that we've switched to clang-16.
+    - bookworm/initialize-const-ctor.patch: drop, now that we've switched to
+      clang-16.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 10 Oct 2023 22:03:00 -0500
+
 chromium (118.0.5993.70-1) unstable; urgency=high
 
   * New upstream stable release.

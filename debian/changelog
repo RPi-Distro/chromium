@@ -1,5 +1,8 @@
-chromium (118.0.5993.70-2) UNRELEASED; urgency=high
+chromium (118.0.5993.117-1) unstable; urgency=high
 
+  * New upstream security release.
+    - CVE-2023-5472: Use after free in Profiles.
+      Reported by @18楼梦想改造家.
   * d/patches:
     - bookworm/clang-attribs.patch: drop, now that we've switched to clang-16.
     - bookworm/typename.patch: drop, now that we've switched to clang-16.
@@ -13,7 +16,7 @@ chromium (118.0.5993.70-2) UNRELEASED; urgency=high
       clang-16.
     - fixes/SkColor4f-init.patch: drop, now that we've switched to clang-16.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 10 Oct 2023 22:03:00 -0500
+ -- Andres Salomon <dilinger@debian.org>  Tue, 24 Oct 2023 20:00:54 -0400
 
 chromium (118.0.5993.70-1) unstable; urgency=high
 

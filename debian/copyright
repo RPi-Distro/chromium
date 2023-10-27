@@ -187,8 +187,8 @@ Copyright:
  2012-2019 Michael Gilbert <mgilbert@debian.org>
 License: BSD-3-clause
 
-Files: PRESUBMIT.py
-Copyright: 2010 The Chromium Authors.
+Files: debian/patches/ungoogled/*
+Copyright: Copyright (c) 2015-2023, The ungoogled-chromium Authors
 License: BSD-3-clause
 
 Files: base/*

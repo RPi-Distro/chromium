@@ -29,7 +29,6 @@ disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/angle-perftests.patch
 disable/clang-version-check.patch
-disable/privacy-sandbox.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -42,6 +41,10 @@ system/opus.patch
 system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
+
+# Ungoogled Chromium
+ungoogled/disable-web-environment-integrity.patch
+ungoogled/disable-privacy-sandbox.patch
 
 # i386 support
 i386/support-i386.patch
@@ -125,6 +128,3 @@ ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch
 # These patches enable full POWER ISA 3.0 (POWER9) acceleration when applied
 # They will not work on POWER8 (ISA 2.07) or below
 #ppc64le/core/baseline-isa-3-0.patch
-
-# Ungoogled Chromium
-ungoogled/core/ungoogled-chromium/disable-web-environment-integrity.patch

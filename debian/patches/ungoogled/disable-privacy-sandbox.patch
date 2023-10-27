@@ -1,0 +1,95 @@
+description: disable Privacy Sandbox completely
+
+https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/core/ungoogled-chromium/disable-privacy-sandbox.patch
+
+--- a/components/attribution_reporting/features.cc
++++ b/components/attribution_reporting/features.cc
+@@ -11,7 +11,7 @@ namespace attribution_reporting::feature
+ // Controls whether the Conversion Measurement API infrastructure is enabled.
+ BASE_FEATURE(kConversionMeasurement,
+              "ConversionMeasurement",
+-             base::FEATURE_ENABLED_BY_DEFAULT);
++             base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ BASE_FEATURE(kAttributionReportingNullAggregatableReports,
+              "AttributionReportingNullAggregatableReports",
+--- a/components/privacy_sandbox/privacy_sandbox_prefs.cc
++++ b/components/privacy_sandbox/privacy_sandbox_prefs.cc
+@@ -12,7 +12,7 @@ namespace privacy_sandbox {
+ 
+ void RegisterProfilePrefs(PrefRegistrySimple* registry) {
+   registry->RegisterBooleanPref(
+-      prefs::kPrivacySandboxApisEnabled, true,
++      prefs::kPrivacySandboxApisEnabled, false,
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+   registry->RegisterBooleanPref(prefs::kPrivacySandboxApisEnabledV2, false);
+   registry->RegisterBooleanPref(prefs::kPrivacySandboxM1ConsentDecisionMade,
+--- a/components/privacy_sandbox/privacy_sandbox_settings_impl.cc
++++ b/components/privacy_sandbox/privacy_sandbox_settings_impl.cc
+@@ -120,7 +120,7 @@ std::set<browsing_topics::Topic> GetTopi
+ 
+ // static
+ bool PrivacySandboxSettingsImpl::IsAllowed(Status status) {
+-  return status == Status::kAllowed;
++  return false;
+ }
+ 
+ // static
+@@ -728,20 +728,7 @@ bool PrivacySandboxSettingsImpl::IsPriva
+ }
+ 
+ bool PrivacySandboxSettingsImpl::IsPrivacySandboxEnabled() const {
+-  PrivacySandboxSettingsImpl::Status status = GetPrivacySandboxAllowedStatus();
+-  if (!IsAllowed(status)) {
+-    return false;
+-  }
+-
+-  // For Measurement and Relevance APIs, we explicitly do not require the
+-  // underlying pref to be enabled if there is a local flag enabling the APIs to
+-  // allow for local testing.
+-  if (base::FeatureList::IsEnabled(
+-          privacy_sandbox::kOverridePrivacySandboxSettingsLocalTesting)) {
+-    return true;
+-  }
+-
+-  return pref_service_->GetBoolean(prefs::kPrivacySandboxApisEnabledV2);
++  return false;
+ }
+ 
+ void PrivacySandboxSettingsImpl::SetAllPrivacySandboxAllowedForTesting() {
+@@ -766,11 +753,10 @@ void PrivacySandboxSettingsImpl::SetTopi
+ }
+ 
+ void PrivacySandboxSettingsImpl::SetPrivacySandboxEnabled(bool enabled) {
+-  pref_service_->SetBoolean(prefs::kPrivacySandboxApisEnabledV2, enabled);
+ }
+ 
+ bool PrivacySandboxSettingsImpl::IsPrivacySandboxRestricted() const {
+-  return delegate_->IsPrivacySandboxRestricted();
++  return true;
+ }
+ 
+ bool PrivacySandboxSettingsImpl::IsPrivacySandboxCurrentlyUnrestricted() const {
+@@ -857,11 +843,7 @@ PrivacySandboxSettingsImpl::GetPrivacySa
+     return Status::kIncognitoProfile;
+   }
+ 
+-  if (IsPrivacySandboxRestricted() && !should_ignore_restriction) {
+     return Status::kRestricted;
+-  }
+-
+-  return Status::kAllowed;
+ }
+ 
+ PrivacySandboxSettingsImpl::Status
+--- a/content/browser/aggregation_service/aggregation_service_features.cc
++++ b/content/browser/aggregation_service/aggregation_service_features.cc
+@@ -8,7 +8,7 @@ namespace content {
+ 
+ BASE_FEATURE(kPrivacySandboxAggregationService,
+              "PrivacySandboxAggregationService",
+-             base::FEATURE_ENABLED_BY_DEFAULT);
++             base::FEATURE_DISABLED_BY_DEFAULT);
+ 
+ const base::FeatureParam<std::string>
+     kPrivacySandboxAggregationServiceTrustedServerUrlAwsParam{

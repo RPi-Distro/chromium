@@ -10,6 +10,11 @@ chromium (119.0.6045.59-1) UNRELEASED; urgency=high
     - upstream/sizet.patch: drop, merged upstream.
     - disable/catapult.patch: drop an unused hunk.
     - disable/widevine-cdm-cu.patch: refresh.
+    - disable/privacy-sandbox.patch: rename, sync up with ungoogled-chromium,
+      and use the full ungoogled patch. The privacy sandbox config interface
+      is now gone, with no way to enable it.
+    - ungoogled/core/ungoogled-chromium/disable-web-environment-integrity.patch:
+      sync up with with ungoogled-chromium, and rename.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 24 Oct 2023 20:00:54 -0400
 

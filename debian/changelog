@@ -3,6 +3,7 @@ chromium (119.0.6045.59-1) UNRELEASED; urgency=high
   * New upstream stable release.
   * d/patches:
     - fixes/gcc13-headers.patch: drop parts that have been merged upstream.
+    - fixes/perfetto.patch: drop part that was merged upstream.
     - upstream/sensor-reading.patch: drop, merged upstream.
     - upstream/lweight.patch: drop, merged upstream.
     - upstream/freetype.patch: drop, merged upstream.

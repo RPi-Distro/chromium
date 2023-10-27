@@ -11,6 +11,7 @@ fixes/gcc13-headers.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch
+fixes/blink-frags.patch
 fixes/v8-compressed-ptrs.patch
 
 upstream/mojo.patch

@@ -270,18 +270,6 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
      "//third_party/perfetto/src/trace_processor:trace_processor_shell",
    ]
    data = [
---- a/weblayer/shell/BUILD.gn
-+++ b/weblayer/shell/BUILD.gn
-@@ -181,9 +181,6 @@ repack("support_pak") {
-   }
-   if (is_android) {
-     deps += [ "//ui/android:ui_java_resources" ]
--  } else {
--    deps += [ "//content/browser/tracing:resources" ]
--    sources += [ "$root_gen_dir/content/browser/tracing/tracing_resources.pak" ]
-   }
-   output = "$root_out_dir/weblayer_support.pak"
- }
 --- a/third_party/blink/tools/BUILD.gn
 +++ b/third_party/blink/tools/BUILD.gn
 @@ -36,7 +36,6 @@ group("wpt_tests_isolate") {

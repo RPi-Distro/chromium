@@ -12,6 +12,7 @@ fixes/material-utils.patch
 fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/v8-compressed-ptrs.patch
+fixes/atspi.patch
 
 upstream/mojo.patch
 

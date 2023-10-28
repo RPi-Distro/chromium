@@ -17,6 +17,7 @@ chromium (119.0.6045.59-1) UNRELEASED; urgency=high
       sync up with with ungoogled-chromium, and rename.
     - fixes/blink-frags.patch: additional build fix for libstdc++13.
     - fixes/gcc13-with-clang14.patch: drop, now that we've switched to clang-16.
+    - fixes/atspi.patch: fix build failure with atspi >= 2.50.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 24 Oct 2023 20:00:54 -0400
 

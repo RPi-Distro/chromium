@@ -19,6 +19,10 @@ chromium (119.0.6045.59-1) UNRELEASED; urgency=high
     - fixes/gcc13-with-clang14.patch: drop, now that we've switched to clang-16.
     - fixes/atspi.patch: fix build failure with atspi >= 2.50.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - Mass refresh all patches against 119 codebase.  No functional change.
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 24 Oct 2023 20:00:54 -0400
 
 chromium (118.0.5993.117-1) unstable; urgency=high

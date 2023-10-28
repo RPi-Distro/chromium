@@ -7,10 +7,10 @@ Subject: [PATCH 1/1] sandbox: Enable seccomp_bpf for ppc64
  sandbox/features.gni | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: chromium-110.0.5481.77/sandbox/features.gni
+Index: chromium-119.0.6045.59/sandbox/features.gni
 ===================================================================
---- chromium-110.0.5481.77.orig/sandbox/features.gni
-+++ chromium-110.0.5481.77/sandbox/features.gni
+--- chromium-119.0.6045.59.orig/sandbox/features.gni
++++ chromium-119.0.6045.59/sandbox/features.gni
 @@ -9,7 +9,8 @@
  use_seccomp_bpf = (is_linux || is_chromeos || is_android) &&
                    (current_cpu == "x86" || current_cpu == "x64" ||

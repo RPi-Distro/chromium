@@ -7,10 +7,10 @@ Subject: [PATCH] Fix libdav1d compilation on clang ppc
  src/ppc/dav1d_types.h | 15 +++++++++++++++
  1 file changed, 15 insertions(+)
 
-Index: chromium-110.0.5481.77/third_party/dav1d/libdav1d/src/ppc/dav1d_types.h
+Index: chromium-119.0.6045.59/third_party/dav1d/libdav1d/src/ppc/dav1d_types.h
 ===================================================================
---- chromium-110.0.5481.77.orig/third_party/dav1d/libdav1d/src/ppc/dav1d_types.h
-+++ chromium-110.0.5481.77/third_party/dav1d/libdav1d/src/ppc/dav1d_types.h
+--- chromium-119.0.6045.59.orig/third_party/dav1d/libdav1d/src/ppc/dav1d_types.h
++++ chromium-119.0.6045.59/third_party/dav1d/libdav1d/src/ppc/dav1d_types.h
 @@ -51,4 +51,19 @@
  #define u16l_to_i32(v) ((i32x4) vec_mergel((u16x8) v, vec_splat_u16(0)))
  #define i16l_to_i32(v) ((i32x4) vec_unpackl((i16x8)v))

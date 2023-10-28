@@ -1,8 +1,7 @@
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm b/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
-new file mode 100644
-index 0000000..b5e24a6
+Index: chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
++++ chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 @@ -0,0 +1,86 @@
 +;
 +; Copyright (c) 2023, Alliance for Open Media. All rights reserved
@@ -90,11 +89,10 @@ index 0000000..b5e24a6
 +HAVE_VSX equ 1
 +HAVE_WXWIDGETS equ 0
 +STATIC_LINK_JXL equ 0
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.c b/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
-new file mode 100644
-index 0000000..f22d720
+Index: chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
++++ chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 @@ -0,0 +1,13 @@
 +/*
 + * Copyright (c) 2016, Alliance for Open Media. All rights reserved
@@ -109,11 +107,10 @@ index 0000000..f22d720
 +#include "aom/aom_codec.h"
 +static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_ENCODER=1 -DCONFIG_LIBYUV=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=1 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_MAX_DECODE_PROFILE=0 -DCONFIG_NORMAL_TILE_MODE=1 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_config.h b/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
-new file mode 100644
-index 0000000..faeecbe
+Index: chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
++++ chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 @@ -0,0 +1,90 @@
 +/*
 + * Copyright (c) 2023, Alliance for Open Media. All rights reserved
@@ -205,11 +202,10 @@ index 0000000..faeecbe
 +#define INLINE inline
 +#define STATIC_LINK_JXL 0
 +#endif  // AOM_CONFIG_H_
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
-new file mode 100644
-index 0000000..65e6a2e
+Index: chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
++++ chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 @@ -0,0 +1,1631 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_DSP_RTCD_H_
@@ -1842,11 +1838,10 @@ index 0000000..65e6a2e
 +#endif
 +
 +#endif
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
-new file mode 100644
-index 0000000..a4be327
+Index: chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
++++ chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 @@ -0,0 +1,105 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_SCALE_RTCD_H_
@@ -1953,11 +1948,10 @@ index 0000000..a4be327
 +#endif
 +
 +#endif
-diff --git a/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h b/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
-new file mode 100644
-index 0000000..3911686
+Index: chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+===================================================================
 --- /dev/null
-+++ b/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
++++ chromium-119.0.6045.59/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 @@ -0,0 +1,485 @@
 +// This file is generated. Do not edit.
 +#ifndef AV1_RTCD_H_
@@ -2444,4 +2438,3 @@ index 0000000..3911686
 +#endif
 +
 +#endif
-

@@ -20,6 +20,8 @@ chromium (119.0.6045.59-1) UNRELEASED; urgency=high
     - fixes/atspi.patch: fix build failure with atspi >= 2.50.
 
   [ Timothy Pearson ]
+  * d/patches:
+    - patches/bullseye/constexpr.patch: Add MiracleParameter workaround
   * d/patches/ppc64le:
     - Mass refresh all patches against 119 codebase.  No functional change.
 

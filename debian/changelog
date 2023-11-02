@@ -11,8 +11,8 @@ chromium (119.0.6045.105-1) unstable; urgency=high
       Reported by Shaheen Fazim.
     - CVE-2023-5852: Use after free in Printing. Reported by [pwn2car].
     - CVE-2023-5853: Incorrect security UI in Downloads. Reported by Hafiizh.
-    - CVE-2023-5854: Use after free in Profiles.
-      Reported by Dohyun Lee (@l33d0hyun) of SSD-Disclosure Labs & DNSLab, Korea Univ.
+    - CVE-2023-5854: Use after free in Profiles. Reported by
+      Dohyun Lee (@l33d0hyun) of SSD-Disclosure Labs & DNSLab, Korea Univ.
     - CVE-2023-5855: Use after free in Reading Mode. Reported by ChaobinZhang.
     - CVE-2023-5856: Use after free in Side Panel.
       Reported by Weipeng Jiang (@Krace) of VRI.

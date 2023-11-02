@@ -3,16 +3,6 @@ Fix a bunch of build errors with gcc-13's libstdc++ headers.
 These are technically correct and should go upstream.
 
 
---- a/third_party/perfetto/src/trace_processor/sqlite/query_constraints.h
-+++ b/third_party/perfetto/src/trace_processor/sqlite/query_constraints.h
-@@ -19,6 +19,7 @@
- 
- #include <limits>
- #include <vector>
-+#include <stdint.h>
- 
- #include "perfetto/ext/base/scoped_file.h"
- 
 --- a/third_party/ruy/src/ruy/profiler/instrumentation.h
 +++ b/third_party/ruy/src/ruy/profiler/instrumentation.h
 @@ -16,6 +16,8 @@ limitations under the License.
@@ -34,36 +24,6 @@ These are technically correct and should go upstream.
  #include <cstdlib>
  #include <cstring>
  #include <utility>
---- a/third_party/perfetto/include/perfetto/trace_processor/read_trace.h
-+++ b/third_party/perfetto/include/perfetto/trace_processor/read_trace.h
-@@ -19,6 +19,7 @@
- 
- #include <functional>
- #include <vector>
-+#include <stdint.h>
- 
- #include "perfetto/base/export.h"
- #include "perfetto/trace_processor/status.h"
---- a/third_party/perfetto/src/trace_processor/read_trace_internal.h
-+++ b/third_party/perfetto/src/trace_processor/read_trace_internal.h
-@@ -19,6 +19,7 @@
- 
- #include <functional>
- #include <vector>
-+#include <cstdint>
- 
- #include "perfetto/base/export.h"
- #include "perfetto/trace_processor/status.h"
---- a/third_party/maldoca/src/maldoca/ole/header.h
-+++ b/third_party/maldoca/src/maldoca/ole/header.h
-@@ -44,6 +44,7 @@
- #define MALDOCA_OLE_HEADER_H_
- 
- #include "absl/strings/string_view.h"
-+#include <cstdint>
- 
- namespace maldoca {
- 
 --- a/net/third_party/quiche/src/quiche/quic/core/qpack/qpack_stream_sender_delegate.h
 +++ b/net/third_party/quiche/src/quiche/quic/core/qpack/qpack_stream_sender_delegate.h
 @@ -7,6 +7,7 @@

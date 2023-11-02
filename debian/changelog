@@ -1,3 +1,53 @@
+chromium (119.0.6045.105-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream stable release.
+    - CVE-2023-5480: Inappropriate implementation in Payments.
+      Reported by Vsevolod Kokorin (Slonser) of Solidlab.
+    - CVE-2023-5482: Insufficient data validation in USB. Reported by DarkNavy.
+    - CVE-2023-5849: Integer overflow in USB. Reported by DarkNavy.
+    - CVE-2023-5850: Incorrect security UI in Downloads.
+      Reported by Mohit Raj (shadow2639) .
+    - CVE-2023-5851: Inappropriate implementation in Downloads.
+      Reported by Shaheen Fazim.
+    - CVE-2023-5852: Use after free in Printing. Reported by [pwn2car].
+    - CVE-2023-5853: Incorrect security UI in Downloads. Reported by Hafiizh.
+    - CVE-2023-5854: Use after free in Profiles. Reported by
+      Dohyun Lee (@l33d0hyun) of SSD-Disclosure Labs & DNSLab, Korea Univ.
+    - CVE-2023-5855: Use after free in Reading Mode. Reported by ChaobinZhang.
+    - CVE-2023-5856: Use after free in Side Panel.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2023-5857: Inappropriate implementation in Downloads.
+      Reported by Will Dormann.
+    - CVE-2023-5858: Inappropriate implementation in WebApp Provider.
+      Reported by Axel Chong.
+    - CVE-2023-5859: Incorrect security UI in Picture In Picture.
+      Reported by Junsung Lee
+  * d/patches:
+    - patches/bullseye/constexpr.patch: Add MiracleParameter workaround
+  * d/patches/ppc64le:
+    - Mass refresh all patches against 119 codebase.  No functional change.
+
+  [ Andres Salomon ]
+  * d/patches:
+    - fixes/gcc13-headers.patch: drop parts that have been merged upstream.
+    - fixes/perfetto.patch: drop part that was merged upstream.
+    - upstream/sensor-reading.patch: drop, merged upstream.
+    - upstream/lweight.patch: drop, merged upstream.
+    - upstream/freetype.patch: drop, merged upstream.
+    - upstream/sizet.patch: drop, merged upstream.
+    - disable/catapult.patch: drop an unused hunk.
+    - disable/widevine-cdm-cu.patch: refresh.
+    - disable/privacy-sandbox.patch: rename, sync up with ungoogled-chromium,
+      and use the full ungoogled patch. The privacy sandbox config interface
+      is now gone, with no way to enable it.
+    - ungoogled/core/ungoogled-chromium/disable-web-environment-integrity.patch:
+      sync up with with ungoogled-chromium, and rename.
+    - fixes/blink-frags.patch: additional build fix for libstdc++13.
+    - fixes/gcc13-with-clang14.patch: drop, now that we've switched to clang-16.
+    - fixes/atspi.patch: fix build failure with atspi >= 2.50.
+
+ -- Timothy Pearson <tpearson@raptorengineering.com>  Tue, 31 Oct 2023 23:50:00 -0500
+
 chromium (118.0.5993.117-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

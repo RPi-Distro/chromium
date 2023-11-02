@@ -1,7 +1,7 @@
-Index: chromium-118.0.5993.54/base/allocator/partition_allocator/page_allocator_constants.h
+Index: chromium-119.0.6045.59/base/allocator/partition_allocator/page_allocator_constants.h
 ===================================================================
---- chromium-118.0.5993.54.orig/base/allocator/partition_allocator/page_allocator_constants.h
-+++ chromium-118.0.5993.54/base/allocator/partition_allocator/page_allocator_constants.h
+--- chromium-119.0.6045.59.orig/base/allocator/partition_allocator/page_allocator_constants.h
++++ chromium-119.0.6045.59/base/allocator/partition_allocator/page_allocator_constants.h
 @@ -172,7 +172,11 @@ SystemPageBaseMask() {
    return ~SystemPageOffsetMask();
  }
@@ -14,11 +14,11 @@ Index: chromium-118.0.5993.54/base/allocator/partition_allocator/page_allocator_
  constexpr size_t kPageMetadataSize = 1 << kPageMetadataShift;
  
  }  // namespace partition_alloc::internal
-Index: chromium-118.0.5993.54/base/allocator/partition_allocator/partition_page.h
+Index: chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page.h
 ===================================================================
---- chromium-118.0.5993.54.orig/base/allocator/partition_allocator/partition_page.h
-+++ chromium-118.0.5993.54/base/allocator/partition_allocator/partition_page.h
-@@ -87,7 +87,11 @@ struct SlotSpanMetadata {
+--- chromium-119.0.6045.59.orig/base/allocator/partition_allocator/partition_page.h
++++ chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page.h
+@@ -90,7 +90,11 @@ struct SlotSpanMetadata {
  
    // CHECK()ed in AllocNewSlotSpan().
    // The maximum number of bits needed to cover all currently supported OSes.
@@ -30,7 +30,7 @@ Index: chromium-118.0.5993.54/base/allocator/partition_allocator/partition_page.
    static_assert(kMaxSlotsPerSlotSpan < (1 << kMaxSlotsPerSlotSpanBits), "");
  
    // |marked_full| isn't equivalent to being full. Slot span is marked as full
-@@ -101,7 +105,11 @@ struct SlotSpanMetadata {
+@@ -104,7 +108,11 @@ struct SlotSpanMetadata {
   private:
    const uint32_t can_store_raw_size_ : 1;
    uint32_t freelist_is_sorted_ : 1;
@@ -42,10 +42,10 @@ Index: chromium-118.0.5993.54/base/allocator/partition_allocator/partition_page.
    // If |in_empty_cache_|==1, |empty_cache_index| is undefined and mustn't be
    // used.
    uint16_t in_empty_cache_ : 1;
-Index: chromium-118.0.5993.54/base/allocator/partition_allocator/partition_page_constants.h
+Index: chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page_constants.h
 ===================================================================
---- chromium-118.0.5993.54.orig/base/allocator/partition_allocator/partition_page_constants.h
-+++ chromium-118.0.5993.54/base/allocator/partition_allocator/partition_page_constants.h
+--- chromium-119.0.6045.59.orig/base/allocator/partition_allocator/partition_page_constants.h
++++ chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page_constants.h
 @@ -21,6 +21,11 @@ static constexpr size_t kMaxSlotsPerSlot
  // currently (kMaxSlotsPerSlotSpanBits == 13) not supported by the code,
  // so we use the 16 kiB maximum (64 kiB will crash).

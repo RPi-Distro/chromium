@@ -44,12 +44,10 @@ Files-Excluded:
  chrome/installer/mini_installer
  chrome/installer/launcher_support
  chrome/utility/safe_browsing/rar_analyzer.*
- chrome/browser/resources/chromeos/ac*
  chrome/browser/resources/chromeos/s*
  chrome/browser/resources/chromeos/l*
  chrome/browser/resources/chromeos/n*
  chrome/browser/resources/default_apps
- chrome/chrome_cleaner/test/resources/signed_dll
  fuchsia*
  tools/emacs
  tools/luci-go
@@ -189,8 +187,8 @@ Copyright:
  2012-2019 Michael Gilbert <mgilbert@debian.org>
 License: BSD-3-clause
 
-Files: PRESUBMIT.py
-Copyright: 2010 The Chromium Authors.
+Files: debian/patches/ungoogled/*
+Copyright: Copyright (c) 2015-2023, The ungoogled-chromium Authors
 License: BSD-3-clause
 
 Files: base/*

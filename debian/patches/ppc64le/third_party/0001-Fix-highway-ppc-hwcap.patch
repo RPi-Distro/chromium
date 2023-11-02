@@ -1,6 +1,8 @@
---- a/third_party/highway/BUILD.gn
-+++ b/third_party/highway/BUILD.gn
-@@ -13,6 +13,9 @@
+Index: chromium-119.0.6045.59/third_party/highway/BUILD.gn
+===================================================================
+--- chromium-119.0.6045.59.orig/third_party/highway/BUILD.gn
++++ chromium-119.0.6045.59/third_party/highway/BUILD.gn
+@@ -13,6 +13,9 @@ config("libhwy_external_config") {
      # explicitly disabling AVX2 and AVX3 targets.
      defines += [ "HWY_BROKEN_TARGETS=(HWY_AVX2|HWY_AVX3)" ]
    }

@@ -1,5 +1,7 @@
---- a/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
-+++ b/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
+Index: chromium-119.0.6045.59/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
+===================================================================
+--- chromium-119.0.6045.59.orig/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
++++ chromium-119.0.6045.59/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
 @@ -36,6 +36,8 @@
  
  #include "hwy/ops/shared-inl.h"
@@ -9,7 +11,7 @@
  HWY_BEFORE_NAMESPACE();
  namespace hwy {
  namespace HWY_NAMESPACE {
-@@ -2844,7 +2846,6 @@
+@@ -2844,7 +2846,6 @@ struct CompressIsPartition {
  
  namespace detail {
  
@@ -17,7 +19,7 @@
  // fallback for missing vec_extractm
  template <size_t N>
  HWY_INLINE uint64_t ExtractSignBits(Vec128<uint8_t, N> sign_bits,
-@@ -2857,22 +2858,16 @@
+@@ -2857,22 +2858,16 @@ HWY_INLINE uint64_t ExtractSignBits(Vec1
    return extracted.raw[__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__];
  }
  
@@ -40,7 +42,7 @@
  }
  
  template <typename T, size_t N>
-@@ -2882,10 +2877,6 @@
+@@ -2882,10 +2877,6 @@ HWY_INLINE uint64_t BitsFromMask(hwy::Si
    const Repartition<uint8_t, decltype(d)> du8;
    const VFromD<decltype(du8)> sign_bits = BitCast(du8, VecFromMask(d, mask));
  
@@ -51,7 +53,7 @@
  #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
    const __vector unsigned char kBitShuffle = {
      112, 96, 80, 64, 48, 32, 16, 0, 128, 128, 128, 128, 128, 128, 128, 128};
-@@ -2894,7 +2885,6 @@
+@@ -2894,7 +2885,6 @@ HWY_INLINE uint64_t BitsFromMask(hwy::Si
      128, 128, 128, 128, 128, 128, 128, 128, 112, 96, 80, 64, 48, 32, 16, 0};
  #endif
    return ExtractSignBits(sign_bits, kBitShuffle);
@@ -59,7 +61,7 @@
  }
  
  template <typename T, size_t N>
-@@ -2903,10 +2893,6 @@
+@@ -2903,10 +2893,6 @@ HWY_INLINE uint64_t BitsFromMask(hwy::Si
    const DFromM<decltype(mask)> d;
    const Repartition<uint8_t, decltype(d)> du8;
    const VFromD<decltype(du8)> sign_bits = BitCast(du8, VecFromMask(d, mask));
@@ -70,7 +72,7 @@
  #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
    const __vector unsigned char kBitShuffle = {
      96, 64, 32, 0, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128};
-@@ -2915,7 +2901,6 @@
+@@ -2915,7 +2901,6 @@ HWY_INLINE uint64_t BitsFromMask(hwy::Si
       128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 128, 96, 64, 32, 0};
  #endif
    return ExtractSignBits(sign_bits, kBitShuffle);
@@ -78,7 +80,7 @@
  }
  
  template <typename T, size_t N>
-@@ -2924,10 +2909,6 @@
+@@ -2924,10 +2909,6 @@ HWY_INLINE uint64_t BitsFromMask(hwy::Si
    const DFromM<decltype(mask)> d;
    const Repartition<uint8_t, decltype(d)> du8;
    const VFromD<decltype(du8)> sign_bits = BitCast(du8, VecFromMask(d, mask));
@@ -89,7 +91,7 @@
  #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
    const __vector unsigned char kBitShuffle = {64,  0,   128, 128, 128, 128,
                                                128, 128, 128, 128, 128, 128,
-@@ -2938,7 +2919,6 @@
+@@ -2938,7 +2919,6 @@ HWY_INLINE uint64_t BitsFromMask(hwy::Si
                                                128, 128, 64,  0};
  #endif
    return ExtractSignBits(sign_bits, kBitShuffle);

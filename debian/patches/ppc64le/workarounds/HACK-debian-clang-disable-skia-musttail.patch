@@ -1,6 +1,8 @@
---- a/third_party/skia/src/core/SkRasterPipeline.h
-+++ b/third_party/skia/src/core/SkRasterPipeline.h
-@@ -24,7 +24,7 @@
+Index: chromium-119.0.6045.59/third_party/skia/src/core/SkRasterPipeline.h
+===================================================================
+--- chromium-119.0.6045.59.orig/third_party/skia/src/core/SkRasterPipeline.h
++++ chromium-119.0.6045.59/third_party/skia/src/core/SkRasterPipeline.h
+@@ -24,7 +24,7 @@ enum SkColorType : int;
  struct SkImageInfo;
  struct skcms_TransferFunction;
  

@@ -1,7 +1,7 @@
-Index: chromium-118.0.5993.54/sandbox/policy/linux/bpf_utility_policy_linux.cc
+Index: chromium-119.0.6045.59/sandbox/policy/linux/bpf_utility_policy_linux.cc
 ===================================================================
---- chromium-118.0.5993.54.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
-+++ chromium-118.0.5993.54/sandbox/policy/linux/bpf_utility_policy_linux.cc
+--- chromium-119.0.6045.59.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
++++ chromium-119.0.6045.59/sandbox/policy/linux/bpf_utility_policy_linux.cc
 @@ -34,7 +34,7 @@ ResultExpr UtilityProcessPolicy::Evaluat
      case __NR_fdatasync:
      case __NR_fsync:
@@ -11,10 +11,10 @@ Index: chromium-118.0.5993.54/sandbox/policy/linux/bpf_utility_policy_linux.cc
      case __NR_getrlimit:
  #endif
  #if defined(__i386__) || defined(__arm__)
-Index: chromium-118.0.5993.54/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+Index: chromium-119.0.6045.59/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 ===================================================================
---- chromium-118.0.5993.54.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
-+++ chromium-118.0.5993.54/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+--- chromium-119.0.6045.59.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
++++ chromium-119.0.6045.59/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 @@ -76,7 +76,7 @@ ResultExpr RendererProcessPolicy::Evalua
      case __NR_ftruncate64:
  #endif
@@ -24,10 +24,10 @@ Index: chromium-118.0.5993.54/sandbox/policy/linux/bpf_renderer_policy_linux.cc
      case __NR_getrlimit:
      case __NR_setrlimit:
  // We allow setrlimit to dynamically adjust the address space limit as
-Index: chromium-118.0.5993.54/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+Index: chromium-119.0.6045.59/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 ===================================================================
---- chromium-118.0.5993.54.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
-+++ chromium-118.0.5993.54/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+--- chromium-119.0.6045.59.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
++++ chromium-119.0.6045.59/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 @@ -58,9 +58,9 @@
  
  #elif defined(__powerpc64__)
@@ -40,10 +40,10 @@ Index: chromium-118.0.5993.54/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
  #define MAX_SYSCALL MAX_PUBLIC_SYSCALL
  
  #else
-Index: chromium-118.0.5993.54/sandbox/linux/services/credentials.cc
+Index: chromium-119.0.6045.59/sandbox/linux/services/credentials.cc
 ===================================================================
---- chromium-118.0.5993.54.orig/sandbox/linux/services/credentials.cc
-+++ chromium-118.0.5993.54/sandbox/linux/services/credentials.cc
+--- chromium-119.0.6045.59.orig/sandbox/linux/services/credentials.cc
++++ chromium-119.0.6045.59/sandbox/linux/services/credentials.cc
 @@ -89,7 +89,9 @@ bool ChrootToSafeEmptyDir() {
  
    int clone_flags = CLONE_FS | LINUX_SIGCHLD;
@@ -67,10 +67,10 @@ Index: chromium-118.0.5993.54/sandbox/linux/services/credentials.cc
    clone_flags |= CLONE_VM | CLONE_VFORK | CLONE_SETTLS;
  
    // PTHREAD_STACK_MIN can be dynamic in glibc2.34+, so it is not possible to
-Index: chromium-118.0.5993.54/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+Index: chromium-119.0.6045.59/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 ===================================================================
---- chromium-118.0.5993.54.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
-+++ chromium-118.0.5993.54/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+--- chromium-119.0.6045.59.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
++++ chromium-119.0.6045.59/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 @@ -357,7 +357,16 @@ intptr_t SIGSYSFstatatHandler(const stru
    if (args.nr == __NR_fstatat_default) {
      if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&

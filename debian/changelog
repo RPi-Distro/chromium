@@ -1,6 +1,12 @@
-chromium (119.0.6045.105-2) UNRELEASED; urgency=high
+chromium (119.0.6045.123-1) UNRELEASED; urgency=high
 
+  * New upstream security release.
+    - CVE-2023-5996: Use after free in WebAudio. Reported by
+      Huang Xilin of Ant Group Light-Year Security Lab via Tianfu Cup 2023.
   * Replace libgl1-mesa-dev build dependency with libgl-dev.
+  * Drop d/patches/system/convertutf.patch; license issue has been fixed.
+  * d/copyright: stop deleting convert_UTF.* and document Unicode copyright
+    (closes: #1033136).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 31 Oct 2023 23:50:00 -0500
 

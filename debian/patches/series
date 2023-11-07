@@ -36,7 +36,6 @@ system/jpeg.patch
 system/zlib.patch
 system/event.patch
 system/openjpeg.patch
-system/convertutf.patch
 system/clang-format.patch
 system/opus.patch
 system/eu-strip.patch

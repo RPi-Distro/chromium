@@ -1,3 +1,9 @@
+chromium (119.0.6045.105-2) UNRELEASED; urgency=high
+
+  * Replace libgl1-mesa-dev build dependency with libgl-dev.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 31 Oct 2023 23:50:00 -0500
+
 chromium (119.0.6045.105-1) unstable; urgency=high
 
   * New upstream stable release.
@@ -41,7 +47,7 @@ chromium (119.0.6045.105-1) unstable; urgency=high
       and use the full ungoogled patch. The privacy sandbox config interface
       is now gone, with no way to enable it.
     - ungoogled/core/ungoogled-chromium/disable-web-environment-integrity.patch:
-      sync up with with ungoogled-chromium, and rename.
+      sync up with ungoogled-chromium, and rename.
     - fixes/blink-frags.patch: additional build fix for libstdc++13.
     - fixes/gcc13-with-clang14.patch: drop, now that we've switched to clang-16.
     - fixes/atspi.patch: fix build failure with atspi >= 2.50.

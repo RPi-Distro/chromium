@@ -7,6 +7,8 @@ chromium (119.0.6045.123-1) unstable; urgency=high
   * Drop d/patches/system/convertutf.patch; license issue has been fixed.
   * d/copyright: stop deleting convert_UTF.* and document Unicode copyright
     (closes: #1033136).
+  * d/patches/ppc64le/fixes/fix-breakpad-compile.patch: refresh due to convertutf
+    change.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 07 Nov 2023 23:49:10 -0500
 

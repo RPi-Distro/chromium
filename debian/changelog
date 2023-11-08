@@ -1,4 +1,4 @@
-chromium (119.0.6045.123-1) UNRELEASED; urgency=high
+chromium (119.0.6045.123-1) unstable; urgency=high
 
   * New upstream security release.
     - CVE-2023-5996: Use after free in WebAudio. Reported by
@@ -8,7 +8,7 @@ chromium (119.0.6045.123-1) UNRELEASED; urgency=high
   * d/copyright: stop deleting convert_UTF.* and document Unicode copyright
     (closes: #1033136).
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 31 Oct 2023 23:50:00 -0500
+ -- Andres Salomon <dilinger@debian.org>  Tue, 07 Nov 2023 23:49:10 -0500
 
 chromium (119.0.6045.105-1) unstable; urgency=high
 

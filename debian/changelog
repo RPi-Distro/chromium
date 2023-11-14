@@ -1,6 +1,8 @@
 chromium (119.0.6045.123-2) UNRELEASED; urgency=high
 
   * Don't spit out error on startup if Crash Reports directory doesn't exist.
+  * Check for $DISPLAY before trying to run xmessage in chromium's wrapper
+    script. Fall back to just using echo (closes: #1055765).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 07 Nov 2023 23:49:10 -0500
 

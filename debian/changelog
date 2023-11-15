@@ -1,3 +1,16 @@
+chromium (119.0.6045.159-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-5997: Use after free in Garbage Collection.
+      Reported by Anonymous.
+    - CVE-2023-6112: Use after free in Navigation.
+      Reported by Sergei Glazunov of Google Project Zero.
+  * Don't show errors on startup if Crash Reports directory doesn't exist.
+  * Check for $DISPLAY before trying to run xmessage in chromium's wrapper
+    script. Fall back to just using echo (closes: #1055765).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 14 Nov 2023 20:04:30 -0500
+
 chromium (119.0.6045.123-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

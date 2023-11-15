@@ -25,21 +25,19 @@ usage () {
   echo " See 'man chromium' for more details"
 }
 
+display_msg() {
+  if [ -z "$DISPLAY" ]; then
+    echo "$@" 1>&2
+  else
+    xmessage "$@"
+  fi
+}
+
 nosse3="\
 The hardware on this system lacks support for the sse3 instruction set.
 The upstream chromium project no longer supports this configuration.
 For more information, please read and possibly provide input to their
 bug tracking system at http://crbug.com/1123353"
-
-case `uname -m` in
-    i386|i586|i686|x86_64)
-        # Check whether this system supports SSE3 (aka PNI)
-        if ! grep -q 'sse3\|pni' /proc/cpuinfo; then
-            xmessage "$nosse3"
-            exit 1
-        fi
-        ;;
-esac
 
 noneon="\
 The hardware on this system lacks support for NEON SIMD extensions.
@@ -48,6 +46,13 @@ machines. See https://lists.debian.org/debian-devel/2023/09/msg00175.html
 for more information."
 
 case `uname -m` in
+    i386|i586|i686|x86_64)
+        # Check whether this system supports SSE3 (aka PNI)
+        if ! grep -q 'sse3\|pni' /proc/cpuinfo; then
+            display_msg "$nosse3"
+            exit 1
+        fi
+        ;;
     armv7l)
         # Check whether this system supports NEON or ASIMD. Even though there
         # could be ARMv8 systems without ASIMD, we're far more likely to hit
@@ -55,7 +60,7 @@ case `uname -m` in
         # bother checking armv8l for now. If we do check in the future, they
         # advertise 'asimd' instead of 'neon'.
         if ! grep -q 'neon\|asimd' /proc/cpuinfo; then
-            xmessage "$noneon"
+            display_msg "$noneon"
             exit 1
         fi
         ;;
@@ -63,7 +68,8 @@ esac
 
 # Clean up old crash reports (see https://bugs.debian.org/1015931)
 # after 30 days.
-find "$HOME/.config/chromium/Crash Reports/pending/" -mtime +30 \
+test -d "$HOME/.config/chromium/Crash Reports/pending/" && \
+  find "$HOME/.config/chromium/Crash Reports/pending/" -mtime +30 \
   \( -name "*.meta" -o -name "*.dmp" \) -exec rm \{\} \;
 
 # Source additional settings

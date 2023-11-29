@@ -1,3 +1,20 @@
+chromium (119.0.6045.199-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-6348: Type Confusion in Spellcheck.
+      Reported by Mark Brand of Google Project Zero.
+    - CVE-2023-6347: Use after free in Mojo. Reported by
+      Leecraso and Guang Gong of 360 Vulnerability Research Institute.
+    - CVE-2023-6346: Use after free in WebAudio.
+      Reported by Huang Xilin of Ant Group Light-Year Security Lab.
+    - CVE-2023-6350: Out of bounds memory access in libavif.
+      Reported by Fudan University.
+    - CVE-2023-6351: Use after free in libavif. Reported by Fudan University.
+    - CVE-2023-6345: Integer overflow in Skia. Reported by
+      Benoît Sevens and Clément Lecigne of Google's Threat Analysis Group.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
+
 chromium (119.0.6045.159-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

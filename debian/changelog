@@ -1,3 +1,10 @@
+chromium (120.0.6099.56-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright: adjust path for chai.js & mocha.js deletion.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
+
 chromium (119.0.6045.199-1) unstable; urgency=high
 
   * New upstream security release.

@@ -148,9 +148,9 @@ Files-Excluded:
  third_party/node/node_modules.tar.gz
  third_party/node/node_modules/acorn
  third_party/node/node_modules/rollup
- third_party/mocha/mocha.js
+ third_party/node/node_modules/mocha/mocha.js
  third_party/rust-src
- third_party/chaijs/chai.js
+ third_party/node/node_modules/chaijs/chai.js
  third_party/siso/siso
  third_party/accessibility-audit/axs_testing.js
  third_party/catapult

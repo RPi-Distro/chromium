@@ -76,6 +76,8 @@ Files-Excluded:
  third_party/angle/src/third_party/libXNVCtrl
  third_party/opus
  third_party/flac
+ third_party/flatbuffers/g*
+ third_party/flatbuffers/src
  third_party/llvm
  third_party/libei
  third_party/webgl
@@ -83,6 +85,7 @@ Files-Excluded:
  third_party/libdrm
  third_party/snappy
  third_party/libevent
+ third_party/libsecret
  third_party/libxslt
  third_party/libwebp
  third_party/freetype
@@ -139,6 +142,7 @@ Files-Excluded:
  third_party/google_input_tools/src/chrome/os/inputview/_locales/*.js
  v8/third_party/colorama
  v8/third_party/googletest
+ third_party/libusb
  third_party/libxml/mac
  third_party/libxml/linux
  third_party/libxml/win32

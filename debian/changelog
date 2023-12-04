@@ -2,6 +2,14 @@ chromium (120.0.6099.56-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
   * d/copyright: adjust path for chai.js & mocha.js deletion.
+  * d/patches:
+    - fixes/gcc13-headers.patch: refresh.
+    - fixes/blink-frags.patch: drop part of patch & refresh.
+    - disable/catapult.patch: refresh.
+    - disable/driver-chrome-path.patch: update for minor upstream changes.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
+    - ungoogled/disable-web-environment-integrity.patch: update from
+      from ungoogled-chromium.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
 

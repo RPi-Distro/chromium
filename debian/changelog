@@ -14,6 +14,7 @@ chromium (120.0.6099.62-1) UNRELEASED; urgency=high
     - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
     - ungoogled/disable-web-environment-integrity.patch: update from
       from ungoogled-chromium.
+    - upstream/mojo.patch: update patch from upstream's git.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
 

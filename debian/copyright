@@ -76,9 +76,6 @@ Files-Excluded:
  third_party/angle/src/third_party/libXNVCtrl
  third_party/opus
  third_party/flac
- third_party/flatbuffers/g*
- third_party/flatbuffers/src
- third_party/flatbuffers/BUILD.gn
  third_party/llvm
  third_party/libei
  third_party/webgl

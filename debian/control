@@ -62,7 +62,6 @@ Build-Depends:
  libkrb5-dev,
  libexif-dev,
  libflac-dev,
- libflatbuffers-dev,
  libudev-dev,
  libpipewire-0.3-dev,
  libopus-dev,

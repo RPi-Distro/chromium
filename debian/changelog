@@ -2,8 +2,8 @@ chromium (120.0.6099.62-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
   * d/copyright: adjust path for chai.js & mocha.js deletion.
-    - delete third_party/libsecret and third_party/flatbuffers.
-  * d/control: new build depends on libsecret-1-dev and libflatbuffers-dev.
+    - delete third_party/libsecret.
+  * d/control: new build depends on libsecret-1-dev.
   * d/scripts/unbundle: keep bundled libhwy; it's not available in bullseye.
     - also keep vulkan_memory_allocator.
   * d/patches:

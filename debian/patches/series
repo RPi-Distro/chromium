@@ -42,6 +42,8 @@ system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
 
+bookworm/clang16.patch
+
 # Ungoogled Chromium
 ungoogled/disable-web-environment-integrity.patch
 ungoogled/disable-privacy-sandbox.patch

@@ -17,6 +17,7 @@ chromium (120.0.6099.62-1) UNRELEASED; urgency=high
     - upstream/mojo.patch: update patch from upstream's git.
     - bookworm/clang16.patch: new patch working around upstream's clang18 flags.
     - fixes/nullptr_t.patch: more libstdc++13 build fixes.
+    - fixes/optional.patch: new patch working around a clang bug.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
 

@@ -1,0 +1,33 @@
+author: Andres Salomon <dilinger@debian.org>
+description: work around clang-16 bug
+
+Upstream switched from using absl::optional to std::optional via build
+option. Unfortunately, due to a bug in clang, that doesn't work. libc++
+works around the bug, but libstdc++ does not, so we hit it when building
+with our normal libstdc++ build.
+
+https://github.com/llvm/llvm-project/issues/50248
+
+The error shows up like this during the build:
+
+>> gen/ui/gfx/x/randr.cc:482:13: error: no matching member function for call to 'emplace'
+>>     data.lc.emplace();
+>>     ~~~~~~~~^~~~~~~
+>> /usr/bin/../lib/gcc/x86_64-linux-gnu/13/../../../../include/c++/13/optional:914:2: note: candidate template ignored: requirement 'is_constructible_v<x11::RandR::NotifyEvent::Lc>' was not satisfied [with _Args = <>]
+>>         emplace(_Args&&... __args)
+>>         ^
+
+This just reverts back to chromium 119 behavior of using the ACTUAL
+absl::optional instead of aliasing it to std::optional.
+
+--- a/third_party/abseil-cpp/absl/base/options.h
++++ b/third_party/abseil-cpp/absl/base/options.h
+@@ -121,7 +121,7 @@
+ // absl::optional is a typedef of std::optional, use the feature macro
+ // ABSL_USES_STD_OPTIONAL.
+ 
+-#define ABSL_OPTION_USE_STD_OPTIONAL 2
++#define ABSL_OPTION_USE_STD_OPTIONAL 0
+ 
+ 
+ // ABSL_OPTION_USE_STD_STRING_VIEW

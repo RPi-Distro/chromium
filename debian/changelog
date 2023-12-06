@@ -1,3 +1,18 @@
+chromium-browser (119.0.6045.171-rpt1) bullseye; urgency=medium
+
+  * Update to 119.0.6045.171
+  * v119.0.6045.171_rpi_2.62.patch
+  * Remove duckduckgo search credit patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 23 Nov 2023 14:57:35 +0000
+
+chromium-browser (116.0.5845.102-rpt1) bullseye; urgency=medium
+
+  * Update to 116.0.5845.102
+  * v116.0.5845.102_rpi_2.60.patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 15 Aug 2023 21:53:37 +0100
+
 chromium-browser (113.0.5672.95-rpt1) bullseye; urgency=medium
 
   * Update to 113.0.5672.95

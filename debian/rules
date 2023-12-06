@@ -175,6 +175,9 @@ endif
 binary binary-arch binary-indep build build-arch build-indep clean install install-arch install-indep patch:
 	dh $@ --builddirectory=out --with quilt
 
+override_dh_shlibdeps:
+	dh_shlibdeps -Xlibqt6_shim.so
+
 override_dh_fixperms:
 	dh_fixperms
 

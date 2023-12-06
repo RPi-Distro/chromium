@@ -12,8 +12,6 @@ Build-Depends:
 	pkg-config,
 	lsb-release,
 	quilt,
-	python,
-	python-pkg-resources,
 	xcb-proto,
 	bison,
 	clang,
@@ -47,8 +45,7 @@ Build-Depends:
 	nodejs,
 	libx11-xcb-dev,
 	libxcb-dri3-dev,
-	qtbase5-dev,
-	libraspberrypi-dev [armel armhf]
+	qtbase5-dev
 Standards-Version: 4.1.1
 
 Package: chromium-browser
@@ -61,7 +58,6 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
 	libnss3,
 	xdg-utils,
 	chromium-codecs-ffmpeg-extra (= ${binary:Version}) | chromium-codecs-ffmpeg (= ${binary:Version}),
-	libraspberrypi0,
 	libgl1-mesa-dri,
 	libgles2,
 	libegl1,
@@ -96,7 +92,7 @@ Description: chromium-browser language packages
 Package: chromium-codecs-ffmpeg
 Architecture: i386 amd64 armhf arm64
 Pre-Depends: dpkg (>= 1.15.6)
-Depends: ${shlibs:Depends}, ${misc:Depends}, libraspberrypi0
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: chromium-codecs-ffmpeg-extra, chromium-browser (<< 44)
 Replaces: chromium-codecs-ffmpeg-extra, chromium-browser (<< 44)
 Description: Free ffmpeg codecs for the Chromium Browser
@@ -110,7 +106,7 @@ Description: Free ffmpeg codecs for the Chromium Browser
 Package: chromium-codecs-ffmpeg-extra
 Architecture: i386 amd64 armhf arm64
 Pre-Depends: dpkg (>= 1.15.6)
-Depends: ${shlibs:Depends}, ${misc:Depends}, libraspberrypi0
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: chromium-codecs-ffmpeg, chromium-browser (<< 44)
 Replaces: chromium-codecs-ffmpeg, chromium-browser (<< 44)
 Description: Extra ffmpeg codecs for the Chromium Browser

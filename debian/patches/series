@@ -14,7 +14,8 @@ fixes/blink-frags.patch
 fixes/v8-compressed-ptrs.patch
 fixes/atspi.patch
 fixes/nullptr_t.patch
-string-include.patch
+fixes/string-include.patch
+fixes/absl-optional.patch
 
 upstream/mojo.patch
 

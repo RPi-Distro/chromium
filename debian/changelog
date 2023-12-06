@@ -16,8 +16,8 @@ chromium (120.0.6099.62-1) UNRELEASED; urgency=high
       from ungoogled-chromium.
     - upstream/mojo.patch: update patch from upstream's git.
     - bookworm/clang16.patch: new patch working around upstream's clang18 flags.
-    - fixes/nullptr_t.patch: more libstdc++13 build fixes.
-    - fixes/string-include.patch: add a simple header include build fix.
+    - upstream/nullptr_t.patch: more libstdc++13 build fixes.
+    - upstream/string-include.patch: add a simple header include build fix.
     - fixes/absl-optional.patch: TODO
 
   [ Timothy Pearson ]

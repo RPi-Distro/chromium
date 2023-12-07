@@ -1,5 +1,6 @@
-chromium (120.0.6099.71-1) UNRELEASED; urgency=high
+chromium (120.0.6099.71-1) unstable; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
     - CVE-2023-6508: Use after free in Media Stream.
       Reported by Cassidy Kim(@cassidy6564).
@@ -45,7 +46,7 @@ chromium (120.0.6099.71-1) UNRELEASED; urgency=high
     - Mass refresh all other patches against 120 codebase.  No functional
       change.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
+ -- Andres Salomon <dilinger@debian.org>  Thu, 07 Dec 2023 15:00:36 -0500
 
 chromium (119.0.6045.199-1) unstable; urgency=high
 

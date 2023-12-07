@@ -35,6 +35,9 @@ chromium (120.0.6099.71-1) UNRELEASED; urgency=high
       upstream changes
     - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
       refresh for upstream changes
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      regenerate
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
     - third_party/use-sysconf-page-size-on-ppc64.patch: refresh for upstream
       changes
 

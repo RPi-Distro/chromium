@@ -20,6 +20,15 @@ chromium (120.0.6099.62-1) UNRELEASED; urgency=high
     - fixes/string-include.patch: add a simple header include build fix.
     - fixes/absl-optional.patch: TODO
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-libdav1d.patch: refresh for
+      upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - third_party/use-sysconf-page-size-on-ppc64.patch: refresh for upstream
+      changes
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
 
 chromium (119.0.6045.199-1) unstable; urgency=high

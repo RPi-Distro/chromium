@@ -1,7 +1,7 @@
-Index: chromium-119.0.6045.59/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
+Index: chromium-120.0.6099.71/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
 ===================================================================
---- chromium-119.0.6045.59.orig/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
-+++ chromium-119.0.6045.59/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
+--- chromium-120.0.6099.71.orig/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
++++ chromium-120.0.6099.71/third_party/highway/src/hwy/ops/ppc_vsx-inl.h
 @@ -36,6 +36,8 @@
  
  #include "hwy/ops/shared-inl.h"

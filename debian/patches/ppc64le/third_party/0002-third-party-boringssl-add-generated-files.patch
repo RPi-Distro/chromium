@@ -1,7 +1,7 @@
-Index: chromium-119.0.6045.59/third_party/boringssl/BUILD.generated.gni
+Index: chromium-120.0.6099.71/third_party/boringssl/BUILD.generated.gni
 ===================================================================
---- chromium-119.0.6045.59.orig/third_party/boringssl/BUILD.generated.gni
-+++ chromium-119.0.6045.59/third_party/boringssl/BUILD.generated.gni
+--- chromium-120.0.6099.71.orig/third_party/boringssl/BUILD.generated.gni
++++ chromium-120.0.6099.71/third_party/boringssl/BUILD.generated.gni
 @@ -94,6 +94,7 @@ crypto_sources = [
    "src/crypto/cpu_arm_linux.c",
    "src/crypto/cpu_arm_linux.h",
@@ -10,7 +10,7 @@ Index: chromium-119.0.6045.59/third_party/boringssl/BUILD.generated.gni
    "src/crypto/crypto.c",
    "src/crypto/curve25519/curve25519.c",
    "src/crypto/curve25519/curve25519_64_adx.c",
-@@ -388,6 +389,9 @@ crypto_sources_asm = [
+@@ -389,6 +390,9 @@ crypto_sources_asm = [
    "linux-arm/crypto/fipsmodule/sha512-armv4-linux.S",
    "linux-arm/crypto/fipsmodule/vpaes-armv7-linux.S",
    "linux-arm/crypto/test/trampoline-armv4-linux.S",
@@ -20,10 +20,10 @@ Index: chromium-119.0.6045.59/third_party/boringssl/BUILD.generated.gni
    "linux-x86/crypto/chacha/chacha-x86-linux.S",
    "linux-x86/crypto/fipsmodule/aesni-x86-linux.S",
    "linux-x86/crypto/fipsmodule/bn-586-linux.S",
-Index: chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
+Index: chromium-120.0.6099.71/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
++++ chromium-120.0.6099.71/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/aesp8-ppc-linux.S
 @@ -0,0 +1,3673 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -3698,10 +3698,10 @@ Index: chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/fipsmod
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-Index: chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
+Index: chromium-120.0.6099.71/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
++++ chromium-120.0.6099.71/third_party/boringssl/linux-ppc64le/crypto/fipsmodule/ghashp8-ppc-linux.S
 @@ -0,0 +1,590 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -4293,10 +4293,10 @@ Index: chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/fipsmod
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-Index: chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
+Index: chromium-120.0.6099.71/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-119.0.6045.59/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
++++ chromium-120.0.6099.71/third_party/boringssl/linux-ppc64le/crypto/test/trampoline-ppc-linux.S
 @@ -0,0 +1,1413 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.

@@ -42,6 +42,8 @@ chromium (120.0.6099.71-1) UNRELEASED; urgency=high
     - third_party/skia-vsx-instructions.patch: refresh for upstream changes
     - third_party/use-sysconf-page-size-on-ppc64.patch: refresh for upstream
       changes
+    - Mass refresh all other patches against 120 codebase.  No functional
+      change.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 28 Nov 2023 23:33:06 -0500
 

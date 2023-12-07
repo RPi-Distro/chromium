@@ -1,11 +1,20 @@
-chromium (120.0.6099.62-1) UNRELEASED; urgency=high
+chromium (120.0.6099.71-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+    - CVE-2023-6508: Use after free in Media Stream.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-6509: Use after free in Side Panel Search.
+      Reported by Khalil Zhani.
+    - CVE-2023-6510: Use after free in Media Capture. Reported by [pwn2car].
+    - CVE-2023-6511: Inappropriate implementation in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-6512: Inappropriate implementation in Web Browser UI.
+      Reported by Om Apip.
   * d/copyright: adjust path for chai.js & mocha.js deletion.
     - delete third_party/libsecret.
   * d/control: new build depends on libsecret-1-dev.
   * d/scripts/unbundle: keep bundled libhwy; it's not available in bullseye.
-    - also keep vulkan_memory_allocator.
+    - also keep vulkan_memory_allocator and flatbuffers.
   * d/patches:
     - fixes/gcc13-headers.patch: refresh.
     - fixes/blink-frags.patch: drop part of patch & refresh.

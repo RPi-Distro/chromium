@@ -8,11 +8,11 @@ Subject: [PATCH] Force baseline POWER8 / AltiVec / VSX CPU features when on a
  BUILD.gn | 6 ++++++
  1 file changed, 6 insertions(+)
 
-Index: chromium-119.0.6045.59/v8/BUILD.gn
+Index: chromium-120.0.6099.71/v8/BUILD.gn
 ===================================================================
---- chromium-119.0.6045.59.orig/v8/BUILD.gn
-+++ chromium-119.0.6045.59/v8/BUILD.gn
-@@ -1327,6 +1327,12 @@ config("toolchain") {
+--- chromium-120.0.6099.71.orig/v8/BUILD.gn
++++ chromium-120.0.6099.71/v8/BUILD.gn
+@@ -1340,6 +1340,12 @@ config("toolchain") {
      }
      if (host_byteorder == "little") {
        defines += [ "V8_TARGET_ARCH_PPC_LE" ]

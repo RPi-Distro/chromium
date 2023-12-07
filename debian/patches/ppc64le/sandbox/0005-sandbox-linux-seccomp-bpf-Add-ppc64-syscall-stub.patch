@@ -7,10 +7,10 @@ Subject: [PATCH] sandbox/linux/seccomp-bpf: Add ppc64 syscall stub
  sandbox/linux/seccomp-bpf/syscall.cc | 53 ++++++++++++++++++++++++++--
  1 file changed, 51 insertions(+), 2 deletions(-)
 
-Index: chromium-119.0.6045.59/sandbox/linux/seccomp-bpf/syscall.cc
+Index: chromium-120.0.6099.71/sandbox/linux/seccomp-bpf/syscall.cc
 ===================================================================
---- chromium-119.0.6045.59.orig/sandbox/linux/seccomp-bpf/syscall.cc
-+++ chromium-119.0.6045.59/sandbox/linux/seccomp-bpf/syscall.cc
+--- chromium-120.0.6099.71.orig/sandbox/linux/seccomp-bpf/syscall.cc
++++ chromium-120.0.6099.71/sandbox/linux/seccomp-bpf/syscall.cc
 @@ -18,7 +18,7 @@ namespace sandbox {
  namespace {
  

@@ -81,6 +81,7 @@ Build-Depends:
  libglib2.0-dev,
  libasound2-dev,
  libjsoncpp-dev,
+ libsecret-1-dev,
  libspeechd-dev,
  libminizip-dev,
  libhunspell-dev,

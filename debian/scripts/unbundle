@@ -35,6 +35,8 @@ keepers = ('ffmpeg', 'harfbuzz-ng', 'icu', 'libvpx',
     'brotli',
     'crc32c',
     'dav1d',
+    'flatbuffers',
+    'highway',
     'libaom' ,
     'libavif' ,
     'libyuv' ,
@@ -43,6 +45,7 @@ keepers = ('ffmpeg', 'harfbuzz-ng', 'icu', 'libvpx',
     'swiftshader-SPIRV-Tools' ,
     'vulkan-SPIRV-Headers' ,
     'vulkan-SPIRV-Tools' ,
+    'vulkan_memory_allocator',
     )
 
 for lib,rule in replace_gn_files.REPLACEMENTS.items():

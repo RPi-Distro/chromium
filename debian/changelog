@@ -1,3 +1,53 @@
+chromium (120.0.6099.71-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2023-6508: Use after free in Media Stream.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-6509: Use after free in Side Panel Search.
+      Reported by Khalil Zhani.
+    - CVE-2023-6510: Use after free in Media Capture. Reported by [pwn2car].
+    - CVE-2023-6511: Inappropriate implementation in Autofill.
+      Reported by Ahmed ElMasry.
+    - CVE-2023-6512: Inappropriate implementation in Web Browser UI.
+      Reported by Om Apip.
+  * d/copyright: adjust path for chai.js & mocha.js deletion.
+    - delete third_party/libsecret.
+  * d/control: new build depends on libsecret-1-dev.
+  * d/scripts/unbundle: keep bundled libhwy; it's not available in bullseye.
+    - also keep vulkan_memory_allocator and flatbuffers.
+  * d/patches:
+    - fixes/gcc13-headers.patch: refresh.
+    - fixes/blink-frags.patch: drop part of patch & refresh.
+    - disable/catapult.patch: refresh.
+    - disable/driver-chrome-path.patch: update for minor upstream changes.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
+    - ungoogled/disable-web-environment-integrity.patch: update from
+      from ungoogled-chromium.
+    - upstream/mojo.patch: update patch from upstream's git.
+    - bookworm/clang16.patch: new patch working around upstream's clang18 flags.
+    - upstream/nullptr_t.patch: more libstdc++13 build fixes.
+    - upstream/string-include.patch: add a simple header include build fix.
+    - fixes/absl-optional.patch: add a workaround for a clang bug
+      (https://github.com/llvm/llvm-project/issues/50248) by providing our
+      own 'optional' header.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-libdav1d.patch: refresh for
+      upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      regenerate
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
+    - third_party/use-sysconf-page-size-on-ppc64.patch: refresh for upstream
+      changes
+    - Mass refresh all other patches against 120 codebase.  No functional
+      change.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 07 Dec 2023 15:00:36 -0500
+
 chromium (119.0.6045.199-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

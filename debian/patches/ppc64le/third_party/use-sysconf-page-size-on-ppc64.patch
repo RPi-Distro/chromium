@@ -1,7 +1,7 @@
-Index: chromium-119.0.6045.59/base/allocator/partition_allocator/page_allocator_constants.h
+Index: chromium-120.0.6099.71/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
 ===================================================================
---- chromium-119.0.6045.59.orig/base/allocator/partition_allocator/page_allocator_constants.h
-+++ chromium-119.0.6045.59/base/allocator/partition_allocator/page_allocator_constants.h
+--- chromium-120.0.6099.71.orig/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
++++ chromium-120.0.6099.71/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
 @@ -172,7 +172,11 @@ SystemPageBaseMask() {
    return ~SystemPageOffsetMask();
  }
@@ -14,10 +14,10 @@ Index: chromium-119.0.6045.59/base/allocator/partition_allocator/page_allocator_
  constexpr size_t kPageMetadataSize = 1 << kPageMetadataShift;
  
  }  // namespace partition_alloc::internal
-Index: chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page.h
+Index: chromium-120.0.6099.71/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
 ===================================================================
---- chromium-119.0.6045.59.orig/base/allocator/partition_allocator/partition_page.h
-+++ chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page.h
+--- chromium-120.0.6099.71.orig/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
++++ chromium-120.0.6099.71/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
 @@ -90,7 +90,11 @@ struct SlotSpanMetadata {
  
    // CHECK()ed in AllocNewSlotSpan().
@@ -42,10 +42,10 @@ Index: chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page.
    // If |in_empty_cache_|==1, |empty_cache_index| is undefined and mustn't be
    // used.
    uint16_t in_empty_cache_ : 1;
-Index: chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page_constants.h
+Index: chromium-120.0.6099.71/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
 ===================================================================
---- chromium-119.0.6045.59.orig/base/allocator/partition_allocator/partition_page_constants.h
-+++ chromium-119.0.6045.59/base/allocator/partition_allocator/partition_page_constants.h
+--- chromium-120.0.6099.71.orig/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
++++ chromium-120.0.6099.71/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
 @@ -21,6 +21,11 @@ static constexpr size_t kMaxSlotsPerSlot
  // currently (kMaxSlotsPerSlotSpanBits == 13) not supported by the code,
  // so we use the 16 kiB maximum (64 kiB will crash).

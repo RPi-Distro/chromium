@@ -12,8 +12,11 @@ fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/v8-compressed-ptrs.patch
 fixes/atspi.patch
+fixes/absl-optional.patch
 
 upstream/mojo.patch
+upstream/nullptr_t.patch
+upstream/string-include.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -41,6 +44,7 @@ system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
 
+bookworm/clang16.patch
 bookworm/generate-ninja.patch
 bookworm/freetype-COLRV1.patch
 

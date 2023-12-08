@@ -977,7 +977,7 @@ We'll need to update this patch with major libstdc++ upgrades.
 +#else
 +// Drop the constructible checks
 +	_Tp& emplace(_Args&&... __args)
-+endif
++#endif
 +	{
 +	  this->_M_reset();
 +	  this->_M_construct(std::forward<_Args>(__args)...);

@@ -45,7 +45,7 @@ We'll need to update this patch with major libstdc++ upgrades.
 
 --- /dev/null
 +++ b/optional
-@@ -0,0 +1,1557 @@
+@@ -0,0 +1,1549 @@
 +// <optional> -*- C++ -*-
 +
 +// Copyright (C) 2013-2023 Free Software Foundation, Inc.
@@ -968,29 +968,21 @@ We'll need to update this patch with major libstdc++ upgrades.
 +	  return *this;
 +	}
 +
-+#if 0
 +      template<typename... _Args>
 +	_GLIBCXX20_CONSTEXPR
++#if 0
 +	enable_if_t<is_constructible_v<_Tp, _Args...>, _Tp&>
 +	emplace(_Args&&... __args)
 +	noexcept(is_nothrow_constructible_v<_Tp, _Args...>)
++#else
++// Drop the constructible checks
++	_Tp& emplace(_Args&&... __args)
++endif
 +	{
 +	  this->_M_reset();
 +	  this->_M_construct(std::forward<_Args>(__args)...);
 +	  return this->_M_get();
 +	}
-+#else
-+// Take the function definition from absl::optional's emplace, with the
-+// body from std::optional's emplace (below).
-+  template <typename... Args,
-+            typename = typename std::enable_if<
-+                std::is_constructible<_Tp, Args&&...>::value>::type>
-+  _Tp& emplace(Args&&... args) {
-+    this->_M_reset();
-+    this->_M_construct(std::forward<Args>(args)...);
-+    return this->_M_get();
-+  }
-+#endif
 +
 +      template<typename _Up, typename... _Args>
 +	_GLIBCXX20_CONSTEXPR

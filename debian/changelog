@@ -1,4 +1,4 @@
-chromium (120.0.6099.71-1~deb12u1) UNRELEASED; urgency=high
+chromium (120.0.6099.71-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -47,7 +47,7 @@ chromium (120.0.6099.71-1~deb12u1) UNRELEASED; urgency=high
     - Mass refresh all other patches against 120 codebase.  No functional
       change.
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 07 Dec 2023 15:00:36 -0500
+ -- Andres Salomon <dilinger@debian.org>  Fri, 08 Dec 2023 11:40:41 -0500
 
 chromium (119.0.6045.199-1~deb12u1) bookworm-security; urgency=high
 

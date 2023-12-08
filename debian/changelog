@@ -31,6 +31,7 @@ chromium (120.0.6099.71-1~deb12u1) UNRELEASED; urgency=high
     - fixes/absl-optional.patch: add a workaround for a clang bug
       (https://github.com/llvm/llvm-project/issues/50248) by providing our
       own 'optional' header.
+    - bookworm/constcountrycode.patch: add workaround for older libstdc++.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

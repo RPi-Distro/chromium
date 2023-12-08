@@ -14,9 +14,9 @@ Index: chromium-120.0.6099.71/components/autofill/core/browser/data_model/autofi
  // Country code that represents autofill's legacy address hierarchy model as
  // stored `kAutofillModelRules`. As a workaround for GCC we declare the
  // std::string constexpr first.
--constexpr inline std::string kLegacyHierarchyCountryCodeString("XX");
+-constexpr inline std::string kLegacyHierarchyCountryCodeString{"XX"};
 -constexpr AddressCountryCode kLegacyHierarchyCountryCode =
-+const inline std::string kLegacyHierarchyCountryCodeString("XX");
++const inline std::string kLegacyHierarchyCountryCodeString{"XX"};
 +const AddressCountryCode kLegacyHierarchyCountryCode =
      AddressCountryCode(kLegacyHierarchyCountryCodeString);
  

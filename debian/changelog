@@ -1,3 +1,18 @@
+chromium (120.0.6099.109-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-6702: Type Confusion in V8. Reported by
+      Zhiyi Zhang and Zhunki from Codesafe Team of Legendsec at Qi'anxin Group.
+    - CVE-2023-6703: Use after free in Blink.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-6704: Use after free in libavif. Reported by Fudan University.
+    - CVE-2023-6705: Use after free in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2023-6706: Use after free in FedCM. Reported by anonymous.
+    - CVE-2023-6707: Use after free in CSS. Reported by @ginggilBesel.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 12 Dec 2023 19:52:08 -0500
+
 chromium (120.0.6099.71-1) unstable; urgency=high
 
   [ Andres Salomon ]

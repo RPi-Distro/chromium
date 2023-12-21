@@ -1,3 +1,11 @@
+chromium (120.0.6099.129-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2023-7024: Heap buffer overflow in WebRTC. Reported by
+      Clément Lecigne and Vlad Stolyarov of Google's Threat Analysis Group.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 20 Dec 2023 21:05:12 -0500
+
 chromium (120.0.6099.109-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

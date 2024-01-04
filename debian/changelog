@@ -1,3 +1,16 @@
+chromium (120.0.6099.199-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-0222: Use after free in ANGLE.
+      Reported by Toan (suto) Pham of Qrious Secure.
+    - CVE-2024-0223: Heap buffer overflow in ANGLE.
+      Reported by Toan (suto) Pham and Tri Dang of Qrious Secure.
+    - CVE-2024-0224: Use after free in WebAudio.
+      Reported by Huang Xilin of Ant Group Light-Year Security Lab.
+    - CVE-2024-0225: Use after free in WebGPU. Reported by Anonymous.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 03 Jan 2024 22:53:21 -0500
+
 chromium (120.0.6099.129-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

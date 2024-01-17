@@ -1,4 +1,4 @@
-chromium (120.0.6099.224-1~deb12u1) UNREEASED; urgency=high
+chromium (120.0.6099.224-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.
     - CVE-2024-0517: Out of bounds write in V8.

@@ -17,7 +17,7 @@ Build-Depends:
  clang-16,
  clang-format-16,
  libclang-rt-16-dev,
- rustc (>= 1.70.0+dfsg1-5),
+ rustc,
  python3,
  pkg-config,
  ninja-build,

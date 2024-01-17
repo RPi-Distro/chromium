@@ -7,7 +7,6 @@ chromium (120.0.6099.224-1~deb12u1) UNREEASED; urgency=high
       Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
     - CVE-2024-0519: Out of bounds memory access in V8. Reported by Anonymous.
   * d/rules: enable rust and (relatedly) fix search path for clang libs.
-  * Add versioned build-dep on rustc >= 1.70.0+dfsg1-5 for profiler support.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jan 2024 15:35:05 -0500
 

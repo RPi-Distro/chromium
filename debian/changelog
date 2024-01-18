@@ -1,3 +1,9 @@
+chromium (120.0.6099.224-2) unstable; urgency=high
+
+  * d/patches/ppc64le/fixes/fix-rustc.patch: add patch to fix ppc64le build.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 18 Jan 2024 03:05:12 -0500
+
 chromium (120.0.6099.224-1) unstable; urgency=high
 
   * New upstream security release.

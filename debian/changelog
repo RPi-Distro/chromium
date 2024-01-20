@@ -13,6 +13,8 @@ chromium (121.0.6167.75-1) UNRELEASED; urgency=high
     - disable/catapult.patch: refresh for minor upstream changes.
     - system/openjpeg.patch: refresh for minor upstream changes.
     - bookworm/clang16.patch: drop portion that was merged upstream.
+    - upstream/vector.patch: missing header fix, pulled from upstream.
+    - upstream/display-header.patch: missing header fix, pulled from upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 20 Jan 2024 00:51:39 -0500
 

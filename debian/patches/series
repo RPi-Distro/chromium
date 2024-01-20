@@ -15,6 +15,8 @@ fixes/v8-compressed-ptrs.patch
 fixes/absl-optional.patch
 
 upstream/mojo.patch
+upstream/vector.patch
+upstream/display-header.patch
 
 disable/tests.patch
 disable/unrar.patch

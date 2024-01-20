@@ -12,12 +12,9 @@ fixes/material-utils.patch
 fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/v8-compressed-ptrs.patch
-fixes/atspi.patch
 fixes/absl-optional.patch
 
 upstream/mojo.patch
-upstream/nullptr_t.patch
-upstream/string-include.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -48,7 +45,6 @@ system/rollup.patch
 bookworm/clang16.patch
 
 # Ungoogled Chromium
-ungoogled/disable-web-environment-integrity.patch
 ungoogled/disable-privacy-sandbox.patch
 
 # i386 support

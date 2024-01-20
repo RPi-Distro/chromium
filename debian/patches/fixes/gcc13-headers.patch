@@ -14,23 +14,3 @@ These are technically correct and should go upstream.
  #ifdef RUY_PROFILER
  #include <cstdio>
  #include <mutex>
---- a/third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
-+++ b/third_party/vulkan_memory_allocator/include/vk_mem_alloc.h
-@@ -2619,6 +2619,7 @@ VMA_CALL_PRE void VMA_CALL_POST vmaFreeS
- #undef VMA_IMPLEMENTATION
- 
- #include <cstdint>
-+#include <cstdio>
- #include <cstdlib>
- #include <cstring>
- #include <utility>
---- a/net/third_party/quiche/src/quiche/quic/core/qpack/qpack_stream_sender_delegate.h
-+++ b/net/third_party/quiche/src/quiche/quic/core/qpack/qpack_stream_sender_delegate.h
-@@ -9,6 +9,7 @@
- 
- #include "absl/strings/string_view.h"
- #include "quiche/quic/platform/api/quic_export.h"
-+#include <cstdint>
- 
- namespace quic {
- 

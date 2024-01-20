@@ -1,3 +1,21 @@
+chromium (121.0.6167.75-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright: drop another eu-strip binary.
+  * d/patches:
+    - fixes/atspi.patch: drop, merged upstream.
+    - fixes/gcc13-headers.patch: drop portions that were merged upstream.
+    - upstream/nullptr_t.patch: drop, merged upstream.
+    - upstream/string-include.patch: drop, merged upstream.
+    - ungoogled/disable-web-environment-integrity.patch: remove, upstream
+      wisely backed off and removed WEI.
+    - disable/signin.patch: refresh for minor upstream changes.
+    - disable/catapult.patch: refresh for minor upstream changes.
+    - system/openjpeg.patch: refresh for minor upstream changes.
+    - bookworm/clang16.patch: drop portion that was merged upstream.
+
+ -- Andres Salomon <dilinger@debian.org>  Sat, 20 Jan 2024 00:51:39 -0500
+
 chromium (120.0.6099.224-2) unstable; urgency=high
 
   * d/patches/ppc64le/fixes/fix-rustc.patch: add patch to fix ppc64le build.

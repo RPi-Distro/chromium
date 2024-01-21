@@ -13,11 +13,13 @@ fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/v8-compressed-ptrs.patch
 fixes/absl-optional.patch
+fixes/libxml-parseerr.patch
 
 upstream/mojo.patch
 upstream/vector.patch
 upstream/display-header.patch
 upstream/bitset.patch
+upstream/once_flag.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -47,6 +49,7 @@ system/rollup.patch
 
 bookworm/clang16.patch
 bookworm/constexpr-equality.patch
+bookworm/nvt.patch -R
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

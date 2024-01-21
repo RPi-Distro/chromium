@@ -16,7 +16,12 @@ chromium (121.0.6167.75-1) UNRELEASED; urgency=high
     - upstream/vector.patch: missing header fix, pulled from upstream.
     - upstream/display-header.patch: missing header fix, pulled from upstream.
     - upstream/bitset.patch: missing header fix, pulled from upstream.
+    - upstream/once_flag.patch: missing header fix, pulled from upstream.
     - bookworm/constexpr-equality.patch: add clang-16 workaround.
+    - bookworm/nvt.patch: revert an upstream c++-20 change that confuses
+      clang-16.
+    - fixes/libxml-parseerr.patch: revert change from a newer libxml than
+      debian's.
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 20 Jan 2024 00:51:39 -0500
 

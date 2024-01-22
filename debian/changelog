@@ -25,8 +25,15 @@ chromium (121.0.6167.75-1) UNRELEASED; urgency=high
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:
-    - fixes/fix-rust-linking.patch: allow linking C and Rust libraries in
-      full archive mode
+    - fixes/fix-rust-linking.patch: allow linking C and Rust libraries in full
+      archive mode
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh
+      for upstream changes
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
 
  -- Andres Salomon <dilinger@debian.org>  Sat, 20 Jan 2024 00:51:39 -0500
 

@@ -23,6 +23,11 @@ chromium (121.0.6167.75-1) UNRELEASED; urgency=high
     - fixes/libxml-parseerr.patch: revert change from a newer libxml than
       debian's.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - fixes/fix-rust-linking.patch: allow linking C and Rust libraries in
+      full archive mode
+
  -- Andres Salomon <dilinger@debian.org>  Sat, 20 Jan 2024 00:51:39 -0500
 
 chromium (120.0.6099.224-2) unstable; urgency=high

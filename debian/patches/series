@@ -49,7 +49,7 @@ system/rollup.patch
 
 bookworm/clang16.patch
 bookworm/constexpr-equality.patch
-bookworm/nvt.patch -R
+bookworm/nvt.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

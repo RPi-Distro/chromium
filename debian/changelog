@@ -24,6 +24,9 @@ chromium (121.0.6167.75-1) UNRELEASED; urgency=high
       debian's.
 
   [ Timothy Pearson ]
+  * d/patches:
+    - fixes/std-to-address.patch: work around incorrect template selection
+      in Mojo ConvertTo()
   * d/patches/ppc64le:
     - fixes/fix-rust-linking.patch: allow linking C and Rust libraries in full
       archive mode

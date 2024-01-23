@@ -1,6 +1,27 @@
-chromium (121.0.6167.75-1) UNRELEASED; urgency=high
+chromium (121.0.6167.85-1) unstable; urgency=high
 
   * New upstream stable release.
+    - CVE-2024-0807: Use after free in WebAudio.
+      Reported by Huang Xilin of Ant Group Light-Year Security Lab.
+    - CVE-2024-0812: Inappropriate implementation in Accessibility.
+      Reported by Anonymous.
+    - CVE-2024-0808: Integer underflow in WebUI.
+      Reported by Lyra Rebane (rebane2001).
+    - CVE-2024-0810: Insufficient policy enforcement in DevTools.
+      Reported by Shaheen Fazim.
+    - CVE-2024-0814: Incorrect security UI in Payments.
+      Reported by Muneaki Nishimura (nishimunea).
+    - CVE-2024-0813: Use after free in Reading Mode. Reported by @retsew0x01.
+    - CVE-2024-0806: Use after free in Passwords.
+      Reported by 18楼梦想改造家.
+    - CVE-2024-0805: Inappropriate implementation in Downloads.
+      Reported by Om Apip.
+    - CVE-2024-0804: Insufficient policy enforcement in iOS Security UI.
+      Reported by Narendra Bhati of Suma Soft Pvt. Ltd. Pune (India) .
+    - CVE-2024-0811: Inappropriate implementation in Extensions API.
+      Reported by Jann Horn of Google Project Zero.
+    - CVE-2024-0809: Inappropriate implementation in Autofill.
+      Reported by Ahmed ElMasry.
   * d/copyright: drop another eu-strip binary.
   * d/patches:
     - fixes/atspi.patch: drop, merged upstream.
@@ -39,7 +60,7 @@ chromium (121.0.6167.75-1) UNRELEASED; urgency=high
     - third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
       refresh for upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Sat, 20 Jan 2024 00:51:39 -0500
+ -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jan 2024 17:59:49 -0500
 
 chromium (120.0.6099.224-2) unstable; urgency=high
 

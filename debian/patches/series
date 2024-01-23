@@ -15,6 +15,7 @@ fixes/v8-compressed-ptrs.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/std-to-address.patch
+fixes/stdint.patch
 
 upstream/mojo.patch
 upstream/vector.patch

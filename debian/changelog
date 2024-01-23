@@ -27,6 +27,7 @@ chromium (121.0.6167.75-1) UNRELEASED; urgency=high
   * d/patches:
     - fixes/std-to-address.patch: work around incorrect template selection
       in Mojo ConvertTo()
+    - fixes/stdint.patch: add missing stdint include to performance manager
   * d/patches/ppc64le:
     - fixes/fix-rust-linking.patch: allow linking C and Rust libraries in full
       archive mode

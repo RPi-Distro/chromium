@@ -1,0 +1,38 @@
+author: Andres Salomon <dilinger@debian.org>
+
+../../third_party/blink/renderer/core/xml/xsl_style_sheet_libxslt.cc:125:26: error: no matching constructor for initialization of 'XMLDocumentParserScope'
+  XMLDocumentParserScope scope(OwnerDocument(), XSLTProcessor::GenericErrorFunc,
+                         ^     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../../third_party/blink/renderer/core/xml/parser/xml_document_parser_scope.h:41:3: note: candidate constructor not viable: no known conversion from 'void (void *, const xmlError *)' (aka 'void (void *, const _xmlError *)') to 'xmlStructuredErrorFunc' (aka 'void (*)(void *, _xmlError *)') for 3rd argument
+  XMLDocumentParserScope(Document*,
+  ^
+../../third_party/blink/renderer/core/xml/parser/xml_document_parser_scope.h:40:12: note: candidate constructor not viable: requires 1 argument, but 4 were provided
+  explicit XMLDocumentParserScope(Document*);
+           ^
+
+
+Not sure why this got changed in chromium, maybe they're using libxml from git?
+But we change it back.
+
+--- a/third_party/blink/renderer/core/xml/xslt_processor.h
++++ b/third_party/blink/renderer/core/xml/xslt_processor.h
+@@ -77,7 +77,7 @@ class XSLTProcessor final : public Scrip
+ 
+   void reset();
+ 
+-  static void ParseErrorFunc(void* user_data, const xmlError*);
++  static void ParseErrorFunc(void* user_data, xmlError*);
+   static void GenericErrorFunc(void* user_data, const char* msg, ...);
+ 
+   // Only for libXSLT callbacks
+--- a/third_party/blink/renderer/core/xml/xslt_processor_libxslt.cc
++++ b/third_party/blink/renderer/core/xml/xslt_processor_libxslt.cc
+@@ -66,7 +66,7 @@ void XSLTProcessor::GenericErrorFunc(voi
+   // It would be nice to do something with this error message.
+ }
+ 
+-void XSLTProcessor::ParseErrorFunc(void* user_data, const xmlError* error) {
++void XSLTProcessor::ParseErrorFunc(void* user_data, xmlError* error) {
+   FrameConsole* console = static_cast<FrameConsole*>(user_data);
+   if (!console)
+     return;

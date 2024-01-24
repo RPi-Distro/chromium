@@ -52,6 +52,7 @@ bookworm/clang16.patch
 bookworm/generate-ninja.patch
 bookworm/freetype-COLRV1.patch
 bookworm/constcountrycode.patch
+bookworm/undo-rust-req.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
 

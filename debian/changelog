@@ -43,6 +43,8 @@ chromium (121.0.6167.85-1~deb12u1) bookworm-security; urgency=high
       clang-16.
     - fixes/libxml-parseerr.patch: revert change from a newer libxml than
       debian's.
+    - bookworm/undo-rust-req.patch: revert change that makes rust required
+      to build (for now).
 
   [ Timothy Pearson ]
   * d/patches:

@@ -45,6 +45,8 @@ chromium (121.0.6167.85-1~deb12u1) bookworm-security; urgency=high
       debian's.
     - bookworm/undo-rust-req.patch: revert change that makes rust required
       to build (for now).
+    - bookworm/eraseif-lamba.patch: revert changes switching to std::erase_if
+      to work around libstdc++-12 bug.
 
   [ Timothy Pearson ]
   * d/patches:

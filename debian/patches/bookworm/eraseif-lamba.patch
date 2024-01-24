@@ -1,0 +1,122 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Revert parts of the following two commits, which libstdc++-dev 12 doesn't like
+
+
+In file included from ../../net/http/http_auth_cache.cc:5:
+In file included from ../../net/http/http_auth_cache.h:11:
+In file included from /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/map:64:
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/erase_if.h:59:10: error: no matching function for call to object of type '(lambda at ../../net/http/http_auth_cache.cc:92:27)'
+            if (__pred(*__iter))
+                ^~~~~~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/map:111:24: note: in instantiation of function template specialization 'std::__detail::__erase_nodes_if<std::multimap<net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>, std::multimap<net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>, (lambda at ../../net/http/http_auth_cache.cc:92:27)>' requested here
+      return __detail::__erase_nodes_if(__cont, __ucont, __pred);
+                       ^
+../../net/http/http_auth_cache.cc:92:8: note: in instantiation of function template specialization 'std::erase_if<net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry, std::less<net::HttpAuthCache::EntryMapKey>, std::allocator<std::pair<const net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>>, (lambda at ../../net/http/http_auth_cache.cc:92:27)>' requested here
+  std::erase_if(entries_, [](EntryMap::value_type& entry_map_pair) {
+       ^
+../../net/http/http_auth_cache.cc:92:27: note: candidate function not viable: 1st argument ('const std::pair<const net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>') would lose const qualifier
+  std::erase_if(entries_, [](EntryMap::value_type& entry_map_pair) {
+                          ^
+../../net/http/http_auth_cache.cc:92:27: note: conversion candidate of type 'bool (*)(EntryMap::value_type &)' (aka 'bool (*)(pair<const net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry> &)')
+In file included from ../../net/http/http_auth_cache.cc:5:
+In file included from ../../net/http/http_auth_cache.h:11:
+In file included from /usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/map:64:
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/erase_if.h:59:10: error: no matching function for call to object of type '(lambda at ../../net/http/http_auth_cache.cc:316:27)'
+            if (__pred(*__iter))
+                ^~~~~~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/map:111:24: note: in instantiation of function template specialization 'std::__detail::__erase_nodes_if<std::multimap<net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>, std::multimap<net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>, (lambda at ../../net/http/http_auth_cache.cc:316:27)>' requested here
+      return __detail::__erase_nodes_if(__cont, __ucont, __pred);
+                       ^
+../../net/http/http_auth_cache.cc:316:8: note: in instantiation of function template specialization 'std::erase_if<net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry, std::less<net::HttpAuthCache::EntryMapKey>, std::allocator<std::pair<const net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>>, (lambda at ../../net/http/http_auth_cache.cc:316:27)>' requested here
+  std::erase_if(entries_, [begin_time, end_time,
+       ^
+../../net/http/http_auth_cache.cc:316:27: note: candidate function not viable: 1st argument ('const std::pair<const net::HttpAuthCache::EntryMapKey, net::HttpAuthCache::Entry>') would lose const qualifier
+  std::erase_if(entries_, [begin_time, end_time,
+                          ^
+2 errors generated.
+
+
+commit eb8d184f1b4e236f186cf0619ad03a6847e37758
+Author: Andrew Rayskiy <greengrape@google.com>
+Date:   Fri Nov 24 16:30:15 2023 +0000
+
+    [base] Remove base::Erase()/base::EraseIf() overloads for std::multimap
+    
+    They're now replaced with C++20 std::erase()/std::erase_if().
+    
+    Change-Id: I3f6b53e50fb9f69d5b03207fd357b8222c43cd86
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5054086
+    Owners-Override: Kyle Charbonneau <kylechar@chromium.org>
+    Code-Coverage: findit-for-me@appspot.gserviceaccount.com <findit-for-me@appspot.gserviceac
+count.com>
+    Reviewed-by: Kyle Charbonneau <kylechar@chromium.org>
+    Commit-Queue: Andrew Rayskiy <greengrape@google.com>
+    Cr-Commit-Position: refs/heads/main@{#1228828}
+
+
+
+commit be08b98b112a714108c7cbbff94fde5959f4dd1c
+Author: Andrew Rayskiy <greengrape@google.com>
+Date:   Wed Nov 22 15:39:56 2023 +0000
+
+    [base] Remove base::Erase()/base::EraseIf() overloads for std::list
+    
+    They're now replaced with C++20 std::erase()/std::erase_if().
+    
+    Bug: 1414639
+    Change-Id: I2f38a845f132bb4115563547f3669f79b7b6c7ba
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5049925
+    Commit-Queue: Andrew Rayskiy <greengrape@google.com>
+    Reviewed-by: Kyle Charbonneau <kylechar@chromium.org>
+    Owners-Override: Kyle Charbonneau <kylechar@chromium.org>
+    Code-Coverage: findit-for-me@appspot.gserviceaccount.com <findit-for-me@appspot.gserviceaccount.com>
+    Cr-Commit-Position: refs/heads/main@{#1228003}
+
+Index: chromium-121.0.6167.85/net/http/http_auth_cache.cc
+===================================================================
+--- chromium-121.0.6167.85.orig/net/http/http_auth_cache.cc
++++ chromium-121.0.6167.85/net/http/http_auth_cache.cc
+@@ -7,6 +7,7 @@
+ #include <list>
+ #include <map>
+ 
++#include "base/containers/cxx20_erase.h"
+ #include "base/logging.h"
+ #include "base/memory/raw_ptr_exclusion.h"
+ #include "base/metrics/histogram_macros.h"
+@@ -89,7 +90,7 @@ void HttpAuthCache::SetKeyServerEntriesB
+ 
+   key_server_entries_by_network_anonymization_key_ =
+       key_server_entries_by_network_anonymization_key;
+-  std::erase_if(entries_, [](EntryMap::value_type& entry_map_pair) {
++  base::EraseIf(entries_, [](EntryMap::value_type& entry_map_pair) {
+     return entry_map_pair.first.target == HttpAuth::AUTH_SERVER;
+   });
+ }
+@@ -313,7 +314,7 @@ void HttpAuthCache::ClearEntriesAddedBet
+     ClearAllEntries();
+     return;
+   }
+-  std::erase_if(entries_, [begin_time, end_time,
++  base::EraseIf(entries_, [begin_time, end_time,
+                            url_matcher](EntryMap::value_type& entry_map_pair) {
+     Entry& entry = entry_map_pair.second;
+     return entry.creation_time_ >= begin_time &&
+Index: chromium-121.0.6167.85/base/containers/cxx20_erase_map.h
+===================================================================
+--- chromium-121.0.6167.85.orig/base/containers/cxx20_erase_map.h
++++ chromium-121.0.6167.85/base/containers/cxx20_erase_map.h
+@@ -26,6 +26,12 @@ size_t EraseIf(std::map<Key, T, Compare,
+   return internal::IterateAndEraseIf(container, pred);
+ }
+ 
++template <class Key, class T, class Compare, class Allocator, class Predicate>
++size_t EraseIf(std::multimap<Key, T, Compare, Allocator>& container,
++               Predicate pred) {
++  return internal::IterateAndEraseIf(container, pred);
++}
++
+ }  // namespace base
+ 
+ #endif  // BASE_CONTAINERS_CXX20_ERASE_MAP_H_

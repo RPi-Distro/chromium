@@ -1,3 +1,14 @@
+chromium (121.0.6167.139-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-1060: Use after free in Canvas. Reported by Anonymous.
+    - CVE-2024-1059: Use after free in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-1077: Use after free in Network.
+      Reported by Microsoft Security Research Center.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 31 Jan 2024 11:49:10 -0500
+
 chromium (121.0.6167.85-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.

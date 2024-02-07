@@ -1,3 +1,12 @@
+chromium (121.0.6167.160-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-1284: Use after free in Mojo. Reported by Anonymous.
+    - CVE-2024-1283: Heap buffer overflow in Skia.
+      Reported by Jorge Buzeti (@r3tr074).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 06 Feb 2024 22:41:53 -0500
+
 chromium (121.0.6167.139-1) unstable; urgency=high
 
   * New upstream security release.

@@ -1,4 +1,4 @@
-v119.0.6045.171_rpi_2.62.patch
+v120.0.6099.102_rpi_2.63.patch
 gngen_fixes.diff
 set-rpath-on-chromium-executables.patch
 widevine-enable-version-string.patch

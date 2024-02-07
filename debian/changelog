@@ -1,3 +1,10 @@
+chromium-browser (120.0.6099.102-rpt1) bullseye; urgency=medium
+
+  * Update to 120.0.6099.102
+  * v120.0.6099.102_rpi_2.63.patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 11 Dec 2023 10:41:25 +0000
+
 chromium-browser (119.0.6045.171-rpt1) bullseye; urgency=medium
 
   * Update to 119.0.6045.171

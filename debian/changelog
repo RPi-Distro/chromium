@@ -1,6 +1,13 @@
 chromium (122.0.6261.39-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+  * d/patches:
+    - fixes/v8-compressed-ptrs.patch: drop, merged upstream.
+    - fixes/stdint.patch: drop, merged upstream.
+    - upstream/vector.patch: drop, merged upstream.
+    - upstream/display-header.patch: drop, merged upstream.
+    - upstream/bitset.patch: drop, merged upstream.
+    - upstream/once_flag.patch: drop, merged upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 06 Feb 2024 22:41:53 -0500
 

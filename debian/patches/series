@@ -11,17 +11,11 @@ fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch
 fixes/blink-frags.patch
-fixes/v8-compressed-ptrs.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/std-to-address.patch
-fixes/stdint.patch
 
 upstream/mojo.patch
-upstream/vector.patch
-upstream/display-header.patch
-upstream/bitset.patch
-upstream/once_flag.patch
 
 disable/tests.patch
 disable/unrar.patch

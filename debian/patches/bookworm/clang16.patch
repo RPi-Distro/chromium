@@ -22,7 +22,7 @@ but now they're enabled unconditionally.
          }
        }
      }
-@@ -1876,7 +1871,6 @@ config("default_warnings") {
+@@ -1876,13 +1871,12 @@ config("default_warnings") {
          "-Wno-vla-extension",
  
          # TODO(https://crbug.com/1490607): Fix and re-enable.
@@ -30,3 +30,10 @@ but now they're enabled unconditionally.
        ]
  
        if (!is_nacl) {
+         cflags_cc += [
+           # TODO(https://crbug.com/1513724): Fix and re-enable.
+-          "-Wno-c++11-narrowing-const-reference",
++          "-Wno-c++11-narrowing",
+         ]
+       }
+     }

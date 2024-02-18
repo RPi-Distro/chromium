@@ -11,10 +11,13 @@ chromium (122.0.6261.39-1) UNRELEASED; urgency=high
     - fixes/std-to-address.patch: refresh (XXX: test if still needed?).
     - disable/signin.patch: refresh.
     - disable/catapult.patch: refresh.
-    - bookworm/clang16.patch: refresh.
-    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
+    - bookworm/clang16.patch: refresh, and change
+      -Wno-c++11-narrowing-const-reference to -Wno-c++11-narrowing.
     - bookworm/constexpr-equality.patch: refresh.
     - bookworm/nvt.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
+    - bookworm/undo-internal-alloc.patch: revert a commit that confuses
+      clang16 w/ libstdc++. We need a better workaround than this.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 06 Feb 2024 22:41:53 -0500
 

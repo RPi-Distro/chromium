@@ -46,6 +46,7 @@ system/rollup.patch
 bookworm/clang16.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
+bookworm/undo-internal-alloc.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

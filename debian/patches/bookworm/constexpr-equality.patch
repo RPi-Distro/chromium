@@ -10,7 +10,7 @@ but apparently we still have some issues with the equality operator.
 
 --- a/components/performance_manager/resource_attribution/query_params.h
 +++ b/components/performance_manager/resource_attribution/query_params.h
-@@ -27,7 +27,7 @@ struct QueryParams {
+@@ -67,7 +67,7 @@ struct QueryParams {
    QueryParams(const QueryParams& other);
    QueryParams& operator=(const QueryParams& other);
  
@@ -18,4 +18,4 @@ but apparently we still have some issues with the equality operator.
 +  friend bool operator==(const QueryParams&,
                                     const QueryParams&) = default;
  
-   // Individual resource contexts to measure.
+   // Resource types to measure.

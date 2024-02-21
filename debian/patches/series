@@ -16,6 +16,9 @@ fixes/libxml-parseerr.patch
 fixes/std-to-address.patch
 
 upstream/mojo.patch
+upstream/uniqptr.patch
+upstream/optional.patch
+upstream/bookmarknode.patch
 
 disable/tests.patch
 disable/unrar.patch

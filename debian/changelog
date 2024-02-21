@@ -29,12 +29,17 @@ chromium (122.0.6261.57-1) UNRELEASED; urgency=high
     - disable/catapult.patch: refresh.
     - bookworm/clang16.patch: refresh, and change
       -Wno-c++11-narrowing-const-reference to -Wno-c++11-narrowing.
-    - bookworm/constexpr-equality.patch: refresh.
     - bookworm/nvt.patch: refresh.
     - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
     - bookworm/undo-internal-alloc.patch: revert a commit that confuses
       clang16 w/ libstdc++. We need a better workaround than this.
     - upstream/mojo.patch: update from git.
+    - bookworm/constexpr-equality.patch: add a few more build fixes
+      (constexpr removals).
+    - upstream/uniqptr.patch: add missing include.
+    - upstream/optional.patch: add missing include.
+    - upstream/bookmarknode.patch: add comparison equality fix pulled from
+      upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 06 Feb 2024 22:41:53 -0500
 

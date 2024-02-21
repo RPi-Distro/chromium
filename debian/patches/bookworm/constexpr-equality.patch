@@ -19,3 +19,25 @@ but apparently we still have some issues with the equality operator.
                                     const QueryParams&) = default;
  
    // Resource types to measure.
+--- a/base/types/strong_alias.h
++++ b/base/types/strong_alias.h
+@@ -110,7 +110,7 @@ class StrongAlias {
+   // a `StrongAlias<W>`.
+   friend constexpr auto operator<=>(const StrongAlias& lhs,
+                                     const StrongAlias& rhs) = default;
+-  friend constexpr bool operator==(const StrongAlias& lhs,
++  friend bool operator==(const StrongAlias& lhs,
+                                    const StrongAlias& rhs) = default;
+ 
+   // Hasher to use in std::unordered_map, std::unordered_set, etc.
+--- a/components/autofill/core/common/unique_ids.h
++++ b/components/autofill/core/common/unique_ids.h
+@@ -137,7 +137,7 @@ struct GlobalId {
+ 
+   friend constexpr auto operator<=>(const GlobalId<RendererId>& lhs,
+                                     const GlobalId<RendererId>& rhs) = default;
+-  friend constexpr bool operator==(const GlobalId<RendererId>& lhs,
++  friend bool operator==(const GlobalId<RendererId>& lhs,
+                                    const GlobalId<RendererId>& rhs) = default;
+ };
+ 

@@ -41,12 +41,10 @@ chromium (122.0.6261.57-1) UNRELEASED; urgency=high
     - upstream/bookmarknode.patch: add comparison equality fix pulled from
       upstream.
     - fixes/optional.patch: add missing includes.
+    - bookworm/nvt2.patch: revert another upstream c++-20 change for clang-16.
+    - upstream/bitset.patch: add missing include.
 
   [ Timothy Pearson ]
-  * d/patches:
-    - fixes/std-to-address.patch: work around incorrect template selection
-      in Mojo ConvertTo()
-    - fixes/stdint.patch: add missing stdint include to performance manager
   * d/patches/ppc64le:
     - 0001-Properly-detect-little-endian-PPC64-systems.patch: drop, upstream
       fix in GIT hash 25a6e6

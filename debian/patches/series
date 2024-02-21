@@ -20,6 +20,7 @@ upstream/mojo.patch
 upstream/uniqptr.patch
 upstream/optional.patch
 upstream/bookmarknode.patch
+upstream/bitset.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -50,6 +51,7 @@ system/rollup.patch
 bookworm/clang16.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
+bookworm/nvt2.patch
 bookworm/undo-internal-alloc.patch
 
 # Ungoogled Chromium

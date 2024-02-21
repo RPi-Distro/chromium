@@ -40,6 +40,7 @@ chromium (122.0.6261.57-1) UNRELEASED; urgency=high
     - upstream/optional.patch: add missing include.
     - upstream/bookmarknode.patch: add comparison equality fix pulled from
       upstream.
+    - fixes/optional.patch: add missing includes.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 06 Feb 2024 22:41:53 -0500
 

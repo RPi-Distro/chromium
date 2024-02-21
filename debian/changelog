@@ -42,6 +42,19 @@ chromium (122.0.6261.57-1) UNRELEASED; urgency=high
       upstream.
     - fixes/optional.patch: add missing includes.
 
+  [ Timothy Pearson ]
+  * d/patches:
+    - fixes/std-to-address.patch: work around incorrect template selection
+      in Mojo ConvertTo()
+    - fixes/stdint.patch: add missing stdint include to performance manager
+  * d/patches/ppc64le:
+    - 0001-Properly-detect-little-endian-PPC64-systems.patch: drop, upstream
+      fix in GIT hash 25a6e6
+    - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
+    - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
+      upstream changes
+    - skia-vsx-instructions.patch: refresh for upstream changes
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 06 Feb 2024 22:41:53 -0500
 
 chromium (121.0.6167.160-1) unstable; urgency=high

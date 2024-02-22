@@ -47,6 +47,9 @@ chromium (122.0.6261.57-1~deb12u1) bookworm-security; urgency=high
     - bookworm/eraseif0.patch: revert another commit; needed by
       eraseif-lambda.patch.
     - bookworm/eraseif-lamba.patch: refresh.
+    - bookworm/undo-rust-req.patch: refresh.
+    - bookworm/bubble-contents.patch: remove static_assert() that fails with
+      libstdc++12.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

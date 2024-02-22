@@ -1,0 +1,35 @@
+In file included from ../../chrome/browser/ui/commerce/commerce_ui_tab_helper.cc:28:
+In file included from ../../chrome/browser/ui/views/side_panel/side_panel_web_ui_view.h:12:
+../../chrome/browser/ui/views/bubble/bubble_contents_wrapper.h:153:9: error: static assertion expression is not an integral constant expression
+        views_metrics::IsValidWebUINameVariant("." + T::GetWebUIName()));
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/unique_ptr.h:1065:34: note: in instantiation of member function 'BubbleContentsWrapperT<ShoppingInsightsSidePanelUI>::BubbleContentsWrapperT' requested here
+    { return unique_ptr<_Tp>(new _Tp(std::forward<_Args>(__args)...)); }
+                                 ^
+../../chrome/browser/ui/commerce/commerce_ui_tab_helper.cc:458:16: note: in instantiation of function template specialization 'std::make_unique<BubbleContentsWrapperT<ShoppingInsightsSidePanelUI>, GURL, Profile *, int, bool, bool>' requested here
+          std::make_unique<BubbleContentsWrapperT<ShoppingInsightsSidePanelUI>>(
+               ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_construct.h:97:14: note: construction of subobject of member '_M_local_buf' of union with active member '_M_allocated_capacity' is not allowed in a constant expression
+    { return ::new((void*)__location) _Tp(std::forward<_Args>(__args)...); }
+             ^
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/char_traits.h:351:4: note: in call to 'construct_at(&ShoppingInsightsSidePanelUI::GetWebUIName().._M_local_buf[0], char())'
+          std::construct_at(__builtin_addressof(__c1), __c2);
+          ^
+
+
+Index: chromium-122.0.6261.57/chrome/browser/ui/views/bubble/bubble_contents_wrapper.h
+===================================================================
+--- chromium-122.0.6261.57.orig/chrome/browser/ui/views/bubble/bubble_contents_wrapper.h
++++ chromium-122.0.6261.57/chrome/browser/ui/views/bubble/bubble_contents_wrapper.h
+@@ -148,10 +148,7 @@ class BubbleContentsWrapperT : public Bu
+                               webui_resizes_host,
+                               esc_closes_ui,
+                               T::GetWebUIName()),
+-        webui_url_(webui_url) {
+-    static_assert(
+-        views_metrics::IsValidWebUINameVariant("." + T::GetWebUIName()));
+-  }
++        webui_url_(webui_url) {}
+ 
+   void ReloadWebContents() override {
+     web_contents()->GetController().LoadURL(webui_url_, content::Referrer(),

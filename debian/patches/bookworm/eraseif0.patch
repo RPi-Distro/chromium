@@ -1,0 +1,82 @@
+Revert parts of the following commit, which eraseif-lambda.patch depends on:
+
+commit e18bf8da4f596851234f2496c87a6d6135a7dfcc
+Author: K. M. Merajul Arefin <m.arefin@samsung.com>
+Date:   Mon Jan 22 20:47:46 2024 +0000
+
+    [base] Remove base::Erase()/base::EraseIf() overloads for std::map
+    
+    They're now replaced with C++20 std::erase()/std::erase_if().
+    
+    Bug: 1414639
+    
+    Signed-off-by: K. M Merajul Arefin <m.arefin@samsung.com>
+    Change-Id: I57d67d407188013e00e10ae8f1a21a49f4c3095a
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5215293
+    Reviewed-by: Scott Violet <sky@chromium.org>
+    Owners-Override: Kyle Charbonneau <kylechar@chromium.org>
+    Reviewed-by: Kyle Charbonneau <kylechar@chromium.org>
+    Commit-Queue: Kyle Charbonneau <kylechar@chromium.org>
+    Reviewed-by: Peter Conn <peconn@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1250405}
+
+Index: chromium-122.0.6261.57/base/BUILD.gn
+===================================================================
+--- chromium-122.0.6261.57.orig/base/BUILD.gn
++++ chromium-122.0.6261.57/base/BUILD.gn
+@@ -270,6 +270,7 @@ component("base") {
+     "containers/contains.h",
+     "containers/cxx20_erase.h",
+     "containers/cxx20_erase_internal.h",
++    "containers/cxx20_erase_map.h",
+     "containers/cxx20_erase_vector.h",
+     "containers/enum_set.h",
+     "containers/extend.h",
+Index: chromium-122.0.6261.57/base/containers/cxx20_erase.h
+===================================================================
+--- chromium-122.0.6261.57.orig/base/containers/cxx20_erase.h
++++ chromium-122.0.6261.57/base/containers/cxx20_erase.h
+@@ -5,6 +5,7 @@
+ #ifndef BASE_CONTAINERS_CXX20_ERASE_H_
+ #define BASE_CONTAINERS_CXX20_ERASE_H_
+ 
++#include "base/containers/cxx20_erase_map.h"
+ #include "base/containers/cxx20_erase_vector.h"
+ 
+ // Erase/EraseIf are based on C++20's uniform container erasure API:
+Index: chromium-122.0.6261.57/base/containers/cxx20_erase_map.h
+===================================================================
+--- /dev/null
++++ chromium-122.0.6261.57/base/containers/cxx20_erase_map.h
+@@ -0,0 +1,31 @@
++// Copyright 2021 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef BASE_CONTAINERS_CXX20_ERASE_MAP_H_
++#define BASE_CONTAINERS_CXX20_ERASE_MAP_H_
++
++#include <map>
++
++#include "base/containers/cxx20_erase_internal.h"
++
++namespace base {
++
++// EraseIf is based on C++20's uniform container erasure API:
++// - https://eel.is/c++draft/libraryindex#:erase
++// - https://eel.is/c++draft/libraryindex#:erase_if
++// They provide a generic way to erase elements from a container.
++// The functions here implement these for the standard containers until those
++// functions are available in the C++ standard.
++// Note: there is no std::erase for standard associative containers so we don't
++// have it either.
++
++template <class Key, class T, class Compare, class Allocator, class Predicate>
++size_t EraseIf(std::map<Key, T, Compare, Allocator>& container,
++               Predicate pred) {
++  return internal::IterateAndEraseIf(container, pred);
++}
++
++}  // namespace base
++
++#endif  // BASE_CONTAINERS_CXX20_ERASE_MAP_H_

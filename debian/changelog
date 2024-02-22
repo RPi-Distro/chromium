@@ -44,6 +44,9 @@ chromium (122.0.6261.57-1~deb12u1) bookworm-security; urgency=high
     - bookworm/nvt2.patch: revert another upstream c++-20 change for clang-16.
     - upstream/bitset.patch: add missing include.
     - ppc64le/v8/0002-Add-ppc64-trap-instructions.patch: refresh.
+    - bookworm/eraseif0.patch: revert another commit; needed by
+      eraseif-lambda.patch.
+    - bookworm/eraseif-lamba.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

@@ -73,19 +73,19 @@ Date:   Wed Nov 22 15:39:56 2023 +0000
     Code-Coverage: findit-for-me@appspot.gserviceaccount.com <findit-for-me@appspot.gserviceaccount.com>
     Cr-Commit-Position: refs/heads/main@{#1228003}
 
-Index: chromium-121.0.6167.85/net/http/http_auth_cache.cc
+Index: chromium-122.0.6261.57/net/http/http_auth_cache.cc
 ===================================================================
---- chromium-121.0.6167.85.orig/net/http/http_auth_cache.cc
-+++ chromium-121.0.6167.85/net/http/http_auth_cache.cc
+--- chromium-122.0.6261.57.orig/net/http/http_auth_cache.cc
++++ chromium-122.0.6261.57/net/http/http_auth_cache.cc
 @@ -7,6 +7,7 @@
  #include <list>
  #include <map>
  
 +#include "base/containers/cxx20_erase.h"
  #include "base/logging.h"
- #include "base/memory/raw_ptr_exclusion.h"
+ #include "base/memory/raw_ref.h"
  #include "base/metrics/histogram_macros.h"
-@@ -89,7 +90,7 @@ void HttpAuthCache::SetKeyServerEntriesB
+@@ -87,7 +88,7 @@ void HttpAuthCache::SetKeyServerEntriesB
  
    key_server_entries_by_network_anonymization_key_ =
        key_server_entries_by_network_anonymization_key;
@@ -94,7 +94,7 @@ Index: chromium-121.0.6167.85/net/http/http_auth_cache.cc
      return entry_map_pair.first.target == HttpAuth::AUTH_SERVER;
    });
  }
-@@ -313,7 +314,7 @@ void HttpAuthCache::ClearEntriesAddedBet
+@@ -311,7 +312,7 @@ void HttpAuthCache::ClearEntriesAddedBet
      ClearAllEntries();
      return;
    }
@@ -103,10 +103,10 @@ Index: chromium-121.0.6167.85/net/http/http_auth_cache.cc
                             url_matcher](EntryMap::value_type& entry_map_pair) {
      Entry& entry = entry_map_pair.second;
      return entry.creation_time_ >= begin_time &&
-Index: chromium-121.0.6167.85/base/containers/cxx20_erase_map.h
+Index: chromium-122.0.6261.57/base/containers/cxx20_erase_map.h
 ===================================================================
---- chromium-121.0.6167.85.orig/base/containers/cxx20_erase_map.h
-+++ chromium-121.0.6167.85/base/containers/cxx20_erase_map.h
+--- chromium-122.0.6261.57.orig/base/containers/cxx20_erase_map.h
++++ chromium-122.0.6261.57/base/containers/cxx20_erase_map.h
 @@ -26,6 +26,12 @@ size_t EraseIf(std::map<Key, T, Compare,
    return internal::IterateAndEraseIf(container, pred);
  }

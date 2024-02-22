@@ -6,7 +6,7 @@ but now they're enabled unconditionally.
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -621,15 +621,10 @@ config("compiler") {
+@@ -623,15 +623,10 @@ config("compiler") {
      # TODO(crbug.com/1491036): This isn't supported by Cronet's mainline llvm version.
      if (default_toolchain != "//build/toolchain/cros:target" &&
          !llvm_android_mainline) {
@@ -22,11 +22,18 @@ but now they're enabled unconditionally.
          }
        }
      }
-@@ -1880,7 +1875,6 @@ config("default_warnings") {
-           "-Wno-vla-extension",
+@@ -1876,13 +1871,12 @@ config("default_warnings") {
+         "-Wno-vla-extension",
  
-           # TODO(https://crbug.com/1490607): Fix and re-enable.
--          "-Wno-thread-safety-reference-return",
+         # TODO(https://crbug.com/1490607): Fix and re-enable.
+-        "-Wno-thread-safety-reference-return",
+       ]
+ 
+       if (!is_nacl) {
+         cflags_cc += [
+           # TODO(https://crbug.com/1513724): Fix and re-enable.
+-          "-Wno-c++11-narrowing-const-reference",
++          "-Wno-c++11-narrowing",
          ]
        }
      }

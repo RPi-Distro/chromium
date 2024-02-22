@@ -1,8 +1,8 @@
-Index: chromium-121.0.6167.75/third_party/skia/BUILD.gn
+Index: chromium-122.0.6261.57/third_party/skia/BUILD.gn
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/BUILD.gn
-+++ chromium-121.0.6167.75/third_party/skia/BUILD.gn
-@@ -186,6 +186,12 @@ opts("hsw") {
+--- chromium-122.0.6261.57.orig/third_party/skia/BUILD.gn
++++ chromium-122.0.6261.57/third_party/skia/BUILD.gn
+@@ -198,6 +198,12 @@ opts("skx") {
    }
  }
  
@@ -15,15 +15,15 @@ Index: chromium-121.0.6167.75/third_party/skia/BUILD.gn
  # Any feature of Skia that requires third-party code should be optional and use this template.
  template("optional") {
    if (invoker.enabled) {
-@@ -1505,6 +1511,7 @@ skia_component("skia") {
-     ":raw",
+@@ -1467,6 +1473,7 @@ skia_component("skia") {
+     ":skx",
      ":typeface_fontations",
      ":vello",
 +    ":vsx",
      ":webp_decode",
      ":wuffs",
      ":xml",
-@@ -1684,7 +1691,10 @@ skia_static_library("pathkit") {
+@@ -1644,7 +1651,10 @@ skia_static_library("pathkit") {
    public_configs = [ ":skia_public" ]
    configs = skia_library_configs
  
@@ -35,10 +35,10 @@ Index: chromium-121.0.6167.75/third_party/skia/BUILD.gn
  
    sources = []
    sources += skia_pathops_sources
-Index: chromium-121.0.6167.75/third_party/skia/gn/skia/BUILD.gn
+Index: chromium-122.0.6261.57/third_party/skia/gn/skia/BUILD.gn
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/gn/skia/BUILD.gn
-+++ chromium-121.0.6167.75/third_party/skia/gn/skia/BUILD.gn
+--- chromium-122.0.6261.57.orig/third_party/skia/gn/skia/BUILD.gn
++++ chromium-122.0.6261.57/third_party/skia/gn/skia/BUILD.gn
 @@ -163,6 +163,8 @@ config("default") {
        "-mfpmath=sse",
      ]
@@ -48,10 +48,10 @@ Index: chromium-121.0.6167.75/third_party/skia/gn/skia/BUILD.gn
    }
  
    if (malloc != "" && !is_win) {
-Index: chromium-121.0.6167.75/third_party/skia/include/core/SkTypes.h
+Index: chromium-122.0.6261.57/third_party/skia/include/core/SkTypes.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/include/core/SkTypes.h
-+++ chromium-121.0.6167.75/third_party/skia/include/core/SkTypes.h
+--- chromium-122.0.6261.57.orig/third_party/skia/include/core/SkTypes.h
++++ chromium-122.0.6261.57/third_party/skia/include/core/SkTypes.h
 @@ -195,5 +195,44 @@ static constexpr uint32_t SK_InvalidGenI
  */
  static constexpr uint32_t SK_InvalidUniqueID = 0;
@@ -97,10 +97,10 @@ Index: chromium-121.0.6167.75/third_party/skia/include/core/SkTypes.h
 +
  
  #endif
-Index: chromium-121.0.6167.75/third_party/skia/src/base/SkSpinlock.cpp
+Index: chromium-122.0.6261.57/third_party/skia/src/base/SkSpinlock.cpp
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/base/SkSpinlock.cpp
-+++ chromium-121.0.6167.75/third_party/skia/src/base/SkSpinlock.cpp
+--- chromium-122.0.6261.57.orig/third_party/skia/src/base/SkSpinlock.cpp
++++ chromium-122.0.6261.57/third_party/skia/src/base/SkSpinlock.cpp
 @@ -33,7 +33,8 @@
  #endif
  
@@ -111,10 +111,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/base/SkSpinlock.cpp
      #include <emmintrin.h>
      static void do_pause() { _mm_pause(); }
  #else
-Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkBitmapProcState_opts.h
+Index: chromium-122.0.6261.57/third_party/skia/src/opts/SkBitmapProcState_opts.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/opts/SkBitmapProcState_opts.h
-+++ chromium-121.0.6167.75/third_party/skia/src/opts/SkBitmapProcState_opts.h
+--- chromium-122.0.6261.57.orig/third_party/skia/src/opts/SkBitmapProcState_opts.h
++++ chromium-122.0.6261.57/third_party/skia/src/opts/SkBitmapProcState_opts.h
 @@ -21,7 +21,13 @@
  // The rest are scattershot at the moment but I want to get them
  // all migrated to be normal code inside SkBitmapProcState.cpp.
@@ -130,10 +130,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkBitmapProcState_opts.h
      #include <immintrin.h>
  #elif defined(SK_ARM_HAS_NEON)
      #include <arm_neon.h>
-Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkBlitRow_opts.h
+Index: chromium-122.0.6261.57/third_party/skia/src/opts/SkBlitRow_opts.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/opts/SkBlitRow_opts.h
-+++ chromium-121.0.6167.75/third_party/skia/src/opts/SkBlitRow_opts.h
+--- chromium-122.0.6261.57.orig/third_party/skia/src/opts/SkBlitRow_opts.h
++++ chromium-122.0.6261.57/third_party/skia/src/opts/SkBlitRow_opts.h
 @@ -69,7 +69,7 @@
  #endif
  
@@ -143,10 +143,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkBlitRow_opts.h
  
      static inline __m128i SkPMSrcOver_SSE2(const __m128i& src, const __m128i& dst) {
          __m128i scale = _mm_sub_epi32(_mm_set1_epi32(256),
-Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
+Index: chromium-122.0.6261.57/third_party/skia/src/opts/SkRasterPipeline_opts.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
-+++ chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
+--- chromium-122.0.6261.57.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
++++ chromium-122.0.6261.57/third_party/skia/src/opts/SkRasterPipeline_opts.h
 @@ -1,5 +1,6 @@
  /*
   * Copyright 2018 Google Inc.
@@ -154,16 +154,16 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
   *
   * Use of this source code is governed by a BSD-style license that can be
   * found in the LICENSE file.
-@@ -59,6 +60,8 @@
+@@ -74,6 +75,8 @@ using NoCtx = const void*;
      #define JUMPER_IS_SCALAR
  #elif defined(SK_ARM_HAS_NEON)
      #define JUMPER_IS_NEON
 +#elif defined(SK_PPC64_HAS_SSE_COMPAT)
 +    #define JUMPER_IS_VSX
+ #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SKX
+     #define JUMPER_IS_SKX
  #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_AVX2
-     #define JUMPER_IS_HSW
- #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_AVX
-@@ -89,6 +92,8 @@
+@@ -106,6 +109,8 @@ using NoCtx = const void*;
      #include <math.h>
  #elif defined(JUMPER_IS_NEON)
      #include <arm_neon.h>
@@ -172,7 +172,7 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #else
      #include <immintrin.h>
  #endif
-@@ -179,6 +184,179 @@
+@@ -197,6 +202,182 @@ namespace SK_OPTS_NS {
          ptr[3] = a;
      }
  
@@ -205,6 +205,9 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
 +
 +    SI F if_then_else(I32 c, F t, F e) {
 +        return vec_or((vector float)vec_and((vector float)c, (vector float)t), (vector float)vec_andc((vector float)e, (vector float)c));
++    }
++    SI I32 if_then_else(I32 c, I32 t, I32 e) {
++        return vec_or((vector unsigned int)vec_and((vector unsigned int)c, (vector unsigned int)t), (vector unsigned int)vec_andc((vector unsigned int)e, (vector unsigned int)c));
 +    }
 +
 +    // In both AltiVec and SSE there is no horizontal element compare, unlike ARM.  Fall back to scalar operations here...
@@ -350,11 +353,11 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
 +    }
 +
  #elif defined(JUMPER_IS_NEON)
-     // Since we know we're using Clang, we can use its vector extensions.
-     template <typename T> using V = T __attribute__((ext_vector_type(4)));
-@@ -695,6 +873,15 @@
+     template <typename T> using V = Vec<4, T>;
+     using F   = V<float   >;
+@@ -1004,6 +1185,15 @@ SI F from_half(U16 h) {
  #elif defined(JUMPER_IS_HSW)
-     return _mm256_cvtph_ps(h);
+     return _mm256_cvtph_ps((__m128i)h);
  
 +// Disabled for now as this is not a particularly hot function
 +// and there is no good reason to lock Chromium to POWER9+ yet.
@@ -368,9 +371,9 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #else
      // Remember, a half is 1-5-10 (sign-exponent-mantissa) with 15 exponent bias.
      U32 sem = expand(h),
-@@ -716,6 +903,16 @@
+@@ -1027,6 +1217,16 @@ SI U16 to_half(F f) {
  #elif defined(JUMPER_IS_HSW)
-     return _mm256_cvtps_ph(f, _MM_FROUND_CUR_DIRECTION);
+     return (U16)_mm256_cvtps_ph(f, _MM_FROUND_CUR_DIRECTION);
  
 +// Disabled for now as this is not a particularly hot function
 +// and there is no good reason to lock Chromium to POWER9+ yet.
@@ -385,7 +388,7 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #else
      // Remember, a float is 1-8-23 (sign-exponent-mantissa) with 127 exponent bias.
      U32 sem = sk_bit_cast<U32>(f),
-@@ -791,7 +988,7 @@
+@@ -1102,7 +1302,7 @@ static constexpr size_t N = sizeof(F) /
      // instead of {b,a} on the stack.  Narrow stages work best for __vectorcall.
      #define ABI __vectorcall
      #define JUMPER_NARROW_STAGES 1
@@ -394,7 +397,7 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
      // These platforms are ideal for wider stages, and their default ABI is ideal.
      #define ABI
      #define JUMPER_NARROW_STAGES 0
-@@ -4488,6 +4685,10 @@
+@@ -4856,6 +5056,10 @@ SI F sqrt_(F x) {
      float32x4_t lo,hi;
      split(x, &lo,&hi);
      return join<F>(sqrt(lo), sqrt(hi));
@@ -405,7 +408,7 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
  #else
      return F{
          sqrtf(x[0]), sqrtf(x[1]), sqrtf(x[2]), sqrtf(x[3]),
-@@ -4509,6 +4710,10 @@
+@@ -4879,6 +5083,10 @@ SI F floor_(F x) {
      __m128 lo,hi;
      split(x, &lo,&hi);
      return join<F>(_mm_floor_ps(lo), _mm_floor_ps(hi));
@@ -415,16 +418,16 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
 +    return join<F>(vec_floor(lo), vec_floor(hi));
  #else
      F roundtrip = cast<F>(cast<I32>(x));
-     return roundtrip - if_then_else(roundtrip > x, F(1), F(0));
-@@ -4520,6 +4725,7 @@
+     return roundtrip - if_then_else(roundtrip > x, F_(1), F_(0));
+@@ -4890,6 +5098,7 @@ SI F floor_(F x) {
  //     (2 * a * b + (1 << 15)) >> 16
  // The result is a number on [-1, 1).
  // Note: on neon this is a saturating multiply while the others are not.
 +// Note: for POWER, the code below was borrowed from emmintrin.h
  SI I16 scaled_mult(I16 a, I16 b) {
- #if defined(JUMPER_IS_HSW)
-     return _mm256_mulhrs_epi16(a, b);
-@@ -4529,6 +4735,22 @@
+ #if defined(JUMPER_IS_SKX)
+     return (I16)_mm256_mulhrs_epi16((__m256i)a, (__m256i)b);
+@@ -4901,6 +5110,22 @@ SI I16 scaled_mult(I16 a, I16 b) {
      return vqrdmulhq_s16(a, b);
  #elif defined(JUMPER_IS_NEON)
      return vqrdmulhq_s16(a, b);
@@ -445,9 +448,9 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
 +    d = vec_sr(d,(vector unsigned int)ones);
 +    return vec_pack(c, d);
  #else
-     const I32 roundingTerm = 1 << 14;
+     const I32 roundingTerm = I32_(1 << 14);
      return cast<I16>((cast<I32>(a) * cast<I32>(b) + roundingTerm) >> 15);
-@@ -4550,7 +4772,26 @@
+@@ -4922,7 +5147,26 @@ SI U16 constrained_add(I16 a, U16 b) {
              SkASSERT(-ib <= ia && ia <= 65535 - ib);
          }
      #endif
@@ -469,12 +472,12 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
 +    return vec_adds(a, (I16)b);
 +#else
 +    // Hic Sunt Dragones!
-     return b + a;
+     return b + sk_bit_cast<U16>(a);
 +#endif
  }
  
  SI F fract(F x) { return x - floor_(x); }
-@@ -5381,8 +5622,14 @@
+@@ -5778,8 +6022,14 @@ STAGE_GP(bilerp_clamp_8888, const SkRast
      //         2^-8 * v = 2^-9 * (tx*(R - L) + (R + L))
      //                v = 1/2 * (tx*(R - L) + (R + L))
      auto lerpX = [&](U16 left, U16 right) -> U16 {
@@ -489,7 +492,7 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
          // The constrained_add is the most subtle part of lerp. The first term is on the interval
          // [-1, 1), and the second term is on the interval is on the interval [0, 1) because
          // both terms are too high by a factor of 2 which will be handled below. (Both R and L are
-@@ -5394,7 +5641,12 @@
+@@ -5791,7 +6041,12 @@ STAGE_GP(bilerp_clamp_8888, const SkRast
          U16 v2  = constrained_add(scaled_mult(tx, width), middle) + 1;
          // Divide by 2 to calculate v and at the same time bring the intermediate value onto the
          // interval [0, 1/2] to set up for the lerpY.
@@ -502,8 +505,8 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
      };
  
      const uint32_t* ptr;
-@@ -5428,9 +5680,15 @@
-         I16 width  = (I16)bottom - top;
+@@ -5825,9 +6080,15 @@ STAGE_GP(bilerp_clamp_8888, const SkRast
+         I16 width  = (I16)bottom - (I16)top;
          U16 middle = bottom + top;
          // Add + 0x80 for rounding.
 +#if defined(JUMPER_IS_VSX)
@@ -519,10 +522,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkRasterPipeline_opts.h
      };
  
      r = lerpY(topR, bottomR);
-Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkSwizzler_opts.h
+Index: chromium-122.0.6261.57/third_party/skia/src/opts/SkSwizzler_opts.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/opts/SkSwizzler_opts.h
-+++ chromium-121.0.6167.75/third_party/skia/src/opts/SkSwizzler_opts.h
+--- chromium-122.0.6261.57.orig/third_party/skia/src/opts/SkSwizzler_opts.h
++++ chromium-122.0.6261.57/third_party/skia/src/opts/SkSwizzler_opts.h
 @@ -12,7 +12,10 @@
  #include "src/base/SkVx.h"
  #include <utility>
@@ -535,10 +538,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/opts/SkSwizzler_opts.h
      #include <immintrin.h>
  #elif defined(SK_ARM_HAS_NEON)
      #include <arm_neon.h>
-Index: chromium-121.0.6167.75/third_party/skia/src/base/SkVx.h
+Index: chromium-122.0.6261.57/third_party/skia/src/base/SkVx.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/base/SkVx.h
-+++ chromium-121.0.6167.75/third_party/skia/src/base/SkVx.h
+--- chromium-122.0.6261.57.orig/third_party/skia/src/base/SkVx.h
++++ chromium-122.0.6261.57/third_party/skia/src/base/SkVx.h
 @@ -42,7 +42,13 @@
  
  #if SKVX_USE_SIMD
@@ -554,10 +557,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/base/SkVx.h
      #elif defined(SK_ARM_HAS_NEON)
          #include <arm_neon.h>
      #elif defined(__wasm_simd128__)
-Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBlitMask_opts_ssse3.cpp
+Index: chromium-122.0.6261.57/third_party/skia/src/core/SkBlitMask_opts_ssse3.cpp
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/core/SkBlitMask_opts_ssse3.cpp
-+++ chromium-121.0.6167.75/third_party/skia/src/core/SkBlitMask_opts_ssse3.cpp
+--- chromium-122.0.6261.57.orig/third_party/skia/src/core/SkBlitMask_opts_ssse3.cpp
++++ chromium-122.0.6261.57/third_party/skia/src/core/SkBlitMask_opts_ssse3.cpp
 @@ -9,7 +9,7 @@
  #include "src/core/SkBlitMask.h"
  #include "src/core/SkOptsTargets.h"
@@ -567,10 +570,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBlitMask_opts_ssse3.cp
  
  // The order of these includes is important:
  // 1) Select the target CPU architecture by defining SK_OPTS_TARGET and including SkOpts_SetTarget
-Index: chromium-121.0.6167.75/third_party/skia/src/core/SkSwizzler_opts_ssse3.cpp
+Index: chromium-122.0.6261.57/third_party/skia/src/core/SkSwizzler_opts_ssse3.cpp
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/core/SkSwizzler_opts_ssse3.cpp
-+++ chromium-121.0.6167.75/third_party/skia/src/core/SkSwizzler_opts_ssse3.cpp
+--- chromium-122.0.6261.57.orig/third_party/skia/src/core/SkSwizzler_opts_ssse3.cpp
++++ chromium-122.0.6261.57/third_party/skia/src/core/SkSwizzler_opts_ssse3.cpp
 @@ -11,7 +11,7 @@
  #include "src/core/SkOptsTargets.h"
  #include "src/core/SkSwizzlePriv.h"
@@ -580,10 +583,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/core/SkSwizzler_opts_ssse3.cp
  
  // The order of these includes is important:
  // 1) Select the target CPU architecture by defining SK_OPTS_TARGET and including SkOpts_SetTarget
-Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBlitMask_opts.cpp
+Index: chromium-122.0.6261.57/third_party/skia/src/core/SkBlitMask_opts.cpp
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/core/SkBlitMask_opts.cpp
-+++ chromium-121.0.6167.75/third_party/skia/src/core/SkBlitMask_opts.cpp
+--- chromium-122.0.6261.57.orig/third_party/skia/src/core/SkBlitMask_opts.cpp
++++ chromium-122.0.6261.57/third_party/skia/src/core/SkBlitMask_opts.cpp
 @@ -25,7 +25,7 @@ namespace SkOpts {
      static bool init() {
      #if defined(SK_ENABLE_OPTIMIZE_SIZE)
@@ -593,10 +596,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBlitMask_opts.cpp
          #if SK_CPU_SSE_LEVEL < SK_CPU_SSE_LEVEL_SSSE3
              if (SkCpu::Supports(SkCpu::SSSE3)) { Init_BlitMask_ssse3(); }
          #endif
-Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts.cpp
+Index: chromium-122.0.6261.57/third_party/skia/src/core/SkBitmapProcState_opts.cpp
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/core/SkBitmapProcState_opts.cpp
-+++ chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts.cpp
+--- chromium-122.0.6261.57.orig/third_party/skia/src/core/SkBitmapProcState_opts.cpp
++++ chromium-122.0.6261.57/third_party/skia/src/core/SkBitmapProcState_opts.cpp
 @@ -26,7 +26,7 @@ namespace SkOpts {
      static bool init() {
      #if defined(SK_ENABLE_OPTIMIZE_SIZE)
@@ -606,10 +609,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts.c
          #if SK_CPU_SSE_LEVEL < SK_CPU_SSE_LEVEL_SSSE3
              if (SkCpu::Supports(SkCpu::SSSE3)) { Init_BitmapProcState_ssse3(); }
          #endif
-Index: chromium-121.0.6167.75/third_party/skia/src/core/SkCpu.h
+Index: chromium-122.0.6261.57/third_party/skia/src/core/SkCpu.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/core/SkCpu.h
-+++ chromium-121.0.6167.75/third_party/skia/src/core/SkCpu.h
+--- chromium-122.0.6261.57.orig/third_party/skia/src/core/SkCpu.h
++++ chromium-122.0.6261.57/third_party/skia/src/core/SkCpu.h
 @@ -55,7 +55,7 @@ inline bool SkCpu::Supports(uint32_t mas
  
      // If we mask in compile-time known lower limits, the compiler can
@@ -619,10 +622,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/core/SkCpu.h
      #if SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE1
      features |= SSE1;
      #endif
-Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts_hsw.cpp
+Index: chromium-122.0.6261.57/third_party/skia/src/core/SkBitmapProcState_opts_hsw.cpp
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/core/SkBitmapProcState_opts_hsw.cpp
-+++ chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts_hsw.cpp
+--- chromium-122.0.6261.57.orig/third_party/skia/src/core/SkBitmapProcState_opts_hsw.cpp
++++ chromium-122.0.6261.57/third_party/skia/src/core/SkBitmapProcState_opts_hsw.cpp
 @@ -8,7 +8,7 @@
  #include "include/private/base/SkFeatures.h"
  #include "src/core/SkOptsTargets.h"
@@ -632,10 +635,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts_h
  
  // The order of these includes is important:
  // 1) Select the target CPU architecture by defining SK_OPTS_TARGET and including SkOpts_SetTarget
-Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts_ssse3.cpp
+Index: chromium-122.0.6261.57/third_party/skia/src/core/SkBitmapProcState_opts_ssse3.cpp
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/src/core/SkBitmapProcState_opts_ssse3.cpp
-+++ chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts_ssse3.cpp
+--- chromium-122.0.6261.57.orig/third_party/skia/src/core/SkBitmapProcState_opts_ssse3.cpp
++++ chromium-122.0.6261.57/third_party/skia/src/core/SkBitmapProcState_opts_ssse3.cpp
 @@ -8,7 +8,7 @@
  #include "include/private/base/SkFeatures.h"
  #include "src/core/SkOptsTargets.h"
@@ -645,10 +648,10 @@ Index: chromium-121.0.6167.75/third_party/skia/src/core/SkBitmapProcState_opts_s
  
  // The order of these includes is important:
  // 1) Select the target CPU architecture by defining SK_OPTS_TARGET and including SkOpts_SetTarget
-Index: chromium-121.0.6167.75/third_party/skia/include/private/base/SkFeatures.h
+Index: chromium-122.0.6261.57/third_party/skia/include/private/base/SkFeatures.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/include/private/base/SkFeatures.h
-+++ chromium-121.0.6167.75/third_party/skia/include/private/base/SkFeatures.h
+--- chromium-122.0.6261.57.orig/third_party/skia/include/private/base/SkFeatures.h
++++ chromium-122.0.6261.57/third_party/skia/include/private/base/SkFeatures.h
 @@ -63,6 +63,8 @@
  
  #if defined(__i386) || defined(_M_IX86) ||  defined(__x86_64__) || defined(_M_X64)
@@ -658,15 +661,15 @@ Index: chromium-121.0.6167.75/third_party/skia/include/private/base/SkFeatures.h
  #endif
  
  /**
-Index: chromium-121.0.6167.75/third_party/skia/modules/skcms/src/skcms_internals.h
+Index: chromium-122.0.6261.57/third_party/skia/modules/skcms/src/skcms_internals.h
 ===================================================================
---- chromium-121.0.6167.75.orig/third_party/skia/modules/skcms/src/skcms_internals.h
-+++ chromium-121.0.6167.75/third_party/skia/modules/skcms/src/skcms_internals.h
-@@ -46,6 +46,7 @@
+--- chromium-122.0.6261.57.orig/third_party/skia/modules/skcms/src/skcms_internals.h
++++ chromium-122.0.6261.57/third_party/skia/modules/skcms/src/skcms_internals.h
+@@ -46,6 +46,7 @@ extern "C" {
                                                   && !defined(__EMSCRIPTEN__) \
                                                   && !defined(__arm__) \
                                                   && !defined(__riscv) \
 +                                                 && !defined(__powerpc64__) \
                                                   && !defined(_WIN32) && !defined(__SYMBIAN32__)
-             #define SKCMS_MUSTTAIL [[clang::musttail]]
-         #else
+             #define SKCMS_HAS_MUSTTAIL 1
+         #endif

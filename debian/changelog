@@ -1,3 +1,61 @@
+chromium (122.0.6261.57-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream stable release.
+    - CVE-2024-1669: Out of bounds memory access in Blink.
+      Reported by Anonymous.
+    - CVE-2024-1670: Use after free in Mojo.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-1671: Inappropriate implementation in Site Isolation.
+      Reported by Harry Chen.
+    - CVE-2024-1672: Inappropriate implementation in Content Security Policy.
+      Reported by Georg Felber (TU Wien) & Marco Squarcina (TU Wien).
+    - CVE-2024-1673: Use after free in Accessibility.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2024-1674: Inappropriate implementation in Navigation.
+      Reported by David Erceg.
+    - CVE-2024-1675: Insufficient policy enforcement in Download.
+      Reported by Bartłomiej Wacko.
+    - CVE-2024-1676: Inappropriate implementation in Navigation.
+      Reported by Khalil Zhani.
+  * d/patches:
+    - fixes/v8-compressed-ptrs.patch: drop, merged upstream.
+    - fixes/stdint.patch: drop, merged upstream.
+    - upstream/vector.patch: drop, merged upstream.
+    - upstream/display-header.patch: drop, merged upstream.
+    - upstream/bitset.patch: drop, merged upstream.
+    - upstream/once_flag.patch: drop, merged upstream.
+    - fixes/std-to-address.patch: refresh.
+    - disable/signin.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - bookworm/clang16.patch: refresh, and change
+      -Wno-c++11-narrowing-const-reference to -Wno-c++11-narrowing.
+    - bookworm/nvt.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
+    - bookworm/undo-internal-alloc.patch: revert a commit that confuses
+      clang16 w/ libstdc++. We need a better workaround than this.
+    - upstream/mojo.patch: update from git.
+    - bookworm/constexpr-equality.patch: add a few more build fixes
+      (constexpr removals).
+    - upstream/uniqptr.patch: add missing include.
+    - upstream/optional.patch: add missing include.
+    - upstream/bookmarknode.patch: add comparison equality fix pulled from
+      upstream.
+    - fixes/optional.patch: add missing includes.
+    - bookworm/nvt2.patch: revert another upstream c++-20 change for clang-16.
+    - upstream/bitset.patch: add missing include.
+    - ppc64le/v8/0002-Add-ppc64-trap-instructions.patch: refresh.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - 0001-Properly-detect-little-endian-PPC64-systems.patch: drop, upstream
+      fix in GIT hash 25a6e6
+    - 0001-Add-PPC64-support-for-boringssl.patch: refresh for upstream changes
+    - 0002-third_party-libvpx-Remove-bad-ppc64-config.patch: refresh for
+      upstream changes
+    - skia-vsx-instructions.patch: refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 21 Feb 2024 19:56:32 -0500
+
 chromium (121.0.6167.160-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

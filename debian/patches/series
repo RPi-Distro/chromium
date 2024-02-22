@@ -10,17 +10,16 @@ fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch
 fixes/blink-frags.patch
-fixes/v8-compressed-ptrs.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/std-to-address.patch
-fixes/stdint.patch
+fixes/optional.patch
 
 upstream/mojo.patch
-upstream/vector.patch
-upstream/display-header.patch
+upstream/uniqptr.patch
+upstream/optional.patch
+upstream/bookmarknode.patch
 upstream/bitset.patch
-upstream/once_flag.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -56,6 +55,8 @@ bookworm/undo-rust-req.patch
 bookworm/eraseif-lamba.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
+bookworm/nvt2.patch
+bookworm/undo-internal-alloc.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch
@@ -114,7 +115,6 @@ ppc64le/third_party/skia-vsx-instructions.patch
 ppc64le/ffmpeg/0001-Add-support-for-ppc64.patch
 ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch
 ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch
-ppc64le/database/0001-Properly-detect-little-endian-PPC64-systems.patch
 ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch
 ppc64le/fixes/fix-rustc.patch
 ppc64le/fixes/fix-rust-linking.patch

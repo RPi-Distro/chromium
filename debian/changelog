@@ -24,7 +24,7 @@ chromium (122.0.6261.57-1) UNRELEASED; urgency=high
     - upstream/display-header.patch: drop, merged upstream.
     - upstream/bitset.patch: drop, merged upstream.
     - upstream/once_flag.patch: drop, merged upstream.
-    - fixes/std-to-address.patch: refresh (XXX: test if still needed?).
+    - fixes/std-to-address.patch: refresh.
     - disable/signin.patch: refresh.
     - disable/catapult.patch: refresh.
     - bookworm/clang16.patch: refresh, and change

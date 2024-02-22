@@ -111,7 +111,6 @@ ppc64le/third_party/skia-vsx-instructions.patch
 ppc64le/ffmpeg/0001-Add-support-for-ppc64.patch
 ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch
 ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch
-ppc64le/database/0001-Properly-detect-little-endian-PPC64-systems.patch
 ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch
 ppc64le/fixes/fix-rustc.patch
 ppc64le/fixes/fix-rust-linking.patch

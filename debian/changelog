@@ -1,4 +1,4 @@
-chromium (122.0.6261.57-1) UNRELEASED; urgency=high
+chromium (122.0.6261.57-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2024-1669: Out of bounds memory access in Blink.
@@ -43,6 +43,7 @@ chromium (122.0.6261.57-1) UNRELEASED; urgency=high
     - fixes/optional.patch: add missing includes.
     - bookworm/nvt2.patch: revert another upstream c++-20 change for clang-16.
     - upstream/bitset.patch: add missing include.
+    - ppc64le/v8/0002-Add-ppc64-trap-instructions.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:
@@ -53,7 +54,7 @@ chromium (122.0.6261.57-1) UNRELEASED; urgency=high
       upstream changes
     - skia-vsx-instructions.patch: refresh for upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 06 Feb 2024 22:41:53 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 21 Feb 2024 19:56:32 -0500
 
 chromium (121.0.6167.160-1) unstable; urgency=high
 

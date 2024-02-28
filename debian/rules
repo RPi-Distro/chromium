@@ -136,7 +136,7 @@ test_armhf_neon:
 
 override_dh_auto_configure: test_armhf_neon
 	# verify that we're not accidentally uploading to stable-security without CVEs
-	@echo "$(DIST)" | grep -q -- '-security' && { \
+	@echo "$(DIST)" | grep -q -- '-securiy' && { \
 		dpkg-parsechangelog -l debian/changelog | grep -q 'CVE-' || { \
 			echo "ERROR: security upload with no CVEs listed. You should fix that."; \
 			exit 1; \

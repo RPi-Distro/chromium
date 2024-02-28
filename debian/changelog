@@ -1,3 +1,12 @@
+chromium (122.0.6261.94-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - Type Confusion in V8. Reported by 5f46f4ee2e17957ba7b39897fb376be8.
+    - Type Confusion in V8. Reported by
+      Bohan Liu (@P4nda20371774) of Tencent Security Xuanwu Lab.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 27 Feb 2024 15:15:03 -0500
+
 chromium (122.0.6261.57-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.

@@ -1,3 +1,15 @@
+chromium (122.0.6261.111-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-2173: Out of bounds memory access in V8.
+      Reported by 5fceb6172bbf7e2c5a948183b53565b9.
+    - CVE-2024-2174: Inappropriate implementation in V8.
+      Reported by 5f46f4ee2e17957ba7b39897fb376be8.
+    - CVE-2024-2176: Use after free in FedCM. Reported by Anonymous.
+  * d/rules: drop bullseye nodejs workaround.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 05 Mar 2024 16:40:05 -0500
+
 chromium (122.0.6261.94-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

@@ -1,3 +1,11 @@
+chromium (122.0.6261.128-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-2400: Use after free in Performance Manager.
+      Reported by zh1x1an1221 of Ant Group Tianqiong Security Lab.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 12 Mar 2024 18:43:05 -0400
+
 chromium (122.0.6261.111-1) unstable; urgency=high
 
   * New upstream security release.

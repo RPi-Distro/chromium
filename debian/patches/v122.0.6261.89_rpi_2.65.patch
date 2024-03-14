@@ -1,14 +1,12 @@
 --- a/src/build/.gitignore
 +++ b/src/build/.gitignore
-@@ -23,6 +23,13 @@ ciopfs
+@@ -23,6 +23,11 @@ ciopfs
  /x64/
  /linux/debian_*-sysroot/
  /linux/ubuntu_*-sysroot/
 +# We've built anything with pios in the name
 +/linux/pios_*-sysroot/
 +/linux/sysroot_scripts/*pios*
-+/linux/sysroot_scripts/generated_package_lists/buster.*
-+/linux/sysroot_scripts/generated_package_lists/bullseye.*
 +/linux/sysroot_scripts/generated_package_lists/*pios*
 +
  /ios_files
@@ -26,109 +24,160 @@
  group("linux") {
 --- a/src/build/linux/sysroot_scripts/generate_keyring.sh
 +++ b/src/build/linux/sysroot_scripts/generate_keyring.sh
-@@ -9,6 +9,10 @@ set -o errexit
- SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
- 
- KEYS=(
-+    # Raspbian
-+    "A0DA38D0D76E8B5D638872819165938D90FDDD2E"
-+    # Raspberry Pi OS
-+    "CF8A1AF502A2AA2D763BAE7E82B129927FA3303E"
-     # Debian Archive Automatic Signing Key (12/bookworm)
-     "6ED0E7B82643E131"
-     # Debian Stable Release Key (12/bookworm)
---- a/src/build/linux/sysroot_scripts/sysroot-creator.sh
-+++ b/src/build/linux/sysroot_scripts/sysroot-creator.sh
-@@ -22,6 +22,13 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SO
- 
- DISTRO=debian
- RELEASE=bullseye
-+PKG_LIST_PREFIX=
-+
-+if [ "$1" == "pios" ]; then
-+  DISTRO=pios
-+  PKG_LIST_PREFIX=pios-
-+  shift
-+fi
- 
- # This number is appended to the sysroot key to cause full rebuilds.  It
- # should be incremented when removing packages or patching existing packages.
-@@ -36,12 +43,21 @@ APT_SOURCES_LIST=(
-   # so that bullseye takes precedence.
-   "${ARCHIVE_URL} bookworm main"
-   "${ARCHIVE_URL} bookworm-updates main"
--
-+)
-+if [ "${DISTRO}" == "pios" ]; then
-+  # Rpi
-+  APT_SOURCES_LIST+=( "http://archive.raspberrypi.org/debian/ bookworm gz main" )
-+fi
-+APT_SOURCES_LIST+=(
-   # This mimics a sources.list from bullseye.
-   "${ARCHIVE_URL} bullseye main contrib non-free"
-   "${ARCHIVE_URL} bullseye-updates main contrib non-free"
-   "${ARCHIVE_URL} bullseye-backports main contrib non-free"
+@@ -27,5 +27,19 @@ KEYS=(
+     "4DFAB270CAA96DFA"
  )
-+if [ "${DISTRO}" == "pios" ]; then
-+  # Rpi
-+  APT_SOURCES_LIST+=( "http://archive.raspberrypi.org/debian/ bullseye gz main" )
-+fi
  
- # gpg keyring file generated using generate_keyring.sh
- KEYRING_FILE="${SCRIPT_DIR}/keyring.gpg"
-@@ -686,7 +702,11 @@ ExtractPackageXz() {
-   local src_file="$1"
-   local dst_file="$2"
-   local repo="$3"
--  xzcat "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
-+  local ucat=xzcat
-+  if [ "${src_file##*.}" == "gz" ]; then
-+    ucat=zcat
-+  fi
-+  ${ucat} "${src_file}" | egrep '^(Package:|Filename:|SHA256:) ' |
-     sed "s|Filename: |Filename: ${repo}|" > "${dst_file}"
- }
- 
-@@ -695,11 +715,12 @@ GeneratePackageListDistRepo() {
-   local repo="$2"
-   local dist="$3"
-   local repo_name="$4"
-+  local pkg_ext="$5"
- 
-   local tmp_package_list="${BUILD_DIR}/Packages.${dist}_${repo_name}_${arch}"
-   local repo_basedir="${repo}/dists/${dist}"
--  local package_list="${BUILD_DIR}/Packages.${dist}_${repo_name}_${arch}.${PACKAGES_EXT}"
--  local package_file_arch="${repo_name}/binary-${arch}/Packages.${PACKAGES_EXT}"
-+  local package_list="${BUILD_DIR}/Packages.${dist}_${repo_name}_${arch}.${pkg_ext}"
-+  local package_file_arch="${repo_name}/binary-${arch}/Packages.${pkg_ext}"
-   local package_list_arch="${repo_basedir}/${package_file_arch}"
- 
-   DownloadOrCopyNonUniqueFilename "${package_list_arch}" "${package_list}"
-@@ -713,9 +734,14 @@ GeneratePackageListDist() {
-   set -- $2
-   local repo="$1"
-   local dist="$2"
-+  local pkg_ext=$PACKAGES_EXT
-   shift 2
-+  if [ "$1" == "gz" ]; then
-+    pkg_ext=$1
++KEYFILE=keyring.gpg
++
++if [ $# -ge 1 ] && [ "$1" == "--pios" ]; then
++    KEYS+=(
++        # Raspbian
++        "A0DA38D0D76E8B5D638872819165938D90FDDD2E"
++        # Raspberry Pi OS
++        "CF8A1AF502A2AA2D763BAE7E82B129927FA3303E"
++    )
++    KEYFILE=pios_keyring.gpg
 +    shift
-+  fi
-   while (( "$#" )); do
--    GeneratePackageListDistRepo "$arch" "$repo" "$dist" "$1"
-+    GeneratePackageListDistRepo "$arch" "$repo" "$dist" "$1" "$pkg_ext"
-     shift
-   done
- }
-@@ -895,7 +921,7 @@ VerifyLibraryDeps() {
++fi
++echo "Build keyring: ${SCRIPT_DIR}/${KEYFILE}"
++
+ gpg --keyserver keyserver.ubuntu.com --recv-keys ${KEYS[@]}
+-gpg --output "${SCRIPT_DIR}/keyring.gpg" --export ${KEYS[@]}
++gpg --output "${SCRIPT_DIR}/${KEYFILE}" --export ${KEYS[@]}
+--- a/src/build/linux/sysroot_scripts/sysroot_creator.py
++++ b/src/build/linux/sysroot_scripts/sysroot_creator.py
+@@ -7,6 +7,7 @@ This script is used to build Debian sysr
+ """
  
- BuildSysroot() {
-   ClearInstallDir
--  local package_file="generated_package_lists/${RELEASE}.${ARCH}"
-+  local package_file="generated_package_lists/${PKG_LIST_PREFIX}${RELEASE}.${ARCH}"
-   GeneratePackageList "${package_file}" $ARCH "${DEBIAN_PACKAGES_ARCH}"
-   local files_and_sha256sums="$(cat ${package_file})"
-   StripChecksumsFromPackageList "$package_file"
+ import argparse
++import gzip
+ import hashlib
+ import lzma
+ import os
+@@ -663,17 +664,19 @@ def create_tarball(install_root: str, ar
+ 
+ 
+ def generate_package_list_dist_repo(arch: str, dist: str,
+-                                    repo_name: str) -> list[dict[str, str]]:
+-    repo_basedir = f"{ARCHIVE_URL}/dists/{dist}"
+-    package_list = f"{BUILD_DIR}/Packages.{dist}_{repo_name}_{arch}"
+-    package_list = f"{package_list}.{PACKAGES_EXT}"
+-    package_file_arch = f"{repo_name}/binary-{arch}/Packages.{PACKAGES_EXT}"
++                                    repo_name: str, repo_src: str, repo_pre: str, repo_ext: str) -> list:
++    repo_basedir = f"{repo_src}/dists/{dist}"
++    package_list = f"{BUILD_DIR}/Packages.{repo_pre}{dist}_{repo_name}_{arch}"
++    package_list = f"{package_list}.{repo_ext}"
++    package_file_arch = f"{repo_name}/binary-{arch}/Packages.{repo_ext}"
+     package_list_arch = f"{repo_basedir}/{package_file_arch}"
+ 
+     download_or_copy_non_unique_filename(package_list_arch, package_list)
+-    verify_package_listing(package_file_arch, package_list, dist)
++    verify_package_listing(package_file_arch, package_list, dist, repo_basedir, repo_pre)
+ 
+-    with lzma.open(package_list, "rt") as src:
++    algo = lzma if repo_ext != "gz" else gzip
++
++    with algo.open(package_list, "rt") as src:
+         return [
+             dict(
+                 line.split(": ", 1) for line in package_meta.splitlines()
+@@ -682,11 +685,17 @@ def generate_package_list_dist_repo(arch
+         ]
+ 
+ 
+-def generate_package_list(arch: str) -> dict[str, str]:
++def generate_package_list(arch: str) -> dict:
+     package_meta = {}
+-    for dist, repos in APT_SOURCES_LIST:
++    for a in APT_SOURCES_LIST:
++        dist = a[0]
++        repos = a[1]
++        repo_src = ARCHIVE_URL if len(a) <= 2 else a[2]
++        repo_pre = "" if len(a) <= 3 else a[3] + "_"
++        repo_ext = PACKAGES_EXT if len(a) <= 4 else a[4]
+         for repo_name in repos:
+-            for meta in generate_package_list_dist_repo(arch, dist, repo_name):
++            for meta in generate_package_list_dist_repo(arch, dist, repo_name, repo_src, repo_pre, repo_ext):
++                meta["URL"] = repo_src
+                 package_meta[meta["Package"]] = meta
+ 
+     # Read the input file and create a dictionary mapping package names to URLs
+@@ -697,7 +706,7 @@ def generate_package_list(arch: str) ->
+         package = meta["Package"]
+         if package in missing:
+             missing.remove(package)
+-            url = ARCHIVE_URL + meta["Filename"]
++            url = meta["URL"] + meta["Filename"]
+             package_dict[url] = meta["SHA256"]
+     if missing:
+         raise Exception(f"Missing packages: {', '.join(missing)}")
+@@ -776,7 +785,7 @@ def replace_in_file(file_path: str, sear
+ 
+ 
+ def install_into_sysroot(build_dir: str, install_root: str,
+-                         packages: dict[str, str]) -> None:
++                         packages: dict) -> None:
+     """
+     Installs libraries and headers into the sysroot environment.
+     """
+@@ -930,17 +939,16 @@ def upload_sysroot(arch: str) -> None:
+ 
+ 
+ def verify_package_listing(file_path: str, output_file: str,
+-                           dist: str) -> None:
++                           dist: str, repo_basedir:str, repo_pre: str) -> None:
+     """
+     Verifies the downloaded Packages.xz file against its checksum and GPG keys.
+     """
+     # Paths for Release and Release.gpg files
+-    repo_basedir = f"{ARCHIVE_URL}/dists/{dist}"
+     release_list = f"{repo_basedir}/{RELEASE_FILE}"
+     release_list_gpg = f"{repo_basedir}/{RELEASE_FILE_GPG}"
+ 
+-    release_file = os.path.join(BUILD_DIR, f"{dist}-{RELEASE_FILE}")
+-    release_file_gpg = os.path.join(BUILD_DIR, f"{dist}-{RELEASE_FILE_GPG}")
++    release_file = os.path.join(BUILD_DIR, f"{repo_pre}{dist}-{RELEASE_FILE}")
++    release_file_gpg = os.path.join(BUILD_DIR, f"{repo_pre}{dist}-{RELEASE_FILE_GPG}")
+ 
+     if not os.path.exists(KEYRING_FILE):
+         raise Exception(f"KEYRING_FILE not found: {KEYRING_FILE}")
+@@ -973,12 +981,35 @@ def verify_package_listing(file_path: st
+ 
+ 
+ def main():
++    global APT_SOURCES_LIST
++    global RELEASE
++    global KEYRING_FILE
++
+     parser = argparse.ArgumentParser(
+         description="Build and upload Debian sysroot images for Chromium.")
+     parser.add_argument("command", choices=["build", "upload"])
+     parser.add_argument("architecture", choices=list(TRIPLES))
++    parser.add_argument("--pios", action="store_true")
+     args = parser.parse_args()
+ 
++    if args.pios:
++        # Interleave our repos with those in the starting list
++        APT_PIOS_SOURCES_LIST = [
++            ("bookworm", ["main"], "http://archive.raspberrypi.org/debian/", "pios", "gz"),
++            ("bullseye", ["main"], "http://archive.raspberrypi.org/debian/", "pios", "gz")]
++        newlist = []
++        curdist = "xxx"
++        for a in APT_SOURCES_LIST:
++            if not a[0].startswith(curdist):
++                newlist += [p for p in APT_PIOS_SOURCES_LIST if p[0].startswith(curdist)]
++                curdist = a[0].partition('-')[0]
++            newlist += [a]
++        newlist += [p for p in APT_PIOS_SOURCES_LIST if p[0].startswith(curdist)]
++        APT_SOURCES_LIST = newlist
++
++        RELEASE = "pios-" + RELEASE
++        KEYRING_FILE = os.path.join(SCRIPT_DIR, "pios_keyring.gpg")
++
+     sanity_check()
+ 
+     if args.command == "build":
 --- a/src/chrome/app/chrome_main_delegate.cc
 +++ b/src/chrome/app/chrome_main_delegate.cc
 @@ -78,6 +78,7 @@
@@ -139,7 +188,7 @@
  #include "components/version_info/version_info.h"
  #include "content/public/app/initialize_mojo_core.h"
  #include "content/public/common/content_client.h"
-@@ -410,6 +411,15 @@ bool HandleVersionSwitches(const base::C
+@@ -412,6 +413,15 @@ bool HandleVersionSwitches(const base::C
    }
  #endif
  
@@ -157,7 +206,7 @@
             version_info::GetVersionNumber().data(),
 --- a/src/chrome/browser/about_flags.cc
 +++ b/src/chrome/browser/about_flags.cc
-@@ -7751,15 +7751,17 @@ const FeatureEntry kFeatureEntries[] = {
+@@ -7455,15 +7455,17 @@ const FeatureEntry kFeatureEntries[] = {
       FEATURE_VALUE_TYPE(ash::features::kArcInputOverlayAlphaV2)},
  #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
  
@@ -179,7 +228,7 @@
       flag_descriptions::kChromeOSHWVBREncodingDescription, kOsCrOS | kOsLacros,
 --- a/src/chrome/browser/chrome_browser_main_extra_parts_linux.cc
 +++ b/src/chrome/browser/chrome_browser_main_extra_parts_linux.cc
-@@ -127,10 +127,10 @@ void ChromeBrowserMainExtraPartsLinux::P
+@@ -124,10 +124,10 @@ void ChromeBrowserMainExtraPartsLinux::P
    if (!command_line->HasSwitch(switches::kOzonePlatform)) {
      const auto ozone_platform_hint =
          command_line->GetSwitchValueASCII(switches::kOzonePlatformHint);
@@ -196,8 +245,8 @@
    auto env = base::Environment::Create();
 --- a/src/chrome/browser/flag_descriptions.cc
 +++ b/src/chrome/browser/flag_descriptions.cc
-@@ -7436,8 +7436,7 @@ const char kQuickOfficeForceFileDownload
-     "navigations to document types it can handle.";
+@@ -7588,8 +7588,7 @@ const char kWebPrintingApiDescription[]
+     "https://github.com/WICG/web-printing for details.";
  #endif  // BUILDFLAG(IS_CHROMEOS)
  
 -#if BUILDFLAG(IS_CHROMEOS) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
@@ -206,12 +255,10 @@
  const char kChromeOSDirectVideoDecoderName[] = "ChromeOS Direct Video Decoder";
  const char kChromeOSDirectVideoDecoderDescription[] =
      "Enables the hardware-accelerated ChromeOS direct media::VideoDecoder "
-@@ -7446,7 +7445,9 @@ const char kChromeOSDirectVideoDecoderDe
-     "which is added for platforms where said direct VideoDecoder does not work "
-     "or is not well tested (see the disable_cros_video_decoder USE flag in "
-     "ChromeOS). This flag is supported only on non-Intel and non-AMD devices.";
--#endif  // !BUILDFLAG(USE_VAAPI)
-+#endif
+@@ -7598,6 +7597,8 @@ const char kChromeOSDirectVideoDecoderDe
+     "disable_cros_video_decoder USE flag in ChromeOS). This flag only has an "
+     "effect on non-Intel and non-AMD devices (i.e. on ARM-based SoCs).";
+ #endif  // !BUILDFLAG(USE_VAAPI)
 +
 +#if BUILDFLAG(IS_CHROMEOS) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
  const char kChromeOSHWVBREncodingName[] =
@@ -219,7 +266,7 @@
  const char kChromeOSHWVBREncodingDescription[] =
 --- a/src/chrome/browser/flag_descriptions.h
 +++ b/src/chrome/browser/flag_descriptions.h
-@@ -4278,9 +4278,11 @@ extern const char kAudioFlexibleLoopback
+@@ -4360,9 +4360,11 @@ extern const char kAudioFlexibleLoopback
  extern const char kAudioFlexibleLoopbackForSystemLoopbackDescription[];
  #endif  // BUILDFLAG(IS_CHROMEOS)
  
@@ -234,7 +281,7 @@
  #if defined(ARCH_CPU_ARM_FAMILY)
 --- a/src/chrome/common/chrome_paths.cc
 +++ b/src/chrome/common/chrome_paths.cc
-@@ -389,6 +389,10 @@ bool PathProvider(int key, base::FilePat
+@@ -405,6 +405,10 @@ bool PathProvider(int key, base::FilePat
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
      case chrome::DIR_BUNDLED_WIDEVINE_CDM:
@@ -247,7 +294,7 @@
        }
 --- a/src/chrome/common/chrome_switches.cc
 +++ b/src/chrome/common/chrome_switches.cc
-@@ -458,6 +458,9 @@ const char kPackExtensionKey[] = "pack-e
+@@ -462,6 +462,9 @@ const char kPackExtensionKey[] = "pack-e
  // crashpad (or breakpad) is initialized.
  const char kPreCrashpadCrashTest[] = "pre-crashpad-crash-test";
  
@@ -300,16 +347,16 @@
  
 --- a/src/components/version_info/BUILD.gn
 +++ b/src/components/version_info/BUILD.gn
-@@ -14,6 +14,9 @@ static_library("version_info") {
+@@ -10,6 +10,9 @@ source_set("version_info") {
    sources = [
-     "version_info.cc",
      "version_info.h",
+     "version_info_values.h",
 +    "pi_patch_version_info.cc",
 +    "pi_patch_version_info.h",
 +    "pi_patch_version_values.h",
    ]
- 
-   deps = [
+   public_deps = [
+     ":channel",
 --- /dev/null
 +++ b/src/components/version_info/pi_patch_version_info.cc
 @@ -0,0 +1,11 @@
@@ -343,7 +390,7 @@
 +++ b/src/components/version_info/pi_patch_version_values.h
 @@ -0,0 +1,2 @@
 +// Pi patch version - generated by pi-util/settag.py
-+#define PI_PATCH_VERSION_STRING "rpi_2.63"
++#define PI_PATCH_VERSION_STRING "rpi_2.65"
 --- a/src/content/common/user_agent.cc
 +++ b/src/content/common/user_agent.cc
 @@ -63,7 +63,7 @@ std::string GetUserAgentPlatform() {
@@ -375,7 +422,7 @@
                        cpu_type.c_str(),  // e.g. i686
 --- a/src/content/renderer/render_thread_impl.cc
 +++ b/src/content/renderer/render_thread_impl.cc
-@@ -118,6 +118,7 @@
+@@ -119,6 +119,7 @@
  #include "media/base/decoder_factory.h"
  #include "media/base/media.h"
  #include "media/base/media_switches.h"
@@ -383,7 +430,7 @@
  #include "media/media_buildflags.h"
  #include "media/renderers/default_decoder_factory.h"
  #include "media/video/gpu_video_accelerator_factories.h"
-@@ -1020,7 +1021,7 @@ media::GpuVideoAcceleratorFactories* Ren
+@@ -942,7 +943,7 @@ media::GpuVideoAcceleratorFactories* Ren
                               kGpuStreamIdMedia, kGpuStreamPriorityMedia);
  
    const bool enable_video_decode_accelerator =
@@ -394,7 +441,7 @@
        !cmd_line->HasSwitch(switches::kDisableAcceleratedVideoDecode) &&
 --- a/src/media/base/media_switches.cc
 +++ b/src/media/base/media_switches.cc
-@@ -1209,7 +1209,7 @@ BASE_FEATURE(kChromeOSHWVBREncoding,
+@@ -1252,7 +1252,7 @@ BASE_FEATURE(kUseDedicatedDecoderThreadI
  // TODO(b/159825227): remove when the direct video decoder is fully launched.
  BASE_FEATURE(kUseChromeOSDirectVideoDecoder,
               "UseChromeOSDirectVideoDecoder",
@@ -403,16 +450,16 @@
  #endif  // !BUILDFLAG(USE_VAAPI)
  
  // Limit the number of concurrent hardware decoder instances on ChromeOS.
-@@ -1222,7 +1222,7 @@ BASE_FEATURE(kUSeSequencedTaskRunnerForV
-              "UseSequencedTaskRunnerForVEA",
+@@ -1274,6 +1274,8 @@ BASE_FEATURE(kUSeSequencedTaskRunnerForV
+ BASE_FEATURE(kUseGLForScaling,
+              "UseGLForScaling",
               base::FEATURE_DISABLED_BY_DEFAULT);
- 
--#if defined(ARCH_CPU_ARM_FAMILY)
++#endif
 +#if defined(ARCH_CPU_ARM_FAMILY) || BUILDFLAG(USE_V4L2_CODEC)
  // Experimental support for GL based image processing. On some architectures,
  // the hardware accelerated video decoder outputs frames in a format not
  // understood by the display controller. We usually use LibYUV to convert these
-@@ -1230,6 +1230,8 @@ BASE_FEATURE(kUSeSequencedTaskRunnerForV
+@@ -1281,6 +1283,8 @@ BASE_FEATURE(kUseGLForScaling,
  BASE_FEATURE(kPreferGLImageProcessor,
               "PreferGLImageProcessor",
               base::FEATURE_DISABLED_BY_DEFAULT);
@@ -423,7 +470,7 @@
  // known as MT21. Normally a hardware block performs to the conversion between
 --- a/src/media/base/media_switches.h
 +++ b/src/media/base/media_switches.h
-@@ -397,6 +397,10 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kPrefe
+@@ -407,6 +407,10 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kPrefe
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseAlternateVideoDecoderImplementation);
  #endif  // BUILDFLAG(IS_CHROMEOS) && !BUILDFLAG(USE_VAAPI)
  #endif  // BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
@@ -436,17 +483,17 @@
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kDirectShowGetPhotoState);
 --- a/src/media/gpu/BUILD.gn
 +++ b/src/media/gpu/BUILD.gn
-@@ -20,6 +20,7 @@ buildflag_header("buildflags") {
+@@ -21,6 +21,7 @@ buildflag_header("buildflags") {
      "USE_VAAPI=$use_vaapi",
      "USE_VAAPI_IMAGE_CODECS=$use_vaapi_image_codecs",
      "USE_V4L2_CODEC=$use_v4l2_codec",
 +    "USE_V4L2_CODEC_RPI=$use_v4l2_codec_rpi",
      "USE_LIBV4L2=$use_v4lplugin",
-     "USE_VAAPI_X11=$use_vaapi_x11",
    ]
+ }
 --- a/src/media/gpu/args.gni
 +++ b/src/media/gpu/args.gni
-@@ -21,6 +21,10 @@ declare_args() {
+@@ -14,6 +14,10 @@ declare_args() {
    use_v4l2_codec =
        is_chromeos_lacros && (target_cpu == "arm" || target_cpu == "arm64")
  
@@ -456,7 +503,7 @@
 +
    # Indicates if VA-API-based hardware acceleration is to be used. This
    # is typically the case on x86-based ChromeOS devices.
-   # VA-API should also be compiled by default on x11-using linux devices
+   # VA-API should also be compiled by default on x11/wayland linux devices
 --- a/src/media/gpu/chromeos/fourcc.cc
 +++ b/src/media/gpu/chromeos/fourcc.cc
 @@ -34,6 +34,7 @@ absl::optional<Fourcc> Fourcc::FromUint3
@@ -513,7 +560,7 @@
  std::unique_ptr<ImageProcessor> CreateV4L2ImageProcessorWithInputCandidates(
      const std::vector<PixelLayoutCandidate>& input_candidates,
      const gfx::Rect& visible_rect,
-@@ -200,7 +199,7 @@ std::unique_ptr<ImageProcessor> CreateLi
+@@ -207,7 +206,7 @@ std::unique_ptr<ImageProcessor> CreateLi
        std::move(client_task_runner));
  }
  
@@ -524,7 +571,7 @@
      const gfx::Rect& input_visible_rect,
 --- a/src/media/gpu/chromeos/mailbox_video_frame_converter.cc
 +++ b/src/media/gpu/chromeos/mailbox_video_frame_converter.cc
-@@ -322,7 +322,8 @@ void MailboxVideoFrameConverter::Convert
+@@ -337,7 +337,8 @@ void MailboxVideoFrameConverter::Convert
    DCHECK(parent_task_runner_->RunsTasksInCurrentSequence());
    DVLOGF(4);
  
@@ -536,7 +583,7 @@
    VideoFrame* origin_frame =
 --- a/src/media/gpu/v4l2/BUILD.gn
 +++ b/src/media/gpu/v4l2/BUILD.gn
-@@ -62,12 +62,18 @@ source_set("v4l2") {
+@@ -65,12 +65,18 @@ source_set("v4l2") {
      "v4l2_video_decoder_delegate_h264.h",
      "v4l2_video_decoder_delegate_vp8.cc",
      "v4l2_video_decoder_delegate_vp8.h",
@@ -559,7 +606,7 @@
        "v4l2_video_decoder_delegate_h265.cc",
 --- a/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.cc
 +++ b/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.cc
-@@ -1209,6 +1209,26 @@ bool V4L2VideoDecodeAccelerator::FlushIn
+@@ -1208,6 +1208,26 @@ bool V4L2VideoDecodeAccelerator::FlushIn
    return (decoder_state_ != kError);
  }
  
@@ -586,7 +633,7 @@
  void V4L2VideoDecodeAccelerator::ServiceDeviceTask(bool event_pending) {
    DVLOGF(4);
    DCHECK(decoder_thread_.task_runner()->BelongsToCurrentThread());
-@@ -1232,11 +1252,11 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1231,11 +1251,11 @@ void V4L2VideoDecodeAccelerator::Service
      return;
    }
  
@@ -601,7 +648,7 @@
      // Some platforms do not send an initial resolution change event.
      // To work around this, we need to keep checking if the initial resolution
      // is known already by explicitly querying the format after each decode,
-@@ -1249,11 +1269,15 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1248,11 +1268,15 @@ void V4L2VideoDecodeAccelerator::Service
      gfx::Size visible_size;
      bool again;
      if (GetFormatInfo(&format, &visible_size, &again) && !again) {
@@ -618,7 +665,7 @@
    Dequeue();
    Enqueue();
  
-@@ -1295,7 +1319,7 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1294,7 +1318,7 @@ void V4L2VideoDecodeAccelerator::Service
              << buffers_at_client_.size() << "]";
  
    ScheduleDecodeBufferTaskIfNeeded();
@@ -627,7 +674,7 @@
      StartResolutionChange();
  }
  
-@@ -1582,8 +1606,11 @@ bool V4L2VideoDecodeAccelerator::Enqueue
+@@ -1581,8 +1605,11 @@ bool V4L2VideoDecodeAccelerator::Enqueue
    }
  
    if (!ret) {
@@ -641,7 +688,7 @@
      return false;
    }
  
-@@ -1744,7 +1771,7 @@ bool V4L2VideoDecodeAccelerator::IsDecod
+@@ -1743,7 +1770,7 @@ bool V4L2VideoDecodeAccelerator::IsDecod
    memset(&cmd, 0, sizeof(cmd));
    cmd.cmd = V4L2_DEC_CMD_STOP;
    if (device_->Ioctl(VIDIOC_TRY_DECODER_CMD, &cmd) != 0) {
@@ -1371,7 +1418,7 @@
  #define V4L2_PIX_FMT_AV1 v4l2_fourcc('A', 'V', '0', '1') /* AV1 */
 --- a/src/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
 +++ b/src/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
-@@ -250,6 +250,7 @@ V4L2StatefulVideoDecoder::GetSupportedCo
+@@ -271,6 +271,7 @@ V4L2StatefulVideoDecoder::GetSupportedCo
        base::BindRepeating(&HandledIoctl, device_fd.get()),
        V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
  
@@ -1379,7 +1426,7 @@
    // V4L2 stateful formats (don't end up with _SLICE or _FRAME) supported.
    constexpr std::array<uint32_t, 4> kSupportedInputCodecs = {
      V4L2_PIX_FMT_H264,
-@@ -262,6 +263,7 @@ V4L2StatefulVideoDecoder::GetSupportedCo
+@@ -283,6 +284,7 @@ V4L2StatefulVideoDecoder::GetSupportedCo
    std::erase_if(v4l2_codecs, [kSupportedInputCodecs](uint32_t v4l2_codec) {
      return !base::Contains(kSupportedInputCodecs, v4l2_codec);
    });
@@ -1399,7 +1446,7 @@
  #include <memory>
 --- a/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateless.cc
 +++ b/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateless.cc
-@@ -746,10 +746,12 @@ bool V4L2StatelessVideoDecoderBackend::C
+@@ -740,10 +740,12 @@ bool V4L2StatelessVideoDecoderBackend::C
      decoder_ = std::make_unique<VP8Decoder>(
          std::make_unique<V4L2VideoDecoderDelegateVP8>(this, device_.get()),
          color_space_);
@@ -1414,9 +1461,9 @@
      decoder_ = std::make_unique<AV1Decoder>(
 --- a/src/media/gpu/v4l2/v4l2_video_decoder_delegate_h264.h
 +++ b/src/media/gpu/v4l2/v4l2_video_decoder_delegate_h264.h
-@@ -13,6 +13,8 @@
- #include "media/gpu/h264_decoder.h"
+@@ -16,6 +16,8 @@
  #include "media/gpu/h264_dpb.h"
+ #include "media/video/h264_parser.h"
  
 +#include "missing-stateless-ctrl.h"
 +
@@ -1436,7 +1483,7 @@
  class V4L2Device;
 --- a/src/media/mojo/services/gpu_mojo_media_client_linux.cc
 +++ b/src/media/mojo/services/gpu_mojo_media_client_linux.cc
-@@ -13,22 +13,36 @@
+@@ -13,21 +13,29 @@
  #include "media/gpu/chromeos/mailbox_video_frame_converter.h"
  #include "media/gpu/chromeos/platform_video_frame_pool.h"
  #include "media/gpu/chromeos/video_decoder_pipeline.h"
@@ -1463,17 +1510,10 @@
 +  if (!base::FeatureList::IsEnabled(kUseChromeOSDirectVideoDecoder)) {
 +    return VideoDecoderType::kVda;
 +  }
-+#if BUILDFLAG(USE_VAAPI)
+ #if BUILDFLAG(USE_VAAPI)
    return VideoDecoderType::kVaapi;
-+#elif BUILDFLAG(USE_V4L2_CODEC)
-+  return VideoDecoderType::kV4L2;
-+#else
-+  return VideoDecoderType::kUnknown;
-+#endif
- }
- 
- std::vector<Fourcc> GetPreferredRenderableFourccs(
-@@ -43,6 +57,7 @@ std::vector<Fourcc> GetPreferredRenderab
+ #elif BUILDFLAG(USE_V4L2_CODEC)
+@@ -47,6 +55,7 @@ std::vector<Fourcc> GetPreferredRenderab
  
    // Support 1-copy argb textures.
    renderable_fourccs.emplace_back(Fourcc::AR24);
@@ -1481,7 +1521,7 @@
  
    return renderable_fourccs;
  }
-@@ -50,12 +65,22 @@ std::vector<Fourcc> GetPreferredRenderab
+@@ -54,7 +63,7 @@ std::vector<Fourcc> GetPreferredRenderab
  VideoDecoderType GetActualPlatformDecoderImplementation(
      const gpu::GpuPreferences& gpu_preferences,
      const gpu::GPUInfo& gpu_info) {
@@ -1490,13 +1530,10 @@
    switch (GetPreferredLinuxDecoderImplementation()) {
      case VideoDecoderType::kUnknown:
        return VideoDecoderType::kUnknown;
-     case VideoDecoderType::kOutOfProcess:
+@@ -62,6 +71,11 @@ VideoDecoderType GetActualPlatformDecode
        return VideoDecoderType::kOutOfProcess;
-+    case VideoDecoderType::kV4L2: {
-+      return gpu_preferences.gr_context_type == gpu::GrContextType::kGL
-+                 ? VideoDecoderType::kV4L2
-+                 : VideoDecoderType::kUnknown;
-+    }
+     case VideoDecoderType::kV4L2:
+       return VideoDecoderType::kV4L2;
 +    case VideoDecoderType::kVda: {
 +      return gpu_preferences.gr_context_type == gpu::GrContextType::kGL
 +                 ? VideoDecoderType::kVda
@@ -1505,9 +1542,9 @@
      case VideoDecoderType::kVaapi: {
        // Allow VaapiVideoDecoder on GL.
        if (gpu_preferences.gr_context_type == gpu::GrContextType::kGL) {
-@@ -146,6 +171,13 @@ std::unique_ptr<VideoDecoder> CreatePlat
-           GetPreferredRenderableFourccs(traits.gpu_preferences),
-           traits.media_log->Clone(), /*oop_video_decoder=*/{});
+@@ -154,6 +168,13 @@ std::unique_ptr<VideoDecoder> CreatePlat
+           traits.media_log->Clone(), /*oop_video_decoder=*/{},
+           /*in_video_decoder_process=*/false);
      }
 +    case VideoDecoderType::kVda: {
 +      return VdaVideoDecoder::Create(
@@ -1519,7 +1556,7 @@
      default:
        return nullptr;
    }
-@@ -181,6 +213,8 @@ GetPlatformSupportedVideoDecoderConfigs(
+@@ -189,6 +210,8 @@ GetPlatformSupportedVideoDecoderConfigs(
    base::UmaHistogramEnumeration("Media.VaapiLinux.SupportedVideoDecoder",
                                  decoder_implementation);
    switch (decoder_implementation) {
@@ -1530,7 +1567,7 @@
      case VideoDecoderType::kV4L2:
 --- /dev/null
 +++ b/src/pi-util/BUILD.txt
-@@ -0,0 +1,254 @@
+@@ -0,0 +1,256 @@
 +Build notes (cross compile from Ubuntu)
 +=======================================
 +
@@ -1703,6 +1740,8 @@
 +# Merge new version into current base
 +git fetch --all
 +TAG=<new_tag>
++NEWVER=`echo $TAG | sed -nE 's/^([0-9]+).*$/\1/p'`
++
 +git merge $TAG
 +# Fix conflicts - DEPS always seems to conflict
 +git checkout $TAG -- DEPS
@@ -1714,7 +1753,7 @@
 +# Get the rest of the tree
 +gclient sync --with_branch_heads
 +# Checkout our tree and merge the new base into it
-+pi-util/gitscan.py --gitscan-no-src checkout test/119/rpi_2
++pi-util/gitscan.py --gitscan-no-src checkout test/$NEWVER/rpi_2
 +pi-util/gitscan.py --gitscan-no-src merge --no-edit {BASE}
 +
 +and we should be good to go.  At this point you can either clean build or
@@ -1964,7 +2003,7 @@
 +
 --- /dev/null
 +++ b/src/pi-util/defargs_arm64-bullseye.gn
-@@ -0,0 +1,32 @@
+@@ -0,0 +1,33 @@
 +# Build arguments go here. Examples:
 +#   is_component_build = true
 +#   is_debug = false
@@ -1985,6 +2024,7 @@
 +# Disabling Dawn seems to create no penalty but this probably won't
 +# be true indefinitely
 +use_dawn = false
++skia_use_dawn = false
 +
 +# We don't have the required GL extensions to enable GL passthrough so must
 +# enable the validating decode otherwise we get a fatal GPU error
@@ -1999,7 +2039,7 @@
 +
 --- /dev/null
 +++ b/src/pi-util/defargs_armv7-bullseye.gn
-@@ -0,0 +1,40 @@
+@@ -0,0 +1,41 @@
 +# Build arguments go here. Examples:
 +#   is_component_build = true
 +#   is_debug = false
@@ -2022,6 +2062,7 @@
 +# Disabling Dawn seems to create no penalty but this probably won't
 +# be true indefinitely
 +use_dawn = false
++skia_use_dawn = false
 +
 +# Enables screen sharing in hangouts
 +enable_hangout_services_extension = true
@@ -2393,16 +2434,14 @@
 +# pi-util/syncroot.sh my-pi: raspian_jessie_pi1
 --- /dev/null
 +++ b/src/pi-util/pipaths.py
-@@ -0,0 +1,9 @@
+@@ -0,0 +1,7 @@
 +pipaths=[
 +    "src",
-+    "src/native_client",
-+    "src/third_party/ffmpeg",
 +    "src/third_party/libyuv",
 +    "src/third_party/skia"]
 +
 +# Our base tag or commit no
-+src_commit="120.0.6099.102"
++src_commit="122.0.6261.89"
 --- /dev/null
 +++ b/src/pi-util/pipewire_utils_h.patch
 @@ -0,0 +1,11 @@
@@ -2506,7 +2545,7 @@
 +
 +if [ $CLEAN ]; then
 +  rm -rf $SRC_DIR/build/linux/pios_*-sysroot
-+  rm -f $SCRIPT_DIR/keyring.gpg
++  rm -f $SCRIPT_DIR/pios_keyring.gpg
 +  rm -f $SCRIPT_DIR/generated_package_lists/pios-*
 +  rm -rf $SRC_DIR/out/sysroot-build
 +fi
@@ -2514,22 +2553,22 @@
 +if [ ! $NOGEN ]; then
 +  mkdir -p $BUILD_DIR
 +  cd $SCRIPT_DIR
-+  if [ ! -e keyring.gpg ]; then
-+    ./generate_keyring.sh
++  if [ ! -e pios_keyring.gpg ]; then
++    ./generate_keyring.sh --pios
 +  fi
 +  if [ $WANT32 ]; then
 +    cd $SCRIPT_DIR
-+    ./sysroot-creator.sh pios build armhf |& tee $BUILD_DIR/build-armhf.log
++    ./sysroot_creator.py --pios build armhf |& tee $BUILD_DIR/build-armhf.log
 +    mkdir -pv ../pios_bullseye_armhf-sysroot
 +    cd ../pios_bullseye_armhf-sysroot
-+    bsdtar xf $BUILD_DIR/pios_bullseye_armhf_sysroot.tar.xz
++    bsdtar xf $BUILD_DIR/debian_pios-bullseye_armhf_sysroot.tar.xz
 +  fi
 +  if [ $WANT64 ]; then
 +    cd $SCRIPT_DIR
-+    ./sysroot-creator.sh pios build arm64 |& tee $BUILD_DIR/build-arm64.log
++    ./sysroot_creator.py --pios build arm64 |& tee $BUILD_DIR/build-arm64.log
 +    mkdir -pv ../pios_bullseye_arm64-sysroot
 +    cd ../pios_bullseye_arm64-sysroot
-+    bsdtar xf $BUILD_DIR/pios_bullseye_arm64_sysroot.tar.xz
++    bsdtar xf $BUILD_DIR/debian_pios-bullseye_arm64_sysroot.tar.xz
 +  fi
 +fi
 +
@@ -2763,7 +2802,7 @@
      return allowed_impls[0];
 --- a/src/ui/ozone/platform/wayland/host/wayland_connection.h
 +++ b/src/ui/ozone/platform/wayland/host/wayland_connection.h
-@@ -349,8 +349,9 @@ class WaylandConnection {
+@@ -358,8 +358,9 @@ class WaylandConnection {
    void DumpState(std::ostream& out) const;
  
    bool UseImplicitSyncInterop() const {
@@ -2775,69 +2814,29 @@
    }
  
   private:
---- a/src/native_client/src/include/concurrency_ops.h
-+++ b/src/native_client/src/include/concurrency_ops.h
-@@ -32,14 +32,13 @@ static INLINE void NaClWriteMemoryBarrie
- #elif NACL_ARCH(NACL_BUILD_ARCH) == NACL_arm
- 
- static INLINE void NaClWriteMemoryBarrier(void) {
-+#if __ARM_ARCH >= 7
-   /* Note that this depends on ARMv7. */
-   __asm__ __volatile__("dsb");
--
--  /*
--   * We could support ARMv6 by instead using:
--   * __asm__ __volatile__("mcr p15, 0, %0, c7, c10, 5"
--   *                      : : "r" (0) : "memory");
--   */
-+#else
-+ __asm__ __volatile__("mcr p15, 0, %0, c7, c10, 5"
-+                      : : "r" (0) : "memory");
-+#endif
- }
- 
- #elif NACL_ARCH(NACL_BUILD_ARCH) == NACL_mips
---- a/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
-+++ b/src/third_party/ffmpeg/chromium/config/Chrome/linux/arm/config.h
-@@ -44,7 +44,7 @@
- #define ARCH_X86_64 0
- #define HAVE_ARMV5TE 1
- #define HAVE_ARMV6 1
--#define HAVE_ARMV6T2 1
-+#define HAVE_ARMV6T2 0
- #define HAVE_ARMV8 0
- #define HAVE_DOTPROD 0
- #define HAVE_I8MM 0
-@@ -95,7 +95,7 @@
- #define HAVE_LASX 0
- #define HAVE_ARMV5TE_EXTERNAL 1
- #define HAVE_ARMV6_EXTERNAL 1
--#define HAVE_ARMV6T2_EXTERNAL 1
-+#define HAVE_ARMV6T2_EXTERNAL 0
- #define HAVE_ARMV8_EXTERNAL 0
- #define HAVE_DOTPROD_EXTERNAL 0
- #define HAVE_I8MM_EXTERNAL 0
-@@ -146,7 +146,7 @@
- #define HAVE_LASX_EXTERNAL 0
- #define HAVE_ARMV5TE_INLINE 1
- #define HAVE_ARMV6_INLINE 1
--#define HAVE_ARMV6T2_INLINE 1
-+#define HAVE_ARMV6T2_INLINE 0
- #define HAVE_ARMV8_INLINE 0
- #define HAVE_DOTPROD_INLINE 0
- #define HAVE_I8MM_INLINE 0
-@@ -643,7 +643,7 @@
- #define CONFIG_OSSFUZZ 0
- #define CONFIG_PIC 1
- #define CONFIG_PTX_COMPRESSION 0
--#define CONFIG_THUMB 1
-+#define CONFIG_THUMB 0
- #define CONFIG_VALGRIND_BACKTRACE 0
- #define CONFIG_XMM_CLOBBER_TEST 0
- #define CONFIG_BSFS 0
 --- a/src/third_party/libyuv/BUILD.gn
 +++ b/src/third_party/libyuv/BUILD.gn
-@@ -215,6 +215,11 @@ if (libyuv_use_neon) {
+@@ -174,7 +174,6 @@ static_library("libyuv_internal") {
+     configs += [ "//build/config/compiler:optimize_max" ]
+   }
+ 
+-  # To enable AVX2 or other cpu optimization, pass flag here
+   if (!is_win) {
+     cflags = [
+       # "-mpopcnt",
+@@ -183,6 +182,11 @@ static_library("libyuv_internal") {
+       "-ffp-contract=fast",  # Enable fma vectorization for NEON.
+     ]
+   }
++
++  if (current_cpu == "arm" && arm_version < 7) {
++    # This emables the neon test even if the current compile doesn't support it
++    defines += [ "LIBYUV_NEON" ]
++  }
+ }
+ 
+ if (libyuv_use_neon) {
+@@ -215,6 +219,11 @@ if (libyuv_use_neon) {
  
      if (current_cpu != "arm64") {
        configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
@@ -2888,7 +2887,7 @@
  // One-stop-shop shader for,
  //   - nearest-neighbor sampling (_nofilter_),
  //   - clamp tiling in X and Y both (Clamp_),
-@@ -79,6 +80,400 @@ static void Clamp_S32_opaque_D32_nofilte
+@@ -79,6 +80,199 @@ static void Clamp_S32_opaque_D32_nofilte
          }
      }
  }
@@ -2897,207 +2896,6 @@
 +// We define two variants of this: one for 32-bit ARM NEON, and one generic C:
 +
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
-+
-+// Copied from SkBitmapProcState_opts.h
-+template <typename U32, typename Out>
-+static void decode_packed_coordinates_and_weight(U32 packed, Out* v0, Out* v1, Out* w) {
-+    *v0 = (packed >> 18);       // Integer coordinate x0 or y0.
-+    *v1 = (packed & 0x3fff);    // Integer coordinate x1 or y1.
-+    *w  = (packed >> 14) & 0xf; // Lerp weight for v1; weight for v0 is 16-w.
-+}
-+
-+#define S32_OPAQUE_D32_FILTER_DX_1PIX_NEON(opt)              \
-+            "ldr         %[x], [%[xy]], #4           \n\t"   \
-+            "uxth        %[tmp2], %[x], ror #16      \n\t"   \
-+            "lsl         %[tmp3], %[x], #2           \n\t"   \
-+            "bic         %[tmp2], #3                 \n\t"   \
-+            "uxth        %[tmp3], %[tmp3]            \n\t"   \
-+            "add         %[tmp0], %[row0], %[tmp2]   \n\t"   \
-+            "add         %[tmp1], %[row0], %[tmp3]   \n\t"   \
-+            "add         %[tmp2], %[row1], %[tmp2]   \n\t"   \
-+            "add         %[tmp3], %[row1], %[tmp3]   \n\t"   \
-+            "lsr         %[x], #14                   \n\t"   \
-+            "vldr        s0, [%[tmp0]]               \n\t"   \
-+            "and         %[x], #0xf                  \n\t"   \
-+            "vldr        s1, [%[tmp1]]               \n\t"   \
-+            "vldr        s2, [%[tmp2]]               \n\t"   \
-+            "vldr        s3, [%[tmp3]]               \n\t"   \
-+            "vdup.16     d2, %[x]                    \n\t"   \
-+            "vsub.i16    d3, d23, d2                 \n\t"   \
-+            "vmull.u8    q2, d0, d31                 \n\t"   \
-+            "vmlal.u8    q2, d1, d30                 \n\t"   \
-+            "vmul.u16    d0, d4, d3                  \n\t"   \
-+            "vmla.u16    d0, d5, d2                  \n\t"   \
-+            opt"                                     \n\t"   \
-+            "vshrn.u16   d0, q0, #8                  \n\t"   \
-+            "vst1.32     {d0[0]}, [%[dst]:32]!       \n\t"   \
-+
-+static void S32_opaque_D32_filter_DX(const SkBitmapProcState& s,
-+                              const uint32_t* SK_RESTRICT xy,
-+                              int count, SkPMColor* SK_RESTRICT colors) {
-+    SkASSERT(count > 0 && colors != nullptr);
-+    SkASSERT(4 == s.fPixmap.info().bytesPerPixel());
-+    SkASSERT(s.fAlphaScale == 256);
-+
-+    int y0, y1, wy;
-+    decode_packed_coordinates_and_weight(*xy++, &y0, &y1, &wy);
-+
-+    auto row0 = (const uint32_t*)( (const char*)s.fPixmap.addr() + y0 * s.fPixmap.rowBytes() ),
-+         row1 = (const uint32_t*)( (const char*)s.fPixmap.addr() + y1 * s.fPixmap.rowBytes() );
-+
-+    uint32_t tmp0, tmp1, tmp2, tmp3, x;
-+    __asm__ volatile (
-+            "vpush       {q4}                        \n\t"
-+            "vmov.i16    d22, #0xf                   \n\t"
-+            "vmov.i16    d23, #0x10                  \n\t"
-+            "vmov.i32    q12, #0x3fff                \n\t"
-+            "vdup.32     q13, %[row0]                \n\t"
-+            "vdup.32     q14, %[row1]                \n\t"
-+            "vdup.i8     d30, %[subY]                \n\t"
-+            "vmov.i8     d31, #16                    \n\t"
-+            "vshl.i32    q12, #2                     \n\t"
-+            "tst         %[dst], #0xc                \n\t"
-+            "vsub.i8     d31, d30                    \n\t"
-+            "beq         2f                          \n\t"
-+
-+            "1:                                      \n\t"
-+            S32_OPAQUE_D32_FILTER_DX_1PIX_NEON(
-+            "add         %[tmp0], %[dst], #4         \n\t"
-+            "subs        %[len], #1                  \n\t"
-+            "it          ne                          \n\t"
-+            "tstne       %[tmp0], #0xc"
-+            )
-+            "bne         1b                          \n\t"
-+
-+            "2:"
-+            "subs        %[len], #4                  \n\t"
-+            "bmi         13f                         \n\t"
-+
-+            "vld1.32     {q8}, [%[xy]]!              \n\t"
-+            "vshr.u32    q9, q8, #16                 \n\t"
-+            "vand        q9, q12                     \n\t"
-+            "vadd.i32    q1, q13, q9                 \n\t"
-+            "vshl.i32    q0, q8, #2                  \n\t"
-+            "vand        q0, q12                     \n\t"
-+            "vadd.i32    q2, q13, q0                 \n\t"
-+            "vmov        %[tmp0], s4                 \n\t"
-+            "vmov        %[tmp1], s5                 \n\t"
-+
-+            "11:                                     \n\t"
-+            "vadd.i32    q3, q14, q9                 \n\t"
-+            "vmov        %[tmp2], %[tmp3], d3        \n\t"
-+            "vadd.i32    q4, q14, q0                 \n\t"
-+            "vldr        s4, [%[tmp0]]               \n\t"
-+            "vmov        %[tmp0], s8                 \n\t"
-+            "vldr        s5, [%[tmp1]]               \n\t"
-+            "vmov        %[tmp1], s9                 \n\t"
-+            "vldr        s6, [%[tmp2]]               \n\t"
-+            "vmov        %[tmp2], s10                \n\t"
-+            "vldr        s7, [%[tmp3]]               \n\t"
-+            "vmov        %[tmp3], s11                \n\t"
-+            "vldr        s8, [%[tmp0]]               \n\t"
-+            "vmov        %[tmp0], s12                \n\t"
-+            "vldr        s9, [%[tmp1]]               \n\t"
-+            "vmov        %[tmp1], s13                \n\t"
-+            "vldr        s10, [%[tmp2]]              \n\t"
-+            "vmov        %[tmp2], s14                \n\t"
-+            "vldr        s11, [%[tmp3]]              \n\t"
-+            "vmov        %[tmp3], s15                \n\t"
-+            "vldr        s12, [%[tmp0]]              \n\t"
-+            "vmov        %[tmp0], s16                \n\t"
-+            "vldr        s13, [%[tmp1]]              \n\t"
-+            "vmov        %[tmp1], s17                \n\t"
-+            "vldr        s14, [%[tmp2]]              \n\t"
-+            "vmov        %[tmp2], s18                \n\t"
-+            "vldr        s15, [%[tmp3]]              \n\t"
-+            "vmov        %[tmp3], s19                \n\t"
-+            "vldr        s16, [%[tmp0]]              \n\t"
-+            "vshrn.i32   d1, q8, #14                 \n\t"
-+            "vldr        s17, [%[tmp1]]              \n\t"
-+            "vand        d1, d22                     \n\t"
-+            "vldr        s18, [%[tmp2]]              \n\t"
-+            "vsub.i16    d0, d23, d1                 \n\t"
-+            "vldr        s19, [%[tmp3]]              \n\t"
-+            "vmull.u8    q10, d2, d31                \n\t"
-+            "vmlal.u8    q10, d6, d30                \n\t"
-+            "vmull.u8    q1, d3, d31                 \n\t"
-+            "vmlal.u8    q1, d7, d30                 \n\t"
-+            "vmull.u8    q3, d4, d31                 \n\t"
-+            "subs        %[len], #4                  \n\t"
-+            "vmlal.u8    q3, d8, d30                 \n\t"
-+            "bmi         12f                         \n\t"
-+
-+            "  vld1.32     {q8}, [%[xy]]!            \n\t"
-+            "vmull.u8    q2, d5, d31                 \n\t"
-+            "vmlal.u8    q2, d9, d30                 \n\t"
-+            "vmul.u16    d8, d20, d0[0]              \n\t"
-+            "  vshr.u32    d18, d16, #16             \n\t"
-+            "vmul.u16    d9, d21, d0[1]              \n\t"
-+            "  vshr.u32    d19, d17, #16             \n\t"
-+            "vmul.u16    d20, d2, d0[2]              \n\t"
-+            "  vand        d18, d24                  \n\t"
-+            "vmul.u16    d21, d3, d0[3]              \n\t"
-+            "  vand        d19, d25                  \n\t"
-+            "vmla.u16    d8, d6, d1[0]               \n\t"
-+            "  vadd.i32    d2, d26, d18              \n\t"
-+            "vmla.u16    d9, d7, d1[1]               \n\t"
-+            "  vadd.i32    d3, d27, d19              \n\t"
-+            "vmla.u16    d20, d4, d1[2]              \n\t"
-+            "  vshl.i32    d0, d16, #2               \n\t"
-+            "vmla.u16    d21, d5, d1[3]              \n\t"
-+            "  vshl.i32    d1, d17, #2               \n\t"
-+            "  vand        q0, q12                   \n\t"
-+            "  vadd.i32    q2, q13, q0               \n\t"
-+            "  vmov        %[tmp0], s4               \n\t"
-+            "  vmov        %[tmp1], s5               \n\t"
-+            "vshrn.u16   d8, q4, #8                  \n\t"
-+            "vshrn.u16   d9, q10, #8                 \n\t"
-+            "vst1.32     {q4}, [%[dst]:128]!         \n\t"
-+            "b           11b                         \n\t"
-+
-+            "12:                                     \n\t"
-+            "vmull.u8    q2, d5, d31                 \n\t"
-+            "vmlal.u8    q2, d9, d30                 \n\t"
-+            "vmul.u16    d8, d20, d0[0]              \n\t"
-+            "vmul.u16    d9, d21, d0[1]              \n\t"
-+            "vmul.u16    d20, d2, d0[2]              \n\t"
-+            "vmul.u16    d21, d3, d0[3]              \n\t"
-+            "vmla.u16    d8, d6, d1[0]               \n\t"
-+            "vmla.u16    d9, d7, d1[1]               \n\t"
-+            "vmla.u16    d20, d4, d1[2]              \n\t"
-+            "vmla.u16    d21, d5, d1[3]              \n\t"
-+            "vshrn.u16   d8, q4, #8                  \n\t"
-+            "vshrn.u16   d9, q10, #8                 \n\t"
-+            "vst1.32     {q4}, [%[dst]:128]!         \n\t"
-+
-+            "13:                                     \n\t"
-+            "adds        %[len], #4-1                \n\t"
-+            "bmi         22f                         \n\t"
-+
-+            "21:                                     \n\t"
-+            S32_OPAQUE_D32_FILTER_DX_1PIX_NEON("subs %[len], #1")
-+            "bpl         21b                         \n\t"
-+
-+            "22:                                     \n\t"
-+            "vpop        {q4}                        \n\t"
-+    : // Outputs
-+             [dst]"+r"(colors),
-+              [xy]"+r"(xy),
-+             [len]"+r"(count),
-+            [tmp0]"=&r"(tmp0),
-+            [tmp1]"=&r"(tmp1),
-+            [tmp2]"=&r"(tmp2),
-+            [tmp3]"=&r"(tmp3),
-+               [x]"=&r"(x)
-+    : // Inputs
-+            [row0]"r"(row0),
-+            [row1]"r"(row1),
-+            [subY]"r"(wy)
-+    : // Clobbers
-+            "cc", "memory"
-+    );
-+}
-+
 +static inline void Clamp_S32_opaque_D32_nofilter_DX_shaderproc_core_neon(SkPMColor* __restrict__ &dst, const SkPMColor* __restrict__ src, int core, SkFractionalInt fx, const SkFractionalInt dx)
 +{
 +    const SkPMColor*p = src + (int32_t)(fx >> 32);
@@ -3289,23 +3087,33 @@
  
  static void S32_alpha_D32_nofilter_DX(const SkBitmapProcState& s,
                                        const uint32_t* xy, int count, SkPMColor* colors) {
-@@ -255,7 +650,15 @@ bool SkBitmapProcState::chooseProcs() {
+@@ -255,7 +449,11 @@ bool SkBitmapProcState::chooseProcs() {
      fMatrixProc = this->chooseMatrixProc(translate_only);
      SkASSERT(fMatrixProc);
  
 -    fSampleProc32 = fBilerp ? SkOpts::S32_alpha_D32_filter_DX : S32_alpha_D32_nofilter_DX;
-+    if (fInvMatrix.isScaleTranslate()) {
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
-+        fSampleProc32 = fBilerp ? (fAlphaScale == 256 ? S32_opaque_D32_filter_DX : SkOpts::S32_alpha_D32_filter_DX)   : S32_alpha_D32_nofilter_DX  ;
++    fSampleProc32 = fBilerp ? (fAlphaScale == 256 ? SkOpts::S32_opaque_D32_filter_DX : SkOpts::S32_alpha_D32_filter_DX) : S32_alpha_D32_nofilter_DX  ;
 +#else
-+        fSampleProc32 = fBilerp ? SkOpts::S32_alpha_D32_filter_DX   : S32_alpha_D32_nofilter_DX  ;
++    fSampleProc32 = fBilerp ? SkOpts::S32_alpha_D32_filter_DX   : S32_alpha_D32_nofilter_DX  ;
 +#endif
-+    } else {
-+        fSampleProc32 = fBilerp ? SkOpts::S32_alpha_D32_filter_DX   : S32_alpha_D32_nofilter_DX  ;
-+    }
      SkASSERT(fSampleProc32);
  
      // our special-case shaderprocs
+--- a/src/third_party/skia/src/core/SkBitmapProcState.h
++++ b/src/third_party/skia/src/core/SkBitmapProcState.h
+@@ -216,7 +216,10 @@ namespace SkOpts {
+     // SkBitmapProcState optimized Shader, Sample, or Matrix procs.
+     extern void (*S32_alpha_D32_filter_DX)(const SkBitmapProcState&,
+                                            const uint32_t* xy, int count, SkPMColor*);
+-
++#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
++    extern void (*S32_opaque_D32_filter_DX)(const SkBitmapProcState&,
++                                           const uint32_t* xy, int count, SkPMColor*);
++#endif
+     void Init_BitmapProcState();
+ }  // namespace SkOpts
+ 
 --- a/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
 +++ b/src/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
 @@ -272,6 +272,530 @@ static unsigned clamp(SkFixed fx, int ma
@@ -3849,21 +3657,21 @@
  static const SkBitmapProcState::MatrixProc MirrorX_MirrorY_Procs[] = {
      nofilter_scale <mirror, mirror,  false>, filter_scale <mirror, mirror, extract_low_bits_general, false>,
      nofilter_affine<mirror, mirror>,         filter_affine<mirror, mirror, extract_low_bits_general>,
---- a/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp
-+++ b/src/third_party/skia/src/core/SkBlitter_ARGB32.cpp
-@@ -1206,6 +1206,9 @@ void SkARGB32_Shader_Blitter::blitMask(c
+--- a/src/third_party/skia/src/core/SkBitmapProcState_opts.cpp
++++ b/src/third_party/skia/src/core/SkBitmapProcState_opts.cpp
+@@ -19,6 +19,9 @@
  
-     if (mask.fFormat == SkMask::kA8_Format && opaque) {
-         blend_row = blend_row_A8_opaque;
-+//    } else if (mask.fFormat == SkMask::kA8_Format) {
-+//        // blend_row_A8 has been ported to SkOpts, but not the others yet
-+//        blend_row = SkOpts::blit_row_s32a_a8;
-     } else if (mask.fFormat == SkMask::kA8_Format) {
-         blend_row = blend_row_A8;
-     } else if (mask.fFormat == SkMask::kLCD16_Format && opaque) {
+ namespace SkOpts {
+     DEFINE_DEFAULT(S32_alpha_D32_filter_DX);
++#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
++    DEFINE_DEFAULT(S32_opaque_D32_filter_DX);
++#endif
+ 
+     void Init_BitmapProcState_ssse3();
+     void Init_BitmapProcState_hsw();
 --- a/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
 +++ b/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
-@@ -387,6 +387,213 @@ static void decode_packed_coordinates_an
+@@ -387,6 +387,256 @@ static void decode_packed_coordinates_an
          }
      }
  
@@ -4073,10 +3881,256 @@
 +            "cc", "memory"
 +    );
 +}
++#if 0
++        // Copied from just below
++        static void filter_and_scale_by_alpha(unsigned x, unsigned y,
++                                              SkPMColor a00, SkPMColor a01,
++                                              SkPMColor a10, SkPMColor a11,
++                                              SkPMColor *dst,
++                                              uint16_t scale) {
++            uint8x8_t vy, vconst16_8, v16_y, vres;
++            uint16x4_t vx, vconst16_16, v16_x, tmp, vscale;
++            uint32x2_t va0, va1;
++            uint16x8_t tmp1, tmp2;
++
++            vy = vdup_n_u8(y);                // duplicate y into vy
++            vconst16_8 = vmov_n_u8(16);       // set up constant in vconst16_8
++            v16_y = vsub_u8(vconst16_8, vy);  // v16_y = 16-y
++
++            va0 = vdup_n_u32(a00);            // duplicate a00
++            va1 = vdup_n_u32(a10);            // duplicate a10
++            va0 = vset_lane_u32(a01, va0, 1); // set top to a01
++            va1 = vset_lane_u32(a11, va1, 1); // set top to a11
++
++            tmp1 = vmull_u8(vreinterpret_u8_u32(va0), v16_y); // tmp1 = [a01|a00] * (16-y)
++            tmp2 = vmull_u8(vreinterpret_u8_u32(va1), vy);    // tmp2 = [a11|a10] * y
++
++            vx = vdup_n_u16(x);                // duplicate x into vx
++            vconst16_16 = vmov_n_u16(16);      // set up constant in vconst16_16
++            v16_x = vsub_u16(vconst16_16, vx); // v16_x = 16-x
++
++            tmp = vmul_u16(vget_high_u16(tmp1), vx);        // tmp  = a01 * x
++            tmp = vmla_u16(tmp, vget_high_u16(tmp2), vx);   // tmp += a11 * x
++            tmp = vmla_u16(tmp, vget_low_u16(tmp1), v16_x); // tmp += a00 * (16-x)
++            tmp = vmla_u16(tmp, vget_low_u16(tmp2), v16_x); // tmp += a10 * (16-x)
++
++            if (scale < 256) {
++                vscale = vdup_n_u16(scale);        // duplicate scale
++                tmp = vshr_n_u16(tmp, 8);          // shift down result by 8
++                tmp = vmul_u16(tmp, vscale);       // multiply result by scale
++            }
++
++            vres = vshrn_n_u16(vcombine_u16(tmp, vcreate_u16(0)), 8); // shift down result by 8
++            vst1_lane_u32(dst, vreinterpret_u32_u8(vres), 0);         // store result
++        }
++#endif
 +
  #else
  
      // The NEON code only actually differs from the portable code in the
+@@ -499,6 +749,202 @@ static void decode_packed_coordinates_an
+ 
+ #endif
+ 
++#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
++
++#define S32_OPAQUE_D32_FILTER_DX_1PIX_NEON(opt)              \
++            "ldr         %[x], [%[xy]], #4           \n\t"   \
++            "uxth        %[tmp2], %[x], ror #16      \n\t"   \
++            "lsl         %[tmp3], %[x], #2           \n\t"   \
++            "bic         %[tmp2], #3                 \n\t"   \
++            "uxth        %[tmp3], %[tmp3]            \n\t"   \
++            "add         %[tmp0], %[row0], %[tmp2]   \n\t"   \
++            "add         %[tmp1], %[row0], %[tmp3]   \n\t"   \
++            "add         %[tmp2], %[row1], %[tmp2]   \n\t"   \
++            "add         %[tmp3], %[row1], %[tmp3]   \n\t"   \
++            "lsr         %[x], #14                   \n\t"   \
++            "vldr        s0, [%[tmp0]]               \n\t"   \
++            "and         %[x], #0xf                  \n\t"   \
++            "vldr        s1, [%[tmp1]]               \n\t"   \
++            "vldr        s2, [%[tmp2]]               \n\t"   \
++            "vldr        s3, [%[tmp3]]               \n\t"   \
++            "vdup.16     d2, %[x]                    \n\t"   \
++            "vsub.i16    d3, d23, d2                 \n\t"   \
++            "vmull.u8    q2, d0, d31                 \n\t"   \
++            "vmlal.u8    q2, d1, d30                 \n\t"   \
++            "vmul.u16    d0, d4, d3                  \n\t"   \
++            "vmla.u16    d0, d5, d2                  \n\t"   \
++            opt"                                     \n\t"   \
++            "vshrn.u16   d0, q0, #8                  \n\t"   \
++            "vst1.32     {d0[0]}, [%[dst]:32]!       \n\t"   \
++
++void S32_opaque_D32_filter_DX(const SkBitmapProcState& s,
++                              const uint32_t* SK_RESTRICT xy,
++                              int count, SkPMColor* SK_RESTRICT colors) {
++    SkASSERT(count > 0 && colors != nullptr);
++    SkASSERT(4 == s.fPixmap.info().bytesPerPixel());
++    SkASSERT(s.fAlphaScale == 256);
++
++    int y0, y1, wy;
++    decode_packed_coordinates_and_weight(*xy++, &y0, &y1, &wy);
++
++    auto row0 = (const uint32_t*)( (const char*)s.fPixmap.addr() + y0 * s.fPixmap.rowBytes() ),
++         row1 = (const uint32_t*)( (const char*)s.fPixmap.addr() + y1 * s.fPixmap.rowBytes() );
++
++    uint32_t tmp0, tmp1, tmp2, tmp3, x;
++    __asm__ volatile (
++            "vpush       {q4}                        \n\t"
++            "vmov.i16    d22, #0xf                   \n\t"
++            "vmov.i16    d23, #0x10                  \n\t"
++            "vmov.i32    q12, #0x3fff                \n\t"
++            "vdup.32     q13, %[row0]                \n\t"
++            "vdup.32     q14, %[row1]                \n\t"
++            "vdup.i8     d30, %[subY]                \n\t"
++            "vmov.i8     d31, #16                    \n\t"
++            "vshl.i32    q12, #2                     \n\t"
++            "tst         %[dst], #0xc                \n\t"
++            "vsub.i8     d31, d30                    \n\t"
++            "beq         2f                          \n\t"
++
++            "1:                                      \n\t"
++            S32_OPAQUE_D32_FILTER_DX_1PIX_NEON(
++            "add         %[tmp0], %[dst], #4         \n\t"
++            "subs        %[len], #1                  \n\t"
++            "it          ne                          \n\t"
++            "tstne       %[tmp0], #0xc"
++            )
++            "bne         1b                          \n\t"
++
++            "2:"
++            "subs        %[len], #4                  \n\t"
++            "bmi         13f                         \n\t"
++
++            "vld1.32     {q8}, [%[xy]]!              \n\t"
++            "vshr.u32    q9, q8, #16                 \n\t"
++            "vand        q9, q12                     \n\t"
++            "vadd.i32    q1, q13, q9                 \n\t"
++            "vshl.i32    q0, q8, #2                  \n\t"
++            "vand        q0, q12                     \n\t"
++            "vadd.i32    q2, q13, q0                 \n\t"
++            "vmov        %[tmp0], s4                 \n\t"
++            "vmov        %[tmp1], s5                 \n\t"
++
++            "11:                                     \n\t"
++            "vadd.i32    q3, q14, q9                 \n\t"
++            "vmov        %[tmp2], %[tmp3], d3        \n\t"
++            "vadd.i32    q4, q14, q0                 \n\t"
++            "vldr        s4, [%[tmp0]]               \n\t"
++            "vmov        %[tmp0], s8                 \n\t"
++            "vldr        s5, [%[tmp1]]               \n\t"
++            "vmov        %[tmp1], s9                 \n\t"
++            "vldr        s6, [%[tmp2]]               \n\t"
++            "vmov        %[tmp2], s10                \n\t"
++            "vldr        s7, [%[tmp3]]               \n\t"
++            "vmov        %[tmp3], s11                \n\t"
++            "vldr        s8, [%[tmp0]]               \n\t"
++            "vmov        %[tmp0], s12                \n\t"
++            "vldr        s9, [%[tmp1]]               \n\t"
++            "vmov        %[tmp1], s13                \n\t"
++            "vldr        s10, [%[tmp2]]              \n\t"
++            "vmov        %[tmp2], s14                \n\t"
++            "vldr        s11, [%[tmp3]]              \n\t"
++            "vmov        %[tmp3], s15                \n\t"
++            "vldr        s12, [%[tmp0]]              \n\t"
++            "vmov        %[tmp0], s16                \n\t"
++            "vldr        s13, [%[tmp1]]              \n\t"
++            "vmov        %[tmp1], s17                \n\t"
++            "vldr        s14, [%[tmp2]]              \n\t"
++            "vmov        %[tmp2], s18                \n\t"
++            "vldr        s15, [%[tmp3]]              \n\t"
++            "vmov        %[tmp3], s19                \n\t"
++            "vldr        s16, [%[tmp0]]              \n\t"
++            "vshrn.i32   d1, q8, #14                 \n\t"
++            "vldr        s17, [%[tmp1]]              \n\t"
++            "vand        d1, d22                     \n\t"
++            "vldr        s18, [%[tmp2]]              \n\t"
++            "vsub.i16    d0, d23, d1                 \n\t"
++            "vldr        s19, [%[tmp3]]              \n\t"
++            "vmull.u8    q10, d2, d31                \n\t"
++            "vmlal.u8    q10, d6, d30                \n\t"
++            "vmull.u8    q1, d3, d31                 \n\t"
++            "vmlal.u8    q1, d7, d30                 \n\t"
++            "vmull.u8    q3, d4, d31                 \n\t"
++            "subs        %[len], #4                  \n\t"
++            "vmlal.u8    q3, d8, d30                 \n\t"
++            "bmi         12f                         \n\t"
++
++            "  vld1.32     {q8}, [%[xy]]!            \n\t"
++            "vmull.u8    q2, d5, d31                 \n\t"
++            "vmlal.u8    q2, d9, d30                 \n\t"
++            "vmul.u16    d8, d20, d0[0]              \n\t"
++            "  vshr.u32    d18, d16, #16             \n\t"
++            "vmul.u16    d9, d21, d0[1]              \n\t"
++            "  vshr.u32    d19, d17, #16             \n\t"
++            "vmul.u16    d20, d2, d0[2]              \n\t"
++            "  vand        d18, d24                  \n\t"
++            "vmul.u16    d21, d3, d0[3]              \n\t"
++            "  vand        d19, d25                  \n\t"
++            "vmla.u16    d8, d6, d1[0]               \n\t"
++            "  vadd.i32    d2, d26, d18              \n\t"
++            "vmla.u16    d9, d7, d1[1]               \n\t"
++            "  vadd.i32    d3, d27, d19              \n\t"
++            "vmla.u16    d20, d4, d1[2]              \n\t"
++            "  vshl.i32    d0, d16, #2               \n\t"
++            "vmla.u16    d21, d5, d1[3]              \n\t"
++            "  vshl.i32    d1, d17, #2               \n\t"
++            "  vand        q0, q12                   \n\t"
++            "  vadd.i32    q2, q13, q0               \n\t"
++            "  vmov        %[tmp0], s4               \n\t"
++            "  vmov        %[tmp1], s5               \n\t"
++            "vshrn.u16   d8, q4, #8                  \n\t"
++            "vshrn.u16   d9, q10, #8                 \n\t"
++            "vst1.32     {q4}, [%[dst]:128]!         \n\t"
++            "b           11b                         \n\t"
++
++            "12:                                     \n\t"
++            "vmull.u8    q2, d5, d31                 \n\t"
++            "vmlal.u8    q2, d9, d30                 \n\t"
++            "vmul.u16    d8, d20, d0[0]              \n\t"
++            "vmul.u16    d9, d21, d0[1]              \n\t"
++            "vmul.u16    d20, d2, d0[2]              \n\t"
++            "vmul.u16    d21, d3, d0[3]              \n\t"
++            "vmla.u16    d8, d6, d1[0]               \n\t"
++            "vmla.u16    d9, d7, d1[1]               \n\t"
++            "vmla.u16    d20, d4, d1[2]              \n\t"
++            "vmla.u16    d21, d5, d1[3]              \n\t"
++            "vshrn.u16   d8, q4, #8                  \n\t"
++            "vshrn.u16   d9, q10, #8                 \n\t"
++            "vst1.32     {q4}, [%[dst]:128]!         \n\t"
++
++            "13:                                     \n\t"
++            "adds        %[len], #4-1                \n\t"
++            "bmi         22f                         \n\t"
++
++            "21:                                     \n\t"
++            S32_OPAQUE_D32_FILTER_DX_1PIX_NEON("subs %[len], #1")
++            "bpl         21b                         \n\t"
++
++            "22:                                     \n\t"
++            "vpop        {q4}                        \n\t"
++    : // Outputs
++             [dst]"+r"(colors),
++              [xy]"+r"(xy),
++             [len]"+r"(count),
++            [tmp0]"=&r"(tmp0),
++            [tmp1]"=&r"(tmp1),
++            [tmp2]"=&r"(tmp2),
++            [tmp3]"=&r"(tmp3),
++               [x]"=&r"(x)
++    : // Inputs
++            [row0]"r"(row0),
++            [row1]"r"(row1),
++            [subY]"r"(wy)
++    : // Clobbers
++            "cc", "memory"
++    );
++}
++
++#endif
++
+ }  // namespace SK_OPTS_NS
+ 
+ namespace sktests {
 --- a/src/third_party/skia/src/opts/SkBlitMask_opts.h
 +++ b/src/third_party/skia/src/opts/SkBlitMask_opts.h
 @@ -233,6 +233,322 @@ namespace SK_OPTS_NS {
@@ -4408,7 +4462,7 @@
  #endif
  
  #if defined(SK_ARM_HAS_NEON)
-+#if defined(__ARM_64BIT_STATE)
++#ifdef __ARM_64BIT_STATE
 +// No attempt has been made to adapt the inline assembly version for AArch64
 +// so fall back to the less performant version that uses intrinsics instead
 +
@@ -4613,14 +4667,14 @@
  #endif
  
  #if defined(SK_ARM_HAS_NEON)
-+#if defined(__ARM_64BIT_STATE)
++#ifdef __ARM_64BIT_STATE
 +    // No attempt has been made to adapt the inline assembly version for AArch64
 +    // so fall back to the less performant version that uses intrinsics instead
 +
      while (len >= 8) {
          vst4_u8((uint8_t*)dst, SkPMSrcOver_neon8(vld4_u8((const uint8_t*)dst),
                                                   vld4_u8((const uint8_t*)src)));
-@@ -167,6 +360,159 @@ inline void blit_row_s32a_opaque(SkPMCol
+@@ -167,6 +360,154 @@ inline void blit_row_s32a_opaque(SkPMCol
          vst1_lane_u32(dst, vreinterpret_u32_u8(result), 0);
      }
      return;
@@ -4771,96 +4825,7 @@
 +    }
 +    return;
 +
-+// Important to undef once we've finished using them as T (in particular) is
-+// used in templates
-+#undef A
-+#undef T
-+
 +#endif // __ARM_64BIT_STATE
  #endif
  
      while (len --> 0) {
---- a/src/third_party/skia/src/opts/SkMemset_opts.h
-+++ b/src/third_party/skia/src/opts/SkMemset_opts.h
-@@ -39,7 +39,81 @@ namespace SK_OPTS_NS {
-         memsetT(buffer, value, count);
-     }
-     /*not static*/ inline void memset32(uint32_t buffer[], uint32_t value, int count) {
-+#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
-+        uint32_t *p1 = buffer;
-+        uint32_t off;
-+        __asm__ volatile (
-+                "vdup.32     q0, %[p2]                     \n\t"
-+                "cmp         %[n], #3+16                   \n\t"
-+                "vdup.32     q1, %[p2]                     \n\t"
-+                "blo         20f                           \n\t"
-+
-+                // Long case (at least one 16-byte-aligned 64-byte block)
-+                "ands        %[off], %[buffer], #12        \n\t"
-+                "bne         15f                           \n\t"
-+
-+                // 16-byte aligned. Set up inner loop
-+                "10:                                       \n\t"
-+                "mov         %[off], #64                   \n\t"
-+                "sub         %[n], #16                     \n\t"
-+                "add         %[p2], %[p1], #32             \n\t"
-+
-+                // Inner loop
-+                "11:                                       \n\t"
-+                "vst1.32     {q0-q1}, [%[p1] :128], %[off] \n\t"
-+                "subs        %[n], #16                     \n\t"
-+                "vst1.32     {q0-q1}, [%[p2] :128], %[off] \n\t"
-+                "bhs         11b                           \n\t"
-+
-+                // Handle trailing 1..15 words
-+                "12:                                       \n\t"
-+                "lsls        %[n], #29                     \n\t"
-+                "bcc         1f                            \n\t"
-+                "vst1.32     {q0-q1}, [%[p1]]!             \n\t"
-+                "1:                                        \n\t"
-+                "bpl         1f                            \n\t"
-+                "vst1.32     {q0}, [%[p1]]!                \n\t"
-+                "1:                                        \n\t"
-+                "lsls        %[n], #2                      \n\t"
-+                "it          cs                            \n\t"
-+                "vstmcs      %[p1]!, {d0}                  \n\t"
-+                "it          mi                            \n\t"
-+                "vstmmi      %[p1]!, {s0}                  \n\t"
-+                "b           90f                           \n\t"
-+
-+                // Handle first 1..3 words to achieve 16-byte alignment
-+                "15:                                       \n\t"
-+                "rsb         %[off], #16                   \n\t"
-+                "sub         %[n], %[off], lsr #2          \n\t"
-+                "lsls        %[off], #29                   \n\t"
-+                "it          mi                            \n\t"
-+                "vstmmi      %[p1]!, {s0}                  \n\t"
-+                "it          cs                            \n\t"
-+                "vstmcs      %[p1]!, {d0}                  \n\t"
-+                "b           10b                           \n\t"
-+
-+                // Short case
-+                "20:                                       \n\t"
-+                "cmp         %[n], #8                      \n\t"
-+                "blo         12b                           \n\t"
-+                "sub         %[n], #8                      \n\t"
-+                "vst1.8      {q0-q1}, [%[p1]]!             \n\t"
-+                "b           12b                           \n\t"
-+
-+                "90:                                       \n\t"
-+        : // Outputs
-+                 [p2]"+r"(value),
-+                  [n]"+r"(count),
-+                 [p1]"+r"(p1),
-+                [off]"=&r"(off)
-+        : // Inputs
-+                [buffer]"r"(buffer)
-+        : // Clobbers
-+                "cc", "memory"
-+        );
-+#else
-         memsetT(buffer, value, count);
-+#endif
-     }
-     /*not static*/ inline void memset64(uint64_t buffer[], uint64_t value, int count) {
-         memsetT(buffer, value, count);

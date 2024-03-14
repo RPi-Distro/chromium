@@ -12,7 +12,7 @@
  # Dawn seems to really want Vulkan - Chrome doesn't like our Vulkan
 --- a/src/pi-util/defargs_armv7-bullseye.gn
 +++ b/src/pi-util/defargs_armv7-bullseye.gn
-@@ -28,9 +28,6 @@ enable_hangout_services_extension = true
+@@ -29,9 +29,6 @@ enable_hangout_services_extension = true
  # enable the validating decode otherwise we get a fatal GPU error
  enable_validating_command_decoder = true
  

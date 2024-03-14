@@ -1,6 +1,6 @@
 --- a/src/chrome/browser/ui/startup/infobar_utils.cc
 +++ b/src/chrome/browser/ui/startup/infobar_utils.cc
-@@ -139,8 +139,8 @@ void AddInfoBarsIfNecessary(Browser* bro
+@@ -146,8 +146,8 @@ void AddInfoBarsIfNecessary(Browser* bro
      infobars::ContentInfoBarManager* infobar_manager =
          infobars::ContentInfoBarManager::FromWebContents(web_contents);
  

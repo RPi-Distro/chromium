@@ -4,7 +4,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
 
 --- a/src/chrome/BUILD.gn
 +++ b/src/chrome/BUILD.gn
-@@ -397,6 +397,8 @@ if (!is_android && !is_mac) {
+@@ -390,6 +390,8 @@ if (!is_android && !is_mac && !is_fuchsi
            "app/chrome_main_linux.h",
          ]
        }
@@ -28,7 +28,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
          ":disable_icf",
 --- a/src/components/nacl/loader/BUILD.gn
 +++ b/src/components/nacl/loader/BUILD.gn
-@@ -114,6 +114,7 @@ if ((is_linux || is_chromeos) && current
+@@ -103,6 +103,7 @@ if ((is_linux || is_chromeos) && current
        "nacl_helper_linux.h",
      ]
  

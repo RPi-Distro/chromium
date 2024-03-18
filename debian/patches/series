@@ -6,7 +6,6 @@ debianization/clang-version.patch
 fixes/ps-print.patch
 fixes/widevine-revision.patch
 fixes/widevine-locations.patch
-fixes/gcc13-headers.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch
@@ -14,13 +13,8 @@ fixes/blink-frags.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/std-to-address.patch
-fixes/optional.patch
 
 upstream/mojo.patch
-upstream/uniqptr.patch
-upstream/optional.patch
-upstream/bookmarknode.patch
-upstream/bitset.patch
 
 disable/tests.patch
 disable/unrar.patch

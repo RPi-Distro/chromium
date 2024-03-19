@@ -12,9 +12,9 @@ fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
-fixes/std-to-address.patch
 
 upstream/mojo.patch
+upstream/std-to-address.patch
 
 disable/tests.patch
 disable/unrar.patch

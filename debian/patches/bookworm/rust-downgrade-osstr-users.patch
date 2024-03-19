@@ -1,0 +1,155 @@
+essentially downgrade the clap_lex crate
+
+
+error[E0599]: no method named `as_encoded_bytes` found for reference `&OsStr` in the current scope
+   --> ../../third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.0/src/ext.rs:186:26
+    |
+186 |         let bytes = self.as_encoded_bytes();
+    |                          ^^^^^^^^^^^^^^^^ method not found in `&OsStr`
+
+[...]
+error[E0599]: no function or associated item named `from_encoded_bytes_unchecked` found for struct `OsStr` in the current scope
+   --> ../../third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.0/src/ext.rs:206:29
+    |
+206 |             unsafe { OsStr::from_encoded_bytes_unchecked(s) }
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ function or associated item not found in `OsStr`
+
+
+as_encoded_bytes() is available as of rustc 1.74.0, but we're on 1.70.0:
+https://doc.rust-lang.org/std/ffi/struct.OsStr.html#method.as_encoded_bytes
+
+
+Reverts the following commit:
+
+https://github.com/epage/clap/commit/f750e577789e1dd34c6950d8c8fe16d1bfd1f49c
+
+  commit f750e577789e1dd34c6950d8c8fe16d1bfd1f49c
+  Author: Ed Page <eopage@gmail.com>
+  Date:   Thu Feb 8 10:05:24 2024 -0600
+  
+      fix(lex): Use new-ish OsStr API
+    
+      Fixes #5280
+
+--- a/third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.0/src/ext.rs
++++ b/third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.0/src/ext.rs
+@@ -183,7 +183,7 @@ pub trait OsStrExt: private::Sealed {
+ 
+ impl OsStrExt for OsStr {
+     fn try_str(&self) -> Result<&str, std::str::Utf8Error> {
+-        let bytes = self.as_encoded_bytes();
++        let bytes = to_bytes(self);
+         std::str::from_utf8(bytes)
+     }
+ 
+@@ -192,22 +192,22 @@ impl OsStrExt for OsStr {
+     }
+ 
+     fn find(&self, needle: &str) -> Option<usize> {
+-        let bytes = self.as_encoded_bytes();
++        let bytes = to_bytes(self);
+         (0..=self.len().checked_sub(needle.len())?)
+             .find(|&x| bytes[x..].starts_with(needle.as_bytes()))
+     }
+ 
+     fn strip_prefix(&self, prefix: &str) -> Option<&OsStr> {
+-        let bytes = self.as_encoded_bytes();
++        let bytes = to_bytes(self);
+         bytes.strip_prefix(prefix.as_bytes()).map(|s| {
+             // SAFETY:
+-            // - This came from `as_encoded_bytes`
+-            // - Since `prefix` is `&str`, any split will be along UTF-8 boundary
+-            unsafe { OsStr::from_encoded_bytes_unchecked(s) }
++            // - This came from `to_bytes`
++            // - Since `prefix` is `&str`, any split will be along UTF-8 boundarie
++            unsafe { to_os_str_unchecked(s) }
+         })
+     }
+     fn starts_with(&self, prefix: &str) -> bool {
+-        let bytes = self.as_encoded_bytes();
++        let bytes = to_bytes(self);
+         bytes.starts_with(prefix.as_bytes())
+     }
+ 
+@@ -222,18 +222,13 @@ impl OsStrExt for OsStr {
+     fn split_once(&self, needle: &'_ str) -> Option<(&OsStr, &OsStr)> {
+         let start = self.find(needle)?;
+         let end = start + needle.len();
+-        let haystack = self.as_encoded_bytes();
++        let haystack = to_bytes(self);
+         let first = &haystack[0..start];
+         let second = &haystack[end..];
+         // SAFETY:
+-        // - This came from `as_encoded_bytes`
+-        // - Since `needle` is `&str`, any split will be along UTF-8 boundary
+-        unsafe {
+-            Some((
+-                OsStr::from_encoded_bytes_unchecked(first),
+-                OsStr::from_encoded_bytes_unchecked(second),
+-            ))
+-        }
++        // - This came from `to_bytes`
++        // - Since `needle` is `&str`, any split will be along UTF-8 boundarie
++        unsafe { Some((to_os_str_unchecked(first), to_os_str_unchecked(second))) }
+     }
+ }
+ 
+@@ -243,6 +238,45 @@ mod private {
+     impl Sealed for std::ffi::OsStr {}
+ }
+ 
++/// Allow access to raw bytes
++///
++/// As the non-UTF8 encoding is not defined, the bytes only make sense when compared with
++/// 7-bit ASCII or `&str`
++///
++/// # Compatibility
++///
++/// There is no guarantee how non-UTF8 bytes will be encoded, even within versions of this crate
++/// (since its dependent on rustc)
++fn to_bytes(s: &OsStr) -> &[u8] {
++    // SAFETY:
++    // - Lifetimes are the same
++    // - Types are compatible (`OsStr` is effectively a transparent wrapper for `[u8]`)
++    // - The primary contract is that the encoding for invalid surrogate code points is not
++    //   guaranteed which isn't a problem here
++    //
++    // There is a proposal to support this natively (https://github.com/rust-lang/rust/pull/95290)
++    // but its in limbo
++    unsafe { std::mem::transmute(s) }
++}
++
++/// Restore raw bytes as `OsStr`
++///
++/// # Safety
++///
++/// - `&[u8]` must either by a `&str` or originated with `to_bytes` within the same binary
++/// - Any splits of the original `&[u8]` must be done along UTF-8 boundaries
++unsafe fn to_os_str_unchecked(s: &[u8]) -> &OsStr {
++    // SAFETY:
++    // - Lifetimes are the same
++    // - Types are compatible (`OsStr` is effectively a transparent wrapper for `[u8]`)
++    // - The primary contract is that the encoding for invalid surrogate code points is not
++    //   guaranteed which isn't a problem here
++    //
++    // There is a proposal to support this natively (https://github.com/rust-lang/rust/pull/95290)
++    // but its in limbo
++    std::mem::transmute(s)
++}
++
+ pub struct Split<'s, 'n> {
+     haystack: Option<&'s OsStr>,
+     needle: &'n str,
+@@ -275,10 +309,7 @@ impl<'s, 'n> Iterator for Split<'s, 'n>
+ ///
+ /// `index` must be at a valid UTF-8 boundary
+ pub(crate) unsafe fn split_at(os: &OsStr, index: usize) -> (&OsStr, &OsStr) {
+-    let bytes = os.as_encoded_bytes();
++    let bytes = to_bytes(os);
+     let (first, second) = bytes.split_at(index);
+-    (
+-        OsStr::from_encoded_bytes_unchecked(first),
+-        OsStr::from_encoded_bytes_unchecked(second),
+-    )
++    (to_os_str_unchecked(first), to_os_str_unchecked(second))
+ }

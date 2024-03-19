@@ -45,6 +45,7 @@ bookworm/clang16.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
 bookworm/nvt2.patch
+bookworm/rust-downgrade-osstr-users.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

@@ -117,7 +117,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
  #include "third_party/blink/renderer/core/typed_arrays/typed_flexible_array_buffer_view.h"
  
  namespace blink {
-@@ -699,11 +698,12 @@ DOMArrayBufferBase* NativeValueTraits<
+@@ -698,11 +697,12 @@ DOMArrayBufferBase* NativeValueTraits<
  // ArrayBufferView
  
  template <typename T>
@@ -135,7 +135,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return NativeValueImpl<
        RecipeTrait<NotShared<T>>, ToDOMViewType<T, kNotShared>,
        Nullablity::kIsNotNullable, BufferSizeCheck::kCheck,
-@@ -712,12 +712,13 @@ NotShared<T> NativeValueTraits<NotShared
+@@ -711,12 +711,13 @@ NotShared<T> NativeValueTraits<NotShared
  }
  
  template <typename T>
@@ -155,7 +155,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return ArgumentValueImpl<
        RecipeTrait<NotShared<T>>, ToDOMViewType<T, kNotShared>,
        Nullablity::kIsNotNullable, BufferSizeCheck::kCheck,
-@@ -728,11 +729,12 @@ NotShared<T> NativeValueTraits<NotShared
+@@ -727,11 +728,12 @@ NotShared<T> NativeValueTraits<NotShared
  // [AllowShared] ArrayBufferView
  
  template <typename T>
@@ -173,7 +173,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return NativeValueImpl<RecipeTrait<MaybeShared<T>>,
                           ToDOMViewType<T, kMaybeShared>,
                           Nullablity::kIsNotNullable, BufferSizeCheck::kCheck,
-@@ -741,12 +743,13 @@ MaybeShared<T> NativeValueTraits<MaybeSh
+@@ -740,12 +742,13 @@ MaybeShared<T> NativeValueTraits<MaybeSh
  }
  
  template <typename T>
@@ -193,7 +193,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return ArgumentValueImpl<RecipeTrait<MaybeShared<T>>,
                             ToDOMViewType<T, kMaybeShared>,
                             Nullablity::kIsNotNullable, BufferSizeCheck::kCheck,
-@@ -757,12 +760,12 @@ MaybeShared<T> NativeValueTraits<MaybeSh
+@@ -756,12 +759,12 @@ MaybeShared<T> NativeValueTraits<MaybeSh
  // [AllowShared, BufferSourceTypeNoSizeLimit] ArrayBufferView
  
  template <typename T>
@@ -212,7 +212,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return NativeValueImpl<
        RecipeTrait<MaybeShared<T>>, ToDOMViewType<T, kMaybeShared>,
        Nullablity::kIsNotNullable, BufferSizeCheck::kDoNotCheck,
-@@ -771,12 +774,13 @@ NativeValueTraits<IDLBufferSourceTypeNoS
+@@ -770,12 +773,13 @@ NativeValueTraits<IDLBufferSourceTypeNoS
  }
  
  template <typename T>
@@ -232,7 +232,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return ArgumentValueImpl<
        RecipeTrait<MaybeShared<T>>, ToDOMViewType<T, kMaybeShared>,
        Nullablity::kIsNotNullable, BufferSizeCheck::kDoNotCheck,
-@@ -787,11 +791,12 @@ MaybeShared<T> NativeValueTraits<IDLBuff
+@@ -786,11 +790,12 @@ MaybeShared<T> NativeValueTraits<IDLBuff
  // Nullable ArrayBufferView
  
  template <typename T>
@@ -250,7 +250,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return NativeValueImpl<
        RecipeTrait<NotShared<T>>, ToDOMViewType<T, kNotShared>,
        Nullablity::kIsNullable, BufferSizeCheck::kCheck,
-@@ -800,12 +805,13 @@ NotShared<T> NativeValueTraits<IDLNullab
+@@ -799,12 +804,13 @@ NotShared<T> NativeValueTraits<IDLNullab
  }
  
  template <typename T>
@@ -270,7 +270,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return ArgumentValueImpl<
        RecipeTrait<NotShared<T>>, ToDOMViewType<T, kNotShared>,
        Nullablity::kIsNullable, BufferSizeCheck::kCheck,
-@@ -816,11 +822,12 @@ NotShared<T> NativeValueTraits<IDLNullab
+@@ -815,11 +821,12 @@ NotShared<T> NativeValueTraits<IDLNullab
  // Nullable [AllowShared] ArrayBufferView
  
  template <typename T>
@@ -288,7 +288,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return NativeValueImpl<RecipeTrait<MaybeShared<T>>,
                           ToDOMViewType<T, kMaybeShared>,
                           Nullablity::kIsNullable, BufferSizeCheck::kCheck,
-@@ -829,12 +836,13 @@ MaybeShared<T> NativeValueTraits<IDLNull
+@@ -828,12 +835,13 @@ MaybeShared<T> NativeValueTraits<IDLNull
  }
  
  template <typename T>
@@ -308,7 +308,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return ArgumentValueImpl<RecipeTrait<MaybeShared<T>>,
                             ToDOMViewType<T, kMaybeShared>,
                             Nullablity::kIsNullable, BufferSizeCheck::kCheck,
-@@ -845,9 +853,9 @@ MaybeShared<T> NativeValueTraits<IDLNull
+@@ -844,9 +852,9 @@ MaybeShared<T> NativeValueTraits<IDLNull
  // Nullable [AllowShared, BufferSourceTypeNoSizeLimit] ArrayBufferView
  
  template <typename T>
@@ -321,7 +321,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      ArgumentValue(v8::Isolate* isolate,
                    int argument_index,
                    v8::Local<v8::Value> value,
-@@ -862,11 +870,13 @@ NativeValueTraits<IDLNullable<IDLBufferS
+@@ -861,11 +869,13 @@ NativeValueTraits<IDLNullable<IDLBufferS
  // [AllowShared, FlexibleArrayBufferView] ArrayBufferView
  
  template <typename T>
@@ -340,7 +340,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return ArgumentValueImpl<RecipeTrait<T>, ToFlexibleArrayBufferView,
                             Nullablity::kIsNotNullable, BufferSizeCheck::kCheck,
                             ResizableAllowance::kDisallowResizable,
-@@ -878,12 +888,13 @@ T NativeValueTraits<T>::ArgumentValue(v8
+@@ -877,12 +887,13 @@ T NativeValueTraits<T>::ArgumentValue(v8
  // ArrayBufferView
  
  template <typename T>
@@ -360,7 +360,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    return ArgumentValueImpl<
        RecipeTrait<T>, ToFlexibleArrayBufferView, Nullablity::kIsNotNullable,
        BufferSizeCheck::kDoNotCheck, ResizableAllowance::kDisallowResizable,
-@@ -894,12 +905,13 @@ T NativeValueTraits<IDLBufferSourceTypeN
+@@ -893,12 +904,13 @@ T NativeValueTraits<IDLBufferSourceTypeN
  // Nullable [AllowShared, FlexibleArrayBufferView] ArrayBufferView
  
  template <typename T>
@@ -382,17 +382,17 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
                             ResizableAllowance::kDisallowResizable,
 --- a/third_party/blink/renderer/bindings/core/v8/native_value_traits_impl.h
 +++ b/third_party/blink/renderer/bindings/core/v8/native_value_traits_impl.h
-@@ -5,9 +5,6 @@
+@@ -5,9 +5,7 @@
  #ifndef THIRD_PARTY_BLINK_RENDERER_BINDINGS_CORE_V8_NATIVE_VALUE_TRAITS_IMPL_H_
  #define THIRD_PARTY_BLINK_RENDERER_BINDINGS_CORE_V8_NATIVE_VALUE_TRAITS_IMPL_H_
  
 -#include <concepts>
+ #include <optional>
 -#include <type_traits>
--
- #include "third_party/abseil-cpp/absl/types/optional.h"
+ 
  #include "third_party/blink/renderer/bindings/core/v8/idl_types.h"
  #include "third_party/blink/renderer/bindings/core/v8/native_value_traits.h"
-@@ -736,8 +733,9 @@ struct CORE_EXPORT NativeValueTraits<
+@@ -718,8 +716,9 @@ struct CORE_EXPORT NativeValueTraits<
  };
  
  template <typename T>
@@ -404,7 +404,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    // NotShared<T> or MaybeShared<T> should be used instead.
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
-@@ -749,8 +747,9 @@ struct NativeValueTraits<T> {
+@@ -731,8 +730,9 @@ struct NativeValueTraits<T> {
  };
  
  template <typename T>
@@ -416,7 +416,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    // NotShared<T> or MaybeShared<T> should be used instead.
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
-@@ -762,8 +761,9 @@ struct NativeValueTraits<IDLNullable<T>>
+@@ -744,8 +744,9 @@ struct NativeValueTraits<IDLNullable<T>>
  };
  
  template <typename T>
@@ -428,7 +428,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<NotShared<T>> {
    static NotShared<T> NativeValue(v8::Isolate* isolate,
                                    v8::Local<v8::Value> value,
-@@ -776,8 +776,9 @@ struct NativeValueTraits<NotShared<T>>
+@@ -758,8 +759,9 @@ struct NativeValueTraits<NotShared<T>>
  };
  
  template <typename T>
@@ -440,7 +440,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<NotShared<T>> {
    static NotShared<T> NativeValue(v8::Isolate* isolate,
                                    v8::Local<v8::Value> value,
-@@ -790,8 +791,9 @@ struct NativeValueTraits<IDLNullable<Not
+@@ -772,8 +774,9 @@ struct NativeValueTraits<IDLNullable<Not
  };
  
  template <typename T>
@@ -452,7 +452,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<MaybeShared<T>> {
    static MaybeShared<T> NativeValue(v8::Isolate* isolate,
                                      v8::Local<v8::Value> value,
-@@ -804,8 +806,9 @@ struct NativeValueTraits<MaybeShared<T>>
+@@ -786,8 +789,9 @@ struct NativeValueTraits<MaybeShared<T>>
  };
  
  template <typename T>
@@ -464,7 +464,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<MaybeShared<T>> {
    // FlexibleArrayBufferView uses this in its implementation, so we cannot
    // delete it.
-@@ -820,8 +823,9 @@ struct NativeValueTraits<IDLBufferSource
+@@ -802,8 +806,9 @@ struct NativeValueTraits<IDLBufferSource
  };
  
  template <typename T>
@@ -476,7 +476,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<MaybeShared<T>> {
    static MaybeShared<T> NativeValue(v8::Isolate* isolate,
                                      v8::Local<v8::Value> value,
-@@ -834,9 +838,9 @@ struct NativeValueTraits<IDLNullable<May
+@@ -816,9 +821,9 @@ struct NativeValueTraits<IDLNullable<May
  };
  
  template <typename T>
@@ -488,7 +488,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<MaybeShared<T>> {
    // BufferSourceTypeNoSizeLimit must be used only as arguments.
    static MaybeShared<T> NativeValue(v8::Isolate* isolate,
-@@ -850,8 +854,11 @@ struct NativeValueTraits<
+@@ -832,8 +837,11 @@ struct NativeValueTraits<
  };
  
  template <typename T>
@@ -502,7 +502,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    // FlexibleArrayBufferView must be used only as arguments.
    static T NativeValue(v8::Isolate* isolate,
                         v8::Local<v8::Value> value,
-@@ -864,8 +871,10 @@ struct NativeValueTraits<T> : public Nat
+@@ -846,8 +854,10 @@ struct NativeValueTraits<T> : public Nat
  };
  
  template <typename T>
@@ -515,7 +515,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<T> {
    // BufferSourceTypeNoSizeLimit and FlexibleArrayBufferView must be used only
    // as arguments.
-@@ -880,8 +889,11 @@ struct NativeValueTraits<IDLBufferSource
+@@ -862,8 +872,11 @@ struct NativeValueTraits<IDLBufferSource
  };
  
  template <typename T>
@@ -529,7 +529,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    // FlexibleArrayBufferView must be used only as arguments.
    static T NativeValue(v8::Isolate* isolate,
                         v8::Local<v8::Value> value,
-@@ -1217,8 +1229,9 @@ NativeValueTraits<IDLSequence<T>>::Nativ
+@@ -1199,8 +1212,9 @@ NativeValueTraits<IDLSequence<T>>::Nativ
  }
  
  template <typename T>
@@ -541,7 +541,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<HeapVector<AddMemberIfNeeded<T>>*> {
    using ImplType = typename NativeValueTraits<IDLSequence<T>>::ImplType*;
  
-@@ -1294,8 +1307,9 @@ struct NativeValueTraits<IDLArray<T>>
+@@ -1276,8 +1290,9 @@ struct NativeValueTraits<IDLArray<T>>
      : public NativeValueTraits<IDLSequence<T>> {};
  
  template <typename T>
@@ -553,7 +553,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraits<IDLNullable<IDLSequence<T>>> {};
  
  // Record types
-@@ -1425,8 +1439,10 @@ struct NativeValueTraits<IDLRecord<K, V>
+@@ -1407,8 +1422,10 @@ struct NativeValueTraits<IDLRecord<K, V>
  
  // Callback function types
  template <typename T>
@@ -566,7 +566,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
                          ExceptionState& exception_state) {
-@@ -1449,8 +1465,9 @@ struct NativeValueTraits<T> : public Nat
+@@ -1431,8 +1448,9 @@ struct NativeValueTraits<T> : public Nat
  };
  
  template <typename T>
@@ -578,7 +578,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<IDLNullable<T>> {
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
-@@ -1479,8 +1496,10 @@ struct NativeValueTraits<IDLNullable<T>>
+@@ -1461,8 +1479,10 @@ struct NativeValueTraits<IDLNullable<T>>
  
  // Callback interface types
  template <typename T>
@@ -591,7 +591,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
                          ExceptionState& exception_state) {
-@@ -1504,8 +1523,9 @@ struct NativeValueTraits<T> : public Nat
+@@ -1486,8 +1506,9 @@ struct NativeValueTraits<T> : public Nat
  
  // Interface types
  template <typename T>
@@ -603,7 +603,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<IDLNullable<T>> {
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
-@@ -1534,8 +1554,11 @@ struct NativeValueTraits<IDLNullable<T>>
+@@ -1516,8 +1537,11 @@ struct NativeValueTraits<IDLNullable<T>>
  
  // Dictionary types
  template <typename T>
@@ -617,7 +617,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
                          ExceptionState& exception_state) {
-@@ -1546,11 +1569,14 @@ struct NativeValueTraits<T> : public Nat
+@@ -1528,11 +1552,14 @@ struct NativeValueTraits<T> : public Nat
  // We don't support nullable dictionary types in general since it's quite
  // confusing and often misused.
  template <typename T>
@@ -637,7 +637,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
                          ExceptionState& exception_state) {
-@@ -1562,8 +1588,11 @@ struct NativeValueTraits<IDLNullable<T>>
+@@ -1544,8 +1571,11 @@ struct NativeValueTraits<IDLNullable<T>>
  
  // Enumeration types
  template <typename T>
@@ -651,7 +651,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    static T NativeValue(v8::Isolate* isolate,
                         v8::Local<v8::Value> value,
                         ExceptionState& exception_state) {
-@@ -1573,8 +1602,10 @@ struct NativeValueTraits<T> : public Nat
+@@ -1555,8 +1585,10 @@ struct NativeValueTraits<T> : public Nat
  
  // Interface types
  template <typename T>
@@ -664,7 +664,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    // This signifies that CreateIDLSequenceFromV8ArraySlow() may apply
    // certain optimization based on assumptions about `NativeValue()`
    // implementation below. For subclasses of ScriptWrappable that have
-@@ -1611,8 +1642,9 @@ struct NativeValueTraits<T> : public Nat
+@@ -1593,8 +1625,9 @@ struct NativeValueTraits<T> : public Nat
  };
  
  template <typename T>
@@ -676,7 +676,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<IDLNullable<T>> {
    static inline T* NativeValue(v8::Isolate* isolate,
                                 v8::Local<v8::Value> value,
-@@ -1647,8 +1679,10 @@ struct NativeValueTraits<IDLNullable<T>>
+@@ -1629,8 +1662,10 @@ struct NativeValueTraits<IDLNullable<T>>
  };
  
  template <typename T>
@@ -689,7 +689,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
                          ExceptionState& exception_state) {
-@@ -1664,8 +1698,10 @@ struct NativeValueTraits<T> : public Nat
+@@ -1646,8 +1681,10 @@ struct NativeValueTraits<T> : public Nat
  };
  
  template <typename T>
@@ -702,7 +702,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
    static T* NativeValue(v8::Isolate* isolate,
                          v8::Local<v8::Value> value,
                          ExceptionState& exception_state) {
-@@ -1686,8 +1722,9 @@ struct NativeValueTraits<IDLNullable<T>>
+@@ -1668,8 +1705,9 @@ struct NativeValueTraits<IDLNullable<T>>
  
  // Nullable types
  template <typename InnerType>
@@ -714,7 +714,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<IDLNullable<InnerType>> {
    // https://webidl.spec.whatwg.org/#es-nullable-type
    using ImplType =
-@@ -1719,8 +1756,9 @@ struct NativeValueTraits<IDLNullable<IDL
+@@ -1701,8 +1739,9 @@ struct NativeValueTraits<IDLNullable<IDL
  
  // Optional types
  template <typename T>
@@ -726,7 +726,7 @@ Date:   Wed Nov 15 16:24:54 2023 +0000
      : public NativeValueTraitsBase<typename NativeValueTraits<T>::ImplType> {
    using ImplType = typename NativeValueTraits<T>::ImplType;
  
-@@ -1742,8 +1780,9 @@ struct NativeValueTraits<IDLOptional<T>>
+@@ -1724,8 +1763,9 @@ struct NativeValueTraits<IDLOptional<T>>
  };
  
  template <typename T>

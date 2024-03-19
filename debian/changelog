@@ -8,6 +8,16 @@ chromium (123.0.6312.46-1) UNRELEASED; urgency=high
     - upstream/uniqptr.patch: drop, merged upstream.
     - fixes/gcc13-headers.patch: drop, merged upstream.
     - fixes/optional.patch: drop, merged upstream.
+    - fixes/material-utils.patch: drop part that was merged upstream.
+    - disable/catapult.patch: refresh.
+    - bookworm/constexpr-equality.patch: refresh.
+    - bookworm/nvt.patch: refresh.
+    - bookworm/undo-internal-alloc.patch: drop, as this was fixed upstream.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
+    - disable/angle-perftests.patch: drop, replace with a gn build argument.
+
+  * d/rules: add angle_build_tests=false build argument, which allows us to
+    drop angle-perftests.patch.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 12 Mar 2024 18:43:05 -0400
 

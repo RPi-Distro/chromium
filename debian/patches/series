@@ -28,7 +28,6 @@ disable/google-api-warning.patch
 disable/third-party-cookies.patch
 disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
-disable/angle-perftests.patch
 disable/clang-version-check.patch
 
 system/icu-shim.patch
@@ -46,7 +45,6 @@ bookworm/clang16.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
 bookworm/nvt2.patch
-bookworm/undo-internal-alloc.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

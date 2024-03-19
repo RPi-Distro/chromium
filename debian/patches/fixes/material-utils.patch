@@ -8,15 +8,6 @@
 
 --- a/third_party/material_color_utilities/src/cpp/palettes/tones.cc
 +++ b/third_party/material_color_utilities/src/cpp/palettes/tones.cc
-@@ -16,6 +16,8 @@
- 
- #include "cpp/palettes/tones.h"
- 
-+#include <cmath>
-+
- #include "cpp/cam/cam.h"
- #include "cpp/cam/hct.h"
- 
 @@ -55,7 +57,7 @@ Argb TonalPalette::get(double tone) cons
  Hct TonalPalette::createKeyColor(double hue, double chroma) {
    double start_tone = 50.0;

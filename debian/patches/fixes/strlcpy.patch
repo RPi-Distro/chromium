@@ -1,0 +1,14 @@
+Author: Andres Salomon <dilinger@debian.org>
+
+fixes https://bugs.debian.org/1066235
+
+--- a/third_party/libsync/src/sync.c
++++ b/third_party/libsync/src/sync.c
+@@ -29,6 +29,7 @@
+ 
+ #include <sync/sync.h>
+ 
++size_t strlcpy(char *dst, const char *src, size_t siz);
+ 
+ struct sw_sync_create_fence_data {
+   __u32 value;

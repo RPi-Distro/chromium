@@ -13,6 +13,7 @@ fixes/blink-frags.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/internalalloc.patch
+fixes/strlcpy.patch
 
 upstream/mojo.patch
 upstream/std-to-address.patch

@@ -14,6 +14,8 @@ fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/internalalloc.patch
 fixes/strlcpy.patch
+fixes/optional2.patch
+fixes/stats-collector.patch
 
 upstream/mojo.patch
 upstream/std-to-address.patch

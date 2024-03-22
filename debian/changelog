@@ -34,7 +34,7 @@ chromium (123.0.6312.58-1~deb12u1) UNRELEASED; urgency=high
     - fixes/optional2.patch: add another missing <optional> inclusion.
     - fixes/stats-collector.patch: add build fix for wrong header.
     - disable/screen-ai-blob.patch: add patch to not register the
-      ScreenAI component. Previously, if you opened a PDf and clicked
+      ScreenAI component. Previously, if you opened a PDF and clicked
       "open in reader mode", it would download a binary blob to
       ~/.config/chromium/screen_ai/, and do OCR stuff (and who knows
       what else) in that opaque blob without warning you. We, uh, don't
@@ -48,7 +48,22 @@ chromium (123.0.6312.58-1~deb12u1) UNRELEASED; urgency=high
   * d/rules: add angle_build_tests=false build argument, which allows us to
     drop angle-perftests.patch.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 12 Mar 2024 18:43:05 -0400
+  [ Timothy Pearson ]
+  * d/patches:
+    - fixes/blink-fonts-shape-result.patch: pull in upstream patch for
+      compilation failure in Blink SameSizeAsShapeResult class
+  * d/patches/ppc64le:
+    - ffmpeg/0001-Add-support-for-ppc64.patch: refresh for upstream changes
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh
+      for upstream changes
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh for
+      upstream changes
+    - third_party/skia-vsx-instructions.patch: refresh & harden Skia against
+      timing attacks.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 22 Mar 2024 12:45:06 -0400
 
 chromium (122.0.6261.128-1~deb12u1) bookworm-security; urgency=high
 

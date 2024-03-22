@@ -1,8 +1,8 @@
-Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 ===================================================================
 --- /dev/null
-+++ chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
-@@ -0,0 +1,92 @@
++++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+@@ -0,0 +1,93 @@
 +;
 +; Copyright (c) 2024, Alliance for Open Media. All rights reserved
 +;
@@ -45,6 +45,7 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +CONFIG_INSPECTION equ 0
 +CONFIG_INTERNAL_STATS equ 0
 +CONFIG_INTER_STATS_ONLY equ 0
++CONFIG_LIBVMAF_PSNR_PEAK equ 1
 +CONFIG_LIBYUV equ 0
 +CONFIG_MAX_DECODE_PROFILE equ 0
 +CONFIG_MISMATCH_DEBUG equ 0
@@ -95,10 +96,10 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +HAVE_VSX equ 1
 +HAVE_WXWIDGETS equ 0
 +STATIC_LINK_JXL equ 0
-Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
+Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 ===================================================================
 --- /dev/null
-+++ chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
++++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 @@ -0,0 +1,13 @@
 +/*
 + * Copyright (c) 2024, Alliance for Open Media. All rights reserved
@@ -113,11 +114,11 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +#include "aom/aom_codec.h"
 +static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_ENCODER=1 -DCONFIG_LIBYUV=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=1 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_MAX_DECODE_PROFILE=0 -DCONFIG_NORMAL_TILE_MODE=1 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
-Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 ===================================================================
 --- /dev/null
-+++ chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
-@@ -0,0 +1,96 @@
++++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+@@ -0,0 +1,97 @@
 +/*
 + * Copyright (c) 2024, Alliance for Open Media. All rights reserved
 + *
@@ -162,6 +163,7 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +#define CONFIG_INSPECTION 0
 +#define CONFIG_INTERNAL_STATS 0
 +#define CONFIG_INTER_STATS_ONLY 0
++#define CONFIG_LIBVMAF_PSNR_PEAK 1
 +#define CONFIG_LIBYUV 0
 +#define CONFIG_MAX_DECODE_PROFILE 0
 +#define CONFIG_MISMATCH_DEBUG 0
@@ -214,10 +216,10 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +#define INLINE inline
 +#define STATIC_LINK_JXL 0
 +#endif  // AOM_CONFIG_H_
-Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
++++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 @@ -0,0 +1,1541 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_DSP_RTCD_H_
@@ -1760,11 +1762,11 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif
-Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
-@@ -0,0 +1,105 @@
++++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+@@ -0,0 +1,107 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_SCALE_RTCD_H_
 +#define AOM_SCALE_RTCD_H_
@@ -1774,6 +1776,8 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +#else
 +#define RTCD_EXTERN extern
 +#endif
++
++#include <stdbool.h>
 +
 +struct yv12_buffer_config;
 +
@@ -1817,13 +1821,13 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +void aom_yv12_copy_frame_c(const struct yv12_buffer_config *src_bc, struct yv12_buffer_config *dst_bc, const int num_planes);
 +#define aom_yv12_copy_frame aom_yv12_copy_frame_c
 +
-+void aom_yv12_copy_u_c(const struct yv12_buffer_config *src_bc, struct yv12_buffer_config *dst_bc);
++void aom_yv12_copy_u_c(const struct yv12_buffer_config *src_bc, struct yv12_buffer_config *dst_bc, int use_crop);
 +#define aom_yv12_copy_u aom_yv12_copy_u_c
 +
-+void aom_yv12_copy_v_c(const struct yv12_buffer_config *src_bc, struct yv12_buffer_config *dst_bc);
++void aom_yv12_copy_v_c(const struct yv12_buffer_config *src_bc, struct yv12_buffer_config *dst_bc, int use_crop);
 +#define aom_yv12_copy_v aom_yv12_copy_v_c
 +
-+void aom_yv12_copy_y_c(const struct yv12_buffer_config *src_ybc, struct yv12_buffer_config *dst_ybc);
++void aom_yv12_copy_y_c(const struct yv12_buffer_config *src_ybc, struct yv12_buffer_config *dst_ybc, int use_crop);
 +#define aom_yv12_copy_y aom_yv12_copy_y_c
 +
 +void aom_yv12_extend_frame_borders_c(struct yv12_buffer_config *ybf, const int num_planes);
@@ -1847,7 +1851,7 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +void aom_yv12_partial_copy_y_c(const struct yv12_buffer_config *src_ybc, int hstart1, int hend1, int vstart1, int vend1, struct yv12_buffer_config *dst_ybc, int hstart2, int vstart2);
 +#define aom_yv12_partial_copy_y aom_yv12_partial_copy_y_c
 +
-+int aom_yv12_realloc_with_new_border_c(struct yv12_buffer_config *ybf, int new_border, int byte_alignment, int num_pyramid_levels, int num_planes);
++int aom_yv12_realloc_with_new_border_c(struct yv12_buffer_config *ybf, int new_border, int byte_alignment, bool alloc_pyramid, int num_planes);
 +#define aom_yv12_realloc_with_new_border aom_yv12_realloc_with_new_border_c
 +
 +void aom_scale_rtcd(void);
@@ -1870,10 +1874,10 @@ Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif
-Index: chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-121.0.6167.75/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
++++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 @@ -0,0 +1,478 @@
 +// This file is generated. Do not edit.
 +#ifndef AV1_RTCD_H_

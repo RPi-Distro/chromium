@@ -10,10 +10,10 @@ Subject: [PATCH] Add support for ppc64
  chromium/scripts/generate_gn_unittest.py | 10 ++++++++--
  4 files changed, 19 insertions(+), 6 deletions(-)
 
-Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
+Index: chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
-+++ chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
+--- chromium-123.0.6312.58.orig/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
++++ chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
 @@ -43,7 +43,7 @@ BRANDINGS = [
  ARCH_MAP = {
      'android': ['ia32', 'x64', 'arm-neon', 'arm64'],
@@ -23,16 +23,7 @@ Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/build_ffmpeg.p
      ],
      'mac': ['x64', 'arm64'],
      'win': ['ia32', 'x64', 'arm64'],
-@@ -145,6 +145,8 @@ def DetermineHostOsAndArch():
-     host_arch = 'mips64el'
-   elif platform.machine().startswith('arm'):
-     host_arch = 'arm'
-+  elif platform.machine() == 'ppc64le':
-+    host_arch = 'ppc64'
-   else:
-     return None
- 
-@@ -921,6 +923,11 @@ def ConfigureAndBuild(target_arch, targe
+@@ -889,6 +889,11 @@ def ConfigureAndBuild(target_arch, targe
              '--extra-cflags=--target=mips64el-linux-gnuabi64',
              '--extra-ldflags=--target=mips64el-linux-gnuabi64',
          ])
@@ -44,10 +35,10 @@ Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/build_ffmpeg.p
      else:
        print(
            'Error: Unknown target arch %r for target OS %r!' % (target_arch,
-Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/copy_config.sh
+Index: chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/copy_config.sh
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/ffmpeg/chromium/scripts/copy_config.sh
-+++ chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/copy_config.sh
+--- chromium-123.0.6312.58.orig/third_party/ffmpeg/chromium/scripts/copy_config.sh
++++ chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/copy_config.sh
 @@ -10,7 +10,7 @@ for os in android linux linux-noasm mac
      # Copy config files for various architectures:
      #   - ia32/x64 have config.asm, config.h
@@ -57,10 +48,10 @@ Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/copy_config.sh
        # Don't waste time on non-existent configs, if no config.h then skip.
        [ ! -e "build.$arch.$os/$target/config.h" ] && continue
        for f in config.h config_components.h config.asm libavutil/avconfig.h libavutil/ffversion.h libavcodec/bsf_list.c libavcodec/codec_list.c libavcodec/parser_list.c libavformat/demuxer_list.c libavformat/muxer_list.c libavformat/protocol_list.c; do
-Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/generate_gn.py
+Index: chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/generate_gn.py
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/ffmpeg/chromium/scripts/generate_gn.py
-+++ chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/generate_gn.py
+--- chromium-123.0.6312.58.orig/third_party/ffmpeg/chromium/scripts/generate_gn.py
++++ chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/generate_gn.py
 @@ -82,7 +82,7 @@ _Attrs = ('ARCHITECTURE', 'TARGET', 'PLA
  Attr = collections.namedtuple('Attr', _Attrs)(*_Attrs)
  SUPPORT_MATRIX = {
@@ -70,10 +61,10 @@ Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/generate_gn.py
      Attr.TARGET:
          set(['Chromium', 'Chrome', 'ChromeOS']),
      Attr.PLATFORM:
-Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
+Index: chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
-+++ chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
+--- chromium-123.0.6312.58.orig/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
++++ chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/generate_gn_unittest.py
 @@ -329,6 +329,10 @@ class SourceSetUnittest(unittest.TestCas
      f = SourceSet(
          set(['common', 'arm-neon', 'chrome', 'chromeos']),
@@ -111,4 +102,17 @@ Index: chromium-120.0.6099.71/third_party/ffmpeg/chromium/scripts/generate_gn_un
 +            SourceListCondition('ppc64', 'Chromium', 'linux'),
          ]))
      gg.ReduceConditionalLogic(a)
+ 
+Index: chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/robo_lib/config.py
+===================================================================
+--- chromium-123.0.6312.58.orig/third_party/ffmpeg/chromium/scripts/robo_lib/config.py
++++ chromium-123.0.6312.58/third_party/ffmpeg/chromium/scripts/robo_lib/config.py
+@@ -162,6 +162,8 @@ class RoboConfiguration:
+       self._host_architecture = "mips64el"
+     elif platform.machine().startswith("arm"):
+       self._host_architecture = "arm"
++    elif platform.machine().startswith("ppc64le"):
++      self._host_architecture = "ppc64"
+     else:
+       raise ValueError(f"Unrecognized CPU architecture: {platform.machine()}")
  

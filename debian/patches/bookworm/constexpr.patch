@@ -1,0 +1,35 @@
+author: Andres Salomon <dilinger@debian.org>
+description: another gcc-12 constexpr fix
+
+../../services/network/shared_dictionary/simple_url_pattern_matcher.cc:31:34: error: constexpr variable 'kDefaultOptions' must be initialized by a constant expression
+constexpr liburlpattern::Options kDefaultOptions = {.delimiter_list = "",
+                                 ^                 ~~~~~~~~~~~~~~~~~~~~~~
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/basic_string.h:356:10: note: assignment to member '_M_local_buf' of union with no active member is not allowed in a constant expression
+            __c = _CharT();
+                ^
+
+Index: chromium-123.0.6312.58/services/network/shared_dictionary/simple_url_pattern_matcher.cc
+===================================================================
+--- chromium-123.0.6312.58.orig/services/network/shared_dictionary/simple_url_pattern_matcher.cc
++++ chromium-123.0.6312.58/services/network/shared_dictionary/simple_url_pattern_matcher.cc
+@@ -28,17 +28,17 @@ namespace network {
+ namespace {
+ 
+ // https://urlpattern.spec.whatwg.org/#default-options
+-constexpr liburlpattern::Options kDefaultOptions = {.delimiter_list = "",
++const liburlpattern::Options kDefaultOptions = {.delimiter_list = "",
+                                                     .prefix_list = "",
+                                                     .sensitive = true,
+                                                     .strict = true};
+ // https://urlpattern.spec.whatwg.org/#hostname-options
+-constexpr liburlpattern::Options kHostnameOptions = {.delimiter_list = ".",
++const liburlpattern::Options kHostnameOptions = {.delimiter_list = ".",
+                                                      .prefix_list = "",
+                                                      .sensitive = true,
+                                                      .strict = true};
+ // https://urlpattern.spec.whatwg.org/#pathname-options
+-constexpr liburlpattern::Options kPathnameOptions = {.delimiter_list = "/",
++const liburlpattern::Options kPathnameOptions = {.delimiter_list = "/",
+                                                      .prefix_list = "/",
+                                                      .sensitive = true,
+                                                      .strict = true};

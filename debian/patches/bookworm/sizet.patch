@@ -1,0 +1,36 @@
+In file included from ../../third_party/perfetto/src/tracing/core/id_allocator.cc:17:
+../../third_party/perfetto/src/tracing/core/id_allocator.h:66:35: error: unknown type name 'size_t'; did you mean 'std::size_t'?
+  std::vector<T> AllocateMultiple(size_t n) {
+                                  ^~~~~~
+                                  std::size_t
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/x86_64-linux-gnu/c++/12/bits/c++config.h:298:26: note: 'std::size_t' declared here
+  typedef __SIZE_TYPE__         size_t;
+                                ^
+In file included from ../../third_party/perfetto/src/tracing/core/id_allocator.cc:17:
+../../third_party/perfetto/src/tracing/core/id_allocator.h:69:10: error: unknown type name 'size_t'; did you mean 'std::size_t'?
+    for (size_t i = 0; i < n; i++) {
+         ^~~~~~
+         std::size_t
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/x86_64-linux-gnu/c++/12/bits/c++config.h:298:26: note: 'std::size_t' declared here
+  typedef __SIZE_TYPE__         size_t;
+                                ^
+2 errors generated.
+
+
+Index: chromium-123.0.6312.58/third_party/perfetto/src/tracing/core/id_allocator.h
+===================================================================
+--- chromium-123.0.6312.58.orig/third_party/perfetto/src/tracing/core/id_allocator.h
++++ chromium-123.0.6312.58/third_party/perfetto/src/tracing/core/id_allocator.h
+@@ -63,10 +63,10 @@ class IdAllocator : public IdAllocatorGe
+ 
+   // Tries to allocate `n` IDs. Returns a vector of `n` valid IDs or an empty
+   // vector, if not enough IDs are available.
+-  std::vector<T> AllocateMultiple(size_t n) {
++  std::vector<T> AllocateMultiple(std::size_t n) {
+     std::vector<T> res;
+     res.reserve(n);
+-    for (size_t i = 0; i < n; i++) {
++    for (std::size_t i = 0; i < n; i++) {
+       T id = Allocate();
+       if (id) {
+         res.push_back(id);

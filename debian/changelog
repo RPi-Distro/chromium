@@ -43,6 +43,8 @@ chromium (123.0.6312.58-1~deb12u1) UNRELEASED; urgency=high
     - bookworm/bubble-contents.patch: update for renamed header.
     - bookworm/eraseif0.patch, eraseif-lambda.patch: drop, upstream merged
       a fix for g++-12 compilation.
+    - bookworm/constexpr.patch: add yet another constexpr g++-12 fix.
+    - bookworm/sizet.patch: another simple g++-12 build fix.
   * d/rules: add angle_build_tests=false build argument, which allows us to
     drop angle-perftests.patch.
 

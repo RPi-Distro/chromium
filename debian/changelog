@@ -33,7 +33,6 @@ chromium (123.0.6312.58-1) UNRELEASED; urgency=high
     - fixes/internalalloc.patch: wrong header inclusion build fix.
     - fixes/strlcpy.patch: add strlcpy declaration (closes: #1066235).
     - fixes/optional2.patch: add another missing <optional> inclusion.
-    - fixes/stats-collector.patch: add build fix for wrong header.
   * d/rules: add angle_build_tests=false build argument, which allows us to
     drop angle-perftests.patch.
 

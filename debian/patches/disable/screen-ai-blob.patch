@@ -1,0 +1,24 @@
+author: Andres Salomon <dilinger@debian.org>
+description: delete ~/.config/chromium/screen_ai and don't download libchromescreenai.so
+
+This fixes https://bugs.debian.org/1066910
+
+Chromium will download libchromescreenai.so (an opaque binary blob that
+does OCR and other things) without warning the user when you
+open a PDF in "reading mode". We don't actually know what's in the
+binary blob, so we disable the ScreenAI service right up front (and
+as an added benefit, that deletes everything in ~/.config/chromium/screen_ai
+
+
+--- a/chrome/browser/component_updater/screen_ai_component_installer.cc
++++ b/chrome/browser/component_updater/screen_ai_component_installer.cc
+@@ -143,8 +143,7 @@ void ScreenAIComponentInstallerPolicy::D
+ void ManageScreenAIComponentRegistration(ComponentUpdateService* cus,
+                                          PrefService* local_state) {
+   if (screen_ai::ScreenAIInstallState::ShouldInstall(local_state)) {
+-    RegisterScreenAIComponent(cus);
+-    return;
++    // don't actually register the service - we don't want the binary blob
+   }
+ 
+   // Clean up.

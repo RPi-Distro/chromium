@@ -49,8 +49,6 @@ bookworm/clang16.patch
 bookworm/freetype-COLRV1.patch
 bookworm/bubble-contents.patch
 bookworm/constcountrycode.patch
-bookworm/eraseif0.patch
-bookworm/eraseif-lamba.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
 bookworm/nvt2.patch

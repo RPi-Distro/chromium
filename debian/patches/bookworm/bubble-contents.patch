@@ -17,10 +17,10 @@ In file included from ../../chrome/browser/ui/views/side_panel/side_panel_web_ui
           ^
 
 
-Index: chromium-122.0.6261.57/chrome/browser/ui/views/bubble/bubble_contents_wrapper.h
+Index: chromium-122.0.6261.57/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
 ===================================================================
---- chromium-122.0.6261.57.orig/chrome/browser/ui/views/bubble/bubble_contents_wrapper.h
-+++ chromium-122.0.6261.57/chrome/browser/ui/views/bubble/bubble_contents_wrapper.h
+--- chromium-122.0.6261.57.orig/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
++++ chromium-122.0.6261.57/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
 @@ -148,10 +148,7 @@ class BubbleContentsWrapperT : public Bu
                                webui_resizes_host,
                                esc_closes_ui,

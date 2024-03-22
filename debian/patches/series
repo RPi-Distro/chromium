@@ -46,7 +46,6 @@ system/rapidjson.patch
 system/rollup.patch
 
 bookworm/clang16.patch
-bookworm/generate-ninja.patch
 bookworm/freetype-COLRV1.patch
 bookworm/bubble-contents.patch
 bookworm/constcountrycode.patch

@@ -39,6 +39,7 @@ chromium (123.0.6312.58-1~deb12u1) UNRELEASED; urgency=high
       ~/.config/chromium/screen_ai/, and do OCR stuff (and who knows
       what else) in that opaque blob without warning you. We, uh, don't
       want that. (closes: #1066910).
+    - bookworm/generate-ninja.patch: drop, merged upstream.
   * d/rules: add angle_build_tests=false build argument, which allows us to
     drop angle-perftests.patch.
 

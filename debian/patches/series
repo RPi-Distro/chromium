@@ -12,14 +12,12 @@ fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
-fixes/std-to-address.patch
-fixes/optional.patch
+fixes/strlcpy.patch
+fixes/optional2.patch
+fixes/stats-collector.patch
 
 upstream/mojo.patch
-upstream/uniqptr.patch
-upstream/optional.patch
-upstream/bookmarknode.patch
-upstream/bitset.patch
+upstream/std-to-address.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -33,8 +31,8 @@ disable/google-api-warning.patch
 disable/third-party-cookies.patch
 disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
-disable/angle-perftests.patch
 disable/clang-version-check.patch
+disable/screen-ai-blob.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -50,14 +48,14 @@ system/rollup.patch
 bookworm/clang16.patch
 bookworm/generate-ninja.patch
 bookworm/freetype-COLRV1.patch
+bookworm/bubble-contents.patch
 bookworm/constcountrycode.patch
 bookworm/eraseif0.patch
 bookworm/eraseif-lamba.patch
 bookworm/constexpr-equality.patch
 bookworm/nvt.patch
 bookworm/nvt2.patch
-bookworm/undo-internal-alloc.patch
-bookworm/bubble-contents.patch
+bookworm/rust-downgrade-osstr-users.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

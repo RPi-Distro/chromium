@@ -1,3 +1,49 @@
+chromium (123.0.6312.58-1~deb12u1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+    - CVE-2024-2625: Object lifecycle issue in V8.
+      Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
+    - CVE-2024-2626: Out of bounds read in Swiftshader.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-2627: Use after free in Canvas. Reported by Anonymous.
+    - CVE-2024-2628: Inappropriate implementation in Downloads.
+      Reported by Ath3r1s.
+    - CVE-2024-2629: Incorrect security UI in iOS.
+      Reported by Muneaki Nishimura (nishimunea).
+    - CVE-2024-2630: Inappropriate implementation in iOS.
+      Reported by James Lee (@Windowsrcer).
+    - CVE-2024-2631: Inappropriate implementation in iOS.
+      Reported by Ramit Gangwar.
+  * d/patches:
+    - upstream/bitset.patch: drop, merged upstream.
+    - upstream/bookmarknode.patch: drop, merged upstream.
+    - upstream/optional.patch: drop, merged upstream.
+    - upstream/uniqptr.patch: drop, merged upstream.
+    - fixes/gcc13-headers.patch: drop, merged upstream.
+    - fixes/optional.patch: drop, merged upstream.
+    - fixes/material-utils.patch: drop part that was merged upstream.
+    - disable/catapult.patch: refresh.
+    - bookworm/constexpr-equality.patch: include another similar fix.
+    - bookworm/nvt.patch: refresh.
+    - bookworm/undo-internal-alloc.patch: drop, as this was fixed upstream.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled-chromium.
+    - disable/angle-perftests.patch: drop, replace with a gn build argument.
+    - bookworm/rust-downgrade-osstr-users.patch: add new patch to downgrade
+      clap-lex crate, as it's using 1.74 features and we only have 1.70.
+    - fixes/strlcpy.patch: add strlcpy declaration (closes: #1066235).
+    - fixes/optional2.patch: add another missing <optional> inclusion.
+    - fixes/stats-collector.patch: add build fix for wrong header.
+    - disable/screen-ai-blob.patch: add patch to not register the
+      ScreenAI component. Previously, if you opened a PDf and clicked
+      "open in reader mode", it would download a binary blob to
+      ~/.config/chromium/screen_ai/, and do OCR stuff (and who knows
+      what else) in that opaque blob without warning you. We, uh, don't
+      want that. (closes: #1066910).
+  * d/rules: add angle_build_tests=false build argument, which allows us to
+    drop angle-perftests.patch.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 12 Mar 2024 18:43:05 -0400
+
 chromium (122.0.6261.128-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

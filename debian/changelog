@@ -30,7 +30,6 @@ chromium (123.0.6312.58-1) UNRELEASED; urgency=high
     - disable/angle-perftests.patch: drop, replace with a gn build argument.
     - bookworm/rust-downgrade-osstr-users.patch: add new patch to downgrade
       clap-lex crate, as it's using 1.74 features and we only have 1.70.
-    - fixes/internalalloc.patch: wrong header inclusion build fix.
     - fixes/strlcpy.patch: add strlcpy declaration (closes: #1066235).
     - fixes/optional2.patch: add another missing <optional> inclusion.
     - fixes/stats-collector.patch: add build fix for wrong header.

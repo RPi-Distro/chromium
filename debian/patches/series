@@ -12,7 +12,6 @@ fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
-fixes/internalalloc.patch
 fixes/strlcpy.patch
 fixes/optional2.patch
 fixes/stats-collector.patch

@@ -538,23 +538,40 @@ Index: chromium-123.0.6312.58/third_party/skia/src/opts/SkSwizzler_opts.h
      #include <immintrin.h>
  #elif defined(SK_ARM_HAS_NEON)
      #include <arm_neon.h>
-@@ -43,7 +46,7 @@ static inline float SkReciprocalAlphaTim
+@@ -43,6 +43,33 @@
  static inline float SkReciprocalAlpha(float a) {
      return SkReciprocalAlpha_portable(a);
  }
--#elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE1 && (defined(__clang__) || !defined(_MSC_VER))
-+#elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE1 && (defined(__clang__) || !defined(_MSC_VER)) && (!defined(SK_PPC64_HAS_SSE_COMPAT))
++#elif defined(SK_PPC64_HAS_SSE_COMPAT)
++// -- VSX -- Harden against timing attacks
++SK_NO_SANITIZE("float-divide-by-zero")
++static inline float SkReciprocalAlphaTimes255(float a) {
++    SkASSERT(0 <= a && a <= 255);
++
++    vector float vA{a,a,a,a};
++    vector float vB{255.0f,255.0f,255.0f,255.0f};
++    vector float vC{0.0f,0.0f,0.0f,0.0f};
++    vector float q = vec_div(vB, vA);
++    vector float vCmp{static_cast<float>(vA != vC)};
++
++    return vec_and(vCmp, q)[0];
++}
++
++SK_NO_SANITIZE("float-divide-by-zero")
++static inline float SkReciprocalAlpha(float a) {
++    SkASSERT(0 <= a && a <= 1);
++
++    vector float vA{a,a,a,a};
++    vector float vB{1.0f,1.0f,1.0f,1.0f};
++    vector float vC{0.0f,0.0f,0.0f,0.0f};
++    vector float q = vec_div(vB, vA);
++    vector float vCmp{static_cast<float>(vA != vC)};
++
++    return vec_and(vCmp, q)[0];
++}
+ #elif SK_CPU_SSE_LEVEL >= SK_CPU_SSE_LEVEL_SSE1 && (defined(__clang__) || !defined(_MSC_VER))
  // -- SSE -- Harden against timing attacks -- MSVC is not supported.
  using F4 = __m128;
- 
-@@ -64,6 +67,7 @@ static inline float SkReciprocalAlpha(fl
- }
- #else
- // -- Portable -- *Not* hardened against timing attacks
-+// -- TODO: ppc64el generated portable code is vulnerable to timing attacks as it uses fcmpu followed by beq.  Needs a rewrite the same general way as x86 above.
- static inline float SkReciprocalAlphaTimes255(float a) {
-     return SkReciprocalAlphaTimes255_portable(a);
- }
 Index: chromium-123.0.6312.58/third_party/skia/src/base/SkVx.h
 ===================================================================
 --- chromium-123.0.6312.58.orig/third_party/skia/src/base/SkVx.h

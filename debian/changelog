@@ -1,4 +1,4 @@
-chromium (123.0.6312.58-1~deb12u1) UNRELEASED; urgency=high
+chromium (123.0.6312.58-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.
     - CVE-2024-2625: Object lifecycle issue in V8.

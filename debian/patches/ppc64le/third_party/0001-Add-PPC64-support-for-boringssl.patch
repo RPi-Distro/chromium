@@ -5086,7 +5086,7 @@ Index: chromium-123.0.6312.58/third_party/boringssl/src/crypto/fipsmodule/sha/in
  #endif
  
 +#if defined(OPENSSL_PPC64LE) ||                                                   \
-+    (!defined(OPENSSL_NO_ASM) && (defined(OPENSSL_X86) || defined(OPENSSL_ARM)))
++    (!defined(OPENSSL_NO_ASM) && defined(OPENSSL_X86))
 +// POWER has an intrinsics-based implementation of SHA-1 and thus the functions
 +// normally defined in assembly are available even with |OPENSSL_NO_ASM| in
 +// this case.

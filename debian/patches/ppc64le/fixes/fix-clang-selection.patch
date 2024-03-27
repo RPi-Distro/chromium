@@ -1,10 +1,12 @@
---- a/build/config/BUILDCONFIG.gn
-+++ b/build/config/BUILDCONFIG.gn
-@@ -138,6 +138,7 @@
+Index: chromium-123.0.6312.86/build/config/BUILDCONFIG.gn
+===================================================================
+--- chromium-123.0.6312.86.orig/build/config/BUILDCONFIG.gn
++++ chromium-123.0.6312.86/build/config/BUILDCONFIG.gn
+@@ -138,7 +138,6 @@ declare_args() {
    # Set to true when compiling with the Clang compiler.
    is_clang = current_os != "linux" ||
               (current_cpu != "s390x" && current_cpu != "s390" &&
-+              current_cpu != "ppc64" && current_cpu != "ppc" &&
+-              current_cpu != "ppc64" && current_cpu != "ppc" &&
                current_cpu != "mips" && current_cpu != "mips64" &&
                current_cpu != "riscv64")
  

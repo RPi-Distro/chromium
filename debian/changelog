@@ -19,7 +19,7 @@ chromium (123.0.6312.86-1) unstable; urgency=high
       upstream commits that result in blink's garbage collector frequently
       deadlocking and crashing (closes: #1067886).
 
- -- Timothy Pearson <tpearson@debian.org>  Thu, 28 Mar 2024 11:57:05 -0400
+ -- Timothy Pearson <tpearson@debian.org>  Wed, 28 Mar 2024 16:58:00 -0500
 
 chromium (123.0.6312.58-1) unstable; urgency=high
 

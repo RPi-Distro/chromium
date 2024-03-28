@@ -16,6 +16,8 @@ fixes/strlcpy.patch
 fixes/optional2.patch
 fixes/stats-collector.patch
 fixes/blink-fonts-shape-result.patch
+fixes/bad-font-gc1.patch
+fixes/bad-font-gc2.patch
 
 upstream/mojo.patch
 upstream/std-to-address.patch

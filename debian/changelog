@@ -13,6 +13,12 @@ chromium (123.0.6312.86-1) UNRELEASED; urgency=high
     - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: fix
       ARM builds.
 
+  [ Andres Salomon ]
+  * d/patches:
+    - fixes/bad-font-gc1.patch, fixes/bad-font-gc2.patch: revert a pair of
+      upstream commits that result in blink's garbage collector frequently
+      deadlocking and crashing.
+
  -- Timothy Pearson <tpearson@debian.org>  Tue, 26 Mar 2024 16:31:00 -0500
 
 chromium (123.0.6312.58-1) unstable; urgency=high

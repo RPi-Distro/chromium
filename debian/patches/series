@@ -16,6 +16,8 @@ fixes/strlcpy.patch
 fixes/optional2.patch
 fixes/stats-collector.patch
 fixes/blink-fonts-shape-result.patch
+fixes/bad-font-gc1.patch
+fixes/bad-font-gc2.patch
 
 upstream/mojo.patch
 upstream/std-to-address.patch
@@ -115,6 +117,7 @@ ppc64le/ffmpeg/0001-Add-support-for-ppc64.patch
 ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch
 ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch
 ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch
+ppc64le/fixes/fix-clang-selection.patch
 ppc64le/fixes/fix-rustc.patch
 ppc64le/fixes/fix-rust-linking.patch
 ppc64le/fixes/fix-breakpad-compile.patch

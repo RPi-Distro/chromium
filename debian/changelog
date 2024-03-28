@@ -1,4 +1,4 @@
-chromium (123.0.6312.86-1) UNRELEASED; urgency=high
+chromium (123.0.6312.86-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2024-2883: Use after free in ANGLE.
@@ -17,9 +17,9 @@ chromium (123.0.6312.86-1) UNRELEASED; urgency=high
   * d/patches:
     - fixes/bad-font-gc1.patch, fixes/bad-font-gc2.patch: revert a pair of
       upstream commits that result in blink's garbage collector frequently
-      deadlocking and crashing.
+      deadlocking and crashing (closes: #1067886).
 
- -- Timothy Pearson <tpearson@debian.org>  Tue, 26 Mar 2024 16:31:00 -0500
+ -- Timothy Pearson <tpearson@debian.org>  Thu, 28 Mar 2024 11:57:05 -0400
 
 chromium (123.0.6312.58-1) unstable; urgency=high
 

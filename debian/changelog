@@ -1,3 +1,15 @@
+chromium (123.0.6312.105-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-3156: Inappropriate implementation in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2024-3158: Use after free in Bookmarks. Reported by undoingfish.
+    - CVE-2024-3159: Out of bounds memory access in V8. Reported by
+      Edouard Bochin (@le_douds) and Tao Yan (@Ga1ois) of Palo Alto
+      Networks, via Pwn2Own 2024.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 02 Apr 2024 18:28:18 -0400
+
 chromium (123.0.6312.86-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.
@@ -19,7 +31,7 @@ chromium (123.0.6312.86-1~deb12u1) bookworm-security; urgency=high
       upstream commits that result in blink's garbage collector frequently
       deadlocking and crashing (closes: #1067886).
 
- -- Timothy Pearson <tpearson@debian.org>  Thu, 28 Mar 2024 11:57:05 -0400
+ -- Timothy Pearson <tpearson@debian.org>  Wed, 28 Mar 2024 16:58:00 -0500
 
 chromium (123.0.6312.58-1~deb12u1) bookworm-security; urgency=high
 

@@ -1,3 +1,21 @@
+chromium (123.0.6312.122-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-3157: Out of bounds write in Compositing.
+      Reported by DarkNavy.
+    - CVE-2024-3516: Heap buffer overflow in ANGLE.
+      Reported by Bao (zx) Pham and Toan (suto) Pham of Qrious Secure.
+    - CVE-2024-3515: Use after free in Dawn. Reported by wgslfuzz.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
+
+chromium (123.0.6312.105-2) unstable; urgency=high
+
+  * Depend on libgtk-3-0t64 instead of libgtk-3-0 for time_t transition
+    (closes: #1068540).
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 07 Apr 2024 12:43:26 -0400
+
 chromium (123.0.6312.105-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

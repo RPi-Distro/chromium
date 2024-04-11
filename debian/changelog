@@ -1,4 +1,4 @@
-chromium (123.0.6312.122-1) unstable; urgency=high
+chromium (123.0.6312.122-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.
     - CVE-2024-3157: Out of bounds write in Compositing.

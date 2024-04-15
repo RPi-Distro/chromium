@@ -13,14 +13,11 @@ fixes/blink-frags.patch
 fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/strlcpy.patch
-fixes/optional2.patch
 fixes/stats-collector.patch
-fixes/blink-fonts-shape-result.patch
 fixes/bad-font-gc1.patch
 fixes/bad-font-gc2.patch
 
 upstream/mojo.patch
-upstream/std-to-address.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -49,7 +46,6 @@ system/rapidjson.patch
 system/rollup.patch
 
 bookworm/clang16.patch
-bookworm/constexpr-equality.patch
 bookworm/nvt.patch
 bookworm/nvt2.patch
 bookworm/rust-downgrade-osstr-users.patch

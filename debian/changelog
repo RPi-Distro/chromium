@@ -1,3 +1,14 @@
+chromium (124.0.6367.49-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/patches:
+    - upstream/std-to-address.patch: drop, merged upstream.
+    - fixes/optional2.patch: drop, merged upstream.
+    - fixes/blink-fonts-shape-result.patch: drop, merged upstream.
+    - bookworm/constexpr-equality.patch: drop, merged upstream.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
+
 chromium (123.0.6312.122-1) unstable; urgency=high
 
   * New upstream security release.

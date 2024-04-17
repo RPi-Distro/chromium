@@ -66,6 +66,7 @@ Build-Depends:
  libpipewire-0.3-dev,
  libopus-dev,
  libwebp-dev,
+ libavif-dev,
  libxtst-dev,
  libjpeg-dev,
  libxml2-dev,

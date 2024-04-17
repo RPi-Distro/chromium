@@ -14,6 +14,7 @@ third_party/libxml/BUILD.gn
 third_party/libdrm/BUILD.gn
 third_party/libpng/BUILD.gn
 third_party/libwebp/BUILD.gn
+third_party/libavif/BUILD.gn
 third_party/libjpeg/BUILD.gn
 third_party/libxslt/BUILD.gn
 third_party/openh264/BUILD.gn

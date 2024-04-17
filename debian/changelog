@@ -26,6 +26,8 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
       Reported by Ahmed ElMasry.
     - CVE-2024-3847: Insufficient policy enforcement in WebUI.
       Reported by Yan Zhu.
+  * d/copyright:
+    - delete __pycache__ directories to shut up dpkg warnings.
   * d/patches:
     - upstream/std-to-address.patch: drop, merged upstream.
     - fixes/optional2.patch: drop, merged upstream.

@@ -3,6 +3,7 @@ Source: http://www.chromium.org/Home
 Upstream-Name: chromium
 Files-Excluded:
  .clang-format
+ *__pycache__
  *.mk
  *.so
  *.dll

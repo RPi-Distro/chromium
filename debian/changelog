@@ -1,6 +1,31 @@
-chromium (124.0.6367.49-1) UNRELEASED; urgency=high
+chromium (124.0.6367.60-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+    - CVE-2024-3832: Object corruption in V8.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2024-3833: Object corruption in WebAssembly.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2024-3834: Use after free in Downloads. Reported by ChaobinZhang
+    - CVE-2024-3837: Use after free in QUIC.
+      Reported by {rotiple, dch3ck} of CW Research Inc.
+    - CVE-2024-3838: Inappropriate implementation in Autofill.
+      Reported by Ardyan Vicky Ramadhan.
+    - CVE-2024-3839: Out of bounds read in Fonts.
+      Reported by Ronald Crane (Zippenhop LLC).
+    - CVE-2024-3840: Insufficient policy enforcement in Site Isolation.
+      Reported by Ahmed ElMasry.
+    - CVE-2024-3841: Insufficient data validation in Browser Switcher.
+      Reported by Oleg.
+    - CVE-2024-3843: Insufficient data validation in Downloads.
+      Reported by Azur.
+    - CVE-2024-3844: Inappropriate implementation in Extensions.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-3845: Inappropriate implementation in Network.
+      Reported by Daniel Baulig.
+    - CVE-2024-3846: Inappropriate implementation in Prompts.
+      Reported by Ahmed ElMasry.
+    - CVE-2024-3847: Insufficient policy enforcement in WebUI.
+      Reported by Yan Zhu.
   * d/patches:
     - upstream/std-to-address.patch: drop, merged upstream.
     - fixes/optional2.patch: drop, merged upstream.

@@ -83,7 +83,6 @@ Files-Excluded:
  third_party/libpng
  third_party/libdrm
  third_party/snappy
- third_party/libavif
  third_party/libevent
  third_party/libsecret
  third_party/libxslt

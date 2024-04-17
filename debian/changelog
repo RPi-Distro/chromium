@@ -28,9 +28,6 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
       Reported by Yan Zhu.
   * d/copyright:
     - delete __pycache__ directories to shut up dpkg warnings.
-    - delete bundled third_party/libavif.
-  * Build-dep on libavif-dev and switch to using that instead of the
-    (now deleted) bundled libavif.
   * d/patches:
     - upstream/std-to-address.patch: drop, merged upstream.
     - fixes/optional2.patch: drop, merged upstream.

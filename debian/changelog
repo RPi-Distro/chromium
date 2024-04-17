@@ -43,6 +43,10 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
       preference.
     - upstream/mojo-null.patch: pull a (typescript) build fix from upstream.
     - upstream/uint-includes.patch: simple header build fix from upstream.
+    - upstream/fps-optional.patch: add header build fix.
+    - upstream/span-optional.patch: add header build fix.
+    - upstream/extractor-bitset.patch: add header build fix.
+    - upstream/atomic.patch: add header build fix.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
 

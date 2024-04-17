@@ -20,6 +20,10 @@ fixes/bad-font-gc2.patch
 upstream/mojo.patch
 upstream/mojo-null.patch
 upstream/uint-includes.patch
+upstream/fps-optional.patch
+upstream/span-optional.patch
+upstream/extractor-bitset.patch
+upstream/atomic.patch
 
 disable/tests.patch
 disable/unrar.patch

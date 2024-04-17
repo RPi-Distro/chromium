@@ -18,6 +18,8 @@ fixes/bad-font-gc1.patch
 fixes/bad-font-gc2.patch
 
 upstream/mojo.patch
+upstream/mojo-null.patch
+upstream/uint-includes.patch
 
 disable/tests.patch
 disable/unrar.patch

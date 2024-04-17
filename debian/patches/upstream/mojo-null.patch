@@ -1,0 +1,60 @@
+commit a29a47989e76d7f13d7080819152e6d9976f01bf
+Author: rbpotter <rbpotter@chromium.org>
+Date:   Wed Feb 28 23:21:01 2024 +0000
+
+    WebUI TypeScript Mojo bindings: Update type definitions to match runtime
+    
+    At runtime, nullable struct fields are set to null, not to undefined.
+    Update the type annotation to match. i.e.:
+    
+    Previously:
+    interface Foo {
+      x?: string,
+    }
+    
+    After this CL, this becomes
+    interface Foo {
+      x: (string|null),
+    }
+    
+    Note: also investigated changing the runtime behavior to not
+    populate optional struct fields when they are set to null (which
+    indicates they are unset). This would be more intuitive from the
+    perspective of Chromium TypeScript development (i.e., would not
+    require explicitly setting null as is done in this CL). However,
+    this modification appears to break some assumptions in Blink, so
+    is likely infeasible at least for the short term. See
+    https://chromium-review.googlesource.com/c/chromium/src/+/5280348
+    
+    Bug: 1442785, 1293911
+    Change-Id: I63b422236a1947abc0a225ec3983c9619bdf72e1
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5269917
+    Reviewed-by: Demetrios Papadopoulos <dpapad@chromium.org>
+    Commit-Queue: Rebekah Potter <rbpotter@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1266707}
+
+diff --git a/content/test/data/web_ui_mojo_ts_test.ts b/content/test/data/web_ui_mojo_ts_test.ts
+index 4a0b3246e6b01..35ec8d674ed66 100644
+--- a/content/test/data/web_ui_mojo_ts_test.ts
++++ b/content/test/data/web_ui_mojo_ts_test.ts
+@@ -38,7 +38,7 @@ async function doTest(): Promise<boolean> {
+   {
+     const testStruct: OptionalNumericsStruct = {
+       optionalBool: true,
+-      optionalUint8: undefined,
++      optionalUint8: null,
+       optionalEnum: TestEnum.kOne,
+     };
+ 
+@@ -65,9 +65,9 @@ async function doTest(): Promise<boolean> {
+   }
+   {
+     const testStruct: OptionalNumericsStruct = {
+-      optionalBool: undefined,
++      optionalBool: null,
+       optionalUint8: 1,
+-      optionalEnum: undefined,
++      optionalEnum: null,
+     };
+ 
+     const {optionalBool, optionalUint8, optionalEnum, optionalNumerics} =

@@ -41,6 +41,8 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
     - bookworm/clang16.patch: refresh.
     - ungoogled/disable-privacy-sandbox.patch: drop hunk related to deprecated
       preference.
+    - upstream/mojo-null.patch: pull a (typescript) build fix from upstream.
+    - upstream/uint-includes.patch: simple header build fix from upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
 

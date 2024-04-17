@@ -31,6 +31,11 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
     - fixes/optional2.patch: drop, merged upstream.
     - fixes/blink-fonts-shape-result.patch: drop, merged upstream.
     - bookworm/constexpr-equality.patch: drop, merged upstream.
+    - disable/catapult.patch: refresh.
+    - disable/google-api-warning.patch: rework to be a smaller patch.
+    - bookworm/clang16.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: drop hunk related to deprecated
+      preference.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
 

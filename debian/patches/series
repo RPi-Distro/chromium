@@ -24,6 +24,7 @@ upstream/fps-optional.patch
 upstream/span-optional.patch
 upstream/extractor-bitset.patch
 upstream/atomic.patch
+upstream/webgpu-optional.patch
 
 disable/tests.patch
 disable/unrar.patch

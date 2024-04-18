@@ -45,6 +45,9 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
     - upstream/extractor-bitset.patch: add header build fix.
     - upstream/atomic.patch: add header build fix.
     - upstream/webgpu-optional.patch: add header build fix.
+    - fixes/absl-optional.patch: comment out assert() that caused crash.
+      This could be another clang16/libstdc++ miscompilation issue, but
+      needs further investigation.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
 

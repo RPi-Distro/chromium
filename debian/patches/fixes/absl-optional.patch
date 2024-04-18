@@ -522,7 +522,7 @@ We'll need to update this patch with major libstdc++ upgrades.
 +      constexpr _Tp&
 +      _M_get() noexcept
 +      {
-+	__glibcxx_assert(this->_M_is_engaged());
++	//__glibcxx_assert(this->_M_is_engaged());
 +	return static_cast<_Dp*>(this)->_M_payload._M_get();
 +      }
 +

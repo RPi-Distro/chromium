@@ -1,0 +1,54 @@
+author: James Zern <jzern@google.com>
+
+Taken from https://chromium-review.googlesource.com/c/chromium/src/+/5462887
+https://issues.chromium.org/issues/335353374
+
+
+unbundle/libwebp.gn: add libwebp_sharpyuv target
+
+libavif/BUILD.gn picked up a dependency on this target in:
+  https://chromium-review.googlesource.com/c/chromium/src/+/5363896
+  3bee841885cad libavif,BUILD.gn::libavif_enc: enable sharpyuv
+
+This fixes the build when using the bundled libavif with the system
+libwebp.
+
+
+--- a/build/linux/unbundle/libwebp.gn
++++ b/build/linux/unbundle/libwebp.gn
+@@ -13,6 +13,10 @@ pkg_config("system_libwebp") {
+   ]
+ }
+ 
++pkg_config("system_libsharpyuv") {
++  packages = [ "libsharpyuv" ]
++}
++
+ shim_headers("libwebp_shim") {
+   root_path = "src/src"
+   headers = [
+@@ -25,11 +29,24 @@ shim_headers("libwebp_shim") {
+   ]
+ }
+ 
++shim_headers("libsharpyuv_shim") {
++  root_path = "src"
++  headers = [
++    "sharpyuv/sharpyuv.h",
++    "sharpyuv/sharpyuv_csp.h",
++  ]
++}
++
+ source_set("libwebp_webp") {
+   deps = [ ":libwebp_shim" ]
+   public_configs = [ ":system_libwebp" ]
+ }
+ 
++source_set("libwebp_sharpyuv") {
++  deps = [ ":libsharpyuv_shim" ]
++  public_configs = [ ":system_libsharpyuv" ]
++}
++
+ group("libwebp") {
+   deps = [ ":libwebp_webp" ]
+ }

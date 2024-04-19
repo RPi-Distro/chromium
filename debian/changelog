@@ -54,6 +54,7 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
       fixes/bad-font-gc11.patch, fixes/bad-font-gc3.patch: revert a bunch
       more (new) upstream commits related to bad-font-gc2.patch. When the
       use-after-free bug gets fixed, all this can be dropped.
+    - fixes/sharpyuv.patch: add (not yet approved) build fix from upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
 

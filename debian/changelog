@@ -58,6 +58,18 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
       fixes/bad-font-gc11.patch, fixes/bad-font-gc3.patch: revert a bunch
       more (new) upstream commits related to bad-font-gc2.patch. When the
       use-after-free bug gets fixed, all this can be dropped.
+  * d/patches/ppc64le:
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch,
+      third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch,
+      workarounds/HACK-third_party-libvpx-use-generic-gnu.patch,
+      breakpad/0001-Implement-support-for-ppc64-on-Linux.patch,
+      ffmpeg/0001-Add-support-for-ppc64.patch,
+      third_party/dawn-fix-typos.patch,
+      third_party/use-sysconf-page-size-on-ppc64.patch: refresh.
+    - third_party/skia-vsx-instructions.patch: refresh & update for header
+      renaming.
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: disable until
+      Tim has a chance to look at this patch.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
 

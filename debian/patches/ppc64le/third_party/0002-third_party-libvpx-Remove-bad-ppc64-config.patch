@@ -1,6 +1,3 @@
-diff --git a/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
-deleted file mode 100644
-index 225647f..0000000
 --- a/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
 +++ /dev/null
 @@ -1,320 +0,0 @@
@@ -324,9 +321,6 @@ index 225647f..0000000
 -#endif
 -
 -#endif
-diff --git a/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
-deleted file mode 100644
-index d0ceec1..0000000
 --- a/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
 +++ /dev/null
 @@ -1,193 +0,0 @@
@@ -523,12 +517,9 @@ index d0ceec1..0000000
 -#endif
 -
 -#endif
-diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm b/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
-deleted file mode 100644
-index cf14597..0000000
 --- a/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
 +++ /dev/null
-@@ -1,107 +0,0 @@
+@@ -1,108 +0,0 @@
 -@ This file was created from a .asm file
 -@  using the ads2gas.pl script.
 -.syntax unified
@@ -551,6 +542,7 @@ index cf14597..0000000
 -.equ HAVE_NEON_DOTPROD ,  0
 -.equ HAVE_NEON_I8MM ,  0
 -.equ HAVE_SVE ,  0
+-.equ HAVE_SVE2 ,  0
 -.equ HAVE_MIPS32 ,  0
 -.equ HAVE_DSPR2 ,  0
 -.equ HAVE_MSA ,  0
@@ -636,9 +628,6 @@ index cf14597..0000000
 -.equ DECODE_WIDTH_LIMIT ,  16384
 -.equ DECODE_HEIGHT_LIMIT ,  16384
 -    .section .note.GNU-stack,"",%progbits
-diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.c b/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
-deleted file mode 100644
-index 9b870e7..0000000
 --- a/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
 +++ /dev/null
 @@ -1,10 +0,0 @@
@@ -652,12 +641,9 @@ index 9b870e7..0000000
 -#include "vpx/vpx_codec.h"
 -static const char* const cfg = "--target=ppc64le-linux-gcc --enable-external-build --enable-postproc --enable-multi-res-encoding --enable-temporal-denoising --enable-vp9-temporal-denoising --enable-vp9-postproc --size-limit=16384x16384 --enable-realtime-only --disable-install-docs --disable-libyuv";
 -const char *vpx_codec_build_config(void) {return cfg;}
-diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_config.h b/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
-deleted file mode 100644
-index 8be04cc..0000000
 --- a/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
 +++ /dev/null
-@@ -1,116 +0,0 @@
+@@ -1,117 +0,0 @@
 -/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
 -/*  */
 -/* Use of this source code is governed by a BSD-style license */
@@ -689,6 +675,7 @@ index 8be04cc..0000000
 -#define HAVE_NEON_DOTPROD 0
 -#define HAVE_NEON_I8MM 0
 -#define HAVE_SVE 0
+-#define HAVE_SVE2 0
 -#define HAVE_MIPS32 0
 -#define HAVE_DSPR2 0
 -#define HAVE_MSA 0
@@ -774,9 +761,6 @@ index 8be04cc..0000000
 -#define DECODE_WIDTH_LIMIT 16384
 -#define DECODE_HEIGHT_LIMIT 16384
 -#endif /* VPX_CONFIG_H */
-diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
-deleted file mode 100644
-index 8749b43..0000000
 --- a/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
 +++ /dev/null
 @@ -1,2128 +0,0 @@
@@ -2908,9 +2892,6 @@ index 8749b43..0000000
 -#endif
 -
 -#endif
-diff --git a/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h b/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
-deleted file mode 100644
-index 37be459..0000000
 --- a/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
 +++ /dev/null
 @@ -1,100 +0,0 @@

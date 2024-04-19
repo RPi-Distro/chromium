@@ -68,8 +68,9 @@ chromium (124.0.6367.60-1) UNRELEASED; urgency=high
       third_party/use-sysconf-page-size-on-ppc64.patch: refresh.
     - third_party/skia-vsx-instructions.patch: refresh & update for header
       renaming.
-    - third_party/0001-Add-PPC64-support-for-boringssl.patch: disable until
-      Tim has a chance to look at this patch.
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch,
+      third_party/0002-third-party-boringssl-add-generated-files.patch:
+      disable these two until Tim has a chance to look at them.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 10 Apr 2024 21:21:05 -0400
 

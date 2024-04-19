@@ -1,3 +1,79 @@
+chromium (124.0.6367.60-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream stable release.
+    - CVE-2024-3832: Object corruption in V8.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2024-3833: Object corruption in WebAssembly.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2024-3834: Use after free in Downloads. Reported by ChaobinZhang
+    - CVE-2024-3837: Use after free in QUIC.
+      Reported by {rotiple, dch3ck} of CW Research Inc.
+    - CVE-2024-3838: Inappropriate implementation in Autofill.
+      Reported by Ardyan Vicky Ramadhan.
+    - CVE-2024-3839: Out of bounds read in Fonts.
+      Reported by Ronald Crane (Zippenhop LLC).
+    - CVE-2024-3840: Insufficient policy enforcement in Site Isolation.
+      Reported by Ahmed ElMasry.
+    - CVE-2024-3841: Insufficient data validation in Browser Switcher.
+      Reported by Oleg.
+    - CVE-2024-3843: Insufficient data validation in Downloads.
+      Reported by Azur.
+    - CVE-2024-3844: Inappropriate implementation in Extensions.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-3845: Inappropriate implementation in Network.
+      Reported by Daniel Baulig.
+    - CVE-2024-3846: Inappropriate implementation in Prompts.
+      Reported by Ahmed ElMasry.
+    - CVE-2024-3847: Insufficient policy enforcement in WebUI.
+      Reported by Yan Zhu.
+  * d/copyright:
+    - delete __pycache__ directories to shut up dpkg warnings.
+    - stop deleting bundled libwebp directory.
+  * Drop build-dep on libwebp-dev and start building against the bundled
+    libwebp. We need to do this because chromium uses features of libavif
+    that require libsharpyuv-dev; but that's only available in sid/trixie.
+  * d/patches:
+    - upstream/std-to-address.patch: drop, merged upstream.
+    - fixes/optional2.patch: drop, merged upstream.
+    - fixes/blink-fonts-shape-result.patch: drop, merged upstream.
+    - bookworm/constexpr-equality.patch: drop, merged upstream.
+    - disable/catapult.patch: refresh.
+    - disable/google-api-warning.patch: rework to be a smaller patch.
+    - bookworm/clang16.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: drop hunk related to deprecated
+      preference.
+    - upstream/mojo-null.patch: pull a (typescript) build fix from upstream.
+    - upstream/uint-includes.patch: simple header build fix from upstream.
+    - upstream/fps-optional.patch: add header build fix.
+    - upstream/span-optional.patch: add header build fix.
+    - upstream/extractor-bitset.patch: add header build fix.
+    - upstream/atomic.patch: add header build fix.
+    - upstream/webgpu-optional.patch: add header build fix.
+    - fixes/absl-optional.patch: comment out assert() that caused crash.
+      This could be another clang16/libstdc++ miscompilation issue, but
+      needs further investigation.
+    - fixes/bad-font-gc2.patch: drop a bunch of test-related pieces.
+    - fixes/bad-font-gc0000.patch, fixes/bad-font-gc000.patch,
+      fixes/bad-font-gc00.patch, fixes/bad-font-gc0.patch,
+      fixes/bad-font-gc11.patch, fixes/bad-font-gc3.patch: revert a bunch
+      more (new) upstream commits related to bad-font-gc2.patch. When the
+      use-after-free bug gets fixed, all this can be dropped.
+  * d/patches/ppc64le:
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch,
+      third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch,
+      workarounds/HACK-third_party-libvpx-use-generic-gnu.patch,
+      breakpad/0001-Implement-support-for-ppc64-on-Linux.patch,
+      ffmpeg/0001-Add-support-for-ppc64.patch,
+      third_party/dawn-fix-typos.patch,
+      third_party/use-sysconf-page-size-on-ppc64.patch: refresh.
+    - third_party/skia-vsx-instructions.patch: refresh & update for header
+      renaming.
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch,
+      third_party/0002-third-party-boringssl-add-generated-files.patch:
+      disable these two until Tim has a chance to look at them.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 19 Apr 2024 12:33:38 -0400
+
 chromium (123.0.6312.122-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

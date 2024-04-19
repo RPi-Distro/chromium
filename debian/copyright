@@ -3,6 +3,7 @@ Source: http://www.chromium.org/Home
 Upstream-Name: chromium
 Files-Excluded:
  .clang-format
+ *__pycache__
  *.mk
  *.so
  *.dll
@@ -85,7 +86,6 @@ Files-Excluded:
  third_party/libevent
  third_party/libsecret
  third_party/libxslt
- third_party/libwebp
  third_party/freetype
  build/config/freetype/freetype.gni
  third_party/android*

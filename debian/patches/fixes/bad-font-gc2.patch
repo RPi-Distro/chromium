@@ -124,7 +124,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
    bool ShouldSkipDrawing() const override {
      if (font_face_source_) {
-@@ -67,7 +62,16 @@ class CSSCustomFontData final : public C
+@@ -66,7 +61,16 @@ class CSSCustomFontData final : public C
    }
  
   private:
@@ -327,39 +327,9 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  };
  
  }  // namespace blink
---- a/third_party/blink/renderer/core/css/css_font_face_source_test.cc
-+++ b/third_party/blink/renderer/core/css/css_font_face_source_test.cc
-@@ -16,20 +16,19 @@ namespace blink {
- 
- class DummyFontFaceSource : public CSSFontFaceSource {
-  public:
--  const SimpleFontData* CreateFontData(
-+  scoped_refptr<SimpleFontData> CreateFontData(
-       const FontDescription&,
-       const FontSelectionCapabilities&) override {
--    return MakeGarbageCollected<SimpleFontData>(
--        MakeGarbageCollected<FontPlatformData>(
--            skia::DefaultTypeface(), /* name */ std::string(),
--            /* text_size */ 0, /* synthetic_bold */ false,
--            /* synthetic_italic */ false, TextRenderingMode::kAutoTextRendering,
--            ResolvedFontFeatures{}));
-+    return SimpleFontData::Create(
-+        FontPlatformData(skia::DefaultTypeface(), /* name */ std::string(),
-+                         /* text_size */ 0, /* synthetic_bold */ false,
-+                         /* synthetic_italic */ false,
-+                         TextRenderingMode::kAutoTextRendering, {}));
-   }
- 
-   DummyFontFaceSource() = default;
- 
--  const SimpleFontData* GetFontDataForSize(float size) {
-+  scoped_refptr<SimpleFontData> GetFontDataForSize(float size) {
-     FontDescription font_description;
-     font_description.SetComputedSize(size);
-     FontSelectionCapabilities normal_capabilities(
 --- a/third_party/blink/renderer/core/css/css_font_selector.cc
 +++ b/third_party/blink/renderer/core/css/css_font_selector.cc
-@@ -161,7 +161,7 @@ void CSSFontSelector::FontCacheInvalidat
+@@ -162,7 +162,7 @@ void CSSFontSelector::FontCacheInvalidat
    DispatchInvalidationCallbacks(FontInvalidationReason::kGeneralInvalidation);
  }
  
@@ -368,7 +338,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      const FontDescription& font_description,
      const FontFamily& font_family) {
    const auto& family_name = font_family.FamilyName();
-@@ -251,13 +251,13 @@ const FontData* CSSFontSelector::GetFont
+@@ -252,13 +252,13 @@ const FontData* CSSFontSelector::GetFont
        family_name, request_description.GetScript(),
        request_description.GenericFamily(), settings_family_name);
  
@@ -1050,7 +1020,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    return owner_font_selector_->GetFontData(description, font_family);
 --- a/third_party/blink/renderer/core/inspector/inspector_css_agent.cc
 +++ b/third_party/blink/renderer/core/inspector/inspector_css_agent.cc
-@@ -124,7 +124,6 @@
+@@ -122,7 +122,6 @@
  #include "third_party/blink/renderer/platform/fonts/font_custom_platform_data.h"
  #include "third_party/blink/renderer/platform/fonts/shaping/caching_word_shaper.h"
  #include "third_party/blink/renderer/platform/fonts/shaping/shape_result_view.h"
@@ -1058,7 +1028,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  #include "third_party/blink/renderer/platform/heap/garbage_collected.h"
  #include "third_party/blink/renderer/platform/text/text_run.h"
  #include "third_party/blink/renderer/platform/wtf/allocator/allocator.h"
-@@ -202,10 +201,10 @@ HeapVector<Member<CSSStyleRule>> FilterD
+@@ -200,10 +199,10 @@ HeapVector<Member<CSSStyleRule>> FilterD
  }
  
  void CollectPlatformFontsFromRunFontDataList(
@@ -1071,7 +1041,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      String family_name = simple_font_data->PlatformData().FontFamilyName();
      if (family_name.IsNull())
        family_name = "";
-@@ -1698,8 +1697,7 @@ void InspectorCSSAgent::CollectPlatformF
+@@ -1733,8 +1732,7 @@ void InspectorCSSAgent::CollectPlatformF
      if (!shape_result) {
        continue;
      }
@@ -1091,7 +1061,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
  namespace blink {
  
-@@ -170,8 +169,7 @@ void InlineBoxState::EnsureTextMetrics(c
+@@ -169,8 +168,7 @@ void InlineBoxState::EnsureTextMetrics(c
  
  void InlineBoxState::AccumulateUsedFonts(const ShapeResultView* shape_result) {
    const auto baseline_type = style->GetFontBaseline();
@@ -1166,7 +1136,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    if (!font_data) {
 --- a/third_party/blink/renderer/platform/BUILD.gn
 +++ b/third_party/blink/renderer/platform/BUILD.gn
-@@ -614,6 +614,7 @@ component("platform") {
+@@ -621,6 +621,7 @@ component("platform") {
      "fonts/font_cache_memory_dump_provider.h",
      "fonts/font_custom_platform_data.cc",
      "fonts/font_custom_platform_data.h",
@@ -1228,37 +1198,6 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  }
  
  // static
---- a/third_party/blink/renderer/platform/fonts/android/font_cache_android_test.cc
-+++ b/third_party/blink/renderer/platform/fonts/android/font_cache_android_test.cc
-@@ -43,7 +43,7 @@ TEST_F(FontCacheAndroidTest, FallbackFon
-     font_description.SetGenericFamily(family_type);
- 
-     FontCache& font_cache = FontCache::Get();
--    const SimpleFontData* font_data =
-+    scoped_refptr<SimpleFontData> font_data =
-         font_cache.FallbackFontForCharacter(font_description, kTestChar, 0);
-     EXPECT_TRUE(font_data);
-   }
-@@ -63,7 +63,7 @@ TEST_F(FontCacheAndroidTest, FallbackFon
-   font_description.SetLocale(ja);
-   FontCache& font_cache = FontCache::Get();
-   const UChar32 kTestChar = 0x4E00;  // U+4E00 CJK UNIFIED IDEOGRAPH-4E00
--  const SimpleFontData* font_data =
-+  scoped_refptr<SimpleFontData> font_data =
-       font_cache.FallbackFontForCharacter(font_description, kTestChar, nullptr);
-   EXPECT_TRUE(font_data);
-   EXPECT_EQ(serif_ja_typeface.get(), font_data->PlatformData().Typeface());
---- a/third_party/blink/renderer/platform/fonts/bitmap_glyphs_block_list_test.cc
-+++ b/third_party/blink/renderer/platform/fonts/bitmap_glyphs_block_list_test.cc
-@@ -22,7 +22,7 @@ static void TestBitmapGlyphsBlockListed(
-   font_family.SetFamily(windows_family_name,
-                         FontFamily::InferredTypeFor(windows_family_name));
-   font_description.SetFamily(font_family);
--  const SimpleFontData* simple_font_data =
-+  scoped_refptr<SimpleFontData> simple_font_data =
-       font_cache.GetFontData(font_description, windows_family_name);
-   ASSERT_TRUE(simple_font_data);
-   const FontPlatformData& font_platform_data = simple_font_data->PlatformData();
 --- a/third_party/blink/renderer/platform/fonts/custom_font_data.h
 +++ b/third_party/blink/renderer/platform/fonts/custom_font_data.h
 @@ -22,8 +22,8 @@
@@ -1271,7 +1210,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
  namespace blink {
  
-@@ -34,11 +34,13 @@ namespace blink {
+@@ -34,17 +34,22 @@ namespace blink {
  //  * `BinaryDataFontFaceSource` as loaded font resource
  //  * `LocalFontFaceSource` as derived class `CSSCustomFontData`
  //  * `RemoteFontFaceSource` as derived class `CSSCustomFontData`
@@ -1288,9 +1227,8 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
    virtual void BeginLoadIfNeeded() const {}
    virtual bool IsLoading() const { return false; }
-@@ -46,6 +48,9 @@ class PLATFORM_EXPORT CustomFontData : p
+   virtual bool IsLoadingFallback() const { return false; }
    virtual bool ShouldSkipDrawing() const { return false; }
-   virtual void ClearFontFaceSource() {}
    virtual bool IsPendingDataUrl() const { return false; }
 +
 + protected:
@@ -1653,93 +1591,6 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      cache.DumpShapeResultCache(memory_dump);
    }
    return true;
---- a/third_party/blink/renderer/platform/fonts/font_cache_test.cc
-+++ b/third_party/blink/renderer/platform/fonts/font_cache_test.cc
-@@ -33,8 +33,8 @@ TEST_F(FontCacheTest, getLastResortFallb
-         FontDescription::kSansSerifFamily}) {
-     FontDescription font_description;
-     font_description.SetGenericFamily(family_type);
--    const SimpleFontData* font_data =
--        font_cache.GetLastResortFallbackFont(font_description);
-+    scoped_refptr<SimpleFontData> font_data =
-+        font_cache.GetLastResortFallbackFont(font_description, kRetain);
-     EXPECT_TRUE(font_data);
-   }
- }
-@@ -53,9 +53,10 @@ TEST_F(FontCacheTest, NoFallbackForPriva
-     font_description.SetGenericFamily(family_type);
-     for (UChar32 character : {0xE000, 0xE401, 0xE402, 0xE403, 0xF8FF, 0xF0000,
-                               0xFAAAA, 0x100000, 0x10AAAA}) {
--      const SimpleFontData* font_data = font_cache.FallbackFontForCharacter(
--          font_description, character, nullptr);
--      EXPECT_EQ(font_data, nullptr);
-+      scoped_refptr<SimpleFontData> font_data =
-+          font_cache.FallbackFontForCharacter(font_description, character,
-+                                              nullptr);
-+      EXPECT_EQ(font_data.get(), nullptr);
-     }
-   }
- }
-@@ -90,17 +91,19 @@ TEST_F(FontCacheTest, FallbackForEmojis)
-       icu::UnicodeString(character).toUTF8String(character_utf8);
- 
-       {
--        const SimpleFontData* font_data = font_cache.FallbackFontForCharacter(
--            font_description, character, nullptr,
--            FontFallbackPriority::kEmojiEmoji);
-+        scoped_refptr<SimpleFontData> font_data =
-+            font_cache.FallbackFontForCharacter(
-+                font_description, character, nullptr,
-+                FontFallbackPriority::kEmojiEmoji);
-         EXPECT_EQ(font_data->PlatformData().FontFamilyName(), kNotoColorEmoji)
-             << "Character " << character_utf8
-             << " doesn't match what we expected for kEmojiEmoji.";
-       }
-       {
--        const SimpleFontData* font_data = font_cache.FallbackFontForCharacter(
--            font_description, character, nullptr,
--            FontFallbackPriority::kEmojiText);
-+        scoped_refptr<SimpleFontData> font_data =
-+            font_cache.FallbackFontForCharacter(
-+                font_description, character, nullptr,
-+                FontFallbackPriority::kEmojiText);
-         if (available_in_contour_font) {
-           EXPECT_NE(font_data->PlatformData().FontFamilyName(), kNotoColorEmoji)
-               << "Character " << character_utf8
-@@ -136,16 +139,8 @@ TEST_F(FontCacheTest, firstAvailableOrFi
-             FontCache::FirstAvailableOrFirst(", not exist, not exist"));
- }
- 
--// Unfortunately, we can't ensure a font here since on Android and Mac the
--// unittests can't access the font configuration. However, this test passes
--// when it's not crashing in FontCache.
--#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_WIN)
--#define MAYBE_GetLargerThanMaxUnsignedFont DISABLED_GetLargerThanMaxUnsignedFont
--#else
--#define MAYBE_GetLargerThanMaxUnsignedFont GetLargerThanMaxUnsignedFont
--#endif
- // https://crbug.com/969402
--TEST_F(FontCacheTest, MAYBE_GetLargerThanMaxUnsignedFont) {
-+TEST_F(FontCacheTest, GetLargerThanMaxUnsignedFont) {
-   FontCache& font_cache = FontCache::Get();
- 
-   FontDescription font_description;
-@@ -153,9 +148,14 @@ TEST_F(FontCacheTest, MAYBE_GetLargerTha
-   font_description.SetComputedSize(
-       static_cast<float>(std::numeric_limits<unsigned>::max()) + 1.f);
-   FontFaceCreationParams creation_params;
--  const blink::SimpleFontData* font_data =
-+  scoped_refptr<blink::SimpleFontData> font_data =
-       font_cache.GetFontData(font_description, AtomicString());
-+#if !BUILDFLAG(IS_ANDROID) && !BUILDFLAG(IS_MAC) && !BUILDFLAG(IS_WIN)
-+  // Unfortunately, we can't ensure a font here since on Android and Mac the
-+  // unittests can't access the font configuration. However, this test passes
-+  // when it's not crashing in FontCache.
-   EXPECT_TRUE(font_data);
-+#endif
- }
- 
- #if !BUILDFLAG(IS_MAC)
 --- a/third_party/blink/renderer/platform/fonts/font_custom_platform_data.cc
 +++ b/third_party/blink/renderer/platform/fonts/font_custom_platform_data.cc
 @@ -103,7 +103,7 @@ FontCustomPlatformData::~FontCustomPlatf
@@ -2826,181 +2677,6 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  }
  
  }  // namespace blink
---- a/third_party/blink/renderer/platform/fonts/mac/font_cache_mac.mm
-+++ b/third_party/blink/renderer/platform/fonts/mac/font_cache_mac.mm
-@@ -164,7 +164,7 @@ bool TraitsMismatch(CTFontSymbolicTraits
-   return (desired_traits & TraitsMask) != (found_traits & TraitsMask);
- }
- 
--const FontPlatformData* GetAlternateFontPlatformData(
-+std::unique_ptr<FontPlatformData> GetAlternateFontPlatformData(
-     const FontDescription& font_description,
-     UChar32 character,
-     const FontPlatformData& platform_data) {
-@@ -293,22 +293,22 @@ static inline bool IsAppKitFontWeightBol
-   return app_kit_font_weight >= 7;
- }
- 
--const SimpleFontData* FontCache::PlatformFallbackFontForCharacter(
-+scoped_refptr<SimpleFontData> FontCache::PlatformFallbackFontForCharacter(
-     const FontDescription& font_description,
-     UChar32 character,
-     const SimpleFontData* font_data_to_substitute,
-     FontFallbackPriority fallback_priority) {
-   if (fallback_priority == FontFallbackPriority::kEmojiEmoji) {
--    if (const SimpleFontData* emoji_font =
--            GetFontData(font_description, AtomicString(kColorEmojiFontMac))) {
-+    scoped_refptr<SimpleFontData> emoji_font =
-+        GetFontData(font_description, AtomicString(kColorEmojiFontMac));
-+    if (emoji_font)
-       return emoji_font;
--    }
-   }
- 
-   const FontPlatformData& platform_data =
-       font_data_to_substitute->PlatformData();
- 
--  const FontPlatformData* alternate_font = nullptr;
-+  std::unique_ptr<FontPlatformData> alternate_font;
-   if (RuntimeEnabledFeatures::FontMatchingCTMigrationEnabled()) {
-     alternate_font = GetAlternateFontPlatformData(font_description, character,
-                                                   platform_data);
-@@ -421,17 +421,18 @@ const SimpleFontData* FontCache::Platfor
-   if (!alternate_font)
-     return nullptr;
- 
--  return FontDataFromFontPlatformData(alternate_font);
-+  return FontDataFromFontPlatformData(alternate_font.get(), kDoNotRetain);
- }
- 
--const SimpleFontData* FontCache::GetLastResortFallbackFont(
--    const FontDescription& font_description) {
-+scoped_refptr<SimpleFontData> FontCache::GetLastResortFallbackFont(
-+    const FontDescription& font_description,
-+    ShouldRetain should_retain) {
-   // FIXME: Would be even better to somehow get the user's default font here.
-   // For now we'll pick the default that the user would get without changing
-   // any prefs.
--  const SimpleFontData* simple_font_data =
-+  scoped_refptr<SimpleFontData> simple_font_data =
-       GetFontData(font_description, font_family_names::kTimes,
--                  AlternateFontName::kAllowAlternate);
-+                  AlternateFontName::kAllowAlternate, should_retain);
-   if (simple_font_data)
-     return simple_font_data;
- 
-@@ -440,10 +441,10 @@ const SimpleFontData* FontCache::GetLast
-   // that's guaranteed to be there, according to Nathan Taylor. This is good
-   // enough to avoid a crash at least.
-   return GetFontData(font_description, font_family_names::kLucidaGrande,
--                     AlternateFontName::kAllowAlternate);
-+                     AlternateFontName::kAllowAlternate, should_retain);
- }
- 
--const FontPlatformData* FontCache::CreateFontPlatformData(
-+std::unique_ptr<FontPlatformData> FontCache::CreateFontPlatformData(
-     const FontDescription& font_description,
-     const FontFaceCreationParams& creation_params,
-     float size,
-@@ -524,7 +525,7 @@ const FontPlatformData* FontCache::Creat
-   // font loading failing.  Out-of-process loading occurs for registered fonts
-   // stored in non-system locations.  When loading fails, we do not want to use
-   // the returned FontPlatformData since it will not have a valid SkTypeface.
--  const FontPlatformData* platform_data = FontPlatformDataFromCTFont(
-+  std::unique_ptr<FontPlatformData> platform_data = FontPlatformDataFromCTFont(
-       matched_font, size, font_description.SpecifiedSize(), synthetic_bold,
-       synthetic_italic, font_description.TextRendering(),
-       ResolvedFontFeatures(), font_description.Orientation(),
---- a/third_party/blink/renderer/platform/fonts/mac/font_cache_mac_test.mm
-+++ b/third_party/blink/renderer/platform/fonts/mac/font_cache_mac_test.mm
-@@ -47,7 +47,7 @@ class FontCacheMacTest : public testing:
-       FontDescription font_description =
-           CreateFontDescriptionWithFontSynthesisNone(weight, kNormalSlopeValue,
-                                                      kNormalWidthValue);
--      const FontPlatformData* font_platform_data =
-+      std::unique_ptr<FontPlatformData> font_platform_data =
-           font_cache.CreateFontPlatformData(
-               font_description,
-               FontFaceCreationParams(font_family_names::kSystemUi), size);
---- a/third_party/blink/renderer/platform/fonts/mac/font_platform_data_mac.h
-+++ b/third_party/blink/renderer/platform/fonts/mac/font_platform_data_mac.h
-@@ -36,6 +36,8 @@
- #include "third_party/blink/renderer/platform/fonts/text_rendering_mode.h"
- #include "third_party/blink/renderer/platform/platform_export.h"
- 
-+#include <memory>
-+
- @class NSFont;
- class SkTypeface;
- typedef uint32_t SkFourByteTag;
-@@ -57,7 +59,7 @@ bool PLATFORM_EXPORT VariableAxisChangeE
- // parameters. `size` is scaled size, `specified_size` is passed in to control
- // optical sizing and tracking, needed in particular for the San Francisco
- // system font.
--const FontPlatformData* FontPlatformDataFromCTFont(
-+std::unique_ptr<FontPlatformData> FontPlatformDataFromCTFont(
-     base::apple::ScopedCFTypeRef<CTFontRef>,
-     float size,
-     float specified_size,
---- a/third_party/blink/renderer/platform/fonts/mac/font_platform_data_mac.mm
-+++ b/third_party/blink/renderer/platform/fonts/mac/font_platform_data_mac.mm
-@@ -113,7 +113,7 @@ static bool CanLoadInProcess(ScopedCFTyp
-          kCFCompareEqualTo;
- }
- 
--const FontPlatformData* FontPlatformDataFromCTFont(
-+std::unique_ptr<FontPlatformData> FontPlatformDataFromCTFont(
-     ScopedCFTypeRef<CTFontRef> ct_font,
-     float size,
-     float specified_size,
-@@ -136,7 +136,7 @@ const FontPlatformData* FontPlatformData
-                                          &synthetic_italic, &text_rendering,
-                                          resolved_font_features,
-                                          &orientation]() {
--    return MakeGarbageCollected<FontPlatformData>(
-+    return std::make_unique<FontPlatformData>(
-         std::move(typeface), std::string(), size, synthetic_bold,
-         synthetic_italic, text_rendering, resolved_font_features, orientation);
-   };
---- a/third_party/blink/renderer/platform/fonts/opentype/open_type_caps_support_test.mm
-+++ b/third_party/blink/renderer/platform/fonts/opentype/open_type_caps_support_test.mm
-@@ -11,7 +11,6 @@
- #include "testing/gtest/include/gtest/gtest.h"
- #include "third_party/blink/renderer/platform/fonts/font_description.h"
- #include "third_party/blink/renderer/platform/fonts/font_platform_data.h"
--#include "third_party/blink/renderer/platform/heap/garbage_collected.h"
- #include "third_party/blink/renderer/platform/testing/font_test_base.h"
- #include "third_party/blink/renderer/platform/wtf/text/wtf_string.h"
- #include "third_party/skia/include/core/SkRefCnt.h"
-@@ -24,11 +23,10 @@ class OpenTypeCapsSupportTest : public F
- void ensureHasNativeSmallCaps(const String& font_family_name) {
-   sk_sp<SkTypeface> test_typeface = skia::MakeTypefaceFromName(
-       font_family_name.Utf8().c_str(), SkFontStyle());
--  FontPlatformData* font_platform_data = MakeGarbageCollected<FontPlatformData>(
-+  FontPlatformData font_platform_data(
-       test_typeface, font_family_name.Utf8(),
-       /* text_size */ 16, /* synthetic_bold */ false,
--      /* synthetic_italic */ false, TextRenderingMode::kAutoTextRendering,
--      ResolvedFontFeatures{});
-+      /* synthetic_italic */ false, TextRenderingMode::kAutoTextRendering, {});
-   // System font names are magical. The family name of the system font in the
-   // test below yields ".AppleSystemUIFont", which seems to be a generic role
-   // name, because when it's actually instantiated with SkTypeface it ends up as
-@@ -36,11 +34,11 @@ void ensureHasNativeSmallCaps(const Stri
-   // instantiate a magical system font, at least ensure that the resulting font
-   // is magical as well.
-   if (font_family_name[0] == '.')
--    ASSERT_TRUE(font_platform_data->FontFamilyName()[0] == '.');
-+    ASSERT_TRUE(font_platform_data.FontFamilyName()[0] == '.');
-   else
--    ASSERT_EQ(font_platform_data->FontFamilyName(), font_family_name);
-+    ASSERT_EQ(font_platform_data.FontFamilyName(), font_family_name);
- 
--  OpenTypeCapsSupport caps_support(font_platform_data->GetHarfBuzzFace(),
-+  OpenTypeCapsSupport caps_support(font_platform_data.GetHarfBuzzFace(),
-                                    FontDescription::FontVariantCaps::kSmallCaps,
-                                    FontDescription::kAutoFontSynthesisSmallCaps,
-                                    HB_SCRIPT_LATIN);
 --- a/third_party/blink/renderer/platform/fonts/segmented_font_data.h
 +++ b/third_party/blink/renderer/platform/fonts/segmented_font_data.h
 @@ -28,7 +28,6 @@
@@ -3204,17 +2880,6 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      }
  
      CaseMappingHarfBuzzBufferFiller(
---- a/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_shaper_test.cc
-+++ b/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_shaper_test.cc
-@@ -743,7 +743,7 @@ TEST_F(HarfBuzzShaperTest, IdeographicSp
-       u"\u3000");  // IDEOGRAPHIC SPACE
-   HarfBuzzShaper shaper(string);
-   const ShapeResult* result = shaper.Shape(&font, TextDirection::kLtr);
--  HeapVector<ShapeResult::RunFontData> run_font_data;
-+  Vector<ShapeResult::RunFontData> run_font_data;
-   result->GetRunFontData(&run_font_data);
-   EXPECT_EQ(run_font_data.size(), 1u);
- }
 --- a/third_party/blink/renderer/platform/fonts/shaping/shape_result.cc
 +++ b/third_party/blink/renderer/platform/fonts/shaping/shape_result.cc
 @@ -79,10 +79,9 @@ ASSERT_SIZE(ShapeResult::RunInfo, SameSi
@@ -3348,126 +3013,6 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
 -WTF_ALLOW_CLEAR_UNUSED_SLOTS_WITH_MEM_FUNCTIONS(blink::ShapeResult::RunFontData)
  
  #endif  // THIRD_PARTY_BLINK_RENDERER_PLATFORM_FONTS_SHAPING_SHAPE_RESULT_H_
---- a/third_party/blink/renderer/platform/fonts/shaping/shape_result_bloberizer_test.cc
-+++ b/third_party/blink/renderer/platform/fonts/shaping/shape_result_bloberizer_test.cc
-@@ -28,14 +28,14 @@ namespace {
- 
- // Creating minimal test SimpleFontData objects,
- // the font won't have any glyphs, but that's okay.
--static SimpleFontData* CreateTestSimpleFontData(bool force_rotation = false) {
--  return MakeGarbageCollected<SimpleFontData>(
--      MakeGarbageCollected<FontPlatformData>(
--          skia::DefaultTypeface(), std::string(), 10, false, false,
--          TextRenderingMode::kAutoTextRendering, ResolvedFontFeatures{},
--          force_rotation ? FontOrientation::kVerticalUpright
--                         : FontOrientation::kHorizontal),
--      nullptr);
-+static scoped_refptr<SimpleFontData> CreateTestSimpleFontData(
-+    bool force_rotation = false) {
-+  FontPlatformData platform_data(
-+      skia::DefaultTypeface(), std::string(), 10, false, false,
-+      TextRenderingMode::kAutoTextRendering, {},
-+      force_rotation ? FontOrientation::kVerticalUpright
-+                     : FontOrientation::kHorizontal);
-+  return SimpleFontData::Create(platform_data, nullptr);
- }
- 
- class ShapeResultBloberizerTest : public FontTestBase {
-@@ -147,17 +147,17 @@ TEST_F(ShapeResultBloberizerTest, Stores
-   ShapeResultBloberizer bloberizer(font.GetFontDescription(),
-                                    ShapeResultBloberizer::Type::kNormal);
- 
--  SimpleFontData* font1 = CreateTestSimpleFontData();
--  SimpleFontData* font2 = CreateTestSimpleFontData();
-+  scoped_refptr<SimpleFontData> font1 = CreateTestSimpleFontData();
-+  scoped_refptr<SimpleFontData> font2 = CreateTestSimpleFontData();
- 
-   // 2 pending glyphs
--  ShapeResultBloberizerTestInfo::Add(bloberizer, 42, font1,
-+  ShapeResultBloberizerTestInfo::Add(bloberizer, 42, font1.get(),
-                                      CanvasRotationInVertical::kRegular, 10, 0);
--  ShapeResultBloberizerTestInfo::Add(bloberizer, 43, font1,
-+  ShapeResultBloberizerTestInfo::Add(bloberizer, 43, font1.get(),
-                                      CanvasRotationInVertical::kRegular, 15, 1);
- 
-   EXPECT_EQ(ShapeResultBloberizerTestInfo::PendingRunFontData(bloberizer),
--            font1);
-+            font1.get());
-   EXPECT_FALSE(
-       ShapeResultBloberizerTestInfo::HasPendingRunVerticalOffsets(bloberizer));
-   {
-@@ -179,11 +179,11 @@ TEST_F(ShapeResultBloberizerTest, Stores
-   EXPECT_EQ(ShapeResultBloberizerTestInfo::CommittedBlobCount(bloberizer), 0ul);
- 
-   // one more glyph, different font => pending run flush
--  ShapeResultBloberizerTestInfo::Add(bloberizer, 44, font2,
-+  ShapeResultBloberizerTestInfo::Add(bloberizer, 44, font2.get(),
-                                      CanvasRotationInVertical::kRegular, 12, 0);
- 
-   EXPECT_EQ(ShapeResultBloberizerTestInfo::PendingRunFontData(bloberizer),
--            font2);
-+            font2.get());
-   EXPECT_FALSE(
-       ShapeResultBloberizerTestInfo::HasPendingRunVerticalOffsets(bloberizer));
-   {
-@@ -211,19 +211,19 @@ TEST_F(ShapeResultBloberizerTest, Stores
-   ShapeResultBloberizer bloberizer(font.GetFontDescription(),
-                                    ShapeResultBloberizer::Type::kNormal);
- 
--  SimpleFontData* font1 = CreateTestSimpleFontData();
--  SimpleFontData* font2 = CreateTestSimpleFontData();
-+  scoped_refptr<SimpleFontData> font1 = CreateTestSimpleFontData();
-+  scoped_refptr<SimpleFontData> font2 = CreateTestSimpleFontData();
- 
-   // 2 pending glyphs
--  ShapeResultBloberizerTestInfo::Add(bloberizer, 42, font1,
-+  ShapeResultBloberizerTestInfo::Add(bloberizer, 42, font1.get(),
-                                      CanvasRotationInVertical::kRegular,
-                                      gfx::Vector2dF(10, 0), 0);
--  ShapeResultBloberizerTestInfo::Add(bloberizer, 43, font1,
-+  ShapeResultBloberizerTestInfo::Add(bloberizer, 43, font1.get(),
-                                      CanvasRotationInVertical::kRegular,
-                                      gfx::Vector2dF(15, 0), 1);
- 
-   EXPECT_EQ(ShapeResultBloberizerTestInfo::PendingRunFontData(bloberizer),
--            font1);
-+            font1.get());
-   EXPECT_TRUE(
-       ShapeResultBloberizerTestInfo::HasPendingRunVerticalOffsets(bloberizer));
-   {
-@@ -247,12 +247,12 @@ TEST_F(ShapeResultBloberizerTest, Stores
-   EXPECT_EQ(ShapeResultBloberizerTestInfo::CommittedBlobCount(bloberizer), 0ul);
- 
-   // one more glyph, different font => pending run flush
--  ShapeResultBloberizerTestInfo::Add(bloberizer, 44, font2,
-+  ShapeResultBloberizerTestInfo::Add(bloberizer, 44, font2.get(),
-                                      CanvasRotationInVertical::kRegular,
-                                      gfx::Vector2dF(12, 2), 2);
- 
-   EXPECT_EQ(ShapeResultBloberizerTestInfo::PendingRunFontData(bloberizer),
--            font2);
-+            font2.get());
-   EXPECT_TRUE(
-       ShapeResultBloberizerTestInfo::HasPendingRunVerticalOffsets(bloberizer));
-   {
-@@ -281,7 +281,7 @@ TEST_F(ShapeResultBloberizerTest, MixedB
-   ShapeResultBloberizer bloberizer(font.GetFontDescription(),
-                                    ShapeResultBloberizer::Type::kNormal);
- 
--  SimpleFontData* test_font = CreateTestSimpleFontData();
-+  scoped_refptr<SimpleFontData> test_font = CreateTestSimpleFontData();
- 
-   struct {
-     CanvasRotationInVertical canvas_rotation;
-@@ -310,7 +310,7 @@ TEST_F(ShapeResultBloberizerTest, MixedB
-   };
- 
-   for (const auto& op : append_ops) {
--    ShapeResultBloberizerTestInfo::Add(bloberizer, 42, test_font,
-+    ShapeResultBloberizerTestInfo::Add(bloberizer, 42, test_font.get(),
-                                        op.canvas_rotation, gfx::Vector2dF(), 0);
-     EXPECT_EQ(
-         op.expected_pending_glyphs,
 --- a/third_party/blink/renderer/platform/fonts/shaping/shape_result_buffer.cc
 +++ b/third_party/blink/renderer/platform/fonts/shaping/shape_result_buffer.cc
 @@ -249,8 +249,8 @@ int ShapeResultBuffer::OffsetForPosition
@@ -4072,105 +3617,6 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
    font_platform_data->SetAvoidEmbeddedBitmaps(
        BitmapGlyphsBlockList::ShouldAvoidEmbeddedBitmapsForTypeface(*typeface));
---- a/third_party/blink/renderer/platform/fonts/win/font_cache_skia_win.cc
-+++ b/third_party/blink/renderer/platform/fonts/win/font_cache_skia_win.cc
-@@ -167,7 +167,8 @@ void FontCache::SetStatusFontMetrics(con
- // to run in parallel with the API based OOP font fallback calls to compare the
- // results and track them in UMA for a while until we decide to remove this
- // completely.
--const SimpleFontData* FontCache::GetFallbackFamilyNameFromHardcodedChoices(
-+scoped_refptr<SimpleFontData>
-+FontCache::GetFallbackFamilyNameFromHardcodedChoices(
-     const FontDescription& font_description,
-     UChar32 codepoint,
-     FontFallbackPriority fallback_priority) {
-@@ -179,10 +180,10 @@ const SimpleFontData* FontCache::GetFall
-   if (legacy_fallback_family) {
-     FontFaceCreationParams create_by_family =
-         FontFaceCreationParams(AtomicString(legacy_fallback_family));
--    const FontPlatformData* data =
-+    FontPlatformData* data =
-         GetFontPlatformData(font_description, create_by_family);
-     if (data && data->FontContainsCharacter(codepoint)) {
--      return FontDataFromFontPlatformData(data);
-+      return FontDataFromFontPlatformData(data, kDoNotRetain);
-     }
-   }
- 
-@@ -230,15 +231,15 @@ const SimpleFontData* FontCache::GetFall
-   for (int i = 0; i < num_fonts; ++i) {
-     FontFaceCreationParams create_by_family =
-         FontFaceCreationParams(AtomicString(pan_uni_fonts[i]));
--    const FontPlatformData* data =
-+    FontPlatformData* data =
-         GetFontPlatformData(font_description, create_by_family);
-     if (data && data->FontContainsCharacter(codepoint))
--      return FontDataFromFontPlatformData(data);
-+      return FontDataFromFontPlatformData(data, kDoNotRetain);
-   }
-   return nullptr;
- }
- 
--const SimpleFontData* FontCache::GetDWriteFallbackFamily(
-+scoped_refptr<SimpleFontData> FontCache::GetDWriteFallbackFamily(
-     const FontDescription& font_description,
-     UChar32 codepoint,
-     FontFallbackPriority fallback_priority) {
-@@ -264,17 +265,17 @@ const SimpleFontData* FontCache::GetDWri
-   fallback_updated_font_description.UpdateFromSkiaFontStyle(
-       typeface->fontStyle());
-   const FontFaceCreationParams create_by_family(ToAtomicString(skia_family));
--  const FontPlatformData* data =
-+  FontPlatformData* data =
-       GetFontPlatformData(fallback_updated_font_description, create_by_family);
-   if (!data || !data->FontContainsCharacter(codepoint)) {
-     return nullptr;
-   }
--  return FontDataFromFontPlatformData(data);
-+  return FontDataFromFontPlatformData(data, kDoNotRetain);
- }
- 
- // Given the desired base font, this will create a SimpleFontData for a specific
- // font that can be used to render the given range of characters.
--const SimpleFontData* FontCache::PlatformFallbackFontForCharacter(
-+scoped_refptr<SimpleFontData> FontCache::PlatformFallbackFontForCharacter(
-     const FontDescription& font_description,
-     UChar32 character,
-     const SimpleFontData* original_font_data,
-@@ -285,13 +286,13 @@ const SimpleFontData* FontCache::Platfor
-   if (fallback_priority != FontFallbackPriority::kEmojiEmoji &&
-       (font_description.Style() == kItalicSlopeValue ||
-        font_description.Weight() >= kBoldWeightValue)) {
--    const SimpleFontData* font_data =
-+    scoped_refptr<SimpleFontData> font_data =
-         FallbackOnStandardFontStyle(font_description, character);
-     if (font_data)
-       return font_data;
-   }
- 
--  const SimpleFontData* hardcoded_list_fallback_font =
-+  scoped_refptr<SimpleFontData> hardcoded_list_fallback_font =
-       GetFallbackFamilyNameFromHardcodedChoices(font_description, character,
-                                                 fallback_priority);
- 
-@@ -415,7 +416,7 @@ static bool TypefacesHasStretchSuffix(co
-   return false;
- }
- 
--const FontPlatformData* FontCache::CreateFontPlatformData(
-+std::unique_ptr<FontPlatformData> FontCache::CreateFontPlatformData(
-     const FontDescription& font_description,
-     const FontFaceCreationParams& creation_params,
-     float font_size,
-@@ -503,7 +504,7 @@ const FontPlatformData* FontCache::Creat
-        !typeface->isItalic()) ||
-       font_description.IsSyntheticItalic();
- 
--  FontPlatformData* result = MakeGarbageCollected<FontPlatformData>(
-+  std::unique_ptr<FontPlatformData> result = std::make_unique<FontPlatformData>(
-       typeface, name.data(), font_size,
-       synthetic_bold_requested && font_description.SyntheticBoldAllowed(),
-       synthetic_italic_requested && font_description.SyntheticItalicAllowed(),
 --- a/third_party/blink/renderer/platform/testing/font_test_helpers.cc
 +++ b/third_party/blink/renderer/platform/testing/font_test_helpers.cc
 @@ -43,26 +43,23 @@ class TestFontSelector : public FontSele

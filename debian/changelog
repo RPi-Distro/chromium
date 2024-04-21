@@ -5,6 +5,8 @@ chromium (124.0.6367.60-1) unstable; urgency=high
       Reported by Man Yue Mo of GitHub Security Lab.
     - CVE-2024-3833: Object corruption in WebAssembly.
       Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2024-3914: Use after free in V8. Reported by Seunghyun Lee
+      (@0x10n) of KAIST Hacking Lab, via Pwn2Own 2024.
     - CVE-2024-3834: Use after free in Downloads. Reported by ChaobinZhang
     - CVE-2024-3837: Use after free in QUIC.
       Reported by {rotiple, dch3ck} of CW Research Inc.

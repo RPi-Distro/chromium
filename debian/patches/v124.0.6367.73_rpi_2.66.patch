@@ -112,7 +112,7 @@
              package_dict[url] = meta["SHA256"]
      if missing:
          raise Exception(f"Missing packages: {', '.join(missing)}")
-@@ -776,7 +785,7 @@ def replace_in_file(file_path: str, sear
+@@ -783,7 +792,7 @@ def replace_in_file(file_path: str, sear
  
  
  def install_into_sysroot(build_dir: str, install_root: str,
@@ -121,7 +121,7 @@
      """
      Installs libraries and headers into the sysroot environment.
      """
-@@ -930,17 +939,16 @@ def upload_sysroot(arch: str) -> None:
+@@ -937,17 +946,16 @@ def upload_sysroot(arch: str) -> None:
  
  
  def verify_package_listing(file_path: str, output_file: str,
@@ -142,7 +142,7 @@
  
      if not os.path.exists(KEYRING_FILE):
          raise Exception(f"KEYRING_FILE not found: {KEYRING_FILE}")
-@@ -973,12 +981,35 @@ def verify_package_listing(file_path: st
+@@ -980,12 +988,35 @@ def verify_package_listing(file_path: st
  
  
  def main():
@@ -188,7 +188,7 @@
  #include "components/version_info/version_info.h"
  #include "content/public/app/initialize_mojo_core.h"
  #include "content/public/common/content_client.h"
-@@ -412,6 +413,15 @@ bool HandleVersionSwitches(const base::C
+@@ -419,6 +420,15 @@ bool HandleVersionSwitches(const base::C
    }
  #endif
  
@@ -206,7 +206,7 @@
             version_info::GetVersionNumber().data(),
 --- a/src/chrome/browser/about_flags.cc
 +++ b/src/chrome/browser/about_flags.cc
-@@ -7455,15 +7455,17 @@ const FeatureEntry kFeatureEntries[] = {
+@@ -7496,15 +7496,17 @@ const FeatureEntry kFeatureEntries[] = {
       FEATURE_VALUE_TYPE(ash::features::kArcInputOverlayAlphaV2)},
  #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
  
@@ -228,7 +228,16 @@
       flag_descriptions::kChromeOSHWVBREncodingDescription, kOsCrOS | kOsLacros,
 --- a/src/chrome/browser/chrome_browser_main_extra_parts_linux.cc
 +++ b/src/chrome/browser/chrome_browser_main_extra_parts_linux.cc
-@@ -124,10 +124,10 @@ void ChromeBrowserMainExtraPartsLinux::P
+@@ -168,7 +168,7 @@ ChromeBrowserMainExtraPartsLinux::Chrome
+ 
+ ChromeBrowserMainExtraPartsLinux::~ChromeBrowserMainExtraPartsLinux() = default;
+ 
+-void ChromeBrowserMainExtraPartsLinux::PreEarlyInitialization() {
++void ChromeBrowserMainExtraPartsLinux::FixOzoneCmdLine() {
+ #if BUILDFLAG(IS_LINUX)
+   // On the desktop, we fix the platform name if necessary.
+   // See https://crbug.com/1246928.
+@@ -176,10 +176,10 @@ void ChromeBrowserMainExtraPartsLinux::P
    if (!command_line->HasSwitch(switches::kOzonePlatform)) {
      const auto ozone_platform_hint =
          command_line->GetSwitchValueASCII(switches::kOzonePlatformHint);
@@ -243,9 +252,30 @@
    }
  
    auto env = base::Environment::Create();
+@@ -190,6 +190,10 @@ void ChromeBrowserMainExtraPartsLinux::P
+ #endif  // BUILDFLAG(IS_LINUX)
+ }
+ 
++void ChromeBrowserMainExtraPartsLinux::PreEarlyInitialization() {
++  FixOzoneCmdLine();
++}
++
+ void ChromeBrowserMainExtraPartsLinux::PostBrowserStart() {
+   RecordDisplayServerProtocolSupport();
+   ChromeBrowserMainExtraPartsOzone::PostBrowserStart();
+--- a/src/chrome/browser/chrome_browser_main_extra_parts_linux.h
++++ b/src/chrome/browser/chrome_browser_main_extra_parts_linux.h
+@@ -17,6 +17,7 @@ class ChromeBrowserMainExtraPartsLinux
+       const ChromeBrowserMainExtraPartsLinux&) = delete;
+   ~ChromeBrowserMainExtraPartsLinux() override;
+ 
++  static void FixOzoneCmdLine();
+  private:
+   // ChromeBrowserMainExtraParts overrides.
+   void PreEarlyInitialization() override;
 --- a/src/chrome/browser/flag_descriptions.cc
 +++ b/src/chrome/browser/flag_descriptions.cc
-@@ -7588,8 +7588,7 @@ const char kWebPrintingApiDescription[]
+@@ -7707,8 +7707,7 @@ const char kWebPrintingApiDescription[]
      "https://github.com/WICG/web-printing for details.";
  #endif  // BUILDFLAG(IS_CHROMEOS)
  
@@ -255,7 +285,7 @@
  const char kChromeOSDirectVideoDecoderName[] = "ChromeOS Direct Video Decoder";
  const char kChromeOSDirectVideoDecoderDescription[] =
      "Enables the hardware-accelerated ChromeOS direct media::VideoDecoder "
-@@ -7598,6 +7597,8 @@ const char kChromeOSDirectVideoDecoderDe
+@@ -7717,6 +7716,8 @@ const char kChromeOSDirectVideoDecoderDe
      "disable_cros_video_decoder USE flag in ChromeOS). This flag only has an "
      "effect on non-Intel and non-AMD devices (i.e. on ARM-based SoCs).";
  #endif  // !BUILDFLAG(USE_VAAPI)
@@ -266,7 +296,7 @@
  const char kChromeOSHWVBREncodingDescription[] =
 --- a/src/chrome/browser/flag_descriptions.h
 +++ b/src/chrome/browser/flag_descriptions.h
-@@ -4360,9 +4360,11 @@ extern const char kAudioFlexibleLoopback
+@@ -4447,9 +4447,11 @@ extern const char kAudioFlexibleLoopback
  extern const char kAudioFlexibleLoopbackForSystemLoopbackDescription[];
  #endif  // BUILDFLAG(IS_CHROMEOS)
  
@@ -281,7 +311,7 @@
  #if defined(ARCH_CPU_ARM_FAMILY)
 --- a/src/chrome/common/chrome_paths.cc
 +++ b/src/chrome/common/chrome_paths.cc
-@@ -405,6 +405,10 @@ bool PathProvider(int key, base::FilePat
+@@ -410,6 +410,10 @@ bool PathProvider(int key, base::FilePat
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
      case chrome::DIR_BUNDLED_WIDEVINE_CDM:
@@ -294,7 +324,7 @@
        }
 --- a/src/chrome/common/chrome_switches.cc
 +++ b/src/chrome/common/chrome_switches.cc
-@@ -462,6 +462,9 @@ const char kPackExtensionKey[] = "pack-e
+@@ -467,6 +467,9 @@ const char kPackExtensionKey[] = "pack-e
  // crashpad (or breakpad) is initialized.
  const char kPreCrashpadCrashTest[] = "pre-crashpad-crash-test";
  
@@ -306,7 +336,7 @@
  const char kPredictionServiceMockLikelihood[] =
 --- a/src/chrome/common/chrome_switches.h
 +++ b/src/chrome/common/chrome_switches.h
-@@ -149,6 +149,7 @@ extern const char kOnTheFlyMhtmlHashComp
+@@ -150,6 +150,7 @@ extern const char kOnTheFlyMhtmlHashComp
  extern const char kOpenInNewWindow[];
  extern const char kPackExtension[];
  extern const char kPackExtensionKey[];
@@ -390,7 +420,35 @@
 +++ b/src/components/version_info/pi_patch_version_values.h
 @@ -0,0 +1,2 @@
 +// Pi patch version - generated by pi-util/settag.py
-+#define PI_PATCH_VERSION_STRING "rpi_2.65"
++#define PI_PATCH_VERSION_STRING "rpi_2.66"
+--- a/src/content/app/content_main_runner_impl.cc
++++ b/src/content/app/content_main_runner_impl.cc
+@@ -50,6 +50,10 @@
+ #include "base/trace_event/trace_event.h"
+ #include "build/build_config.h"
+ #include "build/chromeos_buildflags.h"
++#if BUILDFLAG(IS_LINUX)
++// RPI: Kludge to fix up ozone selection - bugged in current release
++#include "chrome/browser/chrome_browser_main_extra_parts_linux.h"
++#endif
+ #include "components/discardable_memory/service/discardable_shared_memory_manager.h"
+ #include "components/download/public/common/download_task_runner.h"
+ #include "components/power_monitor/make_power_monitor_device_source.h"
+@@ -1205,6 +1209,14 @@ int ContentMainRunnerImpl::RunBrowser(Ma
+           variations::VariationsIdsProvider::Mode::kUseSignedInState);
+     }
+ 
++#if BUILDFLAG(IS_LINUX)
++// RPI - Ozone kludge for google setup bug since v122 or v123
++// The following PostEarlyInitialization sets up Ozone in a manner that depends
++// on platform flags that are set later
++// Remove once fixed
++    ChromeBrowserMainExtraPartsLinux::FixOzoneCmdLine();
++#endif
++
+     std::optional<int> post_early_initialization_exit_code =
+         delegate_->PostEarlyInitialization(invoked_in_browser);
+     if (post_early_initialization_exit_code.has_value())
 --- a/src/content/common/user_agent.cc
 +++ b/src/content/common/user_agent.cc
 @@ -63,7 +63,7 @@ std::string GetUserAgentPlatform() {
@@ -430,7 +488,7 @@
  #include "media/media_buildflags.h"
  #include "media/renderers/default_decoder_factory.h"
  #include "media/video/gpu_video_accelerator_factories.h"
-@@ -942,7 +943,7 @@ media::GpuVideoAcceleratorFactories* Ren
+@@ -996,7 +997,7 @@ media::GpuVideoAcceleratorFactories* Ren
                               kGpuStreamIdMedia, kGpuStreamPriorityMedia);
  
    const bool enable_video_decode_accelerator =
@@ -441,16 +499,7 @@
        !cmd_line->HasSwitch(switches::kDisableAcceleratedVideoDecode) &&
 --- a/src/media/base/media_switches.cc
 +++ b/src/media/base/media_switches.cc
-@@ -1252,7 +1252,7 @@ BASE_FEATURE(kUseDedicatedDecoderThreadI
- // TODO(b/159825227): remove when the direct video decoder is fully launched.
- BASE_FEATURE(kUseChromeOSDirectVideoDecoder,
-              "UseChromeOSDirectVideoDecoder",
--             base::FEATURE_ENABLED_BY_DEFAULT);
-+             base::FEATURE_DISABLED_BY_DEFAULT);
- #endif  // !BUILDFLAG(USE_VAAPI)
- 
- // Limit the number of concurrent hardware decoder instances on ChromeOS.
-@@ -1274,6 +1274,8 @@ BASE_FEATURE(kUSeSequencedTaskRunnerForV
+@@ -1310,6 +1310,8 @@ BASE_FEATURE(kUSeSequencedTaskRunnerForV
  BASE_FEATURE(kUseGLForScaling,
               "UseGLForScaling",
               base::FEATURE_DISABLED_BY_DEFAULT);
@@ -459,7 +508,7 @@
  // Experimental support for GL based image processing. On some architectures,
  // the hardware accelerated video decoder outputs frames in a format not
  // understood by the display controller. We usually use LibYUV to convert these
-@@ -1281,6 +1283,8 @@ BASE_FEATURE(kUseGLForScaling,
+@@ -1317,6 +1319,8 @@ BASE_FEATURE(kUseGLForScaling,
  BASE_FEATURE(kPreferGLImageProcessor,
               "PreferGLImageProcessor",
               base::FEATURE_DISABLED_BY_DEFAULT);
@@ -470,7 +519,7 @@
  // known as MT21. Normally a hardware block performs to the conversion between
 --- a/src/media/base/media_switches.h
 +++ b/src/media/base/media_switches.h
-@@ -407,6 +407,10 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kPrefe
+@@ -421,6 +421,10 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kEnabl
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseAlternateVideoDecoderImplementation);
  #endif  // BUILDFLAG(IS_CHROMEOS) && !BUILDFLAG(USE_VAAPI)
  #endif  // BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
@@ -506,7 +555,7 @@
    # VA-API should also be compiled by default on x11/wayland linux devices
 --- a/src/media/gpu/chromeos/fourcc.cc
 +++ b/src/media/gpu/chromeos/fourcc.cc
-@@ -34,6 +34,7 @@ absl::optional<Fourcc> Fourcc::FromUint3
+@@ -34,6 +34,7 @@ std::optional<Fourcc> Fourcc::FromUint32
      case MM21:
      case P010:
      case MT2T:
@@ -522,7 +571,7 @@
      case AR24:
        return PIXEL_FORMAT_ARGB;
      // V4L2_PIX_FMT_QC08C is a proprietary Qualcomm compressed format that can
-@@ -292,6 +294,7 @@ absl::optional<Fourcc> Fourcc::ToSingleP
+@@ -292,6 +294,7 @@ std::optional<Fourcc> Fourcc::ToSinglePl
      case P010:
      case MM21:
      case MT2T:
@@ -540,7 +589,7 @@
      case Q10C:
 --- a/src/media/gpu/chromeos/fourcc.h
 +++ b/src/media/gpu/chromeos/fourcc.h
-@@ -99,6 +99,9 @@ class MEDIA_GPU_EXPORT Fourcc {
+@@ -100,6 +100,9 @@ class MEDIA_GPU_EXPORT Fourcc {
  
      // Single plane 8-bit little-endian ARGB (bytes in reverse B-G-R-A order).
      AR24 = ComposeFourcc('A', 'R', '2', '4'),
@@ -560,7 +609,7 @@
  std::unique_ptr<ImageProcessor> CreateV4L2ImageProcessorWithInputCandidates(
      const std::vector<PixelLayoutCandidate>& input_candidates,
      const gfx::Rect& visible_rect,
-@@ -207,7 +206,7 @@ std::unique_ptr<ImageProcessor> CreateLi
+@@ -209,7 +208,7 @@ std::unique_ptr<ImageProcessor> CreateLi
        std::move(client_task_runner));
  }
  
@@ -569,18 +618,6 @@
  std::unique_ptr<ImageProcessor> CreateGLImageProcessorWithInputCandidates(
      const std::vector<PixelLayoutCandidate>& input_candidates,
      const gfx::Rect& input_visible_rect,
---- a/src/media/gpu/chromeos/mailbox_video_frame_converter.cc
-+++ b/src/media/gpu/chromeos/mailbox_video_frame_converter.cc
-@@ -337,7 +337,8 @@ void MailboxVideoFrameConverter::Convert
-   DCHECK(parent_task_runner_->RunsTasksInCurrentSequence());
-   DVLOGF(4);
- 
--  if (!frame || frame->storage_type() != VideoFrame::STORAGE_GPU_MEMORY_BUFFER)
-+  if (!frame || (frame->storage_type() != VideoFrame::STORAGE_GPU_MEMORY_BUFFER &&
-+      frame->storage_type() != VideoFrame::STORAGE_DMABUFS))
-     return OnError(FROM_HERE, "Invalid frame.");
- 
-   VideoFrame* origin_frame =
 --- a/src/media/gpu/v4l2/BUILD.gn
 +++ b/src/media/gpu/v4l2/BUILD.gn
 @@ -65,12 +65,18 @@ source_set("v4l2") {
@@ -603,10 +640,10 @@
 +
    if (enable_hevc_parser_and_hw_decoder) {
      sources += [
-       "v4l2_video_decoder_delegate_h265.cc",
+       "stateless/h265_delegate.cc",
 --- a/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.cc
 +++ b/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.cc
-@@ -1208,6 +1208,26 @@ bool V4L2VideoDecodeAccelerator::FlushIn
+@@ -1214,6 +1214,26 @@ bool V4L2VideoDecodeAccelerator::FlushIn
    return (decoder_state_ != kError);
  }
  
@@ -633,7 +670,7 @@
  void V4L2VideoDecodeAccelerator::ServiceDeviceTask(bool event_pending) {
    DVLOGF(4);
    DCHECK(decoder_thread_.task_runner()->BelongsToCurrentThread());
-@@ -1231,11 +1251,11 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1237,11 +1257,11 @@ void V4L2VideoDecodeAccelerator::Service
      return;
    }
  
@@ -648,7 +685,7 @@
      // Some platforms do not send an initial resolution change event.
      // To work around this, we need to keep checking if the initial resolution
      // is known already by explicitly querying the format after each decode,
-@@ -1248,11 +1268,15 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1254,11 +1274,15 @@ void V4L2VideoDecodeAccelerator::Service
      gfx::Size visible_size;
      bool again;
      if (GetFormatInfo(&format, &visible_size, &again) && !again) {
@@ -665,7 +702,7 @@
    Dequeue();
    Enqueue();
  
-@@ -1294,7 +1318,7 @@ void V4L2VideoDecodeAccelerator::Service
+@@ -1300,7 +1324,7 @@ void V4L2VideoDecodeAccelerator::Service
              << buffers_at_client_.size() << "]";
  
    ScheduleDecodeBufferTaskIfNeeded();
@@ -674,7 +711,7 @@
      StartResolutionChange();
  }
  
-@@ -1581,8 +1605,11 @@ bool V4L2VideoDecodeAccelerator::Enqueue
+@@ -1587,8 +1611,11 @@ bool V4L2VideoDecodeAccelerator::Enqueue
    }
  
    if (!ret) {
@@ -688,7 +725,7 @@
      return false;
    }
  
-@@ -1743,7 +1770,7 @@ bool V4L2VideoDecodeAccelerator::IsDecod
+@@ -1749,7 +1776,7 @@ bool V4L2VideoDecodeAccelerator::IsDecod
    memset(&cmd, 0, sizeof(cmd));
    cmd.cmd = V4L2_DEC_CMD_STOP;
    if (device_->Ioctl(VIDIOC_TRY_DECODER_CMD, &cmd) != 0) {
@@ -699,7 +736,7 @@
  
 --- a/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.h
 +++ b/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.h
-@@ -285,6 +285,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
+@@ -286,6 +286,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
                        int32_t picture_buffer_id,
                        EGLImageKHR egl_image);
  
@@ -709,7 +746,7 @@
    // Service I/O on the V4L2 devices.  This task should only be scheduled from
    // DevicePollTask().  If |event_pending| is true, one or more events
    // on file descriptor are pending.
-@@ -450,7 +453,11 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
+@@ -451,7 +454,11 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
    // |num_instances_| tracks the number of simultaneous decoders.
    // |can_use_decoder_| is true iff we haven't reached the maximum number of
    // instances at the time this decoder is created.
@@ -721,7 +758,7 @@
    static base::AtomicRefCount num_instances_;
    const bool can_use_decoder_;
  
-@@ -586,6 +593,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
+@@ -588,6 +595,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
    // The number of pictures that are sent to PictureReady and will be cleared.
    int picture_clearing_count_;
  
@@ -1362,7 +1399,7 @@
        return DRM_FORMAT_ARGB8888;
  
      default:
-@@ -909,11 +920,19 @@ void V4L2Device::CloseDevice() {
+@@ -913,11 +924,19 @@ void V4L2Device::CloseDevice() {
  }
  
  void V4L2Device::EnumerateDevicesForType(Type type) {
@@ -1382,7 +1419,7 @@
  
    std::string device_pattern;
    v4l2_buf_type buf_type;
-@@ -949,7 +968,11 @@ void V4L2Device::EnumerateDevicesForType
+@@ -953,7 +972,11 @@ void V4L2Device::EnumerateDevicesForType
    // We are sandboxed, so we can't query directory contents to check which
    // devices are actually available. Try to open the first 10; if not present,
    // we will just fail to open immediately.
@@ -1396,7 +1433,7 @@
    }
 --- a/src/media/gpu/v4l2/v4l2_device.h
 +++ b/src/media/gpu/v4l2/v4l2_device.h
-@@ -32,6 +32,7 @@
+@@ -34,6 +34,7 @@
  #include "media/base/video_decoder_config.h"
  #include "media/base/video_frame.h"
  #include "media/base/video_frame_layout.h"
@@ -1404,7 +1441,7 @@
  #include "media/gpu/chromeos/fourcc.h"
  #include "media/gpu/media_gpu_export.h"
  #include "media/gpu/v4l2/v4l2_device_poller.h"
-@@ -43,6 +44,11 @@
+@@ -44,6 +45,11 @@
  #include "ui/gfx/geometry/size.h"
  #include "ui/gl/gl_bindings.h"
  
@@ -1416,24 +1453,36 @@
  // This has not been accepted upstream.
  #ifndef V4L2_PIX_FMT_AV1
  #define V4L2_PIX_FMT_AV1 v4l2_fourcc('A', 'V', '0', '1') /* AV1 */
---- a/src/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
-+++ b/src/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
-@@ -271,6 +271,7 @@ V4L2StatefulVideoDecoder::GetSupportedCo
-       base::BindRepeating(&HandledIoctl, device_fd.get()),
-       V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+--- a/src/media/gpu/v4l2/v4l2_utils.cc
++++ b/src/media/gpu/v4l2/v4l2_utils.cc
+@@ -503,7 +503,13 @@ struct timeval TimeDeltaToTimeVal(base::
+ std::optional<SupportedVideoDecoderConfigs> GetSupportedV4L2DecoderConfigs() {
+   SupportedVideoDecoderConfigs supported_media_configs;
  
-+#if 0
-   // V4L2 stateful formats (don't end up with _SLICE or _FRAME) supported.
-   constexpr std::array<uint32_t, 4> kSupportedInputCodecs = {
-     V4L2_PIX_FMT_H264,
-@@ -283,6 +284,7 @@ V4L2StatefulVideoDecoder::GetSupportedCo
-   std::erase_if(v4l2_codecs, [kSupportedInputCodecs](uint32_t v4l2_codec) {
-     return !base::Contains(kSupportedInputCodecs, v4l2_codec);
-   });
++#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
+   constexpr char kVideoDeviceDriverPath[] = "/dev/video-dec0";
++#else
++  // Pi stateful decoder here  current google code doesn't look like it can
++  // cope with multiple devioces
++  constexpr char kVideoDeviceDriverPath[] = "/dev/video10";
 +#endif
+   base::ScopedFD device_fd(HANDLE_EINTR(
+       open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
+   if (!device_fd.is_valid()) {
+@@ -548,7 +554,13 @@ std::optional<SupportedVideoDecoderConfi
+ }
  
-   for (const uint32_t v4l2_codec : v4l2_codecs) {
-     const std::vector<VideoCodecProfile> media_codec_profiles =
+ bool IsV4L2DecoderStateful() {
++#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
+   constexpr char kVideoDeviceDriverPath[] = "/dev/video-dec0";
++#else
++  // Pi stateful decoder here  current google code doesn't look like it can
++  // cope with multiple devioces
++  constexpr char kVideoDeviceDriverPath[] = "/dev/video10";
++#endif
+   base::ScopedFD device_fd(HANDLE_EINTR(
+       open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
+   if (!device_fd.is_valid()) {
 --- a/src/media/gpu/v4l2/v4l2_video_decoder.h
 +++ b/src/media/gpu/v4l2/v4l2_video_decoder.h
 @@ -6,6 +6,7 @@
@@ -1446,7 +1495,7 @@
  #include <memory>
 --- a/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateless.cc
 +++ b/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateless.cc
-@@ -740,10 +740,12 @@ bool V4L2StatelessVideoDecoderBackend::C
+@@ -736,10 +736,12 @@ bool V4L2StatelessVideoDecoderBackend::C
      decoder_ = std::make_unique<VP8Decoder>(
          std::make_unique<V4L2VideoDecoderDelegateVP8>(this, device_.get()),
          color_space_);
@@ -1483,7 +1532,7 @@
  class V4L2Device;
 --- a/src/media/mojo/services/gpu_mojo_media_client_linux.cc
 +++ b/src/media/mojo/services/gpu_mojo_media_client_linux.cc
-@@ -13,21 +13,29 @@
+@@ -13,16 +13,19 @@
  #include "media/gpu/chromeos/mailbox_video_frame_converter.h"
  #include "media/gpu/chromeos/platform_video_frame_pool.h"
  #include "media/gpu/chromeos/video_decoder_pipeline.h"
@@ -1501,8 +1550,10 @@
    }
 +#endif
  
-   if (IsOutOfProcessVideoDecodingEnabled()) {
-     return VideoDecoderType::kOutOfProcess;
+   switch (media::GetOutOfProcessVideoDecodingMode()) {
+     case media::OOPVDMode::kEnabledWithGpuProcessAsProxy:
+@@ -35,6 +38,11 @@ VideoDecoderType GetPreferredLinuxDecode
+       break;
    }
  
 +  // If direct video decoder is disabled, revert to using the VDA
@@ -1513,7 +1564,7 @@
  #if BUILDFLAG(USE_VAAPI)
    return VideoDecoderType::kVaapi;
  #elif BUILDFLAG(USE_V4L2_CODEC)
-@@ -47,6 +55,7 @@ std::vector<Fourcc> GetPreferredRenderab
+@@ -54,6 +62,7 @@ std::vector<Fourcc> GetPreferredRenderab
  
    // Support 1-copy argb textures.
    renderable_fourccs.emplace_back(Fourcc::AR24);
@@ -1521,7 +1572,7 @@
  
    return renderable_fourccs;
  }
-@@ -54,7 +63,7 @@ std::vector<Fourcc> GetPreferredRenderab
+@@ -61,7 +70,7 @@ std::vector<Fourcc> GetPreferredRenderab
  VideoDecoderType GetActualPlatformDecoderImplementation(
      const gpu::GpuPreferences& gpu_preferences,
      const gpu::GPUInfo& gpu_info) {
@@ -1530,7 +1581,7 @@
    switch (GetPreferredLinuxDecoderImplementation()) {
      case VideoDecoderType::kUnknown:
        return VideoDecoderType::kUnknown;
-@@ -62,6 +71,11 @@ VideoDecoderType GetActualPlatformDecode
+@@ -69,6 +78,11 @@ VideoDecoderType GetActualPlatformDecode
        return VideoDecoderType::kOutOfProcess;
      case VideoDecoderType::kV4L2:
        return VideoDecoderType::kV4L2;
@@ -1542,7 +1593,7 @@
      case VideoDecoderType::kVaapi: {
        // Allow VaapiVideoDecoder on GL.
        if (gpu_preferences.gr_context_type == gpu::GrContextType::kGL) {
-@@ -154,6 +168,13 @@ std::unique_ptr<VideoDecoder> CreatePlat
+@@ -161,6 +175,13 @@ std::unique_ptr<VideoDecoder> CreatePlat
            traits.media_log->Clone(), /*oop_video_decoder=*/{},
            /*in_video_decoder_process=*/false);
      }
@@ -1556,7 +1607,7 @@
      default:
        return nullptr;
    }
-@@ -189,6 +210,8 @@ GetPlatformSupportedVideoDecoderConfigs(
+@@ -196,6 +217,8 @@ GetPlatformSupportedVideoDecoderConfigs(
    base::UmaHistogramEnumeration("Media.VaapiLinux.SupportedVideoDecoder",
                                  decoder_implementation);
    switch (decoder_implementation) {
@@ -2441,7 +2492,7 @@
 +    "src/third_party/skia"]
 +
 +# Our base tag or commit no
-+src_commit="122.0.6261.89"
++src_commit="124.0.6367.73"
 --- /dev/null
 +++ b/src/pi-util/pipewire_utils_h.patch
 @@ -0,0 +1,11 @@
@@ -2785,7 +2836,7 @@
 --- a/src/ui/gl/init/gl_factory.cc
 +++ b/src/ui/gl/init/gl_factory.cc
 @@ -103,6 +103,15 @@ GLImplementationParts GetRequestedGLImpl
-   absl::optional<GLImplementationParts> impl_from_cmdline =
+   std::optional<GLImplementationParts> impl_from_cmdline =
        GetRequestedGLImplementationFromCommandLine(cmd, fallback_to_software_gl);
  
 +  // RPI: We always want EGL as our preferred render
@@ -2802,7 +2853,7 @@
      return allowed_impls[0];
 --- a/src/ui/ozone/platform/wayland/host/wayland_connection.h
 +++ b/src/ui/ozone/platform/wayland/host/wayland_connection.h
-@@ -358,8 +358,9 @@ class WaylandConnection {
+@@ -360,8 +360,9 @@ class WaylandConnection {
    void DumpState(std::ostream& out) const;
  
    bool UseImplicitSyncInterop() const {
@@ -2816,7 +2867,7 @@
   private:
 --- a/src/third_party/libyuv/BUILD.gn
 +++ b/src/third_party/libyuv/BUILD.gn
-@@ -174,7 +174,6 @@ static_library("libyuv_internal") {
+@@ -188,7 +188,6 @@ static_library("libyuv_internal") {
      configs += [ "//build/config/compiler:optimize_max" ]
    }
  
@@ -2824,7 +2875,7 @@
    if (!is_win) {
      cflags = [
        # "-mpopcnt",
-@@ -183,6 +182,11 @@ static_library("libyuv_internal") {
+@@ -197,6 +196,11 @@ static_library("libyuv_internal") {
        "-ffp-contract=fast",  # Enable fma vectorization for NEON.
      ]
    }
@@ -2836,7 +2887,7 @@
  }
  
  if (libyuv_use_neon) {
-@@ -215,6 +219,11 @@ if (libyuv_use_neon) {
+@@ -229,6 +233,11 @@ if (libyuv_use_neon) {
  
      if (current_cpu != "arm64") {
        configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
@@ -3668,10 +3719,10 @@
 +#endif
  
      void Init_BitmapProcState_ssse3();
-     void Init_BitmapProcState_hsw();
+ 
 --- a/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
 +++ b/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
-@@ -387,6 +387,256 @@ static void decode_packed_coordinates_an
+@@ -256,6 +256,256 @@ static void decode_packed_coordinates_an
          }
      }
  
@@ -3928,7 +3979,7 @@
  #else
  
      // The NEON code only actually differs from the portable code in the
-@@ -499,6 +749,202 @@ static void decode_packed_coordinates_an
+@@ -368,6 +618,202 @@ static void decode_packed_coordinates_an
  
  #endif
  

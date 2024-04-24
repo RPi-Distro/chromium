@@ -1,0 +1,11 @@
+--- a/src/build/linux/sysroot_scripts/sysroot_creator.py
++++ b/src/build/linux/sysroot_scripts/sysroot_creator.py
+@@ -653,7 +653,7 @@ def create_tarball(install_root: str, ar
+     command = [
+         "tar",
+         "-I",
+-        "xz -z9 -T0 --lzma2='dict=256MiB'",
++        "xz -M 70% -z9 -T0 --lzma2='dict=256MiB'",
+         "-cf",
+         tarball_path,
+         "-C",

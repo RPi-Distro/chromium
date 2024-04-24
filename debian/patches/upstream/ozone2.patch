@@ -1,0 +1,132 @@
+commit e9e5bb8c5cd4112345ed2b62db5f0c70783335a5
+Author: Tom Anderson <thomasanderson@chromium.org>
+Date:   Tue Apr 23 17:45:54 2024 +0000
+
+    Fix ozone platform initialization when set via chrome://flags
+    
+    This change that fixes ozone platform selection.  It's intended to be
+    minimal so it can be merged to beta and stable.  The newly added
+    --eye-dropper-not-supported flag should be removed in a followup.
+    
+    R=sky
+    CC=​nickdiego
+    
+    Fixed: 329678163
+    Change-Id: Ie06da22447740bdeef8a50216bd1d1769c03588d
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5474983
+    Reviewed-by: Scott Violet <sky@chromium.org>
+    Commit-Queue: Thomas Anderson <thomasanderson@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1291406}
+
+--- a/chrome/app/chrome_main_delegate.cc
++++ b/chrome/app/chrome_main_delegate.cc
+@@ -805,12 +805,11 @@ void OnResourceExhausted() {
+ }
+ #endif  // !BUILDFLAG(IS_WIN)
+ 
+-#if BUILDFLAG(IS_OZONE)
++#if BUILDFLAG(IS_CHROMEOS_LACROS)
+ void AddFeatureFlagsToCommandLine() {
+   CHECK(!base::FeatureList::GetInstance());
+   base::ScopedAddFeatureFlags flags(base::CommandLine::ForCurrentProcess());
+ 
+-#if BUILDFLAG(IS_CHROMEOS_LACROS)
+   const auto& init_params = *chromeos::BrowserParamsProxy::Get();
+   if (init_params.IsVariableRefreshRateAlwaysOn()) {
+     flags.EnableIfNotSet(features::kEnableVariableRefreshRateAlwaysOn);
+@@ -819,16 +818,8 @@ void AddFeatureFlagsToCommandLine() {
+   if (init_params.IsPdfOcrEnabled()) {
+     flags.EnableIfNotSet(features::kPdfOcr);
+   }
+-#endif  // BUILDFLAG(IS_CHROMEOS_LACROS)
+-
+-  // Disable currently unsupported web features per platform properties.
+-  if (!ui::OzonePlatform::GetInstance()
+-           ->GetPlatformProperties()
+-           .supports_color_picker_dialog) {
+-    flags.DisableIfNotSet(features::kEyeDropper);
+-  }
+ }
+-#endif  // BUILDFLAG(IS_OZONE)
++#endif  // BUILDFLAG(IS_CHROMEOS_LACROS)
+ 
+ }  // namespace
+ 
+@@ -958,16 +949,9 @@ std::optional<int> ChromeMainDelegate::P
+   chrome::SetLacrosDefaultPathsFromInitParams(init_params.DefaultPaths().get());
+ #endif  // BUILDFLAG(IS_CHROMEOS_LACROS)
+ 
+-#if BUILDFLAG(IS_OZONE)
+-  // Initialize Ozone platform and add required feature flags as per platform's
+-  // properties. Must be added before feature list is created otherwise the
+-  // added flag won't be picked up.
+-#if BUILDFLAG(IS_LINUX)
+-  ChromeBrowserMainExtraPartsLinux::InitOzonePlatformHint();
+-#endif
+-  ui::OzonePlatform::PreEarlyInitialization();
++#if BUILDFLAG(IS_CHROMEOS_LACROS)
+   AddFeatureFlagsToCommandLine();
+-#endif  // BUILDFLAG(IS_OZONE)
++#endif
+ 
+   // The DBus initialization above is needed for FeatureList creation here;
+   // features are needed for Mojo initialization; and Mojo initialization is
+@@ -977,6 +961,23 @@ std::optional<int> ChromeMainDelegate::P
+           ->chrome_feature_list_creator();
+   chrome_feature_list_creator->CreateFeatureList();
+ 
++#if BUILDFLAG(IS_OZONE)
++  // Initialize Ozone platform and add required feature flags as per platform's
++  // properties.
++#if BUILDFLAG(IS_LINUX)
++  ChromeBrowserMainExtraPartsLinux::InitOzonePlatformHint();
++#endif
++  ui::OzonePlatform::PreEarlyInitialization();
++
++  // Disable currently unsupported web features per platform properties.
++  if (!ui::OzonePlatform::GetInstance()
++           ->GetPlatformProperties()
++           .supports_color_picker_dialog) {
++    base::CommandLine::ForCurrentProcess()->AppendSwitch(
++        features::kEyeDropperNotSupported);
++  }
++#endif  // BUILDFLAG(IS_OZONE)
++
+   content::InitializeMojoCore();
+ 
+ #if BUILDFLAG(IS_CHROMEOS_LACROS)
+--- a/ui/base/ui_base_features.cc
++++ b/ui/base/ui_base_features.cc
+@@ -6,6 +6,7 @@
+ 
+ #include <stdlib.h>
+ 
++#include "base/command_line.h"
+ #include "base/feature_list.h"
+ #include "base/metrics/field_trial_params.h"
+ #include "build/build_config.h"
+@@ -333,8 +334,12 @@ BASE_FEATURE(kEyeDropper,
+ #endif
+ );
+ 
++const char kEyeDropperNotSupported[] = "eye-dropper-not-supported";
++
+ bool IsEyeDropperEnabled() {
+-  return base::FeatureList::IsEnabled(features::kEyeDropper);
++  return base::FeatureList::IsEnabled(features::kEyeDropper) &&
++         !base::CommandLine::ForCurrentProcess()->HasSwitch(
++             kEyeDropperNotSupported);
+ }
+ 
+ // Used to enable keyboard accessible tooltips in in-page content
+--- a/ui/base/ui_base_features.h
++++ b/ui/base/ui_base_features.h
+@@ -86,6 +86,8 @@ COMPONENT_EXPORT(UI_BASE_FEATURES) bool
+ 
+ // Used to enable the eye-dropper in the refresh color-picker.
+ COMPONENT_EXPORT(UI_BASE_FEATURES) BASE_DECLARE_FEATURE(kEyeDropper);
++// TODO(https://crbug.com/329678163): This flag should be removed.
++COMPONENT_EXPORT(UI_BASE_FEATURES) extern const char kEyeDropperNotSupported[];
+ COMPONENT_EXPORT(UI_BASE_FEATURES) bool IsEyeDropperEnabled();
+ 
+ COMPONENT_EXPORT(UI_BASE_FEATURES)

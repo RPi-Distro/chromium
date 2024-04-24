@@ -32,6 +32,8 @@ upstream/span-optional.patch
 upstream/extractor-bitset.patch
 upstream/atomic.patch
 upstream/webgpu-optional.patch
+upstream/ozone1.patch
+upstream/ozone2.patch
 
 disable/tests.patch
 disable/unrar.patch

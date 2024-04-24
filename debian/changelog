@@ -7,6 +7,10 @@ chromium (124.0.6367.60-2) UNRELEASED; urgency=high
        regenerate from new ffmpeg source tree
      - third_party/skia-vsx-instructions.patch: update for upstream changes
 
+  [ Andres Salomon ]
+  * d/patches:
+    - fixes/arm64-ftbfs.patch: add arm64-specific ftbfs fix for libdav1d.
+
  -- Timothy Pearson <tpearson@debian.org>  Mon, 22 Apr 2024 10:34:00 -0500
 
 chromium (124.0.6367.60-1) unstable; urgency=high

@@ -1,3 +1,13 @@
+chromium (124.0.6367.78-1) unstable; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-4058: Type Confusion in ANGLE.
+      Reported by Toan (suto) Pham and Bao (zx) Pham of Qrious Secure.
+    - CVE-2024-4059: Out of bounds read in V8 API. Reported by Eirik.
+    - CVE-2024-4060: Use after free in Dawn. Reported by wgslfuzz.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 25 Apr 2024 19:07:35 -0400
+
 chromium (124.0.6367.60-2) unstable; urgency=high
 
   * d/patches/ppc64le:

@@ -1,4 +1,4 @@
-chromium (124.0.6367.60-2) UNRELEASED; urgency=high
+chromium (124.0.6367.60-2) unstable; urgency=high
 
   * d/patches/ppc64le:
      - third_party/0001-Add-PPC64-support-for-boringssl.patch: update for
@@ -13,7 +13,7 @@ chromium (124.0.6367.60-2) UNRELEASED; urgency=high
     - upstream/ozone1.patch, upstream/ozone2.patch: backport fixes for
       broken wayland support (closes: #1069586).
 
- -- Timothy Pearson <tpearson@debian.org>  Mon, 22 Apr 2024 10:34:00 -0500
+ -- Timothy Pearson <tpearson@debian.org>  Thu, 25 Apr 2024 15:21:00 -0500
 
 chromium (124.0.6367.60-1) unstable; urgency=high
 

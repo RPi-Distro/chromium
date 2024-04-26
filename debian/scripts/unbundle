@@ -10,7 +10,6 @@ import replace_gn_files
 
 keepers = (
     'ffmpeg',
-    'harfbuzz-ng',  # needs harfbuzz-subset (>= 6.0). TODO: test w/ bookworm.
     'icu',          # previously bundled due to bullseye. TODO: test w/ bookworm.
     'libvpx',       # currently broken with no easy fix; https://crbug.com/1307941
     'absl_algorithm',

@@ -85,6 +85,7 @@ Build-Depends:
  libspeechd-dev,
  libminizip-dev,
  libhunspell-dev,
+ libharfbuzz-dev,
  libxcb-dri3-dev,
  libusb-1.0-0-dev,
  libopenjp2-7-dev,

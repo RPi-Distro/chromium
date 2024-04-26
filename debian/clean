@@ -6,6 +6,7 @@ Makefile
 third_party/libevent/BUILD.gn
 build/secondary/third_party/libjpeg_turbo/BUILD.gn
 
+third_party/dav1d/BUILD.gn
 third_party/flac/BUILD.gn
 third_party/zlib/BUILD.gn
 third_party/opus/BUILD.gn

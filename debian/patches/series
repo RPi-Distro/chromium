@@ -22,7 +22,6 @@ fixes/bad-font-gc1.patch
 fixes/bad-font-gc11.patch
 fixes/bad-font-gc2.patch
 fixes/bad-font-gc3.patch
-fixes/arm64-ftbfs.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
@@ -132,10 +131,7 @@ ppc64le/fixes/fix-partition-alloc-compile.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 ppc64le/third_party/0001-Fix-highway-ppc-hwcap.patch
 
-ppc64le/third_party/0001-Add-PPC64-support-for-libdav1d.patch
-ppc64le/third_party/0001-Fix-libdav1d-compilation-on-clang-ppc.patch
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch
-ppc64le/third_party/0003-thirdparty-fix-dav1d-gn.patch
 ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
 
 ppc64le/third_party/dawn-fix-typos.patch

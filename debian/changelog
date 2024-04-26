@@ -1,3 +1,15 @@
+chromium (124.0.6367.78-2) UNRELEASED; urgency=high
+
+  * Build-dep on libdav1d-dev and delete the bundled third_party/dav1d.
+  * d/patches:
+    - ppc64le/third_party/0001-Add-PPC64-support-for-libdav1d.patch,
+      ppc64le/third_party/0001-Fix-libdav1d-compilation-on-clang-ppc.patch,
+      ppc64le/third_party/0003-thirdparty-fix-dav1d-gn.patch,
+      fixes/arm64-ftbfs.patch: drop these 4 patches that are only needed
+      for bundled libdav1d.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 25 Apr 2024 19:07:35 -0400
+
 chromium (124.0.6367.78-1) unstable; urgency=high
 
   * New upstream security release.

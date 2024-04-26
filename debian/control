@@ -39,6 +39,7 @@ Build-Depends:
  x11-apps,
  xcb-proto,
  xfonts-base,
+ libdav1d-dev,
  libx11-xcb-dev,
  libxshmfence-dev,
  libgl-dev,

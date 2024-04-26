@@ -35,7 +35,6 @@ keepers = (
     'absl_utility',
     'brotli',       # requires brotli >= 1.1 (trixie)
     'crc32c',
-    'dav1d',
     'flatbuffers',  # "So third_party/tflite uses a specific version of flatbuffers
                     # (currently only available in experimental; not even in sid).
                     # I'm not comfortable changing the version check and potentially

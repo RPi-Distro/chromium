@@ -1,5 +1,6 @@
 chromium (124.0.6367.78-2) UNRELEASED; urgency=high
 
+  * Build-dep on libhwy-dev and delete the bundled third_party/highway.
   * Build-dep on libharfbuzz-dev and delete the bundled harfbuzz-ng.
   * Build-dep on libdav1d-dev and delete the bundled third_party/dav1d.
   * d/patches:
@@ -8,6 +9,9 @@ chromium (124.0.6367.78-2) UNRELEASED; urgency=high
       ppc64le/third_party/0003-thirdparty-fix-dav1d-gn.patch,
       fixes/arm64-ftbfs.patch: drop these 4 patches that are only needed
       for bundled libdav1d.
+    - ppc64le/third_party/0001-Fix-highway-ppc-hwcap.patch,
+      ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch: drop
+      these two patches that were needed for bundled highway.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

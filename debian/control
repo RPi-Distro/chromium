@@ -60,6 +60,7 @@ Build-Depends:
  libcap-dev,
  libdrm-dev,
  libffi-dev,
+ libhwy-dev,
  libkrb5-dev,
  libexif-dev,
  libflac-dev,

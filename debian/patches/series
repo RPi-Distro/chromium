@@ -129,7 +129,6 @@ ppc64le/fixes/fix-rust-linking.patch
 ppc64le/fixes/fix-breakpad-compile.patch
 ppc64le/fixes/fix-partition-alloc-compile.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
-ppc64le/third_party/0001-Fix-highway-ppc-hwcap.patch
 
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch
 ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
@@ -139,12 +138,6 @@ ppc64le/third_party/dawn-fix-ppc64le-detection.patch
 
 # Suppress harmless compiler warning messages that appear on ppc64 due to arch-specific warning flags being passed
 ppc64le/fixes/fix-unknown-warning-option-messages.diff
-
-# Needed on Debian while POWER8 remains the build target
-# POWER9 enables hardware 128 bit vector support (ISA 3.0),
-# and Highway gets confused when building in POWER8 mode
-# (POWER8 compiler flags) on POWER9 hosts.
-ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch
 
 # These patches enable full POWER ISA 3.0 (POWER9) acceleration when applied
 # They will not work on POWER8 (ISA 2.07) or below

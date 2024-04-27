@@ -39,7 +39,6 @@ keepers = (
                     # I'm not comfortable changing the version check and potentially
                     # having different schemas specifically for a serialization library"
                     # from Dec 2023
-    'highway',
     'libaom' ,
     'libavif',
     'libyuv' ,

@@ -80,6 +80,7 @@ Files-Excluded:
  third_party/flac
  third_party/harfbuzz-ng/src
  third_party/harfbuzz-ng/harfbuzz.gni
+ third_party/highway
  third_party/llvm
  third_party/libei
  third_party/webgl

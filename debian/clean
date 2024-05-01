@@ -6,7 +6,10 @@ Makefile
 third_party/libevent/BUILD.gn
 build/secondary/third_party/libjpeg_turbo/BUILD.gn
 
+third_party/dav1d/BUILD.gn
 third_party/flac/BUILD.gn
+third_party/harfbuzz-ng/harfbuzz.gni
+third_party/highway/BUILD.gn
 third_party/zlib/BUILD.gn
 third_party/opus/BUILD.gn
 third_party/snappy/BUILD.gn

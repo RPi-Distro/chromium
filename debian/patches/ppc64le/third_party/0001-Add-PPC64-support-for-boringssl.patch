@@ -5081,12 +5081,11 @@ Index: chromium-124.0.6367.60/third_party/boringssl/src/crypto/fipsmodule/sha/in
 ===================================================================
 --- chromium-124.0.6367.60.orig/third_party/boringssl/src/crypto/fipsmodule/sha/internal.h
 +++ chromium-124.0.6367.60/third_party/boringssl/src/crypto/fipsmodule/sha/internal.h
-@@ -23,6 +23,17 @@
+@@ -23,6 +23,16 @@
  extern "C" {
  #endif
  
-+#if defined(OPENSSL_PPC64LE) ||                                                   \
-+    (!defined(OPENSSL_NO_ASM) && defined(OPENSSL_X86))
++#if defined(OPENSSL_PPC64LE)
 +// POWER has an intrinsics-based implementation of SHA-1 and thus the functions
 +// normally defined in assembly are available even with |OPENSSL_NO_ASM| in
 +// this case.

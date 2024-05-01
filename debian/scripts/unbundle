@@ -10,7 +10,6 @@ import replace_gn_files
 
 keepers = (
     'ffmpeg',
-    'harfbuzz-ng',  # needs harfbuzz-subset (>= 6.0). TODO: test w/ bookworm.
     'icu',          # previously bundled due to bullseye. TODO: test w/ bookworm.
     'libvpx',       # currently broken with no easy fix; https://crbug.com/1307941
     'absl_algorithm',
@@ -35,14 +34,15 @@ keepers = (
     'absl_utility',
     'brotli',       # requires brotli >= 1.1 (trixie)
     'crc32c',
-    'dav1d',
     'flatbuffers',  # "So third_party/tflite uses a specific version of flatbuffers
                     # (currently only available in experimental; not even in sid).
                     # I'm not comfortable changing the version check and potentially
                     # having different schemas specifically for a serialization library"
                     # from Dec 2023
-    'highway',
-    'libaom' ,
+
+    'libaom',       # broken - media/gpu/vaapi/BUILD.gn depends on libaomrc, but the
+                    # shim doesn't provide it. Needs an upstream bug.
+
     'libavif',
     'libyuv' ,
     'libwebp',      # libavif depends on libsharpyuv-dev; only in libwebp 1.3 (trixie)

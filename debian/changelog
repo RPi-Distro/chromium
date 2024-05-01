@@ -1,5 +1,9 @@
-chromium (124.0.6367.78-2) UNRELEASED; urgency=high
+chromium (124.0.6367.118-1) unstable; urgency=high
 
+  * New upstream security release.
+    - CVE-2024-4331: Use after free in Picture In Picture.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2024-4368: Use after free in Dawn. Reported by wgslfuzz.
   * Build-dep on libhwy-dev and delete the bundled third_party/highway.
   * Build-dep on libharfbuzz-dev and delete the bundled harfbuzz-ng.
   * Build-dep on libdav1d-dev and delete the bundled third_party/dav1d.
@@ -12,13 +16,16 @@ chromium (124.0.6367.78-2) UNRELEASED; urgency=high
     - ppc64le/third_party/0001-Fix-highway-ppc-hwcap.patch,
       ppc64le/third_party/0002-Highway-disable-128-bit-vsx.patch: drop
       these two patches that were needed for bundled highway.
+    - upstream/ozone1.patch: drop, merged upstream.
+    - upstream/ozone2.patch: drop, merged upstream.
+    - fixes/bad-font-gc2.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:
     - third_party/0001-Add-PPC64-support-for-boringssl.patch: Fix inadvertent
       breakage of i386 build
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 25 Apr 2024 19:07:35 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 30 Apr 2024 17:53:52 -0400
 
 chromium (124.0.6367.78-1) unstable; urgency=high
 

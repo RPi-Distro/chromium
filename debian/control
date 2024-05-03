@@ -185,7 +185,7 @@ Depends:
  xdg-utils,
 Recommends:
  upower,
- libu2f-udev,
+ udev,
  libgl1-mesa-dri,
  chromium-sandbox,
  fonts-liberation,

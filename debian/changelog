@@ -1,8 +1,16 @@
-chromium (124.0.6367.118-2) UNRELEASED; urgency=high
+chromium (124.0.6367.155-1) unstable; urgency=high
 
+  * New upstream security release.
+    - CVE-2024-4558: Use after free in ANGLE. Reported by gelatin dessert.
+    - CVE-2024-4559: Heap buffer overflow in WebAudio.
+      Reported by Cassidy Kim(@cassidy6564).
   * d/control: replace libu2f-udev recommends with udev (closes: #1070283).
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 30 Apr 2024 17:53:52 -0400
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/skia-vsx-instructions.patch: fix various issues.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 07 May 2024 14:47:32 -0400
 
 chromium (124.0.6367.118-1) unstable; urgency=high
 

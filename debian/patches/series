@@ -14,14 +14,14 @@ fixes/absl-optional.patch
 fixes/libxml-parseerr.patch
 fixes/strlcpy.patch
 fixes/stats-collector.patch
-fixes/bad-font-gc0000.patch
-fixes/bad-font-gc000.patch
-fixes/bad-font-gc00.patch
-fixes/bad-font-gc0.patch
-fixes/bad-font-gc1.patch
-fixes/bad-font-gc11.patch
-fixes/bad-font-gc2.patch
-fixes/bad-font-gc3.patch
+#fixes/bad-font-gc0000.patch
+#fixes/bad-font-gc000.patch
+#fixes/bad-font-gc00.patch
+#fixes/bad-font-gc0.patch
+#fixes/bad-font-gc1.patch
+#fixes/bad-font-gc11.patch
+#fixes/bad-font-gc2.patch
+#fixes/bad-font-gc3.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
@@ -55,8 +55,8 @@ system/rapidjson.patch
 system/rollup.patch
 
 bookworm/clang16.patch
-bookworm/nvt.patch
-bookworm/nvt2.patch
+#bookworm/nvt.patch
+#bookworm/nvt2.patch
 bookworm/rust-downgrade-osstr-users.patch
 
 # Ungoogled Chromium

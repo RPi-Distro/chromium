@@ -20,6 +20,9 @@ chromium (125.0.6422.41-1) unstable; urgency=high
     - upstream/no-vector-consts.patch: add build fix; gnu libstdc++
       doesn't allow const types inside vectors.
     - upstream/lens-include.patch: add header build fix.
+    - bookworm/nvt2.patch: drop (replace with a better non-revert patch).
+    - bookworm/v8-wrappable.patch: add nvt2.patch build fix replacement
+      that just defines a single struct member.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 09 May 2024 20:37:07 -0400
 

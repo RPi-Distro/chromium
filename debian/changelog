@@ -15,6 +15,10 @@ chromium (125.0.6422.41-1) unstable; urgency=high
     - i386/angle-lockfree.patch: drop, I _think_ it's no longer needed.
     - upstream/ruy-include.patch: add header build fix.
     - upstream/vulkan-include.patch: add header build fix.
+    - upstream/mojo-bindings-include.patch: add header build fix.
+    - upstream/appservice-include.patch: add header build fix.
+    - upstream/no-vector-consts.patch: add build fix; gnu libstdc++
+      doesn't allow const types inside vectors.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 09 May 2024 20:37:07 -0400
 

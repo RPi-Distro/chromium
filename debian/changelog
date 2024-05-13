@@ -19,6 +19,7 @@ chromium (125.0.6422.41-1) unstable; urgency=high
     - upstream/appservice-include.patch: add header build fix.
     - upstream/no-vector-consts.patch: add build fix; gnu libstdc++
       doesn't allow const types inside vectors.
+    - upstream/lens-include.patch: add header build fix.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 09 May 2024 20:37:07 -0400
 

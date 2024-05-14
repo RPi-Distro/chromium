@@ -30,6 +30,10 @@ chromium (125.0.6422.41-1) unstable; urgency=high
       upstream changes
     - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch: Add
       pregenerated configuration for ppc64el support in BoringSSL
+    - third_party/0002-third-party-boringssl-add-generated-files.patch:
+      Rename to third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
+    - workarounds/HACK-debian-clang-disable-skia-musttail.patch: Refresh
+      for upstream changes
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 09 May 2024 20:37:07 -0400
 

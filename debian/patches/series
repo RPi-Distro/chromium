@@ -25,8 +25,12 @@ fixes/bad-font-gc3.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
-upstream/ruy-include.patch
-upstream/vulkan-include.patch
+upstream/uint-includes.patch
+upstream/fps-optional.patch
+upstream/span-optional.patch
+upstream/extractor-bitset.patch
+upstream/atomic.patch
+upstream/webgpu-optional.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -64,6 +68,7 @@ ungoogled/disable-privacy-sandbox.patch
 
 # i386 support
 i386/support-i386.patch
+i386/angle-lockfree.patch
 
 # POWER support
 ppc64le/sandbox/0001-linux-seccomp-bpf-ppc64-glibc-workaround-in-SIGSYS-h.patch

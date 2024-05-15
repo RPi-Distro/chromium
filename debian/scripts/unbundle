@@ -15,7 +15,6 @@ keepers = (
     'absl_algorithm',
     'absl_base',    # all absl bundled due to bullseye. TODO: test w/ bookworm.
     'absl_cleanup',
-    'absl_crc',
     'absl_container',
     'absl_debugging',
     'absl_flags',

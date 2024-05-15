@@ -27,10 +27,6 @@ upstream/mojo.patch
 upstream/mojo-null.patch
 upstream/ruy-include.patch
 upstream/vulkan-include.patch
-upstream/mojo-bindings-include.patch
-upstream/appservice-include.patch
-upstream/no-vector-consts.patch
-upstream/lens-include.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -59,8 +55,8 @@ system/rapidjson.patch
 system/rollup.patch
 
 bookworm/clang16.patch
-bookworm/nvt.patch
-bookworm/v8-wrappable.patch
+#bookworm/nvt.patch
+#bookworm/nvt2.patch
 bookworm/rust-downgrade-osstr-users.patch
 
 # Ungoogled Chromium

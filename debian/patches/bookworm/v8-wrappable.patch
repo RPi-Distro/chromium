@@ -1,0 +1,30 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Work around a clang-16 compiler bug:
+
+../../third_party/blink/renderer/bindings/core/v8/native_value_traits_impl.h:1099:19: error: no member named 'supports_scriptwrappable_specific_fast_array_iteration' in 'blink::NativeValueTraits<DOMArrayBuffer>'
+              T>::supports_scriptwrappable_specific_fast_array_iteration) {
+              ~~~~^
+../../third_party/blink/renderer/bindings/core/v8/native_value_traits_impl.h:1162:10: note: in instantiation of function template specialization 'blink::bindings::CreateIDLSequenceFromV8ArraySlow<blink::DOMArrayBuffer>' requested here
+  return CreateIDLSequenceFromV8ArraySlow<T>(isolate, v8_array,
+         ^
+../../third_party/blink/renderer/bindings/core/v8/native_value_traits_impl.h:1186:22: note: in instantiation of function template specialization 'blink::bindings::CreateIDLSequenceFromV8Array<blink::DOMArrayBuffer>' requested here
+    return bindings::CreateIDLSequenceFromV8Array<T>(
+
+
+This defines supports_scriptwrappable_specific_fast_array_iteration for
+that specific template instance struct. To be on the safe side, I'm making
+it non-optimized; it will run slightly slower, but that's better than me
+getting it wrong and crashing.
+
+--- a/third_party/blink/renderer/bindings/core/v8/native_value_traits_impl.h
++++ b/third_party/blink/renderer/bindings/core/v8/native_value_traits_impl.h
+@@ -587,6 +587,8 @@ struct CORE_EXPORT NativeValueTraits<DOM
+                                        int argument_index,
+                                        v8::Local<v8::Value> value,
+                                        ExceptionState& exception_state);
++  static constexpr bool supports_scriptwrappable_specific_fast_array_iteration =
++      false;
+ };
+ 
+ template <>

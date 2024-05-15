@@ -1,6 +1,13 @@
-chromium (125.0.6422.41-1) UNRELEASED; urgency=high
+chromium (125.0.6422.60-1) UNRELEASED; urgency=high
 
-  * New upstream (early) stable release.
+  * New upstream stable release.
+    - CVE-2024-4947: Type Confusion in V8. Reported by Vasily
+      Berdnikov (@vaber_b) and Boris Larin (@oct0xor) of Kaspersky.
+    - CVE-2024-4948: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-4949: Use after free in V8.
+      Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
+    - CVE-2024-4950: Inappropriate implementation in Downloads.
+      Reported by Shaheen Fazim.
   * d/copyright: fix instrumented_libs deletion; upstream renamed it.
   * d/scripts/unbundle: bundle new requirement absl_crc (which is
     unavailable in bookworm).

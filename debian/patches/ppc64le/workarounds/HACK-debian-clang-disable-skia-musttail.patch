@@ -1,13 +1,13 @@
-Index: chromium-120.0.6099.71/third_party/skia/src/core/SkRasterPipeline.h
+Index: chromium-125.0.6422.41/third_party/skia/src/core/SkRasterPipeline.h
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/skia/src/core/SkRasterPipeline.h
-+++ chromium-120.0.6099.71/third_party/skia/src/core/SkRasterPipeline.h
-@@ -24,7 +24,7 @@ enum SkColorType : int;
- struct SkImageInfo;
+--- chromium-125.0.6422.41.orig/third_party/skia/src/core/SkRasterPipeline.h
++++ chromium-125.0.6422.41/third_party/skia/src/core/SkRasterPipeline.h
+@@ -27,7 +27,7 @@ struct SkImageInfo;
  struct skcms_TransferFunction;
  
--#if __has_cpp_attribute(clang::musttail) && !defined(__EMSCRIPTEN__) && !defined(SK_CPU_ARM32)
-+#if __has_cpp_attribute(clang::musttail) && !defined(__EMSCRIPTEN__) && !defined(SK_CPU_ARM32) && !defined(__powerpc64__)
+ #if __has_cpp_attribute(clang::musttail) && !defined(__EMSCRIPTEN__) && !defined(SK_CPU_ARM32) && \
+-        !defined(SK_CPU_LOONGARCH)
++        !defined(SK_CPU_LOONGARCH) && !defined(__powerpc64__)
      #define SK_HAS_MUSTTAIL 1
  #else
      #define SK_HAS_MUSTTAIL 0

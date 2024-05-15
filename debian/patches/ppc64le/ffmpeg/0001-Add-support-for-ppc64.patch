@@ -10,11 +10,43 @@ Subject: [PATCH] Add support for ppc64
  chromium/scripts/generate_gn_unittest.py | 10 ++++++++--
  4 files changed, 19 insertions(+), 6 deletions(-)
 
-Index: chromium-125.0.6422.41/third_party/ffmpeg/chromium/scripts/generate_gn.py
-===================================================================
---- chromium-125.0.6422.41.orig/third_party/ffmpeg/chromium/scripts/generate_gn.py
-+++ chromium-125.0.6422.41/third_party/ffmpeg/chromium/scripts/generate_gn.py
-@@ -77,7 +77,7 @@ GN_SOURCE_END = """]
+--- a/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
++++ b/third_party/ffmpeg/chromium/scripts/build_ffmpeg.py
+@@ -42,7 +42,7 @@ BRANDINGS = [
+ 
+ ARCH_MAP = {
+     'android': ['ia32', 'x64', 'arm-neon', 'arm64'],
+-    'linux': ['ia32', 'x64', 'noasm-x64', 'arm', 'arm-neon', 'arm64'],
++    'linux': ['ia32', 'x64', 'noasm-x64', 'arm', 'arm-neon', 'arm64', 'ppc64' ],
+     'mac': ['x64', 'arm64'],
+     'win': ['ia32', 'x64', 'arm64'],
+ }
+@@ -895,6 +895,11 @@ def ConfigureAndBuild(target_arch, targe
+                     '--extra-cflags=--target=mips64el-linux-gnuabi64',
+                     '--extra-ldflags=--target=mips64el-linux-gnuabi64',
+                 ])
++        elif target_arch == 'ppc64':
++            configure_flags['Common'].extend([
++                '--arch=ppc64le',
++                '--extra-cflags=-mcpu=power8'
++            ])
+         else:
+             print('Error: Unknown target arch %r for target OS %r!' %
+                   (target_arch, target_os),
+--- a/third_party/ffmpeg/chromium/scripts/copy_config.sh
++++ b/third_party/ffmpeg/chromium/scripts/copy_config.sh
+@@ -10,7 +10,7 @@ for os in android linux linux-noasm mac
+     # Copy config files for various architectures:
+     #   - ia32/x64 have config.asm, config.h
+     #   - arm/arm-neon have config.h
+-    for arch in arm arm-neon arm64 ia32 x64 mipsel mips64el; do
++    for arch in arm arm-neon arm64 ia32 x64 mipsel mips64el ppc64; do
+       # Don't waste time on non-existent configs, if no config.h then skip.
+       [ ! -e "build.$arch.$os/$target/config.h" ] && continue
+       for f in config.h config_components.h config.asm libavutil/avconfig.h libavutil/ffversion.h libavcodec/bsf_list.c libavcodec/codec_list.c libavcodec/parser_list.c libavformat/demuxer_list.c libavformat/muxer_list.c libavformat/protocol_list.c; do
+--- a/third_party/ffmpeg/chromium/scripts/generate_gn.py
++++ b/third_party/ffmpeg/chromium/scripts/generate_gn.py
+@@ -80,7 +80,7 @@ GN_SOURCE_END = """]
  _Attrs = ('ARCHITECTURE', 'TARGET', 'PLATFORM')
  Attr = collections.namedtuple('Attr', _Attrs)(*_Attrs)
  SUPPORT_MATRIX = {
@@ -23,3 +55,14 @@ Index: chromium-125.0.6422.41/third_party/ffmpeg/chromium/scripts/generate_gn.py
      Attr.TARGET: set(['Chromium', 'Chrome', 'ChromeOS']),
      Attr.PLATFORM: set(['android', 'linux', 'win', 'mac'])
  }
+--- a/third_party/ffmpeg/chromium/scripts/robo_lib/config.py
++++ b/third_party/ffmpeg/chromium/scripts/robo_lib/config.py
+@@ -165,6 +165,8 @@ class RoboConfiguration:
+             self._host_architecture = "mips64el"
+         elif platform.machine().startswith("arm"):
+             self._host_architecture = "arm"
++        elif platform.machine().startswith("ppc64le"):
++            self._host_architecture = "ppc64"
+         else:
+             raise ValueError(
+                 f"Unrecognized CPU architecture: {platform.machine()}")

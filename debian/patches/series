@@ -92,7 +92,6 @@ ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
 ppc64le/third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
 ppc64le/third_party/0001-third_party-lss-Don-t-look-for-mmap2-on-ppc64.patch
 ppc64le/third_party/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
-ppc64le/third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
 ppc64le/third_party/0002-third_party-lss-kernel-structs.patch
 
 ppc64le/webrtc/Rtc_base-system-arch.h-PPC.patch
@@ -107,6 +106,7 @@ ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch
 ppc64le/libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch
 
 ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch
+ppc64le/third_party/0002-third-party-boringssl-add-generated-files.patch
 ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch
 # Enabling VSX causes artifacts to appear in VP9 videos
 #ppc64le/third_party/0003-third_party-libvpx-Add-ppc64-vsx-files.patch

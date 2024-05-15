@@ -24,19 +24,6 @@ chromium (125.0.6422.41-1) unstable; urgency=high
     - bookworm/v8-wrappable.patch: add nvt2.patch build fix replacement
       that just defines a single struct member.
 
-  [ Timothy Pearson ]
-  * d/patches/ppc64le:
-    - third_party/0001-Add-PPC64-support-for-boringssl.patch: Modify for
-      upstream changes
-    - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch: Add
-      pregenerated configuration for ppc64el support in BoringSSL
-    - third_party/0002-third-party-boringssl-add-generated-files.patch:
-      Rename to third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
-    - workarounds/HACK-debian-clang-disable-skia-musttail.patch: Refresh
-      for upstream changes
-    - third_party/skia-vsx-instructions.patch: Refresh for upstream changes
-    - ffmpeg/0001-Add-support-for-ppc64.patch: Refresh for upstream changes
-
  -- Andres Salomon <dilinger@debian.org>  Thu, 09 May 2024 20:37:07 -0400
 
 chromium (124.0.6367.201-1) unstable; urgency=high

@@ -36,6 +36,7 @@ chromium (125.0.6422.60-1~deb12u1) bookworm-security; urgency=high
       other patches easier to apply.
     - fixes/bad-font-gc2.patch: add a build failure fix & refresh.
     - fixes/bad-font-gc11.patch: add a build failure fix & refresh.
+    - bookworm/bubble-contents.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

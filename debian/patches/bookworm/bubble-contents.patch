@@ -17,19 +17,14 @@ In file included from ../../chrome/browser/ui/views/side_panel/side_panel_web_ui
           ^
 
 
-Index: chromium-122.0.6261.57/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
-===================================================================
---- chromium-122.0.6261.57.orig/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
-+++ chromium-122.0.6261.57/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
-@@ -148,10 +148,7 @@ class BubbleContentsWrapperT : public Bu
-                               webui_resizes_host,
-                               esc_closes_ui,
-                               T::GetWebUIName()),
--        webui_url_(webui_url) {
+--- a/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
++++ b/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
+@@ -185,8 +185,6 @@ class WebUIContentsWrapperT : public Web
+                              supports_draggable_regions,
+                              T::GetWebUIName()),
+         webui_url_(webui_url) {
 -    static_assert(
 -        views_metrics::IsValidWebUINameVariant("." + T::GetWebUIName()));
--  }
-+        webui_url_(webui_url) {}
- 
-   void ReloadWebContents() override {
-     web_contents()->GetController().LoadURL(webui_url_, content::Referrer(),
+     if (is_ready_to_show()) {
+       CHECK(GetWebUIController());
+       GetWebUIController()->set_embedder(weak_ptr_factory_.GetWeakPtr());

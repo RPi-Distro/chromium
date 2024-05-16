@@ -1,4 +1,4 @@
-chromium (125.0.6422.60-1) UNRELEASED; urgency=high
+chromium (125.0.6422.60-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2024-4947: Type Confusion in V8. Reported by Vasily
@@ -32,8 +32,8 @@ chromium (125.0.6422.60-1) UNRELEASED; urgency=high
       that just defines a single struct member.
     - upstream/ninja.patch: add build fix for failure triggered by
       ninja-1.12 (closes: #1071197).
-    - fixes/bad-font-gc00000.patch: add formatting patch to make other
-      patches easier.
+    - fixes/bad-font-gc00000.patch: add formatting patch revert to make
+      other patches easier to apply.
     - fixes/bad-font-gc2.patch: add a build failure fix & refresh.
     - fixes/bad-font-gc11.patch: add a build failure fix & refresh.
 
@@ -50,7 +50,7 @@ chromium (125.0.6422.60-1) UNRELEASED; urgency=high
     - third_party/skia-vsx-instructions.patch: Refresh for upstream changes
     - ffmpeg/0001-Add-support-for-ppc64.patch: Refresh for upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 09 May 2024 20:37:07 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 16 May 2024 18:55:41 -0400
 
 chromium (124.0.6367.207-1) unstable; urgency=high
 

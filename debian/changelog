@@ -1,3 +1,57 @@
+chromium (125.0.6422.60-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream stable release.
+    - CVE-2024-4947: Type Confusion in V8. Reported by Vasily
+      Berdnikov (@vaber_b) and Boris Larin (@oct0xor) of Kaspersky.
+    - CVE-2024-4948: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-4949: Use after free in V8.
+      Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
+    - CVE-2024-4950: Inappropriate implementation in Downloads.
+      Reported by Shaheen Fazim.
+  * d/copyright: fix instrumented_libs deletion; upstream renamed it.
+  * d/scripts/unbundle: bundle new requirement absl_crc (which is
+    unavailable in bookworm).
+  * d/patches:
+    - upstream/uint-includes.patch: drop,merged upstream.
+    - upstream/fps-optional.patch: drop, merged upstream.
+    - upstream/span-optional.patch: drop, merged upstream.
+    - upstream/extractor-bitset.patch: drop, merged upstream.
+    - upstream/atomic.patch: drop, merged upstream.
+    - upstream/webgpu-optional.patch: drop, merged upstream.
+    - disable/catapult.patch: refresh.
+    - i386/angle-lockfree.patch: drop, I _think_ it's no longer needed.
+    - upstream/ruy-include.patch: add header build fix.
+    - upstream/vulkan-include.patch: add header build fix.
+    - upstream/mojo-bindings-include.patch: add header build fix.
+    - upstream/appservice-include.patch: add header build fix.
+    - upstream/no-vector-consts.patch: add build fix; gnu libstdc++
+      doesn't allow const types inside vectors.
+    - upstream/lens-include.patch: add header build fix.
+    - bookworm/nvt2.patch: drop (replace with a better non-revert patch).
+    - bookworm/v8-wrappable.patch: add nvt2.patch build fix replacement
+      that just defines a single struct member.
+    - upstream/ninja.patch: add build fix for failure triggered by
+      ninja-1.12.
+    - fixes/bad-font-gc00000.patch: add formatting patch revert to make
+      other patches easier to apply.
+    - fixes/bad-font-gc2.patch: add a build failure fix & refresh.
+    - fixes/bad-font-gc11.patch: add a build failure fix & refresh.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: Modify for
+      upstream changes
+    - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch: Add
+      pregenerated configuration for ppc64el support in BoringSSL
+    - third_party/0002-third-party-boringssl-add-generated-files.patch:
+      Rename to third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
+    - workarounds/HACK-debian-clang-disable-skia-musttail.patch: Refresh
+      for upstream changes
+    - third_party/skia-vsx-instructions.patch: Refresh for upstream changes
+    - ffmpeg/0001-Add-support-for-ppc64.patch: Refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 16 May 2024 18:55:41 -0400
+
 chromium (124.0.6367.207-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

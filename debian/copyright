@@ -132,7 +132,7 @@ Files-Excluded:
  third_party/swiftshader
  third_party/apache-win32
  third_party/apache-portable-runtime
- third_party/instrumented_libraries
+ third_party/instrumented_lib*
  third_party/angle/third_party/glmark2
  third_party/angle/third_party/rapidjson
  third_party/angle/third_party/VK-GL-CTS

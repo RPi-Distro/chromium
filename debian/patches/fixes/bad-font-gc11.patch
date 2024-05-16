@@ -168,6 +168,15 @@ Date:   Tue Feb 20 17:40:39 2024 +0000
    return glyph;
  }
  
+@@ -329,7 +331,7 @@ hb_codepoint_t HarfBuzzFace::HarfBuzzGet
+     UChar32 variation_selector) {
+   DCHECK(RuntimeEnabledFeatures::FontVariationSequencesEnabled());
+   hb_codepoint_t glyph = 0;
+-  HarfBuzzGetGlyph(harfbuzz_font_data_->unscaled_font_.get(),
++  HarfBuzzGetGlyph(unscaled_font_,
+                    harfbuzz_font_data_, character, variation_selector, &glyph,
+                    nullptr);
+   return glyph;
 @@ -488,10 +490,9 @@ static hb::unique_ptr<hb_face_t> CreateF
    return face;
  }

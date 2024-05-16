@@ -34,8 +34,8 @@ chromium (125.0.6422.60-1) UNRELEASED; urgency=high
       ninja-1.12 (closes: #1071197).
     - fixes/bad-font-gc00000.patch: add formatting patch to make other
       patches easier.
-    - fixes/bad-font-gc*.patch: refresh.
-    - fixes/bad-font-gc2.patch: add a build failure fix.
+    - fixes/bad-font-gc2.patch: add a build failure fix & refresh.
+    - fixes/bad-font-gc11.patch: add a build failure fix & refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

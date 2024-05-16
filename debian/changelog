@@ -30,6 +30,8 @@ chromium (125.0.6422.60-1) UNRELEASED; urgency=high
     - bookworm/nvt2.patch: drop (replace with a better non-revert patch).
     - bookworm/v8-wrappable.patch: add nvt2.patch build fix replacement
       that just defines a single struct member.
+    - upstream/ninja.patch: add build fix for failure triggered by
+      ninja-1.12 (closes: #1071197).
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

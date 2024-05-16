@@ -31,6 +31,7 @@ upstream/mojo-bindings-include.patch
 upstream/appservice-include.patch
 upstream/no-vector-consts.patch
 upstream/lens-include.patch
+upstream/ninja.patch
 
 disable/tests.patch
 disable/unrar.patch

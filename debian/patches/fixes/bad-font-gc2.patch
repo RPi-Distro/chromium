@@ -1103,6 +1103,16 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    if (over_diff == kNoDiff)
      over_diff = LayoutUnit();
    if (under_diff == kNoDiff)
+@@ -956,8 +957,7 @@ FontHeight ComputeEmHeight(const Logical
+     FontHeight result_height;
+     // We don't use ShapeResultView::FallbackFonts() because we can't know if
+     // the primary font is actually used with FallbackFonts().
+-    HeapVector<ShapeResult::RunFontData> run_fonts;
+-    ClearCollectionScope clear_scope(&run_fonts);
++    Vector<ShapeResult::RunFontData> run_fonts;
+     shape_result_view->GetRunFontData(&run_fonts);
+     for (const auto& run_font : run_fonts) {
+       const SimpleFontData* font_data = run_font.font_data_;
 --- a/third_party/blink/renderer/core/layout/layout_font_accessor_win.cc
 +++ b/third_party/blink/renderer/core/layout/layout_font_accessor_win.cc
 @@ -16,7 +16,6 @@

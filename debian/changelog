@@ -1,3 +1,10 @@
+chromium (125.0.6422.60-2) UNRELEASED; urgency=high
+
+  * d/patches:
+    - upstream/tabstrip-include.patch: add header build fix.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 16 May 2024 18:55:41 -0400
+
 chromium (125.0.6422.60-1) unstable; urgency=high
 
   * New upstream stable release.

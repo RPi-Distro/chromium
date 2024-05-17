@@ -33,6 +33,7 @@ upstream/appservice-include.patch
 upstream/no-vector-consts.patch
 upstream/lens-include.patch
 upstream/ninja.patch
+upstream/tabstrip-include.patch
 
 disable/tests.patch
 disable/unrar.patch

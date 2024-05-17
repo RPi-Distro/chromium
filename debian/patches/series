@@ -70,6 +70,7 @@ bookworm/constexpr.patch
 bookworm/nvt.patch
 bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch
+bookworm/omnibox-constexpr.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

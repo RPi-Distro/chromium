@@ -1,5 +1,7 @@
 chromium (125.0.6422.60-2) UNRELEASED; urgency=high
 
+  * Don't silently ignore arguments meant for the wrapper script if chromium
+    args happen to come first (closes: #1068096).
   * d/patches:
     - upstream/tabstrip-include.patch: add header build fix.
 

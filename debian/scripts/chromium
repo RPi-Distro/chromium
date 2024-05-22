@@ -11,6 +11,7 @@ APPNAME=chromium
 GDB=/usr/bin/gdb
 LIBDIR=/usr/lib/$APPNAME
 BUILD_DIST="@BUILD_DIST@"
+CHROMIUM_FLAGS=""
 
 usage () {
   echo "$APPNAME [-h|--help] [-g|--debug] [--temp-profile] [options] [URL]"
@@ -105,9 +106,12 @@ while [ $# -gt 0 ]; do
     --enable-remote-extensions )
       CHROMIUM_FLAGS="$CHROMIUM_FLAGS --enable-remote-extensions"
       shift ;;
-    -- ) # Stop option prcessing
+    -- ) # Stop option processing
       shift
       break ;;
+    --* ) # Preserve (unknown to us) chromium flags
+      CHROMIUM_FLAGS="$CHROMIUM_FLAGS $1"
+      shift ;;
     * )
       break ;;
   esac

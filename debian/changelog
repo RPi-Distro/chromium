@@ -1,3 +1,9 @@
+chromium (125.0.6422.76-2) UNRELEASED; urgency=high
+
+  * Fix handling of quoted arguments (closes: #1071662).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 21 May 2024 16:12:47 -0400
+
 chromium (125.0.6422.76-1) unstable; urgency=high
 
   * New upstream security release.

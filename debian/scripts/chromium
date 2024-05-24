@@ -92,7 +92,8 @@ export CHROME_VERSION_EXTRA="built on Debian $BUILD_DIST, running on Debian $DIS
 
 want_debug=0
 want_temp_profile=0
-while [ $# -gt 0 ]; do
+extra_args=0
+while [ $# -gt 0 -a $# -ne $extra_args ]; do
   case "$1" in
     -h | --help | -help )
       usage
@@ -109,8 +110,9 @@ while [ $# -gt 0 ]; do
     -- ) # Stop option processing
       shift
       break ;;
-    --* ) # Preserve (unknown to us) chromium flags
-      CHROMIUM_FLAGS="$CHROMIUM_FLAGS $1"
+    --* ) # Preserve (unknown to us) chromium flags at the end of the stack
+      set -- "$@" "$1"
+      extra_args=$((extra_args+1))
       shift ;;
     * )
       break ;;

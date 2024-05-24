@@ -1,3 +1,12 @@
+chromium (125.0.6422.112-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-5274: Type Confusion in V8. Reported by Clément Lecigne of
+      Google's Threat Analysis Group and Brendon Tiszka of Chrome Security.
+  * Fix handling of quoted arguments (closes: #1071662).
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 23 May 2024 20:51:14 -0400
+
 chromium (125.0.6422.76-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

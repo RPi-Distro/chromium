@@ -1,3 +1,10 @@
+chromium (125.0.6422.112-2) UNRELEASED; urgency=high
+
+  * d/patches/fixes/libxml-parseerr.patch: move to bookworm directory.
+  * d/control: add versioned build-dep on libxml2-dev < 2.10.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 23 May 2024 20:51:14 -0400
+
 chromium (125.0.6422.112-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

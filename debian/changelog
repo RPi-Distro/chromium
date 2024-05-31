@@ -1,9 +1,20 @@
-chromium (125.0.6422.112-2) UNRELEASED; urgency=high
+chromium (125.0.6422.141-1~deb12u1) bookworm-security; urgency=high
 
+  * New upstream security release.
+    - CVE-2024-5493: Heap buffer overflow in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-5494: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-5495: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-5496: Use after free in Media Session.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-5497: Out of bounds memory access in Keyboard Inputs.
+      Reported by zh1x1an1221 of Ant Group Tianqiong Security Lab.
+    - CVE-2024-5498: Use after free in Presentation API.
+    - CVE-2024-5499: Out of bounds write in Streams API.
   * d/patches/fixes/libxml-parseerr.patch: move to bookworm directory.
   * d/control: add versioned build-dep on libxml2-dev < 2.10.
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 23 May 2024 20:51:14 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 30 May 2024 22:11:26 -0400
 
 chromium (125.0.6422.112-1~deb12u1) bookworm-security; urgency=high
 

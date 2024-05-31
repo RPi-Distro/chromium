@@ -11,8 +11,8 @@ author: Andres Salomon <dilinger@debian.org>
            ^
 
 
-Not sure why this got changed in chromium, maybe they're using libxml from git?
-But we change it back.
+libxml 2.12 changed the API slightly. This maintains compatibility with
+libxml 2.9.
 
 --- a/third_party/blink/renderer/core/xml/xslt_processor.h
 +++ b/third_party/blink/renderer/core/xml/xslt_processor.h

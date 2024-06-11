@@ -26,12 +26,6 @@ fixes/bad-font-gc3.patch
 upstream/mojo.patch
 upstream/mojo-null.patch
 upstream/ruy-include.patch
-upstream/vulkan-include.patch
-upstream/mojo-bindings-include.patch
-upstream/appservice-include.patch
-upstream/no-vector-consts.patch
-upstream/lens-include.patch
-upstream/ninja.patch
 upstream/tabstrip-include.patch
 
 disable/tests.patch

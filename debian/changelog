@@ -1,3 +1,17 @@
+chromium (126.0.6478.36-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright: delete bullseye environment that upstream ships (??).
+  * d/patches:
+    - upstream/appservice-include.patch: drop, merged upstream.
+    - upstream/lens-include.patch: drop, merged upstream.
+    - upstream/mojo-bindings-include.patch: drop, merged upstream.
+    - upstream/ninja.patch: drop, merged upstream.
+    - upstream/no-vector-consts.patch: drop, merged upstream.
+    - upstream/vulkan-include.patch: drop, merged upstream.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 30 May 2024 22:11:26 -0400
+
 chromium (125.0.6422.141-1) unstable; urgency=high
 
   * New upstream security release.

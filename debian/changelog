@@ -1,6 +1,35 @@
-chromium (126.0.6478.36-1) UNRELEASED; urgency=high
+chromium (126.0.6478.54-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
+    - CVE-2024-5830: Type Confusion in V8.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2024-5831: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-5832: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-5833: Type Confusion in V8. Reported by @ginggilBesel.
+    - CVE-2024-5834: Inappropriate implementation in Dawn.
+      Reported by gelatin dessert.
+    - CVE-2024-5835: Heap buffer overflow in Tab Groups.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2024-5836: Inappropriate Implementation in DevTools.
+      Reported by Allen Ding.
+    - CVE-2024-5837: Type Confusion in V8. Reported by Anonymous.
+    - CVE-2024-5838: Type Confusion in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2024-5839: Inappropriate Implementation in Memory Allocator.
+      Reported by Mickey.
+    - CVE-2024-5840: Policy Bypass in CORS. Reported by Matt Howard.
+    - CVE-2024-5841: Use after free in V8.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-5842: Use after free in Browser UI.
+      Reported by Sven Dysthe (@svn_dy).
+    - CVE-2024-5843: Inappropriate implementation in Downloads.
+      Reported by hjy79425575.
+    - CVE-2024-5844: Heap buffer overflow in Tab Strip. Reported by Sri.
+    - CVE-2024-5845: Use after free in Audio. Reported by anonymous.
+    - CVE-2024-5846: Use after free in PDFium.
+      Reported by Han Zheng (HexHive).
+    - CVE-2024-5847: Use after free in PDFium.
+      Reported by Han Zheng (HexHive).
   * d/copyright: delete bullseye environment that upstream ships (??).
   * d/patches:
     - upstream/appservice-include.patch: drop, merged upstream.

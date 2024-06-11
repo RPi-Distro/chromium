@@ -38,6 +38,9 @@ chromium (126.0.6478.54-1) UNRELEASED; urgency=high
     - upstream/ninja.patch: drop, merged upstream.
     - upstream/no-vector-consts.patch: drop, merged upstream.
     - upstream/vulkan-include.patch: drop, merged upstream.
+    - bookworm/clang16.patch: refresh.
+    - upstream/quiche-deque.patch: gcc build fix pulled from upstream.
+    - upstream/gpu-header.patch: add header build fix from upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 30 May 2024 22:11:26 -0400
 

@@ -1,0 +1,25 @@
+commit f3b236db61a52b30ad3b23fba732b6e8826910e9
+Author: Jose Dapena Paz <jdapena@igalia.com>
+Date:   Fri May 24 11:51:45 2024 +0000
+
+    IWYU: missing include for usage of uint64_t in webgpu_blocklist_impl.cc
+    
+    Bug: 41455655
+    Change-Id: I3992b354c93ef98f248db6d6ea8bb79c8ad3e23d
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5539518
+    Reviewed-by: Maggie Chen <magchen@chromium.org>
+    Commit-Queue: José Dapena Paz <jdapena@igalia.com>
+    Cr-Commit-Position: refs/heads/main@{#1305627}
+
+diff --git a/gpu/config/webgpu_blocklist_impl.h b/gpu/config/webgpu_blocklist_impl.h
+index 2f122abae649e..8ab3483aded90 100644
+--- a/gpu/config/webgpu_blocklist_impl.h
++++ b/gpu/config/webgpu_blocklist_impl.h
+@@ -5,6 +5,7 @@
+ #ifndef GPU_CONFIG_WEBGPU_BLOCKLIST_IMPL_H_
+ #define GPU_CONFIG_WEBGPU_BLOCKLIST_IMPL_H_
+ 
++#include <cstdint>
+ #include <string>
+ 
+ namespace wgpu {

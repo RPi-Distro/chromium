@@ -33,6 +33,7 @@ upstream/blink-header.patch
 upstream/blink-header2.patch
 upstream/blink-header3.patch
 upstream/realtime-reporting.patch
+upstream/urlvisit-header.patch
 
 disable/tests.patch
 disable/unrar.patch

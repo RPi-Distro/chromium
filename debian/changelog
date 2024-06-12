@@ -47,6 +47,7 @@ chromium (126.0.6478.54-1) UNRELEASED; urgency=high
     - upstream/blink-header2.patch: add header build fix from upstream.
     - upstream/blink-header3.patch: add header build fix from upstream.
     - upstream/realtime-reporting.patch: gcc build fix from upstream.
+    - upstream/urlvisit-header.patch: add header build fix from upstream.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

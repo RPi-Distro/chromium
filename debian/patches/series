@@ -29,6 +29,9 @@ upstream/ruy-include.patch
 upstream/tabstrip-include.patch
 upstream/quiche-deque.patch
 upstream/gpu-header.patch
+upstream/blink-header.patch
+upstream/blink-header2.patch
+upstream/blink-header3.patch
 
 disable/tests.patch
 disable/unrar.patch

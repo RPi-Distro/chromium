@@ -41,6 +41,9 @@ chromium (126.0.6478.54-1) UNRELEASED; urgency=high
     - bookworm/clang16.patch: refresh.
     - upstream/quiche-deque.patch: gcc build fix pulled from upstream.
     - upstream/gpu-header.patch: add header build fix from upstream.
+    - upstream/blink-header.patch: add header build fix from upstream.
+    - upstream/blink-header2.patch: add header build fix from upstream.
+    - upstream/blink-header3.patch: add header build fix from upstream.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

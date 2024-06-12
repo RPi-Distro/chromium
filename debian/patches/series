@@ -32,6 +32,7 @@ upstream/gpu-header.patch
 upstream/blink-header.patch
 upstream/blink-header2.patch
 upstream/blink-header3.patch
+upstream/realtime-reporting.patch
 
 disable/tests.patch
 disable/unrar.patch

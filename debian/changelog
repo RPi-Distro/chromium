@@ -42,6 +42,13 @@ chromium (126.0.6478.54-1) UNRELEASED; urgency=high
     - upstream/quiche-deque.patch: gcc build fix pulled from upstream.
     - upstream/gpu-header.patch: add header build fix from upstream.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - sandbox/0008-sandbox-fix-ppc64le-glibc234.patch: Modify for upstream
+      changes
+    - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch: Modify
+      for upstream changes
+
  -- Andres Salomon <dilinger@debian.org>  Thu, 30 May 2024 22:11:26 -0400
 
 chromium (125.0.6422.141-1) unstable; urgency=high

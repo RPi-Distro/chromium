@@ -48,6 +48,8 @@ chromium (126.0.6478.54-1) UNRELEASED; urgency=high
       changes
     - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch: Modify
       for upstream changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: Refresh
+      for upstream changes
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 30 May 2024 22:11:26 -0400
 

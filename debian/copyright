@@ -22,6 +22,7 @@ Files-Excluded:
  *jquery*.min.js
  ios
  buildtools
+ build/linux/debian_bullseye_*
  ui/chromeos/B*
  ui/chromeos/D*
  ui/chromeos/devicetype_utils.cc

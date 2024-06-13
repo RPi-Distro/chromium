@@ -16,7 +16,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
 
 --- a/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_face.cc
 +++ b/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_face.cc
-@@ -87,10 +87,8 @@ static hb_bool_t HarfBuzzGetGlyph(hb_fon
+@@ -102,10 +102,8 @@ static hb_bool_t HarfBuzzGetGlyph(hb_fon
        reinterpret_cast<HarfBuzzFontData*>(font_data);
  
    CHECK(hb_font_data);
@@ -28,7 +28,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
    // If the system fonts do not have a glyph coverage for line separator
    // (0x2028) or paragraph separator (0x2029), missing glyph would be displayed
-@@ -203,9 +201,8 @@ static hb_bool_t HarfBuzzGetGlyphVertica
+@@ -219,9 +217,8 @@ static hb_bool_t HarfBuzzGetGlyphVertica
    HarfBuzzFontData* hb_font_data =
        reinterpret_cast<HarfBuzzFontData*>(font_data);
    OpenTypeVerticalData* vertical_data = hb_font_data->VerticalData();
@@ -39,7 +39,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
    float result[] = {0, 0};
    Glyph the_glyph = glyph;
-@@ -252,9 +249,8 @@ static inline bool TableHasSpace(hb_face
+@@ -268,9 +265,8 @@ static inline bool TableHasSpace(hb_face
    for (unsigned i = 0; i < count; i++) {
      hb_ot_layout_lookup_collect_glyphs(face, tag, i, glyphs, glyphs, glyphs,
                                         nullptr);
@@ -50,7 +50,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
    }
    return false;
  }
-@@ -374,12 +370,10 @@ class HarfBuzzSkiaFontFuncs final {
+@@ -390,12 +386,10 @@ class HarfBuzzSkiaFontFuncs final {
      DCHECK_EQ(num_tags, returned_tags);
  
      for (auto& tag : tags) {
@@ -65,7 +65,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
      }
  
      return has_trak && !has_sbix ? hb_font_funcs_harfbuzz_advances_
-@@ -459,9 +453,8 @@ static hb_blob_t* HarfBuzzSkiaGetTable(h
+@@ -475,9 +469,8 @@ static hb_blob_t* HarfBuzzSkiaGetTable(h
  
    char* buffer = reinterpret_cast<char*>(WTF::Partitions::FastMalloc(
        table_size, WTF_HEAP_PROFILER_TYPE_NAME(HarfBuzzFontData)));
@@ -78,7 +78,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
      WTF::Partitions::FastFree(buffer);
 --- a/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_shaper.cc
 +++ b/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_shaper.cc
-@@ -86,10 +86,8 @@ void CheckShapeResultRange(const ShapeRe
+@@ -90,10 +90,8 @@ void CheckShapeResultRange(const ShapeRe
    DCHECK_LE(start, end);
    unsigned length = end - start;
    if (length == result->NumCharacters() &&
@@ -90,7 +90,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
    // Log font-family/size as specified.
    StringBuilder log;
-@@ -111,9 +109,8 @@ void CheckShapeResultRange(const ShapeRe
+@@ -115,9 +113,8 @@ void CheckShapeResultRange(const ShapeRe
    // Log the text to shape.
    log.AppendFormat(": %u-%u -> %u-%u:", start, end, result->StartIndex(),
                     result->EndIndex());
@@ -101,7 +101,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
    log.Append(", result=");
    result->ToString(&log);
-@@ -257,9 +254,8 @@ namespace {
+@@ -265,9 +262,8 @@ namespace {
  // A port of hb_icu_script_to_script because harfbuzz on CrOS is built
  // without hb-icu. See http://crbug.com/356929
  static inline hb_script_t ICUScriptToHBScript(UScriptCode script) {
@@ -112,7 +112,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
    return hb_script_from_string(uscript_getShortName(script), -1);
  }
-@@ -335,9 +331,8 @@ inline bool ShapeRange(hb_buffer_t* buff
+@@ -343,9 +339,8 @@ inline bool ShapeRange(hb_buffer_t* buff
                                : HarfBuzzFace::kNoVerticalLayout,
                            specified_size);
    hb_shape(hb_font, buffer, argument_features.data(), argument_features.size());
@@ -123,7 +123,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
    return true;
  }
-@@ -453,9 +448,8 @@ void HarfBuzzShaper::CommitGlyphs(RangeC
+@@ -511,9 +506,8 @@ void HarfBuzzShaper::CommitGlyphs(RangeC
      unsigned next_num_glyphs =
          current_slice->num_glyphs -
          (next_start_glyph - current_slice->start_glyph_index);
@@ -134,7 +134,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
      // If the slice exceeds the limit a RunInfo can store, create another
      // RunInfo for the rest of the slice.
-@@ -468,9 +462,8 @@ void HarfBuzzShaper::CommitGlyphs(RangeC
+@@ -526,9 +520,8 @@ void HarfBuzzShaper::CommitGlyphs(RangeC
      // The |InsertRun| has truncated the right end. In LTR, advance the
      // |run_start_index| because the end characters are truncated. In RTL, keep
      // the same |run_start_index| because the start characters are truncated.
@@ -143,9 +143,9 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
        run_start_index = next_slice.start_character_index;
 -    }
    }
-   if (fallback_stage == kLast) {
+   if (IsLastFontToShape(fallback_stage)) {
      range_data->font->ReportNotDefGlyph();
-@@ -500,9 +493,8 @@ void HarfBuzzShaper::ExtractShapeResults
+@@ -558,9 +551,8 @@ void HarfBuzzShaper::ExtractShapeResults
    unsigned last_change_glyph_index = 0;
    unsigned previous_cluster_start_glyph_index = 0;
  
@@ -156,10 +156,10 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
    const Glyph space_glyph = current_font->SpaceGlyph();
    for (unsigned glyph_index = 0; glyph_index < num_glyphs; ++glyph_index) {
-@@ -617,18 +609,16 @@ bool HarfBuzzShaper::CollectFallbackHint
+@@ -684,18 +676,16 @@ bool HarfBuzzShaper::CollectFallbackHint
      const Deque<ReshapeQueueItem>& reshape_queue,
      bool needs_hint_list,
-     Vector<UChar32>& hint) const {
+     HintCharList& hint) const {
 -  if (reshape_queue.empty()) {
 +  if (reshape_queue.empty())
      return false;
@@ -177,18 +177,18 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
      CHECK_LE((it->start_index_ + it->num_characters_), text_.length());
      if (text_.Is8Bit()) {
-@@ -641,9 +631,8 @@ bool HarfBuzzShaper::CollectFallbackHint
+@@ -708,9 +698,8 @@ bool HarfBuzzShaper::CollectFallbackHint
+         // managed to find a character with a definite script since
          // FontFallbackIterator needs a character with a determined script to
          // perform meaningful system fallback.
-         if (!needs_hint_list &&
--            Character::HasDefiniteScript(text_[it->start_index_ + i])) {
-+            Character::HasDefiniteScript(text_[it->start_index_ + i]))
+-        if (!needs_hint_list && Character::HasDefiniteScript(hint_char)) {
++        if (!needs_hint_list && Character::HasDefiniteScript(hint_char))
            return true;
 -        }
        }
        continue;
      }
-@@ -660,9 +649,8 @@ bool HarfBuzzShaper::CollectFallbackHint
+@@ -727,9 +716,8 @@ bool HarfBuzzShaper::CollectFallbackHint
        // managed to find a character with a definite script since
        // FontFallbackIterator needs a character with a determined script to
        // perform meaningful system fallback.
@@ -199,7 +199,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
        iterator.Advance();
      }
    }
-@@ -845,9 +833,8 @@ void HarfBuzzShaper::ShapeSegment(
+@@ -925,9 +913,8 @@ void HarfBuzzShaper::ShapeSegment(
          // a substring.
          if (range_data->start >= current_queue_item.start_index_ +
                                       current_queue_item.num_characters_ ||
@@ -210,7 +210,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
        }
      }
  
-@@ -866,9 +853,8 @@ void HarfBuzzShaper::ShapeSegment(
+@@ -946,9 +933,8 @@ void HarfBuzzShaper::ShapeSegment(
      CaseMapIntend case_map_intend = CaseMapIntend::kKeepSameCase;
      if (needs_caps_handling) {
        case_map_intend = caps_support.NeedsCaseChange(small_caps_behavior);
@@ -221,7 +221,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
      }
  
      CaseMappingHarfBuzzBufferFiller(
-@@ -897,9 +883,8 @@ void HarfBuzzShaper::ShapeSegment(
+@@ -977,9 +963,8 @@ void HarfBuzzShaper::ShapeSegment(
      if (!ShapeRange(range_data->buffer, range_data->font_features,
                      adjusted_font, current_font_data_for_range_set->Ranges(),
                      segment.script, direction, language,
@@ -232,7 +232,7 @@ Date:   Wed Mar 27 14:13:13 2024 +0000
  
      ExtractShapeResults(range_data, font_cycle_queued, current_queue_item,
                          adjusted_font, segment.script, canvas_rotation,
-@@ -955,16 +940,14 @@ ShapeResult* HarfBuzzShaper::Shape(const
+@@ -1045,16 +1030,14 @@ ShapeResult* HarfBuzzShaper::Shape(const
      while (run_segmenter.Consume(&segment_range)) {
        // Only shape segments overlapping with the range indicated by start and
        // end. Not only those strictly within.

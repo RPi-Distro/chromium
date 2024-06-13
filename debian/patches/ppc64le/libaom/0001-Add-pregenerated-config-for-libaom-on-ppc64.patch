@@ -1,8 +1,8 @@
-Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+Index: chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 ===================================================================
 --- /dev/null
-+++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
-@@ -0,0 +1,93 @@
++++ chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+@@ -0,0 +1,95 @@
 +;
 +; Copyright (c) 2024, Alliance for Open Media. All rights reserved
 +;
@@ -20,7 +20,7 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +AOM_ARCH_X86_64 equ 0
 +CONFIG_ACCOUNTING equ 0
 +CONFIG_ANALYZER equ 0
-+CONFIG_AV1_DECODER equ 1
++CONFIG_AV1_DECODER equ 0
 +CONFIG_AV1_ENCODER equ 1
 +CONFIG_AV1_HIGHBITDEPTH equ 0
 +CONFIG_AV1_TEMPORAL_DENOISING equ 1
@@ -47,16 +47,17 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +CONFIG_INTER_STATS_ONLY equ 0
 +CONFIG_LIBVMAF_PSNR_PEAK equ 1
 +CONFIG_LIBYUV equ 0
-+CONFIG_MAX_DECODE_PROFILE equ 0
++CONFIG_MAX_DECODE_PROFILE equ 2
 +CONFIG_MISMATCH_DEBUG equ 0
 +CONFIG_MULTITHREAD equ 1
 +CONFIG_NN_V2 equ 0
-+CONFIG_NORMAL_TILE_MODE equ 1
++CONFIG_NORMAL_TILE_MODE equ 0
 +CONFIG_OPTICAL_FLOW_API equ 0
 +CONFIG_OS_SUPPORT equ 1
 +CONFIG_OUTPUT_FRAME_SIZE equ 0
 +CONFIG_PARTITION_SEARCH_ORDER equ 0
 +CONFIG_PIC equ 1
++CONFIG_QUANT_MATRIX equ 0
 +CONFIG_RATECTRL_LOG equ 0
 +CONFIG_RD_COMMAND equ 0
 +CONFIG_RD_DEBUG equ 0
@@ -92,14 +93,15 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +HAVE_SSE4_2 equ 0
 +HAVE_SSSE3 equ 0
 +HAVE_SVE equ 0
++HAVE_SVE2 equ 0
 +HAVE_UNISTD_H equ 1
 +HAVE_VSX equ 1
 +HAVE_WXWIDGETS equ 0
 +STATIC_LINK_JXL equ 0
-Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
+Index: chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 ===================================================================
 --- /dev/null
-+++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
++++ chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 @@ -0,0 +1,13 @@
 +/*
 + * Copyright (c) 2024, Alliance for Open Media. All rights reserved
@@ -112,13 +114,13 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 + * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
 + */
 +#include "aom/aom_codec.h"
-+static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_ENCODER=1 -DCONFIG_LIBYUV=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=1 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_MAX_DECODE_PROFILE=0 -DCONFIG_NORMAL_TILE_MODE=1 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
++static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_DECODER=0 -DCONFIG_AV1_ENCODER=1 -DCONFIG_LIBYUV=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=1 -DCONFIG_QUANT_MATRIX=0 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
-Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+Index: chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 ===================================================================
 --- /dev/null
-+++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
-@@ -0,0 +1,97 @@
++++ chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+@@ -0,0 +1,99 @@
 +/*
 + * Copyright (c) 2024, Alliance for Open Media. All rights reserved
 + *
@@ -138,7 +140,7 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +#define AOM_ARCH_X86_64 0
 +#define CONFIG_ACCOUNTING 0
 +#define CONFIG_ANALYZER 0
-+#define CONFIG_AV1_DECODER 1
++#define CONFIG_AV1_DECODER 0
 +#define CONFIG_AV1_ENCODER 1
 +#define CONFIG_AV1_HIGHBITDEPTH 0
 +#define CONFIG_AV1_TEMPORAL_DENOISING 1
@@ -165,16 +167,17 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +#define CONFIG_INTER_STATS_ONLY 0
 +#define CONFIG_LIBVMAF_PSNR_PEAK 1
 +#define CONFIG_LIBYUV 0
-+#define CONFIG_MAX_DECODE_PROFILE 0
++#define CONFIG_MAX_DECODE_PROFILE 2
 +#define CONFIG_MISMATCH_DEBUG 0
 +#define CONFIG_MULTITHREAD 1
 +#define CONFIG_NN_V2 0
-+#define CONFIG_NORMAL_TILE_MODE 1
++#define CONFIG_NORMAL_TILE_MODE 0
 +#define CONFIG_OPTICAL_FLOW_API 0
 +#define CONFIG_OS_SUPPORT 1
 +#define CONFIG_OUTPUT_FRAME_SIZE 0
 +#define CONFIG_PARTITION_SEARCH_ORDER 0
 +#define CONFIG_PIC 1
++#define CONFIG_QUANT_MATRIX 0
 +#define CONFIG_RATECTRL_LOG 0
 +#define CONFIG_RD_COMMAND 0
 +#define CONFIG_RD_DEBUG 0
@@ -210,16 +213,17 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +#define HAVE_SSE4_2 0
 +#define HAVE_SSSE3 0
 +#define HAVE_SVE 0
++#define HAVE_SVE2 0
 +#define HAVE_UNISTD_H 1
 +#define HAVE_VSX 1
 +#define HAVE_WXWIDGETS 0
 +#define INLINE inline
 +#define STATIC_LINK_JXL 0
 +#endif  // AOM_CONFIG_H_
-Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+Index: chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
++++ chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 @@ -0,0 +1,1541 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_DSP_RTCD_H_
@@ -1762,10 +1766,10 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif
-Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+Index: chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
++++ chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 @@ -0,0 +1,107 @@
 +// This file is generated. Do not edit.
 +#ifndef AOM_SCALE_RTCD_H_
@@ -1785,7 +1789,7 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +extern "C" {
 +#endif
 +
-+void aom_extend_frame_borders_c(struct yv12_buffer_config *ybf, const int num_planes);
++void aom_extend_frame_borders_c(struct yv12_buffer_config *ybf, int num_planes);
 +#define aom_extend_frame_borders aom_extend_frame_borders_c
 +
 +void aom_extend_frame_borders_plane_row_c(const struct yv12_buffer_config *ybf, int plane, int v_start, int v_end);
@@ -1874,11 +1878,11 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif
-Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+Index: chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
-@@ -0,0 +1,478 @@
++++ chromium-126.0.6478.57/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+@@ -0,0 +1,484 @@
 +// This file is generated. Do not edit.
 +#ifndef AV1_RTCD_H_
 +#define AV1_RTCD_H_
@@ -2255,6 +2259,12 @@ Index: chromium-123.0.6312.58/third_party/libaom/source/config/linux/ppc64/confi
 +
 +void av1_resize_and_extend_frame_c(const YV12_BUFFER_CONFIG *src, YV12_BUFFER_CONFIG *dst, const InterpFilter filter, const int phase, const int num_planes);
 +#define av1_resize_and_extend_frame av1_resize_and_extend_frame_c
++
++void av1_resize_horz_dir_c(const uint8_t *const input, int in_stride, uint8_t *intbuf, int height, int filteredlength, int width2);
++#define av1_resize_horz_dir av1_resize_horz_dir_c
++
++bool av1_resize_vert_dir_c(uint8_t *intbuf, uint8_t *output, int out_stride, int height, int height2, int width2, int start_col);
++#define av1_resize_vert_dir av1_resize_vert_dir_c
 +
 +void av1_round_shift_array_c(int32_t *arr, int size, int bit);
 +#define av1_round_shift_array av1_round_shift_array_c

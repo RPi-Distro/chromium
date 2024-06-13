@@ -1,6 +1,7 @@
-diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/bcm/aesp8-ppc-linux.S chromium-125.0.6422.41/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S
---- chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/bcm/aesp8-ppc-linux.S	1970-01-01 00:00:00.000000000 +0000
-+++ chromium-125.0.6422.41/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S	2024-05-14 17:55:16.198250869 +0000
+Index: chromium-126.0.6478.57/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S
+===================================================================
+--- /dev/null
++++ chromium-126.0.6478.57/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S
 @@ -0,0 +1,3673 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -3675,9 +3676,10 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/bcm/aesp8-pp
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/bcm/ghashp8-ppc-linux.S chromium-125.0.6422.41/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S
---- chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/bcm/ghashp8-ppc-linux.S	1970-01-01 00:00:00.000000000 +0000
-+++ chromium-125.0.6422.41/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S	2024-05-14 17:55:16.086263678 +0000
+Index: chromium-126.0.6478.57/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S
+===================================================================
+--- /dev/null
++++ chromium-126.0.6478.57/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S
 @@ -0,0 +1,590 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -4269,10 +4271,11 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/bcm/ghashp8-
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmake chromium-125.0.6422.41/third_party/boringssl/src/gen/sources.cmake
---- chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmake	2024-05-08 20:30:38.000000000 +0000
-+++ chromium-125.0.6422.41/third_party/boringssl/src/gen/sources.cmake	2024-05-14 17:55:16.018271455 +0000
-@@ -110,6 +110,7 @@
+Index: chromium-126.0.6478.57/third_party/boringssl/src/gen/sources.cmake
+===================================================================
+--- chromium-126.0.6478.57.orig/third_party/boringssl/src/gen/sources.cmake
++++ chromium-126.0.6478.57/third_party/boringssl/src/gen/sources.cmake
+@@ -110,6 +110,7 @@ set(
    gen/bcm/aesni-x86-linux.S
    gen/bcm/aesni-x86_64-apple.S
    gen/bcm/aesni-x86_64-linux.S
@@ -4280,7 +4283,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
    gen/bcm/aesv8-armv7-linux.S
    gen/bcm/aesv8-armv8-apple.S
    gen/bcm/aesv8-armv8-linux.S
-@@ -141,6 +142,7 @@
+@@ -141,6 +142,7 @@ set(
    gen/bcm/ghash-x86-linux.S
    gen/bcm/ghash-x86_64-apple.S
    gen/bcm/ghash-x86_64-linux.S
@@ -4288,7 +4291,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
    gen/bcm/ghashv8-armv7-linux.S
    gen/bcm/ghashv8-armv8-apple.S
    gen/bcm/ghashv8-armv8-linux.S
-@@ -336,6 +338,7 @@
+@@ -336,6 +338,7 @@ set(
    crypto/cpu_arm_freebsd.c
    crypto/cpu_arm_linux.c
    crypto/cpu_intel.c
@@ -4296,7 +4299,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
    crypto/crypto.c
    crypto/curve25519/curve25519.c
    crypto/curve25519/curve25519_64_adx.c
-@@ -775,37 +778,6 @@
+@@ -775,37 +778,6 @@ set(
    CRYPTO_TEST_DATA
  
    crypto/blake2/blake2b256_tests.txt
@@ -4334,7 +4337,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
    crypto/curve25519/ed25519_tests.txt
    crypto/ecdh_extra/ecdh_tests.txt
    crypto/evp/evp_tests.txt
-@@ -1182,1401 +1154,6 @@
+@@ -1189,1413 +1161,6 @@ set(
  set(
    PKI_TEST_DATA
  
@@ -5306,14 +5309,18 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-basic-constraints-not-critical/main.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/any.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/chain.pem
+-  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/clientauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/clientauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/clientauth.test
+-  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/serverauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/serverauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/serverauth.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/any.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/chain.pem
+-  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/clientauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/clientauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/clientauth.test
+-  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/serverauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/serverauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/serverauth.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha1-chain.pem
@@ -5328,6 +5335,8 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha256-eku-clientAuth.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha256-eku-serverAuth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha256-eku-serverAuth.test
+-  pki/testdata/verify_certificate_chain_unittest/intermediate-invalid-spki/chain.pem
+-  pki/testdata/verify_certificate_chain_unittest/intermediate-invalid-spki/main.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-lacks-basic-constraints/chain.pem
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-lacks-basic-constraints/main.test
 -  pki/testdata/verify_certificate_chain_unittest/intermediate-lacks-signing-key-usage/chain.pem
@@ -5527,8 +5536,10 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
 -  pki/testdata/verify_certificate_chain_unittest/target-and-intermediate/unspecified-trust-root.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-any/any.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-any/chain.pem
+-  pki/testdata/verify_certificate_chain_unittest/target-eku-any/clientauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-any/clientauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-any/clientauth.test
+-  pki/testdata/verify_certificate_chain_unittest/target-eku-any/serverauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-any/serverauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-any/serverauth.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-clientauth/any.test
@@ -5539,12 +5550,15 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-clientauth/serverauth.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-many/any.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-many/chain.pem
+-  pki/testdata/verify_certificate_chain_unittest/target-eku-many/clientauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-many/clientauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-many/clientauth.test
+-  pki/testdata/verify_certificate_chain_unittest/target-eku-many/serverauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-many/serverauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-many/serverauth.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-none/any.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-none/chain.pem
+-  pki/testdata/verify_certificate_chain_unittest/target-eku-none/clientauth-strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-none/clientauth-strict.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-none/clientauth.test
 -  pki/testdata/verify_certificate_chain_unittest/target-eku-none/serverauth-strict.test
@@ -5567,6 +5581,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
 -  pki/testdata/verify_certificate_chain_unittest/target-msapplicationpolicies-no-eku/main.test
 -  pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/chain.pem
 -  pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/main.test
+-  pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/strict-leaf.test
 -  pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/strict.test
 -  pki/testdata/verify_certificate_chain_unittest/target-only/chain.pem
 -  pki/testdata/verify_certificate_chain_unittest/target-only/trusted_anchor.test
@@ -5736,7 +5751,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
    pki/testdata/verify_unittest/google-leaf.der
    pki/testdata/verify_unittest/self-issued.pem
  )
-@@ -2689,6 +1266,7 @@
+@@ -2708,6 +1273,7 @@ set(
    gen/test_support/trampoline-armv8-apple.S
    gen/test_support/trampoline-armv8-linux.S
    gen/test_support/trampoline-armv8-win.S
@@ -5744,9 +5759,10 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.cmak
    gen/test_support/trampoline-x86-apple.S
    gen/test_support/trampoline-x86-linux.S
    gen/test_support/trampoline-x86_64-apple.S
-diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json chromium-125.0.6422.41/third_party/boringssl/src/gen/sources.json
---- chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json	2024-05-08 20:30:38.000000000 +0000
-+++ chromium-125.0.6422.41/third_party/boringssl/src/gen/sources.json	2024-05-14 17:55:16.022270997 +0000
+Index: chromium-126.0.6478.57/third_party/boringssl/src/gen/sources.json
+===================================================================
+--- chromium-126.0.6478.57.orig/third_party/boringssl/src/gen/sources.json
++++ chromium-126.0.6478.57/third_party/boringssl/src/gen/sources.json
 @@ -88,6 +88,7 @@
        "gen/bcm/aesni-x86-linux.S",
        "gen/bcm/aesni-x86_64-apple.S",
@@ -5809,7 +5825,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
        "crypto/curve25519/ed25519_tests.txt",
        "crypto/ecdh_extra/ecdh_tests.txt",
        "crypto/evp/evp_tests.txt",
-@@ -1123,1401 +1095,6 @@
+@@ -1127,1413 +1099,6 @@
        "pki/verify_signed_data_unittest.cc"
      ],
      "data": [
@@ -6781,14 +6797,18 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-basic-constraints-not-critical/main.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/any.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/chain.pem",
+-      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/clientauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/clientauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/clientauth.test",
+-      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/serverauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/serverauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-any-and-clientauth/serverauth.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/any.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/chain.pem",
+-      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/clientauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/clientauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/clientauth.test",
+-      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/serverauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/serverauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-clientauth/serverauth.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha1-chain.pem",
@@ -6803,6 +6823,8 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha256-eku-clientAuth.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha256-eku-serverAuth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-eku-server-gated-crypto/sha256-eku-serverAuth.test",
+-      "pki/testdata/verify_certificate_chain_unittest/intermediate-invalid-spki/chain.pem",
+-      "pki/testdata/verify_certificate_chain_unittest/intermediate-invalid-spki/main.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-lacks-basic-constraints/chain.pem",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-lacks-basic-constraints/main.test",
 -      "pki/testdata/verify_certificate_chain_unittest/intermediate-lacks-signing-key-usage/chain.pem",
@@ -7002,8 +7024,10 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
 -      "pki/testdata/verify_certificate_chain_unittest/target-and-intermediate/unspecified-trust-root.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/any.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/chain.pem",
+-      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/clientauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/clientauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/clientauth.test",
+-      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/serverauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/serverauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-any/serverauth.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-clientauth/any.test",
@@ -7014,12 +7038,15 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-clientauth/serverauth.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/any.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/chain.pem",
+-      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/clientauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/clientauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/clientauth.test",
+-      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/serverauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/serverauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-many/serverauth.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-none/any.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-none/chain.pem",
+-      "pki/testdata/verify_certificate_chain_unittest/target-eku-none/clientauth-strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-none/clientauth-strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-none/clientauth.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-eku-none/serverauth-strict.test",
@@ -7042,6 +7069,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
 -      "pki/testdata/verify_certificate_chain_unittest/target-msapplicationpolicies-no-eku/main.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/chain.pem",
 -      "pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/main.test",
+-      "pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/strict-leaf.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-not-end-entity/strict.test",
 -      "pki/testdata/verify_certificate_chain_unittest/target-only/chain.pem",
 -      "pki/testdata/verify_certificate_chain_unittest/target-only/trusted_anchor.test",
@@ -7211,7 +7239,7 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
        "pki/testdata/verify_unittest/google-leaf.der",
        "pki/testdata/verify_unittest/self-issued.pem"
      ]
-@@ -2615,6 +1192,7 @@
+@@ -2631,6 +1196,7 @@
        "gen/test_support/trampoline-armv8-apple.S",
        "gen/test_support/trampoline-armv8-linux.S",
        "gen/test_support/trampoline-armv8-win.S",
@@ -7219,9 +7247,10 @@ diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/sources.json
        "gen/test_support/trampoline-x86-apple.S",
        "gen/test_support/trampoline-x86-linux.S",
        "gen/test_support/trampoline-x86_64-apple.S",
-diff -urN chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/test_support/trampoline-ppc-linux.S chromium-125.0.6422.41/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S
---- chromium-125.0.6422.41/third_party/boringssl/src/gen.orig/test_support/trampoline-ppc-linux.S	1970-01-01 00:00:00.000000000 +0000
-+++ chromium-125.0.6422.41/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S	2024-05-14 17:55:16.090263221 +0000
+Index: chromium-126.0.6478.57/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S
+===================================================================
+--- /dev/null
++++ chromium-126.0.6478.57/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S
 @@ -0,0 +1,1413 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.

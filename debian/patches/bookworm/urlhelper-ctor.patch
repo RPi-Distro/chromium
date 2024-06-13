@@ -1,0 +1,28 @@
+author: Andres Salomon <dilinger@debian.org>
+description: work around clang-16 constructor bug
+
+Work around the standard clang-16 compiler bug where a constructor is
+needed. This one was hidden in confusing variadic template stuff, but
+turned out to be the basic compiler bug that we've already seen plenty of
+times (with assistance from Tim Pearson <tpearson@raptorengineering.com>).
+
+../../components/visited_url_ranking/public/url_visit.cc:40:16: error: no viable constructor or deduction guide for deduction of template arguments of 'URLVisitVariantHelper'
+    std::visit(URLVisitVariantHelper{ nullptr, nullptr },
+               ^
+../../components/visited_url_ranking/public/url_visit.h:152:8: note: candidate function template not viable: requires 1 argument, but 2 were provided
+struct URLVisitVariantHelper : Ts... {
+       ^
+../../components/visited_url_ranking/public/url_visit.h:152:8: note: candidate function template not viable: requires 0 arguments, but 2 were provided
+1 error generated.
+
+
+--- a/components/visited_url_ranking/public/url_visit.h
++++ b/components/visited_url_ranking/public/url_visit.h
+@@ -151,6 +151,7 @@ struct URLVisitAggregate {
+ template <class... Ts>
+ struct URLVisitVariantHelper : Ts... {
+   using Ts::operator()...;
++  URLVisitVariantHelper(Ts&&... t) : Ts(t)... { }
+ };
+ 
+ }  // namespace visited_url_ranking

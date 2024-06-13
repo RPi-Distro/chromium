@@ -26,13 +26,15 @@ fixes/bad-font-gc3.patch
 upstream/mojo.patch
 upstream/mojo-null.patch
 upstream/ruy-include.patch
-upstream/vulkan-include.patch
-upstream/mojo-bindings-include.patch
-upstream/appservice-include.patch
-upstream/no-vector-consts.patch
-upstream/lens-include.patch
-upstream/ninja.patch
 upstream/tabstrip-include.patch
+upstream/quiche-deque.patch
+upstream/gpu-header.patch
+upstream/blink-header.patch
+upstream/blink-header2.patch
+upstream/blink-header3.patch
+upstream/realtime-reporting.patch
+upstream/urlvisit-header.patch
+upstream/accessibility-format.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -54,7 +56,6 @@ system/jpeg.patch
 system/zlib.patch
 system/event.patch
 system/openjpeg.patch
-system/clang-format.patch
 system/opus.patch
 system/eu-strip.patch
 system/rapidjson.patch
@@ -67,6 +68,7 @@ bookworm/bubble-contents.patch
 bookworm/constcountrycode.patch
 bookworm/sizet.patch
 bookworm/constexpr.patch
+bookworm/urlhelper-ctor.patch
 bookworm/nvt.patch
 bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch

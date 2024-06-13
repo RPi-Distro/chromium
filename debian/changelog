@@ -1,4 +1,4 @@
-chromium (126.0.6478.54-1) UNRELEASED; urgency=high
+chromium (126.0.6478.56-1) UNRELEASED; urgency=high
 
   * New upstream stable release.
     - CVE-2024-5830: Type Confusion in V8.

@@ -1103,7 +1103,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    if (over_diff == kNoDiff)
      over_diff = LayoutUnit();
    if (under_diff == kNoDiff)
-@@ -956,8 +957,7 @@ FontHeight ComputeEmHeight(const Logical
+@@ -85,8 +86,7 @@ FontHeight ComputeEmHeight(const Logical
      FontHeight result_height;
      // We don't use ShapeResultView::FallbackFonts() because we can't know if
      // the primary font is actually used with FallbackFonts().
@@ -1146,7 +1146,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    if (!font_data) {
 --- a/third_party/blink/renderer/platform/BUILD.gn
 +++ b/third_party/blink/renderer/platform/BUILD.gn
-@@ -637,6 +637,7 @@ component("platform") {
+@@ -634,6 +634,7 @@ component("platform") {
      "fonts/font_cache_memory_dump_provider.h",
      "fonts/font_custom_platform_data.cc",
      "fonts/font_custom_platform_data.h",
@@ -1982,16 +1982,15 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
 -    FontDataForRangeSet* candidate,
 +scoped_refptr<FontDataForRangeSet> FontFallbackIterator::UniqueOrNext(
 +    scoped_refptr<FontDataForRangeSet> candidate,
-     const Vector<UChar32>& hint_list) {
+     const HintCharList& hint_list) {
    if (!candidate->HasFontData())
      return Next(hint_list);
-@@ -117,18 +117,18 @@ bool FontFallbackIterator::NeedsHintList
+@@ -117,17 +117,17 @@ bool FontFallbackIterator::NeedsHintList
    return font_data->IsSegmented();
  }
  
--FontDataForRangeSet* FontFallbackIterator::Next(
-+scoped_refptr<FontDataForRangeSet> FontFallbackIterator::Next(
-     const Vector<UChar32>& hint_list) {
+-FontDataForRangeSet* FontFallbackIterator::Next(const HintCharList& hint_list) {
++scoped_refptr<FontDataForRangeSet> FontFallbackIterator::Next(const HintCharList& hint_list) {
    if (fallback_stage_ == kOutOfLuck)
 -    return MakeGarbageCollected<FontDataForRangeSet>();
 +    return base::AdoptRef(new FontDataForRangeSet());
@@ -2009,7 +2008,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      if (fallback_priority_font_range->HasFontData())
        return UniqueOrNext(std::move(fallback_priority_font_range), hint_list);
      return Next(hint_list);
-@@ -136,11 +136,11 @@ FontDataForRangeSet* FontFallbackIterato
+@@ -135,11 +135,11 @@ FontDataForRangeSet* FontFallbackIterato
  
    if (fallback_stage_ == kSystemFonts) {
      // We've reached pref + system fallback.
@@ -2024,7 +2023,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      }
  
      // If we don't have options from the system fallback anymore or had
-@@ -150,16 +150,18 @@ FontDataForRangeSet* FontFallbackIterato
+@@ -149,16 +149,18 @@ FontDataForRangeSet* FontFallbackIterato
      // LastResort font, not just Times or Arial.
      FontCache& font_cache = FontCache::Get();
      fallback_stage_ = kFirstCandidateForNotdefGlyph;
@@ -2049,7 +2048,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    }
  
    if (fallback_stage_ == kFirstCandidateForNotdefGlyph) {
-@@ -190,13 +192,13 @@ FontDataForRangeSet* FontFallbackIterato
+@@ -189,13 +191,13 @@ FontDataForRangeSet* FontFallbackIterato
      // Skip forward to the next font family for the next call to next().
      current_font_data_index_++;
      if (!font_data->IsLoading()) {
@@ -2065,7 +2064,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      }
      return Next(hint_list);
    }
-@@ -210,7 +212,7 @@ FontDataForRangeSet* FontFallbackIterato
+@@ -209,7 +211,7 @@ FontDataForRangeSet* FontFallbackIterato
    }
  
    DCHECK_LT(segmented_face_index_, segmented->NumFaces());
@@ -2074,7 +2073,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
        segmented->FaceAt(segmented_face_index_);
    segmented_face_index_++;
  
-@@ -221,7 +223,7 @@ FontDataForRangeSet* FontFallbackIterato
+@@ -220,7 +222,7 @@ FontDataForRangeSet* FontFallbackIterato
      current_font_data_index_++;
    }
  
@@ -2083,7 +2082,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      const SimpleFontData* current_segmented_face_font_data =
          current_segmented_face->FontData();
      if (const CustomFontData* current_segmented_face_custom_font_data =
-@@ -235,15 +237,17 @@ FontDataForRangeSet* FontFallbackIterato
+@@ -234,15 +236,17 @@ FontDataForRangeSet* FontFallbackIterato
    return Next(hint_list);
  }
  
@@ -2107,13 +2106,13 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    }
    return font_data;
  }
-@@ -268,7 +272,7 @@ static inline unsigned ChooseHintIndex(c
+@@ -268,7 +272,7 @@ static inline unsigned ChooseHintIndex(
    return 0;
  }
  
 -const SimpleFontData* FontFallbackIterator::UniqueSystemFontForHintList(
 +scoped_refptr<SimpleFontData> FontFallbackIterator::UniqueSystemFontForHintList(
-     const Vector<UChar32>& hint_list) {
+     const HintCharList& hint_list) {
    // When we're asked for a fallback for the same characters again, we give up
    // because the shaper must have previously tried shaping with the font
 @@ -283,13 +287,13 @@ const SimpleFontData* FontFallbackIterat
@@ -2150,33 +2149,33 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
  namespace blink {
  
-@@ -47,7 +48,7 @@ class PLATFORM_EXPORT FontFallbackIterat
+@@ -49,7 +50,7 @@ class PLATFORM_EXPORT FontFallbackIterat
    // Some system fallback APIs (Windows, Android) require a character, or a
    // portion of the string to be passed.  On Mac and Linux, we get a list of
    // fonts without passing in characters.
--  FontDataForRangeSet* Next(const Vector<UChar32>& hint_list);
-+  scoped_refptr<FontDataForRangeSet> Next(const Vector<UChar32>& hint_list);
+-  FontDataForRangeSet* Next(const HintCharList& hint_list);
++  scoped_refptr<FontDataForRangeSet> Next(const HintCharList& hint_list);
  
    void Reset();
  
-@@ -57,11 +58,12 @@ class PLATFORM_EXPORT FontFallbackIterat
+@@ -59,11 +60,12 @@ class PLATFORM_EXPORT FontFallbackIterat
    bool AlreadyLoadingRangeForHintChar(UChar32 hint_char);
    void WillUseRange(const AtomicString& family, const FontDataForRangeSet&);
  
 -  FontDataForRangeSet* UniqueOrNext(FontDataForRangeSet* candidate,
--                                    const Vector<UChar32>& hint_list);
+-                                    const HintCharList& hint_list);
 +  scoped_refptr<FontDataForRangeSet> UniqueOrNext(
 +      scoped_refptr<FontDataForRangeSet> candidate,
-+      const Vector<UChar32>& hint_list);
++      const HintCharList& hint_list);
  
 -  const SimpleFontData* FallbackPriorityFont(UChar32 hint);
 -  const SimpleFontData* UniqueSystemFontForHintList(
 +  scoped_refptr<SimpleFontData> FallbackPriorityFont(UChar32 hint);
 +  scoped_refptr<SimpleFontData> UniqueSystemFontForHintList(
-       const Vector<UChar32>& hint_list);
+       const HintCharList& hint_list);
  
    const FontDescription& font_description_;
-@@ -89,8 +91,8 @@ class PLATFORM_EXPORT FontFallbackIterat
+@@ -91,8 +93,8 @@ class PLATFORM_EXPORT FontFallbackIterat
    // candidate to be used for rendering the .notdef glyph, and set HasNext() to
    // false.
    HashSet<uint32_t> unique_font_data_for_range_sets_returned_;
@@ -2337,7 +2336,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    const uint16_t generation_;
 --- a/third_party/blink/renderer/platform/fonts/font_platform_data.cc
 +++ b/third_party/blink/renderer/platform/fonts/font_platform_data.cc
-@@ -158,10 +158,6 @@ FontPlatformData::FontPlatformData(sk_sp
+@@ -159,10 +159,6 @@ FontPlatformData::FontPlatformData(sk_sp
  
  FontPlatformData::~FontPlatformData() = default;
  
@@ -2348,7 +2347,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  #if BUILDFLAG(IS_MAC)
  CTFontRef FontPlatformData::CtFont() const {
    return SkTypeface_GetCTFontRef(typeface_.get());
-@@ -213,10 +209,11 @@ SkTypeface* FontPlatformData::Typeface()
+@@ -214,10 +210,11 @@ SkTypeface* FontPlatformData::Typeface()
  
  HarfBuzzFace* FontPlatformData::GetHarfBuzzFace() const {
    if (!harfbuzz_face_) {
@@ -2362,7 +2361,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  }
  
  bool FontPlatformData::HasSpaceInLigaturesOrKerning(
-@@ -246,7 +243,7 @@ unsigned FontPlatformData::GetHash() con
+@@ -247,7 +244,7 @@ unsigned FontPlatformData::GetHash() con
  }
  
  #if !BUILDFLAG(IS_MAC)
@@ -2403,7 +2402,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  #if BUILDFLAG(IS_MAC)
    // Returns nullptr for FreeType backed SkTypefaces, compare
    // FontCustomPlatformData, which are used for variable fonts on Mac OS
-@@ -129,7 +126,7 @@ class PLATFORM_EXPORT FontPlatformData
+@@ -130,7 +127,7 @@ class PLATFORM_EXPORT FontPlatformData
  
    bool IsHashTableDeletedValue() const { return is_hash_table_deleted_value_; }
  #if !BUILDFLAG(IS_MAC)
@@ -2412,7 +2411,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  #endif
  
  #if !BUILDFLAG(IS_WIN) && !BUILDFLAG(IS_MAC)
-@@ -185,7 +182,7 @@ class PLATFORM_EXPORT FontPlatformData
+@@ -186,7 +183,7 @@ class PLATFORM_EXPORT FontPlatformData
    WebFontRenderStyle style_;
  #endif
  
@@ -2766,7 +2765,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
 --- a/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_face.cc
 +++ b/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_face.cc
-@@ -63,8 +63,7 @@
+@@ -65,8 +65,7 @@
  
  namespace blink {
  
@@ -2776,18 +2775,17 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
      : platform_data_(platform_data), unique_id_(unique_id) {
    HbFontCacheEntry* const cache_entry =
        FontGlobalContext::GetHarfBuzzFontCache().RefOrNew(unique_id_,
-@@ -77,10 +76,6 @@ HarfBuzzFace::~HarfBuzzFace() {
+@@ -79,9 +78,6 @@ HarfBuzzFace::~HarfBuzzFace() {
    FontGlobalContext::GetHarfBuzzFontCache().Remove(unique_id_);
  }
  
 -void HarfBuzzFace::Trace(Visitor* visitor) const {
 -  visitor->Trace(platform_data_);
 -}
--
- bool HarfBuzzFace::ignore_variation_selectors_ = false;
  
- static hb_bool_t HarfBuzzGetGlyph(hb_font_t* hb_font,
-@@ -470,8 +465,7 @@ static hb_blob_t* HarfBuzzSkiaGetTable(h
+ bool& GetIgnoreVariationSelectors() {
+   DEFINE_THREAD_SAFE_STATIC_LOCAL(WTF::ThreadSpecific<bool>,
+@@ -486,8 +482,7 @@ static hb_blob_t* HarfBuzzSkiaGetTable(h
  }
  
  // TODO(yosin): We should move |CreateFace()| to "harfbuzz_font_cache.cc".
@@ -2797,7 +2795,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    hb::unique_ptr<hb_face_t> face;
  
    sk_sp<SkTypeface> typeface = sk_ref_sp(platform_data->Typeface());
-@@ -519,9 +513,8 @@ static scoped_refptr<HbFontCacheEntry> C
+@@ -535,9 +530,8 @@ static scoped_refptr<HbFontCacheEntry> C
    return cache_entry;
  }
  
@@ -2848,8 +2846,8 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    enum VerticalLayoutCallbacks { kPrepareForVerticalLayout, kNoVerticalLayout };
  
    // In order to support the restricting effect of unicode-range optionally a
-@@ -102,10 +103,11 @@ class PLATFORM_EXPORT HarfBuzzFace final
-   }
+@@ -97,10 +98,11 @@ class PLATFORM_EXPORT HarfBuzzFace final
+   static void SetIgnoreVariationSelectors(bool value);
  
   private:
 +  HarfBuzzFace(FontPlatformData* platform_data, uint64_t);
@@ -2874,7 +2872,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
   private:
 --- a/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_shaper.cc
 +++ b/third_party/blink/renderer/platform/fonts/shaping/harfbuzz_shaper.cc
-@@ -786,7 +786,7 @@ void HarfBuzzShaper::ShapeSegment(
+@@ -853,7 +853,7 @@ void HarfBuzzShaper::ShapeSegment(
      fallback_chars_hint.ReserveInitialCapacity(range_data->end -
                                                 range_data->start);
    }
@@ -2883,7 +2881,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    FallbackFontStage fallback_stage = kIntermediate;
    while (!range_data->reshape_queue.empty()) {
      ReshapeQueueItem current_queue_item = range_data->reshape_queue.TakeFirst();
-@@ -854,7 +854,7 @@ void HarfBuzzShaper::ShapeSegment(
+@@ -934,7 +934,7 @@ void HarfBuzzShaper::ShapeSegment(
      if (needs_caps_handling) {
        case_map_intend = caps_support.NeedsCaseChange(small_caps_behavior);
        if (caps_support.NeedsSyntheticFont(small_caps_behavior))
@@ -2956,7 +2954,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
    if (run.IsLtr()) {  // Left-to-right
      for (const auto& glyph_data : run.glyph_data_) {
-@@ -1675,7 +1673,7 @@ unsigned ShapeResult::CopyRangeInternal(
+@@ -1738,7 +1736,7 @@ unsigned ShapeResult::CopyRangeInternal(
  ShapeResult* ShapeResult::SubRange(unsigned start_offset,
                                     unsigned end_offset) const {
    ShapeResult* sub_range =
@@ -2994,7 +2992,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
    bool HasFallbackFonts(const SimpleFontData* primary_font) const;
  
    // TODO(eae): Remove start_x and return value once ShapeResultBuffer has been
-@@ -347,12 +347,10 @@ class PLATFORM_EXPORT ShapeResult : publ
+@@ -352,12 +352,10 @@ class PLATFORM_EXPORT ShapeResult : publ
  
    // Computes the list of fonts along with the number of glyphs for each font.
    struct RunFontData {
@@ -3009,7 +3007,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
    // Iterates over, and calls the specified callback function, for all the
    // glyphs. Also tracks (and returns) a seeded total advance.
-@@ -512,7 +510,7 @@ class PLATFORM_EXPORT ShapeResult : publ
+@@ -517,7 +515,7 @@ class PLATFORM_EXPORT ShapeResult : publ
    // index to x-position and O(log n) time, using binary search, from
    // x-position to character index.
    mutable HeapVector<ShapeResultCharacterData> character_position_;
@@ -3018,7 +3016,7 @@ Date:   Tue Feb 13 19:15:19 2024 +0000
  
    unsigned start_index_ = 0;
    unsigned num_characters_ = 0;
-@@ -567,6 +565,5 @@ PLATFORM_EXPORT std::ostream& operator<<
+@@ -572,6 +570,5 @@ PLATFORM_EXPORT std::ostream& operator<<
  }  // namespace blink
  
  WTF_ALLOW_CLEAR_UNUSED_SLOTS_WITH_MEM_FUNCTIONS(blink::ShapeResult::ShapeRange)

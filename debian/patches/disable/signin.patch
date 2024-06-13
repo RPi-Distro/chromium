@@ -23,7 +23,7 @@ origin: https://raw.githubusercontent.com/Eloston/ungoogled-chromium/master/reso
  
 --- a/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -226,9 +226,9 @@ void PrimaryAccountManager::RegisterProf
+@@ -245,9 +245,9 @@ void PrimaryAccountManager::RegisterProf
        prefs::kGoogleServicesSyncingGaiaIdMigratedToSignedIn, std::string());
    registry->RegisterStringPref(
        prefs::kGoogleServicesSyncingUsernameMigratedToSignedIn, std::string());
@@ -33,5 +33,5 @@ origin: https://raw.githubusercontent.com/Eloston/ungoogled-chromium/master/reso
 -  registry->RegisterBooleanPref(prefs::kSigninAllowed, true);
 +  registry->RegisterBooleanPref(prefs::kSigninAllowed, false);
    registry->RegisterBooleanPref(prefs::kSignedInWithCredentialProvider, false);
-   registry->RegisterBooleanPref(prefs::kExplicitBrowserSignin, false);
- }
+   registry->RegisterBooleanPref(kExplicitBrowserSigninWithoutFeatureEnabled,
+                                 false);

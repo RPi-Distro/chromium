@@ -61,6 +61,7 @@ system/rapidjson.patch
 system/rollup.patch
 
 bookworm/clang16.patch
+bookworm/urlhelper-ctor.patch
 bookworm/nvt.patch
 bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch

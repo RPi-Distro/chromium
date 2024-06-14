@@ -1,4 +1,4 @@
-chromium (126.0.6478.56-1~deb12u1) UNRELEASED; urgency=high
+chromium (126.0.6478.56-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.
     - CVE-2024-5830: Type Confusion in V8.
@@ -54,7 +54,7 @@ chromium (126.0.6478.56-1~deb12u1) UNRELEASED; urgency=high
     - upstream/urlvisit-header.patch: add header build fix from upstream.
     - upstream/accessibility-format.patch: gcc build fix from upstream.
     - bookworm/urlhelper-ctor.patch: work around a clang-16 bug; add an
-      explicit constructor).
+      explicit constructor.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:
@@ -65,7 +65,7 @@ chromium (126.0.6478.56-1~deb12u1) UNRELEASED; urgency=high
     - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: Refresh
       for upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 30 May 2024 22:11:26 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 13 Jun 2024 21:31:56 -0400
 
 chromium (125.0.6422.141-1~deb12u1) bookworm-security; urgency=high
 

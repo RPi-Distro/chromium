@@ -1,3 +1,16 @@
+chromium (126.0.6478.114-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-6100: Type Confusion in V8. Reported by Seunghyun Lee
+      (@0x10n) participating in SSD Secure Disclosure's TyphoonPWN 2024.
+    - CVE-2024-6101: Inappropriate implementation in WebAssembly.
+      Reported by @ginggilBesel.
+    - CVE-2024-6102: Out of bounds memory access in Dawn.
+      Reported by wgslfuzz.
+    - CVE-2024-6103: Use after free in Dawn. Reported by wgslfuzz.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 18 Jun 2024 15:55:14 -0400
+
 chromium (126.0.6478.56-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.

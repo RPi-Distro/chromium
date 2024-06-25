@@ -1,0 +1,40 @@
+commit 2a049ea572f0e7f13e6e98644b2686b9184be4fe
+Author: Daniel Cheng <dcheng@chromium.org>
+Date:   Fri Jun 7 17:34:50 2024 +0000
+
+    Move autofill::AddressDataManager::observers_ to be the first field
+    
+    AddressDataManager owns AlternativeStateNameMapUpdater, which is an
+    AddressDataManager::Observer. However, the ObserverList is destroyed
+    before the AlternativeStateNameMapUpdater, triggering an MSan error
+    when use-after-dtor checks are enabled. To fix this, reorder
+    `autofill::AddressDataManager::observers_` to be the first field so it
+    is destroyed last.
+    
+    Bug: 40222690
+    Change-Id: I82276679a93003b0b447f7bf21fe3d4f3a1e9b44
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5590096
+    Commit-Queue: Daniel Cheng <dcheng@chromium.org>
+    Reviewed-by: Peter Kotwicz <pkotwicz@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1312106}
+
+--- a/components/autofill/core/browser/address_data_manager.h
++++ b/components/autofill/core/browser/address_data_manager.h
+@@ -405,6 +405,8 @@ class AddressDataManager : public Autofi
+   // has finished.
+   void LogStoredDataMetrics() const;
+ 
++  base::ObserverList<Observer> observers_;
++
+   std::unique_ptr<ContactInfoPreconditionChecker>
+       contact_info_precondition_checker_;
+ 
+@@ -477,8 +479,6 @@ class AddressDataManager : public Autofi
+   // starts.
+   std::unique_ptr<AddressDataCleaner> address_data_cleaner_;
+ 
+-  base::ObserverList<Observer> observers_;
+-
+   // The list of change callbacks. All of them are being triggered in
+   // `NotifyObservers()` and then the list is cleared.
+   std::vector<base::OnceClosure> change_callbacks_;

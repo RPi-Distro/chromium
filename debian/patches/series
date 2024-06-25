@@ -35,6 +35,7 @@ upstream/blink-header3.patch
 upstream/realtime-reporting.patch
 upstream/urlvisit-header.patch
 upstream/accessibility-format.patch
+upstream/observer.patch
 
 disable/tests.patch
 disable/unrar.patch

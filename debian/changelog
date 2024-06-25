@@ -1,3 +1,16 @@
+chromium (126.0.6478.126-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-6290: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-6291: Use after free in Swiftshader.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-6292: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-6293: Use after free in Dawn. Reported by wgslfuzz.
+  * d/patches/upstream/observer.patch: add crash-on-exit fix from
+    upstream (closes: #1073378).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 25 Jun 2024 03:28:40 -0400
+
 chromium (126.0.6478.114-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

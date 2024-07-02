@@ -1,3 +1,10 @@
+chromium-browser (125.0.6422.133-rpt1) bookworm; urgency=medium
+
+  * Update to 125.0.6422.133
+  * v125.0.6422.133_rpi_3.67.patch
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 27 May 2024 19:50:45 +0100
+
 chromium-browser (124.0.6367.73-rpt1) bookworm; urgency=medium
 
   * Update to 124.0.6367.73

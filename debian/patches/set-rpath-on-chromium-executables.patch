@@ -4,7 +4,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
 
 --- a/src/chrome/BUILD.gn
 +++ b/src/chrome/BUILD.gn
-@@ -384,6 +384,8 @@ if (!is_android && !is_mac) {
+@@ -387,6 +387,8 @@ if (!is_android && !is_mac) {
            "app/chrome_main_linux.h",
          ]
        }

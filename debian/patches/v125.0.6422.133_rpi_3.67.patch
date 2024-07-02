@@ -12,16 +12,6 @@
  /ios_files
  /mac_files
  
---- a/src/build/config/linux/BUILD.gn
-+++ b/src/build/config/linux/BUILD.gn
-@@ -5,6 +5,7 @@
- import("//build/config/c++/c++.gni")
- import("//build/config/chromeos/ui_mode.gni")
- import("//build/config/linux/pkg_config.gni")
-+import("//build/config/sysroot.gni")
- import("//build/config/ui.gni")
- 
- group("linux") {
 --- a/src/build/linux/sysroot_scripts/generate_keyring.sh
 +++ b/src/build/linux/sysroot_scripts/generate_keyring.sh
 @@ -27,5 +27,19 @@ KEYS=(
@@ -180,7 +170,7 @@
      if args.command == "build":
 --- a/src/chrome/app/chrome_main_delegate.cc
 +++ b/src/chrome/app/chrome_main_delegate.cc
-@@ -78,6 +78,7 @@
+@@ -74,6 +74,7 @@
  #include "components/nacl/common/buildflags.h"
  #include "components/startup_metric_utils/common/startup_metric_utils.h"
  #include "components/version_info/channel.h"
@@ -188,7 +178,7 @@
  #include "components/version_info/version_info.h"
  #include "content/public/app/initialize_mojo_core.h"
  #include "content/public/common/content_client.h"
-@@ -419,6 +420,15 @@ bool HandleVersionSwitches(const base::C
+@@ -414,6 +415,15 @@ bool HandleVersionSwitches(const base::C
    }
  #endif
  
@@ -206,7 +196,7 @@
             version_info::GetVersionNumber().data(),
 --- a/src/chrome/browser/about_flags.cc
 +++ b/src/chrome/browser/about_flags.cc
-@@ -7496,15 +7496,17 @@ const FeatureEntry kFeatureEntries[] = {
+@@ -7602,15 +7602,17 @@ const FeatureEntry kFeatureEntries[] = {
       FEATURE_VALUE_TYPE(ash::features::kArcInputOverlayAlphaV2)},
  #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
  
@@ -226,85 +216,41 @@
      {"enable-vbr-encode-acceleration",
       flag_descriptions::kChromeOSHWVBREncodingName,
       flag_descriptions::kChromeOSHWVBREncodingDescription, kOsCrOS | kOsLacros,
---- a/src/chrome/browser/chrome_browser_main_extra_parts_linux.cc
-+++ b/src/chrome/browser/chrome_browser_main_extra_parts_linux.cc
-@@ -168,7 +168,7 @@ ChromeBrowserMainExtraPartsLinux::Chrome
- 
- ChromeBrowserMainExtraPartsLinux::~ChromeBrowserMainExtraPartsLinux() = default;
- 
--void ChromeBrowserMainExtraPartsLinux::PreEarlyInitialization() {
-+void ChromeBrowserMainExtraPartsLinux::FixOzoneCmdLine() {
- #if BUILDFLAG(IS_LINUX)
-   // On the desktop, we fix the platform name if necessary.
-   // See https://crbug.com/1246928.
-@@ -176,10 +176,10 @@ void ChromeBrowserMainExtraPartsLinux::P
-   if (!command_line->HasSwitch(switches::kOzonePlatform)) {
-     const auto ozone_platform_hint =
-         command_line->GetSwitchValueASCII(switches::kOzonePlatformHint);
--    if (!ozone_platform_hint.empty()) {
--      command_line->AppendSwitchASCII(
--          switches::kOzonePlatform, MaybeFixPlatformName(ozone_platform_hint));
--    }
-+    command_line->AppendSwitchASCII(
-+      switches::kOzonePlatform,
-+      MaybeFixPlatformName(ozone_platform_hint.empty() ?
-+          std::string("auto") : ozone_platform_hint));
-   }
- 
-   auto env = base::Environment::Create();
-@@ -190,6 +190,10 @@ void ChromeBrowserMainExtraPartsLinux::P
- #endif  // BUILDFLAG(IS_LINUX)
- }
- 
-+void ChromeBrowserMainExtraPartsLinux::PreEarlyInitialization() {
-+  FixOzoneCmdLine();
-+}
-+
- void ChromeBrowserMainExtraPartsLinux::PostBrowserStart() {
-   RecordDisplayServerProtocolSupport();
-   ChromeBrowserMainExtraPartsOzone::PostBrowserStart();
---- a/src/chrome/browser/chrome_browser_main_extra_parts_linux.h
-+++ b/src/chrome/browser/chrome_browser_main_extra_parts_linux.h
-@@ -17,6 +17,7 @@ class ChromeBrowserMainExtraPartsLinux
-       const ChromeBrowserMainExtraPartsLinux&) = delete;
-   ~ChromeBrowserMainExtraPartsLinux() override;
- 
-+  static void FixOzoneCmdLine();
-  private:
-   // ChromeBrowserMainExtraParts overrides.
-   void PreEarlyInitialization() override;
 --- a/src/chrome/browser/flag_descriptions.cc
 +++ b/src/chrome/browser/flag_descriptions.cc
-@@ -7707,8 +7707,7 @@ const char kWebPrintingApiDescription[]
+@@ -7660,7 +7660,8 @@ const char kWebPrintingApiDescription[]
      "https://github.com/WICG/web-printing for details.";
  #endif  // BUILDFLAG(IS_CHROMEOS)
  
 -#if BUILDFLAG(IS_CHROMEOS) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
--#if !BUILDFLAG(USE_VAAPI)
++// RPI: Allow Direct decode under linux as well as chromeos
 +#if (BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
+ #if !BUILDFLAG(USE_VAAPI)
  const char kChromeOSDirectVideoDecoderName[] = "ChromeOS Direct Video Decoder";
  const char kChromeOSDirectVideoDecoderDescription[] =
-     "Enables the hardware-accelerated ChromeOS direct media::VideoDecoder "
-@@ -7717,6 +7716,8 @@ const char kChromeOSDirectVideoDecoderDe
+@@ -7670,6 +7671,9 @@ const char kChromeOSDirectVideoDecoderDe
      "disable_cros_video_decoder USE flag in ChromeOS). This flag only has an "
      "effect on non-Intel and non-AMD devices (i.e. on ARM-based SoCs).";
  #endif  // !BUILDFLAG(USE_VAAPI)
-+
++#endif
++// RPI: Reset to upstream compile options
 +#if BUILDFLAG(IS_CHROMEOS) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
  const char kChromeOSHWVBREncodingName[] =
      "ChromeOS Hardware Variable Bitrate Encoding";
  const char kChromeOSHWVBREncodingDescription[] =
 --- a/src/chrome/browser/flag_descriptions.h
 +++ b/src/chrome/browser/flag_descriptions.h
-@@ -4447,9 +4447,11 @@ extern const char kAudioFlexibleLoopback
+@@ -4444,9 +4444,13 @@ extern const char kAudioFlexibleLoopback
  extern const char kAudioFlexibleLoopbackForSystemLoopbackDescription[];
  #endif  // BUILDFLAG(IS_CHROMEOS)
  
 -#if BUILDFLAG(IS_CHROMEOS) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
++// RPI: Allow Direct decode under linux as well as chromeos
 +#if (BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
  extern const char kChromeOSDirectVideoDecoderName[];
  extern const char kChromeOSDirectVideoDecoderDescription[];
 +#endif
++// RPI: Reset to upstream compile options
 +#if BUILDFLAG(IS_CHROMEOS) && BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
  extern const char kChromeOSHWVBREncodingName[];
  extern const char kChromeOSHWVBREncodingDescription[];
@@ -324,7 +270,7 @@
        }
 --- a/src/chrome/common/chrome_switches.cc
 +++ b/src/chrome/common/chrome_switches.cc
-@@ -467,6 +467,9 @@ const char kPackExtensionKey[] = "pack-e
+@@ -463,6 +463,9 @@ const char kPackExtensionKey[] = "pack-e
  // crashpad (or breakpad) is initialized.
  const char kPreCrashpadCrashTest[] = "pre-crashpad-crash-test";
  
@@ -336,7 +282,7 @@
  const char kPredictionServiceMockLikelihood[] =
 --- a/src/chrome/common/chrome_switches.h
 +++ b/src/chrome/common/chrome_switches.h
-@@ -150,6 +150,7 @@ extern const char kOnTheFlyMhtmlHashComp
+@@ -149,6 +149,7 @@ extern const char kOnTheFlyMhtmlHashComp
  extern const char kOpenInNewWindow[];
  extern const char kPackExtension[];
  extern const char kPackExtensionKey[];
@@ -346,7 +292,7 @@
  extern const char kPreinstalledWebAppsDir[];
 --- a/src/chrome/common/media/cdm_registration.cc
 +++ b/src/chrome/common/media/cdm_registration.cc
-@@ -54,9 +54,7 @@ namespace {
+@@ -58,9 +58,7 @@ namespace {
  using Robustness = content::CdmInfo::Robustness;
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
@@ -357,7 +303,7 @@
  // Create a CdmInfo for a Widevine CDM, using |version|, |cdm_library_path|, and
  // |capability|.
  std::unique_ptr<content::CdmInfo> CreateWidevineCdmInfo(
-@@ -100,7 +98,7 @@ std::unique_ptr<content::CdmInfo> Create
+@@ -104,7 +102,7 @@ std::unique_ptr<content::CdmInfo> Create
          // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && (BUILDFLAG(IS_LINUX) ||
          // BUILDFLAG(IS_CHROMEOS))
  
@@ -365,10 +311,10 @@
 +#if BUILDFLAG(ENABLE_WIDEVINE) && \
      (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
  // On Linux/ChromeOS we have to preload the CDM since it uses the zygote
- // sandbox. On Windows and Mac, the bundled CDM is handled by the component
-@@ -181,7 +179,7 @@ void AddSoftwareSecureWidevine(std::vect
-   // case both versions will be the same and point to the same directory, so
-   // it doesn't matter which one is loaded.
+ // sandbox. On Windows and Mac, CDM registration is handled by Component
+@@ -207,7 +205,7 @@ void AddSoftwareSecureWidevine(std::vect
+   // We should still use the version selected by Component Update (except for
+   // case #3 above).
    content::CdmInfo* bundled_widevine = nullptr;
 -#if BUILDFLAG(BUNDLE_WIDEVINE_CDM)
 +#if BUILDFLAG(ENABLE_WIDEVINE)
@@ -420,35 +366,7 @@
 +++ b/src/components/version_info/pi_patch_version_values.h
 @@ -0,0 +1,2 @@
 +// Pi patch version - generated by pi-util/settag.py
-+#define PI_PATCH_VERSION_STRING "rpi_2.66"
---- a/src/content/app/content_main_runner_impl.cc
-+++ b/src/content/app/content_main_runner_impl.cc
-@@ -50,6 +50,10 @@
- #include "base/trace_event/trace_event.h"
- #include "build/build_config.h"
- #include "build/chromeos_buildflags.h"
-+#if BUILDFLAG(IS_LINUX)
-+// RPI: Kludge to fix up ozone selection - bugged in current release
-+#include "chrome/browser/chrome_browser_main_extra_parts_linux.h"
-+#endif
- #include "components/discardable_memory/service/discardable_shared_memory_manager.h"
- #include "components/download/public/common/download_task_runner.h"
- #include "components/power_monitor/make_power_monitor_device_source.h"
-@@ -1205,6 +1209,14 @@ int ContentMainRunnerImpl::RunBrowser(Ma
-           variations::VariationsIdsProvider::Mode::kUseSignedInState);
-     }
- 
-+#if BUILDFLAG(IS_LINUX)
-+// RPI - Ozone kludge for google setup bug since v122 or v123
-+// The following PostEarlyInitialization sets up Ozone in a manner that depends
-+// on platform flags that are set later
-+// Remove once fixed
-+    ChromeBrowserMainExtraPartsLinux::FixOzoneCmdLine();
-+#endif
-+
-     std::optional<int> post_early_initialization_exit_code =
-         delegate_->PostEarlyInitialization(invoked_in_browser);
-     if (post_early_initialization_exit_code.has_value())
++#define PI_PATCH_VERSION_STRING "rpi_3.67"
 --- a/src/content/common/user_agent.cc
 +++ b/src/content/common/user_agent.cc
 @@ -63,7 +63,7 @@ std::string GetUserAgentPlatform() {
@@ -478,58 +396,6 @@
                        "CrOS "
                        "%s %s",
                        cpu_type.c_str(),  // e.g. i686
---- a/src/content/renderer/render_thread_impl.cc
-+++ b/src/content/renderer/render_thread_impl.cc
-@@ -119,6 +119,7 @@
- #include "media/base/decoder_factory.h"
- #include "media/base/media.h"
- #include "media/base/media_switches.h"
-+#include "media/gpu/buildflags.h"
- #include "media/media_buildflags.h"
- #include "media/renderers/default_decoder_factory.h"
- #include "media/video/gpu_video_accelerator_factories.h"
-@@ -996,7 +997,7 @@ media::GpuVideoAcceleratorFactories* Ren
-                              kGpuStreamIdMedia, kGpuStreamPriorityMedia);
- 
-   const bool enable_video_decode_accelerator =
--#if BUILDFLAG(IS_LINUX)
-+#if BUILDFLAG(IS_LINUX) && !BUILDFLAG(USE_V4L2_CODEC)
-       base::FeatureList::IsEnabled(media::kVaapiVideoDecodeLinux) &&
- #endif  // BUILDFLAG(IS_LINUX)
-       !cmd_line->HasSwitch(switches::kDisableAcceleratedVideoDecode) &&
---- a/src/media/base/media_switches.cc
-+++ b/src/media/base/media_switches.cc
-@@ -1310,6 +1310,8 @@ BASE_FEATURE(kUSeSequencedTaskRunnerForV
- BASE_FEATURE(kUseGLForScaling,
-              "UseGLForScaling",
-              base::FEATURE_DISABLED_BY_DEFAULT);
-+#endif
-+#if defined(ARCH_CPU_ARM_FAMILY) || BUILDFLAG(USE_V4L2_CODEC)
- // Experimental support for GL based image processing. On some architectures,
- // the hardware accelerated video decoder outputs frames in a format not
- // understood by the display controller. We usually use LibYUV to convert these
-@@ -1317,6 +1319,8 @@ BASE_FEATURE(kUseGLForScaling,
- BASE_FEATURE(kPreferGLImageProcessor,
-              "PreferGLImageProcessor",
-              base::FEATURE_DISABLED_BY_DEFAULT);
-+#endif
-+#if defined(ARCH_CPU_ARM_FAMILY)
- // Experimental support for software based MT21 conversion. On some (older)
- // architectures, the hardware video decoder outputs frames in a pixel format
- // known as MT21. Normally a hardware block performs to the conversion between
---- a/src/media/base/media_switches.h
-+++ b/src/media/base/media_switches.h
-@@ -421,6 +421,10 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kEnabl
- MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseAlternateVideoDecoderImplementation);
- #endif  // BUILDFLAG(IS_CHROMEOS) && !BUILDFLAG(USE_VAAPI)
- #endif  // BUILDFLAG(USE_CHROMEOS_MEDIA_ACCELERATION)
-+#if BUILDFLAG(USE_V4L2_CODEC)
-+MEDIA_EXPORT BASE_DECLARE_FEATURE(kPreferLibYuvImageProcessor);
-+MEDIA_EXPORT BASE_DECLARE_FEATURE(kPreferGLImageProcessor);
-+#endif  // defined(ARCH_CPU_ARM_FAMILY)
- 
- #if BUILDFLAG(IS_WIN)
- MEDIA_EXPORT BASE_DECLARE_FEATURE(kDirectShowGetPhotoState);
 --- a/src/media/gpu/BUILD.gn
 +++ b/src/media/gpu/BUILD.gn
 @@ -21,6 +21,7 @@ buildflag_header("buildflags") {
@@ -599,807 +465,9 @@
      // V4L2 proprietary format.
      // https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/pixfmt-reserved.html
      // Opaque format that can only be scanned out as an overlay or composited by
---- a/src/media/gpu/chromeos/image_processor_factory.cc
-+++ b/src/media/gpu/chromeos/image_processor_factory.cc
-@@ -84,7 +84,6 @@ std::unique_ptr<ImageProcessor> CreateVa
- }
- 
- #elif BUILDFLAG(USE_V4L2_CODEC)
--
- std::unique_ptr<ImageProcessor> CreateV4L2ImageProcessorWithInputCandidates(
-     const std::vector<PixelLayoutCandidate>& input_candidates,
-     const gfx::Rect& visible_rect,
-@@ -209,7 +208,7 @@ std::unique_ptr<ImageProcessor> CreateLi
-       std::move(client_task_runner));
- }
- 
--#if defined(ARCH_CPU_ARM_FAMILY)
-+#if defined(ARCH_CPU_ARM_FAMILY) && BUILDFLAG(USE_V4L2_CODEC)
- std::unique_ptr<ImageProcessor> CreateGLImageProcessorWithInputCandidates(
-     const std::vector<PixelLayoutCandidate>& input_candidates,
-     const gfx::Rect& input_visible_rect,
---- a/src/media/gpu/v4l2/BUILD.gn
-+++ b/src/media/gpu/v4l2/BUILD.gn
-@@ -65,12 +65,18 @@ source_set("v4l2") {
-     "v4l2_video_decoder_delegate_h264.h",
-     "v4l2_video_decoder_delegate_vp8.cc",
-     "v4l2_video_decoder_delegate_vp8.h",
--    "v4l2_video_decoder_delegate_vp9.cc",
--    "v4l2_video_decoder_delegate_vp9.h",
-     "v4l2_vp9_helpers.cc",
-     "v4l2_vp9_helpers.h",
-   ]
- 
-+  if (!use_v4l2_codec_rpi) {
-+    sources += [
-+    # RPI doesn't have VP9 headers
-+    "v4l2_video_decoder_delegate_vp9.cc",
-+    "v4l2_video_decoder_delegate_vp9.h",
-+    ]
-+  }
-+
-   if (enable_hevc_parser_and_hw_decoder) {
-     sources += [
-       "stateless/h265_delegate.cc",
---- a/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.cc
-+++ b/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.cc
-@@ -1214,6 +1214,26 @@ bool V4L2VideoDecodeAccelerator::FlushIn
-   return (decoder_state_ != kError);
- }
- 
-+void V4L2VideoDecodeAccelerator::CheckResolutionChangePending() {
-+  struct v4l2_format format;
-+  gfx::Size visible_size;
-+  bool again;
-+  GetFormatInfo(&format, &visible_size, &again);
-+  gfx::Size new_coded(format.fmt.pix_mp.width, format.fmt.pix_mp.height);
-+  if (resolution_change_pending_) {
-+    if (coded_size_ == new_coded) {
-+      LOG(INFO) << __func__ << ": New resolution " << new_coded.ToString() << " == Old resolution: Cancel change";
-+      resolution_change_pending_ = false;
-+    }
-+  } else {
-+    if (coded_size_ != new_coded) {
-+      LOG(INFO) << __func__ << ": New resolution " << new_coded.ToString() <<
-+        "!= Old resolution: " << coded_size_.ToString() << " Start change";
-+      resolution_change_pending_ = true;
-+    }
-+  }
-+}
-+
- void V4L2VideoDecodeAccelerator::ServiceDeviceTask(bool event_pending) {
-   DVLOGF(4);
-   DCHECK(decoder_thread_.task_runner()->BelongsToCurrentThread());
-@@ -1237,11 +1257,11 @@ void V4L2VideoDecodeAccelerator::Service
-     return;
-   }
- 
--  bool resolution_change_pending = false;
-+  resolution_change_pending_ = false;
-   if (event_pending)
--    resolution_change_pending = DequeueResolutionChangeEvent();
-+    resolution_change_pending_ = DequeueResolutionChangeEvent();
- 
--  if (!resolution_change_pending && coded_size_.IsEmpty()) {
-+  if (!resolution_change_pending_ && coded_size_.IsEmpty()) {
-     // Some platforms do not send an initial resolution change event.
-     // To work around this, we need to keep checking if the initial resolution
-     // is known already by explicitly querying the format after each decode,
-@@ -1254,11 +1274,15 @@ void V4L2VideoDecodeAccelerator::Service
-     gfx::Size visible_size;
-     bool again;
-     if (GetFormatInfo(&format, &visible_size, &again) && !again) {
--      resolution_change_pending = true;
-+      resolution_change_pending_ = true;
-       DequeueResolutionChangeEvent();
-     }
-   }
- 
-+  if (resolution_change_pending_) {
-+    LOG(INFO) << "Resolution change pending";
-+  }
-+
-   Dequeue();
-   Enqueue();
- 
-@@ -1300,7 +1324,7 @@ void V4L2VideoDecodeAccelerator::Service
-             << buffers_at_client_.size() << "]";
- 
-   ScheduleDecodeBufferTaskIfNeeded();
--  if (resolution_change_pending)
-+  if (resolution_change_pending_)
-     StartResolutionChange();
- }
- 
-@@ -1587,8 +1611,11 @@ bool V4L2VideoDecodeAccelerator::Enqueue
-   }
- 
-   if (!ret) {
--    LOG(ERROR) << "Error in Dequeue output buffer";
--    NOTIFY_ERROR(PLATFORM_FAILURE);
-+    CheckResolutionChangePending();
-+    if (!resolution_change_pending_) {
-+      LOG(ERROR) << "Error in Enqueue output buffer";
-+      NOTIFY_ERROR(PLATFORM_FAILURE);
-+    }
-     return false;
-   }
- 
-@@ -1749,7 +1776,7 @@ bool V4L2VideoDecodeAccelerator::IsDecod
-   memset(&cmd, 0, sizeof(cmd));
-   cmd.cmd = V4L2_DEC_CMD_STOP;
-   if (device_->Ioctl(VIDIOC_TRY_DECODER_CMD, &cmd) != 0) {
--    VLOGF(2) "V4L2_DEC_CMD_STOP is not supported.";
-+    VLOGF(2) << "V4L2_DEC_CMD_STOP is not supported.";
-     return false;
-   }
- 
---- a/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.h
-+++ b/src/media/gpu/v4l2/legacy/v4l2_video_decode_accelerator.h
-@@ -286,6 +286,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
-                       int32_t picture_buffer_id,
-                       EGLImageKHR egl_image);
- 
-+
-+  void CheckResolutionChangePending();
-+
-   // Service I/O on the V4L2 devices.  This task should only be scheduled from
-   // DevicePollTask().  If |event_pending| is true, one or more events
-   // on file descriptor are pending.
-@@ -451,7 +454,11 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
-   // |num_instances_| tracks the number of simultaneous decoders.
-   // |can_use_decoder_| is true iff we haven't reached the maximum number of
-   // instances at the time this decoder is created.
-+#if BUILDFLAG(USE_V4L2_CODEC_RPI)
-+  static constexpr int kMaxNumOfInstances = 2;
-+#else
-   static constexpr int kMaxNumOfInstances = 10;
-+#endif
-   static base::AtomicRefCount num_instances_;
-   const bool can_use_decoder_;
- 
-@@ -588,6 +595,9 @@ class MEDIA_GPU_EXPORT V4L2VideoDecodeAc
-   // The number of pictures that are sent to PictureReady and will be cleared.
-   int picture_clearing_count_;
- 
-+  // We've spotted that we need a res change
-+  bool resolution_change_pending_;
-+
-   // Output picture coded size.
-   gfx::Size coded_size_;
- 
---- /dev/null
-+++ b/src/media/gpu/v4l2/missing-stateless-ctrl.h
-@@ -0,0 +1,608 @@
-+#include <linux/videodev2.h>
-+
-+#ifndef V4L2_CTRL_CLASS_CODEC_STATELESS
-+#define V4L2_CTRL_CLASS_CODEC_STATELESS 0x00a40000	/* Stateless codecs controls */
-+#endif
-+
-+#ifndef V4L2_CID_CODEC_STATELESS_BASE
-+#define V4L2_CID_CODEC_STATELESS_BASE          (V4L2_CTRL_CLASS_CODEC_STATELESS | 0x900)
-+#define V4L2_CID_CODEC_STATELESS_CLASS         (V4L2_CTRL_CLASS_CODEC_STATELESS | 1)
-+#endif
-+
-+#ifndef V4L2_PIX_FMT_VP8_FRAME
-+#define V4L2_PIX_FMT_VP8_FRAME v4l2_fourcc('V', 'P', '8', 'F') /* VP8 parsed frame */
-+
-+#define V4L2_CTRL_TYPE_VP8_FRAME            0x0240
-+
-+/* Stateless VP8 control */
-+
-+#define V4L2_VP8_SEGMENT_FLAG_ENABLED              0x01
-+#define V4L2_VP8_SEGMENT_FLAG_UPDATE_MAP           0x02
-+#define V4L2_VP8_SEGMENT_FLAG_UPDATE_FEATURE_DATA  0x04
-+#define V4L2_VP8_SEGMENT_FLAG_DELTA_VALUE_MODE     0x08
-+
-+/**
-+ * struct v4l2_vp8_segment - VP8 segment-based adjustments parameters
-+ *
-+ * @quant_update: update values for the segment quantizer.
-+ * @lf_update: update values for the loop filter level.
-+ * @segment_probs: branch probabilities of the segment_id decoding tree.
-+ * @padding: padding field. Should be zeroed by applications.
-+ * @flags: see V4L2_VP8_SEGMENT_FLAG_{}.
-+ *
-+ * This structure contains segment-based adjustments related parameters.
-+ * See the 'update_segmentation()' part of the frame header syntax,
-+ * and section '9.3. Segment-Based Adjustments' of the VP8 specification
-+ * for more details.
-+ */
-+struct v4l2_vp8_segment {
-+	__s8 quant_update[4];
-+	__s8 lf_update[4];
-+	__u8 segment_probs[3];
-+	__u8 padding;
-+	__u32 flags;
-+};
-+
-+#define V4L2_VP8_LF_ADJ_ENABLE	0x01
-+#define V4L2_VP8_LF_DELTA_UPDATE	0x02
-+#define V4L2_VP8_LF_FILTER_TYPE_SIMPLE	0x04
-+
-+/**
-+ * struct v4l2_vp8_loop_filter - VP8 loop filter parameters
-+ *
-+ * @ref_frm_delta: Reference frame signed delta values.
-+ * @mb_mode_delta: MB prediction mode signed delta values.
-+ * @sharpness_level: matches sharpness_level syntax element.
-+ * @level: matches loop_filter_level syntax element.
-+ * @padding: padding field. Should be zeroed by applications.
-+ * @flags: see V4L2_VP8_LF_FLAG_{}.
-+ *
-+ * This structure contains loop filter related parameters.
-+ * See the 'mb_lf_adjustments()' part of the frame header syntax,
-+ * and section '9.4. Loop Filter Type and Levels' of the VP8 specification
-+ * for more details.
-+ */
-+struct v4l2_vp8_loop_filter {
-+	__s8 ref_frm_delta[4];
-+	__s8 mb_mode_delta[4];
-+	__u8 sharpness_level;
-+	__u8 level;
-+	__u16 padding;
-+	__u32 flags;
-+};
-+
-+/**
-+ * struct v4l2_vp8_quantization - VP8 quantizattion indices
-+ *
-+ * @y_ac_qi: luma AC coefficient table index.
-+ * @y_dc_delta: luma DC delta vaue.
-+ * @y2_dc_delta: y2 block DC delta value.
-+ * @y2_ac_delta: y2 block AC delta value.
-+ * @uv_dc_delta: chroma DC delta value.
-+ * @uv_ac_delta: chroma AC delta value.
-+ * @padding: padding field. Should be zeroed by applications.
-+ *
-+ * This structure contains the quantization indices present
-+ * in 'quant_indices()' part of the frame header syntax.
-+ * See section '9.6. Dequantization Indices' of the VP8 specification
-+ * for more details.
-+ */
-+struct v4l2_vp8_quantization {
-+	__u8 y_ac_qi;
-+	__s8 y_dc_delta;
-+	__s8 y2_dc_delta;
-+	__s8 y2_ac_delta;
-+	__s8 uv_dc_delta;
-+	__s8 uv_ac_delta;
-+	__u16 padding;
-+};
-+
-+#define V4L2_VP8_COEFF_PROB_CNT 11
-+#define V4L2_VP8_MV_PROB_CNT 19
-+
-+/**
-+ * struct v4l2_vp8_entropy - VP8 update probabilities
-+ *
-+ * @coeff_probs: coefficient probability update values.
-+ * @y_mode_probs: luma intra-prediction probabilities.
-+ * @uv_mode_probs: chroma intra-prediction probabilities.
-+ * @mv_probs: mv decoding probability.
-+ * @padding: padding field. Should be zeroed by applications.
-+ *
-+ * This structure contains the update probabilities present in
-+ * 'token_prob_update()' and 'mv_prob_update()' part of the frame header.
-+ * See section '17.2. Probability Updates' of the VP8 specification
-+ * for more details.
-+ */
-+struct v4l2_vp8_entropy {
-+	__u8 coeff_probs[4][8][3][V4L2_VP8_COEFF_PROB_CNT];
-+	__u8 y_mode_probs[4];
-+	__u8 uv_mode_probs[3];
-+	__u8 mv_probs[2][V4L2_VP8_MV_PROB_CNT];
-+	__u8 padding[3];
-+};
-+
-+/**
-+ * struct v4l2_vp8_entropy_coder_state - VP8 boolean coder state
-+ *
-+ * @range: coder state value for "Range"
-+ * @value: coder state value for "Value"
-+ * @bit_count: number of bits left in range "Value".
-+ * @padding: padding field. Should be zeroed by applications.
-+ *
-+ * This structure contains the state for the boolean coder, as
-+ * explained in section '7. Boolean Entropy Decoder' of the VP8 specification.
-+ */
-+struct v4l2_vp8_entropy_coder_state {
-+	__u8 range;
-+	__u8 value;
-+	__u8 bit_count;
-+	__u8 padding;
-+};
-+
-+#define V4L2_VP8_FRAME_FLAG_KEY_FRAME		0x01
-+#define V4L2_VP8_FRAME_FLAG_EXPERIMENTAL		0x02
-+#define V4L2_VP8_FRAME_FLAG_SHOW_FRAME		0x04
-+#define V4L2_VP8_FRAME_FLAG_MB_NO_SKIP_COEFF	0x08
-+#define V4L2_VP8_FRAME_FLAG_SIGN_BIAS_GOLDEN	0x10
-+#define V4L2_VP8_FRAME_FLAG_SIGN_BIAS_ALT	0x20
-+
-+#define V4L2_VP8_FRAME_IS_KEY_FRAME(hdr) \
-+	(!!((hdr)->flags & V4L2_VP8_FRAME_FLAG_KEY_FRAME))
-+
-+#define V4L2_CID_STATELESS_VP8_FRAME (V4L2_CID_CODEC_STATELESS_BASE + 200)
-+/**
-+ * struct v4l2_ctrl_vp8_frame - VP8 frame parameters
-+ *
-+ * @segment: segmentation parameters. See &v4l2_vp8_segment for more details
-+ * @lf: loop filter parameters. See &v4l2_vp8_loop_filter for more details
-+ * @quant: quantization parameters. See &v4l2_vp8_quantization for more details
-+ * @entropy: update probabilities. See &v4l2_vp8_entropy for more details
-+ * @coder_state: boolean coder state. See &v4l2_vp8_entropy_coder_state for more details
-+ * @width: frame width.
-+ * @height: frame height.
-+ * @horizontal_scale: horizontal scaling factor.
-+ * @vertical_scale: vertical scaling factor.
-+ * @version: bitstream version.
-+ * @prob_skip_false: frame header syntax element.
-+ * @prob_intra: frame header syntax element.
-+ * @prob_last: frame header syntax element.
-+ * @prob_gf: frame header syntax element.
-+ * @num_dct_parts: number of DCT coefficients partitions.
-+ * @first_part_size: size of the first partition, i.e. the control partition.
-+ * @first_part_header_bits: size in bits of the first partition header portion.
-+ * @dct_part_sizes: DCT coefficients sizes.
-+ * @last_frame_ts: "last" reference buffer timestamp.
-+ * The timestamp refers to the timestamp field in struct v4l2_buffer.
-+ * Use v4l2_timeval_to_ns() to convert the struct timeval to a __u64.
-+ * @golden_frame_ts: "golden" reference buffer timestamp.
-+ * @alt_frame_ts: "alt" reference buffer timestamp.
-+ * @flags: see V4L2_VP8_FRAME_FLAG_{}.
-+ */
-+struct v4l2_ctrl_vp8_frame {
-+	struct v4l2_vp8_segment segment;
-+	struct v4l2_vp8_loop_filter lf;
-+	struct v4l2_vp8_quantization quant;
-+	struct v4l2_vp8_entropy entropy;
-+	struct v4l2_vp8_entropy_coder_state coder_state;
-+
-+	__u16 width;
-+	__u16 height;
-+
-+	__u8 horizontal_scale;
-+	__u8 vertical_scale;
-+
-+	__u8 version;
-+	__u8 prob_skip_false;
-+	__u8 prob_intra;
-+	__u8 prob_last;
-+	__u8 prob_gf;
-+	__u8 num_dct_parts;
-+
-+	__u32 first_part_size;
-+	__u32 first_part_header_bits;
-+	__u32 dct_part_sizes[8];
-+
-+	__u64 last_frame_ts;
-+	__u64 golden_frame_ts;
-+	__u64 alt_frame_ts;
-+
-+	__u64 flags;
-+};
-+
-+#endif // VP8
-+
-+//=============================================================================
-+
-+#ifndef V4L2_PIX_FMT_H264_SLICE
-+#define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 parsed slices */
-+
-+#define V4L2_CTRL_TYPE_H264_SPS             0x0200,
-+#define V4L2_CTRL_TYPE_H264_PPS		    0x0201,
-+#define V4L2_CTRL_TYPE_H264_SCALING_MATRIX  0x0202,
-+#define V4L2_CTRL_TYPE_H264_SLICE_PARAMS    0x0203,
-+#define V4L2_CTRL_TYPE_H264_DECODE_PARAMS   0x0204,
-+#define V4L2_CTRL_TYPE_H264_PRED_WEIGHTS    0x0205,
-+
-+#define V4L2_CID_STATELESS_H264_DECODE_MODE	(V4L2_CID_CODEC_STATELESS_BASE + 0)
-+/**
-+ * enum v4l2_stateless_h264_decode_mode - Decoding mode
-+ *
-+ * @V4L2_STATELESS_H264_DECODE_MODE_SLICE_BASED: indicates that decoding
-+ * is performed one slice at a time. In this mode,
-+ * V4L2_CID_STATELESS_H264_SLICE_PARAMS must contain the parsed slice
-+ * parameters and the OUTPUT buffer must contain a single slice.
-+ * V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF feature is used
-+ * in order to support multislice frames.
-+ * @V4L2_STATELESS_H264_DECODE_MODE_FRAME_BASED: indicates that
-+ * decoding is performed per frame. The OUTPUT buffer must contain
-+ * all slices and also both fields. This mode is typically supported
-+ * by device drivers that are able to parse the slice(s) header(s)
-+ * in hardware. When this mode is selected,
-+ * V4L2_CID_STATELESS_H264_SLICE_PARAMS is not used.
-+ */
-+enum v4l2_stateless_h264_decode_mode {
-+	V4L2_STATELESS_H264_DECODE_MODE_SLICE_BASED,
-+	V4L2_STATELESS_H264_DECODE_MODE_FRAME_BASED,
-+};
-+
-+#define V4L2_CID_STATELESS_H264_START_CODE	(V4L2_CID_CODEC_STATELESS_BASE + 1)
-+/**
-+ * enum v4l2_stateless_h264_start_code - Start code
-+ *
-+ * @V4L2_STATELESS_H264_START_CODE_NONE: slices are passed
-+ * to the driver without any start code.
-+ * @V4L2_STATELESS_H264_START_CODE_ANNEX_B: slices are passed
-+ * to the driver with an Annex B start code prefix
-+ * (legal start codes can be 3-bytes 0x000001 or 4-bytes 0x00000001).
-+ * This mode is typically supported by device drivers that parse
-+ * the start code in hardware.
-+ */
-+enum v4l2_stateless_h264_start_code {
-+	V4L2_STATELESS_H264_START_CODE_NONE,
-+	V4L2_STATELESS_H264_START_CODE_ANNEX_B,
-+};
-+
-+#define V4L2_H264_SPS_CONSTRAINT_SET0_FLAG			0x01
-+#define V4L2_H264_SPS_CONSTRAINT_SET1_FLAG			0x02
-+#define V4L2_H264_SPS_CONSTRAINT_SET2_FLAG			0x04
-+#define V4L2_H264_SPS_CONSTRAINT_SET3_FLAG			0x08
-+#define V4L2_H264_SPS_CONSTRAINT_SET4_FLAG			0x10
-+#define V4L2_H264_SPS_CONSTRAINT_SET5_FLAG			0x20
-+
-+#define V4L2_H264_SPS_FLAG_SEPARATE_COLOUR_PLANE		0x01
-+#define V4L2_H264_SPS_FLAG_QPPRIME_Y_ZERO_TRANSFORM_BYPASS	0x02
-+#define V4L2_H264_SPS_FLAG_DELTA_PIC_ORDER_ALWAYS_ZERO		0x04
-+#define V4L2_H264_SPS_FLAG_GAPS_IN_FRAME_NUM_VALUE_ALLOWED	0x08
-+#define V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY			0x10
-+#define V4L2_H264_SPS_FLAG_MB_ADAPTIVE_FRAME_FIELD		0x20
-+#define V4L2_H264_SPS_FLAG_DIRECT_8X8_INFERENCE			0x40
-+
-+#define V4L2_H264_SPS_HAS_CHROMA_FORMAT(sps) \
-+	((sps)->profile_idc == 100 || (sps)->profile_idc == 110 || \
-+	 (sps)->profile_idc == 122 || (sps)->profile_idc == 244 || \
-+	 (sps)->profile_idc == 44  || (sps)->profile_idc == 83  || \
-+	 (sps)->profile_idc == 86  || (sps)->profile_idc == 118 || \
-+	 (sps)->profile_idc == 128 || (sps)->profile_idc == 138 || \
-+	 (sps)->profile_idc == 139 || (sps)->profile_idc == 134 || \
-+	 (sps)->profile_idc == 135)
-+
-+#define V4L2_CID_STATELESS_H264_SPS		(V4L2_CID_CODEC_STATELESS_BASE + 2)
-+/**
-+ * struct v4l2_ctrl_h264_sps - H264 sequence parameter set
-+ *
-+ * All the members on this sequence parameter set structure match the
-+ * sequence parameter set syntax as specified by the H264 specification.
-+ *
-+ * @profile_idc: see H264 specification.
-+ * @constraint_set_flags: see H264 specification.
-+ * @level_idc: see H264 specification.
-+ * @seq_parameter_set_id: see H264 specification.
-+ * @chroma_format_idc: see H264 specification.
-+ * @bit_depth_luma_minus8: see H264 specification.
-+ * @bit_depth_chroma_minus8: see H264 specification.
-+ * @log2_max_frame_num_minus4: see H264 specification.
-+ * @pic_order_cnt_type: see H264 specification.
-+ * @log2_max_pic_order_cnt_lsb_minus4: see H264 specification.
-+ * @max_num_ref_frames: see H264 specification.
-+ * @num_ref_frames_in_pic_order_cnt_cycle: see H264 specification.
-+ * @offset_for_ref_frame: see H264 specification.
-+ * @offset_for_non_ref_pic: see H264 specification.
-+ * @offset_for_top_to_bottom_field: see H264 specification.
-+ * @pic_width_in_mbs_minus1: see H264 specification.
-+ * @pic_height_in_map_units_minus1: see H264 specification.
-+ * @flags: see V4L2_H264_SPS_FLAG_{}.
-+ */
-+struct v4l2_ctrl_h264_sps {
-+	__u8 profile_idc;
-+	__u8 constraint_set_flags;
-+	__u8 level_idc;
-+	__u8 seq_parameter_set_id;
-+	__u8 chroma_format_idc;
-+	__u8 bit_depth_luma_minus8;
-+	__u8 bit_depth_chroma_minus8;
-+	__u8 log2_max_frame_num_minus4;
-+	__u8 pic_order_cnt_type;
-+	__u8 log2_max_pic_order_cnt_lsb_minus4;
-+	__u8 max_num_ref_frames;
-+	__u8 num_ref_frames_in_pic_order_cnt_cycle;
-+	__s32 offset_for_ref_frame[255];
-+	__s32 offset_for_non_ref_pic;
-+	__s32 offset_for_top_to_bottom_field;
-+	__u16 pic_width_in_mbs_minus1;
-+	__u16 pic_height_in_map_units_minus1;
-+	__u32 flags;
-+};
-+
-+#define V4L2_H264_PPS_FLAG_ENTROPY_CODING_MODE				0x0001
-+#define V4L2_H264_PPS_FLAG_BOTTOM_FIELD_PIC_ORDER_IN_FRAME_PRESENT	0x0002
-+#define V4L2_H264_PPS_FLAG_WEIGHTED_PRED				0x0004
-+#define V4L2_H264_PPS_FLAG_DEBLOCKING_FILTER_CONTROL_PRESENT		0x0008
-+#define V4L2_H264_PPS_FLAG_CONSTRAINED_INTRA_PRED			0x0010
-+#define V4L2_H264_PPS_FLAG_REDUNDANT_PIC_CNT_PRESENT			0x0020
-+#define V4L2_H264_PPS_FLAG_TRANSFORM_8X8_MODE				0x0040
-+#define V4L2_H264_PPS_FLAG_SCALING_MATRIX_PRESENT			0x0080
-+
-+#define V4L2_CID_STATELESS_H264_PPS		(V4L2_CID_CODEC_STATELESS_BASE + 3)
-+/**
-+ * struct v4l2_ctrl_h264_pps - H264 picture parameter set
-+ *
-+ * Except where noted, all the members on this picture parameter set
-+ * structure match the picture parameter set syntax as specified
-+ * by the H264 specification.
-+ *
-+ * In particular, V4L2_H264_PPS_FLAG_SCALING_MATRIX_PRESENT flag
-+ * has a specific meaning. This flag should be set if a non-flat
-+ * scaling matrix applies to the picture. In this case, applications
-+ * are expected to use V4L2_CID_STATELESS_H264_SCALING_MATRIX,
-+ * to pass the values of the non-flat matrices.
-+ *
-+ * @pic_parameter_set_id: see H264 specification.
-+ * @seq_parameter_set_id: see H264 specification.
-+ * @num_slice_groups_minus1: see H264 specification.
-+ * @num_ref_idx_l0_default_active_minus1: see H264 specification.
-+ * @num_ref_idx_l1_default_active_minus1: see H264 specification.
-+ * @weighted_bipred_idc: see H264 specification.
-+ * @pic_init_qp_minus26: see H264 specification.
-+ * @pic_init_qs_minus26: see H264 specification.
-+ * @chroma_qp_index_offset: see H264 specification.
-+ * @second_chroma_qp_index_offset: see H264 specification.
-+ * @flags: see V4L2_H264_PPS_FLAG_{}.
-+ */
-+struct v4l2_ctrl_h264_pps {
-+	__u8 pic_parameter_set_id;
-+	__u8 seq_parameter_set_id;
-+	__u8 num_slice_groups_minus1;
-+	__u8 num_ref_idx_l0_default_active_minus1;
-+	__u8 num_ref_idx_l1_default_active_minus1;
-+	__u8 weighted_bipred_idc;
-+	__s8 pic_init_qp_minus26;
-+	__s8 pic_init_qs_minus26;
-+	__s8 chroma_qp_index_offset;
-+	__s8 second_chroma_qp_index_offset;
-+	__u16 flags;
-+};
-+
-+#define V4L2_CID_STATELESS_H264_SCALING_MATRIX	(V4L2_CID_CODEC_STATELESS_BASE + 4)
-+/**
-+ * struct v4l2_ctrl_h264_scaling_matrix - H264 scaling matrices
-+ *
-+ * @scaling_list_4x4: scaling matrix after applying the inverse
-+ * scanning process. Expected list order is Intra Y, Intra Cb,
-+ * Intra Cr, Inter Y, Inter Cb, Inter Cr. The values on each
-+ * scaling list are expected in raster scan order.
-+ * @scaling_list_8x8: scaling matrix after applying the inverse
-+ * scanning process. Expected list order is Intra Y, Inter Y,
-+ * Intra Cb, Inter Cb, Intra Cr, Inter Cr. The values on each
-+ * scaling list are expected in raster scan order.
-+ *
-+ * Note that the list order is different for the 4x4 and 8x8
-+ * matrices as per the H264 specification, see table 7-2 "Assignment
-+ * of mnemonic names to scaling list indices and specification of
-+ * fall-back rule".
-+ */
-+struct v4l2_ctrl_h264_scaling_matrix {
-+	__u8 scaling_list_4x4[6][16];
-+	__u8 scaling_list_8x8[6][64];
-+};
-+
-+struct v4l2_h264_weight_factors {
-+	__s16 luma_weight[32];
-+	__s16 luma_offset[32];
-+	__s16 chroma_weight[32][2];
-+	__s16 chroma_offset[32][2];
-+};
-+
-+#define V4L2_H264_CTRL_PRED_WEIGHTS_REQUIRED(pps, slice) \
-+	((((pps)->flags & V4L2_H264_PPS_FLAG_WEIGHTED_PRED) && \
-+	 ((slice)->slice_type == V4L2_H264_SLICE_TYPE_P || \
-+	  (slice)->slice_type == V4L2_H264_SLICE_TYPE_SP)) || \
-+	 ((pps)->weighted_bipred_idc == 1 && \
-+	  (slice)->slice_type == V4L2_H264_SLICE_TYPE_B))
-+
-+#define V4L2_CID_STATELESS_H264_PRED_WEIGHTS	(V4L2_CID_CODEC_STATELESS_BASE + 5)
-+/**
-+ * struct v4l2_ctrl_h264_pred_weights - Prediction weight table
-+ *
-+ * Prediction weight table, which matches the syntax specified
-+ * by the H264 specification.
-+ *
-+ * @luma_log2_weight_denom: see H264 specification.
-+ * @chroma_log2_weight_denom: see H264 specification.
-+ * @weight_factors: luma and chroma weight factors.
-+ */
-+struct v4l2_ctrl_h264_pred_weights {
-+	__u16 luma_log2_weight_denom;
-+	__u16 chroma_log2_weight_denom;
-+	struct v4l2_h264_weight_factors weight_factors[2];
-+};
-+
-+#define V4L2_H264_SLICE_TYPE_P				0
-+#define V4L2_H264_SLICE_TYPE_B				1
-+#define V4L2_H264_SLICE_TYPE_I				2
-+#define V4L2_H264_SLICE_TYPE_SP				3
-+#define V4L2_H264_SLICE_TYPE_SI				4
-+
-+#define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x01
-+#define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x02
-+
-+#define V4L2_H264_TOP_FIELD_REF				0x1
-+#define V4L2_H264_BOTTOM_FIELD_REF			0x2
-+#define V4L2_H264_FRAME_REF				0x3
-+
-+/**
-+ * struct v4l2_h264_reference - H264 picture reference
-+ *
-+ * @fields: indicates how the picture is referenced.
-+ * Valid values are V4L2_H264_{}_REF.
-+ * @index: index into v4l2_ctrl_h264_decode_params.dpb[].
-+ */
-+struct v4l2_h264_reference {
-+	__u8 fields;
-+	__u8 index;
-+};
-+
-+/*
-+ * Maximum DPB size, as specified by section 'A.3.1 Level limits
-+ * common to the Baseline, Main, and Extended profiles'.
-+ */
-+#define V4L2_H264_NUM_DPB_ENTRIES 16
-+#define V4L2_H264_REF_LIST_LEN (2 * V4L2_H264_NUM_DPB_ENTRIES)
-+
-+#define V4L2_CID_STATELESS_H264_SLICE_PARAMS	(V4L2_CID_CODEC_STATELESS_BASE + 6)
-+/**
-+ * struct v4l2_ctrl_h264_slice_params - H264 slice parameters
-+ *
-+ * This structure holds the H264 syntax elements that are specified
-+ * as non-invariant for the slices in a given frame.
-+ *
-+ * Slice invariant syntax elements are contained in struct
-+ * v4l2_ctrl_h264_decode_params. This is done to reduce the API surface
-+ * on frame-based decoders, where slice header parsing is done by the
-+ * hardware.
-+ *
-+ * Slice invariant syntax elements are specified in specification section
-+ * "7.4.3 Slice header semantics".
-+ *
-+ * Except where noted, the members on this struct match the slice header syntax.
-+ *
-+ * @header_bit_size: offset in bits to slice_data() from the beginning of this slice.
-+ * @first_mb_in_slice: see H264 specification.
-+ * @slice_type: see H264 specification.
-+ * @colour_plane_id: see H264 specification.
-+ * @redundant_pic_cnt: see H264 specification.
-+ * @cabac_init_idc: see H264 specification.
-+ * @slice_qp_delta: see H264 specification.
-+ * @slice_qs_delta: see H264 specification.
-+ * @disable_deblocking_filter_idc: see H264 specification.
-+ * @slice_alpha_c0_offset_div2: see H264 specification.
-+ * @slice_beta_offset_div2: see H264 specification.
-+ * @num_ref_idx_l0_active_minus1: see H264 specification.
-+ * @num_ref_idx_l1_active_minus1: see H264 specification.
-+ * @reserved: padding field. Should be zeroed by applications.
-+ * @ref_pic_list0: reference picture list 0 after applying the per-slice modifications.
-+ * @ref_pic_list1: reference picture list 1 after applying the per-slice modifications.
-+ * @flags: see V4L2_H264_SLICE_FLAG_{}.
-+ */
-+struct v4l2_ctrl_h264_slice_params {
-+	__u32 header_bit_size;
-+	__u32 first_mb_in_slice;
-+	__u8 slice_type;
-+	__u8 colour_plane_id;
-+	__u8 redundant_pic_cnt;
-+	__u8 cabac_init_idc;
-+	__s8 slice_qp_delta;
-+	__s8 slice_qs_delta;
-+	__u8 disable_deblocking_filter_idc;
-+	__s8 slice_alpha_c0_offset_div2;
-+	__s8 slice_beta_offset_div2;
-+	__u8 num_ref_idx_l0_active_minus1;
-+	__u8 num_ref_idx_l1_active_minus1;
-+
-+	__u8 reserved;
-+
-+	struct v4l2_h264_reference ref_pic_list0[V4L2_H264_REF_LIST_LEN];
-+	struct v4l2_h264_reference ref_pic_list1[V4L2_H264_REF_LIST_LEN];
-+
-+	__u32 flags;
-+};
-+
-+#define V4L2_H264_DPB_ENTRY_FLAG_VALID		0x01
-+#define V4L2_H264_DPB_ENTRY_FLAG_ACTIVE		0x02
-+#define V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM	0x04
-+#define V4L2_H264_DPB_ENTRY_FLAG_FIELD		0x08
-+
-+/**
-+ * struct v4l2_h264_dpb_entry - H264 decoded picture buffer entry
-+ *
-+ * @reference_ts: timestamp of the V4L2 capture buffer to use as reference.
-+ * The timestamp refers to the timestamp field in struct v4l2_buffer.
-+ * Use v4l2_timeval_to_ns() to convert the struct timeval to a __u64.
-+ * @pic_num: matches PicNum variable assigned during the reference
-+ * picture lists construction process.
-+ * @frame_num: frame identifier which matches frame_num syntax element.
-+ * @fields: indicates how the DPB entry is referenced. Valid values are
-+ * V4L2_H264_{}_REF.
-+ * @reserved: padding field. Should be zeroed by applications.
-+ * @top_field_order_cnt: matches TopFieldOrderCnt picture value.
-+ * @bottom_field_order_cnt: matches BottomFieldOrderCnt picture value.
-+ * Note that picture field is indicated by v4l2_buffer.field.
-+ * @flags: see V4L2_H264_DPB_ENTRY_FLAG_{}.
-+ */
-+struct v4l2_h264_dpb_entry {
-+	__u64 reference_ts;
-+	__u32 pic_num;
-+	__u16 frame_num;
-+	__u8 fields;
-+	__u8 reserved[5];
-+	__s32 top_field_order_cnt;
-+	__s32 bottom_field_order_cnt;
-+	__u32 flags;
-+};
-+
-+#define V4L2_H264_DECODE_PARAM_FLAG_IDR_PIC		0x01
-+#define V4L2_H264_DECODE_PARAM_FLAG_FIELD_PIC		0x02
-+#define V4L2_H264_DECODE_PARAM_FLAG_BOTTOM_FIELD	0x04
-+
-+#define V4L2_CID_STATELESS_H264_DECODE_PARAMS	(V4L2_CID_CODEC_STATELESS_BASE + 7)
-+/**
-+ * struct v4l2_ctrl_h264_decode_params - H264 decoding parameters
-+ *
-+ * @dpb: decoded picture buffer.
-+ * @nal_ref_idc: slice header syntax element.
-+ * @frame_num: slice header syntax element.
-+ * @top_field_order_cnt: matches TopFieldOrderCnt picture value.
-+ * @bottom_field_order_cnt: matches BottomFieldOrderCnt picture value.
-+ * Note that picture field is indicated by v4l2_buffer.field.
-+ * @idr_pic_id: slice header syntax element.
-+ * @pic_order_cnt_lsb: slice header syntax element.
-+ * @delta_pic_order_cnt_bottom: slice header syntax element.
-+ * @delta_pic_order_cnt0: slice header syntax element.
-+ * @delta_pic_order_cnt1: slice header syntax element.
-+ * @dec_ref_pic_marking_bit_size: size in bits of dec_ref_pic_marking()
-+ * syntax element.
-+ * @pic_order_cnt_bit_size: size in bits of pic order count syntax.
-+ * @slice_group_change_cycle: slice header syntax element.
-+ * @reserved: padding field. Should be zeroed by applications.
-+ * @flags: see V4L2_H264_DECODE_PARAM_FLAG_{}.
-+ */
-+struct v4l2_ctrl_h264_decode_params {
-+	struct v4l2_h264_dpb_entry dpb[V4L2_H264_NUM_DPB_ENTRIES];
-+	__u16 nal_ref_idc;
-+	__u16 frame_num;
-+	__s32 top_field_order_cnt;
-+	__s32 bottom_field_order_cnt;
-+	__u16 idr_pic_id;
-+	__u16 pic_order_cnt_lsb;
-+	__s32 delta_pic_order_cnt_bottom;
-+	__s32 delta_pic_order_cnt0;
-+	__s32 delta_pic_order_cnt1;
-+	__u32 dec_ref_pic_marking_bit_size;
-+	__u32 pic_order_cnt_bit_size;
-+	__u32 slice_group_change_cycle;
-+
-+	__u32 reserved;
-+	__u32 flags;
-+};
-+
-+#endif
 --- a/src/media/gpu/v4l2/v4l2_device.cc
 +++ b/src/media/gpu/v4l2/v4l2_device.cc
-@@ -53,6 +53,17 @@ uint32_t V4L2PixFmtToDrmFormat(uint32_t
-       return DRM_FORMAT_YVU420;
- 
-     case V4L2_PIX_FMT_RGB32:
-+    case V4L2_PIX_FMT_XRGB32:
-+      return DRM_FORMAT_BGRX8888;
-+
-+    case V4L2_PIX_FMT_ARGB32:
-+      return DRM_FORMAT_BGRA8888;
-+
-+    case V4L2_PIX_FMT_BGR32:
-+    case V4L2_PIX_FMT_BGRX32:
-+      return DRM_FORMAT_XRGB8888;
-+
-+    case V4L2_PIX_FMT_BGRA32:
-       return DRM_FORMAT_ARGB8888;
- 
-     default:
-@@ -913,11 +924,19 @@ void V4L2Device::CloseDevice() {
+@@ -913,11 +913,19 @@ void V4L2Device::CloseDevice() {
  }
  
  void V4L2Device::EnumerateDevicesForType(Type type) {
@@ -1419,7 +487,7 @@
  
    std::string device_pattern;
    v4l2_buf_type buf_type;
-@@ -953,7 +972,11 @@ void V4L2Device::EnumerateDevicesForType
+@@ -953,7 +961,11 @@ void V4L2Device::EnumerateDevicesForType
    // We are sandboxed, so we can't query directory contents to check which
    // devices are actually available. Try to open the first 10; if not present,
    // we will just fail to open immediately.
@@ -1431,31 +499,9 @@
      candidate_paths.push_back(
          base::StringPrintf("%s%d", device_pattern.c_str(), i));
    }
---- a/src/media/gpu/v4l2/v4l2_device.h
-+++ b/src/media/gpu/v4l2/v4l2_device.h
-@@ -34,6 +34,7 @@
- #include "media/base/video_decoder_config.h"
- #include "media/base/video_frame.h"
- #include "media/base/video_frame_layout.h"
-+#include "media/gpu/buildflags.h"
- #include "media/gpu/chromeos/fourcc.h"
- #include "media/gpu/media_gpu_export.h"
- #include "media/gpu/v4l2/v4l2_device_poller.h"
-@@ -44,6 +45,11 @@
- #include "ui/gfx/geometry/size.h"
- #include "ui/gl/gl_bindings.h"
- 
-+// RPI doesn't know about this yet
-+#ifndef V4L2_PIX_FMT_VP9_FRAME
-+#define V4L2_PIX_FMT_VP9_FRAME v4l2_fourcc('V', 'P', '9', 'F')
-+#endif
-+
- // This has not been accepted upstream.
- #ifndef V4L2_PIX_FMT_AV1
- #define V4L2_PIX_FMT_AV1 v4l2_fourcc('A', 'V', '0', '1') /* AV1 */
 --- a/src/media/gpu/v4l2/v4l2_utils.cc
 +++ b/src/media/gpu/v4l2/v4l2_utils.cc
-@@ -503,7 +503,13 @@ struct timeval TimeDeltaToTimeVal(base::
+@@ -500,7 +500,13 @@ struct timeval TimeDeltaToTimeVal(base::
  std::optional<SupportedVideoDecoderConfigs> GetSupportedV4L2DecoderConfigs() {
    SupportedVideoDecoderConfigs supported_media_configs;
  
@@ -1469,7 +515,7 @@
    base::ScopedFD device_fd(HANDLE_EINTR(
        open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
    if (!device_fd.is_valid()) {
-@@ -548,7 +554,13 @@ std::optional<SupportedVideoDecoderConfi
+@@ -546,7 +552,13 @@ std::optional<SupportedVideoDecoderConfi
  }
  
  bool IsV4L2DecoderStateful() {
@@ -1483,88 +529,66 @@
    base::ScopedFD device_fd(HANDLE_EINTR(
        open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
    if (!device_fd.is_valid()) {
+--- a/src/media/gpu/v4l2/v4l2_video_decoder.cc
++++ b/src/media/gpu/v4l2/v4l2_video_decoder.cc
+@@ -391,10 +391,12 @@ V4L2Status V4L2VideoDecoder::InitializeB
+   DVLOGF(3);
+   DCHECK_CALLED_ON_VALID_SEQUENCE(decoder_sequence_checker_);
+ 
++  const int instances = num_instances_.Increment();
+   can_use_decoder_ =
+-      num_instances_.Increment() < kMaxNumOfInstances ||
++      instances < kMaxNumOfInstances ||
+       !base::FeatureList::IsEnabled(media::kLimitConcurrentDecoderInstances);
+   if (!can_use_decoder_) {
++    num_instances_.Decrement();
+     VLOGF(1) << "Reached maximum number of decoder instances ("
+              << kMaxNumOfInstances << ")";
+     return V4L2Status::Codes::kMaxDecoderInstanceCount;
 --- a/src/media/gpu/v4l2/v4l2_video_decoder.h
 +++ b/src/media/gpu/v4l2/v4l2_video_decoder.h
-@@ -6,6 +6,7 @@
- #define MEDIA_GPU_V4L2_V4L2_VIDEO_DECODER_H_
- 
- #include <linux/videodev2.h>
-+#include "missing-stateless-ctrl.h"
- 
- #include <map>
- #include <memory>
---- a/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateless.cc
-+++ b/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateless.cc
-@@ -736,10 +736,12 @@ bool V4L2StatelessVideoDecoderBackend::C
-     decoder_ = std::make_unique<VP8Decoder>(
-         std::make_unique<V4L2VideoDecoderDelegateVP8>(this, device_.get()),
-         color_space_);
-+#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
-   } else if (profile_ >= VP9PROFILE_MIN && profile_ <= VP9PROFILE_MAX) {
-     decoder_ = std::make_unique<VP9Decoder>(
-         std::make_unique<V4L2VideoDecoderDelegateVP9>(this, device_.get()),
-         profile_, color_space_);
+@@ -186,7 +186,12 @@ class MEDIA_GPU_EXPORT V4L2VideoDecoder
+   // decoder instances for now. |num_instances_| tracks the number of
+   // simultaneous decoders. |can_use_decoder_| is true iff we haven't reached
+   // the maximum number of instances at the time this decoder is created.
++#if BUILDFLAG(USE_V4L2_CODEC_RPI)
++  // Pi can run out of firmware memory very quickly
++  static constexpr int kMaxNumOfInstances = 2;
++#else
+   static constexpr int kMaxNumOfInstances = 32;
 +#endif
- #if BUILDFLAG(IS_CHROMEOS)
-   } else if (profile_ >= AV1PROFILE_MIN && profile_ <= AV1PROFILE_MAX) {
-     decoder_ = std::make_unique<AV1Decoder>(
---- a/src/media/gpu/v4l2/v4l2_video_decoder_delegate_h264.h
-+++ b/src/media/gpu/v4l2/v4l2_video_decoder_delegate_h264.h
-@@ -16,6 +16,8 @@
- #include "media/gpu/h264_dpb.h"
- #include "media/video/h264_parser.h"
+   static base::AtomicRefCount num_instances_;
+   bool can_use_decoder_ = false;
  
-+#include "missing-stateless-ctrl.h"
-+
- namespace media {
+--- a/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateful.cc
++++ b/src/media/gpu/v4l2/v4l2_video_decoder_backend_stateful.cc
+@@ -85,6 +85,7 @@ V4L2StatefulVideoDecoderBackend::V4L2Sta
+   DVLOGF(3);
+   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+   weak_this_ = weak_this_factory_.GetWeakPtr();
++  LOG(INFO) << __func__;
+ }
  
- class V4L2Device;
---- a/src/media/gpu/v4l2/v4l2_video_decoder_delegate_vp8.h
-+++ b/src/media/gpu/v4l2/v4l2_video_decoder_delegate_vp8.h
-@@ -9,6 +9,8 @@
- #include "base/memory/scoped_refptr.h"
- #include "media/gpu/vp8_decoder.h"
+ V4L2StatefulVideoDecoderBackend::~V4L2StatefulVideoDecoderBackend() {
+@@ -101,6 +102,7 @@ V4L2StatefulVideoDecoderBackend::~V4L2St
+   if (device_->Ioctl(VIDIOC_UNSUBSCRIBE_EVENT, &sub) != 0) {
+     VLOGF(1) << "Cannot unsubscribe to event";
+   }
++  LOG(INFO) << __func__;
+ }
  
-+#include "missing-stateless-ctrl.h"
-+
- namespace media {
+ bool V4L2StatefulVideoDecoderBackend::Initialize() {
+@@ -590,6 +592,7 @@ void V4L2StatefulVideoDecoderBackend::On
+ void V4L2StatefulVideoDecoderBackend::ChangeResolution() {
+   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+   DVLOGF(3);
++  LOG(INFO) << __func__;
  
- class V4L2Device;
+   // Here we just query the new resolution, visible rect, and number of output
+   // buffers before asking the client to update the resolution.
 --- a/src/media/mojo/services/gpu_mojo_media_client_linux.cc
 +++ b/src/media/mojo/services/gpu_mojo_media_client_linux.cc
-@@ -13,16 +13,19 @@
- #include "media/gpu/chromeos/mailbox_video_frame_converter.h"
- #include "media/gpu/chromeos/platform_video_frame_pool.h"
- #include "media/gpu/chromeos/video_decoder_pipeline.h"
-+#include "media/gpu/ipc/service/vda_video_decoder.h"
- 
- namespace media {
- 
- namespace {
- 
- VideoDecoderType GetPreferredLinuxDecoderImplementation() {
-+#if BUILDFLAG(USE_VAAPI)
-   // VaapiVideoDecoder flag is required for VaapiVideoDecoder.
-   if (!base::FeatureList::IsEnabled(kVaapiVideoDecodeLinux)) {
-     return VideoDecoderType::kUnknown;
-   }
-+#endif
- 
-   switch (media::GetOutOfProcessVideoDecodingMode()) {
-     case media::OOPVDMode::kEnabledWithGpuProcessAsProxy:
-@@ -35,6 +38,11 @@ VideoDecoderType GetPreferredLinuxDecode
-       break;
-   }
- 
-+  // If direct video decoder is disabled, revert to using the VDA
-+  // implementation.
-+  if (!base::FeatureList::IsEnabled(kUseChromeOSDirectVideoDecoder)) {
-+    return VideoDecoderType::kVda;
-+  }
- #if BUILDFLAG(USE_VAAPI)
-   return VideoDecoderType::kVaapi;
- #elif BUILDFLAG(USE_V4L2_CODEC)
-@@ -54,6 +62,7 @@ std::vector<Fourcc> GetPreferredRenderab
+@@ -54,6 +54,7 @@ std::vector<Fourcc> GetPreferredRenderab
  
    // Support 1-copy argb textures.
    renderable_fourccs.emplace_back(Fourcc::AR24);
@@ -1572,50 +596,6 @@
  
    return renderable_fourccs;
  }
-@@ -61,7 +70,7 @@ std::vector<Fourcc> GetPreferredRenderab
- VideoDecoderType GetActualPlatformDecoderImplementation(
-     const gpu::GpuPreferences& gpu_preferences,
-     const gpu::GPUInfo& gpu_info) {
--  // On linux, Vaapi has GL restrictions.
-+  // On linux, VDA and Vaapi have GL restrictions.
-   switch (GetPreferredLinuxDecoderImplementation()) {
-     case VideoDecoderType::kUnknown:
-       return VideoDecoderType::kUnknown;
-@@ -69,6 +78,11 @@ VideoDecoderType GetActualPlatformDecode
-       return VideoDecoderType::kOutOfProcess;
-     case VideoDecoderType::kV4L2:
-       return VideoDecoderType::kV4L2;
-+    case VideoDecoderType::kVda: {
-+      return gpu_preferences.gr_context_type == gpu::GrContextType::kGL
-+                 ? VideoDecoderType::kVda
-+                 : VideoDecoderType::kUnknown;
-+    }
-     case VideoDecoderType::kVaapi: {
-       // Allow VaapiVideoDecoder on GL.
-       if (gpu_preferences.gr_context_type == gpu::GrContextType::kGL) {
-@@ -161,6 +175,13 @@ std::unique_ptr<VideoDecoder> CreatePlat
-           traits.media_log->Clone(), /*oop_video_decoder=*/{},
-           /*in_video_decoder_process=*/false);
-     }
-+    case VideoDecoderType::kVda: {
-+      return VdaVideoDecoder::Create(
-+          traits.task_runner, traits.gpu_task_runner, traits.media_log->Clone(),
-+          *traits.target_color_space, traits.gpu_preferences,
-+          *traits.gpu_workarounds, traits.get_command_buffer_stub_cb,
-+          VideoDecodeAccelerator::Config::OutputMode::kAllocate);
-+    }
-     default:
-       return nullptr;
-   }
-@@ -196,6 +217,8 @@ GetPlatformSupportedVideoDecoderConfigs(
-   base::UmaHistogramEnumeration("Media.VaapiLinux.SupportedVideoDecoder",
-                                 decoder_implementation);
-   switch (decoder_implementation) {
-+    case VideoDecoderType::kVda:
-+      return std::move(get_vda_configs).Run();
-     case VideoDecoderType::kOutOfProcess:
-     case VideoDecoderType::kVaapi:
-     case VideoDecoderType::kV4L2:
 --- /dev/null
 +++ b/src/pi-util/BUILD.txt
 @@ -0,0 +1,256 @@
@@ -2492,7 +1472,7 @@
 +    "src/third_party/skia"]
 +
 +# Our base tag or commit no
-+src_commit="124.0.6367.73"
++src_commit="125.0.6422.133"
 --- /dev/null
 +++ b/src/pi-util/pipewire_utils_h.patch
 @@ -0,0 +1,11 @@
@@ -2762,66 +1742,6 @@
 +ln -sf ../$API/pkgconfig/* .
 +cd ../../../../../..
 +pi-util/rebase_liblinks.py $DST
---- a/src/sandbox/policy/linux/bpf_gpu_policy_linux.cc
-+++ b/src/sandbox/policy/linux/bpf_gpu_policy_linux.cc
-@@ -85,6 +85,27 @@ ResultExpr GpuProcessPolicy::EvaluateSys
-     case __NR_mmap:
-       return Allow();
- #endif
-+#if defined(USE_X11) || 1
-+    // Wanted for MESA to fire up happily
-+    // *** Should almost certainly arrange for the offending setup
-+    //     to happen before sandbox is applied but I can't work out
-+    //     what is needed
-+    // Alternatively --in-process-gpu fixes the issue
-+#ifdef __NR_readlink
-+    case __NR_readlink:  // 85
-+#else
-+    case __NR_readlinkat:
-+#endif
-+#ifdef __NR_stat64
-+    case __NR_stat64:    // 195
-+#endif
-+    case __NR_openat:    // 322 --- This one is clearly bad!
-+    // V4L2 requires open/close - not sure how this works in chromeos without the holes
-+#ifdef __NR_open
-+    case __NR_open:
-+#endif
-+    case __NR_close:
-+#endif
-     // We also hit this on the linux_chromeos bot but don't yet know what
-     // weird flags were involved.
-     case __NR_mprotect:
---- a/src/third_party/ipcz/src/ipcz/node_messages_generator.h
-+++ b/src/third_party/ipcz/src/ipcz/node_messages_generator.h
-@@ -7,6 +7,9 @@
- // This file defines the internal messages which can be sent on a NodeLink
- // between two ipcz nodes.
- 
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wunaligned-access"
-+
- IPCZ_MSG_BEGIN_INTERFACE(Node)
- 
- // Initial greeting sent by a broker node when a ConnectNode() is issued without
-@@ -627,3 +630,7 @@ IPCZ_MSG_BEGIN(AcceptRelayedMessage, IPC
- IPCZ_MSG_END()
- 
- IPCZ_MSG_END_INTERFACE()
-+
-+#pragma GCC diagnostic pop
-+
-+
---- a/src/third_party/libdrm/BUILD.gn
-+++ b/src/third_party/libdrm/BUILD.gn
-@@ -72,6 +72,7 @@ static_library("libdrm") {
-     # glibc-2.24.  This causes a build error when using the Debian
-     # Stretch sysroot.
-     "-Wno-deprecated-declarations",
-+    "-DMAJOR_IN_SYSMACROS=1",
-   ]
- 
-   public_configs = [ ":libdrm_config" ]
 --- a/src/third_party/widevine/cdm/widevine.gni
 +++ b/src/third_party/widevine/cdm/widevine.gni
 @@ -27,7 +27,7 @@ if (is_chromeos && !is_chromeos_device)
@@ -2851,15 +1771,33 @@
    // The default implementation is always the first one in list.
    if (!impl_from_cmdline)
      return allowed_impls[0];
+--- a/src/ui/linux/display_server_utils.cc
++++ b/src/ui/linux/display_server_utils.cc
+@@ -121,6 +121,13 @@ void SetOzonePlatformForLinuxIfNeeded(ba
+       command_line.AppendSwitchASCII(switches::kOzonePlatform,
+                                      MaybeFixPlatformName(ozone_platform_hint));
+     }
++#if BUILDFLAG(IS_OZONE_WAYLAND)
++    // Pick wayland as hint if we have it
++    else {
++      command_line.AppendSwitchASCII(switches::kOzonePlatform,
++                                     MaybeFixPlatformName(kPlatformWayland));
++    }
++#endif
+   }
+ }
+ 
 --- a/src/ui/ozone/platform/wayland/host/wayland_connection.h
 +++ b/src/ui/ozone/platform/wayland/host/wayland_connection.h
-@@ -360,8 +360,9 @@ class WaylandConnection {
+@@ -355,8 +355,11 @@ class WaylandConnection {
    void DumpState(std::ostream& out) const;
  
    bool UseImplicitSyncInterop() const {
 -    return !linux_explicit_synchronization_v1() &&
 -           WaylandBufferManagerHost::SupportsImplicitSyncInterop();
-+    return false; // *** Broken, at least on Pi
++    // *** Broken, at least on Pi (last checked v125)
++    //  Causes flickering / out-of-order / old frames when navigating or animating
++    return false;
 +//    return !linux_explicit_synchronization_v1() &&
 +//           WaylandBufferManagerHost::SupportsImplicitSyncInterop();
    }
@@ -3722,10 +2660,10 @@
  
 --- a/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
 +++ b/src/third_party/skia/src/opts/SkBitmapProcState_opts.h
-@@ -256,6 +256,256 @@ static void decode_packed_coordinates_an
+@@ -428,6 +428,255 @@ static void decode_packed_coordinates_an
+                                                            __lsx_vsat_hu(sum, 8)), 0);
          }
      }
- 
 +#elif defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
 +
 +#define S32_ALPHA_D32_FILTER_DX_1PIX_NEON(opt)               \
@@ -3975,11 +2913,10 @@
 +            vst1_lane_u32(dst, vreinterpret_u32_u8(vres), 0);         // store result
 +        }
 +#endif
-+
+ 
  #else
  
-     // The NEON code only actually differs from the portable code in the
-@@ -368,6 +618,202 @@ static void decode_packed_coordinates_an
+@@ -541,6 +790,202 @@ static void decode_packed_coordinates_an
  
  #endif
  
@@ -4184,7 +3121,7 @@
  namespace sktests {
 --- a/src/third_party/skia/src/opts/SkBlitMask_opts.h
 +++ b/src/third_party/skia/src/opts/SkBlitMask_opts.h
-@@ -233,6 +233,322 @@ namespace SK_OPTS_NS {
+@@ -409,6 +409,322 @@ namespace SK_OPTS_NS {
      }
  }
  
@@ -4520,7 +3457,7 @@
      #include <arm_neon.h>
  
      // SkMulDiv255Round() applied to each lane.
-@@ -114,8 +118,193 @@
+@@ -114,6 +118,16 @@
          return vqadd_u8(src, SkMulDiv255Round_neon8(nalphas, dst));
      }
  
@@ -4534,8 +3471,13 @@
 +#else
 +#define A(x) x
 +#define T(x)
-+#endif
-+
+ #endif
+ 
+ #if SK_CPU_LSX_LEVEL >= SK_CPU_LSX_LEVEL_LASX
+@@ -158,6 +172,181 @@
+     }
+ #endif
+ 
 +// These macros permit optionally-included features to be switched using a parameter to another macro
 +#define YES(x) x
 +#define NO(x)
@@ -4548,8 +3490,8 @@
 +#define IF_PRELOAD YES
 +#else
 +#define IF_PRELOAD NO
- #endif
- 
++#endif
++
 +/// Macro to load or store 1..7 pixels in growing powers-of-2 in size - suitable for leading pixels
 +#define S32A_LOADSTORE_LEADING_7(ls, r0, r1, r2, r3, base, opt)                                       \
 +                "tst         %[group_size], #1                                                \n\t"   \
@@ -4714,7 +3656,7 @@
  namespace SK_OPTS_NS {
  
  /*not static*/
-@@ -145,6 +334,10 @@ inline void blit_row_s32a_opaque(SkPMCol
+@@ -187,6 +376,10 @@ inline void blit_row_s32a_opaque(SkPMCol
  #endif
  
  #if defined(SK_ARM_HAS_NEON)
@@ -4725,7 +3667,7 @@
      while (len >= 8) {
          vst4_u8((uint8_t*)dst, SkPMSrcOver_neon8(vld4_u8((const uint8_t*)dst),
                                                   vld4_u8((const uint8_t*)src)));
-@@ -167,6 +360,154 @@ inline void blit_row_s32a_opaque(SkPMCol
+@@ -209,6 +402,154 @@ inline void blit_row_s32a_opaque(SkPMCol
          vst1_lane_u32(dst, vreinterpret_u32_u8(result), 0);
      }
      return;
@@ -4879,4 +3821,4 @@
 +#endif // __ARM_64BIT_STATE
  #endif
  
-     while (len --> 0) {
+ #if SK_CPU_LSX_LEVEL >= SK_CPU_LSX_LEVEL_LASX

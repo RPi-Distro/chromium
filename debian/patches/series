@@ -1,4 +1,4 @@
-v124.0.6367.73_rpi_2.66.patch
+v125.0.6422.133_rpi_3.67.patch
 xz_memlimit.patch
 gngen_fixes.diff
 set-rpath-on-chromium-executables.patch

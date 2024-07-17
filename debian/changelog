@@ -1,3 +1,24 @@
+chromium (126.0.6478.182-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-6772: Inappropriate implementation in V8.
+      Reported by 5fceb6172bbf7e2c5a948183b53565b9.
+    - CVE-2024-6773: Type Confusion in V8. Reported by 2ourc3 | Salim Largo.
+    - CVE-2024-6774: Use after free in Screen Capture. Reported by
+      lime(@limeSec_) and fmyy(@binary_fmyy) from TIANGONG Team of Legendsec
+      at QI-ANXIN Group.
+    - CVE-2024-6775: Use after free in Media Stream. Reported by Anonymous.
+    - CVE-2024-6776: Use after free in Audio. Reported by
+      lime(@limeSec_) and fmyy(@binary_fmyy) from TIANGONG Team of Legendsec
+      at QI-ANXIN Group.
+    - CVE-2024-6777: Use after free in Navigation.
+      Reported by Sven Dysthe (@svn-dys).
+    - CVE-2024-6778: Race in DevTools. Reported by Allen Ding.
+    - CVE-2024-6779: Out of bounds memory access in V8.
+      Reported by Seunghyun Lee (@0x10n).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
+
 chromium (126.0.6478.126-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

@@ -76,14 +76,14 @@
  
      dargs.close()
  
-@@ -64,8 +80,9 @@ if __name__ == '__main__':
-     gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_armhf-sysroot")
+@@ -64,8 +80,10 @@ if __name__ == '__main__':
+     if len(sys.argv) < 2 or sys.argv[1] == "--32":
+         gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_armhf-sysroot")
+         docopy("armv7-bullseye", gyp_vars, is_ozone=True)
++        docopy("armv7-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)
  
-     docopy("armv7-bullseye", gyp_vars, is_ozone=True)
-+    docopy("armv7-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)
+     if len(sys.argv) < 2 or sys.argv[1] == "--64":
+         gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm64-sysroot")
+         docopy("arm64-bullseye", gyp_vars, is_ozone=True)
++        docopy("arm64-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)
  
-     gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm64-sysroot")
- 
-     docopy("arm64-bullseye", gyp_vars, is_ozone=True)
--
-+    docopy("arm64-bullseye", gyp_vars, is_ozone=True, extra_codecs=False)

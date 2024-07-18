@@ -15,7 +15,7 @@ Bug-Ubuntu: https://launchpad.net/bugs/1718885
    _chrome_exe("chrome_initial") {
 --- a/src/tools/v8_context_snapshot/BUILD.gn
 +++ b/src/tools/v8_context_snapshot/BUILD.gn
-@@ -89,6 +89,10 @@ if (use_v8_context_snapshot) {
+@@ -90,6 +90,10 @@ if (use_v8_context_snapshot) {
          "//v8",
        ]
  

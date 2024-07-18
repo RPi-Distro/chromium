@@ -1,0 +1,1334 @@
+From 905acf1a31404fdf69ee87b5a9ee905559fe0c8b Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Fri, 17 May 2024 12:02:35 +0100
+Subject: [PATCH 01/17] pi-util: Add scripts to help build and release
+
+---
+ pi-util/BUILD.txt                 | 254 ++++++++++++++++++++++++++++++
+ pi-util/README.txt                | 118 ++++++++++++++
+ pi-util/cpbuild.sh                |  31 ++++
+ pi-util/cplibs.sh                 |  19 +++
+ pi-util/defargs_arm64-bullseye.gn |  33 ++++
+ pi-util/defargs_armv7-bullseye.gn |  41 +++++
+ pi-util/dodiff.py                 |  93 +++++++++++
+ pi-util/gencherry.py              |  59 +++++++
+ pi-util/gitscan.py                |  76 +++++++++
+ pi-util/gngen.py                  |  71 +++++++++
+ pi-util/makeall.sh                |  49 ++++++
+ pi-util/patch2nd.awk              |   3 +
+ pi-util/patchmake.sh              |  50 ++++++
+ pi-util/pi-install-dev.sh         |  53 +++++++
+ pi-util/pipaths.py                |   7 +
+ pi-util/pipewire_utils_h.patch    |  11 ++
+ pi-util/rebase_liblinks.py        |  37 +++++
+ pi-util/rootgen.sh                |  73 +++++++++
+ pi-util/settag.py                 |  78 +++++++++
+ pi-util/syncroot.sh               |  70 ++++++++
+ 20 files changed, 1226 insertions(+)
+ create mode 100644 pi-util/BUILD.txt
+ create mode 100644 pi-util/README.txt
+ create mode 100755 pi-util/cpbuild.sh
+ create mode 100755 pi-util/cplibs.sh
+ create mode 100644 pi-util/defargs_arm64-bullseye.gn
+ create mode 100644 pi-util/defargs_armv7-bullseye.gn
+ create mode 100755 pi-util/dodiff.py
+ create mode 100755 pi-util/gencherry.py
+ create mode 100755 pi-util/gitscan.py
+ create mode 100755 pi-util/gngen.py
+ create mode 100755 pi-util/makeall.sh
+ create mode 100644 pi-util/patch2nd.awk
+ create mode 100755 pi-util/patchmake.sh
+ create mode 100755 pi-util/pi-install-dev.sh
+ create mode 100755 pi-util/pipaths.py
+ create mode 100644 pi-util/pipewire_utils_h.patch
+ create mode 100755 pi-util/rebase_liblinks.py
+ create mode 100755 pi-util/rootgen.sh
+ create mode 100755 pi-util/settag.py
+ create mode 100755 pi-util/syncroot.sh
+
+--- /dev/null
++++ b/src/pi-util/BUILD.txt
+@@ -0,0 +1,254 @@
++Build notes (cross compile from Ubuntu)
++=======================================
++
++Build from a patch
++------------------
++
++# Pick somewhere to put this
++cd ~
++mkdir chromium
++cd chromium
++# Get the build tools & put on path
++# You may want to add the path in .bashrc
++git clone https://chromium.googlesource.com/chromium/tools/depot_tools
++export PATH=$PATH:`pwd`/depot_tools
++# Get the main tree
++fetch chromium
++cd src
++# Checkout the version you want
++# * Fix version number
++git checkout 55.0.2883.99
++# Fix up any missing dependancies on the build m/c
++# * may well be unnecessary if you have built any other chrome
++./build/install-build-deps.sh
++./build/install-build-deps.sh --arm
++# Fetch & pull the other bits of the tree to sync.
++# As we are checking out a tag the --with_branch_heads is important
++gclient sync --with_branch_heads
++# Patch - should be completely clean if everything matchs
++# * Fix patch file to correct name / location
++cd ..
++patch -p1 < v55.0.2883.99.patch
++cd src
++# * Get a sysroot from somewhere and put it in build/linux/raspian_jessie_pi1-sysroot
++# * Example below is only if you have got an appropriate one lying around
++# * Otherwise follow sysroot instructions further down
++rsync -rl previous_location/raspian_jessie_pi1-sysroot build/linux/
++# Build output directories (out/armv6, out/armv7)
++# * This script currently assumes a sysroot of build/linux/raspian_jessie_pi1-sysroot
++#   so may need editing if you have put it elsewhere
++pi-util/gngen.py
++# Build chrome
++ninja -C out/armv6 chrome chrome_sandbox
++# Build armv7 ffmpeg
++ninja -C out/armv7 third_party/ffmpeg
++
++
++To run on a Pi
++--------------
++
++This requires a little installation.  The sandbox and ffmpeg shared libs
++need to be copied to the pi.  As neither is being tweaked much by me these
++steps should only be required if the underlying Chrome changes.  Otherwise
++you can just run out of the build directory (src/out/armv6)
++
++Assuming you can mount the build dir from the pi.
++
++# On the Pi NOT the build machine
++cd <path to build env>/src
++# Copy the ffmpeg libs
++pi-util/cplibs.sh
++# Copy the sandbox. BUILDTYPE tells the script where to get it from
++# This doesn't seem to be needed anymore with linux 4.9 and chrome 55
++BUILDTYPE=armv6 build/update-linux-sandbox.sh
++# Run chrome
++cd out/armv6
++./chrome
++
++
++Rebuilds
++--------
++
++In most cases a simple "ninja -C out/armv6 chrome" is all that is needed
++and the pi can run from out/armv6.
++
++To clean build "rm -rf out" and follow the build instructions from gngen.py
++
++
++Updating chromium from git
++--------------------------
++
++There is no script for this as the merges are prone to conflicts and it
++is much easier to sort them if you are doing stuff manually.
++
++If updating between major versions then mergeing tends to fail horribly
++so something along the lines of:
++
++# Look for where we are going
++git tag -l "118.*"
++TAG=118...
++
++# Remember where we are
++OLDTAG=`sed -nE 's/^src[^0-9]*([0-9.]+)"$/\1/p' pi-util/pipaths.py`
++OLDVER=`echo $OLDTAG | sed -nE 's/^([0-9]+).*$/\1/p'`
++echo OLDTAG=$OLDTAG OLDVER=$OLDVER
++
++NEWVER=`echo $TAG | sed -nE 's/^([0-9]+).*$/\1/p'`
++echo NEWTAG=$TAG NEWVER=$NEWVER
++
++# * Make sure there are no updates required and no untracked files
++pi-util/gitscan.py status
++# Set rename limit to huge as files are moved around frequently and getting
++# git to track them is much easier than trying to do it ourselves
++git config diff.renameLimit 1000000
++
++# Tag source & make a patch file - patch file is useful when files are moved
++# as then git goes all unhelpful
++pi-util/dodiff.py > ../v${OLDTAG}_stash.patch
++# As git stash will reset the branch switch to a temp branch 1st
++pi-util/gitscan.py checkout -b stash/${OLDVER}/base
++pi-util/gitscan.py --gitscan-no-src reset {BASE}
++pi-util/gitscan.py --gitscan-no-src stash -u
++pi-util/gitscan.py --gitscan-no-src checkout {BASE}
++
++# Need to do src separately as the stash will lose pi-utils
++git reset $OLDTAG
++git stash -u
++
++git checkout $TAG -b test/${NEWVER}/rpi_2
++
++# Clean out old objects
++rm -rf out
++# Beware that git clean might kill our sub-repos so so don't do it unless we
++# are sure it won't
++# git clean -dxf
++
++### Do the "get environment" stages of a new build
++./build/install-build-deps.sh
++./build/install-build-deps.sh --arm
++# Fetch & pull the other bits of the tree to sync.
++# As we are checking out a tag the --with_branch_heads is important
++gclient sync -D --with_branch_heads
++
++# Start rebuild
++git stash pop
++
++# Fix pipaths & make new branches (now so we don't forget later)
++sed "s/src_commit=.*/src_commit=\"$TAG\"/" pi-util/pipaths.py | tee t
++mv t pi-util/pipaths.py && git add pi-util/pipaths.py
++chmod 0755 pi-util/*.py pi-util/*.sh
++pi-util/gitscan.py --gitscan-no-src checkout -b test/${NEWVER}/rpi_2
++
++# If running with filemode false then readd pi-util with filemode true
++git config core.filemode true
++git add pi-util
++git config core.filemode false
++
++
++### Fix conflicts (there will be some)
++
++# If building a separated ffmpeg .so (we are not not currrently) then
++# fix chrome major version for ffmpeg .so in pi-util/cplibs.sh and third_party/ffmpeg/BUILD.gn
++
++git commit
++### run through all other dirs we care about doing the same
++### Probably need to fix exec perms on pi-util scripts
++pi-util/rootgen.sh
++pi-util/gngen.py
++### Fix up any new libpackage-dev that we need
++ninja ...
++### Fix up build disasters
++
++
++If updating within a major version mergeing seems to work reliably so my
++preferred method for achieving this goes:
++
++# Make sure everything is committed
++pi-util/gitscan.py status --ignore-submodules
++# Revert to base chromium checkout for old checkout
++pi-util/gitscan.py --gitscan-no-src checkout {BASE}
++# Merge new version into current base
++git fetch --all
++TAG=<new_tag>
++NEWVER=`echo $TAG | sed -nE 's/^([0-9]+).*$/\1/p'`
++
++git rebase $TAG
++# Either commit now or later
++sed "s/src_commit=.*/src_commit=\"$TAG\"/" pi-util/pipaths.py | tee t
++mv t pi-util/pipaths.py && git add pi-util/pipaths.py
++git commit -m "pipaths: update to $TAG"
++
++# Get the rest of the tree
++gclient sync -D --with_branch_heads
++
++# Rebase the rest too
++pi-util/gitscan.py --gitscan-no-src rebase HEAD test/$NEWVER/rpi_3
++
++and we should be good to go.  At this point you can either clean build or
++not.  Chromes dependancy checks seem remarkably good so a simple build
++works nearly all the time.
++
++# Rebuild from clean
++rm -rf out
++# refetch root (optional)
++pi-util/rootgen.sh
++# Configure
++pi-util/gngen.py
++# Build release armv7 chrome (and any other targets you feel like)
++ninja -C out/armv7-rel chrome
++
++
++Sysroots (one time only)
++------------------------
++
++1st you will need to get the dev files for a bunch of libs on your pi (or
++if you can get the right files by magic on your cross-compile m/c then
++that is good too).  In src/pi-util there is a shell script
++pi-install-dev.sh which lists all the libs I think are needed along with a
++helpful apt-get install so all you should need to do is run it on an
++appropriate pi.
++
++Next the appropriate bits need to be copied to
++build/linux/<sysroot-name>-sysroot. We use raspian_stretch_pi1 as the
++sysroot name in these instructions and in the example script files so you
++might well find it easiest to use the same name too
++
++The script pi-util/syncroot.sh that will copy the needed bits of a root to
++the right place and then fix the full path symlinks to be relative.  It
++uses rsync to copy the files so the src can contain a machine name
++
++pi-util/syncroot.sh my-pi: raspian_stretch_pi1
++
++The "raspian_stretch_pi1" can be omitted and syncroot will choose the current
++default sysroot name.
++
++Beware that there are ~8 rsync statements so if the rsync is operating
++over ssh then you may need to type your password 8 times...  Note also
++that the script appends -sysroot to the given name so don't add that
++yourself!
++
++If the pi root is updated then this script can / should be rerun to update
++the sysroot.
++
++
++
++Other notes on the tree
++-----------------------
++
++The definitive list of expected repos is in pi-util/pipaths.py
++
++The script pi-util/gitscan.py will perform the same git op on all the
++repos that are in use in the current patch set.  It has substitutions
++of {PATH} and {BASE} for the path to the current repo and the chromium
++commit on which the current branch is based
++
++The current dev branch is test/57/mmal_2
++
++Status of optional neon by build file:
++skia/BUILD.gn:                     yes
++build/secondary/third_party/libjpeg_turbo/BUILD.gn: yes
++third_party/libwebp/BUILD.gn:      yes
++third_party/openmax_dl/dl/BUILD.gn unused
++third_party/libyuv/BUILD.gn:       yes
++third_party/libyuv/libyuv.gni:     yes
++third_party/pdfium/skia/BUILD.gn:  unused
+--- /dev/null
++++ b/src/pi-util/README.txt
+@@ -0,0 +1,118 @@
++Release notes
++=============
++
++This version should run with gpu-mem=64 with the default switches. Having
++said that this will only allow for 1 stream.  If you are playing >1 stream
++(even transiently) then you will need more (say gpu_mem=128) and you will
++need to set the --mmal-decoders option to the desired max number. The code
++should give up cleanly if it cannot allocate a h/w video decoder and give
++the stream to old-style ffmpeg decode, but as it stands in many cases it
++thinks it has allocated a decoder cleanly only to find that it fails when
++it tries to use it.
++
++Needs a current (buster 2019-06-07+) firmware/userland
++
++There are a few command-line switches - in general you shouldn't use
++them!
++
++
++Decode and resizer options
++--------------------------
++
++--mmal-decode-opaque     Set the decoder to use opaque frames between
++decoder and resizer.  This should be faster than i420 but doesn't work
++with old firmware.  This is the default with newer firmware (>=
++2016-11-01). (see --mmal-decode-i420)
++
++--mmal-decode-i420       Set the decoder to use I420 frames between
++decoder and resizer.  This generates an unnecessary conversion but works
++with all firmware.  This is the default with older firmware (<
++2016-11-01). (see --mmal-decode-opaque)
++
++--mmal-low-delay         Force "low-delay" mode on the decoder pipe.  This
++reduces the number of buffered ES frames before the decoder.  It isn't
++exactly low-delay but is definitely lower than otherwise.  May have a
++slight performance penalty and increase the risk of stuttering.  This mode
++will be automatically set by Chrome for some streams.
++
++--mmal-resize-isp        Use ISP resize rather than resizer.  Is noticably
++faster but requires --mmal-frame-copy or --mmal-zero-copy and newer
++firmware.  This is the default with newer firmware  (>= 2016-11-01) and
++enough gpu memory to support --mmal-frame-copy.
++
++--mmal-resize-resizer    Use resizer rather than ISP. Slower than ISP
++resize but supports older firmware and --mmal-slice-copy which may be
++needed if GPU memory is very limited (as will be the case on a Pi1 with a
++default setup).
++
++--mmal-resize-mode=NEVER|ALWAYS|SMALLER
++Sets resize behaviour.
++  NEVER    Output is the native size of the video
++  ALWAYS   Output allways attempts to match the size of the displayed picture
++           This is normally the fastest mode for SHM-RGB copy
++  SMALLER  Resize to smaller of native & display. This saves memory and is
++           the fastest for EGL output
++
++
++Copy-modes
++----------
++
++--mmal-copy-mode=<copy mode>
++
++This sets the output frame type & mmal->chrome copy mode. Current values
++for <copy mode> are:
++
++slice                   slowest - uses only a small amount of memory
++                        in the resizer
++
++<alloc>-<format>-<copy>
++  <alloc>
++    SHM      Frame allocated from shared memory
++    GPU      Frame allocated from gpu memory
++  <format>
++    YUV      3-plane I420
++    YC       2-plane I420 e.g. NV12
++    RGB      1-plane 4-byte RGBX
++  <copy>
++    COPY     Data copied on the ARM.  This should be slower than DMA but
++             sometimes give more performance at the expense of slightly
++	     higher ARM CPU usage
++    DMA      Data copied by firmware DMA to ARM buffers.
++    ZC       Data put directly into GPU buffer.  Fastest - only works
++             with EGL (needs vcsm-cma).
++
++Currently valid combinations are:
++
++SHM-YUV-DMA
++SHM-YC-DMA
++SHM-RGB-DMA
++SHM-RGB-COPY  Default for non-gpu operation
++GPU-RGB-DMA
++GPU-RGB-ZC
++GPU-YUV-COPY
++GPU-YUV-ZC    Default for EGL operation
++
++
++Misc options
++------------
++
++--enable-logging=stderr This is a standard option for chrome but worth
++noting as the mmal code will print out its interpretation of the command
++line options passed to it along with how much GPU memory it has detected
++and the firmware date.
++
++--pi-patch-version       Print out the versions of Chromium and Pi
++patches.  Chrome will then terminate
++
++--mmal-decoders=<n>      Set the number of mmal decoders we wil try to
++create simultainiously. Default=1. If this number is exceeded then decoder
++init will fail and chrome will fallback to ffmpeg decode.  There is no
++panalty for setting this to a large number if you wish to have "unlimited"
++decoders.  However if it is set too big and there isn't the gpu mem to
++satisfy the requirements of the decode it may fail cleanly and revert to
++software (ffmpeg) decode or init may appear to succeed and decode then
++fails in an undefined manner.
++
++--mmal-frame-buffers=<n> Set the number of gpu "frame" buffers.
++Change with care.
++
+--- /dev/null
++++ b/src/pi-util/cpbuild.sh
+@@ -0,0 +1,31 @@
++set -e
++if [ "$2" == "" ]; then
++  echo "mkzip <zipname> <out/dir>"
++  exit 1
++fi
++
++BASEDIR=`pwd`
++TMPBASE=$BASEDIR/out/tmp
++TMPDIRNAME=$1
++ZIPFILE=$1.zip
++OUTDIR=$BASEDIR/$2
++
++cd $OUTDIR
++D=$TMPBASE/$TMPDIRNAME
++rm -rf $D
++mkdir -p $D
++
++echo "=== Copying"
++cp -r * $D
++cd $D
++
++echo "=== Clean unwanted"
++find . -name obj -exec rm -rf {} +
++rm -rf gen clang_*
++rm -rf *.TOC *_deps *.zip core-* bin test_* toolchain.ninja third_party tools local_rustc_sysroot thinlto-cache
++cd $TMPBASE
++
++echo "=== Zipping"
++zip -r -q $ZIPFILE $TMPDIRNAME
++
++echo "=== Done: $TMPBASE/$ZIPFILE"
+--- /dev/null
++++ b/src/pi-util/cplibs.sh
+@@ -0,0 +1,19 @@
++set -e
++
++FFNAME=libffmpeg_chrome.so.66
++LIBROOT=/usr/lib/arm-linux-gnueabihf
++
++if [ ! -d $LIBROOT ]; then
++  echo Can\'t find $LIBROOT
++  echo Are you sure you are running this on a Pi?
++  exit 1
++fi
++
++echo Copying $FFNAME from armv6/7 to $LIBROOT/...
++
++cp out/armv7/$FFNAME /tmp
++sudo cp /tmp/$FFNAME $LIBROOT/neon/vfp
++cp out/armv6/$FFNAME /tmp
++sudo cp /tmp/$FFNAME $LIBROOT
++
++
+--- /dev/null
++++ b/src/pi-util/defargs_arm64-bullseye.gn
+@@ -0,0 +1,33 @@
++# Build arguments go here. Examples:
++#   is_component_build = true
++#   is_debug = false
++# See "gn args <out_dir> --list" for available build arguments.
++target_cpu = "arm64"
++target_os = "linux"
++
++# Enables screen sharing in hangouts
++enable_hangout_services_extension = true
++
++ffmpeg_branding = "Chrome"
++proprietary_codecs = true
++
++enable_widevine = true
++
++# Dawn seems to really want Vulkan - Chrome doesn't like our Vulkan
++# this causes a hiccup about a min after startup.
++# Disabling Dawn seems to create no penalty but this probably won't
++# be true indefinitely
++use_dawn = false
++skia_use_dawn = false
++
++# We don't have the required GL extensions to enable GL passthrough so must
++# enable the validating decode otherwise we get a fatal GPU error
++enable_validating_command_decoder = true
++
++disable_fieldtrial_testing_config = true
++enable_nacl = false
++blink_symbol_level = 0
++symbol_level = 1
++is_official_build = true
++is_component_ffmpeg = true
++
+--- /dev/null
++++ b/src/pi-util/defargs_armv7-bullseye.gn
+@@ -0,0 +1,41 @@
++# Build arguments go here. Examples:
++#   is_component_build = true
++#   is_debug = false
++# See "gn args <out_dir> --list" for available build arguments.
++target_cpu = "arm"
++target_os = "linux"
++
++arm_float_abi = "hard"
++arm_use_neon = true
++# We have lib issues if we enable thumb
++arm_use_thumb = false
++arm_optionally_use_neon = false
++arm_version = 7
++arm_arch = "armv7-a"
++
++enable_widevine = true
++
++# Dawn seems to really want Vulkan - Chrome doesn't like our Vulkan
++# this causes a hiccup about a min after startup.
++# Disabling Dawn seems to create no penalty but this probably won't
++# be true indefinitely
++use_dawn = false
++skia_use_dawn = false
++
++# Enables screen sharing in hangouts
++enable_hangout_services_extension = true
++
++# We don't have the required GL extensions to enable GL passthrough so must
++# enable the validating decode otherwise we get a fatal GPU error
++enable_validating_command_decoder = true
++
++ffmpeg_branding = "Chrome"
++proprietary_codecs = true
++
++disable_fieldtrial_testing_config = true
++enable_nacl = false
++blink_symbol_level = 0
++symbol_level = 1
++is_official_build = true
++is_component_ffmpeg = true
++
+--- /dev/null
++++ b/src/pi-util/dodiff.py
+@@ -0,0 +1,93 @@
++#!/usr/bin/env python3
++
++import os, sys, string, subprocess, argparse
++
++# Local
++import gitscan, pipaths
++
++def doscan(outfile = sys.stdout):
++    revdict = gitscan.revdict()
++
++    cpath = gitscan.basepath()
++
++    for p in pipaths.pipaths:
++        os.chdir(os.path.join(cpath, p))
++        diff = subprocess.check_output(["git", "diff", "--ignore-submodules", revdict[p]], text=True)
++
++        header = False
++        lines = diff.split("\n")
++        # Remove terminal blank line
++        if lines[-1] == "":
++            lines.pop()
++        for line in lines:
++            if line.startswith("diff --git "):
++                header = True
++            if header:
++                line = line.replace(" a/", " a/" + p + "/")
++                line = line.replace(" b/", " b/" + p + "/")
++            if line.startswith("+++ "):
++                header = False
++            print(line, file=outfile)
++
++def cprebase(src, dst, p):
++    with open(src, "rt") as s:
++        with open(dst, "wt") as d:
++            header = False
++            for line in s:
++                if p:
++                    if line.startswith("diff --git "):
++                        header = True
++                    if header:
++                        line = line.replace(" a/", " a/" + p + "/")
++                        line = line.replace(" b/", " b/" + p + "/")
++                    if line.startswith("+++ "):
++                        header = False
++                d.write(line)
++
++def doscanset(outdir = 'cpatch', mkzip = False):
++    revdict = gitscan.revdict()
++    cpath = gitscan.basepath()
++    patchfiles = []
++
++    dstdir = os.path.join(cpath, outdir)
++    tmpdir = os.path.join(dstdir, "tmp")
++    os.makedirs(tmpdir, exist_ok=True)
++
++    start_num = 1
++    for p in pipaths.pipaths:
++        os.chdir(os.path.join(cpath, p))
++        diff = subprocess.check_output(["git", "format-patch",
++                                        "--output-directory", tmpdir,
++                                        "--start-number", str(start_num),
++                                        "--ignore-submodules", revdict[p]], text=True)
++        lines = diff.split("\n")
++        for line in lines:
++            print("'" + line + "'")
++            fname = os.path.basename(line)
++            if len(fname) > 5 and fname[0:4].isnumeric():
++                patchfile = os.path.join(dstdir, fname)
++                cprebase(line, patchfile, p);
++                os.remove(line)
++                patchfiles.append(patchfile)
++
++        start_num += 100
++    os.rmdir(tmpdir);
++
++    if mkzip:
++        subprocess.check_call(["zip", "-j", dstdir + ".zip"] + patchfiles)
++        for f in patchfiles:
++            os.remove(f)
++        os.rmdir(dstdir)
++
++
++if __name__ == '__main__':
++    argp = argparse.ArgumentParser(
++        description="Produce patch or patchset")
++    argp.add_argument("-s", action='store_true', help="Generate patchset")
++    args = argp.parse_args()
++
++    if args.s:
++        doscanset()
++    else:
++        doscan()
++
+--- /dev/null
++++ b/src/pi-util/gencherry.py
+@@ -0,0 +1,59 @@
++#!/usr/bin/env python3
++
++import argparse
++import os
++import subprocess
++import sys
++
++import gitscan
++import pipaths
++
++if __name__ == '__main__':
++    argp = argparse.ArgumentParser(description="Create a simple cherry-pick script")
++    argp.add_argument("--ignore-uncommited", action='store_true', help="Ignore presence of uncomitted files")
++    argp.add_argument("--no-branch", action='store_true', help="Do not create a new branch")
++    argp.add_argument("branch", nargs='?', help="New branch name")
++    args = argp.parse_args()
++
++    if not (args.branch or args.no_branch):
++        print("Usage: Must have either a branch name or --no-branch")
++        sys.exit(1)
++    rdict = gitscan.revdict()
++    cpath = gitscan.basepath()
++
++    print("set -e")
++
++    for p in pipaths.pipaths:
++        uncommited = []
++        oid = None
++        head = None
++
++        cdir = os.path.join(cpath, p)
++        print("cd {}".format(cdir))
++        os.chdir(cdir)
++
++        if not args.no_branch:
++            print("git checkout -b {}".format(args.branch))
++
++        st = subprocess.check_output(["git", "status", "--branch", "--porcelain=2", "--ignore-submodules"], text=True).splitlines()
++        for line in st:
++            f = line.split()
++            if f and f[0] != "#":
++                uncommited.append(f[-1])
++                continue
++            if len(f) < 3:
++                continue
++            if f[1] == "branch.oid":
++                oid = f[2]
++            elif f[1] == "branch.head":
++                head = f[2]
++
++        if uncommited:
++            if args.ignore_uncommited:
++                print("# Has uncommited files:", uncommited)
++            else:
++                print("*** Uncommited files", uncommited, file=sys.stderr)
++                sys.exit(1)
++
++        print("git cherry-pick {}..{}".format(rdict[p], head or oid))
++
+--- /dev/null
++++ b/src/pi-util/gitscan.py
+@@ -0,0 +1,76 @@
++#!/usr/bin/env python3
++
++import os, string, subprocess, sys
++
++# Local
++import pipaths
++
++def revdict():
++    revdict = {'src':pipaths.src_commit}
++    stuff = subprocess.check_output(["gclient", "revinfo"], text=True)
++    for line in stuff.split("\n"):
++        pathn = line.find(":")
++        commitn = line.rfind("@")
++        if pathn != -1 and commitn != -1 :
++             revdict[line[:pathn]] = line[commitn+1:]
++    return revdict
++
++def basepath():
++    cpath = os.getcwd()
++    if not cpath.endswith("/src"):
++        raise "CWD doesn't end with /src"
++
++    return cpath[:-4]
++
++def gitscan(args, nosrc = False, quiet=False):
++    rv = 0
++
++    oldcwd = os.getcwd()
++    rdict = revdict()
++    cpath = basepath()
++
++    for p in pipaths.pipaths:
++        if nosrc and p == "src":
++            continue
++
++        os.chdir(os.path.join(cpath, p))
++
++        gitargs = [a.replace("{PATH}", p).replace("{BASE}", rdict[p]) for a in args]
++        gitargs[0:0] = ["git"]
++
++        if not quiet:
++            print(">>>", p)
++
++        rv = subprocess.call(gitargs)
++        if rv != 0:
++            if not quiet:
++                print("Git returned non-zero error code", rv, "\ncwd =", os.getcwd(), "\ncmd =", gitargs)
++            break
++
++    os.chdir(oldcwd)
++    return rv
++
++
++if __name__ == '__main__':
++
++    if len(sys.argv) < 2:
++        print("Usage: gitscan [--gitscan-no-src] <git cmd>")
++        print("       gitscan --gitscan-bases")
++        print("  substitutes {PATH} and {BASE}")
++        exit(0)
++
++    nosrc = False
++
++    if sys.argv[1] == "--gitscan-bases":
++        rdict = revdict()
++        for p in pipaths.pipaths:
++            print(p, ":", rdict[p])
++        sys.exit(0)
++
++    if sys.argv[1] == "--gitscan-no-src":
++        nosrc = True
++        del sys.argv[1]
++
++    gitscan(sys.argv[1:], nosrc)
++
++
+--- /dev/null
++++ b/src/pi-util/gngen.py
+@@ -0,0 +1,71 @@
++#!/usr/bin/env python3
++
++import os, ast, fileinput, subprocess, sys
++
++def docopy(name, vars, is_debug=False, is_ozone=False):
++    dir_suffix = ""
++    deb_str = "false"
++
++    if is_ozone:
++        ozone_str = "true"
++        dir_suffix = dir_suffix + "-ozone"
++    else:
++        ozone_str = "false"
++
++    if is_debug:
++        deb_str = "true"
++        dir_suffix = dir_suffix + "-deb"
++    else:
++        deb_str = "false"
++        dir_suffix = dir_suffix + "-rel"
++
++
++    dest_dir = os.path.join("out", name + dir_suffix)
++    src_file = os.path.join("pi-util", "defargs_" + name + ".gn")
++
++    # Ignore any errors making dir (in particular it already exists)
++    try:
++        os.makedirs(dest_dir)
++    except:
++        pass
++
++    dargs = open(os.path.join(dest_dir, "args.gn"), "wt")
++    dargs.write('# -- copied from: ' + src_file + '\n')
++
++    for line in fileinput.input(src_file):
++        dargs.write(line)
++
++    dargs.write('# -- created by ' + sys.argv[0] + '\n')
++    dargs.write('is_debug = ' + deb_str + '\n')
++    dargs.write('use_ozone = ' + ozone_str + '\n')
++    if is_ozone:
++        dargs.write('ozone_platform_x11 = true\n')
++        dargs.write('use_v4l2_codec = true\n')
++        dargs.write('use_v4l2_codec_rpi = true\n')
++
++    dargs.write('target_sysroot = "' + vars["target_sysroot"] + '"\n')
++    dargs.write('google_api_key = "' + vars["google_api_key"] + '"\n')
++    dargs.write('google_default_client_id = "' + vars["google_default_client_id"] + '"\n')
++    dargs.write('google_default_client_secret = "' + vars["google_default_client_secret"] + '"\n')
++
++    dargs.close()
++
++    subprocess.check_call(["gn", "gen", dest_dir])
++
++
++if __name__ == '__main__':
++    gyp_vars = {}
++    gypi = os.path.join(os.environ["HOME"], ".gyp", "include.gypi")
++    if os.path.isfile(gypi):
++        print("Importing from:", gypi)
++        gyps = open(gypi).read(-1)
++        gyp_vars = ast.literal_eval(gyps)["variables"]
++
++    if len(sys.argv) < 2 or sys.argv[1] == "--32":
++        gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_armhf-sysroot")
++        docopy("armv7-bullseye", gyp_vars, is_ozone=True)
++
++    if len(sys.argv) < 2 or sys.argv[1] == "--64":
++        gyp_vars["target_sysroot"] = os.path.abspath("build/linux/pios_bullseye_arm64-sysroot")
++        docopy("arm64-bullseye", gyp_vars, is_ozone=True)
++
+--- /dev/null
++++ b/src/pi-util/makeall.sh
+@@ -0,0 +1,49 @@
++set -e
++
++DISTRO=bullseye
++
++GET_BUILD_DEPS=
++if [ "$1" == "--build-deps" ]; then
++  GET_BUILD_DEPS=1
++  shift
++fi
++
++if [ "$1" == "" ]; then
++  echo "Usage: $0 [--build-deps] <git tag>"
++  exit 1
++fi
++
++echo === Check all committed
++pi-util/gitscan.py diff --name-status --exit-code
++echo === Reset third party libraries
++pi-util/gitscan.py --gitscan-no-src checkout {BASE}
++TAG=$1
++echo === Fetch chrome
++pi-util/gitscan.py fetch -t --all
++echo === Checkout chrome $TAG
++git checkout $TAG
++if [ ! $GET_BUILD_DEPS ]; then
++  echo === Skip system build dependancies
++else
++  echo === Get system build dependancies
++  build/install-build-deps.sh --arm
++fi
++echo === Sync third party libraries
++gclient sync -D --with_branch_heads
++# Shouldn't need this but the x bit often gets accidentally lost
++# due to core.filemode options
++chmod +x pi-util/*.sh pi-util/*.py
++echo === Checkout third party libraries
++pi-util/gitscan.py --gitscan-no-src checkout $TAG --
++echo === Get pi sysroots
++rm -rf out
++pi-util/rootgen.sh
++echo === Setup gn
++pi-util/gngen.py
++echo === Start build
++ninja -C out/armv7-${DISTRO}-ozone-rel chrome
++ninja -C out/arm64-${DISTRO}-ozone-rel chrome
++ninja -C out/armv6-${DISTRO}-ozone-rel chrome
++
++
++
+--- /dev/null
++++ b/src/pi-util/patch2nd.awk
+@@ -0,0 +1,3 @@
++/^\-\-\-/  { next }
++/^\+\+\+/ { $1="---"; print; $1="+++"; }
++{ print }
+--- /dev/null
++++ b/src/pi-util/patchmake.sh
+@@ -0,0 +1,50 @@
++set -e
++
++GET_BUILD_DEPS=
++if [ "$1" == "--build-deps" ]; then
++  GET_BUILD_DEPS=1
++  shift
++fi
++
++if [ "$1" == "" ]; then
++  echo "Usage: $0 [--build-deps] <patch file>"
++  exit 1
++fi
++if [ ! -e "$1" ]; then
++  echo "Didn't find patchfile $1"
++  exit 1
++fi
++
++PATCHFILE=$1
++TAG=${PATCHFILE##*/}
++TAG=${TAG:1}
++TAG=${TAG%%_*}
++
++echo "Version $TAG extracted from patchfile name"
++
++echo === Checkout chrome $TAG
++git checkout $TAG
++if [ ! $GET_BUILD_DEPS ]; then
++  echo === Skip system build dependancies
++else
++  echo === Get system build dependancies
++  build/install-build-deps.sh --unsupported --arm
++fi
++echo === Sync third party libraries
++gclient sync -D --with_branch_heads
++echo === Patch
++patch -p2 < $PATCHFILE
++# Shouldn't need this but the x bit often gets accidentally lost
++# due to core.filemode options
++chmod +x pi-util/*.sh pi-util/*.py
++echo === Get pi sysroots
++rm -rf out
++pi-util/rootgen.sh
++echo === Setup gn
++pi-util/gngen.py
++echo === Start build
++ninja -C out/armv7-bullseye-ozone-rel chrome
++ninja -C out/arm64-bullseye-ozone-rel chrome
++
++
++
+--- /dev/null
++++ b/src/pi-util/pi-install-dev.sh
+@@ -0,0 +1,53 @@
++# Install set to build appropriate root on a clean pi
++
++APT=aptitude
++#APT=apt-get
++
++sudo $APT install \
++comerr-dev \
++libasound2-dev \
++libatk1.0-dev \
++libatk-bridge2.0-dev \
++libcap-dev \
++libcups2-dev \
++libexif-dev \
++libffi-dev \
++libgbm-dev \
++libgconf2-dev \
++libgl1-mesa-dev \
++libgles-dev \
++libgtk-3-dev \
++libjpeg-dev \
++libkrb5-dev \
++libnspr4-dev \
++libnss3-dev \
++libpam0g-dev \
++libpango1.0-dev \
++libpci-dev \
++libpcre3-dev \
++libpipewire-0.2-dev \
++libssl-dev \
++libudev-dev \
++libx11-xcb-dev \
++libxcb1-dev \
++libxcb-dri3-dev \
++libxcb-shm0-dev \
++libxcb-image0-dev \
++libxss-dev \
++libxt-dev \
++libxtst-dev \
++mesa-common-dev \
++python-xcbgen \
++uuid-dev \
++xcb-proto
++
++echo Also need python-xcbgen on host
++
++# Pulse (hopefully) disabled
++# libpulse-dev \
++
++# Obviously replace paths appropriately below
++# Now run pi-util/syncroot.sh on the compile m/c to grab the appropriate
++# bits of the root and fix up the paths.
++# e.g. ON COMPILE M/C in src dir:
++# pi-util/syncroot.sh my-pi: raspian_jessie_pi1
+--- /dev/null
++++ b/src/pi-util/pipaths.py
+@@ -0,0 +1,7 @@
++pipaths=[
++    "src",
++    "src/third_party/libyuv",
++    "src/third_party/skia"]
++
++# Our base tag or commit no
++src_commit="126.0.6478.164"
+--- /dev/null
++++ b/src/pi-util/pipewire_utils_h.patch
+@@ -0,0 +1,11 @@
++--- a/build/linux/raspian_stretch_pi1-sysroot/usr/include/pipewire/utils.h
+++++ b/build/linux/raspian_stretch_pi1-sysroot/usr/include/pipewire/utils.h
++@@ -52,7 +52,7 @@ static inline struct spa_pod *
++ pw_spa_pod_copy(const struct spa_pod *pod)
++ {
++ 	size_t size;
++-	struct spa_pod *c;
+++	void *c;
++ 
++ 	if (pod == NULL)
++ 		return NULL;
+--- /dev/null
++++ b/src/pi-util/rebase_liblinks.py
+@@ -0,0 +1,37 @@
++#!/usr/bin/env python
++
++import os, sys
++from stat import *
++
++def walktree(top, callback, n, prefix):
++    '''recursively descend the directory tree rooted at top,
++       calling the callback function for each regular file'''
++
++    for f in os.listdir(top):
++        pathname = os.path.join(top, f)
++        mode = os.lstat(pathname).st_mode
++        if S_ISDIR(mode):
++            # It's a directory, recurse into it
++            walktree(pathname, callback, n+1, prefix)
++        elif S_ISLNK(mode):
++            # It's a file, call the callback function
++            callback(pathname, os.readlink(pathname), n, prefix)
++
++def visitfile(file, linkname, n, prefix):
++    if (linkname.startswith(prefix + 'lib/')):
++        newlink = "../" * n + linkname[len(prefix):]
++        print 'relinking', file, "->", newlink
++        os.remove(file)
++        os.symlink(newlink, file)
++
++if __name__ == '__main__':
++    argc = len(sys.argv)
++    if argc == 2:
++        walktree(sys.argv[1], visitfile, 0, "/")
++    elif argc == 3:
++        walktree(sys.argv[1], visitfile, 0, sys.argv[2])
++    else:
++        print "rebase_liblinks.py <local root> [<old sysroot>]"
++
++
++
+--- /dev/null
++++ b/src/pi-util/rootgen.sh
+@@ -0,0 +1,73 @@
++#!/bin/bash -e
++
++SRC_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
++SCRIPT_DIR=$SRC_DIR/build/linux/sysroot_scripts
++BUILD_DIR=$SRC_DIR/out/sysroot-build/bullseye
++
++NOGEN=
++CLEAN=
++WANTXX=
++WANT32=
++WANT64=
++while [ "$1" != "" ] ; do
++  case $1 in
++    --nogen)
++      NOGEN=1
++      ;;
++    --clean)
++      CLEAN=1
++      ;;
++    --32)
++      WANT32=1
++      WANTXX=1
++      ;;
++    --64)
++      WANT64=1
++      WANTXX=1
++      ;;
++    *)
++      echo "Usage: $0 [--nogen][--clean][--32][--64]"
++      echo "  --nogen    Do not do sysroot generation"
++      echo "  --clean    Wipe existing sysroot caches"
++      echo "  --32       Only build 32-bit sysroot"
++      echo "  --64       Only build 64-bit sysroot"
++      exit 1
++      ;;
++  esac
++  shift
++done
++
++if [ ! $WANTXX ]; then
++  WANT32=1
++  WANT64=1
++fi
++
++if [ $CLEAN ]; then
++  rm -rf $SRC_DIR/build/linux/pios_*-sysroot
++  rm -f $SCRIPT_DIR/pios_keyring.gpg
++  rm -f $SCRIPT_DIR/generated_package_lists/pios-*
++  rm -rf $SRC_DIR/out/sysroot-build
++fi
++
++if [ ! $NOGEN ]; then
++  mkdir -p $BUILD_DIR
++  cd $SCRIPT_DIR
++  if [ ! -e pios_keyring.gpg ]; then
++    ./generate_keyring.sh --pios
++  fi
++  if [ $WANT32 ]; then
++    cd $SCRIPT_DIR
++    ./sysroot_creator.py --pios build armhf |& tee $BUILD_DIR/build-armhf.log
++    mkdir -pv ../pios_bullseye_armhf-sysroot
++    cd ../pios_bullseye_armhf-sysroot
++    bsdtar xf $BUILD_DIR/debian_pios-bullseye_armhf_sysroot.tar.xz
++  fi
++  if [ $WANT64 ]; then
++    cd $SCRIPT_DIR
++    ./sysroot_creator.py --pios build arm64 |& tee $BUILD_DIR/build-arm64.log
++    mkdir -pv ../pios_bullseye_arm64-sysroot
++    cd ../pios_bullseye_arm64-sysroot
++    bsdtar xf $BUILD_DIR/debian_pios-bullseye_arm64_sysroot.tar.xz
++  fi
++fi
++
+--- /dev/null
++++ b/src/pi-util/settag.py
+@@ -0,0 +1,78 @@
++#!/usr/bin/env python3
++
++import sys, os, subprocess
++
++# Local
++import pipaths
++import gitscan
++import dodiff
++import argparse
++
++vercommitstr = "Update pi patch version to "
++
++def set_version(verstr):
++    pathname = "components/version_info/pi_patch_version_values.h"
++
++    with open(pathname, "wt") as f:
++        f.write("// Pi patch version - generated by pi-util/settag.py\n")
++        f.write('#define PI_PATCH_VERSION_STRING "' + verstr + '"\n')
++
++    subprocess.check_call(["git", "add", pathname])
++    subprocess.check_call(["git", "commit", "-m", vercommitstr + verstr])
++
++def has_vercommit(verno):
++    log = subprocess.check_output(["git", "log", "--oneline", verno + "..HEAD"], text=True)
++    return vercommitstr in log
++
++def set_tag(verstr):
++    newtag = "pi/" + pipaths.src_commit + "/" + verstr
++    print("Setting tag: " + newtag)
++    if gitscan.gitscan(["tag", newtag], quiet=True) != 0:
++        print("Tagging failed")
++        sys.exit(1)
++
++def set_tag_and_version(verstr):
++    set_version(verstr)
++    set_tag(verstr)
++
++if __name__ == '__main__':
++    argp = argparse.ArgumentParser(
++        description="Sets version info in pi_patch_version_values & tags source tree with it")
++    argp.add_argument("-p", action='store_true', help="Generate patch file")
++    argp.add_argument("-f", action='store_true', help="Overwrite existing patch file (only relevent if -p)")
++    argp.add_argument("-n", action='store_true', help="Do not tag")
++    argp.add_argument("-s", action='store_true', help="Create zip of a patcset rather than a single blob patch")
++    argp.add_argument("verstr", help="Pi patch version string")
++    args = argp.parse_args()
++
++    patchname = "v" + pipaths.src_commit + "_" + args.verstr
++    patchpath = os.path.join("..", patchname + (".zip" if args.s else ".patch"))
++
++    if args.p and not args.f and os.path.exists(patchpath):
++        print("Patchfile", patchpath, "already exists")
++        sys.exit(1)
++
++    if not args.n:
++        print("-- Checking all committed")
++        if gitscan.gitscan(["diff", "--ignore-submodules", "--name-status", "--exit-code"], quiet=True) != 0:
++            print("Status check failed - commit everything and try again")
++            sys.exit(1)
++
++        if args.s and has_vercommit(pipaths.src_commit):
++            print("Previous version commit string unmerged - rebase and try again")
++            sys.exit(1)
++
++        print("-- Generating & committing pi_patch_version_values.h")
++        set_version(args.verstr)
++        print("-- Generating tags")
++        set_tag(args.verstr)
++
++    if args.p:
++        print("-- Generating patch file: ", patchpath)
++        if not args.s:
++            with open(patchpath, "wt") as f:
++                dodiff.doscan(f)
++        else:
++            dodiff.doscanset(patchname, True)
++
++
+--- /dev/null
++++ b/src/pi-util/syncroot.sh
+@@ -0,0 +1,70 @@
++set -e
++
++NEEDSVC=1
++TYPE=arm
++API=arm-linux-gnueabihf
++SYSROOT_DEFAULT=pios_buster_arm
++
++if [ "$1" == "--arm64" ]; then
++  shift
++  TYPE=arm64
++  NEEDSVC=
++  API=aarch64-linux-gnu
++  SYSROOT_DEFAULT=pios_buster_arm64
++fi
++
++if [ "$1" == "" ]; then
++  echo Usage: $0 [--arm64] \<src_dir\> [\<rootname\>]
++  echo src_dir is a source for rsync so may contain m/c name.
++  echo rootname will be set to \"pios_buster_arm\" if missing
++  echo e.g.: pi-util/syncroot.sh my-pi:
++  exit 1
++fi
++
++SYSROOT_NAME=$2
++if [ "$SYSROOT_NAME" == "" ]; then
++  SYSROOT_NAME=$SYSROOT_DEFAULT
++fi
++
++DST_ROOT=`gclient root`
++DST=$DST_ROOT/src/build/linux/$SYSROOT_NAME-sysroot
++SRC=$1
++
++if [ ! -d $DST_ROOT/src/build/linux ]; then
++  echo We don\'t appear to be in a Chrome build tree
++  exit 1
++fi
++
++echo Copying root for $TYPE
++echo Sync src:  $SRC
++echo Sync dest: $DST
++
++mkdir -p $DST/lib
++mkdir -p $DST/opt/vc/include
++mkdir -p $DST/usr/lib/pkgconfig
++mkdir -p $DST/usr/bin
++mkdir -p $DST/usr/share
++
++rsync -rl $SRC/lib $DST
++if [ $NEEDSVC ]; then
++  #### MUST NOT include /opt/vc/include/*GL*
++  # Creates conflicts with GL includes inside Chrome
++  rsync -rl $SRC/opt/vc/lib $DST/opt/vc
++  rsync -rl $SRC/opt/vc/include/interface $DST/opt/vc/include
++fi
++rsync -rl --exclude cups/backend $SRC/usr/lib $DST/usr
++rsync -rl $SRC/usr/include $DST/usr
++rsync -rl $SRC/usr/share/pkgconfig $DST/usr/share
++rsync -rl $SRC/usr/share/xcb $DST/usr/share
++rsync -rl $SRC/usr/bin/cups-config $DST/usr/bin
++
++# Fix up pipewire issue
++if [ -e $DST/usr/include/pipewire/utils.h ]; then
++  sed 's/struct spa_pod \*c/void \* c/' < $DST/usr/include/pipewire/utils.h > u.h
++  mv u.h $DST/usr/include/pipewire/utils.h
++fi
++
++cd $DST/usr/lib/pkgconfig
++ln -sf ../$API/pkgconfig/* .
++cd ../../../../../..
++pi-util/rebase_liblinks.py $DST

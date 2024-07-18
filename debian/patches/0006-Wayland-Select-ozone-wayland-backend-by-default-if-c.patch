@@ -1,0 +1,26 @@
+From 383370258babc33d839b34bffb8df5ffd89885cb Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 20 May 2024 12:00:30 +0100
+Subject: [PATCH 06/17] Wayland: Select ozone wayland backend by default if
+ compiled in
+
+---
+ ui/linux/display_server_utils.cc | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/src/ui/linux/display_server_utils.cc
++++ b/src/ui/linux/display_server_utils.cc
+@@ -121,6 +121,13 @@ void SetOzonePlatformForLinuxIfNeeded(ba
+       command_line.AppendSwitchASCII(switches::kOzonePlatform,
+                                      MaybeFixPlatformName(ozone_platform_hint));
+     }
++#if BUILDFLAG(IS_OZONE_WAYLAND)
++    // Pick wayland as hint if we have it
++    else {
++      command_line.AppendSwitchASCII(switches::kOzonePlatform,
++                                     MaybeFixPlatformName(kPlatformWayland));
++    }
++#endif
+   }
+ }
+ 

@@ -1,3 +1,11 @@
+chromium-browser (126.0.6478.164-rpt1) bullseye; urgency=medium
+
+  * Switch to split patches
+  * Update to 126.0.6478.164
+  * Patch set 3.68
+
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 04 Jul 2024 17:42:51 +0100
+
 chromium-browser (125.0.6422.133-rpt1) bookworm; urgency=medium
 
   * Update to 125.0.6422.133

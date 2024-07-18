@@ -1,0 +1,25 @@
+From 33dcce7305898cf26839b15ababc1fe730b79b8f Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 17 Jun 2024 13:36:06 +0100
+Subject: [PATCH 16/17] gbm_pixmap: Avoid spamming BO create failures
+
+---
+ ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/src/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
++++ b/src/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
+@@ -79,6 +79,13 @@ bool GbmPixmapWayland::InitializeBuffer(
+   }
+ 
+   if (!gbm_bo_) {
++    // Restrict logging
++    static gfx::BufferFormat last_fail_format;
++
++    if (format == last_fail_format)
++      return false;
++    last_fail_format = format;
++
+     LOG(ERROR) << "Cannot create bo with format= "
+                << gfx::BufferFormatToString(format)
+                << " and usage=" << gfx::BufferUsageToString(usage);

@@ -1,0 +1,67 @@
+From e5937881e6e07cbb9d5f9a23afb3a7ff76603225 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 20 May 2024 17:36:07 +0100
+Subject: [PATCH 10/17] Video decode: Add BGR4 format (used by Pi H264 V4L2)
+
+---
+ media/gpu/chromeos/fourcc.cc                       | 4 ++++
+ media/gpu/chromeos/fourcc.h                        | 3 +++
+ media/mojo/services/gpu_mojo_media_client_linux.cc | 1 +
+ 3 files changed, 8 insertions(+)
+
+--- a/src/media/gpu/chromeos/fourcc.cc
++++ b/src/media/gpu/chromeos/fourcc.cc
+@@ -34,6 +34,7 @@ std::optional<Fourcc> Fourcc::FromUint32
+     case MM21:
+     case P010:
+     case MT2T:
++    case BGR4:
+     case AR24:
+     case Q08C:
+     case Q10C:
+@@ -188,6 +189,7 @@ VideoPixelFormat Fourcc::ToVideoPixelFor
+       return PIXEL_FORMAT_P016LE;
+     case MT2T:
+       return PIXEL_FORMAT_P016LE;
++    case BGR4:
+     case AR24:
+       return PIXEL_FORMAT_ARGB;
+     // V4L2_PIX_FMT_QC08C is a proprietary Qualcomm compressed format that can
+@@ -292,6 +294,7 @@ std::optional<Fourcc> Fourcc::ToSinglePl
+     case P010:
+     case MM21:
+     case MT2T:
++    case BGR4:
+     case AR24:
+       return Fourcc(value_);
+     case YM12:
+@@ -327,6 +330,7 @@ bool Fourcc::IsMultiPlanar() const {
+     case YU16:
+     case P010:
+     case MT2T:
++    case BGR4:
+     case AR24:
+     case Q08C:
+     case Q10C:
+--- a/src/media/gpu/chromeos/fourcc.h
++++ b/src/media/gpu/chromeos/fourcc.h
+@@ -100,6 +100,9 @@ class MEDIA_GPU_EXPORT Fourcc {
+ 
+     // Single plane 8-bit little-endian ARGB (bytes in reverse B-G-R-A order).
+     AR24 = ComposeFourcc('A', 'R', '2', '4'),
++    // Single plane 8-bit little-endian XRGB (bytes in reverse B-G-R-X order).
++    BGR4 = ComposeFourcc('B', 'G', 'R', '4'),
++
+     // V4L2 proprietary format.
+     // https://linuxtv.org/downloads/v4l-dvb-apis-new/userspace-api/v4l/pixfmt-reserved.html
+     // Opaque format that can only be scanned out as an overlay or composited by
+--- a/src/media/mojo/services/gpu_mojo_media_client_linux.cc
++++ b/src/media/mojo/services/gpu_mojo_media_client_linux.cc
+@@ -54,6 +54,7 @@ std::vector<Fourcc> GetPreferredRenderab
+ 
+   // Support 1-copy argb textures.
+   renderable_fourccs.emplace_back(Fourcc::AR24);
++  renderable_fourccs.emplace_back(Fourcc::BGR4);
+ 
+   return renderable_fourccs;
+ }

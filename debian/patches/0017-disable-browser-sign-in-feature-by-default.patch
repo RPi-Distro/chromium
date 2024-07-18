@@ -21,12 +21,12 @@ Subject: [PATCH 17/22] disable browser sign in feature by default
  // static
 --- a/src/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/src/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -227,7 +227,7 @@ void PrimaryAccountManager::RegisterProf
+@@ -247,7 +247,7 @@ void PrimaryAccountManager::RegisterProf
        prefs::kGoogleServicesSyncingUsernameMigratedToSignedIn, std::string());
    registry->RegisterBooleanPref(prefs::kAutologinEnabled, true);
    registry->RegisterListPref(prefs::kReverseAutologinRejectedEmailList);
 -  registry->RegisterBooleanPref(prefs::kSigninAllowed, true);
 +  registry->RegisterBooleanPref(prefs::kSigninAllowed, false);
    registry->RegisterBooleanPref(prefs::kSignedInWithCredentialProvider, false);
-   registry->RegisterBooleanPref(prefs::kExplicitBrowserSignin, false);
- }
+   registry->RegisterBooleanPref(kExplicitBrowserSigninWithoutFeatureEnabled,
+                                 false);

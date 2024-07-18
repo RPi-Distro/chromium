@@ -1,0 +1,27 @@
+From 10bc007ac5db94377ce2ebd797e9d4fe36743cf9 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Thu, 23 May 2024 18:58:25 +0100
+Subject: [PATCH 14/17] v4l2decode: Restrict instances to 2
+
+May need to restrict to 1 but 2 is waht we were using for the VDA
+version and that seemed to work. 2 Allows some overlap between one
+decode starting and the previous shutting down.
+---
+ media/gpu/v4l2/v4l2_video_decoder.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/src/media/gpu/v4l2/v4l2_video_decoder.h
++++ b/src/media/gpu/v4l2/v4l2_video_decoder.h
+@@ -186,7 +186,12 @@ class MEDIA_GPU_EXPORT V4L2VideoDecoder
+   // decoder instances for now. |num_instances_| tracks the number of
+   // simultaneous decoders. |can_use_decoder_| is true iff we haven't reached
+   // the maximum number of instances at the time this decoder is created.
++#if BUILDFLAG(USE_V4L2_CODEC_RPI)
++  // Pi can run out of firmware memory very quickly
++  static constexpr int kMaxNumOfInstances = 2;
++#else
+   static constexpr int kMaxNumOfInstances = 32;
++#endif
+   static base::AtomicRefCount num_instances_;
+   bool can_use_decoder_ = false;
+ 

@@ -1,0 +1,229 @@
+From 659f93eee21422348f7845387b05b68f0d72f118 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Fri, 17 May 2024 12:08:08 +0100
+Subject: [PATCH 02/17] sysroot_scripts: Use PiOS pkgs where they differ from
+ the default pkgs
+
+Add PiOS repos to the list of repos that chrome uses.
+Also add the ability to unpack .gz compressed packages as that is what
+PiOS repos use.
+---
+ build/.gitignore                              |  5 ++
+ .../linux/sysroot_scripts/generate_keyring.sh | 16 +++-
+ .../linux/sysroot_scripts/sysroot_creator.py  | 76 ++++++++++++++-----
+ 3 files changed, 78 insertions(+), 19 deletions(-)
+
+--- a/src/build/.gitignore
++++ b/src/build/.gitignore
+@@ -23,6 +23,11 @@ ciopfs
+ /x64/
+ /linux/debian_*-sysroot/
+ /linux/ubuntu_*-sysroot/
++# We've built anything with pios in the name
++/linux/pios_*-sysroot/
++/linux/sysroot_scripts/*pios*
++/linux/sysroot_scripts/generated_package_lists/*pios*
++
+ /ios_files
+ /mac_files
+ 
+--- a/src/build/linux/sysroot_scripts/generate_keyring.sh
++++ b/src/build/linux/sysroot_scripts/generate_keyring.sh
+@@ -27,5 +27,19 @@ KEYS=(
+     "4DFAB270CAA96DFA"
+ )
+ 
++KEYFILE=keyring.gpg
++
++if [ $# -ge 1 ] && [ "$1" == "--pios" ]; then
++    KEYS+=(
++        # Raspbian
++        "A0DA38D0D76E8B5D638872819165938D90FDDD2E"
++        # Raspberry Pi OS
++        "CF8A1AF502A2AA2D763BAE7E82B129927FA3303E"
++    )
++    KEYFILE=pios_keyring.gpg
++    shift
++fi
++echo "Build keyring: ${SCRIPT_DIR}/${KEYFILE}"
++
+ gpg --keyserver keyserver.ubuntu.com --recv-keys ${KEYS[@]}
+-gpg --output "${SCRIPT_DIR}/keyring.gpg" --export ${KEYS[@]}
++gpg --output "${SCRIPT_DIR}/${KEYFILE}" --export ${KEYS[@]}
+--- a/src/build/linux/sysroot_scripts/sysroot_creator.py
++++ b/src/build/linux/sysroot_scripts/sysroot_creator.py
+@@ -7,6 +7,7 @@ This script is used to build Debian sysr
+ """
+ 
+ import argparse
++import gzip
+ import hashlib
+ import lzma
+ import os
+@@ -570,6 +571,7 @@ DEBIAN_PACKAGES_ARCH = {
+         "libdrm-tegra0",
+         "libubsan1",
+         "valgrind",
++        "libraspberrypi0",
+     ],
+     "arm64": [
+         "libasan6",
+@@ -708,7 +710,7 @@ def create_tarball(install_root: str, ar
+     command = [
+         "tar",
+         "-I",
+-        "xz -z9 -T0 --lzma2='dict=256MiB'",
++        "xz -z9 -T0 --lzma2='dict=256MiB' --memlimit-compress=50%",
+         "-cf",
+         tarball_path,
+         "-C",
+@@ -719,17 +721,19 @@ def create_tarball(install_root: str, ar
+ 
+ 
+ def generate_package_list_dist_repo(arch: str, dist: str,
+-                                    repo_name: str) -> list[dict[str, str]]:
+-    repo_basedir = f"{ARCHIVE_URL}/dists/{dist}"
+-    package_list = f"{BUILD_DIR}/Packages.{dist}_{repo_name}_{arch}"
+-    package_list = f"{package_list}.{PACKAGES_EXT}"
+-    package_file_arch = f"{repo_name}/binary-{arch}/Packages.{PACKAGES_EXT}"
++                                    repo_name: str, repo_src: str, repo_pre: str, repo_ext: str) -> list:
++    repo_basedir = f"{repo_src}/dists/{dist}"
++    package_list = f"{BUILD_DIR}/Packages.{repo_pre}{dist}_{repo_name}_{arch}"
++    package_list = f"{package_list}.{repo_ext}"
++    package_file_arch = f"{repo_name}/binary-{arch}/Packages.{repo_ext}"
+     package_list_arch = f"{repo_basedir}/{package_file_arch}"
+ 
+     download_or_copy_non_unique_filename(package_list_arch, package_list)
+-    verify_package_listing(package_file_arch, package_list, dist)
++    verify_package_listing(package_file_arch, package_list, dist, repo_basedir, repo_pre)
+ 
+-    with lzma.open(package_list, "rt") as src:
++    algo = lzma if repo_ext != "gz" else gzip
++
++    with algo.open(package_list, "rt") as src:
+         return [
+             dict(
+                 line.split(": ", 1) for line in package_meta.splitlines()
+@@ -738,11 +742,17 @@ def generate_package_list_dist_repo(arch
+         ]
+ 
+ 
+-def generate_package_list(arch: str) -> dict[str, str]:
++def generate_package_list(arch: str) -> dict:
+     package_meta = {}
+-    for dist, repos in APT_SOURCES_LIST:
++    for a in APT_SOURCES_LIST:
++        dist = a[0]
++        repos = a[1]
++        repo_src = ARCHIVE_URL if len(a) <= 2 else a[2]
++        repo_pre = "" if len(a) <= 3 else a[3] + "_"
++        repo_ext = PACKAGES_EXT if len(a) <= 4 else a[4]
+         for repo_name in repos:
+-            for meta in generate_package_list_dist_repo(arch, dist, repo_name):
++            for meta in generate_package_list_dist_repo(arch, dist, repo_name, repo_src, repo_pre, repo_ext):
++                meta["URL"] = repo_src
+                 package_meta[meta["Package"]] = meta
+ 
+     # Read the input file and create a dictionary mapping package names to URLs
+@@ -753,7 +763,7 @@ def generate_package_list(arch: str) ->
+         package = meta["Package"]
+         if package in missing:
+             missing.remove(package)
+-            url = ARCHIVE_URL + meta["Filename"]
++            url = meta["URL"] + meta["Filename"]
+             package_dict[url] = meta["SHA256"]
+     if missing:
+         raise Exception(f"Missing packages: {', '.join(missing)}")
+@@ -847,7 +857,7 @@ def replace_in_file(file_path: str, sear
+ 
+ 
+ def install_into_sysroot(build_dir: str, install_root: str,
+-                         packages: dict[str, str]) -> None:
++                         packages: dict) -> None:
+     """
+     Installs libraries and headers into the sysroot environment.
+     """
+@@ -952,6 +962,7 @@ def verify_library_deps(install_root: st
+     # Get all shared libraries and their dependencies.
+     shared_libs = set()
+     needed_libs = set()
++    where = dict()
+     for root, _, files in os.walk(install_root):
+         for file in files:
+             if ".so" not in file:
+@@ -971,10 +982,17 @@ def verify_library_deps(install_root: st
+             output = subprocess.check_output(cmd_readelf).decode()
+             for line in output.split("\n"):
+                 if "NEEDED" in line:
+-                    needed_libs.add(line.split("[")[1].split("]")[0])
++                    needed_lib = line.split("[")[1].split("]")[0]
++                    needed_libs.add(needed_lib)
++                    if needed_lib in where:
++                        where[needed_lib].append(path)
++                    else:
++                        where[needed_lib] = [path]
+ 
+     missing_libs = needed_libs - shared_libs
+     if missing_libs:
++        for p in missing_libs:
++            print(p, " is needed by ", where[p])
+         raise Exception(f"Missing libraries: {missing_libs}")
+ 
+ 
+@@ -1002,17 +1020,16 @@ def upload_sysroot(arch: str) -> str:
+ 
+ 
+ def verify_package_listing(file_path: str, output_file: str,
+-                           dist: str) -> None:
++                           dist: str, repo_basedir:str, repo_pre: str) -> None:
+     """
+     Verifies the downloaded Packages.xz file against its checksum and GPG keys.
+     """
+     # Paths for Release and Release.gpg files
+-    repo_basedir = f"{ARCHIVE_URL}/dists/{dist}"
+     release_list = f"{repo_basedir}/{RELEASE_FILE}"
+     release_list_gpg = f"{repo_basedir}/{RELEASE_FILE_GPG}"
+ 
+-    release_file = os.path.join(BUILD_DIR, f"{dist}-{RELEASE_FILE}")
+-    release_file_gpg = os.path.join(BUILD_DIR, f"{dist}-{RELEASE_FILE_GPG}")
++    release_file = os.path.join(BUILD_DIR, f"{repo_pre}{dist}-{RELEASE_FILE}")
++    release_file_gpg = os.path.join(BUILD_DIR, f"{repo_pre}{dist}-{RELEASE_FILE_GPG}")
+ 
+     if not os.path.exists(KEYRING_FILE):
+         raise Exception(f"KEYRING_FILE not found: {KEYRING_FILE}")
+@@ -1045,12 +1062,35 @@ def verify_package_listing(file_path: st
+ 
+ 
+ def main():
++    global APT_SOURCES_LIST
++    global RELEASE
++    global KEYRING_FILE
++
+     parser = argparse.ArgumentParser(
+         description="Build and upload Debian sysroot images for Chromium.")
+     parser.add_argument("command", choices=["build", "upload"])
+     parser.add_argument("architecture", choices=list(TRIPLES))
++    parser.add_argument("--pios", action="store_true")
+     args = parser.parse_args()
+ 
++    if args.pios:
++        # Interleave our repos with those in the starting list
++        APT_PIOS_SOURCES_LIST = [
++            ("bookworm", ["main"], "http://archive.raspberrypi.org/debian/", "pios", "gz"),
++            ("bullseye", ["main"], "http://archive.raspberrypi.org/debian/", "pios", "gz")]
++        newlist = []
++        curdist = "xxx"
++        for a in APT_SOURCES_LIST:
++            if not a[0].startswith(curdist):
++                newlist += [p for p in APT_PIOS_SOURCES_LIST if p[0].startswith(curdist)]
++                curdist = a[0].partition('-')[0]
++            newlist += [a]
++        newlist += [p for p in APT_PIOS_SOURCES_LIST if p[0].startswith(curdist)]
++        APT_SOURCES_LIST = newlist
++
++        RELEASE = "pios-" + RELEASE
++        KEYRING_FILE = os.path.join(SCRIPT_DIR, "pios_keyring.gpg")
++
+     sanity_check()
+ 
+     if args.command == "build":

@@ -1,0 +1,33 @@
+From 15c4cd1e34bc7b66686ace530809c2b05f409b07 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 20 May 2024 17:29:18 +0100
+Subject: [PATCH 09/17] Build: add use_v4l2_codec_rpi gn option
+
+---
+ media/gpu/BUILD.gn | 1 +
+ media/gpu/args.gni | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+--- a/src/media/gpu/BUILD.gn
++++ b/src/media/gpu/BUILD.gn
+@@ -21,6 +21,7 @@ buildflag_header("buildflags") {
+     "USE_VAAPI=$use_vaapi",
+     "USE_VAAPI_IMAGE_CODECS=$use_vaapi_image_codecs",
+     "USE_V4L2_CODEC=$use_v4l2_codec",
++    "USE_V4L2_CODEC_RPI=$use_v4l2_codec_rpi",
+     "USE_LIBV4L2=$use_v4lplugin",
+   ]
+ }
+--- a/src/media/gpu/args.gni
++++ b/src/media/gpu/args.gni
+@@ -14,6 +14,10 @@ declare_args() {
+   use_v4l2_codec =
+       is_chromeos_lacros && (target_cpu == "arm" || target_cpu == "arm64")
+ 
++  # Indicates if this is V4L2 on RPi.  Only compiles stateful V4L2 code
++  # and removes all legacy codecs
++  use_v4l2_codec_rpi = false
++
+   # Indicates if VA-API-based hardware acceleration is to be used. This
+   # is typically the case on x86-based ChromeOS devices.
+   # VA-API should also be compiled by default on x11/wayland linux devices

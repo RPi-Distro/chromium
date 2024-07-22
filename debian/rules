@@ -26,6 +26,11 @@ export LDFLAGS=$(shell dpkg-buildflags --get LDFLAGS) -stdlib=libc++ -Wl,-rpath,
 # more verbose linker output
 export LDFLAGS+=-Wl,--stats
 
+# Our builder has a *lot* of cores. lld's thread-parallelism gets a bit
+# over-excited and exceeds the per-process virtual memory limit on armhf.
+# Somewhere around 10-20 should work but use 1 for now, it isn't too slow.
+export LDFLAGS+=-Wl,--threads=1
+
 # extra flags to reduce warnings that aren't very useful
 export CXXFLAGS+=-Wno-conversion \
                  -Wno-unused-function \
@@ -94,7 +99,6 @@ defines+=is_debug=false \
          build_dawn_tests=false \
          enable_reading_list=false \
          enable_iterator_debugging=false \
-         enable_hangout_services_extension=false \
          angle_has_histograms=false \
          angle_build_tests=false \
          build_angle_perftests=false \
@@ -123,6 +127,20 @@ defines+=use_gio=true \
          proprietary_codecs=true \
          ffmpeg_branding=\"Chrome\" \
          disable_fieldtrial_testing_config=true \
+
+
+# Extra Pi customisations:
+# Dawn seems to really want Vulkan - Chrome doesn't like our Vulkan
+# this causes a hiccup about a min after startup.
+# Disabling Dawn seems to create no penalty but this probably won't
+# be true indefinitely
+defines+=use_dawn=false skia_use_dawn=false
+# Enables screen sharing in hangouts
+defines+=enable_hangout_services_extension=true
+# We don't have the required GL extensions to enable GL passthrough so must
+# enable the validating decode otherwise we get a fatal GPU error
+defines+=enable_validating_command_decoder=true
+
 
 # handle parallel build options
 njobs=1

@@ -1,3 +1,38 @@
+chromium (127.0.6533.72-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+    - CVE-2024-6988: Use after free in Downloads. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+    - CVE-2024-6989: Use after free in Loader. Reported by Anonymous.
+    - CVE-2024-6991: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-6992: Out of bounds memory access in ANGLE.
+      Reported by Xiantong Hou of Wuheng Lab and Pisanbao.
+    - CVE-2024-6993: Inappropriate implementation in Canvas.
+      Reported by Anonymous.
+    - CVE-2024-6994: Heap buffer overflow in Layout.
+      Reported by Huang Xilin of Ant Group Light-Year Security Lab.
+    - CVE-2024-6995: Inappropriate implementation in Fullscreen.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-6996: Race in Frames.
+      Reported by Louis Jannett (Ruhr University Bochum).
+    - CVE-2024-6997: Use after free in Tabs.
+      Reported by Sven Dysthe (@svn-dys).
+    - CVE-2024-6998: Use after free in User Education.
+      Reported by Sven Dysthe (@svn-dys).
+    - CVE-2024-6999: Inappropriate implementation in FedCM.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-7000: Use after free in CSS. Reported by Anonymous.
+    - CVE-2024-7001: Inappropriate implementation in HTML.
+      Reported by Jake Archibald.
+    - CVE-2024-7003: Inappropriate implementation in FedCM.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-7004: Insufficient validation of untrusted input in Safe
+      Browsing. Reported by Anonymous.
+    - CVE-2024-7005: Insufficient validation of untrusted input in Safe
+      Browsing. Reported by Umar Farooq.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
+
 chromium (126.0.6478.182-1) unstable; urgency=high
 
   * New upstream security release.

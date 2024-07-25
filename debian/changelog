@@ -36,6 +36,19 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     release). Instead, use d/scripts/get-exludes.pl and tar's
     --exclude-from to drastically speed things up (total run now takes
     8 mins).
+  * d/patches:
+    - upstream/tabstrip-include.patch: drop, merged upstream.
+    - upstream/quiche-deque.patch: drop, merged upstream.
+    - upstream/gpu-header.patch: drop, merged upstream.
+    - upstream/blink-header.patch: drop, merged upstream.
+    - upstream/blink-header2.patch: drop, merged upstream.
+    - upstream/blink-header3.patch: drop, merged upstream.
+    - upstream/realtime-reporting.patch: drop, merged upstream.
+    - upstream/urlvisit-header.patch: drop, merged upstream.
+    - upstream/accessibility-format.patch: drop, merged upstream.
+    - upstream/observer.patch: drop, merged upstream.
+    - bookworm/clang16.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: refresh.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
 

@@ -1,5 +1,6 @@
 chromium (127.0.6533.72-1) UNRELEASED; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
     - CVE-2024-6988: Use after free in Downloads. Reported by
       lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
@@ -53,6 +54,7 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - upstream/accessibility-format.patch: drop, merged upstream.
     - upstream/observer.patch: drop, merged upstream.
     - bookworm/clang16.patch: refresh.
+    - bookworm/rust-downgrade-osstr-users.patch: refresh w/ minor changes.
     - ungoogled/disable-privacy-sandbox.patch: refresh.
     - upstream/crabbyav1f.patch: add build fix pulled from upstream.
     - upstream/lock-impl.patch: add build fix pulled from upstream.

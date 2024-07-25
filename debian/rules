@@ -205,17 +205,15 @@ options=--sort=name --owner=0 --group=0 --numeric-owner --mtime="@$$(stat --form
 
 get-orig-source:
 	wget -nv --show-progress -c $(url)/$(tarball) -O ../$(tarball)
-	cp /usr/share/perl5/Devscripts/MkOrigtargz.pm debian/scripts/mk-origtargz
-	patch -p1 < debian/scripts/mk-origtargz.patch
 	@date +%s > $(seconds)
-	perl debian/scripts/mk-origtargz ../$(tarball) > $(removed)
+	perl debian/scripts/get-excludes.pl "`tar tf ../$(tarball) | head -n1`" > $(debvers).excludes
 	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
 	@echo
 	test ! -e $(extract) || rm -rf $(extract)
-	tar xf ../$(tarball)
+	tar --exclude-from=$(debvers).excludes -xf ../$(tarball)
 	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
 	@echo
-	while read line; do rm -rf $$line; done < $(removed)
+	rm -f $(debvers).excludes
 	cd $(extract) && ../debian/scripts/check-upstream
 	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
 	@echo

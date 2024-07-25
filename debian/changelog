@@ -30,6 +30,12 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
       Browsing. Reported by Anonymous.
     - CVE-2024-7005: Insufficient validation of untrusted input in Safe
       Browsing. Reported by Umar Farooq.
+  * d/copyright: delete new rust, cargo, llvm, and node binaries.
+  * d/rules: rework get-orig-source to not use mk-origtargz, which is
+    incredibly slow (total run 45 mins for the current 6.2G upstream
+    release). Instead, use d/scripts/get-exludes.pl and tar's
+    --exclude-from to drastically speed things up (total run now takes
+    8 mins).
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
 

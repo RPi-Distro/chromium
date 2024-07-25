@@ -57,8 +57,11 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - upstream/crabbyav1f.patch: add build fix pulled from upstream.
     - upstream/lock-impl.patch: add build fix pulled from upstream.
     - upstream/containers-header.patch: add build fix pulled from upstream.
+    - upstream/paint-layer-header.patch: add build fix pulled from upstream
     - fixes/bindgen.patch: work around bindgen-related things (hopefully
       correctly?)
+    - fixes/webui-dep.patch: add missing mojo-related header dependency.
+    - fixes/chrome-cart-dep.patch: add another mojo-related header dep fix.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
 

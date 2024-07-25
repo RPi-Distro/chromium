@@ -1,0 +1,17 @@
+In file included from ../../chrome/browser/ui/views/side_panel/customize_chrome/customize_chrome_side_panel_controller.cc:19:
+../../chrome/browser/ui/webui/side_panel/customize_chrome/customize_chrome_ui.h:12:10: fatal error: 'chrome/browser/cart/chrome_cart.mojom.h' file not found
+#include "chrome/browser/cart/chrome_cart.mojom.h"
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+
+
+--- a/chrome/browser/ui/webui/side_panel/customize_chrome/BUILD.gn
++++ b/chrome/browser/ui/webui/side_panel/customize_chrome/BUILD.gn
+@@ -14,6 +14,7 @@ mojom("mojo_bindings") {
+   ]
+   webui_module_path = "/"
+   public_deps = [
++    "//chrome/browser/cart:mojo_bindings",
+     "//mojo/public/mojom/base",
+     "//skia/public/mojom",
+     "//url/mojom:url_mojom_gurl",

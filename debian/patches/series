@@ -23,6 +23,8 @@ fixes/bad-font-gc11.patch
 fixes/bad-font-gc2.patch
 fixes/bad-font-gc3.patch
 fixes/bindgen.patch
+fixes/webui-dep.patch
+fixes/chrome-cart-dep.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
@@ -30,6 +32,7 @@ upstream/ruy-include.patch
 upstream/crabbyav1f.patch
 upstream/lock-impl.patch
 upstream/containers-header.patch
+upstream/paint-layer-header.patch
 
 disable/tests.patch
 disable/unrar.patch

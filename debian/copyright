@@ -2,7 +2,7 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0
 Source: http://www.chromium.org/Home
 Upstream-Name: chromium
 Files-Excluded:
- .clang-format
+ *.clang-format
  *__pycache__
  *.mk
  *.so
@@ -178,7 +178,7 @@ Files-Excluded:
  third_party/devtools-frontend/src/third_party/esbuild/esbuild
  third_party/nearby/src/third_party
  third_party/updater
- third_party/zstd/src/build/single_file_libs/examples
+ third_party/zstd
  third_party/dawn/third_party/khronos/OpenGL-Registry/ABI/new.gif
  third_party/dawn/third_party/khronos/EGL-Registry/sdk
 

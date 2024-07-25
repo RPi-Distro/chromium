@@ -18,6 +18,7 @@ Build-Depends:
  clang-format-16,
  libclang-rt-16-dev,
  rustc (>= 1.70.0+dfsg1-5),
+ bindgen,
  python3,
  pkg-config,
  ninja-build,
@@ -98,6 +99,7 @@ Build-Depends:
  libevdev-dev,
  libgcrypt20-dev,
  libcurl4-openssl-dev,
+ libzstd-dev,
  fonts-ipafont-gothic,
  fonts-ipafont-mincho,
 

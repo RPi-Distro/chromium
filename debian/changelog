@@ -30,8 +30,13 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
       Browsing. Reported by Anonymous.
     - CVE-2024-7005: Insufficient validation of untrusted input in Safe
       Browsing. Reported by Umar Farooq.
-  * d/copyright: delete new rust, cargo, llvm, and node binaries.
-  * d/rules: rework get-orig-source to not use mk-origtargz, which is
+  * d/copyright:
+    - delete new rust, cargo, llvm, and node binaries.
+    - delete third_party/zstd so we can link against system zstd.
+  * d/control: build-dep against libzstd-dev and bindgen.
+  * d/rules:
+    - set rust_bindgen_root.
+    - rework get-orig-source to not use mk-origtargz, which is
     incredibly slow (total run 45 mins for the current 6.2G upstream
     release). Instead, use d/scripts/get-exludes.pl and tar's
     --exclude-from to drastically speed things up (total run now takes
@@ -49,6 +54,7 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - upstream/observer.patch: drop, merged upstream.
     - bookworm/clang16.patch: refresh.
     - ungoogled/disable-privacy-sandbox.patch: refresh.
+    - upstream/crabbyav1f.patch: add build fix pulled from upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
 

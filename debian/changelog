@@ -64,6 +64,8 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
       correctly?)
     - fixes/webui-dep.patch: add missing mojo-related header dependency.
     - fixes/chrome-cart-dep.patch: add another mojo-related header dep fix.
+    - fixes/fixes/memory-allocator-dcheck-assert-fix.patch: Fix assert on
+      64k page systems such as aarch64 and ppc64el
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
 

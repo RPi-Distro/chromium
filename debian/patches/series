@@ -25,6 +25,7 @@ fixes/bad-font-gc3.patch
 fixes/bindgen.patch
 fixes/webui-dep.patch
 fixes/chrome-cart-dep.patch
+fixes/memory-allocator-dcheck-assert-fix.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch

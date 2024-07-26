@@ -1,10 +1,12 @@
---- a/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
-+++ b/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
+Index: chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
+===================================================================
+--- chromium-127.0.6533.72.orig/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
++++ chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
 @@ -176,7 +176,11 @@ SystemPageBaseMask() {
    return ~SystemPageOffsetMask();
  }
  
-+#if defined(ARCH_CPU_PPC64)
++#if PA_BUILDFLAG(PA_ARCH_CPU_PPC64_FAMILY)
 +constexpr size_t kPageMetadataShift = 6;  // 64 bytes per partition page.
 +#else
  constexpr size_t kPageMetadataShift = 5;  // 32 bytes per partition page.
@@ -12,13 +14,15 @@
  constexpr size_t kPageMetadataSize = 1 << kPageMetadataShift;
  
  }  // namespace internal
---- a/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
-+++ b/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
-@@ -86,7 +86,11 @@ struct SlotSpanMetadata {
+Index: chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
+===================================================================
+--- chromium-127.0.6533.72.orig/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
++++ chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/partition_page.h
+@@ -87,7 +87,11 @@ struct SlotSpanMetadata {
  
    // CHECK()ed in AllocNewSlotSpan().
    // The maximum number of bits needed to cover all currently supported OSes.
-+#if defined(ARCH_CPU_PPC64)
++#if PA_BUILDFLAG(PA_ARCH_CPU_PPC64_FAMILY)
 +  static constexpr size_t kMaxSlotsPerSlotSpanBits = 15;
 +#else
    static constexpr size_t kMaxSlotsPerSlotSpanBits = 13;
@@ -26,11 +30,11 @@
    static_assert(kMaxSlotsPerSlotSpan < (1 << kMaxSlotsPerSlotSpanBits), "");
  
    // |marked_full| isn't equivalent to being full. Slot span is marked as full
-@@ -100,7 +104,11 @@ struct SlotSpanMetadata {
+@@ -101,7 +105,11 @@ struct SlotSpanMetadata {
   private:
    const uint32_t can_store_raw_size_ : 1;
    uint32_t freelist_is_sorted_ : 1;
-+#if defined(ARCH_CPU_PPC64)
++#if PA_BUILDFLAG(PA_ARCH_CPU_PPC64_FAMILY)
 +  uint32_t unused1_ : (64 - 1 - 2 * kMaxSlotsPerSlotSpanBits - 1 - 1);
 +#else
    uint32_t unused1_ : (32 - 1 - 2 * kMaxSlotsPerSlotSpanBits - 1 - 1);
@@ -38,16 +42,15 @@
    // If |in_empty_cache_|==1, |empty_cache_index| is undefined and mustn't be
    // used.
    uint16_t in_empty_cache_ : 1;
---- a/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
-+++ b/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
-@@ -21,6 +21,11 @@ static constexpr size_t kMaxSlotsPerSlot
+Index: chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
+===================================================================
+--- chromium-127.0.6533.72.orig/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
++++ chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
+@@ -20,7 +20,7 @@
+ // System page size can be 4, 16, or 64 kiB on Linux on arm64. 64 kiB is
  // currently (kMaxSlotsPerSlotSpanBits == 13) not supported by the code,
  // so we use the 16 kiB maximum (64 kiB will crash).
- static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 14) / kSmallestBucket;
-+#elif BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_PPC64)
-+// System page size is not a constant on OpenPOWER systems, but is either 4kiB
-+// or 64kiB (1 << 12 or 1 << 16)
-+// And PartitionPageSize() is 4 times the OS page size.
+-static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 14) / kSmallestBucket;
 +static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 16) / kSmallestBucket;
  #else
  // A slot span can "span" multiple PartitionPages, but then its slot size is

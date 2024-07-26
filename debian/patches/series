@@ -119,7 +119,6 @@ ppc64le/third_party/0004-third_party-libvpx-work-around-ambiguous-vsx.patch
 # Enable VSX acceleration in Skia.  Requires POWER8 or higher.
 ppc64le/third_party/skia-vsx-instructions.patch
 
-ppc64le/ffmpeg/0001-Add-support-for-ppc64.patch
 ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch
 ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch
 ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch

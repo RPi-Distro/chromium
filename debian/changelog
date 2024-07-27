@@ -64,6 +64,7 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
       correctly?)
     - fixes/webui-dep.patch: add missing mojo-related header dependency.
     - fixes/chrome-cart-dep.patch: add another mojo-related header dep fix.
+    - fixes/font-key-gc.patch: work around buggy FontCacheKey handling.
 
   [ Timothy Pearson ]
   * d/patches:

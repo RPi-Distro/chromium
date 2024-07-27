@@ -26,7 +26,6 @@ fixes/bindgen.patch
 fixes/webui-dep.patch
 fixes/chrome-cart-dep.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
-fixes/font-key-gc.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch

@@ -10,7 +10,6 @@ fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch
 fixes/blink-frags.patch
-fixes/absl-optional.patch
 fixes/strlcpy.patch
 fixes/stats-collector.patch
 fixes/bad-font-gc00000.patch
@@ -65,6 +64,8 @@ bookworm/urlhelper-ctor.patch
 bookworm/nvt.patch
 bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch
+bookworm/lex-3way.patch
+bookworm/traitors.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

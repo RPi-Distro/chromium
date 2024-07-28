@@ -48,6 +48,8 @@ keepers = (
     'libyuv' ,
     'libwebp',      # libavif depends on libsharpyuv-dev; only in libwebp 1.3 (trixie)
     're2',          # experienced crashes Aug 2023 w/ 20230301-3; try >= 20240401.
+    'snappy',
+    'jsoncpp',
     'swiftshader-SPIRV-Headers' ,
     'swiftshader-SPIRV-Tools' ,
     'vulkan-SPIRV-Headers' ,

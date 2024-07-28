@@ -73,7 +73,6 @@ Files-Excluded:
  components/drive/chromeos
  native_client*
  android_webview
- third_party/jsoncpp
  third_party/woff2
  third_party/angle/src/third_party/libXNVCtrl
  third_party/opus
@@ -87,7 +86,6 @@ Files-Excluded:
  third_party/webgl
  third_party/libpng
  third_party/libdrm
- third_party/snappy
  third_party/libevent
  third_party/libsecret
  third_party/libxslt

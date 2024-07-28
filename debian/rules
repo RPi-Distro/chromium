@@ -15,13 +15,13 @@ export DEB_RULES_REQUIRES_ROOT=no
 # compile with clang (gcc is currently not supported)
 export AR=ar
 export NM=nm
-export CC=clang-16
-export CXX=clang++-16
+export CC=clang-17
+export CXX=clang++-17
 
 # initial flags from dpkg-buildflags
 export DEB_CXXFLAGS_MAINT_STRIP=-g
-export CXXFLAGS=$(shell dpkg-buildflags --get CXXFLAGS)
-export LDFLAGS=$(shell dpkg-buildflags --get LDFLAGS)
+export CXXFLAGS=$(shell dpkg-buildflags --get CXXFLAGS) -stdlib=libc++ -I/usr/lib/llvm-17/include/c++/v1
+export LDFLAGS=$(shell dpkg-buildflags --get LDFLAGS) -stdlib=libc++ -Wl,-rpath,/usr/lib/llvm-17/lib
 
 # more verbose linker output
 export LDFLAGS+=-Wl,--stats

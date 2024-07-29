@@ -82,6 +82,7 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - bookworm/constexpr.patch: add more of the usual constexpr
       workarounds; only needed for clang-16.
     - fixes/absl-optional.patch: drop, only needed for libstdc++-dev.
+    - fixes/bad-font-gc*: drop, only needed for libstdc++-dev.
     - fixes/chromium-browser-ui-missing-deps.patch: add a bunch of
       mojo-related dependency build fixes.
 

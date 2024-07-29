@@ -12,15 +12,6 @@ fixes/perfetto.patch
 fixes/blink-frags.patch
 fixes/strlcpy.patch
 fixes/stats-collector.patch
-fixes/bad-font-gc00000.patch
-fixes/bad-font-gc0000.patch
-fixes/bad-font-gc000.patch
-fixes/bad-font-gc00.patch
-fixes/bad-font-gc0.patch
-fixes/bad-font-gc1.patch
-fixes/bad-font-gc11.patch
-fixes/bad-font-gc2.patch
-fixes/bad-font-gc3.patch
 fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/chromium-browser-ui-missing-deps.patch

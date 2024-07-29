@@ -62,14 +62,14 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - upstream/paint-layer-header.patch: add build fix pulled from upstream
     - fixes/bindgen.patch: work around bindgen-related things (hopefully
       correctly?)
-    - fixes/webui-dep.patch: add missing mojo-related header dependency.
-    - fixes/chrome-cart-dep.patch: add another mojo-related header dep fix.
     - bookworm/lex-3way.patch: add patch to support
       std::lexicographical_compare_three_way, which was added in clang-17.
     - bookworm/traitors.patch: another clang-16 hack; backport
       pointer_traits.h from libc++-18-dev to work around clang
       std::to_address() issue.
     - fixes/absl-optional.patch: drop, only needed for libstdc++-dev.
+    - fixes/chromium-browser-ui-missing-deps.patch: add a bunch of
+      mojo-related dependency build fixes.
 
   [ Timothy Pearson ]
   * d/patches:

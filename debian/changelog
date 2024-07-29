@@ -31,10 +31,22 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
       Browsing. Reported by Anonymous.
     - CVE-2024-7005: Insufficient validation of untrusted input in Safe
       Browsing. Reported by Umar Farooq.
+  * Switch from building against (gcc's) libstdc++ to (clang's) libc++.
+    Upstream is playing fast and loose with memory in ways that results
+    in crashes with gcc's stricter libstdc++, but not with clang's libc++
+    (which allows accessing deleting memory apparently). We can't maintain
+    workarounds any more, and upstream really doesn't care (see, for
+    example, https://crbug.com/346174906 , where they add workarounds only
+    for their ASAN memory checker).
   * d/copyright:
     - delete new rust, cargo, llvm, and node binaries.
     - delete third_party/zstd so we can link against system zstd.
-  * d/control: build-dep against libzstd-dev and bindgen.
+    - stop deleting the bundled woff, snappy, and jsoncpp; those can't be
+      dynamically linked against with clang's libc++.
+  * d/control:
+    - build-dep against libzstd-dev and bindgen.
+    - drop build-dep on libwoff-dev, libsnappy-dev, libjsoncpp-dev, and
+      add build-deps on libc++-16-dev / libc++abi-16-dev.
   * d/rules:
     - set rust_bindgen_root.
     - rework get-orig-source to not use mk-origtargz, which is
@@ -67,6 +79,8 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - bookworm/traitors.patch: another clang-16 hack; backport
       pointer_traits.h from libc++-18-dev to work around clang
       std::to_address() issue.
+    - bookworm/constexpr.patch: add more of the usual constexpr
+      workarounds; only needed for clang-16.
     - fixes/absl-optional.patch: drop, only needed for libstdc++-dev.
     - fixes/chromium-browser-ui-missing-deps.patch: add a bunch of
       mojo-related dependency build fixes.

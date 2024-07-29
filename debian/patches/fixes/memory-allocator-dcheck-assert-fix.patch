@@ -17,7 +17,7 @@ Index: chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_a
            partition_page_count * NumSystemPagesPerPartitionPage() - slack;
        size_t candidate_size = system_page_count * SystemPageSize();
 +      if (candidate_size > kMaxBucketed) {
-+        break;
++        continue;
 +      }
        size_t waste = candidate_size % slot_size;
        if (waste < best_waste) {

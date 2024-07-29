@@ -25,6 +25,7 @@ fixes/bindgen.patch
 fixes/webui-dep.patch
 fixes/chrome-cart-dep.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
+fixes/constexpr.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
@@ -66,6 +67,7 @@ bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch
 bookworm/lex-3way.patch
 bookworm/traitors.patch
+bookworm/spaceship-operator.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

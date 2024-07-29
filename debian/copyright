@@ -73,7 +73,6 @@ Files-Excluded:
  components/drive/chromeos
  native_client*
  android_webview
- third_party/woff2
  third_party/angle/src/third_party/libXNVCtrl
  third_party/opus
  third_party/dav1d

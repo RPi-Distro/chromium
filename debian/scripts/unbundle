@@ -50,6 +50,7 @@ keepers = (
     're2',          # experienced crashes Aug 2023 w/ 20230301-3; try >= 20240401.
     'snappy',
     'jsoncpp',
+    'woff2',
     'swiftshader-SPIRV-Headers' ,
     'swiftshader-SPIRV-Tools' ,
     'vulkan-SPIRV-Headers' ,

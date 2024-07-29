@@ -30,7 +30,6 @@ third_party/yasm/run_yasm.py
 
 base/third_party/double_conversion/BUILD.gn
 third_party/angle/src/third_party/libXNVCtrl/BUILD.gn
-third_party/woff2/BUILD.gn
 
 third_party/libsecret/BUILD.gn
 third_party/libusb/BUILD.gn

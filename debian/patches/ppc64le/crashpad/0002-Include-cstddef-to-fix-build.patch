@@ -7,10 +7,10 @@ size_t is not defined unless cstddef is included.
 ---
  third_party/crashpad/crashpad/compat/linux/sys/user.h  |   1 +
 
-Index: chromium-120.0.6099.71/third_party/crashpad/crashpad/compat/linux/sys/user.h
+Index: chromium-127.0.6533.72/third_party/crashpad/crashpad/compat/linux/sys/user.h
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/crashpad/crashpad/compat/linux/sys/user.h
-+++ chromium-120.0.6099.71/third_party/crashpad/crashpad/compat/linux/sys/user.h
+--- chromium-127.0.6533.72.orig/third_party/crashpad/crashpad/compat/linux/sys/user.h
++++ chromium-127.0.6533.72/third_party/crashpad/crashpad/compat/linux/sys/user.h
 @@ -15,6 +15,7 @@
  #ifndef CRASHPAD_COMPAT_LINUX_SYS_USER_H_
  #define CRASHPAD_COMPAT_LINUX_SYS_USER_H_

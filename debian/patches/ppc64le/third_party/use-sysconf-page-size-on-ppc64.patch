@@ -46,7 +46,7 @@ Index: chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_a
 ===================================================================
 --- chromium-127.0.6533.72.orig/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
 +++ chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
-@@ -20,7 +20,7 @@
+@@ -20,7 +20,7 @@ static constexpr size_t kMaxSlotsPerSlot
  // System page size can be 4, 16, or 64 kiB on Linux on arm64. 64 kiB is
  // currently (kMaxSlotsPerSlotSpanBits == 13) not supported by the code,
  // so we use the 16 kiB maximum (64 kiB will crash).

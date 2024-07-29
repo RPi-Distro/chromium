@@ -8,11 +8,11 @@ Subject: [PATCH] Add ppc64 target to libaom
  third_party/libaom/cmake_update.sh |  3 +++
  2 files changed, 15 insertions(+)
 
-Index: chromium-120.0.6099.71/third_party/libaom/BUILD.gn
+Index: chromium-127.0.6533.72/third_party/libaom/BUILD.gn
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/libaom/BUILD.gn
-+++ chromium-120.0.6099.71/third_party/libaom/BUILD.gn
-@@ -248,6 +248,18 @@ if (current_cpu == "arm64") {
+--- chromium-127.0.6533.72.orig/third_party/libaom/BUILD.gn
++++ chromium-127.0.6533.72/third_party/libaom/BUILD.gn
+@@ -272,6 +272,18 @@ if (current_cpu == "arm64") {
    }
  }
  
@@ -31,7 +31,7 @@ Index: chromium-120.0.6099.71/third_party/libaom/BUILD.gn
  static_library("libaom") {
    check_includes = false
    if (!is_debug && is_win) {
-@@ -312,6 +324,9 @@ static_library("libaom") {
+@@ -335,6 +347,9 @@ static_library("libaom") {
      # This is needed by all arm boards due to aom_arm_cpu_caps()
      sources += [ "source/libaom/aom_ports/aarch32_cpudetect.c" ]
    }
@@ -41,11 +41,11 @@ Index: chromium-120.0.6099.71/third_party/libaom/BUILD.gn
    if (is_android) {
      deps += [ "//third_party/cpu_features:ndk_compat" ]
    }
-Index: chromium-120.0.6099.71/third_party/libaom/cmake_update.sh
+Index: chromium-127.0.6533.72/third_party/libaom/cmake_update.sh
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/libaom/cmake_update.sh
-+++ chromium-120.0.6099.71/third_party/libaom/cmake_update.sh
-@@ -187,6 +187,9 @@ gen_config_files linux/arm64-cpu-detect
+--- chromium-127.0.6533.72.orig/third_party/libaom/cmake_update.sh
++++ chromium-127.0.6533.72/third_party/libaom/cmake_update.sh
+@@ -192,6 +192,9 @@ gen_config_files linux/arm64-cpu-detect
    "${toolchain}/arm64-linux-gcc.cmake -DCONFIG_RUNTIME_CPU_DETECT=1 \
     ${all_platforms}"
  

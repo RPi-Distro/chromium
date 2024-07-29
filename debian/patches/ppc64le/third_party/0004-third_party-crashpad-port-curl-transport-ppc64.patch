@@ -1,7 +1,7 @@
-Index: chromium-120.0.6099.71/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
+Index: chromium-127.0.6533.72/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
 ===================================================================
---- chromium-120.0.6099.71.orig/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
-+++ chromium-120.0.6099.71/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
+--- chromium-127.0.6533.72.orig/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
++++ chromium-127.0.6533.72/third_party/crashpad/crashpad/util/net/http_transport_libcurl.cc
 @@ -239,6 +239,12 @@ std::string UserAgent() {
  #endif
  #elif defined (ARCH_CPU_RISCV64)

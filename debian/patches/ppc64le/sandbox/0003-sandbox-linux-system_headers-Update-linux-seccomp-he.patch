@@ -8,10 +8,10 @@ Subject: [PATCH 3/4] sandbox/linux/system_headers: Update linux seccomp header
  sandbox/linux/system_headers/linux_seccomp.h | 10 ++++++++++
  1 file changed, 10 insertions(+)
 
-Index: chromium-120.0.6099.71/sandbox/linux/system_headers/linux_seccomp.h
+Index: chromium-127.0.6533.72/sandbox/linux/system_headers/linux_seccomp.h
 ===================================================================
---- chromium-120.0.6099.71.orig/sandbox/linux/system_headers/linux_seccomp.h
-+++ chromium-120.0.6099.71/sandbox/linux/system_headers/linux_seccomp.h
+--- chromium-127.0.6533.72.orig/sandbox/linux/system_headers/linux_seccomp.h
++++ chromium-127.0.6533.72/sandbox/linux/system_headers/linux_seccomp.h
 @@ -38,6 +38,9 @@
  #ifndef EM_AARCH64
  #define EM_AARCH64 183

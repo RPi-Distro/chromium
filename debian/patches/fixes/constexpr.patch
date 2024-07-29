@@ -57,3 +57,25 @@ author: Andres Salomon <dilinger@debian.org>
  constexpr std::string_view kModelValidationSwitchName =
      "omnibox-on-device-tail-model-validation";
  
+--- a/chrome/browser/ui/lens/lens_overlay_url_builder.cc
++++ b/chrome/browser/ui/lens/lens_overlay_url_builder.cc
+@@ -78,7 +78,7 @@ inline constexpr char kXSRFTokenQueryPar
+ inline constexpr char kSecActQueryParamKey[] = "sec_act";
+ 
+ // The list of query parameters to ignore when comparing search URLs.
+-inline constexpr std::string kIgnoredSearchUrlQueryParameters[] = {
++inline const std::string kIgnoredSearchUrlQueryParameters[] = {
+     kViewportWidthQueryParamKey, kViewportHeightQueryParamKey,
+     kXSRFTokenQueryParamKey, kSecActQueryParamKey};
+ 
+--- a/content/browser/preloading/prefetch/prefetch_test_util.h
++++ b/content/browser/preloading/prefetch/prefetch_test_util.h
+@@ -15,7 +15,7 @@ namespace content::test {
+ 
+ using PrefetchContainerIdForTesting =
+     base::StrongAlias<class PrefetchContainerIdForTestingTag, std::string>;
+-static constexpr PrefetchContainerIdForTesting
++static const PrefetchContainerIdForTesting
+     InvalidPrefetchContainerIdForTesting = PrefetchContainerIdForTesting("");
+ 
+ class TestPrefetchWatcherImpl;

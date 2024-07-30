@@ -44,7 +44,7 @@ defines=clang_use_chrome_plugins=false
 export RUSTC_BOOTSTRAP=1
 export CLANG_MVERS="$(shell $(CC) --version| sed -n 's/Debian clang version //p' | cut -d. -f1)"
 defines+=rust_sysroot_absolute=\"/usr\"
-defines+=rust_bindgen_root=\"/usr\"
+defines+=rust_bindgen_root=\"$(CURDIR)/debian/bindgen/root/usr\"
 defines+=rustc_version=\"$(shell rustc --version)\"
 defines+=clang_base_path=\"/usr/lib/llvm-$(CLANG_MVERS)\"
 defines+=clang_version=\"$(CLANG_MVERS)\"
@@ -136,7 +136,17 @@ test_armhf_neon:
 		}; \
 	fi
 
-override_dh_auto_configure: test_armhf_neon
+set_up_bindgen:
+	# Bookworm's bindgen is too old. This is a workaround using the
+	# packages from
+	# <https://snapshot.debian.org/package/rust-bindgen-cli/0.66.1-3/>, which
+	# are new enough to build chromium but old enough to not be linked against
+	# Trixie's libc6 2.38
+	mkdir -p debian/bindgen/root
+	ar --output debian/bindgen/root vx debian/bindgen/bindgen_0.66.1-3_$(DEB_HOST_ARCH).deb
+	tar -C debian/bindgen/root -Jxvf debian/bindgen/root/data.tar.xz
+
+override_dh_auto_configure: test_armhf_neon set_up_bindgen
 	# verify that we're not accidentally uploading to stable-security without CVEs
 	@echo "$(DIST)" | grep -q -- '-security' && { \
 		dpkg-parsechangelog -l debian/changelog | grep -q 'CVE-' || { \
@@ -182,6 +192,7 @@ override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_auto_clean:
+	rm -rf debian/bindgen/root
 	rm -rf third_party/node/linux/node-linux-x64
 	rm -rf out
 	rm -rf third_party/node/node_modules/rollup

@@ -54,6 +54,9 @@ chromium (127.0.6533.72-1~deb12u1) UNRELEASED; urgency=high
     release). Instead, use d/scripts/get-exludes.pl and tar's
     --exclude-from to drastically speed things up (total run now takes
     8 mins).
+    - include bindgen 0.66.1-3 packages from snapshot.debian.org, as
+      bookworm's bindgen 0.60.1 is too old. The packages are
+      unpacked during build.
   * d/patches:
     - upstream/tabstrip-include.patch: drop, merged upstream.
     - upstream/quiche-deque.patch: drop, merged upstream.

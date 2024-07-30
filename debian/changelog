@@ -81,6 +81,8 @@ chromium (127.0.6533.72-1~deb12u1) UNRELEASED; urgency=high
       std::to_address() issue.
     - bookworm/constexpr.patch: add more of the usual constexpr
       workarounds; only needed for clang-16.
+    - bookworm/constcountrycode.patch, bookworm/omnibox-constexpr.patch:
+      remove, now part of bookworm/constexpr.patch.
     - fixes/absl-optional.patch: drop, only needed for libstdc++-dev.
     - fixes/bad-font-gc*: drop, only needed for libstdc++-dev.
     - fixes/chromium-browser-ui-missing-deps.patch: add a bunch of

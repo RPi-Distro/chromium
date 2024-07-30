@@ -53,14 +53,12 @@ bookworm/clang16.patch
 bookworm/libxml-parseerr.patch
 bookworm/freetype-COLRV1.patch
 bookworm/bubble-contents.patch
-bookworm/constcountrycode.patch
 bookworm/sizet.patch
 bookworm/constexpr.patch
 bookworm/urlhelper-ctor.patch
 bookworm/nvt.patch
 bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch
-bookworm/omnibox-constexpr.patch
 bookworm/lex-3way.patch
 bookworm/traitors.patch
 bookworm/spaceship-operator.patch

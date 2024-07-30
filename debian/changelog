@@ -48,6 +48,7 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - drop build-dep on libwoff-dev, libsnappy-dev, libjsoncpp-dev, and
       add build-deps on libc++-16-dev / libc++abi-16-dev.
   * d/rules:
+    - drop use_goma=false (upstream switched to rbe).
     - set rust_bindgen_root.
     - rework get-orig-source to not use mk-origtargz, which is
     incredibly slow (total run 45 mins for the current 6.2G upstream

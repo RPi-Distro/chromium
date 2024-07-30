@@ -31,9 +31,9 @@ https://github.com/epage/clap/commit/f750e577789e1dd34c6950d8c8fe16d1bfd1f49c
     
       Fixes #5280
 
---- a/third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.0/src/ext.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.0/src/ext.rs
-@@ -183,7 +183,7 @@ pub trait OsStrExt: private::Sealed {
+--- a/third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.1/src/ext.rs
++++ b/third_party/rust/chromium_crates_io/vendor/clap_lex-0.7.1/src/ext.rs
+@@ -184,7 +184,7 @@ pub trait OsStrExt: private::Sealed {
  
  impl OsStrExt for OsStr {
      fn try_str(&self) -> Result<&str, std::str::Utf8Error> {
@@ -42,7 +42,7 @@ https://github.com/epage/clap/commit/f750e577789e1dd34c6950d8c8fe16d1bfd1f49c
          std::str::from_utf8(bytes)
      }
  
-@@ -192,22 +192,22 @@ impl OsStrExt for OsStr {
+@@ -193,22 +193,22 @@ impl OsStrExt for OsStr {
      }
  
      fn find(&self, needle: &str) -> Option<usize> {
@@ -71,7 +71,7 @@ https://github.com/epage/clap/commit/f750e577789e1dd34c6950d8c8fe16d1bfd1f49c
          bytes.starts_with(prefix.as_bytes())
      }
  
-@@ -222,18 +222,13 @@ impl OsStrExt for OsStr {
+@@ -223,18 +223,13 @@ impl OsStrExt for OsStr {
      fn split_once(&self, needle: &'_ str) -> Option<(&OsStr, &OsStr)> {
          let start = self.find(needle)?;
          let end = start + needle.len();
@@ -94,7 +94,7 @@ https://github.com/epage/clap/commit/f750e577789e1dd34c6950d8c8fe16d1bfd1f49c
      }
  }
  
-@@ -243,6 +238,45 @@ mod private {
+@@ -244,6 +239,45 @@ mod private {
      impl Sealed for std::ffi::OsStr {}
  }
  
@@ -140,16 +140,17 @@ https://github.com/epage/clap/commit/f750e577789e1dd34c6950d8c8fe16d1bfd1f49c
  pub struct Split<'s, 'n> {
      haystack: Option<&'s OsStr>,
      needle: &'n str,
-@@ -275,10 +309,7 @@ impl<'s, 'n> Iterator for Split<'s, 'n>
- ///
+@@ -274,11 +308,8 @@ impl<'s, 'n> Iterator for Split<'s, 'n>
  /// `index` must be at a valid UTF-8 boundary
  pub(crate) unsafe fn split_at(os: &OsStr, index: usize) -> (&OsStr, &OsStr) {
--    let bytes = os.as_encoded_bytes();
-+    let bytes = to_bytes(os);
-     let (first, second) = bytes.split_at(index);
--    (
--        OsStr::from_encoded_bytes_unchecked(first),
--        OsStr::from_encoded_bytes_unchecked(second),
--    )
-+    (to_os_str_unchecked(first), to_os_str_unchecked(second))
+     unsafe {
+-        let bytes = os.as_encoded_bytes();
++        let bytes = to_bytes(os);
+         let (first, second) = bytes.split_at(index);
+-        (
+-            OsStr::from_encoded_bytes_unchecked(first),
+-            OsStr::from_encoded_bytes_unchecked(second),
+-        )
++        (to_os_str_unchecked(first), to_os_str_unchecked(second))
+     }
  }

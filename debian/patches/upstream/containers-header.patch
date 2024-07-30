@@ -1,0 +1,25 @@
+commit 0ed5f7a0d2b8dd43ba63da30bd2e7d23424f6e69
+Author: Jose Dapena Paz <jdapena@igalia.com>
+Date:   Tue Jun 11 06:47:55 2024 +0000
+
+    IWYU: missing include for usage of std::optional in enum_set.h
+    
+    Bug: 41455655
+    Change-Id: I81257de8370245b38ac891b6d1e353557985697d
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5616490
+    Reviewed-by: Daniel Cheng <dcheng@chromium.org>
+    Commit-Queue: Daniel Cheng <dcheng@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1313250}
+
+diff --git a/base/containers/enum_set.h b/base/containers/enum_set.h
+index 6f7026b6f599d..71830f3d0b9a6 100644
+--- a/base/containers/enum_set.h
++++ b/base/containers/enum_set.h
+@@ -8,6 +8,7 @@
+ #include <bitset>
+ #include <cstddef>
+ #include <initializer_list>
++#include <optional>
+ #include <string>
+ #include <type_traits>
+ #include <utility>

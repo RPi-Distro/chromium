@@ -10,32 +10,19 @@ fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch
 fixes/blink-frags.patch
-fixes/absl-optional.patch
 fixes/strlcpy.patch
 fixes/stats-collector.patch
-fixes/bad-font-gc00000.patch
-fixes/bad-font-gc0000.patch
-fixes/bad-font-gc000.patch
-fixes/bad-font-gc00.patch
-fixes/bad-font-gc0.patch
-fixes/bad-font-gc1.patch
-fixes/bad-font-gc11.patch
-fixes/bad-font-gc2.patch
-fixes/bad-font-gc3.patch
+fixes/bindgen.patch
+fixes/memory-allocator-dcheck-assert-fix.patch
+fixes/chromium-browser-ui-missing-deps.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
 upstream/ruy-include.patch
-upstream/tabstrip-include.patch
-upstream/quiche-deque.patch
-upstream/gpu-header.patch
-upstream/blink-header.patch
-upstream/blink-header2.patch
-upstream/blink-header3.patch
-upstream/realtime-reporting.patch
-upstream/urlvisit-header.patch
-upstream/accessibility-format.patch
-upstream/observer.patch
+upstream/crabbyav1f.patch
+upstream/lock-impl.patch
+upstream/containers-header.patch
+upstream/paint-layer-header.patch
 
 disable/tests.patch
 disable/unrar.patch
@@ -74,6 +61,10 @@ bookworm/nvt.patch
 bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch
 bookworm/omnibox-constexpr.patch
+bookworm/lex-3way.patch
+bookworm/traitors.patch
+bookworm/spaceship-operator.patch
+bookworm/constexpr.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch
@@ -128,7 +119,6 @@ ppc64le/third_party/0004-third_party-libvpx-work-around-ambiguous-vsx.patch
 # Enable VSX acceleration in Skia.  Requires POWER8 or higher.
 ppc64le/third_party/skia-vsx-instructions.patch
 
-ppc64le/ffmpeg/0001-Add-support-for-ppc64.patch
 ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch
 ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch
 ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch

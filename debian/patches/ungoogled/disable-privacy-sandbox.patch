@@ -11,11 +11,11 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
 -             base::FEATURE_ENABLED_BY_DEFAULT);
 +             base::FEATURE_DISABLED_BY_DEFAULT);
  
- BASE_FEATURE(kAttributionReportingTriggerContextId,
-              "AttributionReportingTriggerContextId",
+ BASE_FEATURE(kAttributionAggregatableDebugReporting,
+              "AttributionAggregatableDebugReporting",
 --- a/components/privacy_sandbox/privacy_sandbox_settings_impl.cc
 +++ b/components/privacy_sandbox/privacy_sandbox_settings_impl.cc
-@@ -123,7 +123,7 @@ std::set<browsing_topics::Topic> GetTopi
+@@ -125,7 +125,7 @@ std::set<browsing_topics::Topic> GetTopi
  
  // static
  bool PrivacySandboxSettingsImpl::IsAllowed(Status status) {
@@ -24,7 +24,7 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
  }
  
  // static
-@@ -744,7 +744,7 @@ void PrivacySandboxSettingsImpl::SetTopi
+@@ -775,7 +775,7 @@ void PrivacySandboxSettingsImpl::SetTopi
  }
  
  bool PrivacySandboxSettingsImpl::IsPrivacySandboxRestricted() const {
@@ -33,7 +33,7 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
  }
  
  bool PrivacySandboxSettingsImpl::IsPrivacySandboxCurrentlyUnrestricted() const {
-@@ -813,11 +813,7 @@ PrivacySandboxSettingsImpl::GetPrivacySa
+@@ -844,11 +844,7 @@ PrivacySandboxSettingsImpl::GetPrivacySa
      return Status::kIncognitoProfile;
    }
  

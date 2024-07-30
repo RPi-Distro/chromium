@@ -1,7 +1,7 @@
-Index: chromium-125.0.6422.41/third_party/skia/src/core/SkRasterPipeline.h
+Index: chromium-127.0.6533.72/third_party/skia/src/core/SkRasterPipeline.h
 ===================================================================
---- chromium-125.0.6422.41.orig/third_party/skia/src/core/SkRasterPipeline.h
-+++ chromium-125.0.6422.41/third_party/skia/src/core/SkRasterPipeline.h
+--- chromium-127.0.6533.72.orig/third_party/skia/src/core/SkRasterPipeline.h
++++ chromium-127.0.6533.72/third_party/skia/src/core/SkRasterPipeline.h
 @@ -27,7 +27,7 @@ struct SkImageInfo;
  struct skcms_TransferFunction;
  

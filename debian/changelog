@@ -1,3 +1,102 @@
+chromium (127.0.6533.72-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2024-6988: Use after free in Downloads. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+    - CVE-2024-6989: Use after free in Loader. Reported by Anonymous.
+    - CVE-2024-6991: Use after free in Dawn. Reported by wgslfuzz.
+    - CVE-2024-6992: Out of bounds memory access in ANGLE.
+      Reported by Xiantong Hou of Wuheng Lab and Pisanbao.
+    - CVE-2024-6993: Inappropriate implementation in Canvas.
+      Reported by Anonymous.
+    - CVE-2024-6994: Heap buffer overflow in Layout.
+      Reported by Huang Xilin of Ant Group Light-Year Security Lab.
+    - CVE-2024-6995: Inappropriate implementation in Fullscreen.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-6996: Race in Frames.
+      Reported by Louis Jannett (Ruhr University Bochum).
+    - CVE-2024-6997: Use after free in Tabs.
+      Reported by Sven Dysthe (@svn-dys).
+    - CVE-2024-6998: Use after free in User Education.
+      Reported by Sven Dysthe (@svn-dys).
+    - CVE-2024-6999: Inappropriate implementation in FedCM.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-7000: Use after free in CSS. Reported by Anonymous.
+    - CVE-2024-7001: Inappropriate implementation in HTML.
+      Reported by Jake Archibald.
+    - CVE-2024-7003: Inappropriate implementation in FedCM.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-7004: Insufficient validation of untrusted input in Safe
+      Browsing. Reported by Anonymous.
+    - CVE-2024-7005: Insufficient validation of untrusted input in Safe
+      Browsing. Reported by Umar Farooq.
+  * Switch from building against (gcc's) libstdc++ to (clang's) libc++.
+    Upstream is playing fast and loose with memory in ways that results
+    in crashes with gcc's stricter libstdc++, but not with clang's libc++
+    (which allows accessing deleting memory apparently). We can't maintain
+    workarounds any more, and upstream really doesn't care (see, for
+    example, https://crbug.com/346174906 , where they add workarounds only
+    for their ASAN memory checker).
+  * d/copyright:
+    - delete new rust, cargo, llvm, and node binaries.
+    - delete third_party/zstd so we can link against system zstd.
+    - stop deleting the bundled woff, snappy, and jsoncpp; those can't be
+      dynamically linked against with clang's libc++.
+  * d/control:
+    - build-dep against libzstd-dev and bindgen.
+    - drop build-dep on libwoff-dev, libsnappy-dev, libjsoncpp-dev, and
+      add build-deps on libc++-16-dev / libc++abi-16-dev.
+  * d/rules:
+    - set rust_bindgen_root.
+    - rework get-orig-source to not use mk-origtargz, which is
+    incredibly slow (total run 45 mins for the current 6.2G upstream
+    release). Instead, use d/scripts/get-exludes.pl and tar's
+    --exclude-from to drastically speed things up (total run now takes
+    8 mins).
+  * d/patches:
+    - upstream/tabstrip-include.patch: drop, merged upstream.
+    - upstream/quiche-deque.patch: drop, merged upstream.
+    - upstream/gpu-header.patch: drop, merged upstream.
+    - upstream/blink-header.patch: drop, merged upstream.
+    - upstream/blink-header2.patch: drop, merged upstream.
+    - upstream/blink-header3.patch: drop, merged upstream.
+    - upstream/realtime-reporting.patch: drop, merged upstream.
+    - upstream/urlvisit-header.patch: drop, merged upstream.
+    - upstream/accessibility-format.patch: drop, merged upstream.
+    - upstream/observer.patch: drop, merged upstream.
+    - bookworm/clang16.patch: refresh.
+    - bookworm/rust-downgrade-osstr-users.patch: refresh w/ minor changes.
+    - ungoogled/disable-privacy-sandbox.patch: refresh.
+    - upstream/crabbyav1f.patch: add build fix pulled from upstream.
+    - upstream/lock-impl.patch: add build fix pulled from upstream.
+    - upstream/containers-header.patch: add build fix pulled from upstream.
+    - upstream/paint-layer-header.patch: add build fix pulled from upstream
+    - fixes/bindgen.patch: work around bindgen-related things (hopefully
+      correctly?)
+    - bookworm/lex-3way.patch: add patch to support
+      std::lexicographical_compare_three_way, which was added in clang-17.
+    - bookworm/traitors.patch: another clang-16 hack; backport
+      pointer_traits.h from libc++-18-dev to work around clang
+      std::to_address() issue.
+    - bookworm/constexpr.patch: add more of the usual constexpr
+      workarounds; only needed for clang-16.
+    - fixes/absl-optional.patch: drop, only needed for libstdc++-dev.
+    - fixes/bad-font-gc*: drop, only needed for libstdc++-dev.
+    - fixes/chromium-browser-ui-missing-deps.patch: add a bunch of
+      mojo-related dependency build fixes.
+
+  [ Timothy Pearson ]
+  * d/patches:
+    - fixes/fixes/memory-allocator-dcheck-assert-fix.patch: Fix assert on
+      64k page systems such as aarch64 and ppc64el
+  * d/patches/ppc64le:
+    - ffmpeg/0001-Add-support-for-ppc64.patch: Drop, no longer needed
+    - third_party/use-sysconf-page-size-on-ppc64.patch: Refresh for upstream
+      changes
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
+
 chromium (126.0.6478.182-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

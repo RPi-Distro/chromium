@@ -112,6 +112,7 @@ Depends:
  chromium-common (= ${binary:Version}),
 Recommends:
  chromium-sandbox,
+ libwidevinecdm0,
 Suggests:
  chromium-l10n,
  chromium-shell,

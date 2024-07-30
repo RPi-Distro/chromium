@@ -70,7 +70,6 @@ endif
 
 # disabled features
 defines+=is_debug=false \
-         use_goma=false \
          use_sysroot=false \
          use_libjpeg_turbo=true \
          use_custom_libcxx=false \

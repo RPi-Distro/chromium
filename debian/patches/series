@@ -54,7 +54,6 @@ bookworm/libxml-parseerr.patch
 bookworm/freetype-COLRV1.patch
 bookworm/bubble-contents.patch
 bookworm/sizet.patch
-bookworm/constexpr.patch
 bookworm/urlhelper-ctor.patch
 bookworm/nvt.patch
 bookworm/v8-wrappable.patch

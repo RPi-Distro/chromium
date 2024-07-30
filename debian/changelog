@@ -87,6 +87,7 @@ chromium (127.0.6533.72-1~deb12u1) UNRELEASED; urgency=high
     - fixes/bad-font-gc*: drop, only needed for libstdc++-dev.
     - fixes/chromium-browser-ui-missing-deps.patch: add a bunch of
       mojo-related dependency build fixes.
+    - bookworm/bubble-contents.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches:

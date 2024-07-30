@@ -64,6 +64,7 @@ bookworm/spaceship-operator.patch
 bookworm/constexpr.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
+bookworm/crabbyav1f.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

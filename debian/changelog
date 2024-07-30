@@ -96,6 +96,8 @@ chromium (127.0.6533.72-1~deb12u1) UNRELEASED; urgency=high
       bookworm's older generate-ninja.
     - bookworm/gn-absl.patch: add workarounds for absl changes that rely
       on newer gn.
+    - bookworm/crabbyav1f.patch: add experimental feature toggle, needed
+      for older rustc.
 
   [ Timothy Pearson ]
   * d/patches:

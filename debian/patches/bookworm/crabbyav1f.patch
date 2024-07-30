@@ -1,0 +1,23 @@
+author: Andres Salomon <dilinger@debian.org>
+
+error[E0658]: use of unstable library feature 'int_roundings'
+  --> ../../third_party/crabbyavif/src/src/decoder/track.rs:83:65
+   |
+83 |                 let repetition_count: u64 = self.track_duration.div_ceil(self.segment_duration) - 1;
+   |                                                                 ^^^^^^^^
+   |
+   = note: see issue #88581 <https://github.com/rust-lang/rust/issues/88581> for more information
+   = help: add `#![feature(int_roundings)]` to the crate attributes to enable
+
+
+This patch can go away when bookworm gets a newer rustc.
+
+
+--- a/third_party/crabbyavif/src/src/lib.rs
++++ b/third_party/crabbyavif/src/src/lib.rs
+@@ -1,4 +1,5 @@
+ #![deny(unsafe_op_in_unsafe_fn)]
++#![feature(int_roundings)]
+ 
+ pub mod decoder;
+ pub mod image;

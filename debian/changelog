@@ -88,6 +88,10 @@ chromium (127.0.6533.72-1~deb12u1) UNRELEASED; urgency=high
     - fixes/chromium-browser-ui-missing-deps.patch: add a bunch of
       mojo-related dependency build fixes.
     - bookworm/bubble-contents.patch: refresh.
+    - bookworm/gn-funcs.patch: add workarounds for missing functions in
+      bookworm's older generate-ninja.
+    - bookworm/gn-absl.patch: add workarounds for absl changes that rely
+      on newer gn.
 
   [ Timothy Pearson ]
   * d/patches:

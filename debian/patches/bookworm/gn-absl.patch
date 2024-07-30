@@ -1,0 +1,174 @@
+ERROR at //build/config/BUILDCONFIG.gn:533:5: Dependency not allowed.
+    target(_target_type, target_name) {
+    ^----------------------------------
+The item //third_party/webrtc/pc:media_protocol_names
+can not depend on //third_party/abseil-cpp/absl/strings:string_view
+because it is not in //third_party/abseil-cpp/absl/strings:string_view's visibility list: [
+  //third_party/abseil-cpp/*
+  //third_party/googletest/*
+  //third_party/webrtc/rtc_tools:frame_analyzer
+  //third_party/webrtc/rtc_tools:rtp_generator
+  //third_party/webrtc/rtc_tools:video_replay
+  //chromecast/internal/*
+  //libassistant/*
+  //components/optimization_guide/internal/*
+]
+
+
+Absl used to have absl_deps, but that got removed with:
+commit 99c519b3fdac0cbedaecead04a841e89a5f0f69b
+Author: Florent Castelli <orphis@webrtc.org>
+Date:   Thu May 23 11:21:53 2024 +0000
+
+    Mass removal of absl_deps in all BUILD.gn files
+
+Newer gn is fine with s/absl_deps/deps/, but bookworm's gn
+requires manually changing the visibility of all the absl
+libs.
+
+--- a/third_party/abseil-cpp/absl/strings/BUILD.gn
++++ b/third_party/abseil-cpp/absl/strings/BUILD.gn
+@@ -8,6 +8,7 @@ import("//third_party/abseil-cpp/absl.gn
+ absl_source_set("string_view") {
+   sources = [ "string_view.cc" ]
+   public = [ "string_view.h" ]
++  visibility = [ "*" ]
+   deps = [
+     "//third_party/abseil-cpp/absl/base",
+     "//third_party/abseil-cpp/absl/base:config",
+@@ -58,6 +59,7 @@ absl_source_set("strings") {
+     "strip.h",
+     "substitute.h",
+   ]
++  visibility = [ "*" ]
+   public_deps = [
+     # string_view.h was once part of :strings, so string_view.h is
+     # re-exported for backwards compatibility.
+--- a/third_party/abseil-cpp/absl/types/BUILD.gn
++++ b/third_party/abseil-cpp/absl/types/BUILD.gn
+@@ -61,6 +61,7 @@ absl_test("span_test") {
+ absl_source_set("optional") {
+   sources = [ "internal/optional.h" ]
+   public = [ "optional.h" ]
++  visibility = [ "*" ]
+   public_deps = [
+     ":bad_optional_access",
+     "//third_party/abseil-cpp/absl/base:base_internal",
+@@ -90,6 +91,7 @@ absl_source_set("bad_variant_access") {
+ absl_source_set("variant") {
+   sources = [ "internal/variant.h" ]
+   public = [ "variant.h" ]
++  visibility = [ "*" ]
+   public_deps = [
+     ":bad_variant_access",
+     "//third_party/abseil-cpp/absl/base:base_internal",
+--- a/third_party/abseil-cpp/absl/meta/BUILD.gn
++++ b/third_party/abseil-cpp/absl/meta/BUILD.gn
+@@ -6,6 +6,7 @@ import("//third_party/abseil-cpp/absl.gn
+ 
+ absl_source_set("type_traits") {
+   public = [ "type_traits.h" ]
++  visibility = [ "*" ]
+   deps = [
+     "//third_party/abseil-cpp/absl/base:config",
+     "//third_party/abseil-cpp/absl/base:core_headers",
+--- a/third_party/abseil-cpp/absl/base/BUILD.gn
++++ b/third_party/abseil-cpp/absl/base/BUILD.gn
+@@ -39,6 +39,7 @@ absl_source_set("no_destructor") {
+ absl_source_set("nullability") {
+   sources = [ "internal/nullability_impl.h" ]
+   public = [ "nullability.h" ]
++  visibility = [ "*" ]
+   deps = [
+     ":core_headers",
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+@@ -81,6 +82,7 @@ absl_source_set("config") {
+     "options.h",
+     "policy_checks.h",
+   ]
++  visibility = [ "*" ]
+ }
+ 
+ absl_source_set("cycleclock_internal") {
+@@ -116,6 +118,7 @@ absl_source_set("core_headers") {
+     "port.h",
+     "thread_annotations.h",
+   ]
++  visibility = [ "*" ]
+   public_deps = [ ":config" ]
+ }
+ 
+--- a/third_party/abseil-cpp/absl/algorithm/BUILD.gn
++++ b/third_party/abseil-cpp/absl/algorithm/BUILD.gn
+@@ -6,11 +6,13 @@ import("//third_party/abseil-cpp/absl.gn
+ 
+ absl_source_set("algorithm") {
+   public = [ "algorithm.h" ]
++  visibility = [ "*" ]
+   deps = [ "//third_party/abseil-cpp/absl/base:config" ]
+ }
+ 
+ absl_source_set("container") {
+   public = [ "container.h" ]
++  visibility = [ "*" ]
+   deps = [
+     ":algorithm",
+     "//third_party/abseil-cpp/absl/base:nullability",
+--- a/third_party/abseil-cpp/absl/container/BUILD.gn
++++ b/third_party/abseil-cpp/absl/container/BUILD.gn
+@@ -50,6 +50,7 @@ absl_source_set("inlined_vector_internal
+ 
+ absl_source_set("inlined_vector") {
+   public = [ "inlined_vector.h" ]
++  visibility = [ "*" ]
+   deps = [
+     ":inlined_vector_internal",
+     "//third_party/abseil-cpp/absl/algorithm",
+--- a/third_party/abseil-cpp/absl/numeric/BUILD.gn
++++ b/third_party/abseil-cpp/absl/numeric/BUILD.gn
+@@ -9,6 +9,7 @@ absl_source_set("bits") {
+     "bits.h",
+     "internal/bits.h",
+   ]
++  visibility = [ "*" ]
+   deps = [
+     "//third_party/abseil-cpp/absl/base:config",
+     "//third_party/abseil-cpp/absl/base:core_headers",
+--- a/third_party/abseil-cpp/absl/functional/BUILD.gn
++++ b/third_party/abseil-cpp/absl/functional/BUILD.gn
+@@ -7,6 +7,7 @@ import("//third_party/abseil-cpp/absl.gn
+ absl_source_set("any_invocable") {
+   sources = [ "internal/any_invocable.h" ]
+   public = [ "any_invocable.h" ]
++  visibility = [ "*" ]
+   deps = [
+     "//third_party/abseil-cpp/absl/base:base_internal",
+     "//third_party/abseil-cpp/absl/base:config",
+@@ -34,6 +35,7 @@ absl_test("any_invocable_test") {
+ absl_source_set("bind_front") {
+   sources = [ "internal/front_binder.h" ]
+   public = [ "bind_front.h" ]
++  visibility = [ "*" ]
+   deps = [
+     "//third_party/abseil-cpp/absl/base:base_internal",
+     "//third_party/abseil-cpp/absl/container:compressed_tuple",
+--- a/third_party/abseil-cpp/absl/memory/BUILD.gn
++++ b/third_party/abseil-cpp/absl/memory/BUILD.gn
+@@ -6,6 +6,7 @@ import("//third_party/abseil-cpp/absl.gn
+ 
+ absl_source_set("memory") {
+   public = [ "memory.h" ]
++  visibility = [ "*" ]
+   deps = [
+     "//third_party/abseil-cpp/absl/base:core_headers",
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+--- a/third_party/abseil-cpp/absl/cleanup/BUILD.gn
++++ b/third_party/abseil-cpp/absl/cleanup/BUILD.gn
+@@ -16,6 +16,7 @@ absl_source_set("cleanup_internal") {
+ 
+ absl_source_set("cleanup") {
+   public = [ "cleanup.h" ]
++  visibility = [ "*" ]
+   deps = [
+     ":cleanup_internal",
+     "//third_party/abseil-cpp/absl/base:config",

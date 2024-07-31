@@ -1,0 +1,38 @@
+From 051bf4040f049671cfe45f5f8e8c6e0e892714d9 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 20 May 2024 16:37:26 +0100
+Subject: [PATCH 08/17] UA string: Set to something netflix likes
+
+---
+ content/common/user_agent.cc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/content/common/user_agent.cc
++++ b/content/common/user_agent.cc
+@@ -63,7 +63,7 @@ std::string GetUserAgentPlatform() {
+ std::string GetUnifiedPlatform() {
+ #if BUILDFLAG(IS_ANDROID)
+   return "Linux; Android 10; K";
+-#elif BUILDFLAG(IS_CHROMEOS)
++#elif BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_POSIX)
+   return "X11; CrOS x86_64 14541.0.0";
+ #elif BUILDFLAG(IS_MAC)
+   return "Macintosh; Intel Mac OS X 10_15_7";
+@@ -252,7 +252,7 @@ std::string GetOSVersion(IncludeAndroidB
+                       "%s%s", android_version_str.c_str(),
+                       android_info_str.c_str()
+ #else
+-                      ""
++                      "13597.84.0"
+ #endif
+   );
+   return os_version;
+@@ -287,7 +287,7 @@ std::string BuildOSCpuInfoFromOSVersionA
+   base::StringAppendF(&os_cpu,
+ #if BUILDFLAG(IS_MAC)
+                       "%s Mac OS X %s", cpu_type.c_str(), os_version.c_str()
+-#elif BUILDFLAG(IS_CHROMEOS)
++#elif BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_POSIX)
+                       "CrOS "
+                       "%s %s",
+                       cpu_type.c_str(),  // e.g. i686

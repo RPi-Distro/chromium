@@ -1,0 +1,28 @@
+From 695602982c08f2971a13b1aba1096672aa7bce46 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 20 May 2024 11:55:23 +0100
+Subject: [PATCH 05/17] Wayland: Bodge Implicit sync iterop test
+
+Make the test alweays return false as if enabled we get out of order
+frame flickering. This should be removed if our wayland ever supports
+explicit sync.
+---
+ ui/ozone/platform/wayland/host/wayland_connection.h | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+--- a/ui/ozone/platform/wayland/host/wayland_connection.h
++++ b/ui/ozone/platform/wayland/host/wayland_connection.h
+@@ -355,8 +355,11 @@ class WaylandConnection {
+   void DumpState(std::ostream& out) const;
+ 
+   bool UseImplicitSyncInterop() const {
+-    return !linux_explicit_synchronization_v1() &&
+-           WaylandBufferManagerHost::SupportsImplicitSyncInterop();
++    // *** Broken, at least on Pi (last checked v125)
++    //  Causes flickering / out-of-order / old frames when navigating or animating
++    return false;
++//    return !linux_explicit_synchronization_v1() &&
++//           WaylandBufferManagerHost::SupportsImplicitSyncInterop();
+   }
+ 
+  private:

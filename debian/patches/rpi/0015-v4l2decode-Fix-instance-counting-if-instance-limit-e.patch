@@ -1,0 +1,26 @@
+From dc4d8c2982089a9975cf46b8e418b27945b26127 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Thu, 23 May 2024 19:22:55 +0100
+Subject: [PATCH 15/17] v4l2decode: Fix instance counting if instance limit
+ exceeded
+
+---
+ media/gpu/v4l2/v4l2_video_decoder.cc | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/media/gpu/v4l2/v4l2_video_decoder.cc
++++ b/media/gpu/v4l2/v4l2_video_decoder.cc
+@@ -391,10 +391,12 @@ V4L2Status V4L2VideoDecoder::InitializeB
+   DVLOGF(3);
+   DCHECK_CALLED_ON_VALID_SEQUENCE(decoder_sequence_checker_);
+ 
++  const int instances = num_instances_.Increment();
+   can_use_decoder_ =
+-      num_instances_.Increment() < kMaxNumOfInstances ||
++      instances < kMaxNumOfInstances ||
+       !base::FeatureList::IsEnabled(media::kLimitConcurrentDecoderInstances);
+   if (!can_use_decoder_) {
++    num_instances_.Decrement();
+     VLOGF(1) << "Reached maximum number of decoder instances ("
+              << kMaxNumOfInstances << ")";
+     return V4L2Status::Codes::kMaxDecoderInstanceCount;

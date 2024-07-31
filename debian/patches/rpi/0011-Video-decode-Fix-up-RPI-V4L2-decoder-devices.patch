@@ -1,0 +1,74 @@
+From bd9156fbb26d41d79d530587a13a4d3d9c604399 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 20 May 2024 17:39:07 +0100
+Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
+
+---
+ media/gpu/v4l2/v4l2_device.cc | 12 ++++++++++++
+ media/gpu/v4l2/v4l2_utils.cc  | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
+
+--- a/media/gpu/v4l2/v4l2_device.cc
++++ b/media/gpu/v4l2/v4l2_device.cc
+@@ -849,11 +849,19 @@ void V4L2Device::CloseDevice() {
+ }
+ 
+ void V4L2Device::EnumerateDevicesForType(Type type) {
++#if BUILDFLAG(USE_V4L2_CODEC_RPI)
++  static const std::string kDecoderDevicePattern = "/dev/video";
++  static const std::string kEncoderDevicePattern = "/dev/video";
++  static const std::string kImageProcessorDevicePattern = "/dev/video";
++  static const std::string kJpegDecoderDevicePattern = "/dev/video";
++  static const std::string kJpegEncoderDevicePattern = "/dev/video";
++#else
+   static const std::string kDecoderDevicePattern = "/dev/video-dec";
+   static const std::string kEncoderDevicePattern = "/dev/video-enc";
+   static const std::string kImageProcessorDevicePattern = "/dev/image-proc";
+   static const std::string kJpegDecoderDevicePattern = "/dev/jpeg-dec";
+   static const std::string kJpegEncoderDevicePattern = "/dev/jpeg-enc";
++#endif
+ 
+   std::string device_pattern;
+   v4l2_buf_type buf_type;
+@@ -889,7 +897,11 @@ void V4L2Device::EnumerateDevicesForType
+   // We are sandboxed, so we can't query directory contents to check which
+   // devices are actually available. Try to open the first 10; if not present,
+   // we will just fail to open immediately.
++#if BUILDFLAG(USE_V4L2_CODEC_RPI)
++  for (int i = 10; i < 35; ++i) {
++#else
+   for (int i = 0; i < 10; ++i) {
++#endif
+     candidate_paths.push_back(
+         base::StringPrintf("%s%d", device_pattern.c_str(), i));
+   }
+--- a/media/gpu/v4l2/v4l2_utils.cc
++++ b/media/gpu/v4l2/v4l2_utils.cc
+@@ -500,7 +500,13 @@ struct timeval TimeDeltaToTimeVal(base::
+ std::optional<SupportedVideoDecoderConfigs> GetSupportedV4L2DecoderConfigs() {
+   SupportedVideoDecoderConfigs supported_media_configs;
+ 
++#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
+   constexpr char kVideoDeviceDriverPath[] = "/dev/video-dec0";
++#else
++  // Pi stateful decoder here  current google code doesn't look like it can
++  // cope with multiple devioces
++  constexpr char kVideoDeviceDriverPath[] = "/dev/video10";
++#endif
+   base::ScopedFD device_fd(HANDLE_EINTR(
+       open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
+   if (!device_fd.is_valid()) {
+@@ -546,7 +552,13 @@ std::optional<SupportedVideoDecoderConfi
+ }
+ 
+ bool IsV4L2DecoderStateful() {
++#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
+   constexpr char kVideoDeviceDriverPath[] = "/dev/video-dec0";
++#else
++  // Pi stateful decoder here  current google code doesn't look like it can
++  // cope with multiple devioces
++  constexpr char kVideoDeviceDriverPath[] = "/dev/video10";
++#endif
+   base::ScopedFD device_fd(HANDLE_EINTR(
+       open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
+   if (!device_fd.is_valid()) {

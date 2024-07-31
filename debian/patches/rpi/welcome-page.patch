@@ -1,0 +1,15 @@
+description: do not override the welcome page setting set in master_preferences
+author: Michael Gilbert <mgilbert@debian.org>
+bug-debian: http://bugs.debian.org/857767
+
+--- a/chrome/browser/profiles/profile_manager.cc
++++ b/chrome/browser/profiles/profile_manager.cc
+@@ -1226,7 +1226,7 @@ void ProfileManager::InitProfileUserPref
+     profile->GetPrefs()->SetString(prefs::kSupervisedUserId,
+                                    supervised_user_id);
+   }
+-#if !BUILDFLAG(IS_ANDROID)
++#if 0
+   if (profile->IsNewProfile()) {
+     profile->GetPrefs()->SetBoolean(prefs::kHasSeenWelcomePage, false);
+   }

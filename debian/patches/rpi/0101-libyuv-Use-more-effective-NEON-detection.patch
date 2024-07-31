@@ -1,0 +1,73 @@
+From 92578474bee6c658bcbc478f1f16011bd55b6829 Mon Sep 17 00:00:00 2001
+From: John Cox <jc@kynesim.co.uk>
+Date: Mon, 13 May 2024 18:04:29 +0100
+Subject: [PATCH] libyuv: Use more effective NEON detection
+
+---
+ BUILD.gn         | 11 ++++++++++-
+ source/cpu_id.cc | 13 +++++++++++++
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+
+--- a/third_party/libyuv/BUILD.gn
++++ b/third_party/libyuv/BUILD.gn
+@@ -188,7 +188,6 @@ static_library("libyuv_internal") {
+     configs += [ "//build/config/compiler:optimize_max" ]
+   }
+ 
+-  # To enable AVX2 or other cpu optimization, pass flag here
+   if (!is_win) {
+     cflags = [
+       # "-mpopcnt",
+@@ -197,6 +196,11 @@ static_library("libyuv_internal") {
+       "-ffp-contract=fast",  # Enable fma vectorization for NEON.
+     ]
+   }
++
++  if (current_cpu == "arm" && arm_version < 7) {
++    # This emables the neon test even if the current compile doesn't support it
++    defines += [ "LIBYUV_NEON" ]
++  }
+ }
+ 
+ if (libyuv_use_neon) {
+@@ -229,6 +233,11 @@ if (libyuv_use_neon) {
+ 
+     if (current_cpu != "arm64") {
+       configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
++      if (arm_version < 7) {
++        configs += [
++          "//build/config/compiler:force_march_armv7",
++        ]
++      }
+       cflags = [ "-mfpu=neon" ]
+     }
+   }
+--- a/third_party/libyuv/source/cpu_id.cc
++++ b/third_party/libyuv/source/cpu_id.cc
+@@ -132,6 +132,18 @@ static int GetXCR0() {
+ #pragma optimize("g", on)
+ #endif
+ 
++#ifdef __ARMEL__
++// This is (a) simpler and (b) works in sandbox vs the /proc/cpuinfo method
++#include <sys/auxv.h>
++
++int ArmCpuCaps(const char* cpuinfo_name) {
++  const unsigned long auxval = getauxval(AT_HWCAP);
++
++  // Documentation suggests that getauxval(AT_HWCAP) should return a pointer
++  // to a bit array, but evidence suggests it returns a simple bit field
++  return ((auxval & HWCAP_ARM_NEON) != 0 ? kCpuHasNEON : 0);
++}
++#else
+ // Based on libvpx arm_cpudetect.c
+ // For Arm, but public to allow testing on any CPU
+ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(const char* cpuinfo_name) {
+@@ -161,6 +173,7 @@ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(co
+   fclose(f);
+   return 0;
+ }
++#endif
+ 
+ LIBYUV_API SAFEBUFFERS int RiscvCpuCaps(const char* cpuinfo_name) {
+   char cpuinfo_line[512];

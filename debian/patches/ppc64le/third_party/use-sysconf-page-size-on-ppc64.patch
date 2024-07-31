@@ -46,12 +46,21 @@ Index: chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_a
 ===================================================================
 --- chromium-127.0.6533.72.orig/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
 +++ chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
-@@ -20,7 +20,7 @@ static constexpr size_t kMaxSlotsPerSlot
+ // PartitionPageSize() is 4 times the OS page size.
+ static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 14) / kSmallestBucket;
+ #elif defined(PARTITION_ALLOCATOR_CONSTANTS_POSIX_NONCONST_PAGE_SIZE)
++#if PA_BUILDFLAG(PA_ARCH_CPU_ARM64)
  // System page size can be 4, 16, or 64 kiB on Linux on arm64. 64 kiB is
  // currently (kMaxSlotsPerSlotSpanBits == 13) not supported by the code,
  // so we use the 16 kiB maximum (64 kiB will crash).
--static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 14) / kSmallestBucket;
-+static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 16) / kSmallestBucket;
+ static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 14) / kSmallestBucket;
  #else
++// System page size can range from 4 to 64 kiB on Linux on other architectures.
++// 64kiB kiB is currently used by most ppc64 distributions, so use that as the
++// maximum.
++static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 16) / kSmallestBucket;
++#endif
++#else
  // A slot span can "span" multiple PartitionPages, but then its slot size is
  // larger, so it doesn't have as many slots.
+ static constexpr size_t kMaxSlotsPerSlotSpan =

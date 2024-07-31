@@ -1,11 +1,9 @@
 debianization/manpage.patch
 debianization/sandbox.patch
-debianization/master-preferences.patch
 debianization/clang-version.patch
 
 fixes/ps-print.patch
 fixes/widevine-revision.patch
-fixes/widevine-locations.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch

@@ -1,4 +1,4 @@
-chromium (127.0.6533.72-1) UNRELEASED; urgency=high
+chromium (127.0.6533.88-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -31,6 +31,11 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
       Browsing. Reported by Anonymous.
     - CVE-2024-7005: Insufficient validation of untrusted input in Safe
       Browsing. Reported by Umar Farooq.
+    - CVE-2024-6990: Uninitialized Use in Dawn. Reported by gelatin dessert.
+    - CVE-2024-7255: Out of bounds read in WebTransport.
+      Reported by Marten Richter.
+    - CVE-2024-7256: Insufficient data validation in Dawn.
+      Reported by gelatin dessert.
   * Switch from building against (gcc's) libstdc++ to (clang's) libc++.
     Upstream is playing fast and loose with memory in ways that results
     in crashes with gcc's stricter libstdc++, but not with clang's libc++
@@ -69,6 +74,7 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - bookworm/clang16.patch: refresh.
     - bookworm/rust-downgrade-osstr-users.patch: refresh w/ minor changes.
     - ungoogled/disable-privacy-sandbox.patch: refresh.
+    - disable/signin.patch: upstream dropped prefs::kAutologinEnabled.
     - upstream/crabbyav1f.patch: add build fix pulled from upstream.
     - upstream/lock-impl.patch: add build fix pulled from upstream.
     - upstream/containers-header.patch: add build fix pulled from upstream.
@@ -96,7 +102,7 @@ chromium (127.0.6533.72-1) UNRELEASED; urgency=high
     - third_party/use-sysconf-page-size-on-ppc64.patch: Refresh for upstream
       changes
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 16 Jul 2024 16:50:59 -0400
+ -- Andres Salomon <dilinger@debian.org>  Tue, 30 Jul 2024 23:50:29 -0400
 
 chromium (126.0.6478.182-1) unstable; urgency=high
 

@@ -128,6 +128,8 @@ ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
 ppc64le/third_party/dawn-fix-typos.patch
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
 
+ppc64le/core/add-ppc64-architecture-to-extensions.diff
+
 # Suppress harmless compiler warning messages that appear on ppc64 due to arch-specific warning flags being passed
 ppc64le/fixes/fix-unknown-warning-option-messages.diff
 

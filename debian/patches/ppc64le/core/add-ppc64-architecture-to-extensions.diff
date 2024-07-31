@@ -1,0 +1,42 @@
+--- a/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
++++ b/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+@@ -303,6 +303,8 @@
+     info->arch = extensions::api::runtime::PlatformArch::kMips;
+   } else if (strcmp(arch, "mips64el") == 0) {
+     info->arch = extensions::api::runtime::PlatformArch::kMips64;
++  } else if (strcmp(arch, "ppc64") == 0) {
++    info->arch = extensions::api::runtime::PlatformArch::kPpc64;
+   } else {
+     NOTREACHED_IN_MIGRATION();
+     return false;
+@@ -319,6 +321,8 @@
+     info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kMips;
+   } else if (strcmp(nacl_arch, "mips64") == 0) {
+     info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kMips64;
++  } else if (strcmp(nacl_arch, "ppc64") == 0) {
++    info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kPpc64;
+   } else {
+     NOTREACHED_IN_MIGRATION();
+     return false;
+--- a/extensions/common/api/runtime.json
++++ b/extensions/common/api/runtime.json
+@@ -98,7 +98,8 @@
+             {"name": "x86-32", "description": "Specifies the processer architecture as x86-32."},
+             {"name": "x86-64", "description": "Specifies the processer architecture as x86-64."},
+             {"name": "mips", "description": "Specifies the processer architecture as mips."},
+-            {"name": "mips64", "description": "Specifies the processer architecture as mips64."}
++            {"name": "mips64", "description": "Specifies the processer architecture as mips64."},
++            {"name": "ppc64", "description": "Specifies the processer architecture as ppc64."}
+          ],
+         "description": "The machine's processor architecture."
+       },
+@@ -111,7 +112,8 @@
+           {"name": "x86-32", "description": "Specifies the native client architecture as x86-32."},
+           {"name": "x86-64", "description": "Specifies the native client architecture as x86-64."},
+           {"name": "mips", "description": "Specifies the native client architecture as mips."},
+-          {"name": "mips64", "description": "Specifies the native client architecture as mips64."}
++          {"name": "mips64", "description": "Specifies the native client architecture as mips64."},
++          {"name": "ppc64", "description": "Specifies the native client architecture as ppc64."}
+         ]
+       },
+       {

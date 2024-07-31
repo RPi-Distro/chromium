@@ -1,0 +1,36 @@
+author: Andres Salomon <dilinger@debian.org>
+description: disable kMojoIpcz to fix trap runtime error on i386
+
+See https://bugs.debian.org/1034406
+
+Index: chromium/mojo/core/embedder/features.cc
+===================================================================
+--- chromium.orig/mojo/core/embedder/features.cc
++++ chromium/mojo/core/embedder/features.cc
+@@ -36,7 +36,7 @@ BASE_FEATURE(kMojoInlineMessagePayloads,
+ #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
+ BASE_FEATURE(kMojoIpcz, "MojoIpcz", base::FEATURE_DISABLED_BY_DEFAULT);
+ #else
+-BASE_FEATURE(kMojoIpcz, "MojoIpcz", base::FEATURE_ENABLED_BY_DEFAULT);
++BASE_FEATURE(kMojoIpcz, "MojoIpcz", base::FEATURE_DISABLED_BY_DEFAULT);
+ #endif
+ 
+ BASE_FEATURE(kMojoIpczMemV2,
+Index: chromium/mojo/core/embedder/embedder.cc
+===================================================================
+--- chromium.orig/mojo/core/embedder/embedder.cc
++++ chromium/mojo/core/embedder/embedder.cc
+@@ -168,9 +168,10 @@ bool IsMojoIpczEnabled() {
+   // process's lifetime. We cache the result of the first atomic load of this
+   // flag; but we also DCHECK that any subsequent loads would match the cached
+   // value, as a way to detect initialization races.
+-  static bool enabled = g_mojo_ipcz_enabled.load(std::memory_order_acquire);
+-  DCHECK_EQ(enabled, g_mojo_ipcz_enabled.load(std::memory_order_acquire));
+-  return enabled;
++  //static bool enabled = g_mojo_ipcz_enabled.load(std::memory_order_acquire);
++  //DCHECK_EQ(enabled, g_mojo_ipcz_enabled.load(std::memory_order_acquire));
++  //return enabled;
++  return false;
+ }
+ 
+ void InstallMojoIpczBaseSharedMemoryHooks() {

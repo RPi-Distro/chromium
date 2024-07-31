@@ -152,6 +152,8 @@ rpi/0015-v4l2decode-Fix-instance-counting-if-instance-limit-e.patch
 rpi/0016-gbm_pixmap-Avoid-spamming-BO-create-failures.patch
 rpi/0101-libyuv-Use-more-effective-NEON-detection.patch
 rpi/0201-skia-Add-armv7-optimizations.patch
+# Patch for bullseye i386, but also needed for bookworm armhf
+rpi/disable-mojo-ipcz.patch
 rpi/master-preferences.patch
 rpi/title-bar-default-system.patch-v35
 rpi/welcome-page.patch

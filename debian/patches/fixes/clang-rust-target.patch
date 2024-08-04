@@ -1,0 +1,23 @@
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+On amd64, Clang defaults to generating x86_64-pc-linux-gnu, while Rust
+generates x86_64-unknown-linux-gnu. When ThinLTO is enabled, this leads
+to link errors of the form
+
+  ld.lld-16: error: Linking two modules of different target triples:
+  $C_CXX_OBJECT is 'x86_64-pc-linux-gnu' whereas $RUST_OBJECT is
+  'x86_64-unknown-linux-gnu'
+
+--- a/build/config/linux/BUILD.gn
++++ b/build/config/linux/BUILD.gn
+@@ -27,6 +27,10 @@ config("compiler") {
+       asmflags += [ "-mbranch-protection=pac-ret" ]
+     }
+   }
++  if (current_cpu == "x64") {
++    # Match Rust output target (i.e. not x86_64-pc-linux-gnu)
++    cflags = [ "--target=x86_64-unknown-linux-gnu" ]
++  }
+ }
+ 
+ # This is included by reference in the //build/config/compiler:runtime_library

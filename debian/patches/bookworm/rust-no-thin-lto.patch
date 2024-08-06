@@ -1,0 +1,15 @@
+The Rust toolchain on bookworm does not support Chromium's ThinLTO build:
+
+  error: unknown unstable option: `split-lto-unit`
+
+--- a/build/config/rust.gni
++++ b/build/config/rust.gni
+@@ -79,7 +79,7 @@ declare_args() {
+   #
+   # TODO(crbug.com/40281834): Re-enable ThinLTO for Rust on LaCrOS
+   # TODO(b/300937673): Re-enable ThinLTO for Rust on ash-chrome
+-  toolchain_supports_rust_thin_lto = !is_chromeos
++  toolchain_supports_rust_thin_lto = false
+ 
+   # Any extra std rlibs in your Rust toolchain, relative to the standard
+   # Rust toolchain. Typically used with 'rust_sysroot_absolute'

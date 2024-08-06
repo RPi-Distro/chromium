@@ -1,4 +1,18 @@
-chromium (127.0.6533.88-2) UNRELEASED; urgency=high
+chromium (127.0.6533.99-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-7532: Out of bounds memory access in ANGLE. Reported by wgslfuzz.
+    - CVE-2024-7533: Use after free in Sharing.
+      Reported by lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+    - CVE-2024-7550: Type Confusion in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2024-7534: Heap buffer overflow in Layout.
+      Reported by Tashita Software Security.
+    - CVE-2024-7535: Inappropriate implementation in V8.
+      Reported by Tashita Software Security.
+    - CVE-2024-7536: Use after free in WebAudio.
+      Reported by Cassidy Kim(@cassidy6564).
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

@@ -1,3 +1,16 @@
+chromium (127.0.6533.88-2~deb12u1) UNRELEASED; urgency=high
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - core/add-ppc64-architecture-to-extensions.diff: Fix runtime assertion
+      trap on ppc64el systems
+
+  [ Daniel Richard G. ]
+  * Enable ThinLTO (slower linking, faster runtime) on archs that can
+    support it (closes: #1033305).
+
+ -- Timothy Pearson <tpearson@debian.org>  Wed, 31 Jul 2024 13:54:00 -0500
+
 chromium (127.0.6533.88-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

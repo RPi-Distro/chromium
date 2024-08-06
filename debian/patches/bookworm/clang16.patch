@@ -22,7 +22,18 @@ but now they're enabled unconditionally.
          }
        }
      }
-@@ -1910,7 +1905,6 @@ config("default_warnings") {
+@@ -790,10 +785,6 @@ config("compiler") {
+       if (is_apple) {
+         ldflags += [ "-Wcrl,object_path_lto" ]
+       }
+-
+-      # We only use one version of LLVM within a build so there's no need to
+-      # upgrade debug info, which can be expensive since it runs the verifier.
+-      ldflags += [ "-Wl,-mllvm,-disable-auto-upgrade-debug-info" ]
+     }
+ 
+     if (!optimize_for_size) {
+@@ -1910,7 +1901,6 @@ config("default_warnings") {
          "-Wno-vla-extension",
  
          # TODO(crbug.com/40284799): Fix and re-enable.
@@ -30,7 +41,7 @@ but now they're enabled unconditionally.
        ]
  
        cflags_cc += [
-@@ -1921,7 +1915,7 @@ config("default_warnings") {
+@@ -1921,7 +1911,7 @@ config("default_warnings") {
        if (!is_nacl) {
          cflags_cc += [
            # TODO(crbug.com/41486292): Fix and re-enable.

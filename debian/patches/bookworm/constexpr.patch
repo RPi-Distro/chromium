@@ -41,8 +41,8 @@ author: Andres Salomon <dilinger@debian.org>
  // std::string constexpr first.
 -constexpr inline std::string kLegacyHierarchyCountryCodeString{"XX"};
 -constexpr AddressCountryCode kLegacyHierarchyCountryCode =
-+const inline std::string kLegacyHierarchyCountryCodeString{"XX"};
-+const AddressCountryCode kLegacyHierarchyCountryCode =
++[[clang::no_destroy]] const inline std::string kLegacyHierarchyCountryCodeString{"XX"};
++[[clang::no_destroy]] const AddressCountryCode kLegacyHierarchyCountryCode =
      AddressCountryCode(kLegacyHierarchyCountryCodeString);
  
  // Creates an instance of the address hierarchy model corresponding to the

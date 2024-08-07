@@ -1,4 +1,19 @@
-chromium (127.0.6533.88-2~deb12u1) UNRELEASED; urgency=high
+chromium (127.0.6533.99-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-7532: Out of bounds memory access in ANGLE.
+      Reported by wgslfuzz.
+    - CVE-2024-7533: Use after free in Sharing. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+    - CVE-2024-7550: Type Confusion in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2024-7534: Heap buffer overflow in Layout.
+      Reported by Tashita Software Security.
+    - CVE-2024-7535: Inappropriate implementation in V8.
+      Reported by Tashita Software Security.
+    - CVE-2024-7536: Use after free in WebAudio.
+      Reported by Cassidy Kim(@cassidy6564).
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:
@@ -8,8 +23,17 @@ chromium (127.0.6533.88-2~deb12u1) UNRELEASED; urgency=high
   [ Daniel Richard G. ]
   * Enable ThinLTO (slower linking, faster runtime) on archs that can
     support it (closes: #1033305).
+  * Avoid some hard-coded Debian references to simplify package builds for
+    other distributions, e.g. Ubuntu.
+  * d/patches:
+    - bookworm/constexpr.patch: Add no_destroy attributes to quash many
+      "declaration requires an exit-time destructor" warnings.
+    - fixes/highway-include-path.patch: New patch to fix highway.h path.
 
- -- Timothy Pearson <tpearson@debian.org>  Wed, 31 Jul 2024 13:54:00 -0500
+  [ Grzegorz Szymaszek ]
+  * Use https instead of http in initial_bookmarks.html.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 07 Aug 2024 00:18:54 -0400
 
 chromium (127.0.6533.88-1~deb12u1) bookworm-security; urgency=high
 

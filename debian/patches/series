@@ -15,6 +15,7 @@ fixes/stats-collector.patch
 fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/chromium-browser-ui-missing-deps.patch
+fixes/highway-include-path.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch

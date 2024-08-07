@@ -1,0 +1,15 @@
+Fix an #include path so we can use our packaged version of libhwy-dev.
+
+Reported upstream at https://issues.chromium.org/357975577
+
+--- a/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
++++ b/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
+@@ -46,7 +46,7 @@
+ #include "third_party/blink/renderer/platform/wtf/text/wtf_uchar.h"
+ 
+ #if defined(BLINK_ENABLE_VECTORIZED_HTML_SCANNING)
+-#include "third_party/highway/src/hwy/highway.h"
++#include "hwy/highway.h"
+ #define VECTORIZE_SCANNING 1
+ #else
+ #define VECTORIZE_SCANNING 0

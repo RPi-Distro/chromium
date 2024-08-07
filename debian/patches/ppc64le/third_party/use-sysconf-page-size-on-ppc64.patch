@@ -46,6 +46,7 @@ Index: chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_a
 ===================================================================
 --- chromium-127.0.6533.72.orig/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
 +++ chromium-127.0.6533.72/base/allocator/partition_allocator/src/partition_alloc/partition_page_constants.h
+@@ -17,11 +17,18 @@
  // PartitionPageSize() is 4 times the OS page size.
  static constexpr size_t kMaxSlotsPerSlotSpan = 4 * (1 << 14) / kSmallestBucket;
  #elif defined(PARTITION_ALLOCATOR_CONSTANTS_POSIX_NONCONST_PAGE_SIZE)

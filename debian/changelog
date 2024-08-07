@@ -1,10 +1,11 @@
-chromium (127.0.6533.99-1) UNRELEASED; urgency=high
+chromium (127.0.6533.99-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
-    - CVE-2024-7532: Out of bounds memory access in ANGLE. Reported by wgslfuzz.
-    - CVE-2024-7533: Use after free in Sharing.
-      Reported by lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+    - CVE-2024-7532: Out of bounds memory access in ANGLE.
+      Reported by wgslfuzz.
+    - CVE-2024-7533: Use after free in Sharing. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
     - CVE-2024-7550: Type Confusion in V8.
       Reported by Zhenghang Xiao (@Kipreyyy).
     - CVE-2024-7534: Heap buffer overflow in Layout.
@@ -32,7 +33,7 @@ chromium (127.0.6533.99-1) UNRELEASED; urgency=high
   [ Grzegorz Szymaszek ]
   * Use https instead of http in initial_bookmarks.html.
 
- -- Timothy Pearson <tpearson@debian.org>  Wed, 31 Jul 2024 13:54:00 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 07 Aug 2024 00:18:54 -0400
 
 chromium (127.0.6533.88-1) unstable; urgency=high
 

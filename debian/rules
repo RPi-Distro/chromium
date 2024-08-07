@@ -42,7 +42,7 @@ defines=clang_use_chrome_plugins=false
 
 # use system rust
 export RUSTC_BOOTSTRAP=1
-export CLANG_MVERS="$(shell $(CC) --version| sed -n 's/Debian clang version //p' | cut -d. -f1)"
+export CLANG_MVERS=$(shell $(CC) --version | sed -n 's/.* clang version //p' | cut -d. -f1)
 defines+=rust_sysroot_absolute=\"/usr\"
 defines+=rust_bindgen_root=\"/usr\"
 defines+=rustc_version=\"$(shell rustc --version)\"
@@ -178,7 +178,7 @@ override_dh_auto_build-indep:
 override_dh_auto_install-arch:
 	dh_auto_install
 	# update launcher script with build information
-	sed 's|@BUILD_DIST@|$(shell cat /etc/debian_version)|' \
+	sed 's|@BUILD_DIST@|$(shell . /etc/os-release && echo "$$PRETTY_NAME")|' \
 	    < debian/scripts/chromium > debian/chromium/usr/bin/chromium
 	# move icons into /usr/share
 	./debian/scripts/icons

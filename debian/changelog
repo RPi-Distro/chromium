@@ -22,6 +22,12 @@ chromium (127.0.6533.99-1) UNRELEASED; urgency=high
   [ Daniel Richard G. ]
   * Enable ThinLTO (slower linking, faster runtime) on archs that can
     support it (closes: #1033305).
+  * Avoid some hard-coded Debian references to simplify package builds for
+    other distributions, e.g. Ubuntu.
+  * d/patches:
+    - bookworm/constexpr.patch: Add no_destroy attributes to quash many
+      "declaration requires an exit-time destructor" warnings.
+    - fixes/highway-include-path.patch: New patch to fix highway.h path.
 
   [ Grzegorz Szymaszek ]
   * Use https instead of http in initial_bookmarks.html.

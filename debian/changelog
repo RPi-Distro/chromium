@@ -22,6 +22,8 @@ chromium (127.0.6533.99-1) UNRELEASED; urgency=high
   [ Daniel Richard G. ]
   * Enable ThinLTO (slower linking, faster runtime) on archs that can
     support it (closes: #1033305).
+  * d/patches:
+    - fixes/highway-include-path.patch: New patch to fix highway.h path.
 
   [ Grzegorz Szymaszek ]
   * Use https instead of http in initial_bookmarks.html.

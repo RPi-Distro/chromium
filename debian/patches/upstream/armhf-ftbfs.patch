@@ -1,0 +1,51 @@
+
+This commit should fix the following build error:
+
+../../base/allocator/partition_allocator/src/partition_alloc/pointers/raw_ptr.h:795:22: error: no matching function for call to 'Advance'
+    raw_ptr result = Impl::Advance(p.wrapped_ptr_, delta_elems, false);
+                     ^~~~~~~~~~~~~
+../../media/gpu/v4l2/v4l2_vda_helpers.cc:403:26: note: in instantiation of function template specialization 'base::operator+<long long>' requested here
+    *endpos = (nalu.data + nalu.size) - data;
+                         ^
+../../base/allocator/partition_allocator/src/partition_alloc/pointers/raw_ptr_backup_ref_impl.h:344:3: note: candidate template ignored: requirement 'partition_alloc::internal::is_offset_type<long long>' was not satisfied [with T = const unsigned char, Z = long long]
+  Advance(T* wrapped_ptr, Z delta_elems, bool is_in_pointer_modification) {
+  ^
+1 error generated.
+
+
+commit a9727b9e7984591d1cb935024f5ed14969308310
+Author: Nathan Hebert <nhebert@chromium.org>
+Date:   Wed Jun 26 17:33:43 2024 +0000
+
+    media/v4l2/v4l2_vda_helper: Fix H.265 raw pointer offset bug
+    
+    There is a bug where the H265NALU::size, which has a type of `off_t` is
+    being used to offset H265NALU::data, which is a raw_ptr. Using off_t to
+    advance a raw_ptr is not allowed. However, there are no build targets
+    that enable H.265 and compile v4l2_vda_helpers.
+    
+    I ran into this due to my local args.gn enabling H.265 parsing.
+    
+    This CL fixes the issue by casting H265NALU::size to size_t before
+    advancing the H265::data, which fixes the compilation issue.
+    
+    Bug: None
+    Change-Id: I09cddb0223b048f868de298c1bd920e2e4b97160
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5659124
+    Reviewed-by: Fritz Koenig <frkoenig@chromium.org>
+    Commit-Queue: Nathan Hebert <nhebert@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1319876}
+
+diff --git a/media/gpu/v4l2/v4l2_vda_helpers.cc b/media/gpu/v4l2/v4l2_vda_helpers.cc
+index a4f4e516d6300..eda1cbe94b027 100644
+--- a/media/gpu/v4l2/v4l2_vda_helpers.cc
++++ b/media/gpu/v4l2/v4l2_vda_helpers.cc
+@@ -400,7 +400,7 @@ bool HEVCInputBufferFragmentSplitter::AdvanceFrameFragment(const uint8_t* data,
+         return true;
+       }
+     }
+-    *endpos = (nalu.data + nalu.size) - data;
++    *endpos = (nalu.data + base::checked_cast<size_t>(nalu.size)) - data;
+   }
+   NOTREACHED_NORETURN();
+ }

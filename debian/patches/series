@@ -25,6 +25,7 @@ upstream/crabbyav1f.patch
 upstream/lock-impl.patch
 upstream/containers-header.patch
 upstream/paint-layer-header.patch
+upstream/armhf-ftbfs.patch
 
 disable/tests.patch
 disable/unrar.patch

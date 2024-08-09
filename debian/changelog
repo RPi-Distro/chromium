@@ -3,6 +3,11 @@ chromium (127.0.6533.99-2) UNRELEASED; urgency=high
   [ Andres Salomon ]
   * d/patches/upstream/armhf-ftbfs.patch: armhf FTBFS fix from upstream.
 
+  [ Daniel Richard G. ]
+  * d/patches:
+    - ppc64le/crashpad/0002-Include-cstddef-to-fix-build.patch: Switch to
+      including stddef.h to avoid arm64 FTBFS due to extern "C" usage.
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 07 Aug 2024 00:18:54 -0400
 
 chromium (127.0.6533.99-1) unstable; urgency=high

@@ -7,6 +7,9 @@ size_t is not defined unless cstddef is included.
 ---
  third_party/crashpad/crashpad/compat/linux/sys/user.h  |   1 +
 
+(Modified to #include stddef.h instead, as user.h may be referenced
+from within an extern "C" block)
+
 Index: chromium-127.0.6533.72/third_party/crashpad/crashpad/compat/linux/sys/user.h
 ===================================================================
 --- chromium-127.0.6533.72.orig/third_party/crashpad/crashpad/compat/linux/sys/user.h
@@ -15,7 +18,7 @@ Index: chromium-127.0.6533.72/third_party/crashpad/crashpad/compat/linux/sys/use
  #ifndef CRASHPAD_COMPAT_LINUX_SYS_USER_H_
  #define CRASHPAD_COMPAT_LINUX_SYS_USER_H_
  
-+#include <cstddef>
++#include <stddef.h>
  #include_next <sys/user.h>
  
  #include <features.h>

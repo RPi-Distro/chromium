@@ -96,7 +96,6 @@ ppc64le/third_party/0002-third_party-lss-kernel-structs.patch
 
 ppc64le/webrtc/Rtc_base-system-arch.h-PPC.patch
 
-ppc64le/crashpad/0002-Include-cstddef-to-fix-build.patch
 ppc64le/third_party/0004-third_party-crashpad-port-curl-transport-ppc64.patch
 
 ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch

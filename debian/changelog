@@ -7,6 +7,8 @@ chromium (127.0.6533.99-2) UNRELEASED; urgency=high
   * d/patches:
     - ppc64le/crashpad/0002-Include-cstddef-to-fix-build.patch: Switch to
       including stddef.h to avoid arm64 FTBFS due to extern "C" usage.
+    - ppc64le/fixes/fix-different-data-layouts.patch: Fix ppc64el FTBFS due
+      to minor LLVM data-layout clash between older clang and newer rustc.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 07 Aug 2024 00:18:54 -0400
 

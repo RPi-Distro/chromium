@@ -9,6 +9,7 @@ chromium (127.0.6533.99-2) UNRELEASED; urgency=high
       the original FTBFS that this fixed is no longer reproducible.
     - ppc64le/fixes/fix-different-data-layouts.patch: Fix ppc64el FTBFS due
       to minor LLVM data-layout clash between older clang and newer rustc.
+  * d/rules: Add to ppc64el CXXFLAGS to quash copious AltiVec warnings.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 07 Aug 2024 00:18:54 -0400
 

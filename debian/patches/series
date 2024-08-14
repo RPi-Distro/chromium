@@ -96,7 +96,6 @@ ppc64le/third_party/0002-third_party-lss-kernel-structs.patch
 
 ppc64le/webrtc/Rtc_base-system-arch.h-PPC.patch
 
-ppc64le/crashpad/0002-Include-cstddef-to-fix-build.patch
 ppc64le/third_party/0004-third_party-crashpad-port-curl-transport-ppc64.patch
 
 ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch
@@ -123,6 +122,7 @@ ppc64le/fixes/fix-rustc.patch
 ppc64le/fixes/fix-rust-linking.patch
 ppc64le/fixes/fix-breakpad-compile.patch
 ppc64le/fixes/fix-partition-alloc-compile.patch
+ppc64le/fixes/fix-different-data-layouts.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch

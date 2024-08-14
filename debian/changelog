@@ -1,6 +1,7 @@
-chromium (127.0.6533.99-2) UNRELEASED; urgency=high
+chromium (127.0.6533.119-1) unstable; urgency=high
 
   [ Andres Salomon ]
+  * New upstream stable release.
   * d/patches/upstream/armhf-ftbfs.patch: armhf FTBFS fix from upstream.
 
   [ Daniel Richard G. ]
@@ -11,7 +12,7 @@ chromium (127.0.6533.99-2) UNRELEASED; urgency=high
       to minor LLVM data-layout clash between older clang and newer rustc.
   * d/rules: Add to ppc64el CXXFLAGS to quash copious AltiVec warnings.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 07 Aug 2024 00:18:54 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 14 Aug 2024 13:11:25 -0400
 
 chromium (127.0.6533.99-1) unstable; urgency=high
 

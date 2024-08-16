@@ -37,6 +37,11 @@ export CXXFLAGS+=-Wno-conversion \
 # do not optimize away null pointer safety checks
 export CXXFLAGS+=-fno-delete-null-pointer-checks
 
+ifeq (ppc64el,$(DEB_HOST_ARCH))
+# avoid altivec incompatibilities / deprecation warnings
+export CXXFLAGS+=-faltivec-src-compat=mixed -Wno-deprecated-altivec-src-compat
+endif
+
 # disable clang plugins
 defines=clang_use_chrome_plugins=false
 

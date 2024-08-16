@@ -1,3 +1,17 @@
+chromium (127.0.6533.119-1) unstable; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/patches/upstream/armhf-ftbfs.patch: armhf FTBFS fix from upstream.
+
+  [ Daniel Richard G. ]
+  * d/patches:
+    - ppc64le/crashpad/0002-Include-cstddef-to-fix-build.patch: Drop, as
+      the original FTBFS that this fixed is no longer reproducible.
+  * d/rules: Add to ppc64el CXXFLAGS to quash copious AltiVec warnings.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 14 Aug 2024 13:11:25 -0400
+
 chromium (127.0.6533.99-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

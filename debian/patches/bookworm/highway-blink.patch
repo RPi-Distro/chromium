@@ -1,0 +1,28 @@
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+The Blink code for vectorized HTML scanning requires at least highway
+(i.e. libhwy-dev) version 1.2.0, or else the armhf + arm64 builds fail
+with multiple errors like
+
+  ../../third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc:762:13: error: no member named 'Dup128VecFromValues' in namespace 'hwy::N_NEON_WITHOUT_AES'
+          hw::Dup128VecFromValues(tag, 0b0001, 0, 0, 0, 0, 0, 0b0100, 0, 0, 0, 0,
+          ~~~~^
+
+--- a/third_party/blink/renderer/core/BUILD.gn
++++ b/third_party/blink/renderer/core/BUILD.gn
+@@ -102,15 +102,6 @@ declare_args() {
+ 
+   # Use vectorization for fast path HTML parser.
+   enable_vectorized_html_scanning = false
+-
+-  # Since with currently use -msse3 (not -mssse3), there is no pshufb
+-  # instruction, so the generated code on x86 is less optimal and we enable
+-  # vectorization only for NEON.
+-  if (current_cpu == "arm" || current_cpu == "arm64") {
+-    if (arm_use_neon) {
+-      enable_vectorized_html_scanning = true
+-    }
+-  }
+ }
+ 
+ # Config for code that builds as part of core.

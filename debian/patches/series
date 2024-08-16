@@ -68,6 +68,7 @@ bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
 bookworm/crabbyav1f.patch
 bookworm/rust-no-thin-lto.patch
+bookworm/highway-blink.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

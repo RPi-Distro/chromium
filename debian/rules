@@ -48,9 +48,10 @@ defines=clang_use_chrome_plugins=false
 # use system rust
 export RUSTC_BOOTSTRAP=1
 export CLANG_MVERS=$(shell $(CC) --version | sed -n 's/.* clang version //p' | cut -d. -f1)
-defines+=rust_sysroot_absolute=\"/usr\"
+rust_sysroot=/usr
+defines+=rust_sysroot_absolute=\"$(rust_sysroot)\"
 defines+=rust_bindgen_root=\"/usr\"
-defines+=rustc_version=\"$(shell rustc --version)\"
+defines+=rustc_version=\"$(shell $(rust_sysroot)/bin/rustc --version)\"
 defines+=clang_base_path=\"/usr/lib/llvm-$(CLANG_MVERS)\"
 defines+=clang_version=\"$(CLANG_MVERS)\"
 

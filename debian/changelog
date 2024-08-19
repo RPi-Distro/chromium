@@ -1,4 +1,16 @@
-chromium (127.0.6533.119-2) UNRELEASED; urgency=high
+chromium (128.0.6613.36-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/copyright: delete third_party/siso/ which contains binaries.
+  * d/patches:
+    - fixes/blink-frags.patch: drop, merged upstream.
+    - fixes/stats-collector.patch: drop, upstream deleted broken code.
+    - upstream/armhf-ftbfs.patch: drop, merged upstream.
+    - upstream/containers-header.patch: drop, merged upstream.
+    - upstream/crabbyav1f.patch: drop, merged upstream.
+    - upstream/lock-impl.patch: drop, merged upstream.
+    - upstream/paint-layer-header.patch: drop, merged upstream.
 
   [ Daniel Richard G. ]
   * d/rules: Parameterize Rust sysroot to simplify using a different one.

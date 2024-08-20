@@ -16,8 +16,9 @@ chromium (128.0.6613.36-1) UNRELEASED; urgency=high
     - fixes/ps-print.patch: refresh.
     - system/openjpeg.patch: refresh.
     - bookworm/clang16.patch: refresh & remove another unsupported option.
-    - bookworm/constexpr.patch: refresh & update for renamed file.
+    - bookworm/constexpr.patch: refresh & add more fixes.
     - bookworm/lex-3way.patch: pull in another STL function from clang-17.
+    - bookworm/blink-attrib.patch: add build fix to reorder __attribute__.
     - fixes/highway-include-path.patch: upstream fixed the original issue
       in a broken way, making this worse. Add more to this patch to work
       around that.

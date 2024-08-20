@@ -1,0 +1,27 @@
+author: Andres Salomon <dilinger@debian.org>
+
+In file included from ../../third_party/blink/renderer/core/css/parser/css_parser_impl.cc:41:
+../../third_party/blink/renderer/core/css/parser/find_length_of_declaration_list-inl.h:347:40: error: an attribute list cannot appear here
+__attribute__((target("avx2,pclmul"))) ALWAYS_INLINE static size_t
+                                       ^~~~~~~~~~~~~
+../../base/compiler_specific.h:64:23: note: expanded from macro 'ALWAYS_INLINE'
+#define ALWAYS_INLINE [[clang::always_inline]] inline
+                      ^~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+
+
+I don't know why clang-16 doesn't like the order of [[clang::always_line]]
+and __attribute__(...) here, given that a few lines up it works fine...
+But for whatever reason it doesn't. Reversing them does work, though.
+
+--- a/third_party/blink/renderer/core/css/parser/find_length_of_declaration_list-inl.h
++++ b/third_party/blink/renderer/core/css/parser/find_length_of_declaration_list-inl.h
+@@ -344,7 +344,7 @@ __attribute__((target("avx2"))) ALWAYS_I
+ }
+ 
+ template <class CharType>
+-__attribute__((target("avx2,pclmul"))) ALWAYS_INLINE static size_t
++ALWAYS_INLINE __attribute__((target("avx2,pclmul"))) static size_t
+ FindLengthOfDeclarationListAVX2(const CharType* begin, const CharType* end) {
+   uint64_t prev_single_quote = 0;
+   uint64_t prev_double_quote = 0;

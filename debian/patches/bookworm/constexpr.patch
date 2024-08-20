@@ -79,3 +79,14 @@ author: Andres Salomon <dilinger@debian.org>
      InvalidPrefetchContainerIdForTesting = PrefetchContainerIdForTesting("");
  
  class TestPrefetchWatcherImpl;
+--- a/components/history_embeddings/ml_answerer.cc
++++ b/components/history_embeddings/ml_answerer.cc
+@@ -24,7 +24,7 @@ using optimization_guide::proto::Passage
+ 
+ namespace {
+ 
+-static constexpr std::string kPassageIdToken = "ID";
++static const std::string kPassageIdToken = "ID";
+ 
+ std::string GetPassageIdStr(size_t id) {
+   return base::StringPrintf("%04d", static_cast<int>(id));

@@ -6,7 +6,7 @@ but now they're enabled unconditionally.
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -580,15 +580,10 @@ config("compiler") {
+@@ -584,15 +584,10 @@ config("compiler") {
      # TODO(crbug.com/40284925): This isn't supported by Cronet's mainline llvm version.
      if (default_toolchain != "//build/toolchain/cros:target" &&
          !llvm_android_mainline) {
@@ -22,7 +22,7 @@ but now they're enabled unconditionally.
          }
        }
      }
-@@ -790,10 +785,6 @@ config("compiler") {
+@@ -792,10 +787,6 @@ config("compiler") {
        if (is_apple) {
          ldflags += [ "-Wcrl,object_path_lto" ]
        }
@@ -33,7 +33,7 @@ but now they're enabled unconditionally.
      }
  
      if (!optimize_for_size) {
-@@ -1910,7 +1901,6 @@ config("default_warnings") {
+@@ -1940,7 +1931,6 @@ config("default_warnings") {
          "-Wno-vla-extension",
  
          # TODO(crbug.com/40284799): Fix and re-enable.
@@ -41,7 +41,7 @@ but now they're enabled unconditionally.
        ]
  
        cflags_cc += [
-@@ -1921,7 +1911,7 @@ config("default_warnings") {
+@@ -1951,7 +1941,7 @@ config("default_warnings") {
        if (!is_nacl) {
          cflags_cc += [
            # TODO(crbug.com/41486292): Fix and re-enable.
@@ -49,4 +49,4 @@ but now they're enabled unconditionally.
 +          "-Wno-c++11-narrowing",
          ]
  
-         if (llvm_force_head_revision) {
+         # TODO(crbug.com/344680447): Fix and re-enable.

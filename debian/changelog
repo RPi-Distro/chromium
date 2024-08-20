@@ -3,6 +3,7 @@ chromium (128.0.6613.36-1) UNRELEASED; urgency=high
   [ Andres Salomon ]
   * New upstream stable release.
   * d/copyright: delete third_party/siso/ which contains binaries.
+  * d/rules: set safe_browsing_use_unrar=false to disable unrar.
   * d/patches:
     - fixes/blink-frags.patch: drop, merged upstream.
     - fixes/stats-collector.patch: drop, upstream deleted broken code.
@@ -11,6 +12,11 @@ chromium (128.0.6613.36-1) UNRELEASED; urgency=high
     - upstream/crabbyav1f.patch: drop, merged upstream.
     - upstream/lock-impl.patch: drop, merged upstream.
     - upstream/paint-layer-header.patch: drop, merged upstream.
+    - disable/unrar.patch: drop, merged upstream w/ build arg.
+    - fixes/ps-print.patch: refresh.
+    - system/openjpeg.patch: refresh.
+    - bookworm/clang16.patch: refresh.
+    - bookworm/constexpr.patch: refresh & update for renamed file.
 
   [ Daniel Richard G. ]
   * d/rules: Parameterize Rust sysroot to simplify using a different one.

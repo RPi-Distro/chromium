@@ -88,6 +88,7 @@ defines+=is_debug=false \
          use_libjpeg_turbo=true \
          use_custom_libcxx=false \
          use_unofficial_version_number=false \
+         safe_browsing_use_unrar=false \
          enable_vr=false \
          enable_nacl=false \
          enable_swiftshader=false \

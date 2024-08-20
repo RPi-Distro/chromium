@@ -21,7 +21,6 @@ upstream/mojo-null.patch
 upstream/ruy-include.patch
 
 disable/tests.patch
-disable/unrar.patch
 disable/signin.patch
 disable/android.patch
 disable/catapult.patch

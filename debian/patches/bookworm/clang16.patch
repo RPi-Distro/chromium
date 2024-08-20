@@ -41,7 +41,7 @@ but now they're enabled unconditionally.
        ]
  
        cflags_cc += [
-@@ -1951,7 +1941,7 @@ config("default_warnings") {
+@@ -1951,11 +1941,10 @@ config("default_warnings") {
        if (!is_nacl) {
          cflags_cc += [
            # TODO(crbug.com/41486292): Fix and re-enable.
@@ -50,3 +50,7 @@ but now they're enabled unconditionally.
          ]
  
          # TODO(crbug.com/344680447): Fix and re-enable.
+-        cflags_cc += [ "-Wno-missing-template-arg-list-after-template-kw" ]
+       }
+     }
+ 

@@ -22,6 +22,9 @@ chromium (128.0.6613.36-1~deb12u1) UNRELEASED; urgency=high
     - fixes/highway-include-path.patch: upstream fixed the original issue
       in a broken way, making this worse. Add more to this patch to work
       around that.
+    - bookworm/bubble-contents.patch: refresh.
+    - bookworm/crabbyav1f.patch: refresh.
+    - bookworm/gn-absl.patch: refresh.
 
   [ Daniel Richard G. ]
   * d/rules: Parameterize Rust sysroot to simplify using a different one.

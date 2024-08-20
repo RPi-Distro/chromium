@@ -19,9 +19,9 @@ In file included from ../../chrome/browser/ui/views/side_panel/side_panel_web_ui
 
 --- a/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
 +++ b/chrome/browser/ui/webui/top_chrome/webui_contents_wrapper.h
-@@ -186,7 +186,6 @@ class WebUIContentsWrapperT : public Web
-                              supports_draggable_regions,
-                              T::GetWebUIName()),
+@@ -185,7 +185,6 @@ class WebUIContentsWrapperT : public Web
+             supports_draggable_regions,
+             T::GetWebUIName()),
          webui_url_(webui_url) {
 -    static_assert(views_metrics::IsValidWebUIName("." + T::GetWebUIName()));
      if (is_ready_to_show()) {

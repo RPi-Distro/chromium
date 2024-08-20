@@ -1,10 +1,26 @@
+
 Fix an #include path so we can use our packaged version of libhwy-dev.
 
 Reported upstream at https://issues.chromium.org/357975577
 
+
+
+Oops, and upstream broke stuff further by "fixing" the header
+issue with a private .gni:
+
+ERROR at //third_party/highway/BUILD.gn:3:1: Unable to load "/chromium-128.0.6613.36/third_party/highway/src/hwy.gni".
+import("src/hwy.gni")
+^-------------------
+See //third_party/distributed_point_functions/BUILD.gn:71:5: which caused the file to be included.
+    "$dpf_highway_cpp_dir:libhwy",
+    ^----------------------------
+make[1]: *** [debian/rules:170: override_dh_auto_build-arch] Error 1
+
+
+
 --- a/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
 +++ b/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
-@@ -46,7 +46,7 @@
+@@ -51,7 +51,7 @@
  #include "third_party/blink/renderer/platform/wtf/text/wtf_uchar.h"
  
  #if defined(BLINK_ENABLE_VECTORIZED_HTML_SCANNING)
@@ -13,3 +29,27 @@ Reported upstream at https://issues.chromium.org/357975577
  #define VECTORIZE_SCANNING 1
  #else
  #define VECTORIZE_SCANNING 0
+--- a/build/linux/unbundle/highway.gn
++++ b/build/linux/unbundle/highway.gn
+@@ -1,20 +1,11 @@
+ import("//build/config/linux/pkg_config.gni")
+-import("//build/shim_headers.gni")
+-import("src/hwy.gni")
+ 
+ pkg_config("libhwy_external_config") {
+   packages = [ "libhwy" ]
+ }
+ 
+-shim_headers("libhwy_shim") {
+-  root_path = "src"
+-  headers = []
+-  foreach(header, hwy_public) {
+-    headers += [ rebase_path(header, "./src") ]
+-  }
+-}
++
+ 
+ source_set("libhwy") {
+   public_configs = [ ":libhwy_external_config" ]
+-  public_deps = [ ":libhwy_shim" ]
+ }

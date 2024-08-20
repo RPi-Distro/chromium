@@ -1933,7 +1933,9 @@ we need this for clang-16.
 +#endif // _LIBCPP_ALGORITHM
 --- /dev/null
 +++ b/__algorithm/lexicographical_compare_three_way.h
-@@ -0,0 +1,50 @@
+@@ -0,0 +1,61 @@
++#include <__compare/compare_three_way.h>
++
 +#ifndef LCTW_H_
 +#define LCTW_H_
 +namespace std {
@@ -1980,6 +1982,15 @@ we need this for clang-16.
 +                       std::strong_ordering::equal;
 +}
 +/* end cppreference stuff. */
++
++/* and this one is from clang 17 */
++template <class _InputIterator1, class _InputIterator2>
++constexpr auto lexicographical_compare_three_way(
++    _InputIterator1 __first1, _InputIterator1 __last1, _InputIterator2 __first2, _InputIterator2 __last2) {
++  return std::lexicographical_compare_three_way(
++      std::move(__first1), std::move(__last1), std::move(__first2), std::move(__last2), std::compare_three_way());
++}
++
 +}
 +#endif
 +#define LCTW_H_

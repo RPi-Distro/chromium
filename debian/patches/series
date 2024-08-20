@@ -9,9 +9,7 @@ fixes/widevine-locations.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/perfetto.patch
-fixes/blink-frags.patch
 fixes/strlcpy.patch
-fixes/stats-collector.patch
 fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/chromium-browser-ui-missing-deps.patch
@@ -20,14 +18,8 @@ fixes/highway-include-path.patch
 upstream/mojo.patch
 upstream/mojo-null.patch
 upstream/ruy-include.patch
-upstream/crabbyav1f.patch
-upstream/lock-impl.patch
-upstream/containers-header.patch
-upstream/paint-layer-header.patch
-upstream/armhf-ftbfs.patch
 
 disable/tests.patch
-disable/unrar.patch
 disable/signin.patch
 disable/android.patch
 disable/catapult.patch
@@ -69,6 +61,7 @@ bookworm/gn-absl.patch
 bookworm/crabbyav1f.patch
 bookworm/rust-no-thin-lto.patch
 bookworm/highway-blink.patch
+bookworm/blink-attrib.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch

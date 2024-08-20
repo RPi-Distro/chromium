@@ -1,6 +1,30 @@
-chromium (127.0.6533.119-1~deb12u1) UNRELEASED; urgency=high
+chromium (128.0.6613.36-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/copyright: delete third_party/siso/ which contains binaries.
+  * d/rules: set safe_browsing_use_unrar=false to disable unrar.
+  * d/patches:
+    - fixes/blink-frags.patch: drop, merged upstream.
+    - fixes/stats-collector.patch: drop, upstream deleted broken code.
+    - upstream/armhf-ftbfs.patch: drop, merged upstream.
+    - upstream/containers-header.patch: drop, merged upstream.
+    - upstream/crabbyav1f.patch: drop, merged upstream.
+    - upstream/lock-impl.patch: drop, merged upstream.
+    - upstream/paint-layer-header.patch: drop, merged upstream.
+    - disable/unrar.patch: drop, merged upstream w/ build arg.
+    - fixes/ps-print.patch: refresh.
+    - system/openjpeg.patch: refresh.
+    - bookworm/clang16.patch: refresh & remove another unsupported option.
+    - bookworm/constexpr.patch: refresh & add more fixes.
+    - bookworm/lex-3way.patch: pull in another STL function from clang-17.
+    - bookworm/blink-attrib.patch: add build fix to reorder __attribute__.
+    - fixes/highway-include-path.patch: upstream fixed the original issue
+      in a broken way, making this worse. Add more to this patch to work
+      around that.
 
   [ Daniel Richard G. ]
+  * d/rules: Parameterize Rust sysroot to simplify using a different one.
   * d/patches:
     - bookworm/highway-blink.patch: Avoid armhf/arm64 FTBFS by disabling
       Blink feature that requires newer libhwy-dev version.

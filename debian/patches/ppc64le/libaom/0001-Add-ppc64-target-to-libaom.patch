@@ -8,11 +8,11 @@ Subject: [PATCH] Add ppc64 target to libaom
  third_party/libaom/cmake_update.sh |  3 +++
  2 files changed, 15 insertions(+)
 
-Index: chromium-127.0.6533.72/third_party/libaom/BUILD.gn
+Index: chromium-128.0.6613.36/third_party/libaom/BUILD.gn
 ===================================================================
---- chromium-127.0.6533.72.orig/third_party/libaom/BUILD.gn
-+++ chromium-127.0.6533.72/third_party/libaom/BUILD.gn
-@@ -272,6 +272,18 @@ if (current_cpu == "arm64") {
+--- chromium-128.0.6613.36.orig/third_party/libaom/BUILD.gn
++++ chromium-128.0.6613.36/third_party/libaom/BUILD.gn
+@@ -275,6 +275,18 @@ if (current_cpu == "arm64") {
    }
  }
  
@@ -31,7 +31,7 @@ Index: chromium-127.0.6533.72/third_party/libaom/BUILD.gn
  static_library("libaom") {
    check_includes = false
    if (!is_debug && is_win) {
-@@ -335,6 +347,9 @@ static_library("libaom") {
+@@ -338,6 +350,9 @@ static_library("libaom") {
      # This is needed by all arm boards due to aom_arm_cpu_caps()
      sources += [ "source/libaom/aom_ports/aarch32_cpudetect.c" ]
    }
@@ -41,13 +41,13 @@ Index: chromium-127.0.6533.72/third_party/libaom/BUILD.gn
    if (is_android) {
      deps += [ "//third_party/cpu_features:ndk_compat" ]
    }
-Index: chromium-127.0.6533.72/third_party/libaom/cmake_update.sh
+Index: chromium-128.0.6613.36/third_party/libaom/cmake_update.sh
 ===================================================================
---- chromium-127.0.6533.72.orig/third_party/libaom/cmake_update.sh
-+++ chromium-127.0.6533.72/third_party/libaom/cmake_update.sh
-@@ -192,6 +192,9 @@ gen_config_files linux/arm64-cpu-detect
-   "${toolchain}/arm64-linux-gcc.cmake -DCONFIG_RUNTIME_CPU_DETECT=1 \
-    ${all_platforms}"
+--- chromium-128.0.6613.36.orig/third_party/libaom/cmake_update.sh
++++ chromium-128.0.6613.36/third_party/libaom/cmake_update.sh
+@@ -190,6 +190,9 @@ reset_dirs linux/arm64-cpu-detect
+ gen_config_files linux/arm64-cpu-detect \
+   "${toolchain}/arm64-linux-gcc.cmake ${all_platforms}"
  
 +reset_dirs linux/ppc64
 +gen_config_files linux/ppc64 "${toolchain}/ppc-linux-gcc.cmake ${all_platforms}"

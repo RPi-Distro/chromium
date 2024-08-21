@@ -1,7 +1,7 @@
-Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S
+Index: chromium-128.0.6613.36/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-127.0.6533.72/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S
++++ chromium-128.0.6613.36/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.S
 @@ -0,0 +1,3673 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -3676,10 +3676,10 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/bcm/aesp8-ppc-linux.
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S
+Index: chromium-128.0.6613.36/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-127.0.6533.72/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S
++++ chromium-128.0.6613.36/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linux.S
 @@ -0,0 +1,590 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.
@@ -4271,10 +4271,10 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/bcm/ghashp8-ppc-linu
 +// See https://www.airs.com/blog/archives/518.
 +.section .note.GNU-stack,"",%progbits
 +#endif
-Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.cmake
+Index: chromium-128.0.6613.36/third_party/boringssl/src/gen/sources.cmake
 ===================================================================
---- chromium-127.0.6533.72.orig/third_party/boringssl/src/gen/sources.cmake
-+++ chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.cmake
+--- chromium-128.0.6613.36.orig/third_party/boringssl/src/gen/sources.cmake
++++ chromium-128.0.6613.36/third_party/boringssl/src/gen/sources.cmake
 @@ -110,6 +110,7 @@ set(
    gen/bcm/aesni-x86-linux.S
    gen/bcm/aesni-x86_64-apple.S
@@ -4291,7 +4291,7 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.cmake
    gen/bcm/ghashv8-armv7-linux.S
    gen/bcm/ghashv8-armv8-apple.S
    gen/bcm/ghashv8-armv8-linux.S
-@@ -336,6 +338,7 @@ set(
+@@ -338,6 +340,7 @@ set(
    crypto/cpu_arm_freebsd.c
    crypto/cpu_arm_linux.c
    crypto/cpu_intel.c
@@ -4299,7 +4299,7 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.cmake
    crypto/crypto.c
    crypto/curve25519/curve25519.c
    crypto/curve25519/curve25519_64_adx.c
-@@ -775,37 +778,6 @@ set(
+@@ -778,37 +781,6 @@ set(
    CRYPTO_TEST_DATA
  
    crypto/blake2/blake2b256_tests.txt
@@ -4335,9 +4335,9 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.cmake
 -  crypto/cipher_extra/test/nist_cavp/tdes_ecb.txt
 -  crypto/cipher_extra/test/xchacha20_poly1305_tests.txt
    crypto/curve25519/ed25519_tests.txt
-   crypto/ecdh_extra/ecdh_tests.txt
-   crypto/evp/evp_tests.txt
-@@ -1189,1413 +1161,6 @@ set(
+   crypto/dilithium/dilithium_tests.txt
+   crypto/dilithium/edge_cases_draft_dilithium3_sign.txt
+@@ -1198,1413 +1170,6 @@ set(
  set(
    PKI_TEST_DATA
  
@@ -5748,10 +5748,10 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.cmake
 -  pki/testdata/verify_signed_data_unittest/rsa-pss-sha256.pem
 -  pki/testdata/verify_signed_data_unittest/rsa-using-ec-key.pem
 -  pki/testdata/verify_signed_data_unittest/rsa2048-pkcs1-sha512.pem
+   pki/testdata/verify_unittest/google-intermediate1.der
+   pki/testdata/verify_unittest/google-intermediate2.der
    pki/testdata/verify_unittest/google-leaf.der
-   pki/testdata/verify_unittest/self-issued.pem
- )
-@@ -2708,6 +1273,7 @@ set(
+@@ -2725,6 +1290,7 @@ set(
    gen/test_support/trampoline-armv8-apple.S
    gen/test_support/trampoline-armv8-linux.S
    gen/test_support/trampoline-armv8-win.S
@@ -5759,10 +5759,10 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.cmake
    gen/test_support/trampoline-x86-apple.S
    gen/test_support/trampoline-x86-linux.S
    gen/test_support/trampoline-x86_64-apple.S
-Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.json
+Index: chromium-128.0.6613.36/third_party/boringssl/src/gen/sources.json
 ===================================================================
---- chromium-127.0.6533.72.orig/third_party/boringssl/src/gen/sources.json
-+++ chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.json
+--- chromium-128.0.6613.36.orig/third_party/boringssl/src/gen/sources.json
++++ chromium-128.0.6613.36/third_party/boringssl/src/gen/sources.json
 @@ -88,6 +88,7 @@
        "gen/bcm/aesni-x86-linux.S",
        "gen/bcm/aesni-x86_64-apple.S",
@@ -5779,7 +5779,7 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.json
        "gen/bcm/ghashv8-armv7-linux.S",
        "gen/bcm/ghashv8-armv8-apple.S",
        "gen/bcm/ghashv8-armv8-linux.S",
-@@ -306,6 +308,7 @@
+@@ -308,6 +310,7 @@
        "crypto/cpu_arm_freebsd.c",
        "crypto/cpu_arm_linux.c",
        "crypto/cpu_intel.c",
@@ -5787,7 +5787,7 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.json
        "crypto/crypto.c",
        "crypto/curve25519/curve25519.c",
        "crypto/curve25519/curve25519_64_adx.c",
-@@ -729,37 +732,6 @@
+@@ -732,37 +735,6 @@
      ],
      "data": [
        "crypto/blake2/blake2b256_tests.txt",
@@ -5823,10 +5823,10 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.json
 -      "crypto/cipher_extra/test/nist_cavp/tdes_ecb.txt",
 -      "crypto/cipher_extra/test/xchacha20_poly1305_tests.txt",
        "crypto/curve25519/ed25519_tests.txt",
-       "crypto/ecdh_extra/ecdh_tests.txt",
-       "crypto/evp/evp_tests.txt",
-@@ -1127,1413 +1099,6 @@
-       "pki/verify_signed_data_unittest.cc"
+       "crypto/dilithium/dilithium_tests.txt",
+       "crypto/dilithium/edge_cases_draft_dilithium3_sign.txt",
+@@ -1136,1413 +1108,6 @@
+       "pki/verify_unittest.cc"
      ],
      "data": [
 -      "pki/testdata/cert_issuer_source_static_unittest/c1.pem",
@@ -7236,10 +7236,10 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.json
 -      "pki/testdata/verify_signed_data_unittest/rsa-pss-sha256.pem",
 -      "pki/testdata/verify_signed_data_unittest/rsa-using-ec-key.pem",
 -      "pki/testdata/verify_signed_data_unittest/rsa2048-pkcs1-sha512.pem",
+       "pki/testdata/verify_unittest/google-intermediate1.der",
+       "pki/testdata/verify_unittest/google-intermediate2.der",
        "pki/testdata/verify_unittest/google-leaf.der",
-       "pki/testdata/verify_unittest/self-issued.pem"
-     ]
-@@ -2631,6 +1196,7 @@
+@@ -2648,6 +1213,7 @@
        "gen/test_support/trampoline-armv8-apple.S",
        "gen/test_support/trampoline-armv8-linux.S",
        "gen/test_support/trampoline-armv8-win.S",
@@ -7247,10 +7247,10 @@ Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/sources.json
        "gen/test_support/trampoline-x86-apple.S",
        "gen/test_support/trampoline-x86-linux.S",
        "gen/test_support/trampoline-x86_64-apple.S",
-Index: chromium-127.0.6533.72/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S
+Index: chromium-128.0.6613.36/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S
 ===================================================================
 --- /dev/null
-+++ chromium-127.0.6533.72/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S
++++ chromium-128.0.6613.36/third_party/boringssl/src/gen/test_support/trampoline-ppc-linux.S
 @@ -0,0 +1,1413 @@
 +// This file is generated from a similarly-named Perl script in the BoringSSL
 +// source tree. Do not edit by hand.

@@ -12,7 +12,6 @@ fixes/perfetto.patch
 fixes/strlcpy.patch
 fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
-fixes/chromium-browser-ui-missing-deps.patch
 fixes/clang-rust-target.patch
 fixes/highway-include-path.patch
 
@@ -46,7 +45,6 @@ system/rollup.patch
 
 bookworm/clang16.patch
 bookworm/urlhelper-ctor.patch
-bookworm/nvt.patch
 bookworm/v8-wrappable.patch
 bookworm/rust-downgrade-osstr-users.patch
 bookworm/lex-3way.patch

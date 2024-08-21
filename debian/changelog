@@ -7,12 +7,14 @@ chromium (128.0.6613.36-1) UNRELEASED; urgency=high
   * d/patches:
     - fixes/blink-frags.patch: drop, merged upstream.
     - fixes/stats-collector.patch: drop, upstream deleted broken code.
+    - fixes/chromium-browser-ui-missing-deps.patch: drop, fixed upstream.
     - upstream/armhf-ftbfs.patch: drop, merged upstream.
     - upstream/containers-header.patch: drop, merged upstream.
     - upstream/crabbyav1f.patch: drop, merged upstream.
     - upstream/lock-impl.patch: drop, merged upstream.
     - upstream/paint-layer-header.patch: drop, merged upstream.
     - disable/unrar.patch: drop, merged upstream w/ build arg.
+    - bookworm/nvt.patch: drop, no longer needed.
     - fixes/ps-print.patch: refresh.
     - system/openjpeg.patch: refresh.
     - bookworm/clang16.patch: refresh & remove another unsupported option.

@@ -28,6 +28,16 @@ chromium (128.0.6613.36-1) UNRELEASED; urgency=high
   [ Daniel Richard G. ]
   * d/rules: Parameterize Rust sysroot to simplify using a different one.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/dawn-fix-typos.patch: Refresh for upstream changes
+    - third_party/use-sysconf-page-size-on-ppc64.patch: Refresh for upstream
+      changes
+    - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch:
+      Refresh for upstream changes
+    - workarounds/HACK-debian-clang-disable-base-musttail.patch: Disable
+      musttail on ppc64el platforms
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 14 Aug 2024 13:11:25 -0400
 
 chromium (127.0.6533.119-1) unstable; urgency=high

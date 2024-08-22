@@ -91,6 +91,7 @@ ppc64le/third_party/0004-third_party-crashpad-port-curl-transport-ppc64.patch
 
 ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch
 ppc64le/workarounds/HACK-debian-clang-disable-skia-musttail.patch
+ppc64le/workarounds/HACK-debian-clang-disable-base-musttail.patch
 
 ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch
 ppc64le/libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch

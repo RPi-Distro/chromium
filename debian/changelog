@@ -1,7 +1,44 @@
-chromium (128.0.6613.36-1) UNRELEASED; urgency=high
+chromium (128.0.6613.84-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2024-7964: Use after free in Passwords. Reported by Anonymous.
+    - CVE-2024-7965: Inappropriate implementation in V8. Reported by TheDog.
+    - CVE-2024-7966: Out of bounds memory access in Skia.
+      Reported by Renan Rios (@HyHy100).
+    - CVE-2024-7967: Heap buffer overflow in Fonts.
+      Reported by Tashita Software Security.
+    - CVE-2024-7968: Use after free in Autofill.
+      Reported by Han Zheng (HexHive).
+    - CVE-2024-7969: Type Confusion in V8.
+      Reported by CFF of Topsec Alpha Team.
+    - CVE-2024-7971: Type confusion in V8. Reported by Microsoft Threat
+      Intelligence Center (MSTIC), Microsoft Security Response Center (MSRC).
+    - CVE-2024-7972: Inappropriate implementation in V8.
+      Reported by Simon Gerst (intrigus-lgtm).
+    - CVE-2024-7973: Heap buffer overflow in PDFium. Reported by soiax.
+    - CVE-2024-7974: Insufficient data validation in V8 API.
+      Reported by bowu(@gocrashed).
+    - CVE-2024-7975: Inappropriate implementation in Permissions.
+      Reported by Thomas Orlita.
+    - CVE-2024-7976: Inappropriate implementation in FedCM.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-7977: Insufficient data validation in Installer.
+      Reported by Kim Dong-uk (@justlikebono).
+    - CVE-2024-7978: Insufficient policy enforcement in Data Transfer.
+      Reported by NDevTK.
+    - CVE-2024-7979: Insufficient data validation in Installer.
+      Reported by VulnNoob.
+    - CVE-2024-7980: Insufficient data validation in Installer.
+      Reported by VulnNoob.
+    - CVE-2024-7981: Inappropriate implementation in Views.
+      Reported by Thomas Orlita.
+    - CVE-2024-8033: Inappropriate implementation in WebApp Installs.
+      Reported by Lijo A.T.
+    - CVE-2024-8034: Inappropriate implementation in Custom Tabs.
+      Reported by Bharat (mrnoob).
+    - CVE-2024-8035: Inappropriate implementation in Extensions.
+      Reported by Microsoft.
   * d/copyright: delete third_party/siso/ which contains binaries.
   * d/rules: set safe_browsing_use_unrar=false to disable unrar.
   * d/patches:

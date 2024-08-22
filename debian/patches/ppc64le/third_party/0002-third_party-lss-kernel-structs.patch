@@ -1,7 +1,7 @@
-Index: chromium-127.0.6533.72/third_party/lss/linux_syscall_support.h
+Index: chromium-128.0.6613.36/third_party/lss/linux_syscall_support.h
 ===================================================================
---- chromium-127.0.6533.72.orig/third_party/lss/linux_syscall_support.h
-+++ chromium-127.0.6533.72/third_party/lss/linux_syscall_support.h
+--- chromium-128.0.6613.36.orig/third_party/lss/linux_syscall_support.h
++++ chromium-128.0.6613.36/third_party/lss/linux_syscall_support.h
 @@ -87,7 +87,7 @@
   * Porting to other related platforms should not be difficult.
   */

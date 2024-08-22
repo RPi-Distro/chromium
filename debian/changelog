@@ -1,18 +1,57 @@
-chromium (128.0.6613.36-1~deb12u1) UNRELEASED; urgency=high
+chromium (128.0.6613.84-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2024-7964: Use after free in Passwords. Reported by Anonymous.
+    - CVE-2024-7965: Inappropriate implementation in V8. Reported by TheDog.
+    - CVE-2024-7966: Out of bounds memory access in Skia.
+      Reported by Renan Rios (@HyHy100).
+    - CVE-2024-7967: Heap buffer overflow in Fonts.
+      Reported by Tashita Software Security.
+    - CVE-2024-7968: Use after free in Autofill.
+      Reported by Han Zheng (HexHive).
+    - CVE-2024-7969: Type Confusion in V8.
+      Reported by CFF of Topsec Alpha Team.
+    - CVE-2024-7971: Type confusion in V8. Reported by Microsoft Threat
+      Intelligence Center (MSTIC), Microsoft Security Response Center (MSRC).
+    - CVE-2024-7972: Inappropriate implementation in V8.
+      Reported by Simon Gerst (intrigus-lgtm).
+    - CVE-2024-7973: Heap buffer overflow in PDFium. Reported by soiax.
+    - CVE-2024-7974: Insufficient data validation in V8 API.
+      Reported by bowu(@gocrashed).
+    - CVE-2024-7975: Inappropriate implementation in Permissions.
+      Reported by Thomas Orlita.
+    - CVE-2024-7976: Inappropriate implementation in FedCM.
+      Reported by Alesandro Ortiz.
+    - CVE-2024-7977: Insufficient data validation in Installer.
+      Reported by Kim Dong-uk (@justlikebono).
+    - CVE-2024-7978: Insufficient policy enforcement in Data Transfer.
+      Reported by NDevTK.
+    - CVE-2024-7979: Insufficient data validation in Installer.
+      Reported by VulnNoob.
+    - CVE-2024-7980: Insufficient data validation in Installer.
+      Reported by VulnNoob.
+    - CVE-2024-7981: Inappropriate implementation in Views.
+      Reported by Thomas Orlita.
+    - CVE-2024-8033: Inappropriate implementation in WebApp Installs.
+      Reported by Lijo A.T.
+    - CVE-2024-8034: Inappropriate implementation in Custom Tabs.
+      Reported by Bharat (mrnoob).
+    - CVE-2024-8035: Inappropriate implementation in Extensions.
+      Reported by Microsoft.
   * d/copyright: delete third_party/siso/ which contains binaries.
   * d/rules: set safe_browsing_use_unrar=false to disable unrar.
   * d/patches:
     - fixes/blink-frags.patch: drop, merged upstream.
     - fixes/stats-collector.patch: drop, upstream deleted broken code.
+    - fixes/chromium-browser-ui-missing-deps.patch: drop, fixed upstream.
     - upstream/armhf-ftbfs.patch: drop, merged upstream.
     - upstream/containers-header.patch: drop, merged upstream.
     - upstream/crabbyav1f.patch: drop, merged upstream.
     - upstream/lock-impl.patch: drop, merged upstream.
     - upstream/paint-layer-header.patch: drop, merged upstream.
     - disable/unrar.patch: drop, merged upstream w/ build arg.
+    - bookworm/nvt.patch: drop, no longer needed.
     - fixes/ps-print.patch: refresh.
     - system/openjpeg.patch: refresh.
     - bookworm/clang16.patch: refresh & remove another unsupported option.
@@ -32,7 +71,17 @@ chromium (128.0.6613.36-1~deb12u1) UNRELEASED; urgency=high
     - bookworm/highway-blink.patch: Avoid armhf/arm64 FTBFS by disabling
       Blink feature that requires newer libhwy-dev version.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 14 Aug 2024 13:11:25 -0400
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/dawn-fix-typos.patch: Refresh for upstream changes
+    - third_party/use-sysconf-page-size-on-ppc64.patch: Refresh for upstream
+      changes
+    - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch:
+      Refresh for upstream changes
+    - workarounds/HACK-debian-clang-disable-base-musttail.patch: Disable
+      musttail on ppc64el platforms
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 22 Aug 2024 14:06:28 -0400
 
 chromium (127.0.6533.119-1) unstable; urgency=high
 

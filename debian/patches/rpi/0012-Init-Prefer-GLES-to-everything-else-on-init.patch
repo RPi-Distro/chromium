@@ -9,7 +9,7 @@ Subject: [PATCH 12/17] Init: Prefer GLES to everything else on init
 
 --- a/ui/gl/init/gl_factory.cc
 +++ b/ui/gl/init/gl_factory.cc
-@@ -103,6 +103,15 @@ GLImplementationParts GetRequestedGLImpl
+@@ -96,6 +96,15 @@ GLImplementationParts GetRequestedGLImpl
    std::optional<GLImplementationParts> impl_from_cmdline =
        GetRequestedGLImplementationFromCommandLine(cmd, fallback_to_software_gl);
  

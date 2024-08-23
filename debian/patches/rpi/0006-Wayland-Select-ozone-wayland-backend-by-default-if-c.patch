@@ -10,7 +10,7 @@ Subject: [PATCH 06/17] Wayland: Select ozone wayland backend by default if
 
 --- a/ui/linux/display_server_utils.cc
 +++ b/ui/linux/display_server_utils.cc
-@@ -121,6 +121,13 @@ void SetOzonePlatformForLinuxIfNeeded(ba
+@@ -153,6 +153,13 @@ void SetOzonePlatformForLinuxIfNeeded(ba
        command_line.AppendSwitchASCII(switches::kOzonePlatform,
                                       MaybeFixPlatformName(ozone_platform_hint));
      }

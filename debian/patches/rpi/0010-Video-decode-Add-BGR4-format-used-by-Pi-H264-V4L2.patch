@@ -19,15 +19,15 @@ Subject: [PATCH 10/17] Video decode: Add BGR4 format (used by Pi H264 V4L2)
      case AR24:
      case Q08C:
      case Q10C:
-@@ -188,6 +189,7 @@ VideoPixelFormat Fourcc::ToVideoPixelFor
-       return PIXEL_FORMAT_P016LE;
+@@ -196,6 +197,7 @@ VideoPixelFormat Fourcc::ToVideoPixelFor
+       return PIXEL_FORMAT_P010LE;
      case MT2T:
-       return PIXEL_FORMAT_P016LE;
+       return PIXEL_FORMAT_P010LE;
 +    case BGR4:
      case AR24:
        return PIXEL_FORMAT_ARGB;
      // V4L2_PIX_FMT_QC08C is a proprietary Qualcomm compressed format that can
-@@ -292,6 +294,7 @@ std::optional<Fourcc> Fourcc::ToSinglePl
+@@ -300,6 +302,7 @@ std::optional<Fourcc> Fourcc::ToSinglePl
      case P010:
      case MM21:
      case MT2T:
@@ -35,7 +35,7 @@ Subject: [PATCH 10/17] Video decode: Add BGR4 format (used by Pi H264 V4L2)
      case AR24:
        return Fourcc(value_);
      case YM12:
-@@ -327,6 +330,7 @@ bool Fourcc::IsMultiPlanar() const {
+@@ -335,6 +338,7 @@ bool Fourcc::IsMultiPlanar() const {
      case YU16:
      case P010:
      case MT2T:
@@ -57,7 +57,7 @@ Subject: [PATCH 10/17] Video decode: Add BGR4 format (used by Pi H264 V4L2)
      // Opaque format that can only be scanned out as an overlay or composited by
 --- a/media/mojo/services/gpu_mojo_media_client_linux.cc
 +++ b/media/mojo/services/gpu_mojo_media_client_linux.cc
-@@ -54,6 +54,7 @@ std::vector<Fourcc> GetPreferredRenderab
+@@ -60,6 +60,7 @@ std::vector<Fourcc> GetPreferredRenderab
  
    // Support 1-copy argb textures.
    renderable_fourccs.emplace_back(Fourcc::AR24);

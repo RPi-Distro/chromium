@@ -14,7 +14,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  7 files changed, 1834 insertions(+)
 
 --- a/third_party/skia/src/core/SkBitmapProcState.cpp
-+++ b/third_party/skia/core/SkBitmapProcState.cpp
++++ b/third_party/skia/src/core/SkBitmapProcState.cpp
 @@ -24,6 +24,7 @@
  class SkImage;
  class SkImage_Base;
@@ -236,7 +236,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
          fSampleProc32 = fBilerp ? SkOpts::S32_alpha_D32_filter_DXDY : S32_alpha_D32_nofilter_DXDY;
      }
 --- a/third_party/skia/src/core/SkBitmapProcState.h
-+++ b/third_party/skia/core/SkBitmapProcState.h
++++ b/third_party/skia/src/core/SkBitmapProcState.h
 @@ -220,6 +220,10 @@ namespace SkOpts {
      extern void (*S32_alpha_D32_filter_DXDY)(const SkBitmapProcState&,
                                               const uint32_t* xy, int count, SkPMColor*);
@@ -249,7 +249,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  }  // namespace SkOpts
  
 --- a/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
-+++ b/third_party/skia/core/SkBitmapProcState_matrixProcs.cpp
++++ b/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
 @@ -272,6 +272,530 @@ static unsigned clamp(SkFixed fx, int ma
      return SkTPin(fx >> 16, 0, max);
  }
@@ -792,7 +792,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
      nofilter_scale <mirror, mirror,  false>, filter_scale <mirror, mirror, extract_low_bits_general, false>,
      nofilter_affine<mirror, mirror>,         filter_affine<mirror, mirror, extract_low_bits_general>,
 --- a/third_party/skia/src/core/SkBitmapProcState_opts.cpp
-+++ b/third_party/skia/core/SkBitmapProcState_opts.cpp
++++ b/third_party/skia/src/core/SkBitmapProcState_opts.cpp
 @@ -20,6 +20,9 @@
  namespace SkOpts {
      DEFINE_DEFAULT(S32_alpha_D32_filter_DX);
@@ -802,10 +802,10 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +#endif
  
      void Init_BitmapProcState_ssse3();
- 
+     void Init_BitmapProcState_lasx();
 --- a/third_party/skia/src/opts/SkBitmapProcState_opts.h
-+++ b/third_party/skia/opts/SkBitmapProcState_opts.h
-@@ -428,6 +428,255 @@ static void decode_packed_coordinates_an
++++ b/third_party/skia/src/opts/SkBitmapProcState_opts.h
+@@ -434,6 +434,255 @@ static void decode_packed_coordinates_an
                                                             __lsx_vsat_hu(sum, 8)), 0);
          }
      }
@@ -1061,7 +1061,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  
  #else
  
-@@ -575,6 +824,202 @@ static void decode_packed_coordinates_an
+@@ -581,6 +830,202 @@ static void decode_packed_coordinates_an
                                                         const uint32_t*, int, SkPMColor*) = nullptr;
  #endif
  
@@ -1265,7 +1265,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  
  namespace sktests {
 --- a/third_party/skia/src/opts/SkBlitMask_opts.h
-+++ b/third_party/skia/opts/SkBlitMask_opts.h
++++ b/third_party/skia/src/opts/SkBlitMask_opts.h
 @@ -409,6 +409,322 @@ namespace SK_OPTS_NS {
      }
  }
@@ -1590,7 +1590,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  
  #endif//SkBlitMask_opts_DEFINED
 --- a/third_party/skia/src/opts/SkBlitRow_opts.h
-+++ b/third_party/skia/opts/SkBlitRow_opts.h
++++ b/third_party/skia/src/opts/SkBlitRow_opts.h
 @@ -89,6 +89,10 @@
  #endif
  

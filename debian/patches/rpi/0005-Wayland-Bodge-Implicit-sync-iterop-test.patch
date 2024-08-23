@@ -12,7 +12,7 @@ explicit sync.
 
 --- a/ui/ozone/platform/wayland/host/wayland_connection.h
 +++ b/ui/ozone/platform/wayland/host/wayland_connection.h
-@@ -355,8 +355,11 @@ class WaylandConnection {
+@@ -356,8 +356,11 @@ class WaylandConnection {
    void DumpState(std::ostream& out) const;
  
    bool UseImplicitSyncInterop() const {
@@ -25,4 +25,4 @@ explicit sync.
 +//           WaylandBufferManagerHost::SupportsImplicitSyncInterop();
    }
  
-  private:
+   // Returns a sync callback, which is invoked when the server has processed all

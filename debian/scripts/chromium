@@ -29,7 +29,7 @@ display_msg() {
   if [ -z "$DISPLAY" ]; then
     echo "$@" 1>&2
   else
-    xmessage "$@"
+    zenity --info --text="$@"
   fi
 }
 

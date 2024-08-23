@@ -183,8 +183,8 @@ Architecture: i386 amd64 arm64 armhf ppc64el
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
- x11-utils,
  xdg-utils,
+ zenity,
 Recommends:
  upower,
  udev,

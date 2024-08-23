@@ -120,9 +120,13 @@ Suggests:
 Provides:
  www-browser,
  gnome-www-browser,
+ chromium-browser,
 Breaks:
  chromium-lwn4chrome (<= 1.0-2),
  chromium-tt-rss-notifier (<= 0.5.2-2),
+ chromium-browser (<< 1:126.0.6478.126-1~deb12u1+rpt1),
+Replaces:
+ chromium-browser (<< 1:126.0.6478.126-1~deb12u1+rpt1),
 Conflicts:
  libnettle4,
  libsecret-1-0 (<< 0.18),
@@ -139,6 +143,12 @@ Section: localization
 Depends:
  ${misc:Depends},
  chromium (>= ${source:Version}), chromium (<< ${source:Version}.1~),
+Provides:
+ chromium-browser-l10n,
+Breaks:
+ chromium-browser-l10n (<< 1:126.0.6478.126-1~deb12u1+rpt1),
+Replaces:
+ chromium-browser-l10n (<< 1:126.0.6478.126-1~deb12u1+rpt1),
 Description: web browser - language packs
  Web browser that aims to build a safer, faster, and more stable internet
  browsing experience.
@@ -171,6 +181,12 @@ Depends:
  ${misc:Depends},
  ${shlibs:Depends},
  chromium (= ${binary:Version}),
+Provides:
+ chromium-chromedriver,
+Breaks:
+ chromium-chromedriver (<< 1:126.0.6478.126-1~deb12u1+rpt1),
+Replaces:
+ chromium-chromedriver (<< 1:126.0.6478.126-1~deb12u1+rpt1),
 Description: web browser - WebDriver support
  Web browser that aims to build a safer, faster, and more stable internet
  browsing experience.
@@ -218,3 +234,27 @@ Description: web browser - setuid security sandbox for chromium
  browsing experience.
  .
  This package contains the setuid chromium sandbox.
+
+Package: chromium-browser
+Section: oldlibs
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, chromium
+Description: transitional dummy package
+ This is a transitional dummy package, it can be safely removed.
+
+Package: chromium-browser-l10n
+Section: oldlibs
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, chromium-l10n
+Description: transitional dummy package
+ This is a transitional dummy package, it can be safely removed.
+
+Package: chromium-chromedriver
+Section: oldlibs
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}, chromium-driver
+Description: transitional dummy package
+ This is a transitional dummy package, it can be safely removed.

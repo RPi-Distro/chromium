@@ -1,3 +1,14 @@
+chromium (128.0.6613.84-2~deb12u1) UNRELEASE; urgency=high
+
+  [ Andres Salomon ]
+  * d/control:
+    - Bump rustc-web build-dep up to >= 1.74.
+  * d/patches:
+    - bookworm/rust-downgrade-osstr-users.patch: drop, now that we have a
+      newer rust in bookworm.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 22 Aug 2024 14:06:28 -0400
+
 chromium (128.0.6613.84-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

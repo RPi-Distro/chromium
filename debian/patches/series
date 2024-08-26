@@ -49,7 +49,6 @@ bookworm/bubble-contents.patch
 bookworm/sizet.patch
 bookworm/urlhelper-ctor.patch
 bookworm/v8-wrappable.patch
-bookworm/rust-downgrade-osstr-users.patch
 bookworm/lex-3way.patch
 bookworm/traitors.patch
 bookworm/spaceship-operator.patch

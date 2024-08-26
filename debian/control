@@ -19,7 +19,7 @@ Build-Depends:
  libclang-rt-16-dev,
  libc++-16-dev,
  libc++abi-16-dev,
- rustc (>= 1.70.0+dfsg1-5),
+ rustc (>= 1.74),
  bindgen,
  python3,
  pkg-config,

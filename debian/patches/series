@@ -12,6 +12,7 @@ fixes/perfetto.patch
 fixes/strlcpy.patch
 fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
+fixes/clang-rust-target.patch
 fixes/highway-include-path.patch
 
 upstream/mojo.patch
@@ -55,8 +56,6 @@ bookworm/spaceship-operator.patch
 bookworm/constexpr.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
-bookworm/crabbyav1f.patch
-bookworm/rust-no-thin-lto.patch
 bookworm/highway-blink.patch
 bookworm/blink-attrib.patch
 
@@ -121,6 +120,7 @@ ppc64le/fixes/fix-rustc.patch
 ppc64le/fixes/fix-rust-linking.patch
 ppc64le/fixes/fix-breakpad-compile.patch
 ppc64le/fixes/fix-partition-alloc-compile.patch
+ppc64le/fixes/fix-different-data-layouts.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch

@@ -53,7 +53,7 @@ case `uname -m` in
             exit 1
         fi
         ;;
-    armv7l)
+    armv?l)
         # Check whether this system supports NEON or ASIMD. Even though there
         # could be ARMv8 systems without ASIMD, we're far more likely to hit
         # v8 hardware emulating v7 systems with buggy VMs; so don't even

@@ -113,6 +113,7 @@ Depends:
 Recommends:
  chromium-sandbox,
  chromium-l10n,
+ rpi-chromium-mods,
 Suggests:
  chromium-shell,
  chromium-driver,

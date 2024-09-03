@@ -24,8 +24,6 @@ disable/signin.patch
 disable/android.patch
 disable/catapult.patch
 disable/font-tests.patch
-disable/swiftshader.patch
-disable/swiftshader-2.patch
 disable/google-api-warning.patch
 disable/third-party-cookies.patch
 disable/driver-chrome-path.patch

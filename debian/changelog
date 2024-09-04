@@ -1,4 +1,4 @@
-chromium (128.0.6613.119-1) UNRELEASED; urgency=high
+chromium (128.0.6613.119-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
@@ -11,7 +11,7 @@ chromium (128.0.6613.119-1) UNRELEASED; urgency=high
   * d/patches:
     - disable/swiftshader.patch: drop.
     - disable/swiftshader-2.patch: drop.
-    - disable/tests.patch: some swiftshader test deletion needed.
+    - disable/tests.patch: some swiftshader tests deletion needed.
 
   [ Timothy Pearson ]
   * d/patches:
@@ -19,7 +19,7 @@ chromium (128.0.6613.119-1) UNRELEASED; urgency=high
     - ppc64le/third_party/0001-swiftshader-fix-build.patch: Fix SwiftShader
       build on ppc64el systems
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 29 Aug 2024 01:10:43 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 04 Sep 2024 15:05:06 -0400
 
 chromium (128.0.6613.113-1) unstable; urgency=high
 

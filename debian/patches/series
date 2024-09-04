@@ -14,6 +14,7 @@ fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/clang-rust-target.patch
 fixes/highway-include-path.patch
+fixes/gpu-crash.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
@@ -81,6 +82,7 @@ ppc64le/third_party/0001-third_party-lss-Don-t-look-for-mmap2-on-ppc64.patch
 ppc64le/third_party/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
 ppc64le/third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
 ppc64le/third_party/0002-third_party-lss-kernel-structs.patch
+ppc64le/third_party/0001-swiftshader-fix-build.patch
 
 ppc64le/webrtc/Rtc_base-system-arch.h-PPC.patch
 

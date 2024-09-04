@@ -128,7 +128,8 @@ Files-Excluded:
  third_party/unrar
  third_party/apache-linux
  third_party/checkstyle
- third_party/swiftshader
+ third_party/swiftshader/tests
+ third_party/swiftshader/third_party/SPIRV-Tools/tools
  third_party/apache-win32
  third_party/apache-portable-runtime
  third_party/instrumented_lib*

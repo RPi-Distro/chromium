@@ -1,6 +1,10 @@
 out/Release/*.bin usr/lib/chromium
 out/Release/libEGL.so usr/lib/chromium
 out/Release/libGLESv2.so usr/lib/chromium
+out/Release/*swiftshader*.so usr/lib/chromium
+out/Release/libvulkan* usr/lib/chromium
+out/Release/libVk* usr/lib/chromium
+out/Release/vk_swiftshader_icd.json usr/lib/chromium
 
 out/Release/chrome_crashpad_handler usr/lib/chromium
 

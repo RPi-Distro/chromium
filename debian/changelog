@@ -1,3 +1,20 @@
+chromium (128.0.6613.119-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-8362: Use after free in WebAudio.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2024-7970: Out of bounds write in V8.
+      Reported by Cassidy Kim(@cassidy6564).
+  * Enable swiftshader support; thanks to Charles Samuels for helping out
+    on this (closes: #1064465).
+  * d/patches:
+    - disable/swiftshader.patch: drop.
+    - disable/swiftshader-2.patch: drop.
+    - disable/tests.patch: some swiftshader test deletion needed.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 29 Aug 2024 01:10:43 -0400
+
 chromium (128.0.6613.113-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

@@ -1,3 +1,11 @@
+chromium (128.0.6613.119-2) UNRELEASED; urgency=low
+
+  * d/patches/ppc64le:
+    - core/add-ppc64-architecture-string.patch
+    - fixes/fix-study-crash.patch
+
+ -- Timothy Pearson <tpearson@debian.org>  Thu, 05 Sep 2024 14:18:01 -0500
+
 chromium (128.0.6613.119-1) unstable; urgency=high
 
   [ Andres Salomon ]

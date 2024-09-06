@@ -1,3 +1,23 @@
+chromium (1:128.0.6613.119-1~deb12u1+rpt1) bookworm; urgency=medium
+
+  [ David Turner ]
+  * Import rpi and ubuntu patches
+  * Remove debian patches duplicated by rpi
+  * Disable MojoIpcz
+  * rpi build customisations
+  * Remove debian's master_preferences file
+  * Add package recommend for libwidevinecdm0
+
+  [ Serge Schneider ]
+  * Use zenity instead of xmessage for displaying messages in launcher script
+  * Replace old chromium-browser packages
+  * Update and refresh rpi patches
+  * Add chromium-browser symlink
+  * d/c: Add rpi-chromium-mods to chromium Recommends
+  * Launcher: extend NEON check to armv6l platforms
+
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 06 Sep 2024 13:52:45 +0100
+
 chromium (128.0.6613.119-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

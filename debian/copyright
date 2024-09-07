@@ -2,17 +2,27 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0
 Source: http://www.chromium.org/Home
 Upstream-Name: chromium
 Files-Excluded:
+ *.binarypb
+ *.bincfg
  *.clang-format
  *__pycache__
  *.mk
  *.so
  *.dll
  *.exe
+ *.fst
  *.jar
+ *.mp4
+ *.msi
  *.wasm
+ *.ogg
+ *.otf
  *.pyc
  *.pyd
+ *.tflite
  *.ttf
+ *.webm
+ *.zip
  *.orig
  *corpus
  *corpora
@@ -51,6 +61,7 @@ Files-Excluded:
  chrome/browser/resources/chromeos/n*
  chrome/browser/resources/default_apps
  fuchsia*
+ net/data/cache_tests
  tools/emacs
  tools/luci-go
  tools/android
@@ -97,6 +108,7 @@ Files-Excluded:
  third_party/test_fonts/README*
  third_party/pyelftools
  third_party/fontconfig
+ third_party/dawn/test
  third_party/dawn/tools/golang
  third_party/ninja
  third_party/depot_tools/ninja*
@@ -130,6 +142,7 @@ Files-Excluded:
  third_party/checkstyle
  third_party/swiftshader/tests
  third_party/swiftshader/third_party/SPIRV-Tools/tools
+ third_party/swiftshader/third_party/llvm-16.0
  third_party/apache-win32
  third_party/apache-portable-runtime
  third_party/instrumented_lib*
@@ -161,6 +174,7 @@ Files-Excluded:
  third_party/siso/siso
  third_party/accessibility-audit/axs_testing.js
  third_party/catapult
+ third_party/webgpu-cts/src
  third_party/webrtc/sdk
  third_party/webrtc/data
  third_party/webrtc/examples
@@ -176,10 +190,15 @@ Files-Excluded:
  third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
  third_party/devtools-frontend/src/third_party/esbuild/esbuild
  third_party/nearby/src/third_party
+ third_party/sqlite/src/test
  third_party/updater
  third_party/zstd
+ third_party/dawn/third_party/dxc
  third_party/dawn/third_party/khronos/OpenGL-Registry/ABI/new.gif
+ third_party/dawn/third_party/khronos/OpenGL-Registry/extensions
+ third_party/dawn/third_party/khronos/OpenGL-Registry/specs
  third_party/dawn/third_party/khronos/EGL-Registry/sdk
+ third_party/dawn/third_party/webgpu-cts
 
 
 Files: *

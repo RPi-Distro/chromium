@@ -6,6 +6,8 @@ chromium (128.0.6613.119-2) UNRELEASED; urgency=low
     - fixes/fix-study-crash.patch
 
   [ Daniel Richard G. ]
+  * d/copyright: Add some more Files-Excluded: entries.
+  * d/rules: Ensure all files in orig source tarball are user-writable.
   * d/patches/disable:
     - tests.patch: Break out SwiftShader tests deletion to...
     - tests-swiftshader.patch: ...a separate file, to simplify resolving

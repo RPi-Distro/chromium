@@ -1,3 +1,9 @@
+chromium (1:128.0.6613.119-1~deb12u1+rpt4) bookworm; urgency=medium
+
+  * Exclude unwind tabled on armhf
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Sep 2024 14:13:10 +0100
+
 chromium (1:128.0.6613.119-1~deb12u1+rpt3) bookworm; urgency=medium
 
   * Bump alternatives priority to 90

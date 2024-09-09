@@ -1,3 +1,11 @@
+chromium (1:128.0.6613.119-1~deb12u1+rpt2) bookworm; urgency=medium
+
+  [ David Turner ]
+  * rpi: Disable V4L2FlatStatefulVideoDecoder to fix HW accelerated video
+    decoding
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Sep 2024 11:45:38 +0100
+
 chromium (1:128.0.6613.119-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]

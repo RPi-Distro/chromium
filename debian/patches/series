@@ -157,3 +157,4 @@ rpi/disable-mojo-ipcz.patch
 rpi/master-preferences.patch
 rpi/title-bar-default-system.patch-v35
 rpi/welcome-page.patch
+rpi/disable_kV4L2FlatStatefulVideoDecoder.patch

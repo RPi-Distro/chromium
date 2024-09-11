@@ -1,3 +1,31 @@
+chromium (128.0.6613.137-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-8636: Heap buffer overflow in Skia.
+      Reported by Renan Rios (@hyhy_100).
+    - CVE-2024-8637: Use after free in Media Router. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+    - CVE-2024-8638: Type Confusion in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2024-8639: Use after free in Autofill. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - core/add-ppc64-architecture-string.patch
+    - fixes/fix-study-crash.patch
+
+  [ Daniel Richard G. ]
+  * d/copyright: Add some more Files-Excluded: entries.
+  * d/rules: Ensure all files in orig source tarball are user-writable.
+  * d/patches/disable:
+    - tests.patch: Break out SwiftShader tests deletion to...
+    - tests-swiftshader.patch: ...a separate file, to simplify resolving
+      conflicts with the ungoogled-chromium patch series.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 10 Sep 2024 21:56:02 -0400
+
 chromium (128.0.6613.119-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

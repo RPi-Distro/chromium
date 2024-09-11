@@ -1,30 +1,4 @@
-chromium (1:128.0.6613.119-1~deb12u1+rpt5) bookworm; urgency=medium
-
-  * Disable backtrace on 32bit ARM platforms
-
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Sep 2024 15:33:24 +0100
-
-chromium (1:128.0.6613.119-1~deb12u1+rpt4) bookworm; urgency=medium
-
-  * Exclude unwind tabled on armhf
-
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Sep 2024 14:13:10 +0100
-
-chromium (1:128.0.6613.119-1~deb12u1+rpt3) bookworm; urgency=medium
-
-  * Bump alternatives priority to 90
-
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Sep 2024 13:08:51 +0100
-
-chromium (1:128.0.6613.119-1~deb12u1+rpt2) bookworm; urgency=medium
-
-  [ David Turner ]
-  * rpi: Disable V4L2FlatStatefulVideoDecoder to fix HW accelerated video
-    decoding
-
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Sep 2024 11:45:38 +0100
-
-chromium (1:128.0.6613.119-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:128.0.6613.137-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -33,6 +7,10 @@ chromium (1:128.0.6613.119-1~deb12u1+rpt1) bookworm; urgency=medium
   * rpi build customisations
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
+  * rpi: Disable V4L2FlatStatefulVideoDecoder to fix HW accelerated video
+    decoding
+  * Disable backtrace on 32bit ARM platforms
+  * Exclude unwind tabled on armhf
 
   [ Serge Schneider ]
   * Use zenity instead of xmessage for displaying messages in launcher script
@@ -41,8 +19,37 @@ chromium (1:128.0.6613.119-1~deb12u1+rpt1) bookworm; urgency=medium
   * Add chromium-browser symlink
   * d/c: Add rpi-chromium-mods to chromium Recommends
   * Launcher: extend NEON check to armv6l platforms
+  * Bump alternatives priority to 90
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 06 Sep 2024 13:52:45 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 12 Sep 2024 00:05:14 +0100
+
+chromium (128.0.6613.137-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-8636: Heap buffer overflow in Skia.
+      Reported by Renan Rios (@hyhy_100).
+    - CVE-2024-8637: Use after free in Media Router. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+    - CVE-2024-8638: Type Confusion in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2024-8639: Use after free in Autofill. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - core/add-ppc64-architecture-string.patch
+    - fixes/fix-study-crash.patch
+
+  [ Daniel Richard G. ]
+  * d/copyright: Add some more Files-Excluded: entries.
+  * d/rules: Ensure all files in orig source tarball are user-writable.
+  * d/patches/disable:
+    - tests.patch: Break out SwiftShader tests deletion to...
+    - tests-swiftshader.patch: ...a separate file, to simplify resolving
+      conflicts with the ungoogled-chromium patch series.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 10 Sep 2024 21:56:02 -0400
 
 chromium (128.0.6613.119-1~deb12u1) bookworm-security; urgency=high
 

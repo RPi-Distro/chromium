@@ -256,6 +256,7 @@ get-orig-source:
 	@echo
 	rm -f $(debvers).excludes
 	cd $(extract) && ../debian/scripts/check-upstream
+	chmod -R u+w $(extract)
 	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
 	@echo
 	test ! -e $(origtxz) || rm -f $(origtxz)

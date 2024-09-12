@@ -20,7 +20,6 @@ upstream/ruy-include.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
-disable/signin.patch
 disable/android.patch
 disable/catapult.patch
 disable/font-tests.patch
@@ -161,3 +160,4 @@ rpi/welcome-page.patch
 rpi/disable_kV4L2FlatStatefulVideoDecoder.patch
 rpi/disable_armel_stack_trace.patch
 rpi/reduce_stderr_spam.patch
+rpi/0017-disable-browser-sign-in-feature-by-default.patch

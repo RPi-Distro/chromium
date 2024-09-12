@@ -160,3 +160,4 @@ rpi/title-bar-default-system.patch-v35
 rpi/welcome-page.patch
 rpi/disable_kV4L2FlatStatefulVideoDecoder.patch
 rpi/disable_armel_stack_trace.patch
+rpi/reduce_stderr_spam.patch

@@ -6,6 +6,8 @@ export DH_VERBOSE=1
 # indicate that binary targets do not require root
 export DEB_RULES_REQUIRES_ROOT=no
 
+include /usr/share/dpkg/pkg-info.mk
+
 -include /usr/share/dpkg/architecture.mk
 
 ifeq (armhf,$(DEB_HOST_ARCH))
@@ -242,7 +244,7 @@ else
 url=https://github.com/chromium-linux-tarballs/chromium-tarballs/releases/download/$(version)
 tarfile=$(extract)-linux.tar
 endif
-version:=$(shell dpkg-parsechangelog -S Version | sed s/-.*//)
+version:=$(DEB_VERSION_UPSTREAM)
 extract=chromium-$(version)
 tarball=$(tarfile).xz
 debvers=../chromium_$(version)

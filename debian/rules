@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/pkg-info.mk
+
 # enable verbose build messages
 export DH_VERBOSE=1
 
@@ -233,7 +235,7 @@ override_dh_auto_clean:
 ###################### upstream source downloading ############################
 
 url=https://gsdview.appspot.com/chromium-browser-official
-version=$(shell dpkg-parsechangelog -S Version | sed s/-.*//)
+version=$(DEB_VERSION_UPSTREAM)
 extract=chromium-$(version)
 tarfile=$(extract).tar
 tarball=$(tarfile).xz

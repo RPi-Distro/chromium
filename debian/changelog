@@ -1,3 +1,15 @@
+chromium (129.0.6668.42-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/patches:
+    - debianization/sandbox.patch: refresh for upstream changes. Since we
+      have some downstream users of this package, retain the Ubuntu wording.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - bookworm/clang16.patch: refresh, delete -Wno-dangling-assignment-gsl
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 10 Sep 2024 21:56:02 -0400
+
 chromium (128.0.6613.137-1) unstable; urgency=high
 
   [ Andres Salomon ]

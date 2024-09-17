@@ -9,6 +9,15 @@ chromium (129.0.6668.42-1) UNRELEASED; urgency=high
     - disable/catapult.patch: refresh.
     - bookworm/clang16.patch: refresh, delete -Wno-dangling-assignment-gsl
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/dawn-fix-typos.patch: drop, applied upstream
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh
+      for upstream changes
+    - core/cargo-add-ppc64.diff: Add ppc64 to cargo architecture definitions
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 10 Sep 2024 21:56:02 -0400
 
 chromium (128.0.6613.137-1) unstable; urgency=high

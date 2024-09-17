@@ -7,6 +7,11 @@ chromium (129.0.6668.42-1) UNRELEASED; urgency=high
     - disable/tests.patch: refresh.
     - disable/catapult.patch: refresh.
     - bookworm/clang16.patch: refresh, delete -Wno-dangling-assignment-gsl
+    - ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch:
+      refresh.
+    - ppc64le/sandbox/Sandbox-linux-services-credentials.cc-PPC.patch:
+      refresh.
+    - ppc64le/third_party/dawn-fix-ppc64le-detection.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

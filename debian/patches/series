@@ -145,7 +145,6 @@ rpi/0008-UA-string-Set-to-something-netflix-likes.patch
 rpi/0009-Build-add-use_v4l2_codec_rpi-gn-option.patch
 rpi/0010-Video-decode-Add-BGR4-format-used-by-Pi-H264-V4L2.patch
 rpi/0011-Video-decode-Fix-up-RPI-V4L2-decoder-devices.patch
-rpi/0012-Init-Prefer-GLES-to-everything-else-on-init.patch
 rpi/0013-v4l2_stateful-Add-info-line-to-indicate-V4L2-decode.patch
 rpi/0014-v4l2decode-Restrict-instances-to-2.patch
 rpi/0015-v4l2decode-Fix-instance-counting-if-instance-limit-e.patch

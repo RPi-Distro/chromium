@@ -53,6 +53,8 @@ bookworm/v8-wrappable.patch
 bookworm/lex-3way.patch
 bookworm/traitors.patch
 bookworm/spaceship-operator.patch
+bookworm/more-spaceships.patch
+bookworm/signer-lambda.patch
 bookworm/constexpr.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
@@ -127,10 +129,10 @@ ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch
 ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
 
-ppc64le/third_party/dawn-fix-typos.patch
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
 
 ppc64le/core/add-ppc64-architecture-to-extensions.diff
+ppc64le/core/cargo-add-ppc64.diff
 
 # Suppress harmless compiler warning messages that appear on ppc64 due to arch-specific warning flags being passed
 ppc64le/fixes/fix-unknown-warning-option-messages.diff

@@ -1,0 +1,11 @@
+--- a/build/rust/cargo_crate.gni
++++ b/build/rust/cargo_crate.gni
+@@ -429,7 +429,7 @@
+           rust_abi_target,
+         ]
+       }
+-      if (current_cpu == "arm64" || current_cpu == "x64") {
++      if (current_cpu == "arm64" || current_cpu == "x64" || current_cpu == "ppc64") {
+         args += [
+           "--pointer-width",
+           "64",

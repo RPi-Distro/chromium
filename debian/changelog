@@ -1,3 +1,44 @@
+chromium (129.0.6668.58-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2024-8904: Type Confusion in V8. Reported by Popax21.
+    - CVE-2024-8905: Inappropriate implementation in V8.
+      Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
+    - CVE-2024-8906: Incorrect security UI in Downloads.
+      Reported by @retsew0x01.
+    - CVE-2024-8907: Insufficient data validation in Omnibox.
+      Reported by Muhammad Zaid Ghifari.
+    - CVE-2024-8908: Inappropriate implementation in Autofill.
+      Reported by Levit Nudi from Kenya.
+    - CVE-2024-8909: Inappropriate implementation in UI.
+      Reported by Shaheen Fazim.
+  * d/patches:
+    - debianization/sandbox.patch: refresh for upstream changes. Since we
+      have some downstream users of this package, retain the Ubuntu wording.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - bookworm/clang16.patch: refresh, delete -Wno-dangling-assignment-gsl
+    - ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch:
+      refresh.
+    - ppc64le/sandbox/Sandbox-linux-services-credentials.cc-PPC.patch:
+      refresh.
+    - ppc64le/third_party/dawn-fix-ppc64le-detection.patch: refresh.
+    - bookworm/more-spaceships.patch: yet another clang-17 header
+      backport for clang-16 inadequecies.
+    - bookworm/signer-lambda.patch: clang-16 lambda bug workaround.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/dawn-fix-typos.patch: drop, applied upstream
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh
+      for upstream changes
+    - core/cargo-add-ppc64.diff: Add ppc64 to cargo architecture definitions
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 10 Sep 2024 21:56:02 -0400
+
 chromium (128.0.6613.137-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

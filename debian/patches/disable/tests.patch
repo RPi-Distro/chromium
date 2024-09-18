@@ -1,8 +1,8 @@
 --- a/third_party/devtools-frontend/src/BUILD.gn
 +++ b/third_party/devtools-frontend/src/BUILD.gn
-@@ -14,7 +14,6 @@ import("./third_party/typescript/typescr
- 
+@@ -16,7 +16,6 @@ import("./third_party/typescript/typescr
  devtools_frontend_resources_deps = [
+   ":favicon",
    "front_end",
 -  "test",
  ]
@@ -10,7 +10,7 @@
  group("devtools_all_files") {
 --- a/components/update_client/BUILD.gn
 +++ b/components/update_client/BUILD.gn
-@@ -315,8 +315,6 @@ source_set("unit_tests") {
+@@ -316,8 +316,6 @@ source_set("unit_tests") {
      "//third_party/puffin:libpuffpatch",
      "//third_party/re2",
    ]

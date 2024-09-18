@@ -1,6 +1,18 @@
-chromium (129.0.6668.42-1) UNRELEASED; urgency=high
+chromium (129.0.6668.58-1) UNRELEASED; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2024-8904: Type Confusion in V8. Reported by Popax21.
+    - CVE-2024-8905: Inappropriate implementation in V8.
+      Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
+    - CVE-2024-8906: Incorrect security UI in Downloads.
+      Reported by @retsew0x01.
+    - CVE-2024-8907: Insufficient data validation in Omnibox.
+      Reported by Muhammad Zaid Ghifari.
+    - CVE-2024-8908: Inappropriate implementation in Autofill.
+      Reported by Levit Nudi from Kenya.
+    - CVE-2024-8909: Inappropriate implementation in UI.
+      Reported by Shaheen Fazim.
   * d/patches:
     - debianization/sandbox.patch: refresh for upstream changes. Since we
       have some downstream users of this package, retain the Ubuntu wording.

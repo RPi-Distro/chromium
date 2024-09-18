@@ -49,6 +49,7 @@ bookworm/v8-wrappable.patch
 bookworm/lex-3way.patch
 bookworm/traitors.patch
 bookworm/spaceship-operator.patch
+bookworm/more-spaceships.patch
 bookworm/constexpr.patch
 bookworm/blink-attrib.patch
 

@@ -12,6 +12,8 @@ chromium (129.0.6668.42-1) UNRELEASED; urgency=high
     - ppc64le/sandbox/Sandbox-linux-services-credentials.cc-PPC.patch:
       refresh.
     - ppc64le/third_party/dawn-fix-ppc64le-detection.patch: refresh.
+    - bookworm/more-spaceships.patch: yet another clang-17 header
+      backport for clang-16 inadequecies.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

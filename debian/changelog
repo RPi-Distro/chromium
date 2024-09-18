@@ -27,6 +27,7 @@ chromium (129.0.6668.58-1~deb12u1) UNRELEASED; urgency=high
     - bookworm/more-spaceships.patch: yet another clang-17 header
       backport for clang-16 inadequecies.
     - bookworm/signer-lambda.patch: clang-16 lambda bug workaround.
+    - bookworm/bubble-contents.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

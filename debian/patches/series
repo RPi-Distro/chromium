@@ -50,6 +50,7 @@ bookworm/lex-3way.patch
 bookworm/traitors.patch
 bookworm/spaceship-operator.patch
 bookworm/more-spaceships.patch
+bookworm/signer-lambda.patch
 bookworm/constexpr.patch
 bookworm/blink-attrib.patch
 

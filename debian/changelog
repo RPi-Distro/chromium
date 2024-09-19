@@ -1,4 +1,4 @@
-chromium (129.0.6668.58-1) UNRELEASED; urgency=high
+chromium (129.0.6668.58-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -37,7 +37,7 @@ chromium (129.0.6668.58-1) UNRELEASED; urgency=high
       for upstream changes
     - core/cargo-add-ppc64.diff: Add ppc64 to cargo architecture definitions
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 10 Sep 2024 21:56:02 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 18 Sep 2024 20:47:23 -0400
 
 chromium (128.0.6613.137-1) unstable; urgency=high
 

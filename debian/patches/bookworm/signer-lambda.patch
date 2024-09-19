@@ -1,0 +1,39 @@
+author: Andres Salomon <dilinger@debian.org>
+
+work around the following build error (likely caused by a lambda compiler
+issue in clang-16):
+
+../../optional:665:45: error: cannot form a reference to 'void'
+          return is_constructible_v<_Tp, _Up&&> &&
+                                            ^
+../../optional:767:47: note: in instantiation of function template specialization 'std::optional<web_package::WebBundleSigner::IntegrityBlockAttributes>::_CheckOptionalArgsConstructor::__enable_implicit<void>' requested here
+        _CheckOptionalArgsCtor<_Up>::template __enable_implicit<_Up>()
+                                              ^
+../../optional:770:15: note: while substituting prior template arguments into non-type template parameter [with _Up = void]
+    constexpr optional(_Up&& __v)
+              ^~~~~~~~~~~~~~~~~~~
+../../components/web_package/test_support/signed_web_bundles/web_bundle_signer.cc:320:20: note: while substituting deduced template arguments into function template 'optional' [with _Up = void, $1 = (no value)]
+  ib_attributes = {.web_bundle_id = absl::visit(
+                   ^
+1 error generated.
+
+
+
+--- a/components/web_package/test_support/signed_web_bundles/web_bundle_signer.cc
++++ b/components/web_package/test_support/signed_web_bundles/web_bundle_signer.cc
+@@ -317,13 +317,13 @@ void FillIdAttributesIfPossibleAndNecess
+       errors_for_testing.Has(IntegrityBlockErrorForTesting::kNoAttributes)) {
+     return;
+   }
+-  ib_attributes = {.web_bundle_id = absl::visit(
++  ib_attributes = WebBundleSigner::IntegrityBlockAttributes({.web_bundle_id = absl::visit(
+                        [](const auto& key_pair) {
+                          return SignedWebBundleId::CreateForPublicKey(
+                                     key_pair.public_key)
+                              .id();
+                        },
+-                       key_pairs[0])};
++                       key_pairs[0])});
+ }
+ }  // namespace
+ 

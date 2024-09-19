@@ -1,8 +1,6 @@
-Index: chromium-128.0.6613.36/third_party/dawn/src/dawn/common/Platform.h
-===================================================================
---- chromium-128.0.6613.36.orig/third_party/dawn/src/dawn/common/Platform.h
-+++ chromium-128.0.6613.36/third_party/dawn/src/dawn/common/Platform.h
-@@ -158,10 +158,12 @@
+--- a/third_party/dawn/src/dawn/common/Platform.h
++++ b/third_party/dawn/src/dawn/common/Platform.h
+@@ -159,10 +159,12 @@
  #elif defined(__s390x__)
  #define DAWN_PLATFORM_IS_S390X 1
  
@@ -15,5 +13,5 @@ Index: chromium-128.0.6613.36/third_party/dawn/src/dawn/common/Platform.h
 +#elif defined(__PPC__)
 +#define DAWN_PLATFORM_IS_PPC 1
  
- #else
- #error "Unsupported platform."
+ #elif defined(__wasm32__)
+ #define DAWN_PLATFORM_IS_WASM32 1

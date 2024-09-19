@@ -1,20 +1,4 @@
-chromium (1:128.0.6613.137-1~deb12u1+rpt3) bookworm; urgency=medium
-
-  * Remove rpi/0012-Init-Prefer-GLES-to-everything-else-on-init.patch
-
- -- Serge Schneider <serge@raspberrypi.com>  Wed, 18 Sep 2024 13:13:29 +0100
-
-chromium (1:128.0.6613.137-1~deb12u1+rpt2) bookworm; urgency=medium
-
-  [ David Turner ]
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  [ Serge Schneider ]
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 12 Sep 2024 13:48:48 +0100
-
-chromium (1:128.0.6613.137-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:129.0.6668.58-1~deb12u1+rpt1) jammy; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -27,6 +11,9 @@ chromium (1:128.0.6613.137-1~deb12u1+rpt1) bookworm; urgency=medium
     decoding
   * Disable backtrace on 32bit ARM platforms
   * Exclude unwind tabled on armhf
+  * Reduce stderr-spamming when playing h264 on a Pi5
+  * Remove rpi/0012-Init-Prefer-GLES-to-everything-else-on-init.patch
+  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
 
   [ Serge Schneider ]
   * Use zenity instead of xmessage for displaying messages in launcher script
@@ -36,8 +23,51 @@ chromium (1:128.0.6613.137-1~deb12u1+rpt1) bookworm; urgency=medium
   * d/c: Add rpi-chromium-mods to chromium Recommends
   * Launcher: extend NEON check to armv6l platforms
   * Bump alternatives priority to 90
+  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 12 Sep 2024 00:05:14 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 19 Sep 2024 23:44:26 +0100
+
+chromium (129.0.6668.58-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2024-8904: Type Confusion in V8. Reported by Popax21.
+    - CVE-2024-8905: Inappropriate implementation in V8.
+      Reported by Ganjiang Zhou(@refrain_areu) of ChaMd5-H1 team.
+    - CVE-2024-8906: Incorrect security UI in Downloads.
+      Reported by @retsew0x01.
+    - CVE-2024-8907: Insufficient data validation in Omnibox.
+      Reported by Muhammad Zaid Ghifari.
+    - CVE-2024-8908: Inappropriate implementation in Autofill.
+      Reported by Levit Nudi from Kenya.
+    - CVE-2024-8909: Inappropriate implementation in UI.
+      Reported by Shaheen Fazim.
+  * d/patches:
+    - debianization/sandbox.patch: refresh for upstream changes. Since we
+      have some downstream users of this package, retain the Ubuntu wording.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - bookworm/clang16.patch: refresh, delete -Wno-dangling-assignment-gsl
+    - ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch:
+      refresh.
+    - ppc64le/sandbox/Sandbox-linux-services-credentials.cc-PPC.patch:
+      refresh.
+    - ppc64le/third_party/dawn-fix-ppc64le-detection.patch: refresh.
+    - bookworm/more-spaceships.patch: yet another clang-17 header
+      backport for clang-16 inadequecies.
+    - bookworm/signer-lambda.patch: clang-16 lambda bug workaround.
+    - bookworm/bubble-contents.patch: refresh.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/dawn-fix-typos.patch: drop, applied upstream
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh
+      for upstream changes
+    - core/cargo-add-ppc64.diff: Add ppc64 to cargo architecture definitions
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 18 Sep 2024 20:47:23 -0400
 
 chromium (128.0.6613.137-1~deb12u1) bookworm-security; urgency=high
 

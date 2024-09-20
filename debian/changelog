@@ -1,4 +1,4 @@
-chromium (1:129.0.6668.58-1~deb12u1+rpt1) jammy; urgency=medium
+chromium (1:129.0.6668.58-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -7,8 +7,6 @@ chromium (1:129.0.6668.58-1~deb12u1+rpt1) jammy; urgency=medium
   * rpi build customisations
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
-  * rpi: Disable V4L2FlatStatefulVideoDecoder to fix HW accelerated video
-    decoding
   * Disable backtrace on 32bit ARM platforms
   * Exclude unwind tabled on armhf
   * Reduce stderr-spamming when playing h264 on a Pi5
@@ -24,8 +22,9 @@ chromium (1:129.0.6668.58-1~deb12u1+rpt1) jammy; urgency=medium
   * Launcher: extend NEON check to armv6l platforms
   * Bump alternatives priority to 90
   * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
+  * Drop rpi/0004-DirectDecode-Add-option-flags-when-compiling-on-linu.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 19 Sep 2024 23:44:26 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 20 Sep 2024 01:01:30 +0100
 
 chromium (129.0.6668.58-1~deb12u1) bookworm-security; urgency=high
 

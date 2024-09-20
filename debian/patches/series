@@ -124,6 +124,9 @@ ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
 
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
 
+ppc64le/core/add-ppc64-architecture-string.patch
+ppc64le/fixes/fix-study-crash.patch
+
 ppc64le/core/add-ppc64-architecture-to-extensions.diff
 ppc64le/core/cargo-add-ppc64.diff
 

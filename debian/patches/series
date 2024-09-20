@@ -15,6 +15,7 @@ fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/clang-rust-target.patch
 fixes/highway-include-path.patch
 fixes/gpu-crash.patch
+fixes/predictor-denial-of-service.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch

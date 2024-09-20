@@ -1,3 +1,13 @@
+chromium (129.0.6668.58-2) UNRELEASED; urgency=low
+
+  [ Timothy Pearson ]
+  * d/patches:
+    - fixes/predictor-denial-of-service.patch: Work around upstream
+      issue #368562245, which can cause denial of service of the entire
+      browser process on specific types of Web sites.
+
+ -- Timothy Pearson <tpearson@debian.org>  Fri, 20 Sep 2024 18:21:00 -0500
+
 chromium (129.0.6668.58-1) unstable; urgency=high
 
   [ Andres Salomon ]

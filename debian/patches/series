@@ -139,7 +139,6 @@ ppc64le/fixes/fix-unknown-warning-option-messages.diff
 #ppc64le/core/baseline-isa-3-0.patch
 
 # Raspberry Pi OS patches
-rpi/0004-DirectDecode-Add-option-flags-when-compiling-on-linu.patch
 rpi/0005-Wayland-Bodge-Implicit-sync-iterop-test.patch
 rpi/0006-Wayland-Select-ozone-wayland-backend-by-default-if-c.patch
 rpi/0007-Widevide-Add.patch

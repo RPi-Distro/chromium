@@ -10,7 +10,7 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
 
 --- a/third_party/libyuv/BUILD.gn
 +++ b/third_party/libyuv/BUILD.gn
-@@ -188,7 +188,6 @@ static_library("libyuv_internal") {
+@@ -207,7 +207,6 @@ static_library("libyuv_internal") {
      configs += [ "//build/config/compiler:optimize_max" ]
    }
  
@@ -18,7 +18,7 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
    if (!is_win) {
      cflags = [
        # "-mpopcnt",
-@@ -197,6 +196,11 @@ static_library("libyuv_internal") {
+@@ -216,6 +215,11 @@ static_library("libyuv_internal") {
        "-ffp-contract=fast",  # Enable fma vectorization for NEON.
      ]
    }
@@ -30,9 +30,9 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
  }
  
  if (libyuv_use_neon) {
-@@ -229,6 +233,11 @@ if (libyuv_use_neon) {
- 
-     if (current_cpu != "arm64") {
+@@ -240,6 +244,11 @@ if (libyuv_use_neon) {
+       cflags = [ "-march=armv8-a+dotprod+i8mm" ]
+     } else {
        configs -= [ "//build/config/compiler:compiler_arm_fpu" ]
 +      if (arm_version < 7) {
 +        configs += [
@@ -44,9 +44,9 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
    }
 --- a/third_party/libyuv/source/cpu_id.cc
 +++ b/third_party/libyuv/source/cpu_id.cc
-@@ -132,6 +132,18 @@ static int GetXCR0() {
- #pragma optimize("g", on)
- #endif
+@@ -155,6 +155,18 @@ static int cpuinfo_search(const char* cp
+   return p && (p[needle_len] == ' ' || p[needle_len] == '\n');
+ }
  
 +#ifdef __ARMEL__
 +// This is (a) simpler and (b) works in sandbox vs the /proc/cpuinfo method
@@ -63,11 +63,11 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
  // Based on libvpx arm_cpudetect.c
  // For Arm, but public to allow testing on any CPU
  LIBYUV_API SAFEBUFFERS int ArmCpuCaps(const char* cpuinfo_name) {
-@@ -161,6 +173,7 @@ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(co
+@@ -177,6 +189,7 @@ LIBYUV_API SAFEBUFFERS int ArmCpuCaps(co
    fclose(f);
-   return 0;
+   return features;
  }
 +#endif
  
- LIBYUV_API SAFEBUFFERS int RiscvCpuCaps(const char* cpuinfo_name) {
-   char cpuinfo_line[512];
+ #ifdef __aarch64__
+ #ifdef __linux__

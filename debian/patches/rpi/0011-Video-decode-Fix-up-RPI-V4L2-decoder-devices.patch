@@ -10,7 +10,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
 
 --- a/media/gpu/v4l2/v4l2_device.cc
 +++ b/media/gpu/v4l2/v4l2_device.cc
-@@ -848,11 +848,19 @@ void V4L2Device::CloseDevice() {
+@@ -852,11 +852,19 @@ void V4L2Device::CloseDevice() {
  }
  
  void V4L2Device::EnumerateDevicesForType(Type type) {
@@ -30,7 +30,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
  
    std::string device_pattern;
    v4l2_buf_type buf_type;
-@@ -888,7 +896,11 @@ void V4L2Device::EnumerateDevicesForType
+@@ -892,7 +900,11 @@ void V4L2Device::EnumerateDevicesForType
    // We are sandboxed, so we can't query directory contents to check which
    // devices are actually available. Try to open the first 10; if not present,
    // we will just fail to open immediately.
@@ -44,7 +44,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
    }
 --- a/media/gpu/v4l2/v4l2_utils.cc
 +++ b/media/gpu/v4l2/v4l2_utils.cc
-@@ -502,7 +502,13 @@ struct timeval TimeDeltaToTimeVal(base::
+@@ -559,7 +559,13 @@ struct timeval TimeDeltaToTimeVal(base::
  std::optional<SupportedVideoDecoderConfigs> GetSupportedV4L2DecoderConfigs() {
    SupportedVideoDecoderConfigs supported_media_configs;
  
@@ -58,7 +58,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
    base::ScopedFD device_fd(HANDLE_EINTR(
        open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
    if (!device_fd.is_valid()) {
-@@ -548,7 +554,13 @@ std::optional<SupportedVideoDecoderConfi
+@@ -605,7 +611,13 @@ std::optional<SupportedVideoDecoderConfi
  }
  
  bool IsV4L2DecoderStateful() {

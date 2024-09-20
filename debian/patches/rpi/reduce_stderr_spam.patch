@@ -1,6 +1,6 @@
 --- a/gpu/ipc/client/shared_image_interface_proxy.cc
 +++ b/gpu/ipc/client/shared_image_interface_proxy.cc
-@@ -126,7 +126,7 @@ Mailbox SharedImageInterfaceProxy::Creat
+@@ -131,7 +131,7 @@ Mailbox SharedImageInterfaceProxy::Creat
    }
  
    if (handle_to_populate->is_null()) {

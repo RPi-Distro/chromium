@@ -5,34 +5,31 @@ See https://bugs.debian.org/1034406
 
 --- a/mojo/core/embedder/features.cc
 +++ b/mojo/core/embedder/features.cc
-@@ -36,7 +36,7 @@ BASE_FEATURE(kMojoInlineMessagePayloads,
+@@ -37,7 +37,7 @@ BASE_FEATURE(kMojoInlineMessagePayloads,
  #if BUILDFLAG(IS_CHROMEOS)
  BASE_FEATURE(kMojoIpcz, "MojoIpcz", base::FEATURE_DISABLED_BY_DEFAULT);
  #else
 -BASE_FEATURE(kMojoIpcz, "MojoIpcz", base::FEATURE_ENABLED_BY_DEFAULT);
 +BASE_FEATURE(kMojoIpcz, "MojoIpcz", base::FEATURE_DISABLED_BY_DEFAULT);
  #endif
+ #endif  // BUILDFLAG(MOJO_SUPPORT_LEGACY_CORE)
  
- BASE_FEATURE(kMojoIpczMemV2,
 --- a/mojo/core/embedder/embedder.cc
 +++ b/mojo/core/embedder/embedder.cc
-@@ -167,12 +167,13 @@ bool IsMojoIpczEnabled() {
-   // and DCHECK that every subsequent call produces the same result. Note that
-   // setting `disable_ipcz` in the Mojo config overrides both the Feature value
-   // and the environment variable if set.
--  const bool enabled = (g_mojo_ipcz_enabled.load(std::memory_order_acquire) ||
--                        IsMojoIpczForceEnabledByEnvironment()) &&
--                       !g_mojo_ipcz_force_disabled;
--  static bool enabled_on_first_call = enabled;
--  DCHECK_EQ(enabled, enabled_on_first_call);
--  return enabled;
-+  //const bool enabled = (g_mojo_ipcz_enabled.load(std::memory_order_acquire) ||
-+  //                      IsMojoIpczForceEnabledByEnvironment()) &&
-+  //                     !g_mojo_ipcz_force_disabled;
-+  //static bool enabled_on_first_call = enabled;
-+  //DCHECK_EQ(enabled, enabled_on_first_call);
-+  //return enabled;
+@@ -188,6 +188,8 @@ scoped_refptr<base::SingleThreadTaskRunn
+ }
+ 
+ bool IsMojoIpczEnabled() {
 +  return false;
++/*
+ #if !BUILDFLAG(MOJO_SUPPORT_LEGACY_CORE)
+   return true;
+ #else
+@@ -205,6 +207,7 @@ bool IsMojoIpczEnabled() {
+   DCHECK_EQ(enabled, enabled_on_first_call);
+   return enabled;
+ #endif
++*/
  }
  
  void InstallMojoIpczBaseSharedMemoryHooks() {

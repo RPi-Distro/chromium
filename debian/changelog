@@ -1,4 +1,14 @@
-chromium (129.0.6668.58-2) UNRELEASED; urgency=low
+chromium (129.0.6668.70-1) UNRELEASED; urgency=low
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-9120: Use after free in Dawn. Reported by Anonymous.
+    - CVE-2024-9121: Inappropriate implementation in V8.
+      Reported by Tashita Software Security.
+    - CVE-2024-9122: Type Confusion in V8.
+      Reported by Seunghyun Lee (@0x10n).
+    - CVE-2024-9123: Integer overflow in Skia.
+      Reported by raven at KunLun lab.
 
   [ Timothy Pearson ]
   * d/patches:

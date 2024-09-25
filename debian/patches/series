@@ -15,6 +15,7 @@ fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/clang-rust-target.patch
 fixes/highway-include-path.patch
 fixes/gpu-crash.patch
+fixes/predictor-denial-of-service.patch
 
 upstream/mojo.patch
 upstream/mojo-null.patch
@@ -130,6 +131,9 @@ ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch
 ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
 
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
+
+ppc64le/core/add-ppc64-architecture-string.patch
+ppc64le/fixes/fix-study-crash.patch
 
 ppc64le/core/add-ppc64-architecture-to-extensions.diff
 ppc64le/core/cargo-add-ppc64.diff

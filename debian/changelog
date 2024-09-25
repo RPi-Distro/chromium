@@ -1,4 +1,4 @@
-chromium (129.0.6668.70-1) UNRELEASED; urgency=low
+chromium (129.0.6668.70-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
@@ -9,6 +9,7 @@ chromium (129.0.6668.70-1) UNRELEASED; urgency=low
       Reported by Seunghyun Lee (@0x10n).
     - CVE-2024-9123: Integer overflow in Skia.
       Reported by raven at KunLun lab.
+  * d/copyright: delete more upstream .clang, .git, and android residue.
 
   [ Timothy Pearson ]
   * d/patches:
@@ -16,7 +17,7 @@ chromium (129.0.6668.70-1) UNRELEASED; urgency=low
       issue #368562245, which can cause denial of service of the entire
       browser process on specific types of Web sites.
 
- -- Timothy Pearson <tpearson@debian.org>  Fri, 20 Sep 2024 18:21:00 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 25 Sep 2024 15:23:27 -0400
 
 chromium (129.0.6668.58-1) unstable; urgency=high
 

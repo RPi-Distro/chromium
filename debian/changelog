@@ -1,10 +1,4 @@
-chromium (1:129.0.6668.58-1~deb12u1+rpt2) bookworm; urgency=medium
-
-  * Drop rpi/disable-mojo-ipcz.patch
-
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 20 Sep 2024 15:01:01 +0100
-
-chromium (1:129.0.6668.58-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:129.0.6668.70-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -29,8 +23,30 @@ chromium (1:129.0.6668.58-1~deb12u1+rpt1) bookworm; urgency=medium
   * Bump alternatives priority to 90
   * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
   * Drop rpi/0004-DirectDecode-Add-option-flags-when-compiling-on-linu.patch
+  * Drop rpi/disable-mojo-ipcz.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 20 Sep 2024 01:01:30 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 26 Sep 2024 21:08:38 +0100
+
+chromium (129.0.6668.70-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-9120: Use after free in Dawn. Reported by Anonymous.
+    - CVE-2024-9121: Inappropriate implementation in V8.
+      Reported by Tashita Software Security.
+    - CVE-2024-9122: Type Confusion in V8.
+      Reported by Seunghyun Lee (@0x10n).
+    - CVE-2024-9123: Integer overflow in Skia.
+      Reported by raven at KunLun lab.
+  * d/copyright: delete more upstream .clang, .git, and android residue.
+
+  [ Timothy Pearson ]
+  * d/patches:
+    - fixes/predictor-denial-of-service.patch: Work around upstream
+      issue #368562245, which can cause denial of service of the entire
+      browser process on specific types of Web sites.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 25 Sep 2024 15:23:27 -0400
 
 chromium (129.0.6668.58-1~deb12u1) bookworm-security; urgency=high
 

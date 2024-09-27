@@ -13,10 +13,11 @@ LIBDIR=/usr/lib/$APPNAME
 CHROMIUM_FLAGS=""
 
 usage () {
-  echo "$APPNAME [-h|--help] [-g|--debug] [--temp-profile] [options] [URL]"
+  echo "$APPNAME [-h|--help] [-g|--debug] [--no-memcheck] [--temp-profile] [options] [URL]"
   echo
   echo "        -g or --debug              Start within $GDB"
   echo "        -h or --help               This help screen"
+  echo "        --no-memcheck              Skip warning on low RAM devices"
   echo "        --temp-profile             Start with a new and temporary profile"
   echo "        --enable-remote-extensions Allow extensions from remote sites"
   echo
@@ -33,6 +34,15 @@ display_msg() {
   fi
 }
 
+display_qstn() {
+  if [ -z "$DISPLAY" ]; then
+    echo "$1"
+  else
+    zenity --title=Chromium --text="$1" --question --ok-label="$2" \
+      --cancel-label=Cancel --icon-name=dialog-warning
+  fi
+}
+
 nosse3="\
 The hardware on this system lacks support for the sse3 instruction set.
 The upstream chromium project no longer supports this configuration.
@@ -44,6 +54,11 @@ The hardware on this system lacks support for NEON SIMD extensions.
 We now require NEON or equivalent architecture extensions on ARM-based
 machines. See https://lists.debian.org/debian-devel/2023/09/msg00175.html
 for more information."
+
+lowmem="\
+It is not recommended to run Chromium on devices with less than 1GB of RAM."
+
+lowmemok="Launch anyway"
 
 case `uname -m` in
     i386|i586|i686|x86_64)
@@ -89,6 +104,7 @@ export CHROME_DESKTOP="chromium.desktop"
 export CHROME_VERSION_EXTRA="built on @BUILD_DIST@"
 
 want_debug=0
+want_memcheck=1
 want_temp_profile=0
 extra_args=0
 while [ $# -gt 0 -a $# -ne $extra_args ]; do
@@ -101,6 +117,9 @@ while [ $# -gt 0 -a $# -ne $extra_args ]; do
       shift ;;
     --temp-profile )
       want_temp_profile=1
+      shift ;;
+    --no-memcheck )
+      want_memcheck=0
       shift ;;
     --enable-remote-extensions )
       CHROMIUM_FLAGS="$CHROMIUM_FLAGS --enable-remote-extensions"
@@ -116,6 +135,15 @@ while [ $# -gt 0 -a $# -ne $extra_args ]; do
       break ;;
   esac
 done
+
+if [ $want_memcheck -eq 1 ]; then
+  memkb=$(awk '/^MemTotal/{print $2; exit}' /proc/meminfo)
+  if [ $memkb -le 524288 ]; then
+    if ! display_qstn "$lowmem" "$lowmemok"; then
+	    exit 1
+    fi
+  fi
+fi
 
 # Whitelist installed extensions that are specified via --load-extension
 if [ -z "$(echo $CHROMIUM_FLAGS | grep \\-\\-enable-remote-extensions)" ]; then

@@ -45,6 +45,7 @@ system/rapidjson.patch
 system/rollup.patch
 
 bookworm/clang16.patch
+bookworm/libxml-parseerr.patch
 bookworm/urlhelper-ctor.patch
 bookworm/v8-wrappable.patch
 bookworm/lex-3way.patch

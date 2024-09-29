@@ -2,6 +2,9 @@ chromium (129.0.6668.70-1) UNRELEASED; urgency=high
 
   * d/patches/bookworm/libxml-parseerr.patch: readd for downgraded
     libxml2 in unstable (closes: #1082907).
+  * Build against system libtiff, thanks to
+    Soren Stoutner <soren@stoutner.com> for getting this fixed upstream
+    (closes: #1033747).
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 25 Sep 2024 15:23:27 -0400
 

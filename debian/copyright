@@ -181,6 +181,7 @@ Files-Excluded:
  third_party/webrtc/data
  third_party/webrtc/examples
  third_party/pdfium/third_party/libopenjpeg
+ third_party/pdfium/third_party/libtiff
  third_party/breakpad/breakpad/src/client/mac
  third_party/boringssl/src/crypto/cipher_extra/test
  third_party/dom_distiller_js/dist/js/domdistiller_wrapped.js

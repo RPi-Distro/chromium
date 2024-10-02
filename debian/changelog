@@ -1,4 +1,4 @@
-chromium (129.0.6668.89-1) UNRELEASED; urgency=high
+chromium (129.0.6668.89-1) unstable; urgency=high
 
   * New upstream security release.
     - CVE-2024-7025: Integer overflow in Layout.
@@ -16,7 +16,7 @@ chromium (129.0.6668.89-1) UNRELEASED; urgency=high
     Soren Stoutner <soren@stoutner.com> for getting this fixed upstream
     (closes: #1033747).
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 25 Sep 2024 15:23:27 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Oct 2024 01:07:19 -0400
 
 chromium (129.0.6668.70-1) unstable; urgency=high
 

@@ -7,8 +7,11 @@ chromium (129.0.6668.89-1) UNRELEASED; urgency=high
       Reported by Xiantong Hou and Pisanbao of Wuheng Lab.
     - CVE-2024-9370: Inappropriate implementation in V8. Reported by
       Nguyễn Hoàng Thạch, Đỗ Minh Tuấn, and Wu JinLin of STAR Labs SG Pte Ltd.
-  * d/patches/bookworm/libxml-parseerr.patch: readd for downgraded
-    libxml2 in unstable (closes: #1082907).
+  * d/patches:
+    - bookworm/libxml-parseerr.patch: readd for downgraded libxml2 in
+      unstable (closes: #1082907).
+    - upstream/wayland-gbm-pixmap.patch: backport two patches to fix
+      noisy wayland video playback (closes: #1077345).
   * Build against system libtiff, thanks to
     Soren Stoutner <soren@stoutner.com> for getting this fixed upstream
     (closes: #1033747).

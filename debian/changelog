@@ -1,5 +1,12 @@
-chromium (129.0.6668.70-1) UNRELEASED; urgency=high
+chromium (129.0.6668.89-1) UNRELEASED; urgency=high
 
+  * New upstream security release.
+    - CVE-2024-7025: Integer overflow in Layout.
+      Reported by Tashita Software Security.
+    - CVE-2024-9369: Insufficient data validation in Mojo.
+      Reported by Xiantong Hou and Pisanbao of Wuheng Lab.
+    - CVE-2024-9370: Inappropriate implementation in V8. Reported by
+      Nguyễn Hoàng Thạch, Đỗ Minh Tuấn, and Wu JinLin of STAR Labs SG Pte Ltd.
   * d/patches/bookworm/libxml-parseerr.patch: readd for downgraded
     libxml2 in unstable (closes: #1082907).
   * Build against system libtiff, thanks to

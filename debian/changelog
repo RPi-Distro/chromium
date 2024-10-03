@@ -1,10 +1,4 @@
-chromium (1:129.0.6668.70-1~deb12u1+rpt2) bookworm; urgency=medium
-
-  * launcher: Add low memory warning
-
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 27 Sep 2024 16:58:37 +0100
-
-chromium (1:129.0.6668.70-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:129.0.6668.89-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -29,9 +23,30 @@ chromium (1:129.0.6668.70-1~deb12u1+rpt1) bookworm; urgency=medium
   * Bump alternatives priority to 90
   * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
   * Drop rpi/0004-DirectDecode-Add-option-flags-when-compiling-on-linu.patch
+  * launcher: Add low memory warning
   * Drop rpi/disable-mojo-ipcz.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 26 Sep 2024 21:08:38 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 03 Oct 2024 22:42:15 +0100
+
+chromium (129.0.6668.89-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-7025: Integer overflow in Layout.
+      Reported by Tashita Software Security.
+    - CVE-2024-9369: Insufficient data validation in Mojo.
+      Reported by Xiantong Hou and Pisanbao of Wuheng Lab.
+    - CVE-2024-9370: Inappropriate implementation in V8. Reported by
+      Nguyễn Hoàng Thạch, Đỗ Minh Tuấn, and Wu JinLin of STAR Labs SG Pte Ltd.
+  * d/patches:
+    - bookworm/libxml-parseerr.patch: readd for downgraded libxml2 in
+      unstable (closes: #1082907).
+    - upstream/wayland-gbm-pixmap.patch: backport two patches to fix
+      noisy wayland video playback (closes: #1077345).
+  * Build against system libtiff, thanks to
+    Soren Stoutner <soren@stoutner.com> for getting this fixed upstream
+    (closes: #1033747).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Oct 2024 01:07:19 -0400
 
 chromium (129.0.6668.70-1~deb12u1) bookworm-security; urgency=high
 

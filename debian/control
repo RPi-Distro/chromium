@@ -78,6 +78,7 @@ Build-Depends:
  liblcms2-dev,
  libpulse-dev,
  libpam0g-dev,
+ libtiff-dev,
  libdouble-conversion-dev,
  libxnvctrl-dev,
  libglib2.0-dev,

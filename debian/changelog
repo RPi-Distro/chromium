@@ -1,3 +1,13 @@
+chromium (129.0.6668.100-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-9602: Type Confusion in V8.
+      Reported by Seunghyun Lee (@0x10n).
+    - CVE-2024-9603: Type Confusion in V8.
+      Reported by @WeShotTheMoon and @Nguyen Hoang Thach of starlabs.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 08 Oct 2024 19:36:09 -0400
+
 chromium (129.0.6668.89-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

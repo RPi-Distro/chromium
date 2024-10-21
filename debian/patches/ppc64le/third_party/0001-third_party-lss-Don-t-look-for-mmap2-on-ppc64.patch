@@ -1,7 +1,7 @@
-Index: chromium-128.0.6613.36/third_party/lss/linux_syscall_support.h
+Index: chromium-130.0.6723.44/third_party/lss/linux_syscall_support.h
 ===================================================================
---- chromium-128.0.6613.36.orig/third_party/lss/linux_syscall_support.h
-+++ chromium-128.0.6613.36/third_party/lss/linux_syscall_support.h
+--- chromium-130.0.6723.44.orig/third_party/lss/linux_syscall_support.h
++++ chromium-130.0.6723.44/third_party/lss/linux_syscall_support.h
 @@ -4638,7 +4638,7 @@ struct kernel_statx {
        LSS_REG(2, buf);
        LSS_BODY(void*, mmap2, "0"(__r2));

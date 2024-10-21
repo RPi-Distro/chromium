@@ -1,8 +1,8 @@
-Index: chromium-128.0.6613.36/build/config/compiler/BUILD.gn
+Index: chromium-130.0.6723.44/build/config/compiler/BUILD.gn
 ===================================================================
---- chromium-128.0.6613.36.orig/build/config/compiler/BUILD.gn
-+++ chromium-128.0.6613.36/build/config/compiler/BUILD.gn
-@@ -1844,7 +1844,7 @@ config("default_warnings") {
+--- chromium-130.0.6723.44.orig/build/config/compiler/BUILD.gn
++++ chromium-130.0.6723.44/build/config/compiler/BUILD.gn
+@@ -1873,7 +1873,7 @@ config("default_warnings") {
  
        # -Wno-class-memaccess warns about hash table and vector in blink.
        # But the violation is intentional.
@@ -11,7 +11,7 @@ Index: chromium-128.0.6613.36/build/config/compiler/BUILD.gn
          cflags_cc += [ "-Wno-class-memaccess" ]
        }
  
-@@ -1854,7 +1854,9 @@ config("default_warnings") {
+@@ -1883,7 +1883,9 @@ config("default_warnings") {
  
        # Don't warn about "maybe" uninitialized. Clang doesn't include this
        # in -Wall but gcc does, and it gives false positives.
@@ -22,7 +22,7 @@ Index: chromium-128.0.6613.36/build/config/compiler/BUILD.gn
        cflags += [ "-Wno-deprecated-declarations" ]
  
        # -Wcomment gives too many false positives in the case a
-@@ -1865,7 +1867,9 @@ config("default_warnings") {
+@@ -1894,7 +1896,9 @@ config("default_warnings") {
  
        # -Wpacked-not-aligned complains all generated mojom-shared-internal.h
        # files.

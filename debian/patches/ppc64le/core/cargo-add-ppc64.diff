@@ -1,11 +1,13 @@
---- a/build/rust/cargo_crate.gni
-+++ b/build/rust/cargo_crate.gni
-@@ -429,7 +429,7 @@
-           rust_abi_target,
+Index: chromium-130.0.6723.44/build/rust/cargo_crate.gni
+===================================================================
+--- chromium-130.0.6723.44.orig/build/rust/cargo_crate.gni
++++ chromium-130.0.6723.44/build/rust/cargo_crate.gni
+@@ -430,7 +430,7 @@ template("cargo_crate") {
          ]
        }
--      if (current_cpu == "arm64" || current_cpu == "x64") {
-+      if (current_cpu == "arm64" || current_cpu == "x64" || current_cpu == "ppc64") {
+       if (current_cpu == "arm64" || current_cpu == "x64" ||
+-          current_cpu == "loong64" || current_cpu == "riscv64") {
++          current_cpu == "loong64" || current_cpu == "riscv64" || current_cpu == "ppc64") {
          args += [
            "--pointer-width",
            "64",

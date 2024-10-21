@@ -1,0 +1,113 @@
+clang-16 build failure-
+
+../../components/media_router/common/providers/cast/channel/enum_table.h:371:16: error: no member named 'hardware_destructive_interference_size' in namespace 'std'
+  alignas(std::hardware_destructive_interference_size)
+
+Revert (part of) the following commit:
+
+
+commit fc838e8cc887adbe95110045d146b9d5885bf2a9
+Author: Peter Kasting <pkasting@chromium.org>
+Date:   Wed Sep 4 13:56:46 2024 +0000
+
+    Allow (and use) std::hardware_destructive_interference_size.
+    
+    Bug: none
+    Change-Id: Ic3282588f4c6e75c7fcbff6f9c64827b5c18a10d
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5767325
+    Reviewed-by: Jeremy Roman <jbroman@chromium.org>
+    Commit-Queue: Peter Kasting <pkasting@chromium.org>
+    Owners-Override: Peter Kasting <pkasting@chromium.org>
+    Auto-Submit: Peter Kasting <pkasting@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1350762}
+
+--- a/components/media_router/common/providers/cast/channel/enum_table.h
++++ b/components/media_router/common/providers/cast/channel/enum_table.h
+@@ -12,7 +12,6 @@
+ 
+ #include <cstdint>
+ #include <cstring>
+-#include <new>
+ #include <optional>
+ #include <ostream>
+ #include <string_view>
+@@ -368,7 +367,8 @@ class EnumTable {
+ 
+  private:
+ #ifdef ARCH_CPU_64_BITS
+-  alignas(std::hardware_destructive_interference_size)
++  // Align the data on a cache line boundary.
++  alignas(64)
+ #endif
+       std::initializer_list<Entry> data_;
+   bool is_sorted_;
+--- a/styleguide/c++/c++-features.md
++++ b/styleguide/c++/c++-features.md
+@@ -574,6 +574,35 @@ Overlaps with utilities in `base/strings
+ easier to use correctly.
+ ***
+ 
++### std::hardware_{con,de}structive_interference_size <sup>[banned]</sup>
++
++```c++
++struct SharedData {
++  ReadOnlyFrequentlyUsed data;
++  alignas(std::hardware_destructive_interference_size) std::atomic<size_t> counter;
++};
++```
++
++**Description:** The `std::hardware_destructive_interference_size` constant is
++useful to avoid false sharing (destructive interference) between variables that
++would otherwise occupy the same cacheline. In contrast,
++`std::hardware_constructive_interference_size` is helpful to promote true
++sharing (constructive interference), e.g. to support better locality for
++non-contended data.
++
++**Documentation:**
++[`std::hardware_destructive_interference_size`](https://en.cppreference.com/w/cpp/thread/hardware_destructive_interference_size),
++[`std::hardware_constructive_interference_size`](https://en.cppreference.com/w/cpp/thread/hardware_destructive_interference_size)
++
++**Notes:**
++*** promo
++Banned for now since these are
++[not supported yet](https://github.com/llvm/llvm-project/issues/60174). Allow
++once supported.
++
++[Discussion thread](https://groups.google.com/a/chromium.org/g/cxx/c/cwktrFxxUY4)
++***
++
+ ### std::in_place{_type,_index}[_t] <sup>[banned]</sup>
+ 
+ ```c++
+@@ -1177,31 +1206,6 @@ avoiding the need to use the `erase(remo
+ [Migration bug](https://crbug.com/1414639)
+ ***
+ 
+-### std::hardware_{con,de}structive_interference_size <sup>[allowed]</sup>
+-
+-```c++
+-struct SharedData {
+-  ReadOnlyFrequentlyUsed data;
+-  alignas(std::hardware_destructive_interference_size) std::atomic<size_t> counter;
+-};
+-```
+-
+-**Description:** The `std::hardware_destructive_interference_size` constant is
+-useful to avoid false sharing (destructive interference) between variables that
+-would otherwise occupy the same cacheline. In contrast,
+-`std::hardware_constructive_interference_size` is helpful to promote true
+-sharing (constructive interference), e.g. to support better locality for
+-non-contended data.
+-
+-**Documentation:**
+-[`std::hardware_destructive_interference_size`](https://en.cppreference.com/w/cpp/thread/hardware_destructive_interference_size),
+-[`std::hardware_constructive_interference_size`](https://en.cppreference.com/w/cpp/thread/hardware_destructive_interference_size)
+-
+-**Notes:**
+-*** promo
+-[Discussion thread](https://groups.google.com/a/chromium.org/g/cxx/c/cwktrFxxUY4)
+-***
+-
+ ### std::is_[un]bounded_array <sup>[allowed]</sup>
+ 
+ ```c++

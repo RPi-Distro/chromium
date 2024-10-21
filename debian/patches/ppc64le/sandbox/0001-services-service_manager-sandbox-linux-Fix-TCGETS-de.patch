@@ -8,10 +8,10 @@ Subject: [PATCH] services/service_manager/sandbox/linux: Fix TCGETS
  .../sandbox/linux/bpf_renderer_policy_linux.cc               | 5 +++++
  1 file changed, 5 insertions(+)
 
-Index: chromium-128.0.6613.36/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+Index: chromium-130.0.6723.44/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 ===================================================================
---- chromium-128.0.6613.36.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
-+++ chromium-128.0.6613.36/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+--- chromium-130.0.6723.44.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
++++ chromium-130.0.6723.44/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 @@ -15,6 +15,11 @@
  #include "sandbox/linux/system_headers/linux_syscalls.h"
  #include "sandbox/policy/linux/sandbox_linux.h"

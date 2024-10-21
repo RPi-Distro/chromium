@@ -1,7 +1,7 @@
-Index: chromium-128.0.6613.36/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
+Index: chromium-130.0.6723.44/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
 ===================================================================
---- chromium-128.0.6613.36.orig/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
-+++ chromium-128.0.6613.36/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
+--- chromium-130.0.6723.44.orig/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
++++ chromium-130.0.6723.44/base/allocator/partition_allocator/src/partition_alloc/page_allocator_constants.h
 @@ -187,7 +187,11 @@ SystemPageBaseMask() {
    return ~SystemPageOffsetMask();
  }

@@ -10,7 +10,7 @@ I'm not sure how much of them are actually needed, but it's easier to
 just copy all of them for now. Hopefully this will be fixed upstream
 shortly.
 
-This copy is from chromium 123.
+This copy is from chromium 130.
 
 --- /dev/null
 +++ b/content/test/data/web_ui_test.test-mojom
@@ -84,7 +84,7 @@ This copy is from chromium 123.
 +       => (int32 x, int32 y,
 +           // Using TestStruct.StructEnum causes a compile failure. Use
 +           // int32 instead.
-+           // TODO(crbug.com/1011660): Change |z| to TestStruct.StructEnum.
++           // TODO(crbug.com/40102018): Change |z| to TestStruct.StructEnum.
 +           int32 z);
 +
 +  Flatten(array<TestStruct> values) => (array<int32> values);
@@ -216,7 +216,7 @@ This copy is from chromium 123.
 +       => (int32 x, int32 y,
 +           // Using TestStruct.StructEnum causes a compile failure. Use
 +           // int32 instead.
-+           // TODO(crbug.com/1011660): Change |z| to TestStruct.StructEnum.
++           // TODO(crbug.com/40102018): Change |z| to TestStruct.StructEnum.
 +           int32 z);
 +
 +  Flatten(array<TestStruct> values) => (array<int32> values);
@@ -261,7 +261,7 @@ This copy is from chromium 123.
 +</html>
 --- /dev/null
 +++ b/content/test/data/accept-header.html
-@@ -0,0 +1,52 @@
+@@ -0,0 +1,51 @@
 +<html>
 +<head>
 +<script src="test.js"></script>
@@ -306,11 +306,10 @@ This copy is from chromium 123.
 +navigator.serviceWorker.register('/service_worker.js')
 +.catch(function(error) {});
 +
-+// TOOD(crbug.com/v8/13856): Use `with` once it's unflagged
-+import("/test-css-module", { assert: { type: "css" } })
++import("/test-css-module", { with: { type: "css" } })
 +.catch(function(error) {});
 +
-+import("/test-json-module", { assert: { type: "json" } })
++import("/test-json-module", { with: { type: "json" } })
 +.catch(function(error) {});
 +</script>
 +</html>
@@ -1148,7 +1147,7 @@ This copy is from chromium 123.
 +    self.worker = new Worker(worker_url);
 +  }
 +
-+  // Create a shared worker with matching query-string if the "with-worker" 
++  // Create a shared worker with matching query-string if the "with-worker"
 +  // attribute is specified.
 +  if (shouldCreateSharedWorker(frameTree.attributes)) {
 +    let worker_url = 'workers/empty.js';
@@ -4046,7 +4045,7 @@ This copy is from chromium 123.
 +</html>
 --- /dev/null
 +++ b/content/test/data/font_src_local_matching.html
-@@ -0,0 +1,130 @@
+@@ -0,0 +1,105 @@
 +<meta charset="utf-8">
 +<style id="fontfaces">
 +</style>
@@ -4054,46 +4053,21 @@ This copy is from chromium 123.
 +<script>
 +function getFontsWithTestCharsForOS() {
 +  if (navigator.userAgent.indexOf("Android") !== -1) {
-+    // Intersection of available fonts of Android Kitkat to Oreo that kept the
-+    // same family names to compare against for these postscript or full font
-+    // names. (RobotoThin* and RobotoLight* had differing family names on
-+    // different Android versions.
++    // Intersection of available fonts from Android Kitkat (API 19) to Android
++    // 15 (API 35) that kept the same family names to compare against for these
++    // postscript or full font names. (RobotoThin* and RobotoLight* had
++    // differing family names on different Android versions.
 +    return [
 +      ["AndroidClock-Regular", "0"],
-+      ["Roboto-Bold", "0"],
 +      ["DroidSansMono", "0"],
 +      ["Roboto-Regular", "0"],
 +      ["Noto Color Emoji", "☺"],
-+      ["NotoSansBengali-Bold", "0"],
-+      ["NotoSansBengaliUI-Bold", "0"],
-+      ["NotoSansDevanagari-Bold", "0"],
-+      ["NotoSansDevanagariUI-Bold", "0"],
-+      ["NotoSansKannada-Bold", "0"],
-+      ["NotoSansKannada", "0"],
-+      ["NotoSansKannadaUI-Bold", "0"],
-+      ["NotoSansKannadaUI", "0"],
-+      ["NotoSansLao-Bold", "0"],
-+      ["NotoSansLao", "0"],
 +      ["NotoSansLaoUI-Bold", "0"],
 +      ["NotoSansLaoUI", "0"],
-+      ["NotoSansMalayalam-Bold", "0"],
-+      ["NotoSansMalayalamUI-Bold", "0"],
-+      ["NotoSansTamil-Bold", "0"],
-+      ["NotoSansTamilUI-Bold", "0"],
-+      ["NotoSansTelugu-Bold", "0"],
-+      ["NotoSansTelugu", "0"],
-+      ["NotoSansTeluguUI-Bold", "0"],
-+      ["NotoSansTeluguUI", "0"],
 +      ["NotoSansThai-Bold", "๐"],
 +      ["NotoSansThai", "๐"],
 +      ["NotoSansThaiUI-Bold", "๐"],
 +      ["NotoSansThaiUI", "๐"],
-+      ["Roboto-BoldItalic", "0"],
-+      ["RobotoCondensed-BoldItalic", "0"],
-+      ["RobotoCondensed-Bold", "0"],
-+      ["RobotoCondensed-Italic", "0"],
-+      ["RobotoCondensed-Regular", "0"],
-+      ["Roboto-Italic", "0"],
 +    ];
 +  } else if (navigator.userAgent.indexOf("Linux") !== -1
 +             || navigator.userAgent.indexOf("CrOS") !== -1) {
@@ -8038,7 +8012,7 @@ This copy is from chromium 123.
 +</html>
 --- /dev/null
 +++ b/content/test/data/web_ui_ts_test.test-mojom
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,66 @@
 +// Copyright 2022 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -8046,6 +8020,7 @@ This copy is from chromium 123.
 +module content.mojom;
 +
 +import "content/test/data/web_ui_ts_test_types.test-mojom";
++import "content/test/data/web_ui_ts_test_other_types.test-mojom";
 +import "url/mojom/url.mojom";
 +
 +enum TestEnum {
@@ -8059,6 +8034,18 @@ This copy is from chromium 123.
 +  TestEnum? optional_enum;
 +};
 +
++struct SimpleMappedType {
++  string value;
++};
++
++struct NestedMappedType {
++  NestedMappedType? nested;
++};
++
++struct StringDict {
++  MappedDict data;
++};
++
 +interface WebUITsMojoTestCache {
 +  Put(url.mojom.Url url, string contents);
 +  GetAll() => (array<TsCacheItem> items);
@@ -8067,12 +8054,30 @@ This copy is from chromium 123.
 +    bool? optional_bool,
 +    uint8? optional_uint8,
 +    TestEnum? optional_enum,
-+    OptionalNumericsStruct optional_numerics)
++    OptionalNumericsStruct optional_numerics,
++    array<bool?> optional_bools,
++    array<uint32?> optional_ints,
++    array<TestEnum?> optional_enums,
++    map<int32, bool?> bool_map,
++    map<int32, int32?> int_map,
++    map<int32, TestEnum?> enum_map,
++    SimpleMappedType simple_mapped_type,
++    NestedMappedType nested_mapped_type,
++    StringDict? other_mapped_type)
 +  => (
 +    bool? optional_bool,
 +    uint8? optional_uint8,
 +    TestEnum? optional_enum,
-+    OptionalNumericsStruct optional_numerics);
++    OptionalNumericsStruct optional_numerics,
++    array<bool?> optional_bools,
++    array<uint32?> optional_ints,
++    array<TestEnum?> optional_enums,
++    map<int32, bool?> bool_map,
++    map<int32, int32?> int_map,
++    map<int32, TestEnum?> enum_map,
++    SimpleMappedType simple_mapped_type,
++    NestedMappedType nested_mapped_type,
++    StringDict? other_mapped_type);
 +};
 --- /dev/null
 +++ b/content/test/data/web_ui_ts_test_types.test-mojom
@@ -8094,11 +8099,12 @@ This copy is from chromium 123.
 +};
 --- /dev/null
 +++ b/content/test/data/web_ui_mojo_ts_test.ts
-@@ -0,0 +1,102 @@
+@@ -0,0 +1,235 @@
 +// Copyright 2022 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
 +
++import {StringDictType, TestNode} from './web_ui_mojo_ts_test_mapped_types.js';
 +import {OptionalNumericsStruct, TestEnum, WebUITsMojoTestCache} from './web_ui_ts_test.test-mojom-webui.js';
 +
 +const TEST_DATA: Array<{url: string, contents: string}> = [
@@ -8106,6 +8112,26 @@ This copy is from chromium 123.
 +  { url: 'https://youtube.com/', contents: 'probably cat videos?' },
 +  { url: 'https://example.com/', contents: 'internets wow' },
 +];
++
++function assert(condition: any, msg: string) {
++  if (!condition) {
++    throw new Error('assertion failed: ' + msg);
++  }
++}
++
++function assertArrayEquals(a: Array<any>, b: Array<any>, msg: string) {
++  assert(a.length === b.length, msg);
++  for (let i = 0; i < a.length; ++i) {
++    assert(a[i] === b[i], msg);
++  }
++}
++
++function assertObjectEquals(a: any, b: any, msg: string) {
++  assert(Object.keys(a).length === Object.keys(b).length, msg);
++  for (let key of Object.keys(a)) {
++    assert(a[key] === b[key], msg);
++  }
++}
 +
 +async function doTest(): Promise<boolean> {
 +  const cache = WebUITsMojoTestCache.getRemote();
@@ -8135,12 +8161,25 @@ This copy is from chromium 123.
 +  {
 +    const testStruct: OptionalNumericsStruct = {
 +      optionalBool: true,
-+      optionalUint8: undefined,
++      optionalUint8: null,
 +      optionalEnum: TestEnum.kOne,
 +    };
 +
-+    const {optionalBool, optionalUint8, optionalEnum, optionalNumerics} =
-+        await cache.echo(true, null, TestEnum.kOne, testStruct);
++    const {
++      optionalBool,
++      optionalUint8,
++      optionalEnum,
++      optionalNumerics,
++      optionalBools,
++      optionalInts,
++      optionalEnums,
++      boolMap,
++      intMap,
++      enumMap
++    } =
++        await cache.echo(
++            true, null, TestEnum.kOne, testStruct, [], [], [], {}, {}, {}, '',
++            new TestNode(), null);
 +    if (optionalBool !== false) {
 +      return false;
 +    }
@@ -8159,16 +8198,43 @@ This copy is from chromium 123.
 +    if (optionalNumerics.optionalEnum !== TestEnum.kTwo) {
 +      return false;
 +    }
++    for (const arr of [optionalBools, optionalInts, optionalEnums]) {
++      assertArrayEquals(arr, [], 'empty array');
++    }
++    for (const map of [boolMap, intMap, enumMap]) {
++      assertObjectEquals(map, [], 'empty map');
++    }
 +  }
 +  {
 +    const testStruct: OptionalNumericsStruct = {
-+      optionalBool: undefined,
++      optionalBool: null,
 +      optionalUint8: 1,
-+      optionalEnum: undefined,
++      optionalEnum: null,
 +    };
 +
-+    const {optionalBool, optionalUint8, optionalEnum, optionalNumerics} =
-+        await cache.echo(null, 1, null, testStruct);
++    const inOptionalBools = [false, null, true];
++    const inOptionalInts = [null, 0, 1, null];
++    const inOptionalEnums = [null, 0, null, 1, null];
++    const inBoolMap = {0: true, 1: false, 2: null};
++    const inIntMap = {0: 0, 2: null};
++    const inEnumMap = {0: 0, 1: null};
++
++    const {
++      optionalBool,
++      optionalUint8,
++      optionalEnum,
++      optionalNumerics,
++      optionalBools,
++      optionalInts,
++      optionalEnums,
++      boolMap,
++      intMap,
++      enumMap
++    } =
++        await cache.echo(
++            null, 1, null, testStruct, inOptionalBools, inOptionalInts,
++            inOptionalEnums, inBoolMap, inIntMap, inEnumMap, '', new TestNode(),
++            null);
 +    if (optionalBool !== null) {
 +      return false;
 +    }
@@ -8186,6 +8252,78 @@ This copy is from chromium 123.
 +    }
 +    if (optionalNumerics.optionalEnum !== null) {
 +      return false;
++    }
++
++    assertArrayEquals(inOptionalBools, optionalBools, 'optional bools');
++    assertArrayEquals(inOptionalInts, optionalInts, 'optional ints');
++    assertArrayEquals(inOptionalEnums, optionalEnums, 'optional enums');
++
++    assertObjectEquals(inBoolMap, boolMap, 'bool map');
++    assertObjectEquals(inIntMap, intMap, 'bool int');
++    assertObjectEquals(inEnumMap, enumMap, 'enum map');
++  }
++
++  const testStruct: OptionalNumericsStruct = {
++    optionalBool: null,
++    optionalUint8: null,
++    optionalEnum: null,
++  };
++  // Test simple mapped type where a struct is mapped to a string.
++  {
++    const str = 'foobear';
++    const result = await cache.echo(
++        null, 1, null, testStruct, [], [], [], {}, {}, {}, str, new TestNode(),
++        null);
++
++    if (result.simpleMappedType !== str) {
++      return false;
++    }
++  }
++
++  // Tests an empty nested struct to test basic encoding/decoding.
++  {
++    const result = await cache.echo(
++        null, 1, null, testStruct, [], [], [], {}, {}, {}, '', new TestNode(),
++        null);
++
++    assertObjectEquals(
++        new TestNode(), result.nestedMappedType,
++        'nested mappped type: got: ' + JSON.stringify(result.nestedMappedType) +
++            ', expected: {next: null}');
++  }
++
++  // Tests a nested type where a struct includes itself.
++  {
++    const depth = 10;
++    const chain: TestNode = new TestNode();
++    let cursor = chain;
++    for (let i = 0; i < depth; ++i) {
++      cursor = cursor!.next = new TestNode();
++    }
++    const result = await cache.echo(
++        null, 1, null, testStruct, [], [], [], {}, {}, {}, '', chain, null);
++
++    if (JSON.stringify(chain) !== JSON.stringify(result.nestedMappedType)) {
++      throw new Error(
++          'nested mappped type: got: ' +
++          JSON.stringify(result.nestedMappedType) +
++          ', expected: ' + JSON.stringify(chain));
++    }
++  }
++
++  {
++    let map: StringDictType = new Map<string, string>();
++    map.set('foo', 'bear');
++    map.set('some', 'where');
++    const result = await cache.echo(
++        null, 1, null, testStruct, [], [], [], {}, {}, {}, '', new TestNode(),
++        map);
++
++    for (const key of map.keys()) {
++      assert(
++          result.otherMappedType!.get(key) === map.get(key),
++          `Expected value: ${map.get(key)} for key: ${key}, got: ${
++              result.otherMappedType!.get(key)}`);
 +    }
 +  }
 +
@@ -84914,3 +85052,357 @@ This copy is from chromium 123.
 +window.opener.postMessage('loaded', '*');
 +</script>
 +</html>
+--- /dev/null
++++ b/content/test/data/before_unload_same_doc_nav.html
+@@ -0,0 +1,26 @@
++<!DOCTYPE html>
++<meta charset="utf-8">
++<!--
++  On a mobile viewport we need to make sure the page does not stretch beyond the
++  size of the viewport to avoid displaying a scroll bar.
++-->
++<meta name="viewport" content="width=device-width,minimum-scale=1">
++<html>
++  <body></body>
++  <script>
++    onbeforeunload = (event) => {
++      history.pushState(null, '', `#foo`);
++    };
++  </script>
++  <style>
++    body {
++      background-color:#0000FF;
++      overflow: scroll;
++    }
++    #foo {
++      position: relative;
++      height: 100vh;
++    }
++  </style>
++  <div id="foo"></div>
++</html>
+--- /dev/null
++++ b/content/test/data/changing_color.html
+@@ -0,0 +1,17 @@
++<!DOCTYPE html>
++<html>
++<head>
++  <meta name="viewport" content="width=device-width, height=device-height">
++</head>
++<body style="border: 0; margin: 0; padding: 0; overflow:hidden;">
++<a name="red">
++  <div style="height: 100vh; background-color:#FF0000;"></div>
++</a>
++<a name="green">
++    <div style="height: 100vh; background-color:#00FF00;"></div>
++</a>
++<a name="blue">
++    <div style="height: 100vh; background-color:#0000FF;"></div>
++</a>
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/csp_report_only_data_url.html
+@@ -0,0 +1,2 @@
++<!DOCTYPE html>
++<img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+--- /dev/null
++++ b/content/test/data/has-ua-visual-transition.html
+@@ -0,0 +1,32 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++    <meta charset="UTF-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1.0">
++    <title>Navigation API Example</title>
++    <script>
++        var hasUAVisualTransitionValue = false;
++        // Check if the browser supports the Navigation API
++        if ('navigation' in window) {
++            window.navigation.addEventListener('navigate', (event) => {
++                hasUAVisualTransitionValue = event.hasUAVisualTransition;
++            });
++        } else {
++            console.log('Navigation API is not supported in this browser.');
++        }
++    </script>
++</head>
++<body>
++    <h1>Value of hasUAVisualTransition of Navigation API</h1>
++    <div>
++        <a href="#frag1"> Section 1 </a>
++        <a href="#frag2"> Section 2 </a>
++    </div>
++    <div class="section" id="frag1">
++        <p> This is section 1</p>
++    </div>
++    <div class="section" id="frag2">
++        <p> This is section 2 </p>
++    </div>
++</body>
++</html>
+\ No newline at end of file
+--- /dev/null
++++ b/content/test/data/link_rel_preconnect.html
+@@ -0,0 +1,6 @@
++<!DOCTYPE html>
++<html>
++<body>
++  <link rel="preconnect" href="image.jpg" />
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/link_rel_preconnect_disable_network.html
+@@ -0,0 +1,17 @@
++<!DOCTYPE html>
++<html>
++<body>
++  <script>
++    (async () => {
++      await window.fence.disableUntrustedNetwork().then(
++        () => {
++          var link_element = document.createElement('link');
++          link_element.href = 'image.jpg';
++          link_element.rel = 'preconnect';
++          document.body.appendChild(link_element);
++        }
++      );
++    })();
++  </script>
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/link_rel_prefetch_disable_network.html
+@@ -0,0 +1,17 @@
++<!DOCTYPE html>
++<html>
++<body>
++  <script>
++    (async () => {
++      await window.fence.disableUntrustedNetwork().then(
++        () => {
++          var link_element = document.createElement('link');
++          link_element.href = 'image.jpg';
++          link_element.rel = 'prefetch';
++          document.body.appendChild(link_element);
++        }
++      );
++    })();
++  </script>
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/location_equals_about_srcdoc_script.html
+@@ -0,0 +1 @@
++<script>location = "about:srcdoc";</script>
+--- /dev/null
++++ b/content/test/data/no_vary_search_a.html
+@@ -0,0 +1,8 @@
++<html>
++<body>
++  File used to test No-Vary-Search functionality.
++  The embedded test server sends a No-Vary-Search header which informs
++  the client that query parameter "a" is not important for matching URLs from
++  a cache.
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/page_with_sandboxed_srcdoc_iframe.html
+@@ -0,0 +1,10 @@
++<html>
++<head></head>
++<body>
++  <p>This page has a sandboxed srcdoc iframe. Yay for sandboxed srcdoc iframes!
++  <p><iframe id="test_iframe"
++             name="test_iframe"
++             sandbox="allow-scripts"
++             srcdoc="foo"></iframe>
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/page_with_srcdoc_iframe_and_csp.html
+@@ -0,0 +1,8 @@
++<html>
++<head></head>
++<body>
++  <p>This page has a srcdoc iframe. Yay for iframes!</p>
++  <iframe srcdoc="Hello world" id="srcdoc_iframe" name="srcdoc_iframe">
++  </iframe>
++</body>
++</html>
+--- /dev/null
++++ b/content/test/data/red_redirect_to_blue.html
+@@ -0,0 +1,17 @@
++<!DOCTYPE html>
++<meta charset="utf-8">
++<!--
++  On a mobile viewport we need to make sure the page does not stretch beyond the
++  size of the viewport to avoid displaying a scroll bar.
++-->
++<meta name="viewport" content="width=device-width,minimum-scale=1">
++<html>
++  <head>
++    <script type="text/javascript">
++      if (window.location.hash == '#redirect') {
++        window.location.href = "blue.html";
++      }
++    </script>
++  </head>
++  <body style="background-color:#FF0000"></body>
++</html>
+--- /dev/null
++++ b/content/test/data/render-blocking-mainframe.html
+@@ -0,0 +1,15 @@
++<!doctype html>
++<style>
++  iframe {
++    width: 100vw;
++    height: 100vh;
++    border: none;
++    background: white;
++  }
++
++  html {
++    margin: 0;
++  }
++</style>
++</body>
++</body>
+--- /dev/null
++++ b/content/test/data/render-blocking-subframe.html
+@@ -0,0 +1,19 @@
++<!doctype html>
++<head>
++<link rel="stylesheet" href="/slow-response">
++<script>
++  const params = new URLSearchParams(window.location.search);
++  if (params.has('red')) {
++    document.documentElement.style.background = "red";
++  } else {
++    document.documentElement.style.background = "blue";
++  }
++</script>
++<style>
++  html {
++    margin: 0;
++  }
++</style>
++</head>
++<body>
++</body>
+--- /dev/null
++++ b/content/test/data/web_ui_mojo_ts_test_converters.ts
+@@ -0,0 +1,63 @@
++// Copyright 2024 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++import {StringDictType, TestNode} from './web_ui_mojo_ts_test_mapped_types.js';
++import {MappedDictType} from './web_ui_mojo_ts_test_other_mapped_types.js';
++import {NestedMappedTypeDataView, NestedMappedTypeTypeMapper, SimpleMappedTypeDataView, SimpleMappedTypeTypeMapper, StringDictDataView, StringDictTypeMapper} from './web_ui_ts_test.test-mojom-converters.js';
++import {MappedDictDataView, MappedDictTypeMapper} from './web_ui_ts_test_other_types.test-mojom-converters.js';
++
++export class SimpleTypeConverter implements SimpleMappedTypeTypeMapper<string> {
++  value(mappedType: string): string {
++    return mappedType;
++  }
++
++  convert(dataView: SimpleMappedTypeDataView): string {
++    return dataView.value();
++  }
++}
++
++export class NestedTypeConverter implements
++    NestedMappedTypeTypeMapper<TestNode> {
++  nested(mappedType: TestNode): TestNode|null {
++    return mappedType.next;
++  }
++
++  convert(dataView: NestedMappedTypeDataView): TestNode {
++    return new TestNode(dataView.nested());
++  }
++}
++
++export class MappedDictConverter implements
++    MappedDictTypeMapper<MappedDictType> {
++  data(dict: MappedDictType): {[key: string]: string} {
++    const converted: {[key: string]: string} = {};
++    for (let k of dict.keys()) {
++      converted[k] = dict.get(k) || '';
++    }
++    return converted;
++  }
++
++  convert(view: MappedDictDataView): MappedDictType {
++    const converted = new Map<string, string>();
++    for (let k in view.data()) {
++      converted.set(k, view.data()[k]!);
++    }
++    return converted;
++  }
++}
++
++// This should be trivial to implement because StringDict is synonymous
++// with mapped type. If typemapping is working correctly, we should be
++// able to switch back and forth between MappedDictType and StringDictType
++// freely.
++export class StringDictConverter implements
++    StringDictTypeMapper<StringDictType> {
++  data(dict: StringDictType): MappedDictType {
++    return dict;
++  }
++
++  convert(view: StringDictDataView): StringDictType {
++    return view.data();
++  }
++}
+--- /dev/null
++++ b/content/test/data/web_ui_mojo_ts_test_mapped_types.ts
+@@ -0,0 +1,23 @@
++// Copyright 2024 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++import {MappedDictType} from './web_ui_mojo_ts_test_other_mapped_types.js';
++
++// This is effectively the same structure as NestedMappedType mojom,
++// except it is implemented purely in ts and has a different field name
++// to exercise the conversion logic.
++//
++// Using a class instead of an interface in order to have a constructor to
++// instantiate objects of this type with "new"".
++export class TestNode {
++  next: TestNode|null;
++
++  constructor(next?: TestNode|null) {
++    this.next = next || null;
++  }
++}
++
++// Test using an interface as the type declaration then returning a
++// concrete type in the converter. This allows impls to be hidden
++// away from users.
++export interface StringDictType extends MappedDictType {}
+--- /dev/null
++++ b/content/test/data/web_ui_mojo_ts_test_other_mapped_types.ts
+@@ -0,0 +1,9 @@
++// Copyright 2024 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++export interface MappedDictType {
++  get(key: string): string|undefined;
++  set(key: string, value: string): void;
++  keys(): Iterable<string>;
++}
+--- /dev/null
++++ b/content/test/data/web_ui_ts_test_other_types.test-mojom
+@@ -0,0 +1,9 @@
++// Copyright 2024 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++module content.mojom;
++
++struct MappedDict {
++  map<string, string> data;
++};

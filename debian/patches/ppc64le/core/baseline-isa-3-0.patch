@@ -1,6 +1,8 @@
---- a/build/config/compiler/BUILD.gn
-+++ b/build/config/compiler/BUILD.gn
-@@ -1250,7 +1250,7 @@
+Index: chromium-130.0.6723.44/build/config/compiler/BUILD.gn
+===================================================================
+--- chromium-130.0.6723.44.orig/build/config/compiler/BUILD.gn
++++ chromium-130.0.6723.44/build/config/compiler/BUILD.gn
+@@ -1474,7 +1474,7 @@ config("compiler_cpu_abi") {
          cflags += [ "-maix64" ]
          ldflags += [ "-maix64" ]
        } else {
@@ -9,9 +11,11 @@
          ldflags += [ "-m64" ]
        }
      } else if (current_cpu == "riscv64") {
---- a/third_party/libvpx/BUILD.gn
-+++ b/third_party/libvpx/BUILD.gn
-@@ -93,7 +93,7 @@
+Index: chromium-130.0.6723.44/third_party/libvpx/BUILD.gn
+===================================================================
+--- chromium-130.0.6723.44.orig/third_party/libvpx/BUILD.gn
++++ chromium-130.0.6723.44/third_party/libvpx/BUILD.gn
+@@ -105,7 +105,7 @@ config("libvpx_config") {
  
    if (current_cpu == "ppc64") {
      cflags += [
@@ -20,10 +24,12 @@
        "-maltivec",
        "-mvsx",
      ]
---- a/v8/BUILD.gn
-+++ b/v8/BUILD.gn
-@@ -1251,7 +1251,7 @@
-       defines += [ "V8_TARGET_ARCH_PPC_LE" ]
+Index: chromium-130.0.6723.44/v8/BUILD.gn
+===================================================================
+--- chromium-130.0.6723.44.orig/v8/BUILD.gn
++++ chromium-130.0.6723.44/v8/BUILD.gn
+@@ -1434,7 +1434,7 @@ config("toolchain") {
+     if (current_os == "linux") {
          cflags += [
          # Enable usage of AltiVec, VSX, and other POWER8 and higher features
 -        "-mcpu=power8",

@@ -1,0 +1,46 @@
+author: Andres Salomon <dilinger@debian.org>
+description: same kind of clang16 constexpr workaround, except this location is trickier
+
+Clang-16 can't handle constexpr std::strings; normally we can just make
+them const. Because this is inside of a class declaration, it's a bit
+more challenging. Use a C-style const char* instead, defaulting to "" and
+can be overridden during the constexpr DisplayParams definition.
+
+In file included from ../../ui/display/linux/test/virtual_display_util_linux.cc:5:
+In file included from ../../ui/display/linux/test/virtual_display_util_linux.h:12:
+../../ui/display/test/virtual_display_util.h:63:34: error: constexpr variable 'k1920x1080' must be initialized by a constant expression
+  static constexpr DisplayParams k1920x1080 = {gfx::Size(1920, 1080)};
+                                 ^            ~~~~~~~~~~~~~~~~~~~~~~~
+../../ui/display/test/virtual_display_util.h:63:34: note: pointer to subobject of heap-allocated object is not a constant expression
+/usr/bin/../include/c++/v1/__memory/allocator.h:113:38: note: heap allocation performed here
+            return static_cast<_Tp*>(::operator new(__n * sizeof(_Tp)));
+                                     ^
+
+--- a/ui/display/test/virtual_display_util.h
++++ b/ui/display/test/virtual_display_util.h
+@@ -19,21 +19,21 @@ namespace test {
+ struct DISPLAY_EXPORT DisplayParams {
+   gfx::Size resolution;
+   gfx::Vector2d dpi = gfx::Vector2d(96, 96);
+-  std::string description;
++  const char* description = "";
+ };
+ 
+ bool constexpr operator<(const display::test::DisplayParams& a,
+                          const display::test::DisplayParams& b) {
+   return std::tuple(a.resolution.width(), a.resolution.height(), a.dpi.x(),
+-                    a.dpi.y(), a.description) <
++                    a.dpi.y(), std::string(a.description)) <
+          std::tuple(b.resolution.width(), b.resolution.height(), b.dpi.x(),
+-                    b.dpi.y(), b.description);
++                    b.dpi.y(), std::string(b.description));
+ }
+ 
+ bool constexpr operator==(const display::test::DisplayParams& a,
+                           const display::test::DisplayParams& b) {
+   return a.resolution == b.resolution && a.dpi == b.dpi &&
+-         a.description == b.description;
++         std::string(a.description) == std::string(b.description);
+ }
+ 
+ // This interface creates system-level virtual displays to support the automated

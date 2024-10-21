@@ -1,7 +1,7 @@
-Index: chromium-128.0.6613.36/base/compiler_specific.h
+Index: chromium-130.0.6723.44/base/compiler_specific.h
 ===================================================================
---- chromium-128.0.6613.36.orig/base/compiler_specific.h
-+++ chromium-128.0.6613.36/base/compiler_specific.h
+--- chromium-130.0.6723.44.orig/base/compiler_specific.h
++++ chromium-130.0.6723.44/base/compiler_specific.h
 @@ -88,7 +88,7 @@
  // Can be used only on return statements, even for functions returning void.
  // Caller and callee must have the same number of arguments and its types must

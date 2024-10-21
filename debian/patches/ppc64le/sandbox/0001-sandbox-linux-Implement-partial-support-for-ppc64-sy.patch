@@ -17,10 +17,10 @@ GNU/Linux environments, but may require expansion elsewhere.
  create mode 100644 sandbox/linux/system_headers/ppc64_linux_syscalls.h
  create mode 100644 sandbox/linux/system_headers/ppc64_linux_ucontext.h
 
-Index: chromium-128.0.6613.36/sandbox/linux/BUILD.gn
+Index: chromium-130.0.6723.44/sandbox/linux/BUILD.gn
 ===================================================================
---- chromium-128.0.6613.36.orig/sandbox/linux/BUILD.gn
-+++ chromium-128.0.6613.36/sandbox/linux/BUILD.gn
+--- chromium-130.0.6723.44.orig/sandbox/linux/BUILD.gn
++++ chromium-130.0.6723.44/sandbox/linux/BUILD.gn
 @@ -383,6 +383,8 @@ component("sandbox_services") {
  
  source_set("sandbox_services_headers") {
@@ -30,10 +30,10 @@ Index: chromium-128.0.6613.36/sandbox/linux/BUILD.gn
      "system_headers/arm64_linux_syscalls.h",
      "system_headers/arm_linux_syscalls.h",
      "system_headers/arm_linux_ucontext.h",
-Index: chromium-128.0.6613.36/sandbox/linux/system_headers/linux_syscalls.h
+Index: chromium-130.0.6723.44/sandbox/linux/system_headers/linux_syscalls.h
 ===================================================================
---- chromium-128.0.6613.36.orig/sandbox/linux/system_headers/linux_syscalls.h
-+++ chromium-128.0.6613.36/sandbox/linux/system_headers/linux_syscalls.h
+--- chromium-130.0.6723.44.orig/sandbox/linux/system_headers/linux_syscalls.h
++++ chromium-130.0.6723.44/sandbox/linux/system_headers/linux_syscalls.h
 @@ -35,5 +35,9 @@
  #include "sandbox/linux/system_headers/arm64_linux_syscalls.h"
  #endif
@@ -44,10 +44,10 @@ Index: chromium-128.0.6613.36/sandbox/linux/system_headers/linux_syscalls.h
 +
  #endif  // SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_SYSCALLS_H_
  
-Index: chromium-128.0.6613.36/sandbox/linux/system_headers/ppc64_linux_syscalls.h
+Index: chromium-130.0.6723.44/sandbox/linux/system_headers/ppc64_linux_syscalls.h
 ===================================================================
 --- /dev/null
-+++ chromium-128.0.6613.36/sandbox/linux/system_headers/ppc64_linux_syscalls.h
++++ chromium-130.0.6723.44/sandbox/linux/system_headers/ppc64_linux_syscalls.h
 @@ -0,0 +1,12 @@
 +// Copyright 2014 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -61,10 +61,10 @@ Index: chromium-128.0.6613.36/sandbox/linux/system_headers/ppc64_linux_syscalls.
 +//TODO: is it necessary to redefine syscall numbers for PPC64?
 +
 +#endif  // SANDBOX_LINUX_SYSTEM_HEADERS_PPC64_LINUX_SYSCALLS_H_
-Index: chromium-128.0.6613.36/sandbox/linux/system_headers/ppc64_linux_ucontext.h
+Index: chromium-130.0.6723.44/sandbox/linux/system_headers/ppc64_linux_ucontext.h
 ===================================================================
 --- /dev/null
-+++ chromium-128.0.6613.36/sandbox/linux/system_headers/ppc64_linux_ucontext.h
++++ chromium-130.0.6723.44/sandbox/linux/system_headers/ppc64_linux_ucontext.h
 @@ -0,0 +1,12 @@
 +// Copyright 2014 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be

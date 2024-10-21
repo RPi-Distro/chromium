@@ -14,11 +14,13 @@ fixes/clang-rust-target.patch
 fixes/highway-include-path.patch
 fixes/gpu-crash.patch
 fixes/predictor-denial-of-service.patch
+fixes/fix-assert-in-vnc-sessions.patch
 
 upstream/mojo.patch
-upstream/mojo-null.patch
 upstream/ruy-include.patch
 #upstream/wayland-gbm-pixmap.patch
+upstream/stack-header.patch
+upstream/blink-fix-size-assertions.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -34,7 +36,6 @@ disable/screen-ai-blob.patch
 
 system/icu-shim.patch
 system/jpeg.patch
-system/zlib.patch
 system/event.patch
 system/openjpeg.patch
 system/opus.patch
@@ -42,8 +43,8 @@ system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
 
-bookworm/clang16.patch
 bookworm/libxml-parseerr.patch
+bookworm/clang16.patch
 bookworm/freetype-COLRV1.patch
 bookworm/bubble-contents.patch
 bookworm/sizet.patch
@@ -55,10 +56,12 @@ bookworm/spaceship-operator.patch
 bookworm/more-spaceships.patch
 bookworm/signer-lambda.patch
 bookworm/constexpr.patch
+bookworm/constexpr2.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
 bookworm/highway-blink.patch
 bookworm/blink-attrib.patch
+bookworm/cacheline.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch
@@ -131,6 +134,7 @@ ppc64le/third_party/use-sysconf-page-size-on-ppc64.patch
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
 
 ppc64le/core/add-ppc64-architecture-string.patch
+ppc64le/core/add-ppc64-pthread-stack-size.patch
 ppc64le/fixes/fix-study-crash.patch
 
 ppc64le/core/add-ppc64-architecture-to-extensions.diff

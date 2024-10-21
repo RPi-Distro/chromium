@@ -9,7 +9,7 @@ with chromium, which is simple enough..
 
 --- a/third_party/webrtc/webrtc.gni
 +++ b/third_party/webrtc/webrtc.gni
-@@ -677,16 +677,13 @@ template("rtc_source_set") {
+@@ -672,16 +672,13 @@ template("rtc_source_set") {
          "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
  
      # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
@@ -32,7 +32,7 @@ with chromium, which is simple enough..
      }
    }
  }
-@@ -769,16 +766,13 @@ template("rtc_static_library") {
+@@ -764,16 +761,13 @@ template("rtc_static_library") {
          "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
  
      # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
@@ -55,7 +55,7 @@ with chromium, which is simple enough..
      }
    }
  }
-@@ -911,16 +905,13 @@ template("rtc_library") {
+@@ -906,16 +900,13 @@ template("rtc_library") {
          "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
  
      # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true

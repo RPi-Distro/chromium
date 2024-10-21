@@ -168,7 +168,7 @@ Files-Excluded:
  third_party/node/linux
  third_party/node/node_modules.tar.gz
  third_party/node/node_modules/acorn
- third_party/node/node_modules/rollup
+ third_party/node/node_modules/@rollup
  third_party/node/node_modules/mocha/mocha.js
  third_party/rust-*
  third_party/node/node_modules/chai/chai.js

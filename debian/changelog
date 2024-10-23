@@ -1,3 +1,10 @@
+chromium (1:130.0.6723.58-1~deb12u1+rpt2) bookworm; urgency=medium
+
+  * Refresh rpi patches
+  * Enable PipeWire Camera support by default
+
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 23 Oct 2024 12:53:29 +0100
+
 chromium (1:130.0.6723.58-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]

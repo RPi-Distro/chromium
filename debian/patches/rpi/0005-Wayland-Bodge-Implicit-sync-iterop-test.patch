@@ -12,7 +12,7 @@ explicit sync.
 
 --- a/ui/ozone/platform/wayland/host/wayland_connection.h
 +++ b/ui/ozone/platform/wayland/host/wayland_connection.h
-@@ -360,8 +360,11 @@ class WaylandConnection {
+@@ -363,8 +363,11 @@ class WaylandConnection {
    void DumpState(std::ostream& out) const;
  
    bool UseImplicitSyncInterop() const {

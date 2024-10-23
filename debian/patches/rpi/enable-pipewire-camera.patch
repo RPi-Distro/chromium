@@ -1,0 +1,11 @@
+--- a/media/capture/capture_switches.cc
++++ b/media/capture/capture_switches.cc
+@@ -49,7 +49,7 @@ namespace features {
+ // Wayland display server.
+ BASE_FEATURE(kWebRtcPipeWireCamera,
+              "WebRtcPipeWireCamera",
+-             base::FEATURE_DISABLED_BY_DEFAULT);
++             base::FEATURE_ENABLED_BY_DEFAULT);
+ #endif  // defined(WEBRTC_USE_PIPEWIRE)
+ 
+ }  // namespace features

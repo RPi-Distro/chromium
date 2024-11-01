@@ -1,11 +1,4 @@
-chromium (1:130.0.6723.58-1~deb12u1+rpt2) bookworm; urgency=medium
-
-  * Refresh rpi patches
-  * Enable PipeWire Camera support by default
-
- -- Serge Schneider <serge@raspberrypi.com>  Wed, 23 Oct 2024 12:53:29 +0100
-
-chromium (1:130.0.6723.58-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:130.0.6723.69-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -34,8 +27,27 @@ chromium (1:130.0.6723.58-1~deb12u1+rpt1) bookworm; urgency=medium
   * Drop rpi/0004-DirectDecode-Add-option-flags-when-compiling-on-linu.patch
   * launcher: Add low memory warning
   * Drop rpi/disable-mojo-ipcz.patch
+  * Enable PipeWire Camera support by default
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 21 Oct 2024 11:36:20 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 01 Nov 2024 13:07:33 +0000
+
+chromium (130.0.6723.69-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-10229: Inappropriate implementation in Extensions.
+      Reported by Vsevolod Kokorin (Slonser) of Solidlab.
+    - CVE-2024-10230: Type Confusion in V8.
+      Reported by Seunghyun Lee (@0x10n).
+    - CVE-2024-10231: Type Confusion in V8.
+      Reported by Seunghyun Lee (@0x10n).
+
+  [ Timothy Pearson ]
+  * d/patches:
+    - bookworm/partially-deployed-mseal-syscall.patch: Work around newly
+      introduced `mseal` syscall being inconsistently available on Bookworm kernels
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 22 Oct 2024 21:34:57 -0400
 
 chromium (130.0.6723.58-1~deb12u1) bookworm-security; urgency=high
 

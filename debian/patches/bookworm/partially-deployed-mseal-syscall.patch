@@ -1,0 +1,15 @@
+Index: chromium-130.0.6723.58/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+===================================================================
+--- chromium-130.0.6723.58.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
++++ chromium-130.0.6723.58/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+@@ -548,7 +548,10 @@ bool SyscallSets::IsAllowedAddressSpaceA
+     case __NR_mlock:
+     case __NR_munlock:
+     case __NR_munmap:
++// Older Debian kernels are missing this syscall
++#if !defined(__powerpc64__)
+     case __NR_mseal:
++#endif
+       return true;
+     case __NR_madvise:
+     case __NR_mincore:

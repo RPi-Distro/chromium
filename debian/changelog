@@ -1,4 +1,4 @@
-chromium (1:130.0.6723.69-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:130.0.6723.91-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -29,7 +29,17 @@ chromium (1:130.0.6723.69-1~deb12u1+rpt1) bookworm; urgency=medium
   * Drop rpi/disable-mojo-ipcz.patch
   * Enable PipeWire Camera support by default
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 01 Nov 2024 13:07:33 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 04 Nov 2024 12:43:53 +0000
+
+chromium (130.0.6723.91-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-10487: Out of bounds write in Dawn.
+      Reported by Apple Security Engineering and Architecture (SEAR).
+    - CVE-2024-10488: Use after free in WebRTC.
+      Reported by Cassidy Kim(@cassidy6564).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 29 Oct 2024 20:36:38 -0400
 
 chromium (130.0.6723.69-1~deb12u1) bookworm-security; urgency=high
 

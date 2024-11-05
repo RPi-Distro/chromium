@@ -104,6 +104,7 @@ export CHROME_DESKTOP="chromium.desktop"
 export CHROME_VERSION_EXTRA="built on @BUILD_DIST@"
 
 want_debug=0
+want_gles=1
 want_memcheck=1
 want_temp_profile=0
 extra_args=0
@@ -117,6 +118,9 @@ while [ $# -gt 0 -a $# -ne $extra_args ]; do
       shift ;;
     --temp-profile )
       want_temp_profile=1
+      shift ;;
+    --no-gl-override)
+      want_gles=0
       shift ;;
     --no-memcheck )
       want_memcheck=0
@@ -143,6 +147,10 @@ if [ $want_memcheck -eq 1 ]; then
 	    exit 1
     fi
   fi
+fi
+
+if [ $want_gles -eq 1 ]; then
+	CHROMIUM_FLAGS="$CHROMIUM_FLAGS --use-angle=gles"
 fi
 
 # Whitelist installed extensions that are specified via --load-extension

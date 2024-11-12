@@ -1,10 +1,4 @@
-chromium (1:130.0.6723.91-1~deb12u1+rpt2) bookworm; urgency=medium
-
-  * Add --use-angle=gles unless --no-gl-override is specified
-
- -- Serge Schneider <serge@raspberrypi.com>  Tue, 05 Nov 2024 15:53:59 +0000
-
-chromium (1:130.0.6723.91-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:130.0.6723.116-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ David Turner ]
   * Import rpi and ubuntu patches
@@ -34,8 +28,24 @@ chromium (1:130.0.6723.91-1~deb12u1+rpt1) bookworm; urgency=medium
   * launcher: Add low memory warning
   * Drop rpi/disable-mojo-ipcz.patch
   * Enable PipeWire Camera support by default
+  * Add --use-angle=gles unless --no-gl-override is specified
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 04 Nov 2024 12:43:53 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 12 Nov 2024 09:58:20 +0000
+
+chromium (130.0.6723.116-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-10826: Use after free in Family Experiences.
+      Reported by Anonymous.
+    - CVE-2024-10827: Use after free in Serial. Reported by Anonymous.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 06 Nov 2024 02:30:57 -0500
+
+chromium (130.0.6723.91-2) unstable; urgency=high
+
+  * d/patches/fixes/armhf-timespec.patch: add patch to fix armhf FTBFS.
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 03 Nov 2024 02:47:53 -0500
 
 chromium (130.0.6723.91-1~deb12u1) bookworm-security; urgency=high
 

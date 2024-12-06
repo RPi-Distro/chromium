@@ -112,8 +112,8 @@ Depends:
  chromium-common (= ${binary:Version}),
 Recommends:
  chromium-sandbox,
-Suggests:
  chromium-l10n,
+Suggests:
  chromium-shell,
  chromium-driver,
 Provides:

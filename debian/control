@@ -109,10 +109,10 @@ Depends:
  chromium-common (= ${binary:Version}),
 Recommends:
  chromium-sandbox,
+ chromium-l10n,
  libwidevinecdm0,
  rpi-chromium-mods,
 Suggests:
- chromium-l10n,
  chromium-shell,
  chromium-driver,
 Provides:

@@ -79,6 +79,12 @@ case `uname -m` in
             exit 1
         fi
         ;;
+    aarch64)
+        # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
+        if [ "$(getconf PAGESIZE)" -gt "4096" ]; then
+            CHROMIUM_FLAGS="$CHROMIUM_FLAGS --js-flags=--no-decommit-pooled-pages"
+        fi
+        ;;
 esac
 
 # Clean up old crash reports (see https://bugs.debian.org/1015931)

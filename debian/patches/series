@@ -190,7 +190,6 @@ rpi/0201-skia-Add-armv7-optimizations.patch
 rpi/master-preferences.patch
 rpi/title-bar-default-system.patch-v35
 rpi/welcome-page.patch
-rpi/disable_armel_stack_trace.patch
 rpi/reduce_stderr_spam.patch
 rpi/0017-disable-browser-sign-in-feature-by-default.patch
 rpi/enable-pipewire-camera.patch

@@ -193,3 +193,4 @@ rpi/reduce_stderr_spam.patch
 rpi/0017-disable-browser-sign-in-feature-by-default.patch
 rpi/enable-pipewire-camera.patch
 rpi/disable_IsV4L2DecoderStateful.patch
+rpi/wayland-gbm-pixmap.patch

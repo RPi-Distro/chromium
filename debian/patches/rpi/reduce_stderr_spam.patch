@@ -1,17 +1,17 @@
 --- a/gpu/ipc/client/shared_image_interface_proxy.cc
 +++ b/gpu/ipc/client/shared_image_interface_proxy.cc
-@@ -131,7 +131,7 @@ Mailbox SharedImageInterfaceProxy::Creat
-   }
+@@ -135,7 +135,7 @@ Mailbox SharedImageInterfaceProxy::Creat
  
    if (handle_to_populate->is_null()) {
--    LOG(ERROR) << "Buffer handle is null. Not creating a mailbox from it.";
-+    VLOG(1) << "Buffer handle is null. Not creating a mailbox from it.";
+     if (!host_->IsLost()) {
+-      LOG(ERROR) << "Buffer handle is null. Not creating a mailbox from it.";
++      VLOG(1) << "Buffer handle is null. Not creating a mailbox from it.";
+     }
      return Mailbox();
    }
- 
 --- a/gpu/ipc/service/gpu_channel.cc
 +++ b/gpu/ipc/service/gpu_channel.cc
-@@ -500,7 +500,7 @@ void GpuChannelMessageFilter::CreateGpuM
+@@ -499,7 +499,7 @@ void GpuChannelMessageFilter::CreateGpuM
      }
    }
    if (handle.is_null()) {

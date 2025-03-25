@@ -11,7 +11,7 @@ Subject: [PATCH 07/17] Widevide: Add
 
 --- a/chrome/common/chrome_paths.cc
 +++ b/chrome/common/chrome_paths.cc
-@@ -410,6 +410,10 @@ bool PathProvider(int key, base::FilePat
+@@ -406,6 +406,10 @@ bool PathProvider(int key, base::FilePat
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
      case chrome::DIR_BUNDLED_WIDEVINE_CDM:
@@ -24,18 +24,18 @@ Subject: [PATCH 07/17] Widevide: Add
        }
 --- a/chrome/common/media/cdm_registration.cc
 +++ b/chrome/common/media/cdm_registration.cc
-@@ -84,9 +84,7 @@ void ReportLacrosUMA(LacrosBundledWidevi
- }
- #endif  // BUILDFLAG(IS_CHROMEOS_LACROS)
+@@ -50,9 +50,7 @@ namespace {
+ using Robustness = content::CdmInfo::Robustness;
  
+ #if BUILDFLAG(ENABLE_WIDEVINE)
 -#if (BUILDFLAG(BUNDLE_WIDEVINE_CDM) ||            \
 -     BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && \
 -    (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
-+#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
++#if (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
  // Create a CdmInfo for a Widevine CDM, using |version|, |cdm_library_path|, and
  // |capability|.
  std::unique_ptr<content::CdmInfo> CreateWidevineCdmInfo(
-@@ -130,7 +128,7 @@ std::unique_ptr<content::CdmInfo> Create
+@@ -96,7 +94,7 @@ std::unique_ptr<content::CdmInfo> Create
          // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && (BUILDFLAG(IS_LINUX) ||
          // BUILDFLAG(IS_CHROMEOS))
  
@@ -44,12 +44,12 @@ Subject: [PATCH 07/17] Widevide: Add
      (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
  // On Linux/ChromeOS we have to preload the CDM since it uses the zygote
  // sandbox. On Windows and Mac, CDM registration is handled by Component
-@@ -270,7 +268,7 @@ void AddSoftwareSecureWidevine(std::vect
+@@ -190,7 +188,7 @@ void AddSoftwareSecureWidevine(std::vect
+   // We should still use the version selected by Component Update (except for
+   // case #3 above).
    std::unique_ptr<content::CdmInfo> bundled_widevine = nullptr;
- #if BUILDFLAG(IS_CHROMEOS_LACROS)
-   bundled_widevine = GetAshBundledWidevine();
--#elif BUILDFLAG(BUNDLE_WIDEVINE_CDM)
-+#elif BUILDFLAG(ENABLE_WIDEVINE)
+-#if BUILDFLAG(BUNDLE_WIDEVINE_CDM)
++#if BUILDFLAG(ENABLE_WIDEVINE)
    bundled_widevine = GetBundledWidevine();
  #endif
  

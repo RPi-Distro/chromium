@@ -1,36 +1,33 @@
-chromium (1:130.0.6723.116-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:134.0.6998.117-1~deb12u1+rpt1) bookworm; urgency=medium
 
-  [ David Turner ]
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
-  * Disable MojoIpcz
   * rpi build customisations
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
-  * Disable backtrace on 32bit ARM platforms
-  * Exclude unwind tabled on armhf
   * Reduce stderr-spamming when playing h264 on a Pi5
-  * Remove rpi/0012-Init-Prefer-GLES-to-everything-else-on-init.patch
   * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Disable upstream/wayland-gbm-pixmap.patch
-    - This breaks video playback on Pi 5 under Wayfire
-
-  [ Serge Schneider ]
+  * Move chromium-l10n to recommends
+  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
+    - Fixes v4l2 h264 playback on Pi4
+  * Revert upstream "Check format supported by gbm for creating native pixmap"
+    - Fixes video playback on Pi 5 under Wayfire
+  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
+    by default
   * Use zenity instead of xmessage for displaying messages in launcher script
   * Replace old chromium-browser packages
-  * Update and refresh rpi patches
   * Add chromium-browser symlink
   * d/c: Add rpi-chromium-mods to chromium Recommends
   * Launcher: extend NEON check to armv6l platforms
   * Bump alternatives priority to 90
   * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * Drop rpi/0004-DirectDecode-Add-option-flags-when-compiling-on-linu.patch
   * launcher: Add low memory warning
-  * Drop rpi/disable-mojo-ipcz.patch
   * Enable PipeWire Camera support by default
   * Add --use-angle=gles unless --no-gl-override is specified
+  * Work around tabs crashing when using a 16k page size kernel
+    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
 
- -- Serge Schneider <serge@raspberrypi.com>  Tue, 12 Nov 2024 09:58:20 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 25 Mar 2025 17:18:21 +0000
 
 chromium (134.0.6998.117-1~deb12u1) bookworm-security; urgency=high
 

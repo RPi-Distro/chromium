@@ -1,0 +1,55 @@
+work around the following by using a string_view instead of string. Let
+users implicitly cast to string as needed.
+
+../../components/compose/core/browser/config.cc:49:5: error: call to consteval function 'base::MakeFixedFlatSet<std::basic_string<char>, 15UL, std::less<void>>' is not a constant expression
+   49 |     base::MakeFixedFlatSet<std::string>({"bd", "ca", "gh", "in", "ke", "my",
+      |     ^
+../../components/compose/core/browser/config.cc:49:5: note: pointer to subobject of temporary is not a constant expression
+../../components/compose/core/browser/config.cc:49:5: note: temporary created here
+../../components/compose/core/browser/config.cc:53:5: error: call to consteval function 'base::MakeFixedFlatSet<std::basic_string<char>, 1UL, std::less<void>>' is not a constant expression
+   53 |     base::MakeFixedFlatSet<std::string>({"us"});
+      |     ^
+../../components/compose/core/browser/config.cc:53:5: note: pointer to subobject of temporary is not a constant expression
+../../components/compose/core/browser/config.cc:53:5: note: temporary created here
+2 errors generated.
+
+
+This is likely a libstdc++ issue, and can probably be dropped when
+switching to libc++.
+
+--- a/components/compose/core/browser/config.cc
++++ b/components/compose/core/browser/config.cc
+@@ -46,11 +46,11 @@ std::vector<std::string> GetFieldTrialPa
+ }
+ 
+ constexpr auto DEFAULT_COMPOSE_ENABLED_COUNTRIES =
+-    base::MakeFixedFlatSet<std::string>({"bd", "ca", "gh", "in", "ke", "my",
++    base::MakeFixedFlatSet<std::string_view>({"bd", "ca", "gh", "in", "ke", "my",
+                                          "ng", "ph", "pk", "sg", "tz", "ug",
+                                          "us", "zm", "zw"});
+ constexpr auto DEFAULT_PROACTIVE_NUDGE_ENABLED_COUNTRIES =
+-    base::MakeFixedFlatSet<std::string>({"us"});
++    base::MakeFixedFlatSet<std::string_view>({"us"});
+ 
+ }  // namespace
+ 
+--- a/chrome/browser/task_manager/task_manager_metrics_recorder.cc
++++ b/chrome/browser/task_manager/task_manager_metrics_recorder.cc
+@@ -28,7 +28,7 @@ void RecordCloseEvent(const base::TimeTi
+ void RecordEndProcessEvent(const base::TimeTicks& start_time,
+                            const base::TimeTicks& end_time,
+                            size_t end_process_count) {
+-  constexpr static std::array<std::string, 5> kEndProcessCountToString = {
++  constexpr static std::array<std::string_view, 5> kEndProcessCountToString = {
+       "First", "Second", "Third", "Fourth", "Fifth"};
+ 
+   // Only record the first five end process events per task manager session.
+@@ -37,7 +37,7 @@ void RecordEndProcessEvent(const base::T
+     // Build the histogram name.
+     const auto histogram_name = base::StringPrintf(
+         kTimeToEndProcessHistogram,
+-        kEndProcessCountToString[end_process_count - 1].c_str());
++        std::string(kEndProcessCountToString[end_process_count - 1]).c_str());
+ 
+     // Record the event.
+     base::UmaHistogramLongTimes100(histogram_name, end_time - start_time);

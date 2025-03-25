@@ -1,0 +1,13 @@
+# Chromium normally creates shared memory regions in /dev/shm/ (tmpfs).
+# If that location is low on available space, the browser will crash due
+# to insufficient shared memory (even when main memory is plentiful) in
+# functions like gpu::ClientSharedImageInterface::CreateSharedImage().
+# For more details, see https://bugs.debian.org/1072299#78
+
+shm_avail=$(findmnt -bnr -o avail -T /dev/shm)
+
+if [ $shm_avail -lt 4080218931 ]  # 3.8 GB
+then
+	# Use $TMPDIR or /tmp instead
+	export CHROMIUM_FLAGS="$CHROMIUM_FLAGS --disable-dev-shm-usage"
+fi

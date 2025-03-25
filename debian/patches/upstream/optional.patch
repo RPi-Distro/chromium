@@ -1,0 +1,22 @@
+--- a/content/browser/media/session/media_session_uma_helper.h
++++ b/content/browser/media/session/media_session_uma_helper.h
+@@ -5,6 +5,8 @@
+ #ifndef CONTENT_BROWSER_MEDIA_SESSION_MEDIA_SESSION_UMA_HELPER_H_
+ #define CONTENT_BROWSER_MEDIA_SESSION_MEDIA_SESSION_UMA_HELPER_H_
+ 
++#include <optional>
++
+ #include "base/memory/raw_ptr.h"
+ #include "base/time/clock.h"
+ #include "base/time/time.h"
+--- a/chrome/browser/picture_in_picture/picture_in_picture_window_manager_uma_helper.h
++++ b/chrome/browser/picture_in_picture/picture_in_picture_window_manager_uma_helper.h
+@@ -5,6 +5,8 @@
+ #ifndef CHROME_BROWSER_PICTURE_IN_PICTURE_PICTURE_IN_PICTURE_WINDOW_MANAGER_UMA_HELPER_H_
+ #define CHROME_BROWSER_PICTURE_IN_PICTURE_PICTURE_IN_PICTURE_WINDOW_MANAGER_UMA_HELPER_H_
+ 
++#include <optional>
++
+ #include "base/memory/raw_ptr.h"
+ #include "base/time/clock.h"
+ #include "base/time/time.h"

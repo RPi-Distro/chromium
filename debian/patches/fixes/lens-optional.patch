@@ -1,0 +1,17 @@
+In file included from ../../chrome/browser/ui/lens/lens_overlay_request_id_generator.cc:5:
+../../chrome/browser/ui/lens/lens_overlay_request_id_generator.h:71:8: error: no template named 'optional' in namespace 'std'
+   71 |   std::optional<lens::LensOverlayRoutingInfo> routing_info_;
+      |   ~~~~~^
+1 error generated.
+
+--- a/chrome/browser/ui/lens/lens_overlay_request_id_generator.h
++++ b/chrome/browser/ui/lens/lens_overlay_request_id_generator.h
+@@ -9,6 +9,8 @@
+ #include "third_party/lens_server_proto/lens_overlay_server.pb.h"
+ #include "third_party/lens_server_proto/lens_overlay_service_deps.pb.h"
+ 
++#include <optional>
++
+ namespace lens {
+ 
+ // The update modes for the request id generator.

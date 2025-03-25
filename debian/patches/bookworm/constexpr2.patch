@@ -1,7 +1,7 @@
 author: Andres Salomon <dilinger@debian.org>
-description: same kind of clang16 constexpr workaround, except this location is trickier
+description: same kind of clang/gcc constexpr workaround, except this location is trickier
 
-Clang-16 can't handle constexpr std::strings; normally we can just make
+Clang with gcc-12's libstdc++ can't handle constexpr std::strings; normally we can just make
 them const. Because this is inside of a class declaration, it's a bit
 more challenging. Use a C-style const char* instead, defaulting to "" and
 can be overridden during the constexpr DisplayParams definition.

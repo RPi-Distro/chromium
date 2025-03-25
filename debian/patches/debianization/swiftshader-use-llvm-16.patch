@@ -1,0 +1,18 @@
+Description: switching to llvm-16 for swiftshader
+Author: Bo Yu <tsu.yubo@gmail.com>
+Forwarded: not-needed
+Applied-Upstream: https://swiftshader.googlesource.com/SwiftShader.git/+log?s=c315c894b9d529b8e7d3753b1217630aa8821d75
+Last-Update: 2024-12-09
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- a/third_party/swiftshader/src/Reactor/BUILD.gn
++++ b/third_party/swiftshader/src/Reactor/BUILD.gn
+@@ -307,7 +307,7 @@
+ 
+ if (supports_llvm) {
+   swiftshader_source_set("swiftshader_llvm_reactor") {
+-    llvm_dir = "../../third_party/llvm-10.0"
++    llvm_dir = "../../third_party/llvm-16.0"
+ 
+     deps = [
+       ":swiftshader_reactor_base",

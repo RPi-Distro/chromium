@@ -1,27 +1,32 @@
 debianization/manpage.patch
 debianization/sandbox.patch
 debianization/clang-version.patch
+debianization/swiftshader-use-llvm-16.patch
 
 fixes/ps-print.patch
-fixes/widevine-revision.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
-fixes/perfetto.patch
 fixes/strlcpy.patch
 fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/clang-rust-target.patch
-fixes/highway-include-path.patch
-fixes/gpu-crash.patch
 fixes/predictor-denial-of-service.patch
 fixes/fix-assert-in-vnc-sessions.patch
 fixes/armhf-timespec.patch
+fixes/updater-test.patch
+fixes/absl-optional.patch
+fixes/font-gc-asan.patch
+fixes/lens-optional.patch
+fixes/libsync-rk3588-panthor.patch
+fixes/optional.patch
+fixes/headless-gn.patch
+fixes/stdatomic.patch
+fixes/variant.patch
+fixes/swiftshader-llvm.patch
+fixes/pipewire14.patch
 
-upstream/mojo.patch
-upstream/ruy-include.patch
-#upstream/wayland-gbm-pixmap.patch
-upstream/stack-header.patch
-upstream/blink-fix-size-assertions.patch
+upstream/qualifications.patch
+upstream/optional.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -37,33 +42,50 @@ disable/screen-ai-blob.patch
 
 system/icu-shim.patch
 system/jpeg.patch
-system/event.patch
 system/openjpeg.patch
 system/opus.patch
 system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
 
+bookworm/dq-forward-iterator.patch
+bookworm/clang19.patch
+bookworm/constflatset.patch
 bookworm/libxml-parseerr.patch
-bookworm/clang16.patch
+bookworm/gn-allowlist.patch
+bookworm/adler1.patch
 bookworm/freetype-COLRV1.patch
-bookworm/bubble-contents.patch
-bookworm/sizet.patch
-bookworm/urlhelper-ctor.patch
-bookworm/v8-wrappable.patch
-bookworm/lex-3way.patch
-bookworm/traitors.patch
-bookworm/spaceship-operator.patch
-bookworm/more-spaceships.patch
-bookworm/signer-lambda.patch
-bookworm/constexpr.patch
-bookworm/constexpr2.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
-bookworm/highway-blink.patch
-bookworm/blink-attrib.patch
-bookworm/cacheline.patch
 bookworm/partially-deployed-mseal-syscall.patch
+bookworm/constexpr.patch
+bookworm/constexpr2.patch
+bookworm/bubble-contents.patch
+bookworm/rust-visibility.patch
+bookworm/less-void.patch
+bookworm/stdarch-arm.patch
+bookworm/modff.patch
+bookworm/foreach.patch
+
+# unused patches:
+# bookworm/blink-attrib.patch
+# bookworm/clang16.patch
+# bookworm/constexpr.patch
+# bookworm/lex-3way.patch
+# bookworm/more-spaceships.patch
+# bookworm/signer-lambda.patch
+# bookworm/spaceship-operator.patch
+# bookworm/traitors.patch
+# bookworm/urlhelper-ctor.patch
+# bookworm/v8-wrappable.patch
+# bullseye/av1-vaapi.patch
+# bullseye/constexpr.patch
+# bullseye/openh264.patch
+# bullseye/webui.patch
+
+# patches for system libhwy-dev
+#fixes/highway-include-path.patch
+#bookworm/highway-blink.patch
 
 # Ungoogled Chromium
 ungoogled/disable-privacy-sandbox.patch
@@ -94,17 +116,18 @@ ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
 ppc64le/third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
 ppc64le/third_party/0001-third_party-lss-Don-t-look-for-mmap2-on-ppc64.patch
 ppc64le/third_party/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
+ppc64le/third_party/0001-swiftshader-fix-build.patch
+ppc64le/third_party/0001-third-party-hwy-wrong-include.patch
 ppc64le/third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
 ppc64le/third_party/0002-third_party-lss-kernel-structs.patch
-ppc64le/third_party/0001-swiftshader-fix-build.patch
 
 ppc64le/webrtc/Rtc_base-system-arch.h-PPC.patch
 
 ppc64le/third_party/0004-third_party-crashpad-port-curl-transport-ppc64.patch
 
 ppc64le/workarounds/HACK-third_party-libvpx-use-generic-gnu.patch
-ppc64le/workarounds/HACK-debian-clang-disable-skia-musttail.patch
 ppc64le/workarounds/HACK-debian-clang-disable-base-musttail.patch
+ppc64le/workarounds/HACK-debian-clang-disable-pa-musttail.patch
 
 ppc64le/libaom/0001-Add-ppc64-target-to-libaom.patch
 ppc64le/libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch

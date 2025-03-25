@@ -1,0 +1,16 @@
+author: Andres Salomon <dilinger@debian.org>
+description: don't hardcode gn path
+
+When building headless_shell, don't use the bundled gn binary; instead
+use the gn debian system binary.
+
+--- a/tools/licenses/licenses.py
++++ b/tools/licenses/licenses.py
+@@ -806,6 +806,7 @@ def FindThirdPartyDirs(root, extra_third
+ # //buildtools.
+ def _GnBinary():
+   exe = 'gn'
++  return exe
+   if sys.platform.startswith('linux'):
+     subdir = 'linux64'
+   elif sys.platform == 'darwin':

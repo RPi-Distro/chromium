@@ -2,121 +2,174 @@ Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0
 Source: http://www.chromium.org/Home
 Upstream-Name: chromium
 Files-Excluded:
+ *.apk
  *.binarypb
  *.bincfg
  *.clang*
- *.git*
- *__pycache__
- *.mk
- *.so
+ *.class
  *.dll
  *.exe
+ *.exe.*
  *.fst
+ *.git*
  *.jar
+ *.java
+ *.lib
+ *.mk
  *.mp4
  *.msi
- *.wasm
  *.ogg
+ *.orig
  *.otf
- *.pyc
+ *.out
+ *.pbtxt
+ *.pkg
+ *.po
  *.pyd
+ *.so
  *.tflite
  *.ttf
+ *.wasm
  *.webm
  *.zip
- *.orig
- *corpus
- *corpora
- *testdata
- *config.sub
  *config.guess
+ *config.sub
+ *corpora
+ *corpus
  *jquery*.min.js
- ios
- buildtools
- build/linux/debian_bullseye_*
- ui/chromeos/B*
- ui/chromeos/D*
- ui/chromeos/devicetype_utils.cc
- ui/chromeos/f*
- ui/chromeos/r*
- ui/chromeos/s*
- ui/chromeos/t*
- ui/chromeos/ui_chromeos_strings*
- ui/chromeos/user*
+ *testdata
+ android_webview
  base/mac
  base/test/data
  base/third_party/double_conversion
+ build/config/freetype/freetype.gni
+ build/linux/debian_bullseye_*
+ buildtools
  chrome/android
+ chrome/browser/android/examples
+ chrome/browser/resources/chromeos/accessibility/common/testing
+ chrome/browser/resources/chromeos/[lns]*
+ chrome/browser/resources/default_apps
  chrome/build
+ chrome/installer/gcapi*
+ chrome/installer/launcher_support
+ chrome/installer/linux
  chrome/installer/mac
+ chrome/installer/mini_installer
+ chrome/installer/setup
  chrome/installer/test
  chrome/installer/tools
- chrome/installer/setup
- chrome/installer/linux
- chrome/installer/gcapi*
- chrome/installer/mini_installer
- chrome/installer/launcher_support
  chrome/utility/safe_browsing/rar_analyzer.*
- chrome/browser/android/examples
- chrome/browser/resources/chromeos/s*
- chrome/browser/resources/chromeos/l*
- chrome/browser/resources/chromeos/n*
- chrome/browser/resources/default_apps
- fuchsia*
- net/data/cache_tests
- tools/emacs
- tools/luci-go
- tools/android
- tools/skia_goldctl
- tools/perf/contrib
- tools/perf/testdata
- tools/perf/page_sets
- tools/perf/measurements/test_data
- tools/perf/page_sets/maps_perf_test
- tools/perf/page_sets/tough_scheduling_cases/*.min.js
- tools/page_cycler/acid3
- tools/resultdb/result_adapter
- tools/resultdb/.versions/*.cipd_version
- tools/win
- tools/gn
- headless/test/data
- content/browser/android
- components/test/data
- components/test/android
  components/drive/chromeos
+ components/test/android
+ components/test/data
+ content/browser/android
+ docs
+ fuchsia*
+ headless/test/data
+ ios
  native_client*
- android_webview
- third_party/angle/src/third_party/libXNVCtrl
- third_party/siso
- third_party/opus
- third_party/dav1d
- third_party/flac
- third_party/harfbuzz-ng/src
- third_party/harfbuzz-ng/harfbuzz.gni
- third_party/highway
- third_party/llvm*
- third_party/libei
- third_party/webgl
- third_party/libpng
- third_party/libdrm
- third_party/libevent
- third_party/libsecret
- third_party/libxslt
- third_party/freetype
- build/config/freetype/freetype.gni
+ net/data/cache_tests
+ third_party/accessibility-audit/axs_testing.js
  third_party/android*
- third_party/lzma_sdk/bin
- third_party/test_fonts/test_fonts*
- third_party/test_fonts/README*
- third_party/pyelftools
- third_party/fontconfig
- third_party/dawn/test
- third_party/dawn/tools/golang
- third_party/ninja
- third_party/depot_tools/ninja*
+ third_party/angle/src/third_party/libXNVCtrl
+ third_party/angle/third_party/VK-GL-CTS
+ third_party/angle/third_party/glmark2
+ third_party/angle/third_party/rapidjson
+ third_party/apache-linux
+ third_party/apache-portable-runtime
+ third_party/apache-win32
+ third_party/blink/manual_tests
+ third_party/blink/renderer/platform/testing/data
+ third_party/boringssl/src/crypto/cipher_extra/test
+ third_party/boringssl/src/third_party/wycheproof_testvectors
+ third_party/breakpad/breakpad/src/client/mac
+ third_party/catapult
+ third_party/checkstyle
+ third_party/chromevox/third_party/sre
+ third_party/crashpad/crashpad/handler/win
+ third_party/dav1d
+ third_party/dawn/third_party/dxc
+ third_party/dawn/third_party/khronos/EGL-Registry/sdk
+ third_party/dawn/third_party/khronos/OpenGL-Registry/ABI/new.gif
+ third_party/dawn/third_party/khronos/OpenGL-Registry/extensions
+ third_party/dawn/third_party/khronos/OpenGL-Registry/specs
  third_party/dawn/third_party/ninja
+ third_party/dawn/third_party/webgpu-cts
+ third_party/dawn/tools/golang
+ third_party/depot_tools/ninja*
+ third_party/devtools-frontend/src/node_modules/.bin
+ third_party/devtools-frontend/src/third_party/esbuild/esbuild
+ third_party/devtools-frontend/src/third_party/image_diff
+ third_party/dom_distiller_js/dist/js/domdistiller_wrapped.js
+ third_party/expat/src
+ third_party/ffmpeg/config*
+ third_party/ffmpeg/doc
+ third_party/ffmpeg/fftools
+ third_party/ffmpeg/tests
+ third_party/ffmpeg/tools
+ third_party/flac
+ third_party/fontconfig
+ third_party/freetype
+ third_party/google_input_tools/src/chrome/os/inputview/_locales/*.js
+ third_party/harfbuzz-ng/harfbuzz.gni
+ third_party/harfbuzz-ng/src
+ third_party/icu/source/data
+ third_party/instrumented_lib*
+ third_party/libc++/src/test
+ third_party/libei
+ third_party/libevent
  third_party/libjpeg.gni
  third_party/libjpeg_turbo
+ third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadata.js
+ third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadatalite.js
+ third_party/libpng
+ third_party/libsecret
+ third_party/libusb
+ third_party/libxml/BUILD.gn
+ third_party/libxml/linux
+ third_party/libxml/mac
+ third_party/libxml/src
+ third_party/libxml/win32
+ third_party/libxslt
+ third_party/llvm*
+ third_party/lzma_sdk/bin
+ third_party/nearby/src
+ third_party/ninja
+ third_party/node/linux
+ third_party/node/node_modules.tar.gz
+ third_party/node/node_modules/@rollup
+ third_party/node/node_modules/acorn
+ third_party/node/node_modules/chai/chai.js
+ third_party/node/node_modules/mocha/mocha.js
+ third_party/openh264/BUILD.gn
+ third_party/openh264/src
+ third_party/openscreen/src/buildtools
+ third_party/opus
+ third_party/pdfium/third_party/libopenjpeg
+ third_party/pyelftools
+ third_party/rust-*
+ third_party/siso
+ third_party/siso/siso
+ third_party/skia/platform_tools
+ third_party/skia/resources/icc_profiles
+ third_party/skia/site/docs/user/api
+ third_party/skia/tools/perf-canvaskit-puppeteer/path_translate_assets/car.svg
+ third_party/speedometer/v3.0
+ third_party/swiftshader/tests
+ third_party/swiftshader/third_party/SPIRV-Tools/tools
+ third_party/swiftshader/third_party/llvm-10.0
+ third_party/test_fonts/README*
+ third_party/tflite/src/tensorflow/examples/multibox_detector/data/surfers.jpg
+ third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
+ third_party/tflite/src/tensorflow/python
+ third_party/unrar
+ third_party/updater
+ third_party/webgl
+ third_party/webgpu-cts/src
+ third_party/webrtc/data
+ third_party/webrtc/examples
+ third_party/webrtc/sdk
  third_party/win_build_output
  third_party/zlib/BUILD.gn
  third_party/zlib/adler*
@@ -124,84 +177,30 @@ Files-Excluded:
  third_party/zlib/deflate*
  third_party/zlib/gzguts*
  third_party/zlib/in*
+ third_party/zlib/patches
  third_party/zlib/trees*
  third_party/zlib/z*
- third_party/zlib/patches
- third_party/skia/site/docs/user/api
- third_party/skia/platform_tools
- third_party/skia/resources/icc_profiles
- third_party/skia/tools/perf-canvaskit-puppeteer/path_translate_assets/car.svg
- third_party/ffmpeg/doc
- third_party/ffmpeg/tests
- third_party/ffmpeg/tools
- third_party/ffmpeg/fftools
- third_party/ffmpeg/config*
- third_party/openh264/src
- third_party/openh264/BUILD.gn
- third_party/expat/src
- third_party/unrar
- third_party/apache-linux
- third_party/checkstyle
- third_party/swiftshader/tests
- third_party/swiftshader/third_party/SPIRV-Tools/tools
- third_party/swiftshader/third_party/llvm-16.0
- third_party/apache-win32
- third_party/apache-portable-runtime
- third_party/instrumented_lib*
- third_party/angle/third_party/glmark2
- third_party/angle/third_party/rapidjson
- third_party/angle/third_party/VK-GL-CTS
- third_party/chromevox/third_party/sre
- third_party/crashpad/crashpad/handler/win
- third_party/blink/renderer/platform/testing/data
- third_party/blink/manual_tests
- third_party/blink/perf_tests
- third_party/google_input_tools/src/chrome/os/inputview/_locales/*.js
+ third_party/zstd
+ tools/android
+ tools/emacs
+ tools/gn
+ tools/luci-go
+ tools/page_cycler/acid3
+ tools/perf/contrib
+ tools/perf/measurements/test_data
+ tools/perf/page_sets
+ tools/perf/page_sets/maps_perf_test
+ tools/perf/page_sets/tough_scheduling_cases/*.min.js
+ tools/resultdb/.versions/*.cipd_version
+ tools/resultdb/result_adapter
+ tools/skia_goldctl
+ tools/win
+ ui/chromeos/[BDfrst]*
+ ui/chromeos/devicetype_utils.cc
+ ui/chromeos/ui_chromeos_strings*
+ ui/chromeos/user*
  v8/third_party/colorama
  v8/third_party/googletest
- third_party/libusb
- third_party/libxml/mac
- third_party/libxml/linux
- third_party/libxml/win32
- third_party/libxml/BUILD.gn
- third_party/libxml/src
- third_party/node/linux
- third_party/node/node_modules.tar.gz
- third_party/node/node_modules/acorn
- third_party/node/node_modules/@rollup
- third_party/node/node_modules/mocha/mocha.js
- third_party/rust-*
- third_party/node/node_modules/chai/chai.js
- third_party/openscreen/src/buildtools
- third_party/siso/siso
- third_party/accessibility-audit/axs_testing.js
- third_party/catapult
- third_party/webgpu-cts/src
- third_party/webrtc/sdk
- third_party/webrtc/data
- third_party/webrtc/examples
- third_party/pdfium/third_party/libopenjpeg
- third_party/pdfium/third_party/libtiff
- third_party/breakpad/breakpad/src/client/mac
- third_party/boringssl/src/crypto/cipher_extra/test
- third_party/dom_distiller_js/dist/js/domdistiller_wrapped.js
- third_party/devtools-frontend/src/third_party/image_diff
- third_party/devtools-frontend/src/node_modules/.bin
- third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadata.js
- third_party/libphonenumber/dist/javascript/i18n/phonenumbers/metadatalite.js
- third_party/tflite/src/tensorflow/examples/multibox_detector/data/surfers.jpg
- third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
- third_party/devtools-frontend/src/third_party/esbuild/esbuild
- third_party/nearby/src/third_party
- third_party/sqlite/src/test
- third_party/updater
- third_party/zstd
- third_party/dawn/third_party/dxc
- third_party/dawn/third_party/khronos/OpenGL-Registry/ABI/new.gif
- third_party/dawn/third_party/khronos/OpenGL-Registry/extensions
- third_party/dawn/third_party/khronos/OpenGL-Registry/specs
- third_party/dawn/third_party/khronos/EGL-Registry/sdk
- third_party/dawn/third_party/webgpu-cts
 
 
 Files: *

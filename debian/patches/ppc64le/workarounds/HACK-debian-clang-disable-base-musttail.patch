@@ -1,13 +1,13 @@
-Index: chromium-130.0.6723.44/base/compiler_specific.h
+Index: chromium-134.0.6998.35/base/compiler_specific.h
 ===================================================================
---- chromium-130.0.6723.44.orig/base/compiler_specific.h
-+++ chromium-130.0.6723.44/base/compiler_specific.h
-@@ -88,7 +88,7 @@
- // Can be used only on return statements, even for functions returning void.
- // Caller and callee must have the same number of arguments and its types must
- // be "similar".
--#if defined(__clang__) && HAS_ATTRIBUTE(musttail)
-+#if defined(__clang__) && HAS_ATTRIBUTE(musttail) && !defined(__powerpc64__)
+--- chromium-134.0.6998.35.orig/base/compiler_specific.h
++++ chromium-134.0.6998.35/base/compiler_specific.h
+@@ -198,7 +198,7 @@
+ //     MUSTTAIL return Func1(d + 1);  // `Func1()` will be tail-called.
+ //   }
+ // ```
+-#if __has_cpp_attribute(clang::musttail)
++#if __has_cpp_attribute(clang::musttail) && !defined(__powerpc64__)
  #define MUSTTAIL [[clang::musttail]]
  #else
  #define MUSTTAIL

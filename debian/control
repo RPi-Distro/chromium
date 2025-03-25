@@ -13,16 +13,14 @@ Rules-Requires-Root: no
 Build-Depends:
  debhelper (>= 11),
  devscripts,
- lld-16,
- clang-16,
- clang-format-16,
- libclang-rt-16-dev,
- libc++-16-dev,
- libc++abi-16-dev,
+ lld-19,
+ clang-19,
+ clang-format-19,
+ libclang-rt-19-dev,
  rustc-web (>= 1.74),
  bindgen,
  python3,
- pkg-config,
+ pkgconf,
  ninja-build,
  python3-jinja2,
  python3-pkg-resources,
@@ -36,6 +34,7 @@ Build-Depends:
  gperf,
  bison,
  nodejs,
+ node-rollup-plugin-terser,
  rollup,
  valgrind,
  xz-utils,
@@ -61,9 +60,7 @@ Build-Depends:
  libelf-dev,
  libpci-dev,
  libcap-dev,
- libdrm-dev,
  libffi-dev,
- libhwy-dev,
  libkrb5-dev,
  libexif-dev,
  libflac-dev,
@@ -78,7 +75,6 @@ Build-Depends:
  liblcms2-dev,
  libpulse-dev,
  libpam0g-dev,
- libtiff-dev,
  libdouble-conversion-dev,
  libxnvctrl-dev,
  libglib2.0-dev,
@@ -176,6 +172,20 @@ Description: web browser - minimal shell
  .
  This package provides a minimal version of the chromium user interface
  (the content shell).
+
+Package: chromium-headless-shell
+Architecture: i386 amd64 arm64 armhf ppc64el
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+ chromium-common (= ${binary:Version}),
+Description: web browser - old headless shell
+ Web browser that aims to build a safer, faster, and more stable internet
+ browsing experience.
+ .
+ This package provides a headless (no GUI) version of the chromium browser,
+ which can be useful for doing things like generating PDFs. It is
+ equivalent to the 'chromium --headless=old' option that was removed.
 
 Package: chromium-driver
 Architecture: i386 amd64 arm64 armhf ppc64el

@@ -1,0 +1,26 @@
+author: Jianfeng Liu <liujianfeng1994@gmail.com>
+Forwarded: no
+description: thirdparty: fix libsync for rk3588 panthor gpu driver
+
+Chromium will crash with panthor gpu driver on rk3588 when running with
+ozone wayland. There is a bug reported upstream:
+
+https://issues.chromium.org/issues/343592370
+
+I find the fix from an upstream commit:
+
+https://chromium.googlesource.com/aosp/platform/system/core/libsync/+/941fe299d072723ddd475c173fe122a4f97b8cdf%5E%21/
+
+diff --git a/third_party/libsync/src/sync.c b/third_party/libsync/src/sync.c
+index 9ed03dba88..0e9ad43822 100644
+--- a/third_party/libsync/src/sync.c
++++ b/third_party/libsync/src/sync.c
+@@ -145,7 +145,7 @@ struct sync_fence_info_data *sync_fence_info(int fd)
+     }
+ 
+     legacy_info->len = sizeof(*legacy_info) +
+-                        num_fences * sizeof(struct sync_fence_info);
++                        num_fences * sizeof(struct sync_pt_info);
+     strlcpy(legacy_info->name, info->name, sizeof(legacy_info->name));
+     legacy_info->status = info->status;
+ 

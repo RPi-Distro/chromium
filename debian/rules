@@ -17,13 +17,13 @@ export DEB_RULES_REQUIRES_ROOT=no
 # compile with clang (gcc is currently not supported)
 export AR=ar
 export NM=nm
-export CC=clang-16
-export CXX=clang++-16
+export CC=clang-19
+export CXX=clang++-19
 
 # initial flags from dpkg-buildflags
 export DEB_CXXFLAGS_MAINT_STRIP=-g
-export CXXFLAGS=$(shell dpkg-buildflags --get CXXFLAGS) -stdlib=libc++
-export LDFLAGS=$(shell dpkg-buildflags --get LDFLAGS) -stdlib=libc++
+export CXXFLAGS:=$(shell dpkg-buildflags --get CXXFLAGS)
+export LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
 
 # more verbose linker output
 export LDFLAGS+=-Wl,--stats
@@ -50,11 +50,11 @@ export CXXFLAGS+=-faltivec-src-compat=mixed -Wno-deprecated-altivec-src-compat
 endif
 
 # disable clang plugins
-defines=clang_use_chrome_plugins=false
+defines:=clang_use_chrome_plugins=false
 
 # use system rust
 export RUSTC_BOOTSTRAP=1
-export CLANG_MVERS=$(shell $(CC) --version | sed -n 's/.* clang version //p' | cut -d. -f1)
+export CLANG_MVERS:=$(shell $(CC) --version | sed -n 's/.* clang version //p' | cut -d. -f1)
 rust_sysroot=/usr
 defines+=rust_sysroot_absolute=\"$(rust_sysroot)\"
 defines+=rust_bindgen_root=\"$(CURDIR)/debian/bindgen/root/usr\"
@@ -67,7 +67,8 @@ defines+=host_toolchain=\"//build/toolchain/linux/unbundle:default\"
 defines+=custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
 
 # set the appropriate cpu architecture
-DEB_HOST_ARCH ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_HOST_ARCH_value := $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_HOST_ARCH ?= $(DEB_HOST_ARCH_value)
 ifeq (i386,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"x86\" use_vaapi=true
 endif
@@ -105,7 +106,7 @@ defines+=is_debug=false \
          angle_build_tests=false \
          build_angle_perftests=false \
          treat_warnings_as_errors=false \
-         use_qt=false \
+         use_qt5=false use_qt6=false \
          is_cfi=false \
          chrome_pgo_phase=0 \
 
@@ -123,7 +124,7 @@ defines+=use_gio=true \
          use_system_lcms2=true \
          use_system_libjpeg=true \
          use_system_libpng=true \
-         use_system_libtiff=true \
+         use_system_libtiff=false \
          use_system_freetype=true \
          use_system_harfbuzz=true \
          use_system_libopenjpeg2=true \
@@ -190,6 +191,7 @@ override_dh_auto_configure: test_armhf_neon set_up_bindgen
 	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin
 	# use system rollup
 	cp -ra /usr/share/nodejs/rollup third_party/node/node_modules/
+	- test -L third_party/devtools-frontend/src/node_modules/rollup3 || ln -s /usr/share/nodejs/rollup third_party/devtools-frontend/src/node_modules/rollup3
 	# output compiler information
 	$(CXX) --version
 	# prefer unbundled (system) libraries
@@ -197,9 +199,10 @@ override_dh_auto_configure: test_armhf_neon set_up_bindgen
 
 override_dh_auto_build-arch:
 	gn gen out/Release --args="$(defines)"
-	ninja -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver
+	ninja -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
 	cp out/Release/chrome out/Release/chromium
 	cp out/Release/content_shell out/Release/chromium-shell
+	cp out/Release/headless_shell out/Release/chromium-headless-shell
 	cp out/Release/chrome_sandbox out/Release/chrome-sandbox
 	cp out/Release/locales/en-US.pak out/Release/resources
 	chmod 4755 out/Release/chrome-sandbox # suid sandbox
@@ -227,6 +230,7 @@ override_dh_auto_clean:
 	rm -rf third_party/node/linux/node-linux-x64
 	rm -rf out
 	rm -rf third_party/node/node_modules/rollup
+	rm -f third_party/devtools-frontend/src/node_modules/rollup3
 	# bullseye workarounds; delete this post-bullseye
 	rm -rf third_party/node/node_modules/acorn
 	rm -rf third_party/node/node_modules/walk
@@ -236,36 +240,38 @@ override_dh_auto_clean:
 ###################### upstream source downloading ############################
 
 url=https://gsdview.appspot.com/chromium-browser-official
-version=$(DEB_VERSION_UPSTREAM)
+version:=$(DEB_VERSION_UPSTREAM)
 extract=chromium-$(version)
-tarfile=$(extract).tar
+tarfile=$(extract)-lite.tar
 tarball=$(tarfile).xz
 debvers=../chromium_$(version)
 seconds=$(debvers).seconds
 origtxz=$(debvers).orig.tar.xz
 removed=$(debvers).files-removed
-options=--sort=name --owner=0 --group=0 --numeric-owner --mtime="@$$(stat --format "%Y" ../$(tarball))" --clamp-mtime
+options=--sort=name --owner=0 --group=0 --numeric-owner --mtime="@$$(cat $(extract)/build/util/LASTCHANGE.committime)" --clamp-mtime
+print_elapsed=echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
 
 get-orig-source:
 	wget -nv --show-progress -c $(url)/$(tarball) -O ../$(tarball)
 	@date +%s > $(seconds)
-	# TODO: use `grep-dctrl -F Files-Excluded '' -s Files-Excluded debian/copyright` instead (from jochensp)
-	perl debian/scripts/get-excludes.pl "`tar tf ../$(tarball) | head -n1`" > $(debvers).excludes
-	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
-	@echo
-	test ! -e $(extract) || rm -rf $(extract)
+	top="$$(tar tf ../$(tarball) | head -n1)" \
+	&& test -n "$$top" \
+	&& grep-dctrl -n -F Files-Excluded -s Files-Excluded '' debian/copyright \
+	| sed -r 's/^ +//; /^$$/d' \
+	| awk -v top="$$top" '/^\*/{print; next} {print top $$0}' \
+	> $(debvers).excludes
+	rm -rf $(extract)
+	@$(print_elapsed); echo
 	tar --exclude-from=$(debvers).excludes -xf ../$(tarball)
-	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
-	@echo
 	rm -f $(debvers).excludes
+	find $(extract) -depth -type d -empty -delete
+	@$(print_elapsed); echo
 	cd $(extract) && ../debian/scripts/check-upstream
 	chmod -R u+w $(extract)
-	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
-	@echo
-	test ! -e $(origtxz) || rm -f $(origtxz)
+	@$(print_elapsed); echo
+	rm -f $(origtxz)
 	tar $(options) -cf - $(extract) | xz -6 -T0 - > $(origtxz)
-	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds
-	@echo
+	@$(print_elapsed); echo
 	rm -rf $(extract)
-	@echo $$(($$(date +%s) - $$(cat $(seconds)))) seconds | tee seconds
+	@$(print_elapsed) | tee seconds
 	@mv -f seconds $(seconds)

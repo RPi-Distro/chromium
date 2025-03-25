@@ -1,0 +1,20 @@
+/usr/bin/../lib/gcc/x86_64-linux-gnu/12/../../../../include/c++/12/bits/stl_tree.h:1306:24: error: no matching function for call to object of type 'const std::less<void>'
+
+
+less<void> doesn't make sense to gcc (and not to me, either!). I think
+what was intended here was a default comparison function?
+
+This is bookworm-specific, as related to older gcc.
+
+
+--- a/base/metrics/field_trial_param_associator.h
++++ b/base/metrics/field_trial_param_associator.h
+@@ -80,7 +80,7 @@ class BASE_EXPORT FieldTrialParamAssocia
+   using FieldTrialRefKey = std::pair<const std::string&, const std::string&>;
+ 
+   Lock lock_;
+-  std::map<FieldTrialKey, FieldTrialParams, std::less<>> field_trial_params_;
++  std::map<FieldTrialKey, FieldTrialParams> field_trial_params_;
+ };
+ 
+ }  // namespace base

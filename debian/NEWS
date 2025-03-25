@@ -1,4 +1,4 @@
-chromium-browser (104.0.5112.79-2) unstable; urgency=low
+chromium-browser (104.0.5112.79-1) unstable; urgency=low
 
   We've switched the default search engine from Google to DuckDuckGo.
   To manually override it, just go into Settings, click "Search Engine",

@@ -1,7 +1,7 @@
-Index: chromium-130.0.6723.44/sandbox/policy/linux/bpf_utility_policy_linux.cc
+Index: chromium-134.0.6998.35/sandbox/policy/linux/bpf_utility_policy_linux.cc
 ===================================================================
---- chromium-130.0.6723.44.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
-+++ chromium-130.0.6723.44/sandbox/policy/linux/bpf_utility_policy_linux.cc
+--- chromium-134.0.6998.35.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
++++ chromium-134.0.6998.35/sandbox/policy/linux/bpf_utility_policy_linux.cc
 @@ -34,7 +34,7 @@ ResultExpr UtilityProcessPolicy::Evaluat
      case __NR_fdatasync:
      case __NR_fsync:
@@ -11,11 +11,11 @@ Index: chromium-130.0.6723.44/sandbox/policy/linux/bpf_utility_policy_linux.cc
      case __NR_getrlimit:
  #endif
  #if defined(__i386__) || defined(__arm__)
-Index: chromium-130.0.6723.44/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+Index: chromium-134.0.6998.35/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 ===================================================================
---- chromium-130.0.6723.44.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
-+++ chromium-130.0.6723.44/sandbox/policy/linux/bpf_renderer_policy_linux.cc
-@@ -87,7 +87,7 @@ ResultExpr RendererProcessPolicy::Evalua
+--- chromium-134.0.6998.35.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
++++ chromium-134.0.6998.35/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+@@ -90,7 +90,7 @@ ResultExpr RendererProcessPolicy::Evalua
      case __NR_ftruncate64:
  #endif
  #if defined(__i386__) || defined(__x86_64__) || defined(__mips__) || \
@@ -24,10 +24,10 @@ Index: chromium-130.0.6723.44/sandbox/policy/linux/bpf_renderer_policy_linux.cc
      case __NR_getrlimit:
      case __NR_setrlimit:
  // We allow setrlimit to dynamically adjust the address space limit as
-Index: chromium-130.0.6723.44/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+Index: chromium-134.0.6998.35/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 ===================================================================
---- chromium-130.0.6723.44.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
-+++ chromium-130.0.6723.44/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+--- chromium-134.0.6998.35.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
++++ chromium-134.0.6998.35/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 @@ -58,9 +58,9 @@
  
  #elif defined(__powerpc64__)
@@ -40,10 +40,10 @@ Index: chromium-130.0.6723.44/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
  #define MAX_SYSCALL MAX_PUBLIC_SYSCALL
  
  #else
-Index: chromium-130.0.6723.44/sandbox/linux/services/credentials.cc
+Index: chromium-134.0.6998.35/sandbox/linux/services/credentials.cc
 ===================================================================
---- chromium-130.0.6723.44.orig/sandbox/linux/services/credentials.cc
-+++ chromium-130.0.6723.44/sandbox/linux/services/credentials.cc
+--- chromium-134.0.6998.35.orig/sandbox/linux/services/credentials.cc
++++ chromium-134.0.6998.35/sandbox/linux/services/credentials.cc
 @@ -96,7 +96,8 @@ bool ChrootToSafeEmptyDir() {
  
    int clone_flags = CLONE_FS | LINUX_SIGCHLD;
@@ -65,11 +65,11 @@ Index: chromium-130.0.6723.44/sandbox/linux/services/credentials.cc
 +  // configuration loading failures and no fonts will be displayed!
    clone_flags |= CLONE_VM | CLONE_VFORK | CLONE_SETTLS;
  
-   char tls_buf[PTHREAD_STACK_MIN_CONST] = {0};
-Index: chromium-130.0.6723.44/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+   char tls_buf[PTHREAD_STACK_MIN_CONST] = {};
+Index: chromium-134.0.6998.35/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 ===================================================================
---- chromium-130.0.6723.44.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
-+++ chromium-130.0.6723.44/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+--- chromium-134.0.6998.35.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
++++ chromium-134.0.6998.35/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 @@ -362,7 +362,16 @@ intptr_t SIGSYSFstatatHandler(const stru
    if (args.nr == __NR_fstatat_default) {
      if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&

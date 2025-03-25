@@ -1,0 +1,31 @@
+author: Andres Salomon <dilinger@debian.org>
+
+work around an issue with libstdc++-12, where clang gets confused and can't
+find base::Value::Dict's Append when inside a lambda inside of for_each:
+
+In file included from ../../components/services/app_service/public/cpp/permission.cc:9:
+../../base/containers/to_value_list.h:39:46: error: no matching member function for call to 'Append'
+   39 |       [&]<typename T>(T&& value) { container.Append(std::forward<T>(value)); },
+      |                                    ~~~~~~~~~~^~~~~~
+
+
+Rather than call for_each, we iterate manually (but still call the lambda).
+
+--- a/base/containers/to_value_list.h
++++ b/base/containers/to_value_list.h
+@@ -34,10 +34,11 @@ template <typename Range, typename Proj
+                std::indirect_result_t<Proj, std::ranges::iterator_t<Range>>>
+ Value::List ToValueList(Range&& range, Proj proj = {}) {
+   auto container = Value::List::with_capacity(std::ranges::size(range));
+-  std::ranges::for_each(
+-      std::forward<Range>(range),
+-      [&]<typename T>(T&& value) { container.Append(std::forward<T>(value)); },
+-      std::move(proj));
++  auto first = std::ranges::begin(range);
++  auto last = std::ranges::end(range);
++  auto f = [&]<typename T>(T&& value) { container.Append(std::forward<T>(value)); };
++  for (; first != last; ++first)
++    std::invoke(f, std::invoke(std::move(proj), *first));
+   return container;
+ }
+ 

@@ -32,6 +32,427 @@ chromium (1:130.0.6723.116-1~deb12u1+rpt1) bookworm; urgency=medium
 
  -- Serge Schneider <serge@raspberrypi.com>  Tue, 12 Nov 2024 09:58:20 +0000
 
+chromium (134.0.6998.117-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-2476: Use after free in Lens.
+      Reported by SungKwon Lee of Enki Whitehat.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 19 Mar 2025 20:04:39 -0400
+
+chromium (134.0.6998.88-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-1920: Type Confusion in V8. Reported by Excello s.r.o.
+    - CVE-2025-2135: Type Confusion in V8.
+      Reported by Zhenghang Xiao (@Kipreyyy).
+    - CVE-2025-24201: Out of bounds write in GPU on Mac. Reported by
+      Apple Security Engineering and Architecture (SEAR).
+    - CVE-2025-2136: Use after free in Inspector. Reported by Sakana.S.
+    - CVE-2025-2137: Out of bounds read in V8. Reported by zeroxiaobai@.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 11 Mar 2025 14:28:43 -0400
+
+chromium (134.0.6998.35-3) unstable; urgency=high
+
+  * Fix FTBFS with pipewire 1.4.0.
+
+ -- Andres Salomon <dilinger@debian.org>  Sat, 08 Mar 2025 13:35:36 -0500
+
+chromium (134.0.6998.35-2) unstable; urgency=high
+
+  * Revert "Have chromium-driver depend upon chromium-common instead of
+    chromium" to make autopkgtests of various packages happy.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 07 Mar 2025 00:58:06 -0500
+
+chromium (134.0.6998.35-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2025-1914: Out of bounds read in V8. Reported by
+      Zhenghang Xiao (@Kipreyyy) and Nan Wang (@eternalsakura13).
+    - CVE-2025-1915: Improper Limitation of a Pathname to a Restricted
+      Directory in DevTools. Reported by Topi Lassila.
+    - CVE-2025-1916: Use after free in Profiles.
+      Reported by parkminchan, SSD Labs Korea.
+    - CVE-2025-1917: Inappropriate Implementation in Browser UI.
+      Reported by Khalil Zhani.
+    - CVE-2025-1918: Out of bounds read in PDFium. Reported by asnine.
+    - CVE-2025-1919: Out of bounds read in Media.
+      Reported by @Bl1nnnk and @Pisanbao.
+    - CVE-2025-1921: Inappropriate Implementation in Media Stream.
+      Reported by Kaiido.
+    - CVE-2025-1922: Inappropriate Implementation in Selection.
+      Reported by Alesandro Ortiz.
+    - CVE-2025-1923: Inappropriate Implementation in Permission Prompts.
+      Reported by Khalil Zhani.
+  * d/patches:
+    - fixes/widevine-revision.patch: drop. Upstream says "with CDMs using
+      manifest-based registration, no need to" hardcode version string.
+    - disable/catapult.patch: refresh.
+    - bookworm/clang19.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: refresh from ungoogled.
+    - bookworm/gn-allowlist.patch: add workaround for older gn.
+    - bookworm/adler1.patch: add workaround for older rust.
+    - fixes/stdatomic.patch: add build fix to ensure <stdatomic.h> isn't
+      used.
+    - fixes/variant.patch: add missing header include.
+    - upstream/qualifications.patch: add fix to silence annoying warnings.
+    - upstream/optional.patch: add more missing header includes.
+    - bookworm/constflatset.patch: refresh.
+    - bookworm/constexpr.patch: refresh.
+    - bookworm/modff.patch: add workaround for libstdc++ build issue.
+    - bookworm/foreach.patch: add workaround for libstdc++ build issue.
+  * d/rules: update to ensure both qt5 AND qt6 are disabled.
+
+  [ Timothy Pearson ]
+  * d/patches:
+    - fixes/swiftshader-llvm.patch: Add LLVM patches from upstream LLVM
+      project to fix integrated SwiftShader LLVM FTBFS
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: Refresh for
+      upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 05 Mar 2025 13:26:45 -0500
+
+chromium (133.0.6943.141-2) unstable; urgency=high
+
+  * Add a bunch of lintian overrides for embedded libraries.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 28 Feb 2025 22:37:45 -0500
+
+chromium (133.0.6943.141-1) unstable; urgency=high
+
+  * New upstream security release (no CVEs).
+  * Move various .pak files from chromium package to chromium-common.
+  * Have chromium-driver depend upon chromium-common instead of chromium.
+  * Double quote args in chromium-shell script (closes: #971906).
+  * Add new package 'chromium-headless-shell' that is equivalent to the
+    now-removed --headless=old argument (closes: #1081204).
+  * d/patches/fixes/headless-gn.patch: add build fix for headless_shell.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 28 Feb 2025 16:16:33 -0500
+
+chromium (133.0.6943.126-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-0999: Heap buffer overflow in V8.
+      Reported by Seunghyun Lee (@0x10n).
+    - CVE-2025-1426: Heap buffer overflow in GPU.
+      Reported by un3xploitable && GF.
+    - CVE-2025-1006: Use after free in Network. Reported by Tal Keren, Sam
+      Agranat, Eran Rom, Edouard Bochin, Adam Hatsir of Palo Alto Networks.
+  * d/patches:
+    - fixes/bindgen-unsafe-op.patch: drop now that sid's bindgen is fixed.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 20 Feb 2025 00:16:49 -0500
+
+chromium (133.0.6943.98-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-0995: Use after free in V8. Reported by Popax21.
+    - CVE-2025-0996: Inappropriate implementation in Browser UI.
+      Reported by yuki yamaoto.
+    - CVE-2025-0997: Use after free in Navigation. Reported by asnine.
+    - CVE-2025-0998: Out of bounds memory access in V8.
+      Reported by Alan Goodman.
+  * d/patches:
+    - fixes/bindgen-unsafe-op.patch: add a workaround for a bindgen bug
+      that causes FTBFS on armhf.
+    - bookworm/stdarch-arm.patch: add workaround to build w/ rust 1.78.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 12 Feb 2025 21:35:00 -0500
+
+chromium (133.0.6943.53-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2025-0444: Use after free in Skia.
+      Reported by Francisco Alonso (@revskills).
+    - CVE-2025-0445: Use after free in V8. Reported by 303f06e3.
+    - CVE-2025-0451: Inappropriate implementation in Extensions API.
+      Reported by Vitor Torres and Alesandro Ortiz.
+  * Stop deleting third_party/highway, drop libhwy-dev build-dep, and
+    build against the bundled libhwy due to new API requirements.
+  * d/patches:
+    - fixes/highway-include-path.patch: drop; switching to bundled hwy.
+    - bookworm/highway-blink.patch: drop; switching to bundled hwy.
+    - upstream/array.patch: drop, merged upstream.
+    - upstream/ink-isfinite.patch: drop, merged upstream.
+    - upstream/ruy-include.patch: drop, merged upstream.
+    - upstream/uint.patch: drop, merged upstream.
+    - upstream/variant.patch: drop, merged upstream.
+    - upstream/webrtc-optional.patch: drop, merged upstream.
+    - fixes/perfetto.patch: drop, merged upstream.
+    - system/event.patch: drop, upstream no longer uses libevent.
+    - ungoogled/disable-privacy-sandbox.patch: refresh from upstream.
+    - fixes/highway-include-path.patch: delete a libhwy build test, add
+      another header build fix.
+    - bookworm/clang19.patch: add patch to disable unsupported build args
+    - fixes/optional.patch: add header build fix.
+    - bookworm/gn-absl.patch: add global visibilty for more symbols.
+    - bookworm/dq-forward-iterator.patch: add workaround for bookworm's
+      libstdc++ 12.
+    - bookworm/constflatset.patch, bookworm/constexpr.patch: add another
+      workaround for bookworm's libstdc++ 12.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: Refresh for
+      upstream changes
+    - third_party/0002-Add-PPC64-generated-files-for-boringssl.patch:
+      Refresh for upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      Refresh for upstream changes
+    - third_party/0001-third-party-hwy-wrong-include.patch: Work around
+      incorrect header include
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 05 Feb 2025 00:18:56 -0500
+
+chromium (132.0.6834.159-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-0762: Use after free in DevTools. Reported by Sakana.S.
+
+  [ Daniel Richard G. ]
+  * d/copyright: Sort the list of Files-Excluded: entries, remove a few
+    that are no longer needed, and consolidate some others with brackets.
+  * d/rules:
+    - Use simple assignments for variables defined using $(shell ...)
+      to avoid recursive-expansion issues with GNU Make 4.4.1.
+    - Download the upstream lite tarball instead of the regular one now
+      that the former has everything we need.
+    - Delete empty directories when making the orig-source tarball.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 28 Jan 2025 20:26:06 -0500
+
+chromium (132.0.6834.110-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-0611: Object corruption in V8. Reported by 303f06e3.
+    - CVE-2025-0612: Out of bounds memory access in V8.
+      Reported by Alan Goodman.
+  * d/patches/upstream/mojo.patch: drop, upstream tarballs are now fixed.
+  * d/chromium-shell.NEWS: ask users of the chromium-shell package to
+    email me; otherwise, chromium-shell will be removed in the future.
+
+  [ Ahmad Khalifa ]
+  * d/NEWS uses missing release, set it to nearest to silence lintian.
+  * d/control: replace obsolete pkg-config with pkgconf.
+  * d/upstream/metadata: switch fields to expected case.
+  * d/patches/series: help lintian ignore unused bullseye patches.
+
+  [ Daniel Richard G. ]
+  * d/etc/dev-shm: Add --disable-dev-shm-usage if the system has less than
+    ~4 GB available in /dev/shm to avoid crashes (closes: #1072299).
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    - fixes/libsync-rk3588-panthor.patch: Fix upstream issue #343592370,
+      which can cause browser crash when running with ozone wayland on
+      rk3588 platform.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 22 Jan 2025 16:36:45 -0500
+
+chromium (132.0.6834.83-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2025-0434: Out of bounds memory access in V8. Reported by ddme.
+    - CVE-2025-0435: Inappropriate implementation in Navigation.
+      Reported by Alesandro Ortiz.
+    - CVE-2025-0436: Integer overflow in Skia.
+      Reported by Han Zheng (HexHive).
+    - CVE-2025-0437: Out of bounds read in Metrics.
+      Reported by Xiantong Hou of Wuheng Lab and Pisanbao.
+    - CVE-2025-0438: Stack buffer overflow in Tracing.
+      Reported by Han Zheng (HexHive).
+    - CVE-2025-0439: Race in Frames. Reported by Hafiizh.
+    - CVE-2025-0440: Inappropriate implementation in Fullscreen.
+      Reported by Umar Farooq.
+    - CVE-2025-0441: Inappropriate implementation in Fenced Frames.
+      Reported by someoneverycurious.
+    - CVE-2025-0442: Inappropriate implementation in Payments.
+      Reported by Ahmed ElMasry.
+    - CVE-2025-0443: Insufficient data validation in Extensions.
+      Reported by Anonymous.
+    - CVE-2025-0446: Inappropriate implementation in Extensions.
+      Reported by Hafiizh.
+    - CVE-2025-0447: Inappropriate implementation in Navigation.
+      Reported by Khiem Tran (@duckhiem).
+    - CVE-2025-0448: Inappropriate implementation in Compositing.
+      Reported by Dahyeon Park.
+  * d/patches:
+    - upstream/blink-fix-size-assertions.patch: drop, merged upstream.
+    - upstream/dawn-strlen.patch: drop, merged upstream.
+    - upstream/mrc-copy-op.patch: drop, merged upstream.
+    - upstream/variant.patch: part of this was merged upstream; keep the
+      rest.
+    - fixes/freetype.patch: drop, merged upstream.
+    - fixes/gpu-crash.patch: drop, merged upstream.
+    - fixes/bindgen.patch: refresh and make patch even smaller. Also some
+      upstream churn.
+    - fixes/fix-assert-in-vnc-sessions.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: refresh.
+    - upstream/mojo.patch: fix missing files.
+    - upstream/uint.patch: add gcc-specific build fix.
+    - bookworm/constflatset.patch: add (probably) gcc-specific workaround.
+    - fixes/lens-optional.patch: add gcc-specific build fix.
+    - bookworm/gn-absl.patch: modify for new dependency.
+    - bookworm/rust-visibility.patch: add build fix for older rustc.
+    - bookworm/less-void.patch: add build fix for older libstdc++/gcc.
+  * Downgrade to rollup3 for devtools-frontend stuff, due to the bundled
+    rollup4 including wasm blobs. Update d/patches/system/rollup.patch to
+    point to the right place as well, and build-dep on
+    node-rollup-plugin-terser.
+  * Build against newer bundled libtiff for memory limiting protection.
+  * Switch to bundled libdrm due to DRM_IOCTL_SYNCOBJ_EVENTFD usage.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - workarounds/HACK-debian-clang-disable-skia-musttail.patch: Drop due
+      to upstream fixes
+    - third_party/skia-vsx-instructions.patch: Refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 14 Jan 2025 21:20:43 -0500
+
+chromium (131.0.6778.264-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-0291: Type Confusion in V8. Reported by Popax21.
+  * d/copyright: Delete some unused upstream binaries that we'd
+    previously missed (closes: #1091459).
+
+  [ Bo YU ]
+  * Enable 0001-swiftshader-fix-build.patch on ppc64el again to fix
+    FTBFS issue.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 08 Jan 2025 11:26:36 -0500
+
+chromium (131.0.6778.204-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-12692: Type Confusion in V8.
+      Reported by Seunghyun Lee (@0x10n).
+    - CVE-2024-12693: Out of bounds memory access in V8.
+      Reported by 303f06e3.
+    - CVE-2024-12694: Use after free in Compositing. Reported by Anonymous.
+    - CVE-2024-12695: Out of bounds write in V8. Reported by 303f06e3.
+  * d/patches/fixes/absl-optional.patch: comment out __glibcxx_assert()
+    that we keep hitting with gcc 12; it was previously commented out, but
+    we lost the change when we switched from libstdc++ and then back.
+
+  [ Bo Yu ]
+  * Build swiftshader with llvm-16 instead of llvm-10.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 18 Dec 2024 16:52:56 -0500
+
+chromium (131.0.6778.139-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2024-12381: Type Confusion in V8.
+      Reported by Seunghyun Lee (@0x10n).
+    - CVE-2024-12382: Use after free in Translate. Reported by
+      lime(@limeSec_) from TIANGONG Team of Legendsec at QI-ANXIN Group.
+  * (Temporarily?) switch from llvm's libc++ to gcc's libstdc++ to
+    simplify the prior clang-16/19 upgrades.
+  * d/patches:
+    - fixes/bindgen.patch: refresh.
+    - upstream/dawn-strlen.patch: add gcc-specific build fix.
+    - upstream/ink-isfinite.patch: add gcc-specific build fix.
+    - upstream/webrtc-optional.patch: add gcc-specific build fix.
+    - upstream/variant.patch: add gcc-specific build fixes.
+    - upstream/array.patch: add gcc-specific build fix.
+    - fixes/absl-optional.patch: re-introduce clang/gcc build workaround.
+    - upstream/mrc-copy-op.patch: add gcc-specific build fix.
+    - fixes/font-gc-asan.patch: add a better workaround for bad font-gc
+      behavior under libstdc++. This is self-contained and small, unlike
+      the prior reverts of the switch to font garbage collection.
+    - bookworm/constexpr.patch: re-enable (and refresh) build fix
+      specifically for gcc 12.
+    - bookworm/constexpr2.patch: re-enable build fix for gcc 12.
+    - bookworm/bubble-contents.patch: re-enable build fix for gcc 12.
+
+  [ Nathan Teodosio ]
+  * Simplify fixes/bindgen.patch so it doesn't need frequent rebasing.
+
+  [ Daniel Richard G. ]
+  * d/copyright: Expand list of Files-Excluded: entries.
+  * d/rules: Various updates to get-orig-source rule, including use of
+    grep-dctrl(1) and the LASTCHANGE.committime timestamp.
+  * d/scripts/check-upstream: Avoid issues with inaccurate $(pwd) value and
+    spaces in filenames, and print all errors instead of only the first one.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 11 Dec 2024 15:33:53 -0500
+
+chromium (131.0.6778.108-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2024-12053: Type Confusion in V8.
+      Reported by gal1ium and chluo.
+  * Switch to clang-19 from clang-16 (closes: #1088162, #1088974).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 04 Dec 2024 01:55:50 -0500
+
+chromium (131.0.6778.85-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2024-11110: Inappropriate implementation in Blink.
+      Reported by Vsevolod Kokorin (Slonser) of Solidlab.
+    - CVE-2024-11111: Inappropriate implementation in Autofill.
+      Reported by Narendra Bhati, Suma Soft Pvt. Ltd - Pune (India).
+    - CVE-2024-11112: Use after free in Media. Reported by
+      Nan Wang(@eternalsakura13) and Zhenghang Xiao(@Kipreyyy) of
+      360 Vulnerability Research Institute.
+    - CVE-2024-11113: Use after free in Accessibility.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2024-11114: Inappropriate implementation in Views.
+      Reported by Micky.
+    - CVE-2024-11115: Insufficient policy enforcement in Navigation.
+      Reported by mastersplinter.
+    - CVE-2024-11116: Inappropriate implementation in Paint.
+      Reported by Thomas Orlita.
+    - CVE-2024-11117: Inappropriate implementation in FileSystem.
+      Reported by Ameen Basha M K.
+    - CVE-2024-11395: Type Confusion in V8. Reported by Anonymous.
+  * d/patches:
+    - upstream/wayland-gbm-pixmap.patch: drop, merged upstream.
+    - disable/catapult.patch: refresh.
+    - fixes/bindgen.patch: refresh.
+    - fixes/freetype.patch: add new patch to fix missing
+      enable_freetype arg declaration.
+    - fixes/updater-test.patch: add simple build fix for deleted
+      third_party/updater/.
+    - upstream/stack-header.patch: drop, merged upstream.
+    - bookworm/clang16.patch: refresh.
+    - bookworm/bubble-contents.patch: refresh.
+    - bookworm/constexpr.patch: refresh.
+    - bookworm/gn-absl.patch: add a few more places where libs needed to
+      be made visible.
+    - bookworm/gn-funcs.patch: add another deletion of newer gn
+      features.
+    - bookworm/constexpr-assert.patch: add patch to work around more
+      clang-16 constexpr bugs; this time a fun one with branching
+      optimizations. Whee!
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - workarounds/HACK-debian-clang-disable-pa-musttail.patch: Work around
+      additional upstream musttail definitions
+    - workarounds/HACK-debian-clang-disable-base-musttail.patch: Refresh for
+      upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      Refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 21 Nov 2024 16:12:03 -0500
+
 chromium (130.0.6723.116-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

@@ -1,29 +1,29 @@
-Index: chromium-130.0.6723.44/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+Index: chromium-134.0.6998.35/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
 ===================================================================
---- chromium-130.0.6723.44.orig/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
-+++ chromium-130.0.6723.44/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
-@@ -307,6 +307,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatfo
+--- chromium-134.0.6998.35.orig/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
++++ chromium-134.0.6998.35/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+@@ -311,6 +311,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatfo
      info->arch = extensions::api::runtime::PlatformArch::kMips;
    } else if (strcmp(arch, "mips64el") == 0) {
      info->arch = extensions::api::runtime::PlatformArch::kMips64;
 +  } else if (strcmp(arch, "ppc64") == 0) {
 +    info->arch = extensions::api::runtime::PlatformArch::kPpc64;
    } else {
-     NOTREACHED_IN_MIGRATION();
-     return false;
-@@ -323,6 +325,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatfo
+     NOTREACHED();
+   }
+@@ -326,6 +328,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatfo
      info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kMips;
    } else if (strcmp(nacl_arch, "mips64") == 0) {
      info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kMips64;
 +  } else if (strcmp(nacl_arch, "ppc64") == 0) {
 +    info->nacl_arch = extensions::api::runtime::PlatformNaclArch::kPpc64;
    } else {
-     NOTREACHED_IN_MIGRATION();
-     return false;
-Index: chromium-130.0.6723.44/extensions/common/api/runtime.json
+     NOTREACHED();
+   }
+Index: chromium-134.0.6998.35/extensions/common/api/runtime.json
 ===================================================================
---- chromium-130.0.6723.44.orig/extensions/common/api/runtime.json
-+++ chromium-130.0.6723.44/extensions/common/api/runtime.json
+--- chromium-134.0.6998.35.orig/extensions/common/api/runtime.json
++++ chromium-134.0.6998.35/extensions/common/api/runtime.json
 @@ -98,7 +98,8 @@
              {"name": "x86-32", "description": "Specifies the processer architecture as x86-32."},
              {"name": "x86-64", "description": "Specifies the processer architecture as x86-64."},

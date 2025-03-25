@@ -18,9 +18,16 @@ make[1]: *** [debian/rules:170: override_dh_auto_build-arch] Error 1
 
 
 
+And a third fix; upstream forgot to include highway_tests in its unbundle
+gn:
+ERROR Unresolved dependencies.
+//:gn_all(//build/toolchain/linux/unbundle:default)
+  needs //third_party/highway:highway_tests(//build/toolchain/linux/unbundle:default)
+
+
 --- a/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
 +++ b/third_party/blink/renderer/core/html/parser/html_document_parser_fastpath.cc
-@@ -51,7 +51,7 @@
+@@ -53,7 +53,7 @@
  #include "third_party/blink/renderer/platform/wtf/text/wtf_uchar.h"
  
  #if defined(BLINK_ENABLE_VECTORIZED_HTML_SCANNING)
@@ -53,3 +60,24 @@ make[1]: *** [debian/rules:170: override_dh_auto_build-arch] Error 1
    public_configs = [ ":libhwy_external_config" ]
 -  public_deps = [ ":libhwy_shim" ]
  }
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -116,7 +116,6 @@ group("gn_all") {
+       "//third_party/angle/src/tests:angle_white_box_tests",
+       "//third_party/distributed_point_functions/shim:distributed_point_functions_shim_unittests",
+       "//third_party/flatbuffers:flatbuffers_unittests",
+-      "//third_party/highway:highway_tests",
+       "//third_party/liburlpattern:liburlpattern_unittests",
+       "//third_party/rapidhash:rapidhash_fuzztests",
+       "//tools/binary_size:binary_size_trybot_py",
+--- a/third_party/blink/renderer/platform/fonts/shaping/glyph_bounds_accumulator.h
++++ b/third_party/blink/renderer/platform/fonts/shaping/glyph_bounds_accumulator.h
+@@ -37,7 +37,7 @@
+ #include "ui/gfx/geometry/rect_f.h"
+ 
+ #if defined(USE_SIMD_FOR_COMPUTING_GLYPH_BOUNDS)
+-#include "third_party/highway/src/hwy/highway.h"
++#include "hwy/highway.h"
+ #endif  // defined(USE_SIMD_FOR_COMPUTING_GLYPH_BOUNDS)
+ 
+ namespace blink {

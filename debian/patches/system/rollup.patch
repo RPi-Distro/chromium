@@ -29,3 +29,70 @@ later on when we drop more nodejs stuff.
  
  
  def PathToSvgo():
+--- a/third_party/devtools-frontend/src/scripts/devtools_paths.py
++++ b/third_party/devtools-frontend/src/scripts/devtools_paths.py
+@@ -102,8 +102,7 @@ def license_checker_path():
+ def rollup_path():
+     return path.join(
+         node_modules_path(),
+-        '@rollup',
+-        'wasm-node',
++        'rollup3',
+         'dist',
+         'bin',
+         'rollup',
+--- a/third_party/devtools-frontend/src/scripts/build/ninja/bundle.gni
++++ b/third_party/devtools-frontend/src/scripts/build/ninja/bundle.gni
+@@ -67,7 +67,7 @@ template("bundle") {
+     }
+   } else {
+     node_action(target_name) {
+-      script = "node_modules/@rollup/wasm-node/dist/bin/rollup"
++      script = "node_modules/rollup3/dist/bin/rollup"
+ 
+       forward_variables_from(invoker,
+                              [
+--- a/third_party/devtools-frontend/src/inspector_overlay/BUILD.gn
++++ b/third_party/devtools-frontend/src/inspector_overlay/BUILD.gn
+@@ -38,7 +38,7 @@ action("build_inspector_overlay") {
+     "$target_gen_dir/main.js",
+     devtools_location_prepend + "inspector_overlay/loadCSS.rollup.js",
+     devtools_location_prepend +
+-        "node_modules/@rollup/wasm-node/dist/bin/rollup",
++        "node_modules/rollup3/dist/bin/rollup",
+   ]
+ 
+   outputs = [ "$resources_out_dir/main.js" ]
+--- a/third_party/devtools-frontend/src/front_end/Images/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/Images/BUILD.gn
+@@ -28,7 +28,7 @@ node_action("generate_css_vars") {
+ }
+ 
+ node_action("optimize_images") {
+-  script = "node_modules/@rollup/wasm-node/dist/bin/rollup"
++  script = "node_modules/rollup3/dist/bin/rollup"
+ 
+   _bundled_entrypoint = target_gen_dir + "/Images.prebundle.js"
+   _output_file_location = target_gen_dir + "/Images.js"
+--- a/third_party/devtools-frontend/src/front_end/models/live-metrics/web-vitals-injected/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/models/live-metrics/web-vitals-injected/BUILD.gn
+@@ -24,7 +24,7 @@ devtools_module("web-vitals-injected") {
+ }
+ 
+ node_action("bundled_library") {
+-  script = "node_modules/@rollup/wasm-node/dist/bin/rollup"
++  script = "node_modules/rollup3/dist/bin/rollup"
+ 
+   _bundled_entrypoint = target_gen_dir + "/web-vitals-injected.js"
+   _output_file_location = target_gen_dir + "/web-vitals-injected.generated.js"
+--- a/third_party/devtools-frontend/src/front_end/panels/recorder/injected/BUILD.gn
++++ b/third_party/devtools-frontend/src/front_end/panels/recorder/injected/BUILD.gn
+@@ -55,7 +55,7 @@ devtools_entrypoint("bundle") {
+ }
+ 
+ node_action("bundled_library") {
+-  script = "node_modules/@rollup/wasm-node/dist/bin/rollup"
++  script = "node_modules/rollup3/dist/bin/rollup"
+ 
+   _bundled_entrypoint = target_gen_dir + "/injected.js"
+   _output_file_location = target_gen_dir + "/injected.generated.js"

@@ -1,2 +1,5 @@
+# currently unavoidable embedded libraries
+embedded-library usr/bin/chromedriver: freetype
+
 # too many upstream spelling mistakes
 spelling-error-in-binary

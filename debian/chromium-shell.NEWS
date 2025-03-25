@@ -1,0 +1,15 @@
+chromium (132.0.6834.110-1~deb12u1) bookworm-security; urgency=high
+
+  We are planning to remove the chromium-shell package due to lack of
+  use and build issues, unless we hear from people who are actively using
+  it for things that can't be done with other packages. If you are actively
+  using this package (as opposed to the package being installed
+  automatically due to some dependency), please let me know. Email
+  <dilinger@debian.org>, and tell me your use case, and why the chromium
+  and chromium-driver packages won't work for you.
+
+  If I don't hear of any interest in keeping chromium-shell around, then
+  we are planning to mark it as deprecated and remove it around
+  chromium 137 or so.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 22 Jan 2025 16:36:45 -0500

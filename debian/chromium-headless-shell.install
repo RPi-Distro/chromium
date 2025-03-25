@@ -1,0 +1,6 @@
+debian/scripts/chromium-headless-shell usr/bin
+
+out/Release/chromium-headless-shell usr/lib/chromium
+
+out/Release/headless_*.pak usr/lib/chromium
+

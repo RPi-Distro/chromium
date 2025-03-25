@@ -11,7 +11,7 @@ lld vs gold).
  
      if (use_lld) {
 -      ldflags += [ "-fuse-ld=lld" ]
-+      ldflags += [ "-fuse-ld=lld-16" ]
++      ldflags += [ "-fuse-ld=lld-19" ]
        if (lld_path != "") {
          ldflags += [ "-B$lld_path" ]
        }

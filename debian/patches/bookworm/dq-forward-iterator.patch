@@ -1,0 +1,31 @@
+../../base/profiler/stack_unwind_data.cc:52:14: error: no matching member function for call to 'insert'
+   52 |   unwinders_.insert(unwinders_.end(),
+      |   ~~~~~~~~~~~^~~~~~
+../../base/containers/circular_deque.h:804:8: note: candidate function not viable: no known conversion from 'move_iterator<reverse_iterator<__normal_iterator<unique_ptr<Unwinder, default_delete<Unwinder>> *, vector<unique_ptr<Unwinder, default_delete<Unwinder>>, allocator<unique_ptr<Unwinder, default_delete<Unwinder>>>>>>>' to 'size_type' (aka 'unsigned long') for 2nd argument
+  804 |   void insert(const_iterator pos, size_type count, const T& value) {
+      |        ^                          ~~~~~~~~~~~~~~~
+../../base/containers/circular_deque.h:830:8: note: candidate template ignored: constraints not satisfied [with InputIterator = move_iterator<reverse_iterator<__normal_iterator<unique_ptr<Unwinder, default_delete<Unwinder>> *, vector<unique_ptr<Unwinder, default_delete<Unwinder>>, allocator<unique_ptr<Unwinder, default_delete<Unwinder>>>>>>>]
+  830 |   void insert(const_iterator pos, InputIterator first, InputIterator last) {
+      |        ^
+../../base/containers/circular_deque.h:829:14: note: because 'std::move_iterator<std::reverse_iterator<__gnu_cxx::__normal_iterator<std::unique_ptr<base::Unwinder> *, std::vector<std::unique_ptr<base::Unwinder>>>>>' does not satisfy 'forward_iterator'
+  829 |     requires(std::forward_iterator<InputIterator>)
+      |              ^
+
+
+Code doesn't work with bookworm's older libstdc++ implementation of
+std::forward_iterator. Works fine in sid. This patch might be unnecessary
+when we switch back to libc++ in a few months..
+
+
+
+--- a/base/containers/circular_deque.h
++++ b/base/containers/circular_deque.h
+@@ -826,7 +826,7 @@ class circular_deque {
+   }
+ 
+   template <class InputIterator>
+-    requires(std::forward_iterator<InputIterator>)
++    requires(std::input_iterator<InputIterator>)
+   void insert(const_iterator pos, InputIterator first, InputIterator last) {
+     ValidateIterator(pos);
+ 

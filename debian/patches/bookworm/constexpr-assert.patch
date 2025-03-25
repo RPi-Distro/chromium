@@ -1,0 +1,82 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Work around stupid compiler behavior around constexpr if statements
+and static_assert()s. Basically,
+"if constexpr (...) { } else { static_assert(false,...)" should
+result in the compiler optimizing away the static_assert() (as well
+as any other branches of the if/else statements that aren't reached).
+
+The compiler (clang-16) does seem to optimize away the other
+if/else statements but for some reason the static_assert() remains
+and therefore always triggers a build failure:
+
+./../cc/mojo_embedder/viz_layer_context.cc:542:5: error: static assertion failed: Unsupported curve type
+    static_assert(false, "Unsupported curve type");
+    ^             ~~~~~
+1 error generated.
+A
+
+This is likely related to other constexpr bugs that we hit; clang-16s
+constexpr implementation seems to just have lots of bugs. This
+workaround leaves the compiler to do its normal optimization, but
+changes the static_assert()s to _also_ have its own boolean logic with
+sanity checking for the various optimized-away tests. In other words, in
+psuedo-code:
+
+if constexp (false) {
+  ... 		// compiler will delete this code
+} else if constexpr (true) {
+  ...		// compiler will keep this code
+} else {
+		// compiler will ALSO delete this code, but not before
+		// validating the static_assert(). Because we DO want the
+		// safety of the assert, do the actual assertion checks.
+  static_assert(false || true, ...);
+}
+
+
+
+--- a/cc/mojo_embedder/viz_layer_context.cc
++++ b/cc/mojo_embedder/viz_layer_context.cc
+@@ -539,7 +539,12 @@ viz::mojom::AnimationKeyframeValuePtr Se
+     return viz::mojom::AnimationKeyframeValue::NewTransform(
+         SerializeTransformOperations(value));
+   } else {
+-    static_assert(false, "Unsupported curve type");
++    static_assert(!std::is_same_v<ValueType, float> &&
++        !std::is_same_v<ValueType, SkColor> &&
++        !std::is_same_v<ValueType, gfx::SizeF> &&
++        !std::is_same_v<ValueType, gfx::Rect> &&
++        !std::is_same_v<ValueType, gfx::TransformOperations>,
++        "Unsupported curve type");
+   }
+ }
+ 
+--- a/third_party/webrtc_overrides/rtc_base/diagnostic_logging.h
++++ b/third_party/webrtc_overrides/rtc_base/diagnostic_logging.h
+@@ -74,7 +74,8 @@ class RTC_EXPORT DiagnosticLogMessage {
+     } else if constexpr (absl::HasAbslStringify<T>::value) {
+       print_stream_ << absl::StrCat(v);
+     } else {
+-      static_assert(false, "Unsupported type to log");
++      static_assert(!absl::HasOstreamOperator<T>::value &&
++          !absl::HasAbslStringify<T>::value, "Unsupported type to log");
+     }
+     return *this;
+   }
+--- a/components/viz/service/layers/layer_context_impl.cc
++++ b/components/viz/service/layers/layer_context_impl.cc
+@@ -645,7 +645,12 @@ DeserializeKeyframe(const mojom::Animati
+           std::move(timing_function));
+     }
+   } else {
+-    static_assert(false, "Unsupported curve type");
++    static_assert(!std::is_same_v<ValueType, float> &&
++          !std::is_same_v<ValueType, SkColor> &&
++          !std::is_same_v<ValueType, gfx::SizeF> &&
++          !std::is_same_v<ValueType, gfx::Rect> &&
++          !std::is_same_v<ValueType, gfx::TransformOperations>,
++        "Unsupported curve type");
+   }
+ 
+   if (!keyframe) {

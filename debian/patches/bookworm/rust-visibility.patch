@@ -1,0 +1,14 @@
+workaround for bookworm's rust (1.78).
+
+error: unknown unstable option: `default-visibility`
+
+--- a/build/config/gcc/BUILD.gn
++++ b/build/config/gcc/BUILD.gn
+@@ -32,7 +32,6 @@ declare_args() {
+ # See http://gcc.gnu.org/wiki/Visibility
+ config("symbol_visibility_hidden") {
+   cflags = [ "-fvisibility=hidden" ]
+-  rustflags = [ "-Zdefault-visibility=hidden" ]
+ 
+   # Visibility attribute is not supported on AIX.
+   if (current_os != "aix") {

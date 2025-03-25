@@ -1,5 +1,9 @@
 # currently unavoidable embedded libraries
+embedded-library usr/lib/chromium/chromium: freetype
+embedded-library usr/lib/chromium/chromium: libjsoncpp
 embedded-library usr/lib/chromium/chromium: srtp
 embedded-library usr/lib/chromium/chromium: sqlite
+embedded-library usr/lib/chromium/chromium: tiff
+
 # too many upstream spelling mistakes
 spelling-error-in-binary

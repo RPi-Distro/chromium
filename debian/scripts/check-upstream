@@ -1,18 +1,18 @@
 #!/bin/sh
 
+tree=$(realpath $PWD)
+
 # check for reasonable symlinks
-for file in $(find . -type l); do
+! find . -type l | while read file; do
     # detect symlinks that don't link to anything
-    if ! realpath $file 1>/dev/null; then
-        echo "symlink links to nothing: $file $(readlink $file)"
-        exit 1
+    if ! realpath "$file" 1>/dev/null; then
+        echo "symlink links to nothing: $file -> $(readlink "$file")"
     fi
-    # detect symlinks that link outside the pwd
-    if [ -n "$(realpath $file | grep -v "^$(pwd)")" ]; then
-        echo "symlink outside of pwd: $file $(readlink $file)"
-        exit 1
+    # detect symlinks that link outside the tree
+    if [ -n "$(realpath "$file" | grep -Pv "^\\Q$tree/")" ]; then
+        echo "symlink outside of pwd: $file -> $(readlink "$file")"
     fi
-done
+done | grep . || exit 1
 
 # check for prebuilt binary files
 list=$(find . -type f -executable -not -empty | perl -lne 'print if -B')

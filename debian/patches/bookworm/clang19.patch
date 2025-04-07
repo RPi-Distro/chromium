@@ -2,11 +2,11 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1982,7 +1982,6 @@ config("default_warnings") {
-         cflags_cc += [ "-Wno-missing-template-arg-list-after-template-kw" ]
+@@ -1968,7 +1968,6 @@ config("default_warnings") {
+         "-Wno-thread-safety-reference-return",
  
          # TODO(crbug.com/376641662): Fix and re-enable.
--        cflags += [ "-Wno-nontrivial-memcall" ]
-       }
-     }
+-        "-Wno-nontrivial-memcall",
+       ]
  
+       cflags_cc += [

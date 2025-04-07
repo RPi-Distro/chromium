@@ -1,0 +1,17 @@
+../../chrome/browser/ui/webui/history/browsing_history_handler.cc:147:10: error: no viable conversion from returned value of type 'tuple<typename __decay_and_strip<const basic_string<char, char_traits<char>, allocator<char>> &>::__type, typename __decay_and_strip<basic_string<char, char_traits<char>, allocator<char>>>::__type>' (aka 'tuple<std::basic_string<char, std::char_traits<char>, std::allocator<char>>, std::basic_string<char, std::char_traits<char>, std::allocator<char>>>') to function return type 'std::pair<std::string, std::string>' (aka 'pair<basic_string<char>, basic_string<char>>')
+  147 |   return std::make_tuple(entry.url.spec(), base::UTF16ToUTF8(title_to_set));
+
+I guess clang can implicitly cast from a std::tuple to a std::pair, but gcc
+can't?
+
+--- a/chrome/browser/ui/webui/history/browsing_history_handler.cc
++++ b/chrome/browser/ui/webui/history/browsing_history_handler.cc
+@@ -144,7 +144,7 @@ std::pair<std::string, std::string> SetH
+     title_to_set.resize(kShortTitleLength);
+   }
+ 
+-  return std::make_tuple(entry.url.spec(), base::UTF16ToUTF8(title_to_set));
++  return std::make_pair(entry.url.spec(), base::UTF16ToUTF8(title_to_set));
+ }
+ 
+ // Helper function to check if entry is present in local database (local-side

@@ -16,17 +16,12 @@ fixes/armhf-timespec.patch
 fixes/updater-test.patch
 fixes/absl-optional.patch
 fixes/font-gc-asan.patch
-fixes/lens-optional.patch
 fixes/libsync-rk3588-panthor.patch
-fixes/optional.patch
 fixes/headless-gn.patch
 fixes/stdatomic.patch
-fixes/variant.patch
-fixes/swiftshader-llvm.patch
 fixes/pipewire14.patch
+fixes/make-pair.patch
 
-upstream/qualifications.patch
-upstream/optional.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -39,6 +34,7 @@ disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/clang-version-check.patch
 disable/screen-ai-blob.patch
+disable/buildtools-libc.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -49,6 +45,7 @@ system/rapidjson.patch
 system/rollup.patch
 
 bookworm/dq-forward-iterator.patch
+bookworm/gn-revert-path-exists.patch
 bookworm/clang19.patch
 bookworm/constflatset.patch
 bookworm/libxml-parseerr.patch
@@ -66,6 +63,8 @@ bookworm/less-void.patch
 bookworm/stdarch-arm.patch
 bookworm/modff.patch
 bookworm/foreach.patch
+bookworm/eslint.patch
+bookworm/crabbyav1f.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch
@@ -151,6 +150,7 @@ ppc64le/fixes/fix-rust-linking.patch
 ppc64le/fixes/fix-breakpad-compile.patch
 ppc64le/fixes/fix-partition-alloc-compile.patch
 ppc64le/fixes/fix-different-data-layouts.patch
+ppc64le/v8/0001-Enable-ppc64-pointer-compression.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 
 ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch

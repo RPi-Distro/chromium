@@ -44,7 +44,7 @@ libs.
    public_deps = [
      # string_view.h was once part of :strings, so string_view.h is
      # re-exported for backwards compatibility.
-@@ -106,6 +108,7 @@ absl_source_set("internal") {
+@@ -107,6 +109,7 @@ absl_source_set("internal") {
  
  absl_source_set("str_format") {
    public = [ "str_format.h" ]
@@ -54,7 +54,7 @@ libs.
      ":string_view",
 --- a/third_party/abseil-cpp/absl/types/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/types/BUILD.gn
-@@ -38,6 +38,7 @@ absl_source_set("bad_any_cast_impl") {
+@@ -17,6 +17,7 @@ absl_source_set("any") {
  absl_source_set("span") {
    public = [ "span.h" ]
    sources = [ "internal/span.h" ]
@@ -62,15 +62,15 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/algorithm",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -66,6 +67,7 @@ absl_test("span_test") {
+@@ -44,6 +45,7 @@ absl_test("span_test") {
+ 
  absl_source_set("optional") {
-   sources = [ "internal/optional.h" ]
    public = [ "optional.h" ]
 +  visibility = [ "*" ]
    deps = [
-     ":bad_optional_access",
-     "//third_party/abseil-cpp/absl/base:base_internal",
-@@ -99,6 +101,7 @@ absl_source_set("bad_variant_access") {
+     "//third_party/abseil-cpp/absl/base:config",
+     "//third_party/abseil-cpp/absl/utility",
+@@ -62,6 +64,7 @@ absl_source_set("bad_variant_access") {
  absl_source_set("variant") {
    sources = [ "internal/variant.h" ]
    public = [ "variant.h" ]
@@ -132,7 +132,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/container/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/container/BUILD.gn
-@@ -50,6 +50,7 @@ absl_source_set("inlined_vector_internal
+@@ -52,6 +52,7 @@ absl_source_set("inlined_vector_internal
  
  absl_source_set("inlined_vector") {
    public = [ "inlined_vector.h" ]
@@ -140,7 +140,7 @@ libs.
    deps = [
      ":inlined_vector_internal",
      "//third_party/abseil-cpp/absl/algorithm",
-@@ -96,6 +97,7 @@ absl_source_set("test_instance_tracker")
+@@ -100,6 +101,7 @@ absl_source_set("test_instance_tracker")
  
  absl_source_set("flat_hash_map") {
    public = [ "flat_hash_map.h" ]
@@ -166,17 +166,17 @@ libs.
    public = [ "any_invocable.h" ]
 +  visibility = [ "*" ]
    deps = [
-     "//third_party/abseil-cpp/absl/base:base_internal",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -34,6 +35,7 @@ absl_test("any_invocable_test") {
+     "//third_party/abseil-cpp/absl/base:core_headers",
+@@ -32,6 +33,7 @@ absl_test("any_invocable_test") {
  absl_source_set("bind_front") {
    sources = [ "internal/front_binder.h" ]
    public = [ "bind_front.h" ]
 +  visibility = [ "*" ]
    deps = [
-     "//third_party/abseil-cpp/absl/base:base_internal",
      "//third_party/abseil-cpp/absl/container:compressed_tuple",
-@@ -65,6 +67,7 @@ absl_test("function_ref_test") {
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+@@ -61,6 +63,7 @@ absl_test("function_ref_test") {
  
  absl_source_set("overload") {
    public = [ "overload.h" ]
@@ -196,7 +196,7 @@ libs.
      "//third_party/abseil-cpp/absl/meta:type_traits",
 --- a/third_party/abseil-cpp/absl/cleanup/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/cleanup/BUILD.gn
-@@ -16,6 +16,7 @@ absl_source_set("cleanup_internal") {
+@@ -15,6 +15,7 @@ absl_source_set("cleanup_internal") {
  
  absl_source_set("cleanup") {
    public = [ "cleanup.h" ]
@@ -206,7 +206,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/flags/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/flags/BUILD.gn
-@@ -158,6 +158,7 @@ absl_source_set("flag") {
+@@ -161,6 +161,7 @@ absl_source_set("flag") {
      "declare.h",
      "flag.h",
    ]
@@ -214,7 +214,7 @@ libs.
    deps = [
      ":commandlineflag",
      ":config",
-@@ -193,6 +194,7 @@ absl_source_set("usage_internal") {
+@@ -197,6 +198,7 @@ absl_source_set("usage_internal") {
  absl_source_set("usage") {
    sources = [ "usage.cc" ]
    public = [ "usage.h" ]
@@ -222,7 +222,7 @@ libs.
    deps = [
      ":usage_internal",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -209,6 +211,7 @@ absl_source_set("parse") {
+@@ -213,6 +215,7 @@ absl_source_set("parse") {
      "internal/parse.h",
      "parse.h",
    ]

@@ -1,0 +1,31 @@
+error[E0658]: use of unstable library feature 'generic_nonzero'
+  --> ../../third_party/crabbyavif/src/src/internal_utils/mod.rs:22:5
+   |
+22 | use std::num::NonZero;
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: see issue #120257 <https://github.com/rust-lang/rust/issues/120257> for more information
+   = help: add `#![feature(generic_nonzero)]` to the crate attributes to enable
+
+
+--- a/third_party/crabbyavif/src/src/lib.rs
++++ b/third_party/crabbyavif/src/src/lib.rs
+@@ -12,6 +12,7 @@
+ // See the License for the specific language governing permissions and
+ // limitations under the License.
+ 
++#![feature(generic_nonzero)]
+ #![deny(unsafe_op_in_unsafe_fn)]
+ 
+ #[macro_use]
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -1106,7 +1106,7 @@ config("compiler") {
+ # Don't allow unstable features to be enabled by `#![feature()]` without
+ # additional command line flags.
+ config("disallow_unstable_features") {
+-  rustflags = [ "-Zallow-features=" ]
++  rustflags = [ "-Zallow-features=generic_nonzero" ]
+ }
+ 
+ config("libcxx_hardening") {

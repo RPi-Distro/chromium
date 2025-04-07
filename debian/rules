@@ -239,10 +239,17 @@ override_dh_auto_clean:
 
 ###################### upstream source downloading ############################
 
+ifdef FROM_GOOGLE
+# official distribution server
 url=https://gsdview.appspot.com/chromium-browser-official
+tarfile=$(extract)-lite.tar
+else
+# https://github.com/chromium-linux-tarballs/chromium-tarballs
+url=https://chromium-tarballs.distfiles.gentoo.org
+tarfile=$(extract)-linux.tar
+endif
 version:=$(DEB_VERSION_UPSTREAM)
 extract=chromium-$(version)
-tarfile=$(extract)-lite.tar
 tarball=$(tarfile).xz
 debvers=../chromium_$(version)
 seconds=$(debvers).seconds

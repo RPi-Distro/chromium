@@ -23,8 +23,8 @@ gets updated.
  #[cfg(test)]
 --- a/third_party/rust/crc32fast/v1/BUILD.gn
 +++ b/third_party/rust/crc32fast/v1/BUILD.gn
-@@ -35,6 +35,7 @@ cargo_crate("lib") {
-       "Fast, SIMD-accelerated CRC32 (IEEE) checksum computation"
+@@ -36,6 +36,7 @@ cargo_crate("lib") {
+   library_configs -= [ "//build/config/coverage:default_coverage" ]
    library_configs -= [ "//build/config/compiler:chromium_code" ]
    library_configs += [ "//build/config/compiler:no_chromium_code" ]
 +  library_configs -= [ "//build/config/compiler:disallow_unstable_features" ]

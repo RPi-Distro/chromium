@@ -1,0 +1,45 @@
+Work around a minor ESLint dependency on Node.js 20. Building with 18 leads
+to this error:
+
+  FAILED: gen/chrome/browser/resources/components/eslint.config.mjs
+  [...]
+  Traceback (most recent call last):
+    File ".../chromium-135.0.7049.41/out/Release/../../ui/webui/resources/tools/eslint_ts.py", line 78, in <module>
+      main(sys.argv[1:])
+    File ".../chromium-135.0.7049.41/out/Release/../../ui/webui/resources/tools/eslint_ts.py", line 67, in main
+      node.RunNode([
+    File ".../chromium-135.0.7049.41/third_party/node/node.py", line 38, in RunNode
+      raise RuntimeError('Command \'%s\' failed\n%s' % (' '.join(cmd), err))
+  RuntimeError: Command '.../chromium-135.0.7049.41/third_party/node/linux/node-linux-x64/bin/node .../chromium-135.0.7049.41/third_party/node/node_modules/eslint/bin/eslint --color --quiet --config gen/chrome/browser/resources/components/eslint.config.mjs gen/chrome/browser/resources/components/preprocessed/component.html.ts gen/chrome/browser/resources/components/preprocessed/components.ts' failed
+
+  Oops! Something went wrong! :(
+
+  ESLint: 9.20.1
+
+  TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
+      at new NodeError (node:internal/errors:400:5)
+      at validateString (node:internal/validators:163:11)
+      at Object.join (node:path:1172:7)
+      at file://.../chromium-135.0.7049.41/out/Release/gen/chrome/browser/resources/components/eslint.config.mjs?mtime=1743209666789:10:26
+      at ModuleJob.run (node:internal/modules/esm/module_job:194:25)
+
+
+--- a/ui/webui/resources/tools/eslint_ts.py
++++ b/ui/webui/resources/tools/eslint_ts.py
+@@ -17,6 +17,7 @@ import node
+ import node_modules
+ 
+ _ESLINT_CONFIG_TEMPLATE = """import path from 'path';
++import url from 'url';
+ 
+ import defaultConfig from '%(config_base)s';
+ 
+@@ -25,7 +26,7 @@ export default [
+   {
+     languageOptions: {
+       parserOptions: {
+-        'project': [path.join(import.meta.dirname, './%(tsconfig)s')],
++        'project': [path.join(path.dirname(url.fileURLToPath(import.meta.url)), './%(tsconfig)s')],
+       },
+     },
+   },

@@ -29,6 +29,62 @@ chromium (1:134.0.6998.117-1~deb12u1+rpt1) bookworm; urgency=medium
 
  -- Serge Schneider <serge@raspberrypi.com>  Tue, 25 Mar 2025 17:18:21 +0000
 
+chromium (135.0.7049.52-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2025-3066: Use after free in Navigations.
+      Reported by Sven Dysthe (@svn-dys).
+    - CVE-2025-3067: Inappropriate implementation in Custom Tabs.
+      Reported by Philipp Beer (TU Wien).
+    - CVE-2025-3068: Inappropriate implementation in Intents.
+      Reported by Simon Rawet.
+    - CVE-2025-3069: Inappropriate implementation in Extensions.
+      Reported by NDevTK.
+    - CVE-2025-3070: Insufficient validation of untrusted input in
+      Extensions.
+    - CVE-2025-3071: Inappropriate implementation in Navigations.
+      Reported by David Erceg.
+    - CVE-2025-3072: Inappropriate implementation in Custom Tabs.
+      Reported by Om Apip.
+    - CVE-2025-3073: Inappropriate implementation in Autofill.
+      Reported by Hafiizh.
+    - CVE-2025-3074: Inappropriate implementation in Downloads.
+      Reported by Farras Givari.
+  * d/patches:
+    - upstream/optional.patch: drop, merged upstream.
+    - upstream/qualifications.patch: drop, merged upstream.
+    - fixes/lens-optional.patch: drop, merged upstream.
+    - fixes/optional.patch: drop, merged upstream.
+    - fixes/swiftshader-llvm.patch: drop, merged upstream.
+    - fixes/variant.patch: drop, merged upstream.
+    - bookworm/clang19.patch: refresh.
+    - bookworm/gn-revert-path-exists.patch: add build fix to work around
+      older gn.
+    - ungoogled/disable-privacy-sandbox.patch: refresh from ungoogled.
+    - fixes/make-pair.patch: add a gcc-specific build fix.
+    - disable/buildtools-libc.patch: add patch to remove libc build stuff.
+    - bookworm/gn-absl.patch: refresh.
+    - bookworm/constexpr.patch: refresh.
+    - bookworm/stdarch-arm.patch: refresh.
+    - bookworm/eslint.patch: add bookworm-specific build fix; thanks
+      Daniel Richard G. <skunk@iSKUNK.ORG>!
+    - bookworm/crabbyav1f.patch: add rustc 1.78 build fix workaround.
+
+  [ Timothy Pearson ]
+  * Enable pointer compression on ppc64le
+    This fixes V8 OOM conditions noted on e.g. https://trac.ffmpeg.org
+  * d/patches/ppc64le:
+    - v8/0001-Enable-ppc64-pointer-compression.patch
+    - sandbox/0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch:
+      refresh for upstream changes
+
+  [ Daniel Richard G. ]
+  * d/rules: Add switch to allow downloading either Google's upstream tarball,
+    or an independently-created one from Gentoo. Default to the latter.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Apr 2025 02:04:23 -0400
+
 chromium (134.0.6998.117-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

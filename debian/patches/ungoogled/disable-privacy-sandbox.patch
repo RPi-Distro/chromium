@@ -5,11 +5,11 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
 --- a/components/browsing_data/content/browsing_data_model.cc
 +++ b/components/browsing_data/content/browsing_data_model.cc
 @@ -1002,12 +1002,6 @@ void BrowsingDataModel::PopulateFromDisk
-       base::FeatureList::IsEnabled(blink::features::kSharedStorageAPI);
+       base::FeatureList::IsEnabled(network::features::kSharedStorageAPI);
    bool is_shared_dictionary_enabled = base::FeatureList::IsEnabled(
        network::features::kCompressionDictionaryTransportBackend);
 -  bool is_interest_group_enabled =
--      base::FeatureList::IsEnabled(blink::features::kInterestGroupStorage);
+-      base::FeatureList::IsEnabled(network::features::kInterestGroupStorage);
 -  bool is_attribution_reporting_enabled = base::FeatureList::IsEnabled(
 -      attribution_reporting::features::kConversionMeasurement);
 -  bool is_private_aggregation_enabled =
@@ -79,7 +79,23 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
  PrivacySandboxSettingsImpl::Status
 --- a/content/browser/attribution_reporting/attribution_suitable_context.cc
 +++ b/content/browser/attribution_reporting/attribution_suitable_context.cc
-@@ -44,67 +44,7 @@ std::optional<AttributionSuitableContext
+@@ -45,85 +45,13 @@ bool UkmSourceIdAllowed(RenderFrameHostI
+ // static
+ std::optional<AttributionSuitableContext> AttributionSuitableContext::Create(
+     NavigationHandle* navigation_handle) {
+-  RenderFrameHostImpl* rfh = static_cast<RenderFrameHostImpl*>(
+-      navigation_handle->GetRenderFrameHost());
+-  std::optional<AttributionSuitableContext> context = Create(rfh);
+-  // Override the UKM source ID from the associated ongoing navigation handle as
+-  // `AttributionHost::GetPageUkmSourceId()` is not updated until the navigation
+-  // finishes.
+-  if (context && UkmSourceIdAllowed(rfh)) {
+-    context->ukm_source_id_ = navigation_handle->GetNextPageUkmSourceId();
+-  }
+-  return context;
++  return std::nullopt;
+ }
+ 
  // static
  std::optional<AttributionSuitableContext> AttributionSuitableContext::Create(
      RenderFrameHostImpl* initiator_frame) {
@@ -143,13 +159,16 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
 -      !url_matcher::util::GetGoogleAmpViewerEmbeddedURL(
 -           initiator_root_frame->GetLastCommittedURL())
 -           .is_empty(),
+-      UkmSourceIdAllowed(initiator_root_frame)
+-          ? attribution_host->GetPageUkmSourceId()
+-          : ukm::kInvalidSourceId,
 -      data_host_manager->AsWeakPtr());
  }
  
  // static
 --- a/content/browser/interest_group/ad_auction_service_impl.cc
 +++ b/content/browser/interest_group/ad_auction_service_impl.cc
-@@ -217,11 +217,6 @@ AdAuctionServiceImpl::BiddingAndAuctionD
+@@ -214,11 +214,6 @@ AdAuctionServiceImpl::BiddingAndAuctionD
  void AdAuctionServiceImpl::CreateMojoService(
      RenderFrameHost* render_frame_host,
      mojo::PendingReceiver<blink::mojom::AdAuctionService> receiver) {
@@ -176,7 +195,7 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
 -        this, path, special_storage_policy_);
 -  }
  
--  if (base::FeatureList::IsEnabled(blink::features::kInterestGroupStorage)) {
+-  if (base::FeatureList::IsEnabled(network::features::kInterestGroupStorage)) {
 -    // Auction worklets on non-Android use dedicated processes; on Android due
 -    // to high cost of process launch they try to reuse renderers.
 -    interest_group_manager_ = std::make_unique<InterestGroupManagerImpl>(
@@ -195,7 +214,7 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
 -
 -  // The Topics API is not available in Incognito mode.
 -  if (!is_in_memory() &&
--      base::FeatureList::IsEnabled(blink::features::kBrowsingTopics)) {
+-      base::FeatureList::IsEnabled(network::features::kBrowsingTopics)) {
 -    browsing_topics_site_data_manager_ =
 -        std::make_unique<BrowsingTopicsSiteDataManagerImpl>(path);
 -  }
@@ -225,7 +244,7 @@ https://github.com/ungoogled-software/ungoogled-chromium/blob/master/patches/cor
  void StoragePartitionImpl::OnStorageServiceDisconnected() {
 --- a/content/browser/web_contents/web_contents_impl.cc
 +++ b/content/browser/web_contents/web_contents_impl.cc
-@@ -3857,12 +3857,6 @@ void WebContentsImpl::Init(const WebCont
+@@ -3888,12 +3888,6 @@ void WebContentsImpl::Init(const WebCont
    DateTimeChooser::CreateDateTimeChooser(this);
  #endif
  

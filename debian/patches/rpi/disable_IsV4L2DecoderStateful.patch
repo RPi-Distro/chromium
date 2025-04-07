@@ -1,6 +1,6 @@
 --- a/media/base/media_switches.cc
 +++ b/media/base/media_switches.cc
-@@ -792,6 +792,13 @@ BASE_FEATURE(kVSyncMjpegDecoding,
+@@ -776,6 +776,13 @@ BASE_FEATURE(kVSyncMjpegDecoding,
               base::FEATURE_DISABLED_BY_DEFAULT);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
@@ -16,7 +16,7 @@
               "V4L2H264TemporalLayerHWEncoding",
 --- a/media/base/media_switches.h
 +++ b/media/base/media_switches.h
-@@ -367,6 +367,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
+@@ -364,6 +364,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kVSyncMjpegDecoding);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
@@ -26,7 +26,7 @@
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kVideoBlitColorAccuracy);
 --- a/media/gpu/chromeos/video_decoder_pipeline.cc
 +++ b/media/gpu/chromeos/video_decoder_pipeline.cc
-@@ -271,7 +271,8 @@ std::unique_ptr<VideoDecoder> VideoDecod
+@@ -233,7 +233,8 @@ std::unique_ptr<VideoDecoder> VideoDecod
  #if BUILDFLAG(USE_VAAPI)
      create_decoder_function_cb = base::BindOnce(&VaapiVideoDecoder::Create);
  #elif BUILDFLAG(USE_V4L2_CODEC)
@@ -36,7 +36,7 @@
        create_decoder_function_cb =
            base::BindOnce(&V4L2StatefulVideoDecoder::Create);
      } else {
-@@ -346,7 +347,8 @@ std::unique_ptr<VideoDecoder> VideoDecod
+@@ -308,7 +309,8 @@ std::unique_ptr<VideoDecoder> VideoDecod
  #if BUILDFLAG(USE_VAAPI)
    create_decoder_function_cb = base::BindOnce(&VaapiVideoDecoder::Create);
  #elif BUILDFLAG(USE_V4L2_CODEC)
@@ -63,7 +63,7 @@
    // Set up our test environment.
 --- a/media/gpu/test/video_decode_accelerator_test_suite.cc
 +++ b/media/gpu/test/video_decode_accelerator_test_suite.cc
-@@ -254,6 +254,12 @@ VideoDecodeAcceleratorTestSuite* VideoDe
+@@ -250,6 +250,12 @@ VideoDecodeAcceleratorTestSuite* VideoDe
    feature_list->InitFromCommandLine(
        cmd_line->GetSwitchValueASCII(switches::kEnableFeatures),
        cmd_line->GetSwitchValueASCII(switches::kDisableFeatures));

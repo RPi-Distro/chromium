@@ -1266,7 +1266,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  namespace sktests {
 --- a/third_party/skia/src/opts/SkBlitMask_opts.h
 +++ b/third_party/skia/src/opts/SkBlitMask_opts.h
-@@ -409,6 +409,322 @@ namespace SK_OPTS_NS {
+@@ -414,6 +414,322 @@ namespace SK_OPTS_NS {
      }
  }
  

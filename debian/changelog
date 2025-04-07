@@ -1,4 +1,4 @@
-chromium (1:134.0.6998.117-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:135.0.7049.52-1~deb12u1+rpt1) bookworm; urgency=high
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -27,7 +27,7 @@ chromium (1:134.0.6998.117-1~deb12u1+rpt1) bookworm; urgency=medium
   * Work around tabs crashing when using a 16k page size kernel
     - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
 
- -- Serge Schneider <serge@raspberrypi.com>  Tue, 25 Mar 2025 17:18:21 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 07 Apr 2025 12:14:45 +0100
 
 chromium (135.0.7049.52-1~deb12u1) bookworm-security; urgency=high
 

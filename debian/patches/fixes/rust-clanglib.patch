@@ -11,10 +11,10 @@ doing the same thing that upstream does w/ chromeos.
 
 --- a/build/config/clang/BUILD.gn
 +++ b/build/config/clang/BUILD.gn
-@@ -142,7 +142,22 @@ template("clang_lib") {
+@@ -197,7 +197,22 @@ template("clang_lib") {
+         } else {
+           assert(false)  # Unhandled cpu type
          }
-       } else if (is_apple) {
-         _dir = "darwin"
 -      } else if (is_linux || is_chromeos) {
 +      } else if (is_linux) {
 +        _dir = "linux"

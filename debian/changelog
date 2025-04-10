@@ -29,6 +29,15 @@ chromium (1:135.0.7049.52-1~deb12u1+rpt1) bookworm; urgency=high
 
  -- Serge Schneider <serge@raspberrypi.com>  Mon, 07 Apr 2025 12:14:45 +0100
 
+chromium (135.0.7049.84-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release (closes: #1101978).
+    - CVE-2025-3066: Use after free in Site Isolation.
+      Reported by Sven Dysthe (@svn-dys).
+  * d/patches/fixes/rust-clanglib.patch: refresh.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 08 Apr 2025 16:57:37 -0400
+
 chromium (135.0.7049.52-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

@@ -1,3 +1,9 @@
+chromium (1:135.0.7049.84-1~deb12u1+rpt2) bookworm; urgency=medium
+
+  * Replace zenity with zenoty
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 14 Apr 2025 13:32:41 +0100
+
 chromium (1:135.0.7049.84-1~deb12u1+rpt1) bookworm; urgency=high
 
   * Import rpi and ubuntu patches

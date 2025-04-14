@@ -212,7 +212,7 @@ Depends:
  ${misc:Depends},
  ${shlibs:Depends},
  xdg-utils,
- zenity,
+ zenoty,
 Recommends:
  upower,
  udev,

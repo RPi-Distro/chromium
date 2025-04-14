@@ -30,7 +30,7 @@ display_msg() {
   if [ -z "$DISPLAY" ]; then
     echo "$@" 1>&2
   else
-    zenity --info --text="$@"
+    zenoty --title=Chromium --text="$@"
   fi
 }
 
@@ -38,7 +38,7 @@ display_qstn() {
   if [ -z "$DISPLAY" ]; then
     echo "$1"
   else
-    zenity --title=Chromium --text="$1" --question --ok-label="$2" \
+    zenoty --title=Chromium --text="$1" --question --ok-label="$2" \
       --cancel-label=Cancel --icon-name=dialog-warning
   fi
 }

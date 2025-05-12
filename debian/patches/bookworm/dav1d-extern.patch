@@ -1,0 +1,16 @@
+d.lld-19: error: undefined symbol: dav1d_data_wrap(Dav1dData*, unsigned char const*, unsigned long, void (*)(unsigned char const*, void*), void*)
+>>> referenced by dav1d_decoder.cc
+>>>               obj/third_party/webrtc/modules/video_coding/codecs/av1/v8_context_snapshot_generator.lto.libdav1d_decoder.a(dav1d_decoder.o at 100).o:(webrtc::(anonymous namespace)::Dav1dDecoder::Decode(webrtc::EncodedImage const&, long))
+
+--- a/third_party/webrtc/modules/video_coding/codecs/av1/dav1d_decoder.cc
++++ b/third_party/webrtc/modules/video_coding/codecs/av1/dav1d_decoder.cc
+@@ -25,7 +25,9 @@
+ #include "common_video/include/video_frame_buffer.h"
+ #include "modules/video_coding/include/video_error_codes.h"
+ #include "rtc_base/logging.h"
++extern "C" {
+ #include "third_party/dav1d/libdav1d/include/dav1d/data.h"
++}
+ #include "third_party/dav1d/libdav1d/include/dav1d/dav1d.h"
+ #include "third_party/dav1d/libdav1d/include/dav1d/headers.h"
+ #include "third_party/dav1d/libdav1d/include/dav1d/picture.h"

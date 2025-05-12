@@ -91,7 +91,6 @@ Build-Depends:
  libnss3-dev,
  libnspr4-dev,
  libcups2-dev,
- libevent-dev,
  libevdev-dev,
  libgcrypt20-dev,
  libcurl4-openssl-dev,

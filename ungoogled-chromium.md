@@ -3,6 +3,8 @@
 
 [Ungoogled Chromium](https://github.com/Eloston/ungoogled-chromium/) is an interesting projects that attempts to remove as many google-specific dependencies as possible from Chromium. They support platforms that we don't have to care about (such as Windows), and they're also extremely aggressive in removing and modifying bits of Chromium that the typical Debian user might find excessive.
 
+They also include patches from other projects, such as [Iridium](https://github.com/iridium-browser/tracker/wiki/Differences-between-Iridium-and-Chromium#security-improvements) that might have additional patches that are interesting in their own right.
+
 ## Patches
 
 That being said - the Ungoogled Chromium project also has some really useful patches that could help with issues that Debian *does* care about, such as Chromium phoning home (described in [bug #792580](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=792580)). This is a list of the patches that they carry, with a description of why they may or may not be useful to Debian's Chromium packaging efforts.

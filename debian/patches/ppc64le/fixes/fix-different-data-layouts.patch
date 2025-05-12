@@ -24,10 +24,10 @@ inconsistency in data layouts when targeting this particular platform.
 The error reported by the linker is not technically an error, however, only
 a warning goosed up by a --fatal-warnings flag.
 
-Index: chromium-135.0.7049.41/build/config/compiler/BUILD.gn
+Index: chromium-136.0.7103.48/build/config/compiler/BUILD.gn
 ===================================================================
---- chromium-135.0.7049.41.orig/build/config/compiler/BUILD.gn
-+++ chromium-135.0.7049.41/build/config/compiler/BUILD.gn
+--- chromium-136.0.7103.48.orig/build/config/compiler/BUILD.gn
++++ chromium-136.0.7103.48/build/config/compiler/BUILD.gn
 @@ -396,7 +396,7 @@ config("compiler") {
  
      # Linker warnings.

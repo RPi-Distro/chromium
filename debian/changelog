@@ -1,39 +1,103 @@
-chromium (1:135.0.7049.84-1~deb12u1+rpt2) bookworm; urgency=medium
+chromium (136.0.7103.92-1~deb12u1) bookworm-security; urgency=high
 
-  * Replace zenity with zenoty
+  [ Andres Salomon ]
+  * New upstream security release.
+   - CVE-2025-4372: Use after free in WebAudio.
+      Reported by Huang Xilin of Ant Group Light-Year Security Lab.
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 14 Apr 2025 13:32:41 +0100
+  [ Daniel Richard G. ]
+  * d/patches/fixes/armhf-no-thumb.patch: Fix armhf FTBFS due to use of a
+    Rust target (thumbv7neon) that Debian does not ship.
 
-chromium (1:135.0.7049.84-1~deb12u1+rpt1) bookworm; urgency=high
+ -- Andres Salomon <dilinger@debian.org>  Tue, 06 May 2025 14:13:50 -0400
 
-  * Import rpi and ubuntu patches
-  * Remove debian patches duplicated by rpi
-  * rpi build customisations
-  * Remove debian's master_preferences file
-  * Add package recommend for libwidevinecdm0
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Move chromium-l10n to recommends
-  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
-    - Fixes v4l2 h264 playback on Pi4
-  * Revert upstream "Check format supported by gbm for creating native pixmap"
-    - Fixes video playback on Pi 5 under Wayfire
-  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
-    by default
-  * Use zenity instead of xmessage for displaying messages in launcher script
-  * Replace old chromium-browser packages
-  * Add chromium-browser symlink
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Launcher: extend NEON check to armv6l platforms
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * launcher: Add low memory warning
-  * Enable PipeWire Camera support by default
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
+chromium (136.0.7103.59-2~deb12u2) bookworm-security; urgency=high
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 10 Apr 2025 10:52:10 +0100
+  * Temporarily disable CVE verification check in order to fix build;
+    will be restored on next upload.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 01 May 2025 12:18:24 -0400
+
+chromium (136.0.7103.59-2~deb12u1) bookworm-security; urgency=high
+
+  * Delete third_party/jetstream due to non-free ("do no evil") license.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 30 Apr 2025 17:38:38 -0400
+
+chromium (136.0.7103.59-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2025-4096: Heap buffer overflow in HTML. Reported by Anonymous.
+    - CVE-2025-4050: Out of bounds memory access in DevTools.
+      Reported by Anonymous.
+    - CVE-2025-4051: Insufficient data validation in DevTools.
+      Reported by Daniel Fröjdendahl.
+    - CVE-2025-4052: Inappropriate implementation in DevTools.
+      Reported by vanillawebdev.
+  * d/rules: disable warning-suppression-mappings; llvm too old.
+  * d/control: drop libevent-dev build-dep, no longer used.
+  * d/scripts/unbundle:
+    - libavif no longer used, no need to specify bundling.
+    - bundle simdutf, which isn't packaged for debian.
+  * d/patches:
+    - fixes/pipewire14.patch: drop, merged upstream.
+    - disable/catapult.patch: refresh.
+    - disable/buildtools-libc.patch: rework patch to be easier to maintain.
+    - bookworm/gn-revert-path-exists.patch: update for a bunch of new
+      path_exists() users.
+    - disable/node-version-ck.patch: add patch to disable upstream's strict
+      nodejs version check.
+    - fixes/media-cstdint.patch: add missing header include.
+    - upstream/media-optional.patch: add missing header include.
+    - fixes/perfetto-nullptr.patch: add nullptr_t std qualification.
+    - bookworm/gn-absl.patch: refresh.
+    - bookworm/crabbyav1f.patch: update for changed rustflags location.
+    - bookworm/node18-import.patch: add patch to work around bookworm's
+      node 18 import rules.
+    - bookworm/rust-is-none-or.patch: add patch to work around missing
+      is_none_or() function in bookworm's rust 1.78.
+    - bookworm/fmodf.patch: add gcc-12 specific build fix.
+    - bookworm/dav1d-extern.patch: add linker fix for older libdav1d.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-third_party-lss-Don-t-look-for-mmap2-on-ppc64.patch:
+      drop due to upstream fixes
+    - third_party/0002-third_party-lss-kernel-structs.patch: refresh for
+      upstream changes
+    - breakpad/0001-Implement-support-for-ppc64-on-Linux.patch: refresh for
+      upstream changes
+    - core/cargo-add-ppc64.diff: drop due to upstream fixes
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 29 Apr 2025 17:21:56 -0400
+
+chromium (135.0.7049.114-1) unstable; urgency=high
+
+  * New upstream security release.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 22 Apr 2025 22:42:31 -0400
+
+chromium (135.0.7049.95-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-3619: Heap buffer overflow in Codecs. Reported by Elias Hohl.
+    - CVE-2025-3620: Use after free in USB. Reported by @retsew0x01.
+
+  [ Daniel Richard G. ]
+  * d/copyright, d/patches/system/rapidjson.patch: Slightly narrow the scope
+    of the bundled RapidJSON deletion, and rework this patch so that it does
+    not require the deletion in order to apply. This allows applying the
+    debianization directly to the unrepackaged upstream tarball source.
+  * d/patches/system/gperf.patch: Import (self-authored) upstream patch to
+    prevent build breakage due to changes in gperf 3.2 generated code
+    (closes: #1103226).
+  * d/rules: Add new check-version rule to validate the package version.
+    Also squelch error messages due to absent clang and rustc executables.
+  * d/rules: Download Gentoo's upstream source tarball straight from GitHub.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 15 Apr 2025 22:12:30 -0400
 
 chromium (135.0.7049.84-1~deb12u1) bookworm-security; urgency=high
 

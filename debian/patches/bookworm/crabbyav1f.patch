@@ -16,16 +16,16 @@ error[E0658]: use of unstable library feature 'generic_nonzero'
  
 +#![feature(generic_nonzero)]
  #![deny(unsafe_op_in_unsafe_fn)]
+ #![cfg_attr(feature = "disable_cfi", feature(no_sanitize))]
  
- #[macro_use]
---- a/build/config/compiler/BUILD.gn
-+++ b/build/config/compiler/BUILD.gn
-@@ -1106,7 +1106,7 @@ config("compiler") {
- # Don't allow unstable features to be enabled by `#![feature()]` without
- # additional command line flags.
- config("disallow_unstable_features") {
--  rustflags = [ "-Zallow-features=" ]
-+  rustflags = [ "-Zallow-features=generic_nonzero" ]
- }
+--- a/third_party/crabbyavif/BUILD.gn
++++ b/third_party/crabbyavif/BUILD.gn
+@@ -175,7 +175,7 @@ rust_static_library("crabbyavif") {
  
- config("libcxx_hardening") {
+   # Required for disable_cfi feature.
+   configs -= [ "//build/config/compiler:disallow_unstable_features" ]
+-  rustflags = [ "-Zallow-features=no_sanitize" ]
++  rustflags = [ "-Zallow-features=no_sanitize,generic_nonzero" ]
+ 
+   public_deps = [ ":header_files" ]
+   deps = [

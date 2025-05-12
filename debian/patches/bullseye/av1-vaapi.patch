@@ -8,7 +8,7 @@ that was added with chromium 114.
 
 --- a/media/gpu/vaapi/BUILD.gn
 +++ b/media/gpu/vaapi/BUILD.gn
-@@ -36,8 +36,6 @@ source_set("vaapi") {
+@@ -35,8 +35,6 @@ source_set("vaapi") {
    sources = [
      "av1_vaapi_video_decoder_delegate.cc",
      "av1_vaapi_video_decoder_delegate.h",
@@ -19,7 +19,7 @@ that was added with chromium 114.
      "h264_vaapi_video_encoder_delegate.cc",
 --- a/media/gpu/vaapi/vaapi_video_encode_accelerator.cc
 +++ b/media/gpu/vaapi/vaapi_video_encode_accelerator.cc
-@@ -44,7 +44,6 @@
+@@ -46,7 +46,6 @@
  #include "media/gpu/gpu_video_encode_accelerator_helpers.h"
  #include "media/gpu/h264_dpb.h"
  #include "media/gpu/macros.h"
@@ -27,7 +27,7 @@ that was added with chromium 114.
  #include "media/gpu/vaapi/h264_vaapi_video_encoder_delegate.h"
  #include "media/gpu/vaapi/vaapi_common.h"
  #include "media/gpu/vaapi/vaapi_utils.h"
-@@ -232,7 +231,7 @@ bool VaapiVideoEncodeAccelerator::Initia
+@@ -234,7 +233,7 @@ EncoderStatus VaapiVideoEncodeAccelerato
  
    const VideoCodec codec = VideoCodecProfileToVideoCodec(config.output_profile);
    if (codec != VideoCodec::kH264 && codec != VideoCodec::kVP8 &&
@@ -35,8 +35,8 @@ that was added with chromium 114.
 +      codec != VideoCodec::kVP9) {
      MEDIA_LOG(ERROR, media_log.get())
          << "Unsupported profile: " << GetProfileName(config.output_profile);
-     return false;
-@@ -324,7 +323,6 @@ void VaapiVideoEncodeAccelerator::Initia
+     return {EncoderStatus::Codes::kEncoderInitializationError};
+@@ -326,7 +325,6 @@ void VaapiVideoEncodeAccelerator::Initia
          break;
        case VideoCodec::kVP8:
        case VideoCodec::kVP9:
@@ -44,7 +44,7 @@ that was added with chromium 114.
          mode = VaapiWrapper::kEncodeConstantQuantizationParameter;
          break;
        default:
-@@ -389,12 +387,6 @@ void VaapiVideoEncodeAccelerator::Initia
+@@ -392,12 +390,6 @@ void VaapiVideoEncodeAccelerator::Initia
              vaapi_wrapper_, error_cb);
        }
        break;
@@ -55,14 +55,14 @@ that was added with chromium 114.
 -      }
 -      break;
      default:
-       NOTREACHED_IN_MIGRATION()
-           << "Unsupported codec type " << GetCodecName(output_codec_);
-@@ -903,11 +895,6 @@ VaapiVideoEncodeAccelerator::CreateEncod
-       picture = new VaapiVP9Picture(
+       NOTREACHED() << "Unsupported codec type " << GetCodecName(output_codec_);
+   }
+@@ -904,11 +896,6 @@ VaapiVideoEncodeAccelerator::CreateEncod
+       picture = base::MakeRefCounted<VaapiVP9Picture>(
            reconstructed_surface->ReleaseAsVASurfaceHandle());
        break;
 -    case VideoCodec::kAV1:
--      picture = new VaapiAV1Picture(
+-      picture = base::MakeRefCounted<VaapiAV1Picture>(
 -          /*display_va_surface=*/nullptr,
 -          reconstructed_surface->ReleaseAsVASurfaceHandle());
 -      break;

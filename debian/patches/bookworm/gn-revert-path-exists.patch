@@ -4,20 +4,6 @@ plus a revert of upstream's 49b23faa16ad14e96601aea8772c7279fcbd6b44
 ("sysroot.gni: Use path_exists() rather than exec_script("dir_exists.py")
 in order to work on older gn that lacks path_exists().
 
---- a/build/toolchain/rbe.gni
-+++ b/build/toolchain/rbe.gni
-@@ -28,10 +28,7 @@ declare_args() {
- }
- 
- use_reclient_default = false
--if (path_exists(rebase_path(".reproxy_tmp", ".", root_build_dir))) {
--  # Use reclient if build dir used reclient before (.reproxy_tmp exists).
--  use_reclient_default = true
--} else if (use_remoteexec) {
-+if (use_remoteexec) {
-   if (use_siso) {
-     use_reclient_default = use_reclient_on_siso
-   } else {
 --- a/build/config/sysroot.gni
 +++ b/build/config/sysroot.gni
 @@ -61,7 +61,9 @@ if (sysroot == "") {
@@ -59,7 +45,7 @@ in order to work on older gn that lacks path_exists().
 +  sys.exit(main())
 --- a/build/dotfile_settings.gni
 +++ b/build/dotfile_settings.gni
-@@ -25,6 +25,7 @@ build_dotfile_settings = {
+@@ -26,6 +26,7 @@ build_dotfile_settings = {
      "//build/config/mac/rules.gni",
      "//build/config/posix/BUILD.gn",
      "//build/config/rust.gni",
@@ -67,3 +53,25 @@ in order to work on older gn that lacks path_exists().
      "//build/config/win/BUILD.gn",
      "//build/config/win/visual_studio_version.gni",
      "//build/rust/analyze.gni",
+--- a/build/toolchain/siso.gni
++++ b/build/toolchain/siso.gni
+@@ -7,19 +7,7 @@ import("//build/config/gclient_args.gni"
+ use_siso_default = false
+ 
+ _is_google_corp_machine = false
+-if (path_exists("/usr/bin/gcert") ||  # linux
+-    path_exists("/usr/local/bin/gcert") ||  # mac
+-    path_exists("/c:/gnubby/bin/gcert.exe")) {
+-  _is_google_corp_machine = true
+-}
+ 
+-_is_ninja_used = path_exists(rebase_path(".ninja_deps", root_build_dir))
+-
+-if (path_exists("//build/config/siso/.sisoenv") &&
+-    defined(build_with_chromium) && build_with_chromium &&
+-    _is_google_corp_machine && !_is_ninja_used) {
+-  use_siso_default = true
+-}
+ 
+ declare_args() {
+   # Placeholder to allow having use_siso in args.gn file.

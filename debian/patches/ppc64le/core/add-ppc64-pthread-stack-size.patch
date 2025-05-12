@@ -1,9 +1,9 @@
-Index: chromium-135.0.7049.41/base/process/launch.h
+Index: chromium-136.0.7103.48/base/process/launch.h
 ===================================================================
---- chromium-135.0.7049.41.orig/base/process/launch.h
-+++ chromium-135.0.7049.41/base/process/launch.h
+--- chromium-136.0.7103.48.orig/base/process/launch.h
++++ chromium-136.0.7103.48/base/process/launch.h
 @@ -58,6 +58,9 @@ namespace base {
- #if defined(ARCH_CPU_ARM64)
+ #if defined(ARCH_CPU_ARM64) || defined(ARCH_CPU_LOONGARCH64)
  #define PTHREAD_STACK_MIN_CONST \
    (__builtin_constant_p(PTHREAD_STACK_MIN) ? PTHREAD_STACK_MIN : 131072)
 +#elif defined(ARCH_CPU_PPC64)

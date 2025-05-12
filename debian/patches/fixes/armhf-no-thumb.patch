@@ -1,0 +1,29 @@
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+Description: Don't use thumbv7neon Rust target
+
+In the armhf build, Chromium wants to use a Rust target for NEON that
+Debian does not ship. Force it to use the target that we do have.
+
+  [883/52770] ACTION //build/rust/std:find_stdlib(//build/toolchain/linux/unbundle:default_for_rust_host_build_tools)
+  FAILED: default_for_rust_host_build_tools/obj/build/rust/std/libstd.rlib [...]
+  python3 ../../build/rust/std/find_std_rlibs.py --rust-bin-dir ../../../../../usr/bin --output default_for_rust_host_build_tools/obj/build/rust/std --depfile default_for_rust_host_build_tools/obj/build/rust/std/stdlib.d --depfile-target std --rustc-revision rustc\ 1.85.0\ \(4d91de4e4\ 2025-02-17\)\ \(built\ from\ a\ source\ tarball\) --target thumbv7neon-unknown-linux-gnueabihf
+  Traceback (most recent call last):
+    File "/build/reproducible-path/chromium-136.0.7103.59/out/Release/../../build/rust/std/find_std_rlibs.py", line 132, in <module>
+      sys.exit(main())
+               ~~~~^^
+    File "/build/reproducible-path/chromium-136.0.7103.59/out/Release/../../build/rust/std/find_std_rlibs.py", line 87, in main
+      name for name in os.listdir(rustlib_dir) if name.endswith('.rlib')
+                       ~~~~~~~~~~^^^^^^^^^^^^^
+  FileNotFoundError: [Errno 2] No such file or directory: '/usr/lib/rustlib/thumbv7neon-unknown-linux-gnueabihf/lib'
+
+--- a/build/config/rust.gni
++++ b/build/config/rust.gni
+@@ -200,7 +200,7 @@ if (is_linux || is_chromeos) {
+       # The thumbv7 vs. armv7 distinction is for legacy reasons and both
+       # targets in fact target Thumb, see:
+       # https://github.com/rust-lang/rust/issues/44722
+-      if (arm_use_neon) {
++      if (false && arm_use_neon) {
+         rust_abi_target = "thumbv7neon-unknown-linux-gnueabi" + float_suffix
+       } else {
+         rust_abi_target = "armv7-unknown-linux-gnueabi" + float_suffix

@@ -70,14 +70,14 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/utility",
-@@ -62,6 +64,7 @@ absl_source_set("bad_variant_access") {
+@@ -52,6 +54,7 @@ absl_source_set("optional") {
+ 
  absl_source_set("variant") {
-   sources = [ "internal/variant.h" ]
    public = [ "variant.h" ]
 +  visibility = [ "*" ]
    deps = [
-     ":bad_variant_access",
-     "//third_party/abseil-cpp/absl/base:base_internal",
+     "//third_party/abseil-cpp/absl/base:config",
+     "//third_party/abseil-cpp/absl/utility",
 --- a/third_party/abseil-cpp/absl/meta/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/meta/BUILD.gn
 @@ -6,6 +6,7 @@ import("//third_party/abseil-cpp/absl.gn
@@ -214,7 +214,7 @@ libs.
    deps = [
      ":commandlineflag",
      ":config",
-@@ -197,6 +198,7 @@ absl_source_set("usage_internal") {
+@@ -198,6 +199,7 @@ absl_source_set("usage_internal") {
  absl_source_set("usage") {
    sources = [ "usage.cc" ]
    public = [ "usage.h" ]
@@ -222,7 +222,7 @@ libs.
    deps = [
      ":usage_internal",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -213,6 +215,7 @@ absl_source_set("parse") {
+@@ -214,6 +216,7 @@ absl_source_set("parse") {
      "internal/parse.h",
      "parse.h",
    ]

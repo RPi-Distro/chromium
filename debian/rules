@@ -54,11 +54,11 @@ defines:=clang_use_chrome_plugins=false
 
 # use system rust
 export RUSTC_BOOTSTRAP=1
-export CLANG_MVERS:=$(shell $(CC) --version | sed -n 's/.* clang version //p' | cut -d. -f1)
+export CLANG_MVERS:=$(shell $(CC) --version 2>/dev/null | sed -n 's/.* clang version //p' | cut -d. -f1)
 rust_sysroot=/usr
 defines+=rust_sysroot_absolute=\"$(rust_sysroot)\"
 defines+=rust_bindgen_root=\"$(CURDIR)/debian/bindgen/root/usr\"
-defines+=rustc_version=\"$(shell $(rust_sysroot)/bin/rustc --version)\"
+defines+=rustc_version=\"$(shell $(rust_sysroot)/bin/rustc --version 2>/dev/null)\"
 defines+=clang_base_path=\"/usr/lib/llvm-$(CLANG_MVERS)\"
 defines+=clang_version=\"$(CLANG_MVERS)\"
 
@@ -106,6 +106,7 @@ defines+=is_debug=false \
          angle_build_tests=false \
          build_angle_perftests=false \
          treat_warnings_as_errors=false \
+         clang_warning_suppression_file=\"\" \
          use_qt5=false use_qt6=false \
          is_cfi=false \
          chrome_pgo_phase=0 \
@@ -244,8 +245,7 @@ ifdef FROM_GOOGLE
 url=https://gsdview.appspot.com/chromium-browser-official
 tarfile=$(extract)-lite.tar
 else
-# https://github.com/chromium-linux-tarballs/chromium-tarballs
-url=https://chromium-tarballs.distfiles.gentoo.org
+url=https://github.com/chromium-linux-tarballs/chromium-tarballs/releases/download/$(version)
 tarfile=$(extract)-linux.tar
 endif
 version:=$(DEB_VERSION_UPSTREAM)
@@ -282,3 +282,19 @@ get-orig-source:
 	rm -rf $(extract)
 	@$(print_elapsed) | tee seconds
 	@mv -f seconds $(seconds)
+
+version_api_url='https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/all/versions?filter=channel%3C=beta&order_by=version%20desc'
+
+check-version:
+	wget -q -O tmp.versions.json $(version_api_url)
+	@echo; echo 'Recent versions of Chromium for Linux:'
+	@jq -r '.versions[].name' tmp.versions.json \
+	 | head -n 10 | tr / '\t' | cut -f5,7 \
+	 | awk -v ver=$(version) '$$2 == ver {print $$0 "  <--- d/changelog"; next} {print $$0}'
+	@echo
+	@jq -r '.versions[].version' tmp.versions.json > tmp.versions.txt
+	@if ! grep -Fqx '$(version)' tmp.versions.txt; then \
+		echo 'Version "$(version)" in d/changelog not found!'; \
+		exit 1; \
+	fi
+	rm tmp.versions.*

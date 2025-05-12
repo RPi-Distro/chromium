@@ -46,11 +46,11 @@ keepers = (
     'libaom',       # broken - media/gpu/vaapi/BUILD.gn depends on libaomrc, but the
                     # shim doesn't provide it. Needs an upstream bug.
 
-    'libavif',
     'libdrm',       # requires DRM_IOCTL_SYNCOBJ_EVENTFD which is only in 2.4.123+
     'libyuv' ,
     'libwebp',      # libavif depends on libsharpyuv-dev; only in libwebp 1.3 (trixie)
     're2',          # experienced crashes Aug 2023 w/ 20230301-3; try >= 20240401.
+    'simdutf',      # not packaged in debian
     'snappy',
     'jsoncpp',
     'woff2',

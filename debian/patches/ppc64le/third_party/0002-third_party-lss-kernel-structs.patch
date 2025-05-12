@@ -1,8 +1,8 @@
-Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
+Index: chromium-136.0.7103.48/third_party/lss/linux_syscall_support.h
 ===================================================================
---- chromium-135.0.7049.41.orig/third_party/lss/linux_syscall_support.h
-+++ chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
-@@ -87,7 +87,7 @@
+--- chromium-136.0.7103.48.orig/third_party/lss/linux_syscall_support.h
++++ chromium-136.0.7103.48/third_party/lss/linux_syscall_support.h
+@@ -86,7 +86,7 @@
   * Porting to other related platforms should not be difficult.
   */
  #if (defined(__i386__) || defined(__x86_64__) || defined(__ARM_ARCH_3__) ||   \
@@ -11,7 +11,7 @@ Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
       defined(__aarch64__) || defined(__s390__) || defined(__e2k__) ||  \
       (defined(__riscv) && __riscv_xlen == 64) || defined(__loongarch_lp64))  \
    && (defined(__linux) || defined(__ANDROID__))
-@@ -399,7 +399,7 @@ struct kernel_stat64 {
+@@ -398,7 +398,7 @@ struct kernel_stat64 {
    unsigned           __pad2;
    unsigned long long st_blocks;
  };
@@ -20,7 +20,7 @@ Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
  struct kernel_stat64 {
    unsigned long long st_dev;
    unsigned long long st_ino;
-@@ -421,6 +421,28 @@ struct kernel_stat64 {
+@@ -420,6 +420,28 @@ struct kernel_stat64 {
    unsigned long      __unused4;
    unsigned long      __unused5;
  };
@@ -49,7 +49,7 @@ Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
  #elif defined(__e2k__)
  struct kernel_stat64 {
    unsigned long long st_dev;
-@@ -537,7 +559,7 @@ struct kernel_stat {
+@@ -536,7 +558,7 @@ struct kernel_stat {
    uint64_t           st_ctime_nsec_;
    int64_t            __unused4[3];
  };
@@ -58,7 +58,7 @@ Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
  typedef unsigned long kernel_blkcnt_t;
  typedef unsigned long kernel_blksize_t;
  typedef unsigned kernel_dev_t;
-@@ -568,6 +590,37 @@ struct kernel_stat {
+@@ -567,6 +589,37 @@ struct kernel_stat {
    unsigned long      __unused4;
    unsigned long      __unused5;
  };
@@ -96,7 +96,7 @@ Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
  #elif (defined(__mips__) && _MIPS_SIM != _MIPS_SIM_ABI64)
  typedef int kernel_blkcnt_t;
  typedef int kernel_blksize_t;
-@@ -1824,6 +1877,28 @@ struct kernel_statx {
+@@ -1823,6 +1876,28 @@ struct kernel_statx {
  #ifndef __NR_getcpu
  #define __NR_getcpu             302
  #endif
@@ -122,30 +122,10 @@ Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
 +#define __NR_recvmsg            342
 +#endif
 +
- /* End of powerpc defininitions                                              */
+ /* End of powerpc definitions                                              */
  #elif defined(__s390__)
  #ifndef __NR_quotactl
-@@ -3363,6 +3438,11 @@ struct kernel_statx {
-     /* TODO(csilvers): consider wrapping some args up in a struct, like we
-      * do for i386's _syscall6, so we can compile successfully on gcc 2.95
-      */
-+    #ifdef __powerpc64__
-+    /* TODO: implement clone() for ppc64.
-+     * until then, use system libc */
-+    #define sys_clone clone
-+    #else
-     LSS_INLINE int LSS_NAME(clone)(int (*fn)(void *), void *child_stack,
-                                    int flags, void *arg, int *parent_tidptr,
-                                    void *newtls, int *child_tidptr) {
-@@ -3433,6 +3513,7 @@ struct kernel_statx {
-       }
-       LSS_RETURN(int, __ret, __err);
-     }
-+    #endif
-   #elif defined(__s390__)
-     #undef  LSS_REG
-     #define LSS_REG(r, a) register unsigned long __r##r __asm__("r"#r) = (unsigned long) a
-@@ -4783,7 +4864,7 @@ struct kernel_statx {
+@@ -4824,7 +4899,7 @@ struct kernel_statx {
      LSS_INLINE _syscall6(void*, mmap, void*, addr, size_t, length, int, prot,
                           int, flags, int, fd, int64_t, offset)
    #endif
@@ -154,7 +134,7 @@ Index: chromium-135.0.7049.41/third_party/lss/linux_syscall_support.h
      #undef LSS_SC_LOADARGS_0
      #define LSS_SC_LOADARGS_0(dummy...)
      #undef LSS_SC_LOADARGS_1
-@@ -5173,7 +5254,11 @@ struct kernel_statx {
+@@ -5214,7 +5289,11 @@ struct kernel_statx {
  #endif
  
  #if !defined(__NR_pipe)

@@ -1,22 +1,36 @@
 description: build against debian's rapidjson-dev package
 author: Andres Salomon <dilinger@debian.org>
 
-Due to some questionable licensing (the JSON "do not use this for evil" license),
-debian deletes all of third_party/angle/third_party/rapidjson even though a small
-portion of it falls under that license. The library is tiny and doesn't change
-much, so this lets chromium build against the system's rapidjson-dev header files.
+Due to some questionable licensing (the JSON "do not use this for evil"
+license), debian deletes all of third_party/angle/third_party/rapidjson/src
+even though a small portion of it falls under that license. The library is
+tiny and doesn't change much, so this lets chromium build against the
+system's rapidjson-dev header files.
 
---- /dev/null
+--- a/third_party/angle/third_party/rapidjson/BUILD.gn
 +++ b/third_party/angle/third_party/rapidjson/BUILD.gn
-@@ -0,0 +1,11 @@
-+config("rapidjson_config") {
+@@ -5,13 +5,14 @@
+ # Custom GN integration for rapidjson.
+ 
+ config("rapidjson_config") {
+-  include_dirs = [ "src/include" ]
 +  include_dirs = [ "/usr/include/rapidjson" ]
-+
-+  # Enable std::string functionality.
-+  defines = [ "RAPIDJSON_HAS_STDSTRING" ]
-+}
-+
-+source_set("rapidjson") {
+ 
+   # Enable std::string functionality.
+   defines = [ "RAPIDJSON_HAS_STDSTRING" ]
+ }
+ 
+ source_set("rapidjson") {
++  if (false) {
+   sources = [
+     "src/include/rapidjson/allocators.h",
+     "src/include/rapidjson/cursorstreamwrapper.h",
+@@ -50,6 +51,8 @@
+     "src/include/rapidjson/stringbuffer.h",
+     "src/include/rapidjson/writer.h",
+   ]
++  } # false
 +  sources = [ "/usr/include/rapidjson/*.h" ]
-+  public_configs = [ ":rapidjson_config" ]
-+}
+ 
+   public_configs = [ ":rapidjson_config" ]
+ }

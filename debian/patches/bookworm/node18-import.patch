@@ -1,0 +1,18 @@
+RuntimeError: Command '/chromium-136.0.7103.48/third_party/node/linux/node-linux-x64/bin/node /chromium-136.0.7103.48/out/Release/../../ui/webui/resources/tools/minify_js.js --in_folder /chromium-136.0.7103.48/out/Release/gen/chrome/browser/resources/gaia_auth_host/build_injected_scripts_bundled --out_folder /chromium-136.0.7103.48/out/Release/gen/chrome/browser/resources/gaia_auth_host saml_injected.rollup.js' failed
+(node:54598) Warning: To load an ES module, set "type": "module" in the package.json or use the .mjs extension.
+(Use `node --trace-warnings ...` to show where the warning was created)
+/chromium-136.0.7103.48/ui/webui/resources/tools/minify_js.js:11
+import assert from 'node:assert';
+^^^^^^
+
+SyntaxError: Cannot use import statement outside a module
+
+
+--- /dev/null
++++ b/ui/webui/resources/tools/package.json
+@@ -0,0 +1,5 @@
++{
++  "name": "webui-tools",
++  "version": "1.0.0",
++  "type": "module"
++}

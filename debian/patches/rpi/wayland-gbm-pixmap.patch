@@ -31,7 +31,7 @@
  void WaylandSurfaceFactory::CreateNativePixmapAsync(
 --- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
 +++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-@@ -70,8 +70,6 @@
+@@ -71,8 +71,6 @@
  #endif
  
  #if defined(WAYLAND_GBM)
@@ -40,7 +40,7 @@
  #include "ui/ozone/platform/wayland/common/drm_render_node_path_finder.h"
  #endif
  
-@@ -199,15 +197,6 @@ class OzonePlatformWayland : public Ozon
+@@ -200,15 +198,6 @@ class OzonePlatformWayland : public Ozon
        if (!buffer_manager_->SupportsFormat(format)) {
          return false;
        }

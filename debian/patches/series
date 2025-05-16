@@ -25,6 +25,7 @@ fixes/perfetto-nullptr.patch
 fixes/armhf-no-thumb.patch
 
 upstream/media-optional.patch
+upstream/arm32-crel.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

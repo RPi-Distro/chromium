@@ -203,4 +203,3 @@ rpi/enable-pipewire-camera.patch
 rpi/disable_IsV4L2DecoderStateful.patch
 rpi/wayland-gbm-pixmap.patch
 rpi/enable-AcceleratedVideoDecodeLinux.patch
-rpi/armhf-crel-revert.path

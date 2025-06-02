@@ -10,7 +10,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
 
 --- a/media/gpu/v4l2/v4l2_device.cc
 +++ b/media/gpu/v4l2/v4l2_device.cc
-@@ -918,7 +918,11 @@ void V4L2Device::EnumerateDevicesForType
+@@ -911,7 +911,11 @@ void V4L2Device::EnumerateDevicesForType
    constexpr int kMaxDevices = 256;
    candidate_paths.reserve(kMaxDevices);
  #endif

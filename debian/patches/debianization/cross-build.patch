@@ -1,0 +1,274 @@
+Description: Enable QEMU-based cross build of Chromium
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+The modifications in this patch allow our cross build of Chromium to run
+foreign-arch build tooling via QEMU, without requiring binfmt-support to be
+set up in the build environment.
+
+Note that this is not the standard cross-build approach supported by the GN
+build system. Instead of having two separate configurations for host_cpu vs.
+target_cpu, we use a single one---that of the foreign arch---and rely on
+QEMU for any foreign binary invocations needed by the build. This turns out
+to be much easier to set up, since we don't have to worry about two large
+(and overlapping) sets of build dependencies.
+
+Main objectives of this patch:
+
+* Wherever a compiled tool may be executed, look at the HOST_EXEC_WRAPPER
+  environment variable. If it is set, then split the value on whitespace,
+  and prepend the resulting words to the tool invocation. This will usually
+  be the appropriate QEMU user mode emulation binary, e.g. "qemu-armhf";
+
+* Rust macros need to be handled a little differently, because they are
+  dynamically loaded by rustc, and we are using the native-arch rustc.
+  We thus special-case the build logic so that they are compiled for the
+  native arch, unlike everything else.
+
+Note that Debian and Chromium use different nomenclature for the native
+versus target architectures, which can make "host arch" ambiguous:
+
+            | native arch    | foreign arch
+  ----------+----------------+---------------
+     Debian | DEB_BUILD_ARCH | DEB_HOST_ARCH
+   Chromium | host_cpu       | target_cpu
+
+(To make things even more confusing, there is also a DEB_TARGET_ARCH, but
+it is relevant only to compilers and other tools that generate binaries.)
+
+See dpkg-architecture(1) for more information on the Debian side, and the
+generate-ninja reference for details on host_* versus target_* variables:
+https://gn.googlesource.com/gn/+/master/docs/reference.md#predefined_variables
+
+Quick-and-dirty guide to performing a cross build:
+
+(This is written to target armhf, but any other architecture supported by
+the package may be substituted. Note that this should be run in a temporary
+environment, as the first three steps will result in major changes to the
+system. Also, while cross-building via sbuild(1) or the like should work as
+a matter of course, the steps below represent a simpler, "manual" approach.)
+
+1. # dpkg --add-architecture armhf
+
+2. # apt-get update
+
+3. # mk-build-deps -ir --host-arch armhf -Pcross /path/to/chromium-src/debian/control
+
+4. (in source tree) $ dpkg-buildpackage -b --host-arch armhf -Pcross
+
+
+--- a/build/gn_run_binary.py
++++ b/build/gn_run_binary.py
+@@ -23,6 +23,11 @@ if not os.path.isabs(path):
+ # The rest of the arguments are passed directly to the executable.
+ args = [path] + sys.argv[2:]
+ 
++# Debian cross-build support
++wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++if wrapper_env:
++  args[0:0] = wrapper_env.split()
++
+ ret = subprocess.call(args)
+ if ret != 0:
+   if ret <= -100:
+--- a/build/toolchain/gcc_toolchain.gni
++++ b/build/toolchain/gcc_toolchain.gni
+@@ -805,6 +805,13 @@ template("gcc_rust_host_build_tools_tool
+     forward_variables_from(invoker,
+                            "*",
+                            TESTONLY_AND_VISIBILITY + [ "toolchain_args" ])
++
++    deb_build_arch = getenv("DEB_BUILD_ARCH")
++    deb_host_arch  = getenv("DEB_HOST_ARCH")
++
++    #cxx           = getenv("RUST_MACRO_CXX")
++    extra_ldflags  = getenv("RUST_MACRO_LDFLAGS")
++
+     toolchain_args = {
+       # Populate toolchain args from the invoker.
+       forward_variables_from(invoker.toolchain_args, "*")
+@@ -819,6 +826,29 @@ template("gcc_rust_host_build_tools_tool
+       use_sanitizer_coverage = false
+       generate_linker_map = false
+       use_thin_lto = false
++
++      if (deb_host_arch != "" && deb_build_arch != "" &&
++          deb_host_arch != deb_build_arch) {
++        # Debian cross build: Use the build (native) arch for Rust macro
++        # code, as it needs to dlopen()ed by rustc.
++
++        if (deb_build_arch == "amd64") {
++          current_cpu = "x64"
++        } else if (deb_build_arch == "armhf") {
++          current_cpu = "arm"
++        } else if (deb_build_arch == "arm64") {
++          current_cpu = "arm64"
++        } else if (deb_build_arch == "i386") {
++          current_cpu = "x86"
++        } else if (deb_build_arch == "ppc64el") {
++          current_cpu = "ppc64"
++        } else {
++          assert(false)  # Unhandled CPU type
++        }
++
++        # Needed to make linking work
++        is_clang = false
++      }
+     }
+ 
+     # When cross-compiling we don't want to use the target platform's file
+--- a/third_party/protobuf/src/google/protobuf/compiler/subprocess.cc
++++ b/third_party/protobuf/src/google/protobuf/compiler/subprocess.cc
+@@ -309,7 +309,19 @@ void Subprocess::Start(const std::string
+   ABSL_CHECK(pipe(stdin_pipe) != -1);
+   ABSL_CHECK(pipe(stdout_pipe) != -1);
+ 
+-  char* argv[2] = {portable_strdup(program.c_str()), nullptr};
++  char* argv[3];
++  int argc = 0;
++
++  // Debian cross-build support
++  char* wrapper_env = getenv("HOST_EXEC_WRAPPER");
++  if (wrapper_env) {
++    // TODO: split on whitespace
++    argv[argc++] = portable_strdup(wrapper_env);
++    search_mode = SEARCH_PATH;
++  }
++
++  argv[argc++] = portable_strdup(program.c_str());
++  argv[argc++] = nullptr;
+ 
+   child_pid_ = fork();
+   if (child_pid_ == -1) {
+@@ -349,6 +361,8 @@ void Subprocess::Start(const std::string
+     _exit(1);
+   } else {
+     free(argv[0]);
++    if (argc == 3)
++      free(argv[1]);
+ 
+     close(stdin_pipe[0]);
+     close(stdout_pipe[1]);
+--- a/third_party/wayland/wayland_scanner_wrapper.py
++++ b/third_party/wayland/wayland_scanner_wrapper.py
+@@ -14,8 +14,14 @@ import os.path
+ import subprocess
+ import sys
+ 
++# Debian cross-build support
++wrapper = []
++wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++if wrapper_env:
++  wrapper = wrapper_env.split()
++
+ def generate_code(wayland_scanner_cmd, scanner_args, path_in, path_out):
+-  ret = subprocess.call([wayland_scanner_cmd, *scanner_args, path_in, path_out])
++  ret = subprocess.call(wrapper + [wayland_scanner_cmd, *scanner_args, path_in, path_out])
+   if ret != 0:
+     raise RuntimeError("wayland-scanner returned an error: %d" % ret)
+ 
+@@ -38,7 +44,7 @@ def main(argv):
+   protocols = options.protocols
+   generator_type = options.generator_type
+ 
+-  version = subprocess.check_output([cmd, "--version"],
++  version = subprocess.check_output(wrapper + [cmd, "--version"],
+                                     stderr=subprocess.STDOUT).decode("utf-8")
+   # The version is of the form "wayland-scanner 1.18.0\n"
+   version = tuple([int(x) for x in version.strip().split(" ")[-1].split(".")])
+--- a/tools/grit/grit/node/brotli_util.py
++++ b/tools/grit/grit/node/brotli_util.py
+@@ -15,6 +15,11 @@ def SetBrotliCommand(brotli):
+   global __brotli_executable
+   __brotli_executable = brotli
+ 
++  # Debian cross-build support
++  import os
++  wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++  if wrapper_env and __brotli_executable:
++    __brotli_executable[0:0] = wrapper_env.split()
+ 
+ def BrotliCompress(data):
+   if not __brotli_executable:
+--- a/tools/protoc_wrapper/protoc_convert.py
++++ b/tools/protoc_wrapper/protoc_convert.py
+@@ -10,6 +10,13 @@ of processing is not supported by GN.
+ import argparse
+ import subprocess
+ 
++# Debian cross-build support
++import os
++wrapper = []
++wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++if wrapper_env:
++  wrapper = wrapper_env.split()
++
+ def Main():
+   parser = argparse.ArgumentParser()
+   parser.add_argument('--protoc', help='Path to protoc compiler.')
+@@ -22,7 +29,7 @@ def Main():
+   stdin = open(args.infile, 'r')
+   stdout = open(args.outfile, 'w')
+ 
+-  subprocess.check_call([args.protoc] + passthrough_args, stdin=stdin,
++  subprocess.check_call(wrapper + [args.protoc] + passthrough_args, stdin=stdin,
+       stdout=stdout)
+ 
+ 
+--- a/tools/protoc_wrapper/protoc_wrapper.py
++++ b/tools/protoc_wrapper/protoc_wrapper.py
+@@ -19,7 +19,7 @@ Features:
+ 
+ from __future__ import print_function
+ import argparse
+-import os.path
++import os
+ import subprocess
+ import sys
+ import tempfile
+@@ -183,6 +183,14 @@ def main(argv):
+     if not options.exclude_imports:
+       protoc_cmd += ["--include_imports"]
+ 
++  # Debian cross-build support
++  wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++  if wrapper_env:
++    protoc_cmd[0:0] = wrapper_env.split()
++    if options.plugin and options.plugin.endswith('.py'):
++      # Don't invoke a Python script via the wrapper
++      del os.environ['HOST_EXEC_WRAPPER']
++
+   dependency_file_data = None
+   if options.descriptor_set_out and options.descriptor_set_dependency_file:
+     protoc_cmd += ['--dependency_out', options.descriptor_set_dependency_file]
+--- a/ui/webui/resources/tools/generate_code_cache.py
++++ b/ui/webui/resources/tools/generate_code_cache.py
+@@ -33,7 +33,13 @@ def main(argv):
+       os.path.join(_CWD, args.out_manifest).replace('\\', '/'))
+   out_file_suffix = '.code_cache'
+ 
+-  subprocess.run([
++  # Debian cross-build support
++  wrapper = []
++  wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++  if wrapper_env:
++    wrapper = wrapper_env.split()
++
++  subprocess.run(wrapper + [
+       util_path, f'--in_folder={in_folder}',
+       '--in_files=' + ','.join(args.in_files), f'--out_folder={out_folder}',
+       f'--out_file_suffix={out_file_suffix}'
+--- a/v8/tools/run.py
++++ b/v8/tools/run.py
+@@ -21,6 +21,12 @@ if cmd and cmd[0] == '--redirect-stdout'
+   kwargs = dict(stdout=subprocess.PIPE)
+   cmd = cmd[2:]
+ 
++# Debian cross-build support
++import os
++wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++if wrapper_env:
++  cmd[0:0] = wrapper_env.split()
++
+ process = subprocess.Popen(cmd, **kwargs)
+ stdout, _ = process.communicate()
+ if stdout_file:

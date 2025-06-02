@@ -1,7 +1,7 @@
-Index: chromium-136.0.7103.48/sandbox/policy/linux/bpf_utility_policy_linux.cc
+Index: chromium-137.0.7151.40/sandbox/policy/linux/bpf_utility_policy_linux.cc
 ===================================================================
---- chromium-136.0.7103.48.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
-+++ chromium-136.0.7103.48/sandbox/policy/linux/bpf_utility_policy_linux.cc
+--- chromium-137.0.7151.40.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
++++ chromium-137.0.7151.40/sandbox/policy/linux/bpf_utility_policy_linux.cc
 @@ -34,7 +34,7 @@ ResultExpr UtilityProcessPolicy::Evaluat
      case __NR_fdatasync:
      case __NR_fsync:
@@ -11,10 +11,10 @@ Index: chromium-136.0.7103.48/sandbox/policy/linux/bpf_utility_policy_linux.cc
      case __NR_getrlimit:
  #endif
  #if defined(__i386__) || defined(__arm__)
-Index: chromium-136.0.7103.48/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+Index: chromium-137.0.7151.40/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 ===================================================================
---- chromium-136.0.7103.48.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
-+++ chromium-136.0.7103.48/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+--- chromium-137.0.7151.40.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
++++ chromium-137.0.7151.40/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 @@ -90,7 +90,7 @@ ResultExpr RendererProcessPolicy::Evalua
      case __NR_ftruncate64:
  #endif
@@ -24,10 +24,10 @@ Index: chromium-136.0.7103.48/sandbox/policy/linux/bpf_renderer_policy_linux.cc
      case __NR_getrlimit:
      case __NR_setrlimit:
  // We allow setrlimit to dynamically adjust the address space limit as
-Index: chromium-136.0.7103.48/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+Index: chromium-137.0.7151.40/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 ===================================================================
---- chromium-136.0.7103.48.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
-+++ chromium-136.0.7103.48/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+--- chromium-137.0.7151.40.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
++++ chromium-137.0.7151.40/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 @@ -58,9 +58,9 @@
  
  #elif defined(__powerpc64__)
@@ -40,11 +40,11 @@ Index: chromium-136.0.7103.48/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
  #define MAX_SYSCALL MAX_PUBLIC_SYSCALL
  
  #else
-Index: chromium-136.0.7103.48/sandbox/linux/services/credentials.cc
+Index: chromium-137.0.7151.40/sandbox/linux/services/credentials.cc
 ===================================================================
---- chromium-136.0.7103.48.orig/sandbox/linux/services/credentials.cc
-+++ chromium-136.0.7103.48/sandbox/linux/services/credentials.cc
-@@ -96,7 +96,8 @@ bool ChrootToSafeEmptyDir() {
+--- chromium-137.0.7151.40.orig/sandbox/linux/services/credentials.cc
++++ chromium-137.0.7151.40/sandbox/linux/services/credentials.cc
+@@ -99,7 +99,8 @@ bool ChrootToSafeEmptyDir() {
  
    int clone_flags = CLONE_FS | LINUX_SIGCHLD;
    void* tls = nullptr;
@@ -54,7 +54,7 @@ Index: chromium-136.0.7103.48/sandbox/linux/services/credentials.cc
      !defined(MEMORY_SANITIZER)
    // Use CLONE_VM | CLONE_VFORK as an optimization to avoid copying page tables.
    // Since clone writes to the new child's TLS before returning, we must set a
-@@ -104,6 +105,11 @@ bool ChrootToSafeEmptyDir() {
+@@ -107,6 +108,11 @@ bool ChrootToSafeEmptyDir() {
    // glibc performs syscalls by calling a function pointer in TLS, so we do not
    // attempt this optimization.
    // TODO(crbug.com/40196869) Broken in MSan builds after LLVM f1bb30a4956f.
@@ -66,10 +66,10 @@ Index: chromium-136.0.7103.48/sandbox/linux/services/credentials.cc
    clone_flags |= CLONE_VM | CLONE_VFORK | CLONE_SETTLS;
  
    char tls_buf[PTHREAD_STACK_MIN_CONST] = {};
-Index: chromium-136.0.7103.48/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+Index: chromium-137.0.7151.40/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 ===================================================================
---- chromium-136.0.7103.48.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
-+++ chromium-136.0.7103.48/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+--- chromium-137.0.7151.40.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
++++ chromium-137.0.7151.40/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 @@ -362,7 +362,16 @@ intptr_t SIGSYSFstatatHandler(const stru
    if (args.nr == __NR_fstatat_default) {
      if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&

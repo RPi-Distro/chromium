@@ -1,4 +1,4 @@
-chromium (1:136.0.7103.113-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:137.0.7151.55-3~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -28,7 +28,97 @@ chromium (1:136.0.7103.113-1~deb12u1+rpt1) bookworm; urgency=medium
     - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
   * d/c: Remove system-config-printer from recommends
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 16 May 2025 16:47:43 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 02 Jun 2025 01:12:11 +0100
+
+chromium (137.0.7151.55-3~deb12u1) bookworm-security; urgency=high
+
+  [ Timothy Pearson ]
+  * Fix FTBFS on ppc64el due to third party xnnpack library
+  * d/patches/ppc64le:
+    - third_party/0001-add-xnn-ppc64el-support.patch: Add ppc64el support to
+      xnn build system
+    - third_party/0002-regenerate-xnn-buildgn.patch: Regenerate xnn BUILD.gn
+      file
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 28 May 2025 18:47:40 -0400
+
+chromium (137.0.7151.55-2) unstable; urgency=high
+
+  * Switch build-deps with :all to :native.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 28 May 2025 01:55:46 -0400
+
+chromium (137.0.7151.55-1) unstable; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/control: Elaborate Build-Depends: clause for a cross build. Also drop
+    x11-apps, as it appears to be unused, as well as libmodpbase64-dev as
+    it is built in-tree under third_party/modp_b64/. Add a Build-Conflicts:
+    clause to avoid some snafus on Ubuntu.
+  * d/patches:
+    - debianization/cross-build.patch: New patch implementing the bulk of our
+      cross-build support.
+    - upstream/cross-build-target.patch: New upstream patch that sets
+      --target=... explicitly on all builds. Needed for a cross build.
+    - fixes/clang-rust-target.patch: Drop, as this patch is made redundant by
+      the preceding one.
+  * d/rules: Add settings and environment exports needed for a cross build.
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2025-5063: Use after free in Compositing. Reported by Anonymous.
+    - CVE-2025-5280: Out of bounds write in V8. Reported by [pwn2car].
+    - CVE-2025-5064: Inappropriate implementation in Background Fetch API.
+      Reported by Maurice Dauer .
+    - CVE-2025-5065: Inappropriate implementation in FileSystemAccess API.
+      Reported by NDevTK.
+    - CVE-2025-5066: Inappropriate implementation in Messages.
+      Reported by Mohit Raj (shadow2639) .
+    - CVE-2025-5281: Inappropriate implementation in BFCache.
+      Reported by Jesper van den Ende (Pelican Party Studios).
+    - CVE-2025-5283: Use after free in libvpx. Reported by Mozilla.
+    - CVE-2025-5067: Inappropriate implementation in Tab Strip.
+      Reported by Khalil Zhani.
+  * d/control: switch bindgen:any build-dep to bindgen:native.
+  * d/rules: disable optimize_webui for now due to a rollup 3.x issue.
+  * d/patches:
+    - upstream/media-optional.patch: drop, merged upstream.
+    - fixes/media-cstdint.patch: drop part of patch merged upstream.
+    - fixes/perfetto-nullptr.patch: drop due to upstream code changes.
+    - upstream/arm32-crel.patch: refresh.
+    - disable/tests.patch: refresh.
+    - system/gperf.patch: drop, merged upstream.
+    - bookworm/gn-revert-path-exists.patch: refresh.
+    - bookworm/gn-allowlist.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled.
+    - bookworm/clang19.patch: add new unsupported arg removal
+      (-fextend-variable-liveness).
+    - upstream/span-fwd.patch: add build fix pulled from upstream.
+    - upstream/mojo-optional.patch: add build fix pulled from upstream.
+    - bookworm/constexpr3.patch: add yet another constexpr workaround.
+    - upstream/opener-heur.patch: add build fix pulled from upstream.
+    - upstream/allowed-state.patch: add build fix pulled from upstream.
+    - upstream/pdfium-libpng.patch: add build fix pulled from upstream.
+    - upstream/safety-hub-set.patch: add build fix pulled from upstream.
+    - bookworm/gn-absl.patch: add global visibility for another type.
+    - bookworm/constexpr.patch: refresh.
+    - bookworm/stdarch-arm.patch: update path for rust crate.
+    - bookworm/rust-is-none-or.patch: add another workaround for missing
+      is_none_or() function.
+    - bookworm/toktrie-utf8chunks.patch: add workaround for missing
+      utf8_chunks() in rustc-web 1.78.
+    - bookworm/derivre-create.patch: enable rust unstable features
+      everywhere, and add some that derivre requires (from newer rustc).
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - sandbox/features.gni: refresh for upstream changes
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      regenerate from upstream sources
+    - fixes/fix-partition-alloc-compile.patch: refresh for upstream changes
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 27 May 2025 23:46:49 -0400
 
 chromium (136.0.7103.113-1~deb12u1) bookworm-security; urgency=high
 

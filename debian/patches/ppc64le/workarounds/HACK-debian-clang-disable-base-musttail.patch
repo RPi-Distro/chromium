@@ -1,7 +1,7 @@
-Index: chromium-136.0.7103.48/base/compiler_specific.h
+Index: chromium-137.0.7151.40/base/compiler_specific.h
 ===================================================================
---- chromium-136.0.7103.48.orig/base/compiler_specific.h
-+++ chromium-136.0.7103.48/base/compiler_specific.h
+--- chromium-137.0.7151.40.orig/base/compiler_specific.h
++++ chromium-137.0.7151.40/base/compiler_specific.h
 @@ -198,7 +198,7 @@
  //     MUSTTAIL return Func1(d + 1);  // `Func1()` will be tail-called.
  //   }

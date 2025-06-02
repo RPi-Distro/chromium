@@ -1,8 +1,8 @@
-Index: chromium-136.0.7103.48/third_party/breakpad/BUILD.gn
+Index: chromium-137.0.7151.40/third_party/breakpad/BUILD.gn
 ===================================================================
---- chromium-136.0.7103.48.orig/third_party/breakpad/BUILD.gn
-+++ chromium-136.0.7103.48/third_party/breakpad/BUILD.gn
-@@ -800,7 +800,6 @@ if (is_linux || is_chromeos || is_androi
+--- chromium-137.0.7151.40.orig/third_party/breakpad/BUILD.gn
++++ chromium-137.0.7151.40/third_party/breakpad/BUILD.gn
+@@ -806,7 +806,6 @@ if (is_linux || is_chromeos || is_androi
        "breakpad/src/client/minidump_file_writer.h",
        "breakpad/src/common/convert_UTF.cc",
        "breakpad/src/common/convert_UTF.h",
@@ -10,7 +10,7 @@ Index: chromium-136.0.7103.48/third_party/breakpad/BUILD.gn
        "breakpad/src/common/linux/elf_core_dump.cc",
        "breakpad/src/common/linux/elf_core_dump.h",
        "breakpad/src/common/linux/elfutils.cc",
-@@ -832,6 +831,8 @@ if (is_linux || is_chromeos || is_androi
+@@ -838,6 +837,8 @@ if (is_linux || is_chromeos || is_androi
      configs += [ "//build/config/compiler:no_chromium_code" ]
      public_configs = [ ":client_config" ]
  
@@ -19,7 +19,7 @@ Index: chromium-136.0.7103.48/third_party/breakpad/BUILD.gn
      if (current_cpu == "arm" && is_chromeos_ash) {
        # Avoid running out of registers in
        # linux_syscall_support.h:sys_clone()'s inline assembly.
-@@ -889,7 +890,6 @@ if (is_linux || is_chromeos || is_androi
+@@ -895,7 +896,6 @@ if (is_linux || is_chromeos || is_androi
        "breakpad/src/client/linux/minidump_writer/minidump_writer_unittest.cc",
        "breakpad/src/client/linux/minidump_writer/minidump_writer_unittest_utils.cc",
        "breakpad/src/client/linux/minidump_writer/proc_cpuinfo_reader_unittest.cc",

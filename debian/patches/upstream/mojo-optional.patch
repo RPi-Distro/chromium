@@ -1,0 +1,28 @@
+commit b85c9c11c561d4b45a7d3083a4e63e65f9ffeff3
+Author: Takuto Ikuta <tikuta@chromium.org>
+Date:   Wed Apr 30 02:33:22 2025 -0700
+
+    mojo: Adds a missing #include for std::optional.
+    
+    This is to fix clang module build.
+    
+    Bug: 40263312
+    Change-Id: Icb66ac690fbac91508af5f447b5dc2ef2f4753d7
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/6499560
+    Auto-Submit: Takuto Ikuta <tikuta@chromium.org>
+    Reviewed-by: Andrea Orru <andreaorru@chromium.org>
+    Commit-Queue: Takuto Ikuta <tikuta@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1453787}
+
+diff --git a/mojo/public/cpp/bindings/lib/template_util.h b/mojo/public/cpp/bindings/lib/template_util.h
+index 738d4f55bd039..01dad82bb8542 100644
+--- a/mojo/public/cpp/bindings/lib/template_util.h
++++ b/mojo/public/cpp/bindings/lib/template_util.h
+@@ -5,6 +5,7 @@
+ #ifndef MOJO_PUBLIC_CPP_BINDINGS_LIB_TEMPLATE_UTIL_H_
+ #define MOJO_PUBLIC_CPP_BINDINGS_LIB_TEMPLATE_UTIL_H_
+ 
++#include <optional>
+ #include <type_traits>
+ 
+ #include "mojo/public/cpp/bindings/optional_as_pointer.h"

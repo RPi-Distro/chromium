@@ -62,7 +62,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/algorithm",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -44,6 +45,7 @@ absl_test("span_test") {
+@@ -46,6 +47,7 @@ absl_test("span_test") {
  
  absl_source_set("optional") {
    public = [ "optional.h" ]
@@ -70,7 +70,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/utility",
-@@ -52,6 +54,7 @@ absl_source_set("optional") {
+@@ -54,6 +56,7 @@ absl_source_set("optional") {
  
  absl_source_set("variant") {
    public = [ "variant.h" ]
@@ -92,13 +92,13 @@ libs.
 +++ b/third_party/abseil-cpp/absl/base/BUILD.gn
 @@ -39,6 +39,7 @@ absl_source_set("no_destructor") {
  absl_source_set("nullability") {
-   sources = [ "internal/nullability_impl.h" ]
+   sources = [ "internal/nullability_deprecated.h" ]
    public = [ "nullability.h" ]
 +  visibility = [ "*" ]
    deps = [
      ":config",
      ":core_headers",
-@@ -85,6 +86,7 @@ absl_source_set("config") {
+@@ -84,6 +85,7 @@ absl_source_set("config") {
      "options.h",
      "policy_checks.h",
    ]
@@ -106,7 +106,7 @@ libs.
  }
  
  absl_source_set("cycleclock_internal") {
-@@ -123,6 +125,7 @@ absl_source_set("core_headers") {
+@@ -122,6 +124,7 @@ absl_source_set("core_headers") {
      "port.h",
      "thread_annotations.h",
    ]
@@ -132,7 +132,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/container/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/container/BUILD.gn
-@@ -52,6 +52,7 @@ absl_source_set("inlined_vector_internal
+@@ -53,6 +53,7 @@ absl_source_set("inlined_vector_internal
  
  absl_source_set("inlined_vector") {
    public = [ "inlined_vector.h" ]
@@ -140,10 +140,18 @@ libs.
    deps = [
      ":inlined_vector_internal",
      "//third_party/abseil-cpp/absl/algorithm",
-@@ -100,6 +101,7 @@ absl_source_set("test_instance_tracker")
+@@ -102,6 +103,7 @@ absl_source_set("test_instance_tracker")
  
  absl_source_set("flat_hash_map") {
    public = [ "flat_hash_map.h" ]
++  visibility = [ "*" ]
+   deps = [
+     ":container_memory",
+     ":hash_container_defaults",
+@@ -132,6 +134,7 @@ absl_test("flat_hash_map_test") {
+ 
+ absl_source_set("flat_hash_set") {
+   public = [ "flat_hash_set.h" ]
 +  visibility = [ "*" ]
    deps = [
      ":container_memory",
@@ -206,7 +214,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/flags/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/flags/BUILD.gn
-@@ -161,6 +161,7 @@ absl_source_set("flag") {
+@@ -163,6 +163,7 @@ absl_source_set("flag") {
      "declare.h",
      "flag.h",
    ]
@@ -214,7 +222,7 @@ libs.
    deps = [
      ":commandlineflag",
      ":config",
-@@ -198,6 +199,7 @@ absl_source_set("usage_internal") {
+@@ -200,6 +201,7 @@ absl_source_set("usage_internal") {
  absl_source_set("usage") {
    sources = [ "usage.cc" ]
    public = [ "usage.h" ]
@@ -222,7 +230,7 @@ libs.
    deps = [
      ":usage_internal",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -214,6 +216,7 @@ absl_source_set("parse") {
+@@ -216,6 +218,7 @@ absl_source_set("parse") {
      "internal/parse.h",
      "parse.h",
    ]

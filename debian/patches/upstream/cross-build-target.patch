@@ -1,0 +1,82 @@
+From 8ea3d1f841dace00c710cac9a092366f827bb8d2 Mon Sep 17 00:00:00 2001
+From: Daniel Richard G <iskunk@gmail.com>
+Date: Fri, 09 May 2025 10:12:45 -0700
+Subject: [PATCH] build: Set explicit --target= for x64, x86, ppc64, and s390x
+
+This fixes some less-common cross-compile scenarios.
+
+Bug: None
+Change-Id: I3382dc93ffef6ee6d55bd0e0eba0563d53fc68c9
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/6491047
+Reviewed-by: Hans Wennborg <hans@chromium.org>
+Commit-Queue: Hans Wennborg <hans@chromium.org>
+Reviewed-by: Nico Weber <thakis@chromium.org>
+Auto-Submit: Daniel Richard G. <iskunk@gmail.com>
+Cr-Commit-Position: refs/heads/main@{#1458195}
+---
+
+diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
+index 3d206cb..aa96f08 100644
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -1221,14 +1221,23 @@
+     # CPU architecture. We may or may not be doing a cross compile now, so for
+     # simplicity we always explicitly set the architecture.
+     if (current_cpu == "x64") {
+-      cflags += [
+-        "-m64",
+-        "-msse3",
+-      ]
+-      ldflags += [ "-m64" ]
++      if (is_clang && !is_android && !is_nacl && !is_fuchsia &&
++          !is_chromeos_device) {
++        cflags += [ "--target=x86_64-unknown-linux-gnu" ]
++        ldflags += [ "--target=x86_64-unknown-linux-gnu" ]
++      } else {
++        cflags += [ "-m64" ]
++        ldflags += [ "-m64" ]
++      }
++      cflags += [ "-msse3" ]
+     } else if (current_cpu == "x86") {
+-      cflags += [ "-m32" ]
+-      ldflags += [ "-m32" ]
++      if (is_clang && !is_android && !is_nacl && !is_chromeos_device) {
++        cflags += [ "--target=i386-unknown-linux-gnu" ]
++        ldflags += [ "--target=i386-unknown-linux-gnu" ]
++      } else {
++        cflags += [ "-m32" ]
++        ldflags += [ "-m32" ]
++      }
+       if (!is_nacl) {
+         cflags += [
+           "-mfpmath=sse",
+@@ -1489,8 +1498,16 @@
+       }
+     } else if (current_cpu == "ppc64") {
+       if (current_os == "aix") {
+-        cflags += [ "-maix64" ]
+-        ldflags += [ "-maix64" ]
++        if (is_clang) {
++          cflags += [ "--target=powerpc64-ibm-aix" ]
++          ldflags += [ "--target=powerpc64-ibm-aix" ]
++        } else {
++          cflags += [ "-maix64" ]
++          ldflags += [ "-maix64" ]
++        }
++      } else if (is_clang) {
++        cflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
++        ldflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
+       } else {
+         cflags += [ "-m64" ]
+         ldflags += [ "-m64" ]
+@@ -1511,6 +1528,10 @@
+         "-mcmodel=medium",
+       ]
+     } else if (current_cpu == "s390x") {
++      if (is_clang) {
++        cflags += [ "--target=s390x-unknown-linux-gnu" ]
++        ldflags += [ "--target=s390x-unknown-linux-gnu" ]
++      }
+       cflags += [ "-m64" ]
+       ldflags += [ "-m64" ]
+     }

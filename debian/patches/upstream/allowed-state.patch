@@ -1,0 +1,29 @@
+commit 2a82a46692e9ec825138a8cdecc758e29449f67d
+Author: Takuto Ikuta <tikuta@chromium.org>
+Date:   Wed Apr 30 17:54:41 2025 -0700
+
+    extensions: Adds a missing #include for std::optional.
+    
+    This is to fix clang module build.
+    
+    Bug: 40263312
+    Change-Id: Ie5b9b958ebf8533e4555ed717a11329a42639677
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/6500517
+    Reviewed-by: Finnur Thorarinsson <finnur@chromium.org>
+    Commit-Queue: Takuto Ikuta <tikuta@chromium.org>
+    Auto-Submit: Takuto Ikuta <tikuta@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1454265}
+
+diff --git a/extensions/common/user_scripts_allowed_state.h b/extensions/common/user_scripts_allowed_state.h
+index cd45923475f11..c257379479c22 100644
+--- a/extensions/common/user_scripts_allowed_state.h
++++ b/extensions/common/user_scripts_allowed_state.h
+@@ -5,6 +5,8 @@
+ #ifndef EXTENSIONS_COMMON_USER_SCRIPTS_ALLOWED_STATE_H_
+ #define EXTENSIONS_COMMON_USER_SCRIPTS_ALLOWED_STATE_H_
+ 
++#include <optional>
++
+ #include "extensions/common/extension_id.h"
+ 
+ namespace extensions {

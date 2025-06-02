@@ -14,6 +14,24 @@ export DEB_BUILD_MAINT_OPTIONS+=optimize=-lto
 # indicate that binary targets do not require root
 export DEB_RULES_REQUIRES_ROOT=no
 
+-include /usr/share/dpkg/architecture.mk
+
+# cross-build support
+ifneq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
+ifeq ($(filter cross,$(DEB_BUILD_PROFILES)),)
+$(error Please specify the "cross" build profile)
+endif
+export DEB_BUILD_OPTIONS+=crossbuildcanrunhostbinaries
+export HOST_EXEC_WRAPPER=qemu-$(DEB_HOST_ARCH_CPU)
+pkg_config_arch=$(subst i686,i386,$(DEB_HOST_GNU_TYPE))
+export PKG_CONFIG_LIBDIR=/usr/share/pkgconfig:/usr/lib/$(pkg_config_arch)/pkgconfig
+ifeq (armhf,$(DEB_HOST_ARCH))
+# avoid "Unable to find a guest_base to satisfy all
+# guest address mapping requirements" error
+export QEMU_GUEST_BASE=0x80000000
+endif
+endif
+
 # compile with clang (gcc is currently not supported)
 export AR=ar
 export NM=nm
@@ -81,9 +99,12 @@ endif
 ifeq (armhf,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"arm\" use_v4l2_codec=true use_vaapi=false arm_use_neon=true
 endif
+ifeq (ppc64el,$(DEB_HOST_ARCH))
+defines+=host_cpu=\"ppc64\" use_vaapi=true
+endif
 
-# thin lto requires >4 GB RAM, so avoid it on 32-bit architectures
-ifeq ($(filter armhf i386,$(DEB_HOST_ARCH)),)
+# thin lto requires >4 GB RAM, so avoid it on 32-bit build hosts
+ifeq ($(filter armhf i386,$(DEB_BUILD_ARCH)),)
 defines+=use_thin_lto=true
 else
 defines+=use_thin_lto=false \
@@ -95,6 +116,7 @@ defines+=is_debug=false \
          use_sysroot=false \
          use_libjpeg_turbo=true \
          use_custom_libcxx=false \
+         optimize_webui=false \
          use_unofficial_version_number=false \
          safe_browsing_use_unrar=false \
          enable_vr=false \
@@ -180,13 +202,6 @@ set_up_bindgen:
 	tar -C debian/bindgen/root -Jxvf debian/bindgen/root/data.tar.xz
 
 override_dh_auto_configure: test_armhf_neon set_up_bindgen
-	# verify that we're not accidentally uploading to stable-security without CVEs
-	@echo "$(DIST)" | grep -q -- '-security' && { \
-		dpkg-parsechangelog -l debian/changelog | grep -q 'CVE-' || { \
-			echo "ERROR: security upload with no CVEs listed. You should fix that."; \
-			exit 1; \
-		} \
-	} || true
 	# use system node w/out patching source; upstream hardcodes x64 in path
 	mkdir -p third_party/node/linux/node-linux-x64/bin
 	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin

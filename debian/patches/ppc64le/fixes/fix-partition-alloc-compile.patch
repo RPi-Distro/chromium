@@ -1,16 +1,15 @@
 kIndex: chromium-114.0.5735.45/base/allocator/partition_allocator/partition_alloc.gni
 ===================================================================
-Index: chromium-136.0.7103.48/base/allocator/partition_allocator/partition_alloc.gni
+Index: chromium-137.0.7151.40/base/allocator/partition_allocator/partition_alloc.gni
 ===================================================================
---- chromium-136.0.7103.48.orig/base/allocator/partition_allocator/partition_alloc.gni
-+++ chromium-136.0.7103.48/base/allocator/partition_allocator/partition_alloc.gni
-@@ -69,7 +69,8 @@ if (is_nacl) {
-   # NaCl targets don't use 64-bit pointers.
+--- chromium-137.0.7151.40.orig/base/allocator/partition_allocator/partition_alloc.gni
++++ chromium-137.0.7151.40/base/allocator/partition_allocator/partition_alloc.gni
+@@ -70,7 +70,7 @@ if (is_nacl) {
    has_64_bit_pointers = false
  } else if (current_cpu == "x64" || current_cpu == "arm64" ||
--           current_cpu == "loong64" || current_cpu == "riscv64") {
-+           current_cpu == "loong64" || current_cpu == "riscv64" ||
-+           current_cpu == "ppc64") {
+            current_cpu == "arm64e" || current_cpu == "loong64" ||
+-           current_cpu == "riscv64") {
++           current_cpu == "riscv64" || current_cpu == "ppc64") {
+   assert(current_cpu != "arm64e" || (is_ios && target_environment == "device"))
    has_64_bit_pointers = true
  } else if (current_cpu == "x86" || current_cpu == "arm" ||
-            current_cpu == "wasm") {

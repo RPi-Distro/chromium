@@ -24,22 +24,6 @@ Index: chromium-137.0.7151.40/sandbox/policy/linux/bpf_renderer_policy_linux.cc
      case __NR_getrlimit:
      case __NR_setrlimit:
  // We allow setrlimit to dynamically adjust the address space limit as
-Index: chromium-137.0.7151.40/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
-===================================================================
---- chromium-137.0.7151.40.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
-+++ chromium-137.0.7151.40/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
-@@ -58,9 +58,9 @@
- 
- #elif defined(__powerpc64__)
- 
--#include <asm/unistd.h>
-+#include <asm-generic/unistd.h>
- #define MIN_SYSCALL 0u
--#define MAX_PUBLIC_SYSCALL 386u
-+#define MAX_PUBLIC_SYSCALL __NR_syscalls
- #define MAX_SYSCALL MAX_PUBLIC_SYSCALL
- 
- #else
 Index: chromium-137.0.7151.40/sandbox/linux/services/credentials.cc
 ===================================================================
 --- chromium-137.0.7151.40.orig/sandbox/linux/services/credentials.cc

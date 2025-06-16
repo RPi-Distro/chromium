@@ -14,12 +14,12 @@ fixes/predictor-denial-of-service.patch
 fixes/fix-assert-in-vnc-sessions.patch
 fixes/armhf-timespec.patch
 fixes/updater-test.patch
-fixes/absl-optional.patch
-fixes/font-gc-asan.patch
+#fixes/absl-optional.patch
+#fixes/font-gc-asan.patch
 fixes/libsync-rk3588-panthor.patch
 fixes/headless-gn.patch
-fixes/stdatomic.patch
-fixes/make-pair.patch
+#fixes/stdatomic.patch
+#fixes/make-pair.patch
 fixes/media-cstdint.patch
 fixes/armhf-no-thumb.patch
 
@@ -57,7 +57,7 @@ system/rollup.patch
 bookworm/dq-forward-iterator.patch
 bookworm/gn-revert-path-exists.patch
 bookworm/clang19.patch
-bookworm/constflatset.patch
+#bookworm/constflatset.patch
 bookworm/libxml-parseerr.patch
 bookworm/gn-allowlist.patch
 bookworm/adler1.patch
@@ -66,8 +66,8 @@ bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
 bookworm/partially-deployed-mseal-syscall.patch
 bookworm/constexpr.patch
-bookworm/constexpr2.patch
-bookworm/constexpr3.patch
+#bookworm/constexpr2.patch
+#bookworm/constexpr3.patch
 bookworm/bubble-contents.patch
 bookworm/rust-visibility.patch
 bookworm/less-void.patch

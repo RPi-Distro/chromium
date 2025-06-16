@@ -1,34 +1,37 @@
-chromium (1:137.0.7151.55-3~deb12u1+rpt1) bookworm; urgency=medium
+chromium (137.0.7151.103-1~deb12u1) bookworm-security; urgency=high
 
-  * Import rpi and ubuntu patches
-  * Remove debian patches duplicated by rpi
-  * rpi build customisations
-  * Remove debian's master_preferences file
-  * Add package recommend for libwidevinecdm0
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Move chromium-l10n to recommends
-  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
-    - Fixes v4l2 h264 playback on Pi4
-  * Revert upstream "Check format supported by gbm for creating native pixmap"
-    - Fixes video playback on Pi 5 under Wayfire
-  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
-    by default
-  * Use zenoty instead of xmessage for displaying messages in launcher script
-  * Replace old chromium-browser packages
-  * Add chromium-browser symlink
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Launcher: extend NEON check to armv6l platforms
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * launcher: Add low memory warning
-  * Enable PipeWire Camera support by default
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
-  * d/c: Remove system-config-printer from recommends
+  * New upstream security release.
+    - CVE-2025-5958: Use after free in Media.
+      Reported by Huang Xilin of Ant Group Light-Year Security Lab.
+    - CVE-2025-5959: Type Confusion in V8.
+      Reported by Seunghyun Lee as part of TyphoonPWN 2025.
+  * Add build-dep on libc++-19-dev and switch to building statically
+    against clang's libc++ (instead of gcc's libstdc++).
+  * d/patches:
+    - fixes/absl-optional.patch: drop, only needed for libstdc++.
+    - fixes/font-gc-asan.patch: drop, only needed for libstdc++.
+    - fixes/stdatomic.patch: drop, only needed for libstdc++.
+    - fixes/make-pair.patch: drop, only needed for libstdc++.
+    - bookworm/constflatset.patch: drop, only needed for libstdc++.
+    - bookworm/constexpr2.patch: drop, only needed for libstdc++.
+    - bookworm/constexpr3.patch: drop, only needed for libstdc++.
+    - bookworm/foreach.patch: add patch from bookworm branch to fix
+      clang-19 build failure.
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 02 Jun 2025 01:12:11 +0100
+ -- Andres Salomon <dilinger@debian.org>  Tue, 10 Jun 2025 15:08:42 -0400
+
+chromium (137.0.7151.68-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon]
+  * New upstream security release.
+    - CVE-2025-5419: Out of bounds read and write in V8. Reported by
+      Clement Lecigne and Benoît Sevens of Google Threat Analysis Group.
+    - CVE-2025-5068: Use after free in Blink. Reported by Walkman.
+
+  [ Jianfeng Liu ]
+  * d/patches/ppc64le: merge ppc64le sandbox syscall patches
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 03 Jun 2025 12:23:46 -0400
 
 chromium (137.0.7151.55-3~deb12u1) bookworm-security; urgency=high
 

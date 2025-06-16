@@ -17,6 +17,7 @@ Build-Depends:
  clang-19:native,
  clang-format-19:native,
  libclang-rt-19-dev,
+ libc++-19-dev,
  rustc-web:any (>= 1.74),
  libstd-rust-dev (>= 1.74) <cross>,
  bindgen:native,

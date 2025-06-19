@@ -1,3 +1,17 @@
+chromium (137.0.7151.119-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-6191: Integer overflow in V8. Reported by Shaheen Fazim.
+    - CVE-2025-6192: Use after free in Profiler.
+      Reported by Chaoyuan Peng (@ret2happy).
+  * Include libtest_trace_processor.so in chromium-shell package.
+    (closes: #1107837).
+  * d/patches:
+    - fixes/armhf-icf.patch: add workaround for build failure on armhf
+      (thanks Daniel Richard G!).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 17 Jun 2025 19:12:16 -0400
+
 chromium (137.0.7151.103-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

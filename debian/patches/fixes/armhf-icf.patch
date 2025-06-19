@@ -1,0 +1,20 @@
+description: disable ICF on armhf to avoid segfaults during build
+author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+Work around a clang/lld bug of some type on armhf, as seen here:
+https://buildd.debian.org/status/fetch.php?pkg=chromium&arch=armhf&ver=137.0.7151.103-1&stamp=1749630295&raw=0
+
+This only happens when linking libc++ statically, so it can go away once
+we've got libc++1/libc++abi1/libunwind packages sorted out.
+
+
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -204,6 +204,7 @@ declare_args() {
+   # Set to true to use icf, Identical Code Folding.
+   use_icf = (is_posix || is_fuchsia) && !is_debug && !using_sanitizer &&
+             !use_clang_coverage && current_os != "zos" &&
++            current_cpu != "arm" &&
+             !(is_android && use_order_profiling) && use_lld
+ }
+ 

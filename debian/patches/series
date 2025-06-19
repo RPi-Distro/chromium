@@ -22,6 +22,7 @@ fixes/headless-gn.patch
 #fixes/make-pair.patch
 fixes/media-cstdint.patch
 fixes/armhf-no-thumb.patch
+fixes/armhf-icf.patch
 
 upstream/arm32-crel.patch
 upstream/cross-build-target.patch

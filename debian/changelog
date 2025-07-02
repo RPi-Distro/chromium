@@ -1,34 +1,77 @@
-chromium (1:137.0.7151.119-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (138.0.7204.92-1~deb12u1) bookworm-security; urgency=high
 
-  * Import rpi and ubuntu patches
-  * Remove debian patches duplicated by rpi
-  * rpi build customisations
-  * Remove debian's master_preferences file
-  * Add package recommend for libwidevinecdm0
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Move chromium-l10n to recommends
-  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
-    - Fixes v4l2 h264 playback on Pi4
-  * Revert upstream "Check format supported by gbm for creating native pixmap"
-    - Fixes video playback on Pi 5 under Wayfire
-  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
-    by default
-  * Use zenoty instead of xmessage for displaying messages in launcher script
-  * Replace old chromium-browser packages
-  * Add chromium-browser symlink
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Launcher: extend NEON check to armv6l platforms
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * launcher: Add low memory warning
-  * Enable PipeWire Camera support by default
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
-  * d/c: Remove system-config-printer from recommends
+  * New upstream security release.
+    - CVE-2025-6554: Type Confusion in V8. Reported by
+      Clément Lecigne of Google's Threat Analysis Group.
+  * Add lintian override for embedded libjsoncpp in
+    libtest_trace_processor.so.
+  * Drop the text about extensions from d/presubj, and instead ask bug
+    reporters to include output from chrome://gpu which is super useful.
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 19 Jun 2025 09:03:31 +0100
+ -- Andres Salomon <dilinger@debian.org>  Tue, 01 Jul 2025 13:17:05 -0400
+
+chromium (138.0.7204.49-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2025-6555: Use after free in Animation.
+      Reported by Lyra Rebane (rebane2001).
+    - CVE-2025-6556: Insufficient policy enforcement in Loader.
+      Reported by Shaheen Fazim.
+    - CVE-2025-6557: Insufficient data validation in DevTools.
+      Reported by Ameen Basha M K.
+  * d/rules:
+    - drop enable_reading_list=false, as Reading List is now
+      supported for all architectures.
+    - disable ThinLTO due to build failure with older rust.
+  * d/patches:
+    - upstream/arm32-crel.patch: drop, merged upstream.
+    - upstream/cross-build-target.patch: drop, merged upstream.
+    - upstream/span-fwd.patch: drop, merged upstream.
+    - upstream/mojo-optional.patch: drop, merged upstream.
+    - upstream/opener-heur.patch: drop, merged upstream.
+    - upstream/allowed-state.patch: drop, merged upstream.
+    - upstream/pdfium-libpng.patch: drop, merged upstream.
+    - upstream/safety-hub-set.patch: drop, merged upstream.
+    - fixes/media-cstdint.patch: drop, merged upstream.
+    - debianization/clang-version.patch: refresh.
+    - fixes/bindgen.patch: refresh.
+    - fixes/armhf-icf.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/google-api-warning.patch: refresh.
+    - disable/buildtools-libc.patch: refresh.
+    - bookworm/clang19.patch: drop part of patch.
+    - fixes/memory-allocator-dcheck-assert-fix.patch: update for renamed
+      config variable kMaxBucketed.
+    - disable/node-version-ck.patch: disable nodejs version check in
+      protobuf.
+    - bookworm/stdarch-arm.patch: drop redundant portion of patch.
+    - bookworm/rust-is-none-or.patch: drop portion of patch due to
+      upstream changes.
+    - bookworm/gn-hpp11.patch: add another workaround for older gn.
+    - bookworm/rust-split-at-checked.patch: enable unstable rust feature
+      split_at_checked.
+    - bookworm/crabbyav1f-macro-scope.patch: fix (macro-created) variable
+      going out of scope.
+    - rust-unstable-features.patch: enable a bunch more unstable rust
+      features.
+    - bookworm/rust-box-to-vec.patch: work around older rustc not being
+      able to implicitly handle converted a boxed slice into a vector.
+
+  [ Daniel Richard G. ]
+  * d/rules: Rearrange DEB_BUILD_MAINT_OPTIONS assignments to avoid
+    "argument unused" warnings on armhf due to -fstack-clash-protection.
+  * d/control, d/rules: Apply cross-build feedback from Helmut Grohne.
+  * d/control: Add myself to Uploaders:, with Andres's blessing of course :)
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: Refresh for
+      upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: Refresh for upstream
+      changes
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 24 Jun 2025 16:01:10 -0400
 
 chromium (137.0.7151.119-1~deb12u1) bookworm-security; urgency=high
 

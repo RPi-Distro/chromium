@@ -20,18 +20,9 @@ fixes/libsync-rk3588-panthor.patch
 fixes/headless-gn.patch
 #fixes/stdatomic.patch
 #fixes/make-pair.patch
-fixes/media-cstdint.patch
 fixes/armhf-no-thumb.patch
 fixes/armhf-icf.patch
 
-upstream/arm32-crel.patch
-upstream/cross-build-target.patch
-upstream/span-fwd.patch
-upstream/mojo-optional.patch
-upstream/opener-heur.patch
-upstream/allowed-state.patch
-upstream/pdfium-libpng.patch
-upstream/safety-hub-set.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -83,6 +74,11 @@ bookworm/fmodf.patch
 bookworm/dav1d-extern.patch
 bookworm/toktrie-utf8chunks.patch
 bookworm/derivre-create.patch
+bookworm/gn-hpp11.patch
+bookworm/rust-split-at-checked.patch
+bookworm/crabbyav1f-macro-scope.patch
+bookworm/rust-unstable-features.patch
+bookworm/rust-box-to-vec.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch

@@ -7,11 +7,11 @@ Subject: [PATCH] sandbox/linux/seccomp-bpf: Add ppc64 syscall stub
  sandbox/linux/seccomp-bpf/syscall.cc | 53 ++++++++++++++++++++++++++--
  1 file changed, 51 insertions(+), 2 deletions(-)
 
-Index: chromium-137.0.7151.40/sandbox/linux/seccomp-bpf/syscall.cc
+Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf/syscall.cc
 ===================================================================
---- chromium-137.0.7151.40.orig/sandbox/linux/seccomp-bpf/syscall.cc
-+++ chromium-137.0.7151.40/sandbox/linux/seccomp-bpf/syscall.cc
-@@ -23,7 +23,7 @@ namespace sandbox {
+--- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf/syscall.cc
++++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf/syscall.cc
+@@ -19,7 +19,7 @@ namespace sandbox {
  namespace {
  
  #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY) || \
@@ -20,7 +20,7 @@ Index: chromium-137.0.7151.40/sandbox/linux/seccomp-bpf/syscall.cc
  // Number that's not currently used by any Linux kernel ABIs.
  const int kInvalidSyscallNumber = 0x351d3;
  #else
-@@ -313,10 +313,54 @@ asm(// We need to be able to tell the ke
+@@ -309,10 +309,54 @@ asm(// We need to be able to tell the ke
      "2:ret\n"
      ".cfi_endproc\n"
      ".size SyscallAsm, .-SyscallAsm\n"
@@ -76,7 +76,7 @@ Index: chromium-137.0.7151.40/sandbox/linux/seccomp-bpf/syscall.cc
  extern "C" {
  intptr_t SyscallAsm(intptr_t nr, const intptr_t args[6]);
  }
-@@ -430,6 +474,8 @@ intptr_t Syscall::Call(int nr,
+@@ -426,6 +470,8 @@ intptr_t Syscall::Call(int nr,
      ret = inout;
    }
  
@@ -85,7 +85,7 @@ Index: chromium-137.0.7151.40/sandbox/linux/seccomp-bpf/syscall.cc
  #else
  #error "Unimplemented architecture"
  #endif
-@@ -446,8 +492,18 @@ void Syscall::PutValueInUcontext(intptr_
+@@ -442,8 +488,18 @@ void Syscall::PutValueInUcontext(intptr_
      // needs to be changed back.
      ret_val = -ret_val;
      SECCOMP_PARM4(ctx) = 1;

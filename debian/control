@@ -5,6 +5,7 @@ Maintainer: Debian Chromium Team <chromium@packages.debian.org>
 Uploaders:
  Andres Salomon <dilinger@debian.org>,
  Timothy Pearson <tpearson@raptorengineering.com>,
+ Daniel Richard G. <skunk@iSKUNK.ORG>,
 Vcs-Git: https://salsa.debian.org/chromium-team/chromium.git
 Vcs-Browser: https://salsa.debian.org/chromium-team/chromium
 Homepage: http://www.chromium.org/Home
@@ -19,7 +20,7 @@ Build-Depends:
  libclang-rt-19-dev,
  libc++-19-dev,
  rustc-web:any (>= 1.74),
- libstd-rust-dev (>= 1.74) <cross>,
+ libstd-rust-dev (>= 1.74),
  bindgen:native,
  python3:any,
  pkgconf,
@@ -97,7 +98,7 @@ Build-Depends:
  libzstd-dev,
  fonts-ipafont-gothic,
  fonts-ipafont-mincho,
- qemu-user <cross>,
+ cross-exe-wrapper <cross>,
 Build-Conflicts:
  bindgen-0.56,
  bindgen-0.65,

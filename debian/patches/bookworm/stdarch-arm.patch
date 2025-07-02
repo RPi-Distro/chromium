@@ -21,13 +21,3 @@ gets updated.
  
  #[deny(missing_docs)]
  #[cfg(test)]
---- a/third_party/rust/crc32fast/v1/BUILD.gn
-+++ b/third_party/rust/crc32fast/v1/BUILD.gn
-@@ -36,6 +36,7 @@ cargo_crate("lib") {
-   library_configs -= [ "//build/config/coverage:default_coverage" ]
-   library_configs -= [ "//build/config/compiler:chromium_code" ]
-   library_configs += [ "//build/config/compiler:no_chromium_code" ]
-+  library_configs -= [ "//build/config/compiler:disallow_unstable_features" ]
-   executable_configs -= [ "//build/config/compiler:chromium_code" ]
-   executable_configs += [ "//build/config/compiler:no_chromium_code" ]
-   proc_macro_configs -= [ "//build/config/compiler:chromium_code" ]

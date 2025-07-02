@@ -1,7 +1,7 @@
-Index: chromium-137.0.7151.40/sandbox/policy/linux/bpf_utility_policy_linux.cc
+Index: chromium-138.0.7204.35/sandbox/policy/linux/bpf_utility_policy_linux.cc
 ===================================================================
---- chromium-137.0.7151.40.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
-+++ chromium-137.0.7151.40/sandbox/policy/linux/bpf_utility_policy_linux.cc
+--- chromium-138.0.7204.35.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
++++ chromium-138.0.7204.35/sandbox/policy/linux/bpf_utility_policy_linux.cc
 @@ -34,7 +34,7 @@ ResultExpr UtilityProcessPolicy::Evaluat
      case __NR_fdatasync:
      case __NR_fsync:
@@ -11,10 +11,10 @@ Index: chromium-137.0.7151.40/sandbox/policy/linux/bpf_utility_policy_linux.cc
      case __NR_getrlimit:
  #endif
  #if defined(__i386__) || defined(__arm__)
-Index: chromium-137.0.7151.40/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+Index: chromium-138.0.7204.35/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 ===================================================================
---- chromium-137.0.7151.40.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
-+++ chromium-137.0.7151.40/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+--- chromium-138.0.7204.35.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
++++ chromium-138.0.7204.35/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 @@ -90,7 +90,7 @@ ResultExpr RendererProcessPolicy::Evalua
      case __NR_ftruncate64:
  #endif
@@ -24,10 +24,10 @@ Index: chromium-137.0.7151.40/sandbox/policy/linux/bpf_renderer_policy_linux.cc
      case __NR_getrlimit:
      case __NR_setrlimit:
  // We allow setrlimit to dynamically adjust the address space limit as
-Index: chromium-137.0.7151.40/sandbox/linux/services/credentials.cc
+Index: chromium-138.0.7204.35/sandbox/linux/services/credentials.cc
 ===================================================================
---- chromium-137.0.7151.40.orig/sandbox/linux/services/credentials.cc
-+++ chromium-137.0.7151.40/sandbox/linux/services/credentials.cc
+--- chromium-138.0.7204.35.orig/sandbox/linux/services/credentials.cc
++++ chromium-138.0.7204.35/sandbox/linux/services/credentials.cc
 @@ -99,7 +99,8 @@ bool ChrootToSafeEmptyDir() {
  
    int clone_flags = CLONE_FS | LINUX_SIGCHLD;
@@ -50,10 +50,10 @@ Index: chromium-137.0.7151.40/sandbox/linux/services/credentials.cc
    clone_flags |= CLONE_VM | CLONE_VFORK | CLONE_SETTLS;
  
    char tls_buf[PTHREAD_STACK_MIN_CONST] = {};
-Index: chromium-137.0.7151.40/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 ===================================================================
---- chromium-137.0.7151.40.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
-+++ chromium-137.0.7151.40/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+--- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
++++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 @@ -362,7 +362,16 @@ intptr_t SIGSYSFstatatHandler(const stru
    if (args.nr == __NR_fstatat_default) {
      if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&

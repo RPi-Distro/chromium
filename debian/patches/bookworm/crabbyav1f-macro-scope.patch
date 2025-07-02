@@ -1,0 +1,25 @@
+error[E0716]: temporary value dropped while borrowed
+   --> /usr/src/rustc-1.78.0/library/alloc/src/macros.rs:42:1
+    |
+    = note: in this expansion of `vec!`
+   ::: /usr/src/rustc-1.78.0/library/alloc/src/macros.rs:55:9
+    |
+    = note: creates a temporary value which is freed while still in use
+    |
+   ::: ../../third_party/crabbyavif/src/src/decoder/mod.rs:914:13
+    |
+
+--- a/third_party/crabbyavif/src/src/decoder/mod.rs
++++ b/third_party/crabbyavif/src/src/decoder/mod.rs
+@@ -911,9 +911,10 @@ impl Decoder {
+             .grpl
+             .iter()
+             .find(|g| g.grouping_type == "altr" && g.entity_ids.contains(&item_id));
++        let b = vec![item_id];
+         let item_ids = match altr_group {
+             Some(altr_group) => &altr_group.entity_ids,
+-            None => &vec![item_id],
++            None => &b,
+         };
+         for item_id in item_ids {
+             if let Some(item) = self.items.get(item_id) {

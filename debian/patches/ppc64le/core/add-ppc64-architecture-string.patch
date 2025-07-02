@@ -1,7 +1,7 @@
-Index: chromium-137.0.7151.40/base/system/sys_info.cc
+Index: chromium-138.0.7204.35/base/system/sys_info.cc
 ===================================================================
---- chromium-137.0.7151.40.orig/base/system/sys_info.cc
-+++ chromium-137.0.7151.40/base/system/sys_info.cc
+--- chromium-138.0.7204.35.orig/base/system/sys_info.cc
++++ chromium-138.0.7204.35/base/system/sys_info.cc
 @@ -254,6 +254,8 @@ std::string SysInfo::ProcessCPUArchitect
    return "ARM";
  #elif defined(ARCH_CPU_ARM64)

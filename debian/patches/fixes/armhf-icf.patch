@@ -10,11 +10,11 @@ we've got libc++1/libc++abi1/libunwind packages sorted out.
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -204,6 +204,7 @@ declare_args() {
+@@ -206,6 +206,7 @@ declare_args() {
    # Set to true to use icf, Identical Code Folding.
    use_icf = (is_posix || is_fuchsia) && !is_debug && !using_sanitizer &&
              !use_clang_coverage && current_os != "zos" &&
 +            current_cpu != "arm" &&
-             !(is_android && use_order_profiling) && use_lld
+             !(is_android && use_order_profiling) && use_lld && !is_wasm
  }
  

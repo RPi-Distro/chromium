@@ -4,10 +4,10 @@ Bug: https://buildd.debian.org/status/fetch.php?pkg=chromium&arch=ppc64el&ver=13
 Last-Update: 2024-12-20
 ---
 This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
-Index: chromium-137.0.7151.40/third_party/swiftshader/third_party/llvm-16.0/BUILD.gn
+Index: chromium-138.0.7204.35/third_party/swiftshader/third_party/llvm-16.0/BUILD.gn
 ===================================================================
---- chromium-137.0.7151.40.orig/third_party/swiftshader/third_party/llvm-16.0/BUILD.gn
-+++ chromium-137.0.7151.40/third_party/swiftshader/third_party/llvm-16.0/BUILD.gn
+--- chromium-138.0.7204.35.orig/third_party/swiftshader/third_party/llvm-16.0/BUILD.gn
++++ chromium-138.0.7204.35/third_party/swiftshader/third_party/llvm-16.0/BUILD.gn
 @@ -1599,6 +1599,9 @@ swiftshader_llvm_source_set("swiftshader
      "llvm/lib/Target/PowerPC/PPCVSXFMAMutate.cpp",
      "llvm/lib/Target/PowerPC/PPCVSXSwapRemoval.cpp",

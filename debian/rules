@@ -5,16 +5,22 @@ include /usr/share/dpkg/pkg-info.mk
 # enable verbose build messages
 export DH_VERBOSE=1
 
-# enable all build hardening flags
-export DEB_BUILD_MAINT_OPTIONS=hardening=+all
-
-# disable lto flags, as they are for gcc, not clang
-export DEB_BUILD_MAINT_OPTIONS+=optimize=-lto
-
 # indicate that binary targets do not require root
 export DEB_RULES_REQUIRES_ROOT=no
 
 -include /usr/share/dpkg/architecture.mk
+
+ifeq (armhf,$(DEB_HOST_ARCH))
+# avoid "argument unused during compilation" warnings on armhf
+arg_hardening = +all,-stackclash
+else
+# enable all build hardening flags
+arg_hardening = +all
+endif
+export DEB_BUILD_MAINT_OPTIONS=hardening=$(arg_hardening)
+
+# disable lto flags, go with use_thin_lto instead
+export DEB_BUILD_MAINT_OPTIONS+=optimize=-lto
 
 # cross-build support
 ifneq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
@@ -22,14 +28,8 @@ ifeq ($(filter cross,$(DEB_BUILD_PROFILES)),)
 $(error Please specify the "cross" build profile)
 endif
 export DEB_BUILD_OPTIONS+=crossbuildcanrunhostbinaries
-export HOST_EXEC_WRAPPER=qemu-$(DEB_HOST_ARCH_CPU)
-pkg_config_arch=$(subst i686,i386,$(DEB_HOST_GNU_TYPE))
-export PKG_CONFIG_LIBDIR=/usr/share/pkgconfig:/usr/lib/$(pkg_config_arch)/pkgconfig
-ifeq (armhf,$(DEB_HOST_ARCH))
-# avoid "Unable to find a guest_base to satisfy all
-# guest address mapping requirements" error
-export QEMU_GUEST_BASE=0x80000000
-endif
+export HOST_EXEC_WRAPPER=$(DEB_HOST_GNU_TYPE)-cross-exe-wrapper
+cross_pkg_config=$(DEB_HOST_GNU_TYPE)-pkgconf
 endif
 
 # compile with clang (gcc is currently not supported)
@@ -103,12 +103,16 @@ ifeq (ppc64el,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"ppc64\" use_vaapi=true
 endif
 
+ifdef cross_pkg_config
+defines+=pkg_config=\"$(cross_pkg_config)\"
+endif
+
 # thin lto requires >4 GB RAM, so avoid it on 32-bit build hosts
-ifeq ($(filter armhf i386,$(DEB_BUILD_ARCH)),)
-defines+=use_thin_lto=true
-else
+ifeq (32,$(DEB_BUILD_ARCH_BITS))
 defines+=use_thin_lto=false \
          concurrent_links=1
+else
+defines+=use_thin_lto=false
 endif
 
 # disabled features
@@ -122,7 +126,6 @@ defines+=is_debug=false \
          enable_vr=false \
          enable_nacl=false \
          build_dawn_tests=false \
-         enable_reading_list=false \
          enable_iterator_debugging=false \
          angle_has_histograms=false \
          angle_build_tests=false \

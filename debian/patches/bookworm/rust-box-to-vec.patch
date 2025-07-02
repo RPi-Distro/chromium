@@ -1,0 +1,24 @@
+error[E0277]: `[(K, V)]` is not an iterator
+   --> ../../third_party/rust/chromium_crates_io/vendor/icu_locale_core-v2/src/shortvec/litemap.rs:137:30
+    |
+137 |                 items.extend(existing_items);
+    |                       ------ ^^^^^^^^^^^^^^ `[(K, V)]` is not an iterator
+    |                       |
+    |                       required by a bound introduced by this call
+    |
+    = help: the trait `Iterator` is not implemented for `[(K, V)]`, which is required by `Box<[(K, V)]>: Iterator`
+    = note: required for `Box<[(K, V)]>` to implement `Iterator`
+note: required by a bound in `extend`
+   --> /usr/src/rustc-1.78.0/library/core/src/iter/traits/collect.rs:415:5
+
+--- a/third_party/rust/chromium_crates_io/vendor/icu_locale_core-v2/src/shortvec/litemap.rs
++++ b/third_party/rust/chromium_crates_io/vendor/icu_locale_core-v2/src/shortvec/litemap.rs
+@@ -134,7 +134,7 @@ impl<K: Ord, V> StoreBulkMut<K, V> for S
+                 items.reserve_exact(existing_items.len() + other.size_hint().0);
+                 // We use a plain extend with existing items, which are already valid and
+                 // lm_extend will fold over rest of the iterator sorting and deduplicating as needed.
+-                items.extend(existing_items);
++                items.extend(existing_items.into_vec());
+                 items.lm_extend(other);
+             }
+         }

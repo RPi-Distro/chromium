@@ -1,7 +1,7 @@
-Index: chromium-137.0.7151.40/build/config/BUILDCONFIG.gn
+Index: chromium-138.0.7204.35/build/config/BUILDCONFIG.gn
 ===================================================================
---- chromium-137.0.7151.40.orig/build/config/BUILDCONFIG.gn
-+++ chromium-137.0.7151.40/build/config/BUILDCONFIG.gn
+--- chromium-138.0.7204.35.orig/build/config/BUILDCONFIG.gn
++++ chromium-138.0.7204.35/build/config/BUILDCONFIG.gn
 @@ -138,7 +138,6 @@ declare_args() {
    # Set to true when compiling with the Clang compiler.
    is_clang = current_os != "linux" ||

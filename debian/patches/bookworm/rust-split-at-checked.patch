@@ -1,0 +1,31 @@
+error[E0658]: use of unstable library feature 'split_at_checked': new API
+   --> ../../third_party/rust/chromium_crates_io/vendor/litemap-v0_8/src/store/vec_impl.rs:235:51
+    |
+235 |     while let Some((before_read, [read, ..])) = v.split_at_mut_checked(read_idx) {
+    |                                                   ^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: see issue #119128 <https://github.com/rust-lang/rust/issues/119128> for more information
+    = help: add `#![feature(split_at_checked)]` to the crate attributes to enable
+
+
+--- a/third_party/rust/chromium_crates_io/vendor/litemap-v0_8/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/litemap-v0_8/src/lib.rs
+@@ -44,6 +44,8 @@
+ //! [`impl Bake for LiteMap`]: ./struct.LiteMap.html#impl-Bake-for-LiteMap<K,+V,+S>
+ //! [`Vec`]: alloc::vec::Vec
+ 
++#![feature(split_at_checked)]
++
+ // https://github.com/unicode-org/icu4x/blob/main/documents/process/boilerplate.md#library-annotations
+ #![cfg_attr(not(any(test, doc)), no_std)]
+ #![cfg_attr(
+--- a/third_party/rust/chromium_crates_io/vendor/writeable-v0_6/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/writeable-v0_6/src/lib.rs
+@@ -1,6 +1,7 @@
+ // This file is part of ICU4X. For terms of use, please see the file
+ // called LICENSE at the top level of the ICU4X source tree
+ // (online at: https://github.com/unicode-org/icu4x/blob/main/LICENSE ).
++#![feature(split_at_checked)]
+ 
+ // https://github.com/unicode-org/icu4x/blob/main/documents/process/boilerplate.md#library-annotations
+ #![cfg_attr(not(any(test, doc)), no_std)]

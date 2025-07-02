@@ -2,6 +2,7 @@
 embedded-library usr/lib/chromium/chromium-shell: freetype
 embedded-library usr/lib/chromium/chromium-shell: libjsoncpp
 embedded-library usr/lib/chromium/chromium-shell: srtp
+embedded-library usr/lib/chromium/libtest_trace_processor.so: libjsoncpp
 
 # too many upstream spelling mistakes
 spelling-error-in-binary

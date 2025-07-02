@@ -38,9 +38,9 @@ fix should probably go upstream.
 +  junk = []
 +  not_needed(["junk"])
 +  junk = [
-     "allowlist-item=AR30ToAB30",
-     "allowlist-item=ARGBToABGR",
-     "allowlist-item=ARGBAttenuate",
+     "allowlist-item=ABGRToI420",
+     "allowlist-item=ABGRToJ400",
+     "allowlist-item=ABGRToJ420",
 --- a/build/rust/rust_bindgen_generator.gni
 +++ b/build/rust/rust_bindgen_generator.gni
 @@ -18,7 +18,7 @@ if (host_os == "win") {

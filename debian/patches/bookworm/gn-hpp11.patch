@@ -1,0 +1,18 @@
+work around the following error:
+
+ERROR at //third_party/glslang/src/BUILD.gn:146:7: Only source, header, and object files belong in the sources of a source_set. //third_party/glslang/src/SPIRV/spirv.hpp11 is not one of the valid types.
+      "SPIRV/spirv.hpp11",
+
+Newer gn added .hpp11 support (via
+https://gn.issues.chromium.org/issues/42440217 ), but bookworm's gn doesn't.
+
+--- a/third_party/glslang/src/BUILD.gn
++++ b/third_party/glslang/src/BUILD.gn
+@@ -143,7 +143,6 @@ template("glslang_sources_common") {
+       "SPIRV/doc.cpp",
+       "SPIRV/doc.h",
+       "SPIRV/hex_float.h",
+-      "SPIRV/spirv.hpp11",
+       "SPIRV/spvIR.h",
+       "SPIRV/spvUtil.h",
+       "glslang/GenericCodeGen/CodeGen.cpp",

@@ -20,14 +20,3 @@ help: there is a method `is_none` with a similar name, but with different argume
              return Some(GlyphName::synthesize(glyph_id));
          }
          Some(name.unwrap_or_else(|| GlyphName::synthesize(glyph_id)))
---- a/third_party/rust/chromium_crates_io/vendor/llguidance-v0_7/src/ffi.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/llguidance-v0_7/src/ffi.rs
-@@ -556,7 +556,7 @@ pub extern "C" fn llg_get_temperature(cc
- pub extern "C" fn llg_is_stopped(cc: &LlgConstraint) -> bool {
-     cc.constraint
-         .as_ref()
--        .is_none_or(|c| c.step_result().is_stop())
-+        .is_none() || cc.constraint.as_ref().is_some_and(|c| c.step_result().is_stop())
- }
- 
- /// Compute mask for the next token sampling

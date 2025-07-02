@@ -16,8 +16,8 @@ Subject: [PATCH 09/17] Build: add use_v4l2_codec_rpi gn option
      "USE_V4L2_CODEC=$use_v4l2_codec",
 +    "USE_V4L2_CODEC_RPI=$use_v4l2_codec_rpi",
      "USE_LIBV4L2=$use_v4lplugin",
+     "USE_LINUX_VIDEO_ACCELERATION=$use_linux_video_acceleration",
    ]
- }
 --- a/media/gpu/args.gni
 +++ b/media/gpu/args.gni
 @@ -12,6 +12,10 @@ declare_args() {

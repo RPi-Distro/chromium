@@ -40,7 +40,7 @@
  #include "ui/ozone/platform/wayland/common/drm_render_node_path_finder.h"
  #endif
  
-@@ -200,15 +198,6 @@ class OzonePlatformWayland : public Ozon
+@@ -201,15 +199,6 @@ class OzonePlatformWayland : public Ozon
        if (!buffer_manager_->SupportsFormat(format)) {
          return false;
        }

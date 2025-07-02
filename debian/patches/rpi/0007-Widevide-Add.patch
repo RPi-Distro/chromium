@@ -24,7 +24,7 @@ Subject: [PATCH 07/17] Widevide: Add
        }
 --- a/chrome/common/media/cdm_registration.cc
 +++ b/chrome/common/media/cdm_registration.cc
-@@ -49,9 +49,7 @@ namespace {
+@@ -57,9 +57,7 @@ namespace {
  using Robustness = content::CdmInfo::Robustness;
  
  #if BUILDFLAG(ENABLE_WIDEVINE)
@@ -35,7 +35,7 @@ Subject: [PATCH 07/17] Widevide: Add
  // Create a CdmInfo for a Widevine CDM, using |version|, |cdm_library_path|, and
  // |capability|.
  std::unique_ptr<content::CdmInfo> CreateWidevineCdmInfo(
-@@ -92,7 +90,7 @@ std::unique_ptr<content::CdmInfo> Create
+@@ -100,7 +98,7 @@ std::unique_ptr<content::CdmInfo> Create
          // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)) && (BUILDFLAG(IS_LINUX) ||
          // BUILDFLAG(IS_CHROMEOS))
  
@@ -44,7 +44,7 @@ Subject: [PATCH 07/17] Widevide: Add
      (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS))
  // On Linux/ChromeOS we have to preload the CDM since it uses the zygote
  // sandbox. On Windows and Mac, CDM registration is handled by Component
-@@ -186,7 +184,7 @@ void AddSoftwareSecureWidevine(std::vect
+@@ -194,7 +192,7 @@ void AddSoftwareSecureWidevine(std::vect
    // We should still use the version selected by Component Update (except for
    // case #3 above).
    std::unique_ptr<content::CdmInfo> bundled_widevine = nullptr;

@@ -12,10 +12,8 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
  sandbox/linux/services/syscall_wrappers.cc    |   2 +-
  6 files changed, 73 insertions(+), 55 deletions(-)
 
-Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
-===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
-+++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
+--- a/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
++++ b/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
 @@ -90,7 +90,8 @@ bool IsBaselinePolicyWatched(int sysno)
           SyscallSets::IsPrctl(sysno) ||
           SyscallSets::IsProcessGroupOrSession(sysno) ||
@@ -26,7 +24,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy.
           SyscallSets::IsSocketCall(sysno) ||
  #endif
  #if defined(__arm__)
-@@ -255,7 +256,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
+@@ -259,7 +260,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
    }
  
  #if defined(__i386__) || defined(__x86_64__) || defined(__mips__) || \
@@ -35,7 +33,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy.
    if (sysno == __NR_mmap)
      return RestrictMmapFlags();
  #endif
-@@ -276,7 +277,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
+@@ -280,7 +281,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
      return RestrictPrctl();
  
  #if defined(__x86_64__) || defined(__arm__) || defined(__mips__) || \
@@ -44,7 +42,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy.
    if (sysno == __NR_socketpair) {
      // Only allow AF_UNIX, PF_UNIX. Crash if anything else is seen.
      static_assert(AF_UNIX == PF_UNIX,
-@@ -340,7 +341,8 @@ ResultExpr EvaluateSyscallImpl(int fs_de
+@@ -344,7 +345,8 @@ ResultExpr EvaluateSyscallImpl(int fs_de
    }
  
  #if defined(__i386__) || \
@@ -54,11 +52,9 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy.
    if (SyscallSets::IsSocketCall(sysno))
      return RestrictSocketcallCommand();
  #endif
-Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-+++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-@@ -37,7 +37,7 @@
+--- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
++++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+@@ -38,7 +38,7 @@
  #include "sandbox/linux/system_headers/linux_syscalls.h"
  #include "sandbox/linux/system_headers/linux_time.h"
  
@@ -67,7 +63,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
      !defined(PTRACE_GET_THREAD_AREA)
  // Also include asm/ptrace-abi.h since ptrace.h in older libc (for instance
  // the one in Ubuntu 16.04 LTS) is missing PTRACE_GET_THREAD_AREA.
-@@ -46,6 +46,11 @@
+@@ -47,6 +47,11 @@
  #include <asm/ptrace-abi.h>
  #endif
  
@@ -79,7 +75,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
  #if BUILDFLAG(IS_ANDROID)
  
  #if !defined(F_DUPFD_CLOEXEC)
-@@ -103,6 +108,15 @@ inline bool IsArchitectureMips() {
+@@ -104,6 +109,15 @@ inline bool IsArchitectureMips() {
  #endif
  }
  
@@ -95,7 +91,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
  // Ubuntu's version of glibc has a race condition in sem_post that can cause
  // it to call futex(2) with bogus op arguments. To workaround this, we need
  // to allow those futex(2) calls to fail with EINVAL, instead of crashing the
-@@ -270,9 +284,11 @@ ResultExpr RestrictFcntlCommands() {
+@@ -271,9 +285,11 @@ ResultExpr RestrictFcntlCommands() {
    // operator.
    // Glibc overrides the kernel's O_LARGEFILE value. Account for this.
    uint64_t kOLargeFileFlag = O_LARGEFILE;
@@ -108,7 +104,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
    const Arg<int> cmd(1);
    const Arg<long> long_arg(2);
  
-@@ -295,8 +311,17 @@ ResultExpr RestrictFcntlCommands() {
+@@ -296,8 +312,17 @@ ResultExpr RestrictFcntlCommands() {
                F_SETLKW,
                F_GETLK,
                F_DUPFD,
@@ -128,7 +124,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
        .Case(F_SETFL,
              If((long_arg & ~kAllowedMask) == 0, Allow()).Else(CrashSIGSYS()))
        .Case(F_ADD_SEALS,
-@@ -305,7 +330,7 @@ ResultExpr RestrictFcntlCommands() {
+@@ -306,7 +331,7 @@ ResultExpr RestrictFcntlCommands() {
    // clang-format on
  }
  
@@ -137,7 +133,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
  ResultExpr RestrictSocketcallCommand() {
    // Unfortunately, we are unable to restrict the first parameter to
    // socketpair(2). Whilst initially sounding bad, it's noteworthy that very
-@@ -474,7 +499,7 @@ ResultExpr RestrictPtrace() {
+@@ -475,7 +500,7 @@ ResultExpr RestrictPtrace() {
  #endif
    return Switch(request)
        .Cases({
@@ -146,10 +142,8 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
                   PTRACE_GETREGS, PTRACE_GETFPREGS, PTRACE_GET_THREAD_AREA,
                   PTRACE_GETREGSET,
  #endif
-Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
-===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
-+++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
+--- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
++++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
 @@ -52,7 +52,7 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
  // O_NONBLOCK | O_SYNC | O_LARGEFILE | O_CLOEXEC | O_NOATIME.
  SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictFcntlCommands();
@@ -159,10 +153,8 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_paramete
  // Restrict socketcall(2) to only allow socketpair(2), send(2), recv(2),
  // sendto(2), recvfrom(2), shutdown(2), sendmsg(2) and recvmsg(2).
  SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictSocketcallCommand();
-Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
-===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
-+++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+--- a/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
++++ b/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
 @@ -29,7 +29,8 @@ bool SyscallSets::IsAllowedGettime(int s
    switch (sysno) {
      case __NR_gettimeofday:
@@ -367,7 +359,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR__llseek:
  #endif
  #if !defined(__aarch64__)
-@@ -604,26 +619,28 @@ bool SyscallSets::IsAllowedGeneralIo(int
+@@ -604,18 +619,19 @@ bool SyscallSets::IsAllowedGeneralIo(int
      case __NR_readv:
      case __NR_pread64:
  #if defined(__arm__) || \
@@ -390,19 +382,23 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
 +#if defined(__i386__) || defined(__arm__) || defined(__mips__) || defined(__powerpc64__)
      case __NR__newselect:
  #endif
+     case __NR_write:
+@@ -635,11 +651,12 @@ bool SyscallSets::IsAllowedGeneralIo(int
+     case __NR_vmsplice:
+ // send* syscalls need their flags filtered.
  #if defined(__arm__) || \
 -    (defined(ARCH_CPU_MIPS_FAMILY) && defined(ARCH_CPU_32_BITS))
 +    (defined(ARCH_CPU_MIPS_FAMILY) && defined(ARCH_CPU_32_BITS)) || \
 +    defined(__powerpc64__)
      case __NR_send:
  #endif
- #if defined(__x86_64__) || defined(__arm__) || defined(__mips__) || \
--    defined(__aarch64__)
-+    defined(__aarch64__) || defined(__powerpc64__)
+ #if defined(__i386__) || defined(__x86_64__) || defined(__arm__) || \
+-    defined(__mips__) || defined(__aarch64__)
++    defined(__mips__) || defined(__aarch64__) || defined(__powerpc64__)
      case __NR_sendmsg:  // Could specify destination.
      case __NR_sendto:   // Could specify destination.
  #endif
-@@ -679,7 +696,8 @@ bool SyscallSets::IsAllowedBasicSchedule
+@@ -697,7 +714,8 @@ bool SyscallSets::IsAllowedBasicSchedule
        return true;
      case __NR_getpriority:
  #if defined(__i386__) || defined(__arm__) || \
@@ -412,7 +408,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_nice:
  #endif
      case __NR_setpriority:
-@@ -691,7 +709,8 @@ bool SyscallSets::IsAllowedBasicSchedule
+@@ -709,7 +727,8 @@ bool SyscallSets::IsAllowedBasicSchedule
  bool SyscallSets::IsAdminOperation(int sysno) {
    switch (sysno) {
  #if defined(__i386__) || defined(__arm__) || \
@@ -422,7 +418,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_bdflush:
  #endif
      case __NR_kexec_load:
-@@ -707,7 +726,8 @@ bool SyscallSets::IsAdminOperation(int s
+@@ -725,7 +744,8 @@ bool SyscallSets::IsAdminOperation(int s
  
  bool SyscallSets::IsKernelModule(int sysno) {
    switch (sysno) {
@@ -432,7 +428,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_create_module:
      case __NR_get_kernel_syms:  // Should ENOSYS.
      case __NR_query_module:
-@@ -740,7 +760,8 @@ bool SyscallSets::IsFsControl(int sysno)
+@@ -758,7 +778,8 @@ bool SyscallSets::IsFsControl(int sysno)
      case __NR_swapoff:
      case __NR_swapon:
  #if defined(__i386__) || \
@@ -442,7 +438,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_umount:
  #endif
      case __NR_umount2:
-@@ -756,7 +777,7 @@ bool SyscallSets::IsNuma(int sysno) {
+@@ -774,7 +795,7 @@ bool SyscallSets::IsNuma(int sysno) {
      case __NR_getcpu:
      case __NR_mbind:
  #if defined(__i386__) || defined(__x86_64__) || defined(__mips__) || \
@@ -451,7 +447,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_migrate_pages:
  #endif
      case __NR_move_pages:
-@@ -791,14 +812,15 @@ bool SyscallSets::IsGlobalProcessEnviron
+@@ -809,14 +830,15 @@ bool SyscallSets::IsGlobalProcessEnviron
    switch (sysno) {
      case __NR_acct:  // Privileged.
  #if defined(__i386__) || defined(__x86_64__) || defined(__mips__) || \
@@ -470,7 +466,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_ulimit:
  #endif
      case __NR_getrusage:
-@@ -832,7 +854,7 @@ bool SyscallSets::IsGlobalSystemStatus(i
+@@ -850,7 +872,7 @@ bool SyscallSets::IsGlobalSystemStatus(i
  #endif
      case __NR_sysinfo:
      case __NR_uname:
@@ -479,7 +475,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_olduname:
      case __NR_oldolduname:
  #endif
-@@ -916,7 +938,8 @@ bool SyscallSets::IsSystemVSemaphores(in
+@@ -934,7 +956,8 @@ bool SyscallSets::IsSystemVSemaphores(in
  
  #if defined(__i386__) || defined(__x86_64__) || defined(__arm__) || \
      defined(__aarch64__) ||                                         \
@@ -489,7 +485,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
  // These give a lot of ambient authority and bypass the setuid sandbox.
  bool SyscallSets::IsSystemVSharedMemory(int sysno) {
    switch (sysno) {
-@@ -947,7 +970,8 @@ bool SyscallSets::IsSystemVMessageQueue(
+@@ -965,7 +988,8 @@ bool SyscallSets::IsSystemVMessageQueue(
  #endif
  
  #if defined(__i386__) || \
@@ -499,7 +495,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
  // Big system V multiplexing system call.
  bool SyscallSets::IsSystemVIpc(int sysno) {
    switch (sysno) {
-@@ -967,7 +991,8 @@ bool SyscallSets::IsAnySystemV(int sysno
+@@ -985,7 +1009,8 @@ bool SyscallSets::IsAnySystemV(int sysno
    return IsSystemVMessageQueue(sysno) || IsSystemVSemaphores(sysno) ||
           IsSystemVSharedMemory(sysno);
  #elif defined(__i386__) || \
@@ -509,7 +505,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
    return IsSystemVIpc(sysno);
  #endif
  }
-@@ -1024,7 +1049,8 @@ bool SyscallSets::IsFaNotify(int sysno)
+@@ -1042,7 +1067,8 @@ bool SyscallSets::IsFaNotify(int sysno)
  bool SyscallSets::IsTimer(int sysno) {
    switch (sysno) {
      case __NR_getitimer:
@@ -519,7 +515,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_alarm:
  #endif
      case __NR_setitimer:
-@@ -1103,18 +1129,22 @@ bool SyscallSets::IsMisc(int sysno) {
+@@ -1121,18 +1147,22 @@ bool SyscallSets::IsMisc(int sysno) {
      case __NR_syncfs:
      case __NR_vhangup:
  // The system calls below are not implemented.
@@ -546,7 +542,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_gtty:
      case __NR_idle:
      case __NR_lock:
-@@ -1122,20 +1152,22 @@ bool SyscallSets::IsMisc(int sysno) {
+@@ -1140,20 +1170,22 @@ bool SyscallSets::IsMisc(int sysno) {
      case __NR_prof:
      case __NR_profil:
  #endif
@@ -573,10 +569,8 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_vserver:
  #endif
        return true;
-Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
-===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
-+++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
+--- a/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
++++ b/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
 @@ -46,13 +46,14 @@ class SANDBOX_EXPORT SyscallSets {
    static bool IsDeniedGetOrModifySocket(int sysno);
  
@@ -594,7 +588,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
    static bool IsNetworkSocketInformation(int sysno);
  #endif
  
-@@ -84,7 +85,8 @@ class SANDBOX_EXPORT SyscallSets {
+@@ -85,7 +86,8 @@ class SANDBOX_EXPORT SyscallSets {
  #endif
  #if defined(__i386__) || defined(__x86_64__) || defined(__arm__) || \
      defined(__aarch64__) ||                                         \
@@ -604,7 +598,7 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
    // These give a lot of ambient authority and bypass the setuid sandbox.
    static bool IsSystemVSharedMemory(int sysno);
  #endif
-@@ -95,7 +97,8 @@ class SANDBOX_EXPORT SyscallSets {
+@@ -96,7 +98,8 @@ class SANDBOX_EXPORT SyscallSets {
  #endif
  
  #if defined(__i386__) || \
@@ -614,10 +608,8 @@ Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
    // Big system V multiplexing system call.
    static bool IsSystemVIpc(int sysno);
  #endif
-Index: chromium-138.0.7204.35/sandbox/linux/services/syscall_wrappers.cc
-===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/services/syscall_wrappers.cc
-+++ chromium-138.0.7204.35/sandbox/linux/services/syscall_wrappers.cc
+--- a/sandbox/linux/services/syscall_wrappers.cc
++++ b/sandbox/linux/services/syscall_wrappers.cc
 @@ -66,7 +66,7 @@ long sys_clone(unsigned long flags,
  #if defined(ARCH_CPU_X86_64)
    return syscall(__NR_clone, flags, child_stack, ptid, ctid, tls);

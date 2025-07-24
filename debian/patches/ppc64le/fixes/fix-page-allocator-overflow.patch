@@ -1,0 +1,22 @@
+--- a/base/allocator/dispatcher/tls.h
++++ b/base/allocator/dispatcher/tls.h
+@@ -83,6 +83,8 @@
+   constexpr static size_t AllocationChunkSize = 16384;
+ #elif BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_ARM64)
+   constexpr static size_t AllocationChunkSize = 16384;
++#elif BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_PPC64)
++  constexpr static size_t AllocationChunkSize = 16384;
+ #else
+   constexpr static size_t AllocationChunkSize = 4096;
+ #endif
+--- a/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
++++ b/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
+@@ -392,7 +400,7 @@
+ // TODO(casey.smalley@arm.com): under 64k pages we can end up in a situation
+ // where a normal slot span will be large enough to contain multiple items,
+ // but the address will go over the final partition page after being aligned.
+-#if PA_BUILDFLAG(IS_LINUX) && PA_BUILDFLAG(PA_ARCH_CPU_ARM64)
++#if PA_BUILDFLAG(IS_LINUX) && (PA_BUILDFLAG(PA_ARCH_CPU_ARM64) || PA_BUILDFLAG(PA_ARCH_CPU_PPC64))
+ constexpr size_t kMaxSupportedAlignment = kSuperPageSize / 4;
+ #else
+ constexpr size_t kMaxSupportedAlignment = kSuperPageSize / 2;

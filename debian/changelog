@@ -1,34 +1,32 @@
-chromium (1:138.0.7204.92-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (138.0.7204.168-1~deb12u1) bookworm-security; urgency=high
 
-  * Import rpi and ubuntu patches
-  * Remove debian patches duplicated by rpi
-  * rpi build customisations
-  * Remove debian's master_preferences file
-  * Add package recommend for libwidevinecdm0
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Move chromium-l10n to recommends
-  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
-    - Fixes v4l2 h264 playback on Pi4
-  * Revert upstream "Check format supported by gbm for creating native pixmap"
-    - Fixes video playback on Pi 5 under Wayfire
-  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
-    by default
-  * Use zenoty instead of xmessage for displaying messages in launcher script
-  * Replace old chromium-browser packages
-  * Add chromium-browser symlink
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Launcher: extend NEON check to armv6l platforms
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * launcher: Add low memory warning
-  * Enable PipeWire Camera support by default
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
-  * d/c: Remove system-config-printer from recommends
+  * New upstream security release.
+    - CVE-2025-8010: Type Confusion in V8. Reported by Shaheen Fazim.
+    - CVE-2025-8011: Type Confusion in V8. Reported by Shaheen Fazim.
+  * d/patches/ppc64le/sandbox:
+    - 0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch:
+      refresh.
 
- -- Serge Schneider <serge@raspberrypi.com>  Wed, 02 Jul 2025 12:03:13 +0100
+ -- Andres Salomon <dilinger@debian.org>  Tue, 15 Jul 2025 15:35:02 -0400
+
+chromium (138.0.7204.157-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-7656: Integer overflow in V8. Reported by Shaheen Fazim.
+    - CVE-2025-6558: Incorrect validation of untrusted input in ANGLE and
+      GPU. Reported by Clément Lecigne and Vlad Stolyarov of Google's
+      Threat Analysis Group.
+    - CVE-2025-7657: Use after free in WebRTC. Reported by jakebiles.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - fixes/fix-page-allocator-overflow.patch: add to fix sporadic
+      partition allocator failures on ppc64el systems.
+    - third_party/use-sysconf-page-size-on-ppc64.patch: drop, no longer
+      needed.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 15 Jul 2025 15:35:02 -0400
 
 chromium (138.0.7204.92-1~deb12u1) bookworm-security; urgency=high
 

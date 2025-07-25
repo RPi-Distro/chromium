@@ -1,0 +1,104 @@
+--- a/media/base/media_switches.cc
++++ b/media/base/media_switches.cc
+@@ -822,6 +822,13 @@ BASE_FEATURE(kVSyncMjpegDecoding,
+              base::FEATURE_DISABLED_BY_DEFAULT);
+ #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
+ #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
++// Enables the new V4L2StatefulVideoDecoder instead of V4L2VideoDecoder.
++// Owners: frkoenig@chromium.org, mcasas@chromium.org
++// Expiry: When the |V4L2FlatVideoDecoder| flag handles stateful decoding on
++// all platforms.
++BASE_FEATURE(kV4L2FlatStatefulVideoDecoder,
++             "V4L2FlatStatefulVideoDecoder",
++             base::FEATURE_DISABLED_BY_DEFAULT);
+ // Enable H264 temporal layer encoding with V4L2 HW encoder on ChromeOS.
+ BASE_FEATURE(kV4L2H264TemporalLayerHWEncoding,
+              "V4L2H264TemporalLayerHWEncoding",
+--- a/media/base/media_switches.h
++++ b/media/base/media_switches.h
+@@ -377,6 +377,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVSyncMjpegDecoding);
+ #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
+ #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
++MEDIA_EXPORT BASE_DECLARE_FEATURE(kV4L2FlatStatefulVideoDecoder);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kV4L2H264TemporalLayerHWEncoding);
+ #endif  // BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVideoBlitColorAccuracy);
+--- a/media/gpu/chromeos/video_decoder_pipeline.cc
++++ b/media/gpu/chromeos/video_decoder_pipeline.cc
+@@ -232,7 +232,8 @@ std::unique_ptr<VideoDecoder> VideoDecod
+ #if BUILDFLAG(USE_VAAPI)
+     create_decoder_function_cb = base::BindOnce(&VaapiVideoDecoder::Create);
+ #elif BUILDFLAG(USE_V4L2_CODEC)
+-    if (IsV4L2DecoderStateful()) {
++    if (base::FeatureList::IsEnabled(kV4L2FlatStatefulVideoDecoder) &&
++        IsV4L2DecoderStateful()) {
+       create_decoder_function_cb =
+           base::BindOnce(&V4L2StatefulVideoDecoder::Create);
+     } else {
+@@ -308,7 +309,8 @@ std::unique_ptr<VideoDecoder> VideoDecod
+ #if BUILDFLAG(USE_VAAPI)
+   create_decoder_function_cb = base::BindOnce(&VaapiVideoDecoder::Create);
+ #elif BUILDFLAG(USE_V4L2_CODEC)
+-  if (IsV4L2DecoderStateful()) {
++  if (base::FeatureList::IsEnabled(kV4L2FlatStatefulVideoDecoder) &&
++      IsV4L2DecoderStateful()) {
+     create_decoder_function_cb =
+         base::BindOnce(&V4L2StatefulVideoDecoder::Create);
+   } else {
+--- a/media/gpu/test/video_decode_accelerator_perf_tests.cc
++++ b/media/gpu/test/video_decode_accelerator_perf_tests.cc
+@@ -539,6 +539,12 @@ int main(int argc, char** argv) {
+   feature_list->InitFromCommandLine(
+       cmd_line->GetSwitchValueASCII(switches::kEnableFeatures),
+       cmd_line->GetSwitchValueASCII(switches::kDisableFeatures));
++  if (feature_list->IsFeatureOverridden("V4L2FlatStatefulVideoDecoder")) {
++    enabled_features.push_back(media::kV4L2FlatStatefulVideoDecoder);
++  }
++  if (feature_list->IsFeatureOverridden("V4L2FlatVideoDecoder")) {
++    enabled_features.push_back(media::kV4L2FlatStatefulVideoDecoder);
++  }
+ #endif
+ 
+   // Set up our test environment.
+--- a/media/gpu/test/video_decode_accelerator_test_suite.cc
++++ b/media/gpu/test/video_decode_accelerator_test_suite.cc
+@@ -250,6 +250,12 @@ VideoDecodeAcceleratorTestSuite* VideoDe
+   feature_list->InitFromCommandLine(
+       cmd_line->GetSwitchValueASCII(switches::kEnableFeatures),
+       cmd_line->GetSwitchValueASCII(switches::kDisableFeatures));
++  if (feature_list->IsFeatureOverridden("V4L2FlatStatefulVideoDecoder")) {
++    enabled_features.push_back(media::kV4L2FlatStatefulVideoDecoder);
++  }
++  if (feature_list->IsFeatureOverridden("V4L2FlatVideoDecoder")) {
++    enabled_features.push_back(media::kV4L2FlatStatefulVideoDecoder);
++  }
+ #endif
+ 
+   return new VideoDecodeAcceleratorTestSuite(
+--- a/media/gpu/test/video_decode_accelerator_tests.cc
++++ b/media/gpu/test/video_decode_accelerator_tests.cc
+@@ -432,6 +432,10 @@ TEST_F(VideoDecoderTest, FlushAtEndOfStr
+ // Flush the decoder somewhere mid-stream, then continue as normal. This is a
+ // contrived use case to exercise important V4L2 stateful areas.
+ TEST_F(VideoDecoderTest, DISABLED_FlushMidStream) {
++  if (!base::FeatureList::IsEnabled(kV4L2FlatStatefulVideoDecoder)) {
++    GTEST_SKIP();
++  }
++
+   auto tvp = CreateDecoderListener(g_env->Video());
+ 
+   tvp->Play();
+@@ -563,6 +567,12 @@ TEST_F(VideoDecoderTest, ResetAfterFirst
+       g_env->Video()->Codec() != media::VideoCodec::kHEVC)
+     GTEST_SKIP();
+ 
++#if BUILDFLAG(USE_V4L2_CODEC)
++  if (base::FeatureList::IsEnabled(kV4L2FlatStatefulVideoDecoder)) {
++    GTEST_SKIP() << "Temporarily disabled due to b/298073737";
++  }
++#endif  // BUILDFLAG(USE_V4L2_CODEC)
++
+   auto tvp = CreateDecoderListener(g_env->Video());
+ 
+   tvp->PlayUntil(DecoderListener::Event::kConfigInfo);

@@ -178,6 +178,13 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 njobs=$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 endif
 
+# Limit gn threads to 30 on armhf to avoid allocation errors
+ifeq (armhf,$(DEB_HOST_ARCH))
+threads=$(intcmp $(njobs),30,$(njobs),30)
+else
+threads=$(njobs)
+endif
+
 DIST := $(shell dpkg-parsechangelog -l debian/changelog  | sed -n 's/^Distribution: //p')
 
 %:
@@ -214,7 +221,7 @@ override_dh_auto_configure: test_armhf_neon
 	./debian/scripts/unbundle
 
 override_dh_auto_build-arch:
-	gn gen out/Release --args="$(defines)"
+	gn gen out/Release --args="$(defines)" --threads="$(threads)"
 	ninja -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
 	cp out/Release/chrome out/Release/chromium
 	cp out/Release/content_shell out/Release/chromium-shell
@@ -226,7 +233,7 @@ override_dh_auto_build-arch:
 	    < chrome/app/resources/manpage.1.in > out/Release/chromium.1
 
 override_dh_auto_build-indep:
-	gn gen out/Release --args="$(defines)"
+	gn gen out/Release --args="$(defines)" --threads="$(threads)"
 	ninja -j$(njobs) -C out/Release packed_resources
 	rm -f out/Release/locales/en-US.pak
 

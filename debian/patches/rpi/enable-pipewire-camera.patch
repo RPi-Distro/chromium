@@ -1,0 +1,11 @@
+--- a/media/capture/capture_switches.cc
++++ b/media/capture/capture_switches.cc
+@@ -52,7 +52,7 @@ BASE_FEATURE(kTabCaptureInfobarLinks,
+ // Wayland display server.
+ BASE_FEATURE(kWebRtcPipeWireCamera,
+              "WebRtcPipeWireCamera",
+-             base::FEATURE_DISABLED_BY_DEFAULT);
++             base::FEATURE_ENABLED_BY_DEFAULT);
+ #endif  // defined(WEBRTC_USE_PIPEWIRE)
+ 
+ #if BUILDFLAG(IS_WIN)

@@ -1,12 +1,10 @@
 debianization/manpage.patch
 debianization/sandbox.patch
-debianization/master-preferences.patch
 debianization/clang-version.patch
 debianization/swiftshader-use-llvm-16.patch
 debianization/cross-build.patch
 
 fixes/ps-print.patch
-fixes/widevine-locations.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/strlcpy.patch
@@ -27,7 +25,6 @@ fixes/armhf-icf.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
-disable/signin.patch
 disable/android.patch
 disable/catapult.patch
 disable/font-tests.patch

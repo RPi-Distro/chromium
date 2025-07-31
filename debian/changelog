@@ -1,34 +1,9 @@
-chromium (1:138.0.7204.168-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (138.0.7204.183-1~deb12u1) bookworm-security; urgency=high
 
-  * Import rpi and ubuntu patches
-  * Remove debian patches duplicated by rpi
-  * rpi build customisations
-  * Remove debian's master_preferences file
-  * Add package recommend for libwidevinecdm0
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Move chromium-l10n to recommends
-  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
-    - Fixes v4l2 h264 playback on Pi4
-  * Revert upstream "Check format supported by gbm for creating native pixmap"
-    - Fixes video playback on Pi 5 under Wayfire
-  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
-    by default
-  * Use zenoty instead of xmessage for displaying messages in launcher script
-  * Replace old chromium-browser packages
-  * Add chromium-browser symlink
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Launcher: extend NEON check to armv6l platforms
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * launcher: Add low memory warning
-  * Enable PipeWire Camera support by default
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
-  * d/c: Remove system-config-printer from recommends 
+  * New upstream security release.
+    - CVE-2025-8292: Use after free in Media Stream.
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 24 Jul 2025 13:06:37 +0100
+ -- Andres Salomon <dilinger@debian.org>  Tue, 29 Jul 2025 18:59:44 -0400
 
 chromium (138.0.7204.168-1~deb12u1) bookworm-security; urgency=high
 
@@ -39,7 +14,7 @@ chromium (138.0.7204.168-1~deb12u1) bookworm-security; urgency=high
     - 0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch:
       refresh.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 15 Jul 2025 15:35:02 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 24 Jul 2025 13:43:34 -0400
 
 chromium (138.0.7204.157-1~deb12u1) bookworm-security; urgency=high
 

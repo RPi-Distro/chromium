@@ -7,10 +7,10 @@ Subject: [PATCH] sandbox/linux: Update IsSyscallAllowed in broker_process.cc
  sandbox/linux/syscall_broker/broker_process.cc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: chromium-138.0.7204.35/sandbox/linux/syscall_broker/broker_process.cc
+Index: chromium-139.0.7258.66/sandbox/linux/syscall_broker/broker_process.cc
 ===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/syscall_broker/broker_process.cc
-+++ chromium-138.0.7204.35/sandbox/linux/syscall_broker/broker_process.cc
+--- chromium-139.0.7258.66.orig/sandbox/linux/syscall_broker/broker_process.cc
++++ chromium-139.0.7258.66/sandbox/linux/syscall_broker/broker_process.cc
 @@ -167,7 +167,7 @@ bool BrokerProcess::IsSyscallBrokerable(
  #if defined(__NR_fstatat64)
      case __NR_fstatat64:

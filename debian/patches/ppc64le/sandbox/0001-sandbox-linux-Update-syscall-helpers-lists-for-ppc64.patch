@@ -12,8 +12,10 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
  sandbox/linux/services/syscall_wrappers.cc    |   2 +-
  6 files changed, 73 insertions(+), 55 deletions(-)
 
---- a/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
-+++ b/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
+Index: chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
+===================================================================
+--- chromium-139.0.7258.66.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
++++ chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
 @@ -90,7 +90,8 @@ bool IsBaselinePolicyWatched(int sysno)
           SyscallSets::IsPrctl(sysno) ||
           SyscallSets::IsProcessGroupOrSession(sysno) ||
@@ -24,25 +26,16 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
           SyscallSets::IsSocketCall(sysno) ||
  #endif
  #if defined(__arm__)
-@@ -259,7 +260,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
-   }
+@@ -258,7 +259,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
  
+   // TODO(crbug.com/40528912): should i386 really be in this list?
  #if defined(__i386__) || defined(__x86_64__) || defined(__mips__) || \
 -    defined(__aarch64__)
 +    defined(__aarch64__) || defined(__powerpc64__)
    if (sysno == __NR_mmap)
      return RestrictMmapFlags();
  #endif
-@@ -280,7 +281,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
-     return RestrictPrctl();
- 
- #if defined(__x86_64__) || defined(__arm__) || defined(__mips__) || \
--    defined(__aarch64__)
-+    defined(__aarch64__) || defined(__powerpc64__)
-   if (sysno == __NR_socketpair) {
-     // Only allow AF_UNIX, PF_UNIX. Crash if anything else is seen.
-     static_assert(AF_UNIX == PF_UNIX,
-@@ -344,7 +345,8 @@ ResultExpr EvaluateSyscallImpl(int fs_de
+@@ -340,7 +341,8 @@ ResultExpr EvaluateSyscallImpl(int fs_de
    }
  
  #if defined(__i386__) || \
@@ -52,9 +45,11 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
    if (SyscallSets::IsSocketCall(sysno))
      return RestrictSocketcallCommand();
  #endif
---- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-+++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-@@ -38,7 +38,7 @@
+Index: chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+===================================================================
+--- chromium-139.0.7258.66.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
++++ chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+@@ -39,7 +39,7 @@
  #include "sandbox/linux/system_headers/linux_syscalls.h"
  #include "sandbox/linux/system_headers/linux_time.h"
  
@@ -63,7 +58,7 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
      !defined(PTRACE_GET_THREAD_AREA)
  // Also include asm/ptrace-abi.h since ptrace.h in older libc (for instance
  // the one in Ubuntu 16.04 LTS) is missing PTRACE_GET_THREAD_AREA.
-@@ -47,6 +47,11 @@
+@@ -48,6 +48,11 @@
  #include <asm/ptrace-abi.h>
  #endif
  
@@ -75,7 +70,7 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
  #if BUILDFLAG(IS_ANDROID)
  
  #if !defined(F_DUPFD_CLOEXEC)
-@@ -104,6 +109,15 @@ inline bool IsArchitectureMips() {
+@@ -105,6 +110,15 @@ inline bool IsArchitectureMips() {
  #endif
  }
  
@@ -91,7 +86,7 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
  // Ubuntu's version of glibc has a race condition in sem_post that can cause
  // it to call futex(2) with bogus op arguments. To workaround this, we need
  // to allow those futex(2) calls to fail with EINVAL, instead of crashing the
-@@ -271,9 +285,11 @@ ResultExpr RestrictFcntlCommands() {
+@@ -272,9 +286,11 @@ ResultExpr RestrictFcntlCommands() {
    // operator.
    // Glibc overrides the kernel's O_LARGEFILE value. Account for this.
    uint64_t kOLargeFileFlag = O_LARGEFILE;
@@ -104,7 +99,7 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
    const Arg<int> cmd(1);
    const Arg<long> long_arg(2);
  
-@@ -296,8 +312,17 @@ ResultExpr RestrictFcntlCommands() {
+@@ -297,8 +313,17 @@ ResultExpr RestrictFcntlCommands() {
                F_SETLKW,
                F_GETLK,
                F_DUPFD,
@@ -124,7 +119,7 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
        .Case(F_SETFL,
              If((long_arg & ~kAllowedMask) == 0, Allow()).Else(CrashSIGSYS()))
        .Case(F_ADD_SEALS,
-@@ -306,7 +331,7 @@ ResultExpr RestrictFcntlCommands() {
+@@ -307,7 +332,7 @@ ResultExpr RestrictFcntlCommands() {
    // clang-format on
  }
  
@@ -133,7 +128,7 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
  ResultExpr RestrictSocketcallCommand() {
    // Unfortunately, we are unable to restrict the first parameter to
    // socketpair(2). Whilst initially sounding bad, it's noteworthy that very
-@@ -475,7 +500,7 @@ ResultExpr RestrictPtrace() {
+@@ -473,7 +498,7 @@ ResultExpr RestrictPtrace() {
  #endif
    return Switch(request)
        .Cases({
@@ -142,8 +137,10 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
                   PTRACE_GETREGS, PTRACE_GETFPREGS, PTRACE_GET_THREAD_AREA,
                   PTRACE_GETREGSET,
  #endif
---- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
-+++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
+Index: chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
+===================================================================
+--- chromium-139.0.7258.66.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
++++ chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
 @@ -52,7 +52,7 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
  // O_NONBLOCK | O_SYNC | O_LARGEFILE | O_CLOEXEC | O_NOATIME.
  SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictFcntlCommands();
@@ -153,8 +150,10 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
  // Restrict socketcall(2) to only allow socketpair(2), send(2), recv(2),
  // sendto(2), recvfrom(2), shutdown(2), sendmsg(2) and recvmsg(2).
  SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictSocketcallCommand();
---- a/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
-+++ b/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+Index: chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+===================================================================
+--- chromium-139.0.7258.66.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
++++ chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
 @@ -29,7 +29,8 @@ bool SyscallSets::IsAllowedGettime(int s
    switch (sysno) {
      case __NR_gettimeofday:
@@ -569,8 +568,10 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
      case __NR_vserver:
  #endif
        return true;
---- a/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
-+++ b/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
+Index: chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
+===================================================================
+--- chromium-139.0.7258.66.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
++++ chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
 @@ -46,13 +46,14 @@ class SANDBOX_EXPORT SyscallSets {
    static bool IsDeniedGetOrModifySocket(int sysno);
  
@@ -608,8 +609,10 @@ Subject: [PATCH] sandbox/linux: Update syscall helpers/lists for ppc64
    // Big system V multiplexing system call.
    static bool IsSystemVIpc(int sysno);
  #endif
---- a/sandbox/linux/services/syscall_wrappers.cc
-+++ b/sandbox/linux/services/syscall_wrappers.cc
+Index: chromium-139.0.7258.66/sandbox/linux/services/syscall_wrappers.cc
+===================================================================
+--- chromium-139.0.7258.66.orig/sandbox/linux/services/syscall_wrappers.cc
++++ chromium-139.0.7258.66/sandbox/linux/services/syscall_wrappers.cc
 @@ -66,7 +66,7 @@ long sys_clone(unsigned long flags,
  #if defined(ARCH_CPU_X86_64)
    return syscall(__NR_clone, flags, child_stack, ptid, ctid, tls);

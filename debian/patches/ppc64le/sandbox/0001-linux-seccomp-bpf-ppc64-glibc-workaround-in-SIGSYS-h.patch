@@ -10,10 +10,10 @@ More investigation required.
  sandbox/linux/seccomp-bpf/trap.cc | 14 ++++++++++++++
  1 file changed, 14 insertions(+)
 
-Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf/trap.cc
+Index: chromium-139.0.7258.66/sandbox/linux/seccomp-bpf/trap.cc
 ===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf/trap.cc
-+++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf/trap.cc
+--- chromium-139.0.7258.66.orig/sandbox/linux/seccomp-bpf/trap.cc
++++ chromium-139.0.7258.66/sandbox/linux/seccomp-bpf/trap.cc
 @@ -236,6 +236,20 @@ void Trap::SigSys(int nr, LinuxSigInfo*
        SetIsInSigHandler();
      }

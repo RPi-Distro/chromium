@@ -1,7 +1,7 @@
-Index: chromium-138.0.7204.35/v8/src/base/immediate-crash.h
+Index: chromium-139.0.7258.66/v8/src/base/immediate-crash.h
 ===================================================================
---- chromium-138.0.7204.35.orig/v8/src/base/immediate-crash.h
-+++ chromium-138.0.7204.35/v8/src/base/immediate-crash.h
+--- chromium-139.0.7258.66.orig/v8/src/base/immediate-crash.h
++++ chromium-139.0.7258.66/v8/src/base/immediate-crash.h
 @@ -98,6 +98,13 @@
  #define TRAP_SEQUENCE1_() asm volatile(".2byte 0x0001");
  #define TRAP_SEQUENCE2_() asm volatile("")

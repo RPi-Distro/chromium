@@ -7,7 +7,7 @@ Since we're not building clang, we don't need this.
 
 --- a/build/config/BUILDCONFIG.gn
 +++ b/build/config/BUILDCONFIG.gn
-@@ -532,7 +532,10 @@ set_defaults("rust_proc_macro") {
+@@ -539,7 +539,10 @@ set_defaults("rust_proc_macro") {
    configs = default_rust_proc_macro_configs
  }
  
@@ -16,6 +16,6 @@ Since we're not building clang, we don't need this.
 +junk = []
 +not_needed(["junk"])
 +junk = [
-   "//buildtools/third_party/libc++:_Builtin_float",
    "//buildtools/third_party/libc++:_Builtin_intrinsics",
-   "//buildtools/third_party/libc++:_Builtin_inttypes",
+   "//buildtools/third_party/libc++:_Builtin_limits",
+   "//buildtools/third_party/libc++:_Builtin_stdarg",

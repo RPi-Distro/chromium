@@ -8,7 +8,6 @@ fixes/ps-print.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/strlcpy.patch
-fixes/bindgen.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/predictor-denial-of-service.patch
 fixes/fix-assert-in-vnc-sessions.patch
@@ -42,12 +41,12 @@ system/icu-shim.patch
 system/jpeg.patch
 system/openjpeg.patch
 system/opus.patch
-system/eu-strip.patch
 system/rapidjson.patch
 system/rollup.patch
 
 bookworm/dq-forward-iterator.patch
 bookworm/gn-revert-path-exists.patch
+bookworm/bindgen.patch
 bookworm/clang19.patch
 #bookworm/constflatset.patch
 bookworm/libxml-parseerr.patch
@@ -60,7 +59,6 @@ bookworm/partially-deployed-mseal-syscall.patch
 bookworm/constexpr.patch
 #bookworm/constexpr2.patch
 #bookworm/constexpr3.patch
-bookworm/bubble-contents.patch
 bookworm/rust-visibility.patch
 bookworm/less-void.patch
 bookworm/stdarch-arm.patch
@@ -69,7 +67,6 @@ bookworm/foreach.patch
 bookworm/eslint.patch
 bookworm/crabbyav1f.patch
 bookworm/node18-import.patch
-bookworm/rust-is-none-or.patch
 bookworm/fmodf.patch
 bookworm/dav1d-extern.patch
 bookworm/toktrie-utf8chunks.patch
@@ -77,7 +74,6 @@ bookworm/derivre-create.patch
 bookworm/gn-hpp11.patch
 bookworm/rust-split-at-checked.patch
 bookworm/crabbyav1f-macro-scope.patch
-bookworm/rust-unstable-features.patch
 bookworm/rust-box-to-vec.patch
 
 # unused patches:
@@ -123,6 +119,7 @@ ppc64le/sandbox/0006-sandbox-linux-disable-timedwait-time64-ppc64.patch
 ppc64le/sandbox/0007-sandbox-linux-add-ppc64-stat.patch
 ppc64le/sandbox/Sandbox-linux-services-credentials.cc-PPC.patch
 ppc64le/sandbox/0008-sandbox-fix-ppc64le-glibc234.patch
+ppc64le/sandbox/0009-sandbox-updates-138.patch
 
 ppc64le/third_party/0001-third_party-angle-Include-missing-header-cstddef-in-.patch
 ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch

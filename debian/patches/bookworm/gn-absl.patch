@@ -90,15 +90,15 @@ libs.
      "//third_party/abseil-cpp/absl/base:core_headers",
 --- a/third_party/abseil-cpp/absl/base/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/base/BUILD.gn
-@@ -39,6 +39,7 @@ absl_source_set("no_destructor") {
+@@ -38,6 +38,7 @@ absl_source_set("no_destructor") {
+ 
  absl_source_set("nullability") {
-   sources = [ "internal/nullability_deprecated.h" ]
    public = [ "nullability.h" ]
 +  visibility = [ "*" ]
    deps = [
      ":config",
      ":core_headers",
-@@ -84,6 +85,7 @@ absl_source_set("config") {
+@@ -83,6 +84,7 @@ absl_source_set("config") {
      "options.h",
      "policy_checks.h",
    ]
@@ -106,7 +106,7 @@ libs.
  }
  
  absl_source_set("cycleclock_internal") {
-@@ -122,6 +124,7 @@ absl_source_set("core_headers") {
+@@ -121,6 +123,7 @@ absl_source_set("core_headers") {
      "port.h",
      "thread_annotations.h",
    ]

@@ -7,11 +7,11 @@ Subject: [PATCH 5/6] sandbox/linux: update unit test for ppc64
  sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Index: chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
+Index: chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
 ===================================================================
---- chromium-138.0.7204.35.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
-+++ chromium-138.0.7204.35/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
-@@ -353,8 +353,10 @@ TEST_BASELINE_SIGSYS(__NR_timer_create)
+--- chromium-139.0.7258.66.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
++++ chromium-139.0.7258.66/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
+@@ -350,8 +350,10 @@ TEST_BASELINE_SIGSYS(__NR_timer_create)
  
  #if !defined(__aarch64__)
  TEST_BASELINE_SIGSYS(__NR_inotify_init)

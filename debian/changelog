@@ -1,34 +1,56 @@
-chromium (1:138.0.7204.183-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (139.0.7258.66-1~deb12u1) bookworm-security; urgency=high
 
-  * Import rpi and ubuntu patches
-  * Remove debian patches duplicated by rpi
-  * rpi build customisations
-  * Remove debian's master_preferences file
-  * Add package recommend for libwidevinecdm0
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Move chromium-l10n to recommends
-  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
-    - Fixes v4l2 h264 playback on Pi4
-  * Revert upstream "Check format supported by gbm for creating native pixmap"
-    - Fixes video playback on Pi 5 under Wayfire
-  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
-    by default
-  * Use zenoty instead of xmessage for displaying messages in launcher script
-  * Replace old chromium-browser packages
-  * Add chromium-browser symlink
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Launcher: extend NEON check to armv6l platforms
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * launcher: Add low memory warning
-  * Enable PipeWire Camera support by default
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
-  * d/c: Remove system-config-printer from recommends
+  * New upstream stable release.
+    - CVE-2025-8576: Use after free in Extensions. Reported by asnine.
+    - CVE-2025-8577: Inappropriate implementation in Picture In Picture.
+      Reported by Umar Farooq.
+    - CVE-2025-8578: Use after free in Cast. Reported by Fayez.
+    - CVE-2025-8579: Inappropriate implementation in Gemini Live in
+      Chrome. Reported by Alesandro Ortiz.
+    - CVE-2025-8580: Inappropriate implementation in Filesystems.
+      Reported by Huuuuu.
+    - CVE-2025-8581: Inappropriate implementation in Extensions.
+      Reported by Vincent Dragnea.
+    - CVE-2025-8582: Insufficient validation of untrusted input in DOM.
+      Reported by Anonymous.
+    - CVE-2025-8583: Inappropriate implementation in Permissions.
+      Reported by Shaheen Fazim.
+  * d/copyright: delete third_party/enterprise_companion, as it includes
+    a binary.
+  * d/control:
+    - Replace elfutils build-dep with llvm-19 for switch to llvm-strip.
+    - Update rustc-web build-dep to >= 1.84.
+  * d/rules:
+    - drop enable_nacl=false; upstream removed NaCL.
+    - set enable_enterprise_companion=false.
+    - disable Gemini AI (enable_glic=false).
+  * d/patches:
+    - disable/catapult.patch: refresh.
+    - disable/buildtools-libc.patch: refresh.
+    - system/eu-strip.patch: drop, upstream switched to llvm-strip.
+    - bookworm/gn-revert-path-exists.patch: refresh & drop unused part.
+    - ungoogled/disable-privacy-sandbox.patch: refresh.
+    - fixes/bindgen.patch: rename to bookworm/bindgen.patch, since trixie
+      now has a newer bindgen.
+    - bookworm/gn-absl.patch: refresh.
+    - bookworm/rust-is-none-or.patch: drop, thanks to newer rustc-web.
+    - bookworm/rust-unstable-features.patch: drop - newer rustc-web.
+    - bookworm/bubble-contents.patch: drop, no longer needed.
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 31 Jul 2025 13:29:06 +0100
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - sandbox/0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch:
+      Refresh for upstream changes
+    - sandbox/0009-sandbox-updates-138.patch: Properly handle IPC and send
+      syscalls
+    - third_party/0001-add-xnn-ppc64el-support.patch: Refresh for upstream
+      changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: Regenerate from upstream
+      sources
+    - third_party/skia-vsx-instructions.patch: Refresh for upstream changes
+    - fixes/fix-partition-alloc-compile.patch: Refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 05 Aug 2025 17:48:13 -0400
 
 chromium (138.0.7204.183-1~deb12u1) bookworm-security; urgency=high
 

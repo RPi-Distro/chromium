@@ -1,7 +1,7 @@
-Index: chromium-138.0.7204.35/third_party/breakpad/BUILD.gn
+Index: chromium-139.0.7258.66/third_party/breakpad/BUILD.gn
 ===================================================================
---- chromium-138.0.7204.35.orig/third_party/breakpad/BUILD.gn
-+++ chromium-138.0.7204.35/third_party/breakpad/BUILD.gn
+--- chromium-139.0.7258.66.orig/third_party/breakpad/BUILD.gn
++++ chromium-139.0.7258.66/third_party/breakpad/BUILD.gn
 @@ -800,7 +800,6 @@ if (is_linux || is_chromeos || is_androi
        "breakpad/src/client/minidump_file_writer.h",
        "breakpad/src/common/convert_UTF.cc",

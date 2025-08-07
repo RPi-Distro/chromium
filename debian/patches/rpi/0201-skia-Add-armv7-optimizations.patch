@@ -15,7 +15,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 
 --- a/third_party/skia/src/core/SkBitmapProcState.cpp
 +++ b/third_party/skia/src/core/SkBitmapProcState.cpp
-@@ -24,6 +24,7 @@
+@@ -25,6 +25,7 @@
  class SkImage;
  class SkImage_Base;
  
@@ -23,7 +23,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  // One-stop-shop shader for,
  //   - nearest-neighbor sampling (_nofilter_),
  //   - clamp tiling in X and Y both (Clamp_),
-@@ -79,6 +80,199 @@ static void Clamp_S32_opaque_D32_nofilte
+@@ -80,6 +81,199 @@ static void Clamp_S32_opaque_D32_nofilte
          }
      }
  }
@@ -237,7 +237,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
      }
 --- a/third_party/skia/src/core/SkBitmapProcState.h
 +++ b/third_party/skia/src/core/SkBitmapProcState.h
-@@ -220,6 +220,10 @@ namespace SkOpts {
+@@ -218,6 +218,10 @@ namespace SkOpts {
      extern void (*S32_alpha_D32_filter_DXDY)(const SkBitmapProcState&,
                                               const uint32_t* xy, int count, SkPMColor*);
  

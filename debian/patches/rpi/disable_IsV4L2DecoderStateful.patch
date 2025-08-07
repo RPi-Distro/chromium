@@ -1,6 +1,6 @@
 --- a/media/base/media_switches.cc
 +++ b/media/base/media_switches.cc
-@@ -796,6 +796,13 @@ BASE_FEATURE(kVSyncMjpegDecoding,
+@@ -822,6 +822,13 @@ BASE_FEATURE(kVSyncMjpegDecoding,
               base::FEATURE_DISABLED_BY_DEFAULT);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
@@ -16,7 +16,7 @@
               "V4L2H264TemporalLayerHWEncoding",
 --- a/media/base/media_switches.h
 +++ b/media/base/media_switches.h
-@@ -373,6 +373,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
+@@ -377,6 +377,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kVSyncMjpegDecoding);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)

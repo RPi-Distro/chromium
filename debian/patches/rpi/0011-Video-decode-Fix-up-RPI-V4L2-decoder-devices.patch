@@ -10,7 +10,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
 
 --- a/media/gpu/v4l2/v4l2_device.cc
 +++ b/media/gpu/v4l2/v4l2_device.cc
-@@ -912,7 +912,11 @@ void V4L2Device::EnumerateDevicesForType
+@@ -939,7 +939,11 @@ void V4L2Device::EnumerateDevicesForType
    constexpr int kMaxDevices = 256;
    candidate_paths.reserve(kMaxDevices);
  #endif
@@ -24,7 +24,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
    }
 --- a/media/gpu/v4l2/v4l2_utils.cc
 +++ b/media/gpu/v4l2/v4l2_utils.cc
-@@ -574,6 +574,11 @@ std::optional<SupportedVideoDecoderConfi
+@@ -575,6 +575,11 @@ std::optional<SupportedVideoDecoderConfi
  #if BUILDFLAG(IS_CHROMEOS)
    constexpr char kVideoDevicePattern[] = "/dev/video-dec0";
    candidate_paths.push_back(kVideoDevicePattern);
@@ -36,17 +36,3 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
  #else
    constexpr char kVideoDevicePattern[] = "/dev/video";
    constexpr int kMaxDevices = 256;
-@@ -632,7 +637,13 @@ std::optional<SupportedVideoDecoderConfi
- }
- 
- bool IsV4L2DecoderStateful() {
-+#if !BUILDFLAG(USE_V4L2_CODEC_RPI)
-   constexpr char kVideoDeviceDriverPath[] = "/dev/video-dec0";
-+#else
-+  // Pi stateful decoder here  current google code doesn't look like it can
-+  // cope with multiple devioces
-+  constexpr char kVideoDeviceDriverPath[] = "/dev/video10";
-+#endif
-   base::ScopedFD device_fd(HANDLE_EINTR(
-       open(kVideoDeviceDriverPath, O_RDWR | O_NONBLOCK | O_CLOEXEC)));
-   if (!device_fd.is_valid()) {

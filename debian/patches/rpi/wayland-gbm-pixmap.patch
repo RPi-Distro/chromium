@@ -1,6 +1,6 @@
 --- a/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
 +++ b/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
-@@ -249,20 +249,17 @@ scoped_refptr<gfx::NativePixmap> Wayland
+@@ -266,20 +266,17 @@ scoped_refptr<gfx::NativePixmap> Wayland
      return nullptr;
    }
  #if defined(WAYLAND_GBM)

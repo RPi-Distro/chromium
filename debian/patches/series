@@ -61,7 +61,6 @@ bookworm/constexpr.patch
 #bookworm/constexpr3.patch
 bookworm/rust-visibility.patch
 bookworm/less-void.patch
-bookworm/stdarch-arm.patch
 bookworm/modff.patch
 bookworm/foreach.patch
 bookworm/eslint.patch

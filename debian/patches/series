@@ -44,14 +44,15 @@ system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
 
+trixie/adler1.patch
+trixie/libxml-parseerr.patch
+
 bookworm/dq-forward-iterator.patch
 bookworm/gn-revert-path-exists.patch
 bookworm/bindgen.patch
 bookworm/clang19.patch
 #bookworm/constflatset.patch
-bookworm/libxml-parseerr.patch
 bookworm/gn-allowlist.patch
-bookworm/adler1.patch
 bookworm/freetype-COLRV1.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
@@ -102,23 +103,7 @@ ungoogled/disable-privacy-sandbox.patch
 i386/support-i386.patch
 
 # POWER support
-ppc64le/sandbox/0001-linux-seccomp-bpf-ppc64-glibc-workaround-in-SIGSYS-h.patch
 ppc64le/sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch
-ppc64le/sandbox/0001-services-service_manager-sandbox-linux-Fix-TCGETS-de.patch
-ppc64le/sandbox/0001-sandbox-linux-bpf_dsl-Update-syscall-ranges-for-ppc6.patch
-ppc64le/sandbox/0001-sandbox-linux-Implement-partial-support-for-ppc64-sy.patch
-ppc64le/sandbox/0001-sandbox-linux-Update-IsSyscallAllowed-in-broker_proc.patch
-ppc64le/sandbox/0001-sandbox-linux-Update-syscall-helpers-lists-for-ppc64.patch
-ppc64le/sandbox/0002-sandbox-linux-bpf_dsl-Modify-seccomp_macros-to-add-s.patch
-ppc64le/sandbox/0003-sandbox-linux-system_headers-Update-linux-seccomp-he.patch
-ppc64le/sandbox/0004-sandbox-linux-system_headers-Update-linux-signal-hea.patch
-ppc64le/sandbox/0005-sandbox-linux-seccomp-bpf-Add-ppc64-syscall-stub.patch
-ppc64le/sandbox/0005-sandbox-linux-update-unit-test-for-ppc64.patch
-ppc64le/sandbox/0006-sandbox-linux-disable-timedwait-time64-ppc64.patch
-ppc64le/sandbox/0007-sandbox-linux-add-ppc64-stat.patch
-ppc64le/sandbox/Sandbox-linux-services-credentials.cc-PPC.patch
-ppc64le/sandbox/0008-sandbox-fix-ppc64le-glibc234.patch
-ppc64le/sandbox/0009-sandbox-updates-138.patch
 
 ppc64le/third_party/0001-third_party-angle-Include-missing-header-cstddef-in-.patch
 ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
@@ -165,8 +150,6 @@ ppc64le/fixes/fix-page-allocator-overflow.patch
 ppc64le/fixes/fix-different-data-layouts.patch
 ppc64le/v8/0001-Enable-ppc64-pointer-compression.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
-
-ppc64le/sandbox/fix-ppc64-linux-syscalls-headers.patch
 
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
 

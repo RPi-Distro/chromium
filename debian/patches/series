@@ -7,7 +7,6 @@ debianization/cross-build.patch
 fixes/ps-print.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
-fixes/strlcpy.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/predictor-denial-of-service.patch
 fixes/fix-assert-in-vnc-sessions.patch
@@ -15,7 +14,6 @@ fixes/armhf-timespec.patch
 fixes/updater-test.patch
 #fixes/absl-optional.patch
 #fixes/font-gc-asan.patch
-fixes/libsync-rk3588-panthor.patch
 fixes/headless-gn.patch
 #fixes/stdatomic.patch
 #fixes/make-pair.patch
@@ -34,7 +32,6 @@ disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
 disable/clang-version-check.patch
 disable/screen-ai-blob.patch
-disable/buildtools-libc.patch
 disable/node-version-ck.patch
 
 system/icu-shim.patch
@@ -46,7 +43,9 @@ system/rollup.patch
 
 trixie/adler1.patch
 trixie/libxml-parseerr.patch
+trixie/rust-no-alloc-shim.patch
 
+#bookworm/strlcpy.patch
 bookworm/dq-forward-iterator.patch
 bookworm/gn-revert-path-exists.patch
 bookworm/bindgen.patch
@@ -60,22 +59,22 @@ bookworm/partially-deployed-mseal-syscall.patch
 bookworm/constexpr.patch
 #bookworm/constexpr2.patch
 #bookworm/constexpr3.patch
-bookworm/rust-visibility.patch
+#bookworm/rust-visibility.patch
 bookworm/less-void.patch
 #bookworm/stdarch-arm.patch
 bookworm/modff.patch
 bookworm/foreach.patch
 bookworm/eslint.patch
-bookworm/crabbyav1f.patch
+#bookworm/crabbyav1f.patch
 bookworm/node18-import.patch
 bookworm/fmodf.patch
 bookworm/dav1d-extern.patch
-bookworm/toktrie-utf8chunks.patch
-bookworm/derivre-create.patch
+#bookworm/toktrie-utf8chunks.patch
+#bookworm/derivre-create.patch
 bookworm/gn-hpp11.patch
-bookworm/rust-split-at-checked.patch
-bookworm/crabbyav1f-macro-scope.patch
-bookworm/rust-box-to-vec.patch
+#bookworm/rust-split-at-checked.patch
+#bookworm/crabbyav1f-macro-scope.patch
+#bookworm/rust-box-to-vec.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch

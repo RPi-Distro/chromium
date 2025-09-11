@@ -35,7 +35,7 @@
  
    data = [ "//chrome/test/variations/test_utils/" ]
  
--  data_deps = [ "//third_party/catapult/third_party/gsutil:gsutil" ]
+-  data_deps = [ "//third_party/catapult/third_party/gsutil" ]
  }
  
  python_library("fixtures") {

@@ -1,7 +1,7 @@
-Index: chromium-139.0.7258.66/third_party/highway/src/hwy/targets.cc
+Index: chromium-140.0.7339.41/third_party/highway/src/hwy/targets.cc
 ===================================================================
---- chromium-139.0.7258.66.orig/third_party/highway/src/hwy/targets.cc
-+++ chromium-139.0.7258.66/third_party/highway/src/hwy/targets.cc
+--- chromium-140.0.7339.41.orig/third_party/highway/src/hwy/targets.cc
++++ chromium-140.0.7339.41/third_party/highway/src/hwy/targets.cc
 @@ -35,7 +35,7 @@
      HWY_OS_LINUX
  // sys/auxv.h does not always include asm/hwcap.h, or define HWCAP*, hence we

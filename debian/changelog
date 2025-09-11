@@ -1,34 +1,61 @@
-chromium (1:139.0.7258.154-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (140.0.7339.127-1~deb12u1) bookworm-security; urgency=high
 
-  * Import rpi and ubuntu patches
-  * Remove debian patches duplicated by rpi
-  * rpi build customisations
-  * Remove debian's master_preferences file
-  * Add package recommend for libwidevinecdm0
-  * Reduce stderr-spamming when playing h264 on a Pi5
-  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
-  * Move chromium-l10n to recommends
-  * Revert upstream "Drop kV4L2FlatStatefulVideoDecoder flag" and disable it
-    - Fixes v4l2 h264 playback on Pi4
-  * Revert upstream "Check format supported by gbm for creating native pixmap"
-    - Fixes video playback on Pi 5 under Wayfire
-  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
-    by default
-  * Use zenoty instead of xmessage for displaying messages in launcher script
-  * Replace old chromium-browser packages
-  * Add chromium-browser symlink
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Launcher: extend NEON check to armv6l platforms
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
-  * launcher: Add low memory warning
-  * Enable PipeWire Camera support by default
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
-  * d/c: Remove system-config-printer from recommends
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-10200: Use after free in Serviceworker.
+      Reported by Looben Yang.
+    - CVE-2025-10201: Inappropriate implementation in Mojo.
+      Reported by Sahan Fernando & Anon.
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 01 Sep 2025 17:44:13 +0100
+  [ Jianfeng Liu ]
+  * drop not working fixes/libsync-rk3588-panthor.patch.
+  * drop fixes/strlcpy.patch, which isn't needed w/ clang-19.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 09 Sep 2025 17:50:07 -0400
+
+chromium (140.0.7339.80-1~deb12u1) bookworm-security; urgency=medium
+
+  * New upstream stable release.
+    - CVE-2025-9864: Use after free in V8.
+      Reported by Pavel Kuzmin of Yandex Security Team.
+    - CVE-2025-9865: Inappropriate implementation in Toolbar.
+      Reported by Khalil Zhani.
+    - CVE-2025-9866: Inappropriate implementation in Extensions.
+      Reported by NDevTK.
+    - CVE-2025-9867: Inappropriate implementation in Downloads.
+      Reported by Farras Givari.
+  * d/patches:
+    - fixes/armhf-icf.patch: refresh.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/widevine-cdm-cu.patch: refresh (and make it shorter).
+    - bookworm/clang19.patch: refresh.
+    - disable/android.patch: delete a new reference to chrome/android/.
+    - disable/buildtools-libc.patch: drop due to upstream cleanups.
+    - trixie/rust-no-alloc-shim.patch: add a build fix for older rustc.
+    - bookworm/rust-visibility.patch: drop, not needed w/ new rust 1.85.
+    - bookworm/crabbyav1f.patch: drop, not needed w/ new rust 1.85.
+    - bookworm/toktrie-utf8chunks.patch: drop, not needed w/ new rust.
+    - bookworm/derivre-create.patch: drop, not needed w/ new rust.
+    - bookworm/rust-split-at-checked.patch: drop, not needed w/ new rust.
+    - bookworm/crabbyav1f-macro-scope.patch: drop, not needed w/ new rust.
+    - bookworm/rust-box-to-vec.patch: drop, not needed w/ new rust.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch: Refresh for upstream
+      changes
+    - fixes/fix-study-crash.patch: Refresh for upstream changes
+    - core/add-ppc64-architecture-to-extensions.diff: Refresh for upstream
+      changes
+    - fixes/fix-unknown-warning-option-messages.diff: Refresh for upstream
+      changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch:
+      Regenerate from new upstream version
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      Regenerate from new upstream version
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 04 Sep 2025 16:47:14 -0400
 
 chromium (139.0.7258.154-1~deb12u1) bookworm-security; urgency=high
 

@@ -1,8 +1,8 @@
-Index: chromium-139.0.7258.66/v8/gni/v8.gni
+Index: chromium-140.0.7339.41/v8/gni/v8.gni
 ===================================================================
---- chromium-139.0.7258.66.orig/v8/gni/v8.gni
-+++ chromium-139.0.7258.66/v8/gni/v8.gni
-@@ -244,7 +244,7 @@ assert(!(v8_enable_webassembly && v8_ena
+--- chromium-140.0.7339.41.orig/v8/gni/v8.gni
++++ chromium-140.0.7339.41/v8/gni/v8.gni
+@@ -274,7 +274,7 @@ assert(!(v8_enable_webassembly && v8_ena
  if (v8_enable_pointer_compression == "") {
    v8_enable_pointer_compression =
        v8_current_cpu == "arm64" || v8_current_cpu == "x64" ||

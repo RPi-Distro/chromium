@@ -1,8 +1,8 @@
-Index: chromium-139.0.7258.66/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_base/compiler_specific.h
+Index: chromium-140.0.7339.41/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_base/compiler_specific.h
 ===================================================================
---- chromium-139.0.7258.66.orig/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_base/compiler_specific.h
-+++ chromium-139.0.7258.66/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_base/compiler_specific.h
-@@ -139,7 +139,7 @@
+--- chromium-140.0.7339.41.orig/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_base/compiler_specific.h
++++ chromium-140.0.7339.41/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_base/compiler_specific.h
+@@ -144,7 +144,7 @@
  //     PA_MUSTTAIL return Func1(d + 1);  // `Func1()` will be tail-called.
  //   }
  // ```

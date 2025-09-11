@@ -8,10 +8,10 @@ Subject: [PATCH] third_party/pffft: Include altivec.h on ppc64 with SIMD
  third_party/pffft/src/pffft.c | 1 +
  1 file changed, 1 insertion(+)
 
-Index: chromium-139.0.7258.66/third_party/pffft/src/pffft.c
+Index: chromium-140.0.7339.41/third_party/pffft/src/pffft.c
 ===================================================================
---- chromium-139.0.7258.66.orig/third_party/pffft/src/pffft.c
-+++ chromium-139.0.7258.66/third_party/pffft/src/pffft.c
+--- chromium-140.0.7339.41.orig/third_party/pffft/src/pffft.c
++++ chromium-140.0.7339.41/third_party/pffft/src/pffft.c
 @@ -100,6 +100,7 @@
     Altivec support macros 
  */

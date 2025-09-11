@@ -1,7 +1,7 @@
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf/trap.cc
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf/trap.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf/trap.cc
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf/trap.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf/trap.cc
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf/trap.cc
 @@ -236,6 +236,20 @@ void Trap::SigSys(int nr, LinuxSigInfo*
        SetIsInSigHandler();
      }
@@ -23,10 +23,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf/trap.cc
      // Copy the seccomp-specific data into a arch_seccomp_data structure. This
      // is what we are showing to TrapFnc callbacks that the system call
      // evaluator registered with the sandbox.
-Index: chromium-139.0.7258.127/sandbox/features.gni
+Index: chromium-140.0.7339.41/sandbox/features.gni
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/features.gni
-+++ chromium-139.0.7258.127/sandbox/features.gni
+--- chromium-140.0.7339.41.orig/sandbox/features.gni
++++ chromium-140.0.7339.41/sandbox/features.gni
 @@ -9,4 +9,5 @@
  use_seccomp_bpf = (is_linux || is_chromeos || is_android) &&
                    (current_cpu == "x86" || current_cpu == "x64" ||
@@ -34,10 +34,10 @@ Index: chromium-139.0.7258.127/sandbox/features.gni
 -                   current_cpu == "mipsel" || current_cpu == "mips64el")
 +                   current_cpu == "mipsel" || current_cpu == "mips64el" ||
 +                   current_cpu == "ppc64")
-Index: chromium-139.0.7258.127/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+Index: chromium-140.0.7339.41/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
-+++ chromium-139.0.7258.127/sandbox/policy/linux/bpf_renderer_policy_linux.cc
+--- chromium-140.0.7339.41.orig/sandbox/policy/linux/bpf_renderer_policy_linux.cc
++++ chromium-140.0.7339.41/sandbox/policy/linux/bpf_renderer_policy_linux.cc
 @@ -17,6 +17,11 @@
  #include "sandbox/linux/system_headers/linux_syscalls.h"
  #include "sandbox/policy/linux/sandbox_linux.h"
@@ -59,10 +59,10 @@ Index: chromium-139.0.7258.127/sandbox/policy/linux/bpf_renderer_policy_linux.cc
      case __NR_getrlimit:
      case __NR_setrlimit:
  // We allow setrlimit to dynamically adjust the address space limit as
-Index: chromium-139.0.7258.127/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+Index: chromium-140.0.7339.41/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
-+++ chromium-139.0.7258.127/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+--- chromium-140.0.7339.41.orig/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
++++ chromium-140.0.7339.41/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
 @@ -56,6 +56,13 @@
  #define MAX_PUBLIC_SYSCALL __NR_syscalls
  #define MAX_SYSCALL MAX_PUBLIC_SYSCALL
@@ -77,11 +77,11 @@ Index: chromium-139.0.7258.127/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
  #else
  #error "Unsupported architecture"
  #endif
-Index: chromium-139.0.7258.127/sandbox/linux/BUILD.gn
+Index: chromium-140.0.7339.41/sandbox/linux/BUILD.gn
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/BUILD.gn
-+++ chromium-139.0.7258.127/sandbox/linux/BUILD.gn
-@@ -373,6 +373,8 @@ component("sandbox_services") {
+--- chromium-140.0.7339.41.orig/sandbox/linux/BUILD.gn
++++ chromium-140.0.7339.41/sandbox/linux/BUILD.gn
+@@ -377,6 +377,8 @@ component("sandbox_services") {
  
  source_set("sandbox_services_headers") {
    sources = [
@@ -90,10 +90,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/BUILD.gn
      "system_headers/arm64_linux_syscalls.h",
      "system_headers/arm_linux_syscalls.h",
      "system_headers/arm_linux_ucontext.h",
-Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_syscalls.h
+Index: chromium-140.0.7339.41/sandbox/linux/system_headers/linux_syscalls.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/system_headers/linux_syscalls.h
-+++ chromium-139.0.7258.127/sandbox/linux/system_headers/linux_syscalls.h
+--- chromium-140.0.7339.41.orig/sandbox/linux/system_headers/linux_syscalls.h
++++ chromium-140.0.7339.41/sandbox/linux/system_headers/linux_syscalls.h
 @@ -35,5 +35,9 @@
  #include "sandbox/linux/system_headers/arm64_linux_syscalls.h"
  #endif
@@ -104,10 +104,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_syscalls.h
 +
  #endif  // SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_SYSCALLS_H_
  
-Index: chromium-139.0.7258.127/sandbox/linux/system_headers/ppc64_linux_syscalls.h
+Index: chromium-140.0.7339.41/sandbox/linux/system_headers/ppc64_linux_syscalls.h
 ===================================================================
 --- /dev/null
-+++ chromium-139.0.7258.127/sandbox/linux/system_headers/ppc64_linux_syscalls.h
++++ chromium-140.0.7339.41/sandbox/linux/system_headers/ppc64_linux_syscalls.h
 @@ -0,0 +1,25 @@
 +// Copyright 2014 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -134,10 +134,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/system_headers/ppc64_linux_syscalls
 +#endif
 +
 +#endif  // SANDBOX_LINUX_SYSTEM_HEADERS_PPC64_LINUX_SYSCALLS_H_
-Index: chromium-139.0.7258.127/sandbox/linux/system_headers/ppc64_linux_ucontext.h
+Index: chromium-140.0.7339.41/sandbox/linux/system_headers/ppc64_linux_ucontext.h
 ===================================================================
 --- /dev/null
-+++ chromium-139.0.7258.127/sandbox/linux/system_headers/ppc64_linux_ucontext.h
++++ chromium-140.0.7339.41/sandbox/linux/system_headers/ppc64_linux_ucontext.h
 @@ -0,0 +1,12 @@
 +// Copyright 2014 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
@@ -151,10 +151,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/system_headers/ppc64_linux_ucontext
 +//TODO: is it necessary to redefine ucontext on PPC64?
 +
 +#endif  // SANDBOX_LINUX_SYSTEM_HEADERS_PPC64_LINUX_UCONTEXT_H_
-Index: chromium-139.0.7258.127/sandbox/linux/syscall_broker/broker_process.cc
+Index: chromium-140.0.7339.41/sandbox/linux/syscall_broker/broker_process.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/syscall_broker/broker_process.cc
-+++ chromium-139.0.7258.127/sandbox/linux/syscall_broker/broker_process.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/syscall_broker/broker_process.cc
++++ chromium-140.0.7339.41/sandbox/linux/syscall_broker/broker_process.cc
 @@ -167,7 +167,7 @@ bool BrokerProcess::IsSyscallBrokerable(
  #if defined(__NR_fstatat64)
      case __NR_fstatat64:
@@ -164,10 +164,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/syscall_broker/broker_process.cc
      case __NR_newfstatat:
  #endif
        return !fast_check || policy_->allowed_command_set.test(COMMAND_STAT);
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/baseline_policy.cc
 @@ -90,7 +90,8 @@ bool IsBaselinePolicyWatched(int sysno)
           SyscallSets::IsPrctl(sysno) ||
           SyscallSets::IsProcessGroupOrSession(sysno) ||
@@ -178,7 +178,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy
           SyscallSets::IsSocketCall(sysno) ||
  #endif
  #if defined(__arm__)
-@@ -258,7 +259,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
+@@ -259,7 +260,7 @@ ResultExpr EvaluateSyscallImpl(int fs_de
  
    // TODO(crbug.com/40528912): should i386 really be in this list?
  #if defined(__i386__) || defined(__x86_64__) || defined(__mips__) || \
@@ -187,7 +187,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy
    if (sysno == __NR_mmap)
      return RestrictMmapFlags();
  #endif
-@@ -340,7 +341,8 @@ ResultExpr EvaluateSyscallImpl(int fs_de
+@@ -342,7 +343,8 @@ ResultExpr EvaluateSyscallImpl(int fs_de
    }
  
  #if defined(__i386__) || \
@@ -197,10 +197,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy
    if (SyscallSets::IsSocketCall(sysno))
      return RestrictSocketcallCommand();
  #endif
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
 @@ -39,7 +39,7 @@
  #include "sandbox/linux/system_headers/linux_syscalls.h"
  #include "sandbox/linux/system_headers/linux_time.h"
@@ -238,7 +238,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_paramet
  // Ubuntu's version of glibc has a race condition in sem_post that can cause
  // it to call futex(2) with bogus op arguments. To workaround this, we need
  // to allow those futex(2) calls to fail with EINVAL, instead of crashing the
-@@ -272,9 +286,11 @@ ResultExpr RestrictFcntlCommands() {
+@@ -279,9 +293,11 @@ ResultExpr RestrictFcntlCommands() {
    // operator.
    // Glibc overrides the kernel's O_LARGEFILE value. Account for this.
    uint64_t kOLargeFileFlag = O_LARGEFILE;
@@ -251,7 +251,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_paramet
    const Arg<int> cmd(1);
    const Arg<long> long_arg(2);
  
-@@ -297,8 +313,17 @@ ResultExpr RestrictFcntlCommands() {
+@@ -304,8 +320,17 @@ ResultExpr RestrictFcntlCommands() {
                F_SETLKW,
                F_GETLK,
                F_DUPFD,
@@ -271,7 +271,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_paramet
        .Case(F_SETFL,
              If((long_arg & ~kAllowedMask) == 0, Allow()).Else(CrashSIGSYS()))
        .Case(F_ADD_SEALS,
-@@ -307,7 +332,7 @@ ResultExpr RestrictFcntlCommands() {
+@@ -314,7 +339,7 @@ ResultExpr RestrictFcntlCommands() {
    // clang-format on
  }
  
@@ -280,7 +280,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_paramet
  ResultExpr RestrictSocketcallCommand() {
    // Unfortunately, we are unable to restrict the first parameter to
    // socketpair(2). Whilst initially sounding bad, it's noteworthy that very
-@@ -473,7 +498,7 @@ ResultExpr RestrictPtrace() {
+@@ -480,7 +505,7 @@ ResultExpr RestrictPtrace() {
  #endif
    return Switch(request)
        .Cases({
@@ -289,7 +289,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_paramet
                   PTRACE_GETREGS, PTRACE_GETFPREGS, PTRACE_GET_THREAD_AREA,
                   PTRACE_GETREGSET,
  #endif
-@@ -513,13 +538,14 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
+@@ -520,13 +545,14 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
    size_t argIndex;
    switch (sysno) {
  #if defined(__arm__) || \
@@ -306,11 +306,11 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_paramet
      case __NR_sendto:  // Could specify destination.
        argIndex = 3;
        break;
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
-@@ -52,7 +52,7 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
+@@ -56,7 +56,7 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
  // O_NONBLOCK | O_SYNC | O_LARGEFILE | O_CLOEXEC | O_NOATIME.
  SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictFcntlCommands();
  
@@ -319,10 +319,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_paramet
  // Restrict socketcall(2) to only allow socketpair(2), send(2), recv(2),
  // sendto(2), recvfrom(2), shutdown(2), sendmsg(2) and recvmsg(2).
  SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictSocketcallCommand();
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
 @@ -29,7 +29,8 @@ bool SyscallSets::IsAllowedGettime(int s
    switch (sysno) {
      case __NR_gettimeofday:
@@ -555,7 +555,7 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
  #endif
      case __NR_write:
 @@ -635,11 +653,12 @@ bool SyscallSets::IsAllowedGeneralIo(int
-     case __NR_vmsplice:
+ #endif
  // send* syscalls need their flags filtered.
  #if defined(__arm__) || \
 -    (defined(ARCH_CPU_MIPS_FAMILY) && defined(ARCH_CPU_32_BITS))
@@ -782,10 +782,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_sets.cc
      case __NR_vserver:
  #endif
        return true;
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
 @@ -46,13 +46,14 @@ class SANDBOX_EXPORT SyscallSets {
    static bool IsDeniedGetOrModifySocket(int sysno);
  
@@ -835,11 +835,11 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/syscall_sets.h
    // Big system V multiplexing system call.
    static bool IsSystemVIpc(int sysno);
  #endif
-Index: chromium-139.0.7258.127/sandbox/linux/services/syscall_wrappers.cc
+Index: chromium-140.0.7339.41/sandbox/linux/services/syscall_wrappers.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/services/syscall_wrappers.cc
-+++ chromium-139.0.7258.127/sandbox/linux/services/syscall_wrappers.cc
-@@ -66,7 +66,7 @@ long sys_clone(unsigned long flags,
+--- chromium-140.0.7339.41.orig/sandbox/linux/services/syscall_wrappers.cc
++++ chromium-140.0.7339.41/sandbox/linux/services/syscall_wrappers.cc
+@@ -68,7 +68,7 @@ long sys_clone(unsigned long flags,
  #if defined(ARCH_CPU_X86_64)
    return syscall(__NR_clone, flags, child_stack, ptid, ctid, tls);
  #elif defined(ARCH_CPU_X86) || defined(ARCH_CPU_ARM_FAMILY) || \
@@ -848,10 +848,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/services/syscall_wrappers.cc
    // CONFIG_CLONE_BACKWARDS defined.
    return syscall(__NR_clone, flags, child_stack, ptid, tls, ctid);
  #endif
-Index: chromium-139.0.7258.127/sandbox/linux/bpf_dsl/seccomp_macros.h
+Index: chromium-140.0.7339.41/sandbox/linux/bpf_dsl/seccomp_macros.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/bpf_dsl/seccomp_macros.h
-+++ chromium-139.0.7258.127/sandbox/linux/bpf_dsl/seccomp_macros.h
+--- chromium-140.0.7339.41.orig/sandbox/linux/bpf_dsl/seccomp_macros.h
++++ chromium-140.0.7339.41/sandbox/linux/bpf_dsl/seccomp_macros.h
 @@ -14,6 +14,9 @@
  #if defined(__mips__)
  // sys/user.h in eglibc misses size_t definition
@@ -914,10 +914,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/bpf_dsl/seccomp_macros.h
  #else
  #error Unsupported target platform
  
-Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_seccomp.h
+Index: chromium-140.0.7339.41/sandbox/linux/system_headers/linux_seccomp.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/system_headers/linux_seccomp.h
-+++ chromium-139.0.7258.127/sandbox/linux/system_headers/linux_seccomp.h
+--- chromium-140.0.7339.41.orig/sandbox/linux/system_headers/linux_seccomp.h
++++ chromium-140.0.7339.41/sandbox/linux/system_headers/linux_seccomp.h
 @@ -38,6 +38,9 @@
  #ifndef EM_AARCH64
  #define EM_AARCH64 183
@@ -941,10 +941,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_seccomp.h
  
  // For prctl.h
  #ifndef PR_SET_SECCOMP
-Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_signal.h
+Index: chromium-140.0.7339.41/sandbox/linux/system_headers/linux_signal.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/system_headers/linux_signal.h
-+++ chromium-139.0.7258.127/sandbox/linux/system_headers/linux_signal.h
+--- chromium-140.0.7339.41.orig/sandbox/linux/system_headers/linux_signal.h
++++ chromium-140.0.7339.41/sandbox/linux/system_headers/linux_signal.h
 @@ -13,7 +13,7 @@
  // (not undefined, but defined different values and in different memory
  // layouts). So, fill the gap here.
@@ -954,10 +954,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_signal.h
  
  #define LINUX_SIGHUP 1
  #define LINUX_SIGINT 2
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf/syscall.cc
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf/syscall.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf/syscall.cc
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf/syscall.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf/syscall.cc
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf/syscall.cc
 @@ -19,7 +19,7 @@ namespace sandbox {
  namespace {
  
@@ -1052,10 +1052,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf/syscall.cc
  #endif
    SECCOMP_RESULT(ctx) = static_cast<greg_t>(ret_val);
  }
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/baseline_policy_unittest.cc
 @@ -350,8 +350,10 @@ TEST_BASELINE_SIGSYS(__NR_timer_create)
  
  #if !defined(__aarch64__)
@@ -1067,10 +1067,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/baseline_policy
  
  #if defined(LIBC_GLIBC) && !BUILDFLAG(IS_CHROMEOS)
  BPF_TEST_C(BaselinePolicy, FutexEINVAL, BaselinePolicy) {
-Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_stat.h
+Index: chromium-140.0.7339.41/sandbox/linux/system_headers/linux_stat.h
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/system_headers/linux_stat.h
-+++ chromium-139.0.7258.127/sandbox/linux/system_headers/linux_stat.h
+--- chromium-140.0.7339.41.orig/sandbox/linux/system_headers/linux_stat.h
++++ chromium-140.0.7339.41/sandbox/linux/system_headers/linux_stat.h
 @@ -173,6 +173,28 @@ struct kernel_stat {
    unsigned int __unused4;
    unsigned int __unused5;
@@ -1100,10 +1100,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/system_headers/linux_stat.h
  #endif
  
  #if !defined(AT_EMPTY_PATH)
-Index: chromium-139.0.7258.127/sandbox/linux/services/credentials.cc
+Index: chromium-140.0.7339.41/sandbox/linux/services/credentials.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/services/credentials.cc
-+++ chromium-139.0.7258.127/sandbox/linux/services/credentials.cc
+--- chromium-140.0.7339.41.orig/sandbox/linux/services/credentials.cc
++++ chromium-140.0.7339.41/sandbox/linux/services/credentials.cc
 @@ -90,7 +90,7 @@ bool ChrootToSafeEmptyDir() {
    alignas(16) char stack_buf[PTHREAD_STACK_MIN_CONST];
  
@@ -1135,10 +1135,10 @@ Index: chromium-139.0.7258.127/sandbox/linux/services/credentials.cc
    clone_flags |= CLONE_VM | CLONE_VFORK | CLONE_SETTLS;
  
    char tls_buf[PTHREAD_STACK_MIN_CONST] = {};
-Index: chromium-139.0.7258.127/sandbox/policy/linux/bpf_utility_policy_linux.cc
+Index: chromium-140.0.7339.41/sandbox/policy/linux/bpf_utility_policy_linux.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
-+++ chromium-139.0.7258.127/sandbox/policy/linux/bpf_utility_policy_linux.cc
+--- chromium-140.0.7339.41.orig/sandbox/policy/linux/bpf_utility_policy_linux.cc
++++ chromium-140.0.7339.41/sandbox/policy/linux/bpf_utility_policy_linux.cc
 @@ -34,7 +34,7 @@ ResultExpr UtilityProcessPolicy::Evaluat
      case __NR_fdatasync:
      case __NR_fsync:
@@ -1148,11 +1148,11 @@ Index: chromium-139.0.7258.127/sandbox/policy/linux/bpf_utility_policy_linux.cc
      case __NR_getrlimit:
  #endif
  #if defined(__i386__) || defined(__arm__)
-Index: chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+Index: chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
 ===================================================================
---- chromium-139.0.7258.127.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
-+++ chromium-139.0.7258.127/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
-@@ -362,7 +362,16 @@ intptr_t SIGSYSFstatatHandler(const stru
+--- chromium-140.0.7339.41.orig/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
++++ chromium-140.0.7339.41/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+@@ -389,7 +389,16 @@ intptr_t SIGSYSFstatatHandler(const stru
    if (args.nr == __NR_fstatat_default) {
      if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&
          args.args[3] == static_cast<uint64_t>(AT_EMPTY_PATH)) {

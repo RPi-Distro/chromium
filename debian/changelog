@@ -1,26 +1,54 @@
-chromium (1:139.0.7258.154-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (140.0.7339.127-1~deb13u1) trixie-security; urgency=high
 
-  [ Serge Schneider ]
-  * Import PiOS patches from Bookworm
-  * Remove debian patches duplicated by PiOS
-  * d/c: Remove system-config-printer from recommends
-  * Launcher: Add a low memory check and switch to zenoty for dialogs
-  * Launcher: extend NEON check to armv6l platforms
-  * Work around tabs crashing when using a 16k page size kernel
-  * Add --use-angle=gles unless --no-gl-override is specified
-  * Bump alternatives priority to 90
-  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream
-    version
-  * Move chromium-l10n to recommends
-  * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Limit gn threads to 30 on armhf to avoid allocation errors
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-10200: Use after free in Serviceworker.
+      Reported by Looben Yang.
+    - CVE-2025-10201: Inappropriate implementation in Mojo.
+      Reported by Sahan Fernando & Anon.
 
-  [ David Turner ]
-  * Remove debian's master_preferences file
-  * rpi build customisations
-  * Add package recommend for libwidevinecdm0
+  [ Jianfeng Liu ]
+  * drop not working fixes/libsync-rk3588-panthor.patch.
+  * drop fixes/strlcpy.patch, which isn't needed w/ clang-19.
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 01 Sep 2025 18:40:55 +0100
+ -- Andres Salomon <dilinger@debian.org>  Tue, 09 Sep 2025 17:50:07 -0400
+
+chromium (140.0.7339.80-1~deb13u1) trixie-security; urgency=medium
+
+  * New upstream stable release.
+    - CVE-2025-9864: Use after free in V8.
+      Reported by Pavel Kuzmin of Yandex Security Team.
+    - CVE-2025-9865: Inappropriate implementation in Toolbar.
+      Reported by Khalil Zhani.
+    - CVE-2025-9866: Inappropriate implementation in Extensions.
+      Reported by NDevTK.
+    - CVE-2025-9867: Inappropriate implementation in Downloads.
+      Reported by Farras Givari.
+  * d/patches:
+    - fixes/armhf-icf.patch: refresh.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/widevine-cdm-cu.patch: refresh (and make it shorter).
+    - bookworm/clang19.patch: refresh.
+    - disable/android.patch: delete a new reference to chrome/android/.
+    - disable/buildtools-libc.patch: drop due to upstream cleanups.
+    - trixie/rust-no-alloc-shim.patch: add a build fix for older rustc.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch: Refresh for upstream
+      changes
+    - fixes/fix-study-crash.patch: Refresh for upstream changes
+    - core/add-ppc64-architecture-to-extensions.diff: Refresh for upstream
+      changes
+    - fixes/fix-unknown-warning-option-messages.diff: Refresh for upstream
+      changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch:
+      Regenerate from new upstream version
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      Regenerate from new upstream version
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 04 Sep 2025 23:24:57 -0400
 
 chromium (139.0.7258.154-1~deb13u1) trixie-security; urgency=high
 

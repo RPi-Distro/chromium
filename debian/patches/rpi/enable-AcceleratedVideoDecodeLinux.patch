@@ -1,6 +1,6 @@
 --- a/media/base/media_switches.cc
 +++ b/media/base/media_switches.cc
-@@ -753,7 +753,7 @@ BASE_FEATURE(kUnifiedAutoplay,
+@@ -780,7 +780,7 @@ BASE_FEATURE(kUnifiedAutoplay,
  // on chromeos, but needs an experiment on linux.
  BASE_FEATURE(kAcceleratedVideoDecodeLinux,
               "AcceleratedVideoDecoder",
@@ -9,7 +9,7 @@
               base::FEATURE_ENABLED_BY_DEFAULT);
  #else
               base::FEATURE_DISABLED_BY_DEFAULT);
-@@ -761,7 +761,7 @@ BASE_FEATURE(kAcceleratedVideoDecodeLinu
+@@ -788,7 +788,7 @@ BASE_FEATURE(kAcceleratedVideoDecodeLinu
  
  BASE_FEATURE(kAcceleratedVideoDecodeLinuxGL,
               "AcceleratedVideoDecodeLinuxGL",

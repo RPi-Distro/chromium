@@ -10,7 +10,7 @@ Subject: [PATCH 09/17] Build: add use_v4l2_codec_rpi gn option
 
 --- a/media/gpu/BUILD.gn
 +++ b/media/gpu/BUILD.gn
-@@ -20,6 +20,7 @@ buildflag_header("buildflags") {
+@@ -21,6 +21,7 @@ buildflag_header("buildflags") {
      "USE_VAAPI=$use_vaapi",
      "USE_VAAPI_IMAGE_CODECS=$use_vaapi_image_codecs",
      "USE_V4L2_CODEC=$use_v4l2_codec",

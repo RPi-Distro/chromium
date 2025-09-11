@@ -223,7 +223,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  
  static void S32_alpha_D32_nofilter_DX(const SkBitmapProcState& s,
                                        const uint32_t* xy, int count, SkPMColor* colors) {
-@@ -278,7 +472,11 @@ bool SkBitmapProcState::chooseProcs() {
+@@ -279,7 +473,11 @@ bool SkBitmapProcState::chooseProcs() {
      SkASSERT(fMatrixProc);
  
      if (fInvMatrix.isScaleTranslate()) {
@@ -1266,7 +1266,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  namespace sktests {
 --- a/third_party/skia/src/opts/SkBlitMask_opts.h
 +++ b/third_party/skia/src/opts/SkBlitMask_opts.h
-@@ -419,6 +419,322 @@ namespace SK_OPTS_NS {
+@@ -425,6 +425,322 @@ namespace SK_OPTS_NS {
      }
  }
  

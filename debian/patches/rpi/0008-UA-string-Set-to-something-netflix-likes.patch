@@ -9,16 +9,16 @@ Subject: [PATCH 08/17] UA string: Set to something netflix likes
 
 --- a/components/embedder_support/user_agent_utils.cc
 +++ b/components/embedder_support/user_agent_utils.cc
-@@ -340,7 +340,7 @@ std::string GetUserAgentPlatform() {
- std::string GetUnifiedPlatform() {
- #if BUILDFLAG(IS_ANDROID)
+@@ -345,7 +345,7 @@ std::string GetUnifiedPlatform() {
+     return kUnifiedPlatformLinuxX64;
+   }
    return "Linux; Android 10; K";
 -#elif BUILDFLAG(IS_CHROMEOS)
 +#elif BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_POSIX)
    return "X11; CrOS x86_64 14541.0.0";
  #elif BUILDFLAG(IS_MAC)
    return "Macintosh; Intel Mac OS X 10_15_7";
-@@ -448,7 +448,7 @@ std::string GetOSVersion(IncludeAndroidB
+@@ -453,7 +453,7 @@ std::string GetOSVersion(IncludeAndroidB
                        "%s%s", android_version_str.c_str(),
                        android_info_str.c_str()
  #else
@@ -27,7 +27,7 @@ Subject: [PATCH 08/17] UA string: Set to something netflix likes
  #endif
    );
    return os_version;
-@@ -818,7 +818,7 @@ std::string BuildOSCpuInfoFromOSVersionA
+@@ -864,7 +864,7 @@ std::string BuildOSCpuInfoFromOSVersionA
    base::StringAppendF(&os_cpu,
  #if BUILDFLAG(IS_MAC)
                        "%s Mac OS X %s", cpu_type.c_str(), os_version.c_str()

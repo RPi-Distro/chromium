@@ -167,7 +167,6 @@ ppc64le/fixes/fix-unknown-warning-option-messages.diff
 #ppc64le/core/baseline-isa-3-0.patch
 
 # Raspberry Pi OS patches
-rpi/0006-Wayland-Select-ozone-wayland-backend-by-default-if-c.patch
 rpi/0007-Widevide-Add.patch
 rpi/0008-UA-string-Set-to-something-netflix-likes.patch
 rpi/0009-Build-add-use_v4l2_codec_rpi-gn-option.patch

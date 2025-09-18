@@ -1,3 +1,9 @@
+chromium (1:140.0.7339.127-1~deb12u1+rpt2) bookworm; urgency=medium
+
+  * Set use_wayland_gbm=false
+
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 18 Sep 2025 16:01:03 +0100
+
 chromium (1:140.0.7339.127-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches

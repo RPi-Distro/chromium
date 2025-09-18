@@ -1,3 +1,9 @@
+chromium (1:140.0.7339.127-1~deb13u1+rpt2) trixie; urgency=medium
+
+  * Set use_wayland_gbm=false
+
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 18 Sep 2025 16:38:21 +0100
+
 chromium (1:140.0.7339.127-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]

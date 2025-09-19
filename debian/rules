@@ -171,11 +171,6 @@ defines+=enable_hangout_services_extension=true
 # We don't have the required GL extensions to enable GL passthrough so must
 # enable the validating decode otherwise we get a fatal GPU error
 defines+=enable_validating_command_decoder=true
-# The code assumes that gbm allocator should be able to allocate dmabufs of
-# all the sorts that wayland can consume. Unfortunately our GBM can only
-# allocate RGB-like single planar buffers and so when Chrome wants a YUV
-# buffer it all fails.
-defines+=use_wayland_gbm=false
 
 
 # handle parallel build options

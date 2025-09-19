@@ -1,3 +1,10 @@
+chromium (1:140.0.7339.127-1~deb12u1+rpt3) bookworm; urgency=medium
+
+  * Revert "Set use_wayland_gbm=false"
+  * Disable the GL mappings for YUV formats
+
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 19 Sep 2025 18:35:01 +0100
+
 chromium (1:140.0.7339.127-1~deb12u1+rpt2) bookworm; urgency=medium
 
   * Set use_wayland_gbm=false

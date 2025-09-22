@@ -1,3 +1,28 @@
+chromium (1:140.0.7339.185-1~deb13u1+rpt1) trixie; urgency=medium
+
+  [ Serge Schneider ]
+  * Import PiOS patches from Bookworm
+  * Remove debian patches duplicated by PiOS
+  * d/c: Remove system-config-printer from recommends
+  * Launcher: Add a low memory check and switch to zenoty for dialogs
+  * Launcher: extend NEON check to armv6l platforms
+  * Work around tabs crashing when using a 16k page size kernel
+  * Add --use-angle=gles unless --no-gl-override is specified
+  * Bump alternatives priority to 90
+  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream
+    version
+  * Move chromium-l10n to recommends
+  * d/c: Add rpi-chromium-mods to chromium Recommends
+  * Limit gn threads to 30 on armhf to avoid allocation errors
+  * Disable the GL mappings for YUV formats
+
+  [ David Turner ]
+  * Remove debian's master_preferences file
+  * rpi build customisations
+  * Add package recommend for libwidevinecdm0
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 22 Sep 2025 10:45:44 +0100
+
 chromium (140.0.7339.185-1~deb13u1) trixie-security; urgency=high
 
   * New upstream security release.

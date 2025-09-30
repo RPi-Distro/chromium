@@ -1,4 +1,4 @@
-chromium (1:140.0.7339.185-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:140.0.7339.207-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -21,7 +21,17 @@ chromium (1:140.0.7339.185-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 22 Sep 2025 10:45:44 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 30 Sep 2025 10:02:29 +0100
+
+chromium (140.0.7339.207-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-10890: Side-channel information leakage in V8.
+      Reported by Mate Marjanović (SharpEdged).
+    - CVE-2025-10891: Integer overflow in V8. Reported by Google Big Sleep.
+    - CVE-2025-10892: Integer overflow in V8. Reported by Google Big Sleep.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 23 Sep 2025 16:50:58 -0400
 
 chromium (140.0.7339.185-1~deb13u1) trixie-security; urgency=high
 

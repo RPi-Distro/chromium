@@ -1,7 +1,7 @@
 --- a/media/base/media_switches.cc
 +++ b/media/base/media_switches.cc
-@@ -849,6 +849,13 @@ BASE_FEATURE(kVSyncMjpegDecoding,
-              base::FEATURE_DISABLED_BY_DEFAULT);
+@@ -724,6 +724,13 @@ BASE_FEATURE(VaapiVp9SModeHWEncoding, ba
+ BASE_FEATURE(VSyncMjpegDecoding, base::FEATURE_DISABLED_BY_DEFAULT);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
 +// Enables the new V4L2StatefulVideoDecoder instead of V4L2VideoDecoder.
@@ -12,11 +12,11 @@
 +             "V4L2FlatStatefulVideoDecoder",
 +             base::FEATURE_DISABLED_BY_DEFAULT);
  // Enable H264 temporal layer encoding with V4L2 HW encoder on ChromeOS.
- BASE_FEATURE(kV4L2H264TemporalLayerHWEncoding,
-              "V4L2H264TemporalLayerHWEncoding",
+ BASE_FEATURE(V4L2H264TemporalLayerHWEncoding,
+              base::FEATURE_DISABLED_BY_DEFAULT);
 --- a/media/base/media_switches.h
 +++ b/media/base/media_switches.h
-@@ -380,6 +380,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
+@@ -379,6 +379,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kVSyncMjpegDecoding);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)

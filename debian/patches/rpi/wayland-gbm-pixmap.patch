@@ -1,34 +1,33 @@
 --- a/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
 +++ b/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
-@@ -266,20 +266,17 @@ scoped_refptr<gfx::NativePixmap> Wayland
-     return nullptr;
-   }
+@@ -290,22 +290,11 @@ WaylandSurfaceFactory::CreateNativePixma
+     gfx::BufferFormat format,
+     gfx::NativePixmapHandle handle) {
  #if defined(WAYLAND_GBM)
 -  auto* gbm_device = buffer_manager_->GetGbmDevice();
 -  if (gbm_device && gbm_device->CanCreateBufferForFormat(
 -                        GetFourCCFormatFromBufferFormat(format))) {
 -    scoped_refptr<GbmPixmapWayland> pixmap =
 -        base::MakeRefCounted<GbmPixmapWayland>(buffer_manager_);
+-    if (pixmap->InitializeBufferFromHandle(widget, size, format,
+-                                           std::move(handle))) {
+-      return pixmap;
+-    }
+-  } else {
+-    scoped_refptr<gfx::NativePixmapDmaBuf> pixmap =
+-        base::MakeRefCounted<gfx::NativePixmapDmaBuf>(size, format,
+-                                                      std::move(handle));
+-    if (pixmap->AreDmaBufFdsValid()) {
+-      return pixmap;
+-    }
 +  scoped_refptr<GbmPixmapWayland> pixmap =
 +      base::MakeRefCounted<GbmPixmapWayland>(buffer_manager_);
- 
--    if (!pixmap->InitializeBuffer(widget, size, format, usage,
--                                  framebuffer_size)) {
--      return nullptr;
--    }
--    return pixmap;
-+  if (!pixmap->InitializeBuffer(widget, size, format, usage,
-+                                framebuffer_size)) {
-+    return nullptr;
++  if (pixmap->InitializeBufferFromHandle(widget, size, format,
++                                         std::move(handle))) {
++    return pixmap;
    }
--#endif
-+  return pixmap;
-+#else
+ #endif  //  defined(WAYLAND_GBM)
    return nullptr;
-+#endif
- }
- 
- scoped_refptr<gfx::NativePixmap>
 --- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
 +++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
 @@ -72,8 +72,6 @@

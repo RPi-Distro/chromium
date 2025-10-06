@@ -9,7 +9,7 @@ Subject: [PATCH 16/17] gbm_pixmap: Avoid spamming BO create failures
 
 --- a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
 +++ b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
-@@ -79,6 +79,13 @@ bool GbmPixmapWayland::InitializeBuffer(
+@@ -80,6 +80,13 @@ bool GbmPixmapWayland::InitializeBuffer(
    }
  
    if (!gbm_bo_) {
@@ -22,4 +22,4 @@ Subject: [PATCH 16/17] gbm_pixmap: Avoid spamming BO create failures
 +
      LOG(ERROR) << "Cannot create bo with format= "
                 << gfx::BufferFormatToString(format)
-                << " and usage=" << gfx::BufferUsageToString(usage);
+                << " and usage=" << ui::NativePixmapUsageToString(usage);

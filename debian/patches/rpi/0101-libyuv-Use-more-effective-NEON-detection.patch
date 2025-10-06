@@ -10,7 +10,7 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
 
 --- a/third_party/libyuv/BUILD.gn
 +++ b/third_party/libyuv/BUILD.gn
-@@ -207,7 +207,6 @@ static_library("libyuv_internal") {
+@@ -205,7 +205,6 @@ static_library("libyuv_internal") {
      configs += [ "//build/config/compiler:optimize_max" ]
    }
  
@@ -18,7 +18,7 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
    if (!is_win) {
      cflags = [
        # "-mpopcnt",
-@@ -216,6 +215,11 @@ static_library("libyuv_internal") {
+@@ -214,6 +213,11 @@ static_library("libyuv_internal") {
        "-ffp-contract=fast",  # Enable fma vectorization for NEON.
      ]
    }
@@ -30,7 +30,7 @@ Subject: [PATCH] libyuv: Use more effective NEON detection
  }
  
  if (libyuv_use_neon) {
-@@ -242,6 +246,11 @@ if (libyuv_use_neon) {
+@@ -240,6 +244,11 @@ if (libyuv_use_neon) {
        cflags = [ "-march=armv8-a+dotprod+i8mm" ]
      } else {
        configs -= [ "//build/config/compiler:compiler_arm_fpu" ]

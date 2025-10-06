@@ -10,7 +10,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
 
 --- a/media/gpu/v4l2/v4l2_device.cc
 +++ b/media/gpu/v4l2/v4l2_device.cc
-@@ -939,7 +939,11 @@ void V4L2Device::EnumerateDevicesForType
+@@ -937,7 +937,11 @@ void V4L2Device::EnumerateDevicesForType
    constexpr int kMaxDevices = 256;
    candidate_paths.reserve(kMaxDevices);
  #endif
@@ -24,7 +24,7 @@ Subject: [PATCH 11/17] Video decode: Fix up RPI V4L2 decoder devices
    }
 --- a/media/gpu/v4l2/v4l2_utils.cc
 +++ b/media/gpu/v4l2/v4l2_utils.cc
-@@ -576,6 +576,11 @@ std::optional<SupportedVideoDecoderConfi
+@@ -572,6 +572,11 @@ std::optional<SupportedVideoDecoderConfi
  #if BUILDFLAG(IS_CHROMEOS)
    constexpr char kVideoDevicePattern[] = "/dev/video-dec0";
    candidate_paths.push_back(kVideoDevicePattern);

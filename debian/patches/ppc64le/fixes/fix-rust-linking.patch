@@ -1,8 +1,8 @@
-Index: chromium-140.0.7339.41/build/toolchain/gcc_toolchain.gni
+Index: chromium-141.0.7390.37/build/toolchain/gcc_toolchain.gni
 ===================================================================
---- chromium-140.0.7339.41.orig/build/toolchain/gcc_toolchain.gni
-+++ chromium-140.0.7339.41/build/toolchain/gcc_toolchain.gni
-@@ -430,7 +430,13 @@ template("single_gcc_toolchain") {
+--- chromium-141.0.7390.37.orig/build/toolchain/gcc_toolchain.gni
++++ chromium-141.0.7390.37/build/toolchain/gcc_toolchain.gni
+@@ -418,7 +418,13 @@ template("single_gcc_toolchain") {
          # -soname flag is not available on aix ld
          soname_flag = "-Wl,-soname=\"$soname\""
        }
@@ -17,7 +17,7 @@ Index: chromium-140.0.7339.41/build/toolchain/gcc_toolchain.gni
  
        # Generate a map file to be used for binary size analysis.
        # Map file adds ~10% to the link time on a z620.
-@@ -542,7 +548,13 @@ template("single_gcc_toolchain") {
+@@ -530,7 +536,13 @@ template("single_gcc_toolchain") {
          whole_archive_flag = "-Wl,--whole-archive"
          no_whole_archive_flag = "-Wl,--no-whole-archive"
        }

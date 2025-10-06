@@ -122,6 +122,7 @@ defines+=is_debug=false \
          use_custom_libcxx=false \
          optimize_webui=false \
          use_unofficial_version_number=false \
+         rtc_video_psnr=false \
          safe_browsing_use_unrar=false \
          enable_vr=false \
          enable_enterprise_companion=false \

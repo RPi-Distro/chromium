@@ -1,0 +1,32 @@
+ERROR at //build/config/BUILDCONFIG.gn:700:11: Unable to load "/chromium-141.0.7390.37/buildtools/third_party/libc++/BUILD.gn".
+          "//buildtools/third_party/libc++:libcxx_headers",
+          ^-----------------------------------------------
+
+--- a/build/config/BUILDCONFIG.gn
++++ b/build/config/BUILDCONFIG.gn
+@@ -575,11 +575,10 @@ foreach(_target_type,
+         # is required for things to work, regardless of whether the libc++
+         # module is used in this target or not.
+         public_deps += [
+-          "//buildtools/third_party/libc++:custom_headers",
+-          "//buildtools/third_party/libc++:libcxx_headers",
+         ]
+       }
+ 
++      use_libcxx_modules = false
+       if (!defined(use_libcxx_modules)) {
+         use_libcxx_modules = is_clang
+       }
+@@ -696,11 +695,10 @@ foreach(_target_type,
+         # is required for things to work, regardless of whether the libc++
+         # module is used in this target or not.
+         public_deps += [
+-          "//buildtools/third_party/libc++:custom_headers",
+-          "//buildtools/third_party/libc++:libcxx_headers",
+         ]
+       }
+ 
++      use_libcxx_modules = false
+       if (!defined(use_libcxx_modules)) {
+         use_libcxx_modules = is_clang
+       }

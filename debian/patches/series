@@ -7,6 +7,8 @@ debianization/cross-build.patch
 fixes/ps-print.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
+fixes/gentoo-stylesheet.patch
+fixes/libcpp-headers.patch
 fixes/memory-allocator-dcheck-assert-fix.patch
 fixes/predictor-denial-of-service.patch
 fixes/fix-assert-in-vnc-sessions.patch

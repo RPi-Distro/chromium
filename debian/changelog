@@ -29,7 +29,7 @@ chromium (1:141.0.7390.54-1~deb12u1+rpt1) bookworm; urgency=medium
   * d/c: Remove system-config-printer from recommends
   * Disable the GL mappings for YUV formats
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 06 Oct 2025 15:12:30 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 06 Oct 2025 15:48:21 +0100
 
 chromium (141.0.7390.54-1~deb12u1) bookworm-security; urgency=high
 

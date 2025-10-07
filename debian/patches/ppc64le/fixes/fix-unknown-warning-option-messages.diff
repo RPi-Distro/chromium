@@ -1,8 +1,8 @@
-Index: chromium-140.0.7339.41/build/config/compiler/BUILD.gn
+Index: chromium-141.0.7390.37/build/config/compiler/BUILD.gn
 ===================================================================
---- chromium-140.0.7339.41.orig/build/config/compiler/BUILD.gn
-+++ chromium-140.0.7339.41/build/config/compiler/BUILD.gn
-@@ -2086,7 +2086,9 @@ config("default_warnings") {
+--- chromium-141.0.7390.37.orig/build/config/compiler/BUILD.gn
++++ chromium-141.0.7390.37/build/config/compiler/BUILD.gn
+@@ -2080,7 +2080,9 @@ config("default_warnings") {
  
        # Don't warn about "maybe" uninitialized. Clang doesn't include this
        # in -Wall but gcc does, and it gives false positives.
@@ -13,7 +13,7 @@ Index: chromium-140.0.7339.41/build/config/compiler/BUILD.gn
        cflags += [ "-Wno-deprecated-declarations" ]
  
        # -Wcomment gives too many false positives in the case a
-@@ -2097,7 +2099,9 @@ config("default_warnings") {
+@@ -2091,7 +2093,9 @@ config("default_warnings") {
  
        # -Wpacked-not-aligned complains all generated mojom-shared-internal.h
        # files.

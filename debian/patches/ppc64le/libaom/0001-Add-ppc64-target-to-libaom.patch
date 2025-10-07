@@ -8,10 +8,10 @@ Subject: [PATCH] Add ppc64 target to libaom
  third_party/libaom/cmake_update.sh |  3 +++
  2 files changed, 15 insertions(+)
 
-Index: chromium-140.0.7339.41/third_party/libaom/BUILD.gn
+Index: chromium-141.0.7390.37/third_party/libaom/BUILD.gn
 ===================================================================
---- chromium-140.0.7339.41.orig/third_party/libaom/BUILD.gn
-+++ chromium-140.0.7339.41/third_party/libaom/BUILD.gn
+--- chromium-141.0.7390.37.orig/third_party/libaom/BUILD.gn
++++ chromium-141.0.7390.37/third_party/libaom/BUILD.gn
 @@ -299,6 +299,18 @@ if (current_cpu == "arm64" || current_cp
    }
  }
@@ -41,10 +41,10 @@ Index: chromium-140.0.7339.41/third_party/libaom/BUILD.gn
    if (is_android) {
      deps += [ "//third_party/cpu_features:ndk_compat" ]
    }
-Index: chromium-140.0.7339.41/third_party/libaom/cmake_update.sh
+Index: chromium-141.0.7390.37/third_party/libaom/cmake_update.sh
 ===================================================================
---- chromium-140.0.7339.41.orig/third_party/libaom/cmake_update.sh
-+++ chromium-140.0.7339.41/third_party/libaom/cmake_update.sh
+--- chromium-141.0.7390.37.orig/third_party/libaom/cmake_update.sh
++++ chromium-141.0.7390.37/third_party/libaom/cmake_update.sh
 @@ -167,6 +167,9 @@ egrep \
    "#define [A-Z0-9_]+[[:space:]]+[01]" "${CFG}/win/ia32/config/aom_config.h" \
    | awk '{print "%define " $2 " " $3}' > "${CFG}/win/ia32/config/aom_config.asm"

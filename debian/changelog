@@ -1,4 +1,4 @@
-chromium (1:140.0.7339.207-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:141.0.7390.54-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -21,7 +21,45 @@ chromium (1:140.0.7339.207-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Tue, 30 Sep 2025 10:02:29 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 07 Oct 2025 13:05:17 +0100
+
+chromium (141.0.7390.54-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream stable release.
+    - CVE-2025-11205: Heap buffer overflow in WebGPU.
+      Reported by Atte Kettunen of OUSPG.
+    - CVE-2025-11206: Heap buffer overflow in Video. Reported by Elias Hohl.
+    - CVE-2025-11207: Side-channel information leakage in Storage.
+      Reported by Alesandro Ortiz.
+    - CVE-2025-11208: Inappropriate implementation in Media.
+      Reported by Kevin Joensen.
+    - CVE-2025-11209: Inappropriate implementation in Omnibox.
+      Reported by Hafiizh.
+    - CVE-2025-11210: Side-channel information leakage in Tab.
+      Reported by Umar Farooq.
+    - CVE-2025-11211: Out of bounds read in Media. Reported by Kosir Jakob.
+    - CVE-2025-11212: Inappropriate implementation in Media.
+      Reported by Ameen Basha M K.
+    - CVE-2025-11213: Inappropriate implementation in Omnibox.
+      Reported by Hafiizh.
+    - CVE-2025-11215: Off by one error in V8. Reported by Google Big Sleep.
+    - CVE-2025-11216: Inappropriate implementation in Storage.
+      Reported by Farras Givari.
+    - CVE-2025-11219: Use after free in V8. Reported by Google Big Sleep.
+  * d/patches:
+    - fixes/rust-clanglib.patch: refresh.
+    - trixie/rust-no-alloc-shim.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: update from ungoogled.
+    - fixes/gentoo-stylesheet.patch: add patch from gentoo to fix build.
+    - fixes/libcpp-headers.patch: add build fix for unbundling clang.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: Refresh for
+      upstream changes
+    - fixes/fix-rustc.patch: Refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 01 Oct 2025 02:24:37 -0400
 
 chromium (140.0.7339.207-1~deb13u1) trixie-security; urgency=high
 

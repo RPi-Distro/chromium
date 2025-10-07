@@ -1,7 +1,7 @@
-Index: chromium-140.0.7339.41/base/allocator/dispatcher/tls.h
+Index: chromium-141.0.7390.37/base/allocator/dispatcher/tls.h
 ===================================================================
---- chromium-140.0.7339.41.orig/base/allocator/dispatcher/tls.h
-+++ chromium-140.0.7339.41/base/allocator/dispatcher/tls.h
+--- chromium-141.0.7390.37.orig/base/allocator/dispatcher/tls.h
++++ chromium-141.0.7390.37/base/allocator/dispatcher/tls.h
 @@ -88,6 +88,8 @@ struct BASE_EXPORT MMapAllocator {
    constexpr static size_t AllocationChunkSize = 16384;
  #elif BUILDFLAG(IS_LINUX) && defined(ARCH_CPU_ARM64)
@@ -11,11 +11,11 @@ Index: chromium-140.0.7339.41/base/allocator/dispatcher/tls.h
  #else
    constexpr static size_t AllocationChunkSize = 4096;
  #endif
-Index: chromium-140.0.7339.41/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
+Index: chromium-141.0.7390.37/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
 ===================================================================
---- chromium-140.0.7339.41.orig/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
-+++ chromium-140.0.7339.41/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
-@@ -397,7 +397,7 @@ PA_ALWAYS_INLINE constexpr size_t MaxDir
+--- chromium-141.0.7390.37.orig/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
++++ chromium-141.0.7390.37/base/allocator/partition_allocator/src/partition_alloc/partition_alloc_constants.h
+@@ -399,7 +399,7 @@ PA_ALWAYS_INLINE constexpr size_t MaxDir
  // TODO(casey.smalley@arm.com): under 64k pages we can end up in a situation
  // where a normal slot span will be large enough to contain multiple items,
  // but the address will go over the final partition page after being aligned.

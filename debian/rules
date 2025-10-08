@@ -179,9 +179,9 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 njobs=$(patsubst parallel=%,%,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 endif
 
-# Limit gn threads to 30 on armhf to avoid allocation errors
+# Limit gn threads to 20 on armhf to avoid allocation errors
 ifeq (armhf,$(DEB_HOST_ARCH))
-threads=$(intcmp $(njobs),30,$(njobs),30)
+threads=$(intcmp $(njobs),20,$(njobs),20)
 else
 threads=$(njobs)
 endif

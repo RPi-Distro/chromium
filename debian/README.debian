@@ -86,6 +86,10 @@ wiki, but it is often out of date:
 
 http://wiki.debian.org/Chromium/Debugging
 
+It's also helpful to run chromium with the '--disable-gpu' option, to
+determine whether the issue you're seeing is related to your graphics
+hardware.
+
 Running as Root
 ===============
 

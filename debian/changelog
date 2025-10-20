@@ -1,4 +1,4 @@
-chromium (1:141.0.7390.65-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:141.0.7390.107-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -29,7 +29,15 @@ chromium (1:141.0.7390.65-1~deb12u1+rpt1) bookworm; urgency=medium
   * d/c: Remove system-config-printer from recommends
   * Disable the GL mappings for YUV formats
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 13 Oct 2025 13:12:12 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 20 Oct 2025 10:10:17 +0100
+
+chromium (141.0.7390.107-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-11756: Use after free in Safe Browsing. Reported by asnine.
+  * Suggest --disable-gpu to bug reporters and in README.Debian.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 14 Oct 2025 19:25:54 -0400
 
 chromium (141.0.7390.65-1~deb12u1) bookworm-security; urgency=high
 

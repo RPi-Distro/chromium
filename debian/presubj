@@ -6,5 +6,8 @@ keep track of issues.  Thank you!
 If you experience crashes, please read this wiki page to get a useful backtrace:
 http://wiki.debian.org/Chromium/Debugging
 
+Please also try running chromium with the '--disable-gpu' option, so we can
+determine if the bug is specific to your graphics hardware.
+
 It's very helpful to include the output from chrome://gpu in your report, as a
 lot of bugs can be specific to desktop environments and hardware.

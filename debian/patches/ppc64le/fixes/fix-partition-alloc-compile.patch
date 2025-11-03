@@ -1,10 +1,10 @@
 kIndex: chromium-114.0.5735.45/base/allocator/partition_allocator/partition_alloc.gni
 ===================================================================
-Index: chromium-141.0.7390.37/base/allocator/partition_allocator/partition_alloc.gni
+Index: chromium-142.0.7444.52/base/allocator/partition_allocator/partition_alloc.gni
 ===================================================================
---- chromium-141.0.7390.37.orig/base/allocator/partition_allocator/partition_alloc.gni
-+++ chromium-141.0.7390.37/base/allocator/partition_allocator/partition_alloc.gni
-@@ -66,7 +66,7 @@ is_clang_or_gcc = is_clang || !is_win
+--- chromium-142.0.7444.52.orig/base/allocator/partition_allocator/partition_alloc.gni
++++ chromium-142.0.7444.52/base/allocator/partition_allocator/partition_alloc.gni
+@@ -71,7 +71,7 @@ is_clang_or_gcc = is_clang || !is_win
  # Whether 64-bit pointers are used.
  # A static_assert in partition_alloc_config.h verifies that.
  if (current_cpu == "x64" || current_cpu == "arm64" || current_cpu == "arm64e" ||

@@ -1,4 +1,4 @@
-chromium (1:141.0.7390.122-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:142.0.7444.59-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -29,7 +29,77 @@ chromium (1:141.0.7390.122-1~deb12u1+rpt1) bookworm; urgency=medium
   * d/c: Remove system-config-printer from recommends
   * Disable the GL mappings for YUV formats
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 27 Oct 2025 12:48:28 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 03 Nov 2025 11:25:37 +0000
+
+chromium (142.0.7444.59-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream stable release.
+    - CVE-2025-12428: Type Confusion in V8.
+      Reported by Man Yue Mo of GitHub Security Lab.
+    - CVE-2025-12429: Inappropriate implementation in V8.
+      Reported by Aorui Zhang.
+    - CVE-2025-12430: Object lifecycle issue in Media.
+      Reported by round.about.
+    - CVE-2025-12431: Inappropriate implementation in Extensions.
+      Reported by Alesandro Ortiz.
+    - CVE-2025-12432: Race in V8. Reported by Google Big Sleep.
+    - CVE-2025-12433: Inappropriate implementation in V8.
+      Reported by Google Big Sleep.
+    - CVE-2025-12036: Inappropriate implementation in V8.
+      Reported by Google Big Sleep.
+    - CVE-2025-12434: Race in Storage. Reported by Lijo A.T.
+    - CVE-2025-12435: Incorrect security UI in Omnibox. Reported by Hafiizh.
+    - CVE-2025-12436: Policy bypass in Extensions.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2025-12437: Use after free in PageInfo. Reported by Umar Farooq.
+    - CVE-2025-12438: Use after free in Ozone.
+      Reported by Wei Yuan of MoyunSec VLab.
+    - CVE-2025-12439: Inappropriate implementation in App-Bound Encryption.
+      Reported by Ari Novick.
+    - CVE-2025-12440: Inappropriate implementation in Autofill.
+      Reported by Khalil Zhani.
+    - CVE-2025-12441: Out of bounds read in V8. Reported by Google Big Sleep.
+    - CVE-2025-12443: Out of bounds read in WebXR. Reported by Aisle Research
+    - CVE-2025-12444: Incorrect security UI in Fullscreen UI.
+      Reported by syrf.
+    - CVE-2025-12445: Policy bypass in Extensions. Reported by Thomas Greiner
+    - CVE-2025-12446: Incorrect security UI in SplitView. Reported by Hafiizh
+    - CVE-2025-12447: Incorrect security UI in Omnibox.
+      Reported by Khalil Zhani.
+  * d/patches:
+    - disable/android.patch: drop part of patch related to md5sum tool.
+    - disable/catapult.patch: refresh.
+    - bookworm/clang19.patch: also drop uninit-const-pointer and
+      unnecessary-virtual-specifier warnings.
+    - ungoogled/disable-privacy-sandbox.patch: sync from upstream.
+    - i386/support-i386.patch: refresh.
+    - trixie/rust-sanitize.patch: add a workaround for older rustc.
+    - fixes/chromium-142-iwyu-field-form-data.patch: pull in build fix
+      from gentoo.
+    - trixie/rust-no-alloc-shim.patch: add another missing symbol that's
+      provided by newer versions of rust.
+    - bookworm/gn-path-exists2.patch: add another workaround for lack of
+      path_exists() in older gn.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-third-party-hwy-wrong-include.patch: Drop due to
+      upstream fixes
+    - ppc64le/third_party/0002-regenerate-xnn-buildgn.patch: Regenerate from
+      upstream sources
+    - core/add-ppc64-architecture-to-extensions.diff: Refresh for upstream
+      changes
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-third-party-hwy-wrong-include.patch: Drop due to
+      upstream fixes
+    - ppc64le/third_party/0002-regenerate-xnn-buildgn.patch: Regenerate from
+      upstream sources
+    - core/add-ppc64-architecture-to-extensions.diff: Refresh for upstream
+      changes
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 29 Oct 2025 13:44:37 -0400
 
 chromium (141.0.7390.122-1~deb12u1) bookworm-security; urgency=high
 

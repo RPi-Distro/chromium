@@ -2,11 +2,24 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -2137,7 +2137,6 @@ config("default_warnings") {
+@@ -2171,10 +2171,8 @@ config("default_warnings") {
        "-Wno-thread-safety-reference-return",
  
        # TODO(crbug.com/376641662): Fix and re-enable.
 -      "-Wno-nontrivial-memcall",
+ 
+       # TODO(crbug.com/432275627): Fix and re-enable.
+-      "-Wno-uninitialized-const-pointer",
      ]
  
      cflags_cc += [
+--- a/v8/BUILD.gn
++++ b/v8/BUILD.gn
+@@ -1777,7 +1777,6 @@ config("strict_warnings") {
+     }
+     cflags += [
+       "-Wmissing-field-initializers",
+-      "-Wunnecessary-virtual-specifier",
+     ]
+   }
+ }

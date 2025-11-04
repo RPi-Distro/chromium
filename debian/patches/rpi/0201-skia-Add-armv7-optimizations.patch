@@ -32,7 +32,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +// We define two variants of this: one for 32-bit ARM NEON, and one generic C:
 +
 +#if defined(SK_ARM_HAS_NEON) && !defined(__ARM_64BIT_STATE)
-+static inline void Clamp_S32_opaque_D32_nofilter_DX_shaderproc_core_neon(SkPMColor* __restrict__ &dst, const SkPMColor* __restrict__ src, int core, SkFractionalInt fx, const SkFractionalInt dx)
++static inline void Clamp_S32_opaque_D32_nofilter_DX_shaderproc_core_neon(SkPMColor* __restrict__ &dst, const SkPMColor* __restrict__ src, int core, SkFixed3232 fx, const SkFixed3232 dx)
 +{
 +    const SkPMColor*p = src + (int32_t)(fx >> 32);
 +    uint32_t accum = (uint32_t) fx;
@@ -115,7 +115,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +#endif
 +
 +#if 0
-+static inline void Clamp_S32_opaque_D32_nofilter_DX_shaderproc_core(SkPMColor* __restrict__ &dst, const SkPMColor* __restrict__ src, int core, SkFractionalInt fx, const SkFractionalInt dx)
++static inline void Clamp_S32_opaque_D32_nofilter_DX_shaderproc_core(SkPMColor* __restrict__ &dst, const SkPMColor* __restrict__ src, int core, SkFixed3232 fx, const SkFixed3232 dx)
 +{
 +    const SkPMColor*p = src + (int32_t)(fx >> 32);
 +    uint32_t accum = (uint32_t) fx;
@@ -138,17 +138,17 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +    SkASSERT(s.fAlphaScale == 256);                                                                \
 +                                                                                                   \
 +    const unsigned maxX = s.fPixmap.width() - 1;                                                   \
-+    SkFractionalInt fx;                                                                            \
++    SkFixed3232 fx;                                                                            \
 +    int dstY;                                                                                      \
 +    {                                                                                              \
 +        const SkBitmapProcStateAutoMapper mapper(s, x, y);                                         \
 +        const unsigned maxY = s.fPixmap.height() - 1;                                              \
 +        dstY = SkTPin(mapper.intY(), 0, (int)maxY);                                                    \
-+        fx = mapper.fractionalIntX();                                                              \
++        fx = mapper.fixed3232X();                                                              \
 +    }                                                                                              \
 +                                                                                                   \
 +    const SkPMColor* SK_RESTRICT src = s.fPixmap.addr32(0, dstY);                                  \
-+    const SkFractionalInt dx = s.fInvSxFractionalInt;                                              \
++    const SkFixed3232 dx = s.fInvSx;                                              \
 +                                                                                                   \
 +    int core;                                                                                      \
 +                                                                                                   \
@@ -186,7 +186,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +        else if ((int32_t)((fx + (count - 1) * dx) >> 32) <= (int)maxX)                            \
 +            core = count;                                                                          \
 +        else                                                                                       \
-+            core = (int32_t)(((((SkFractionalInt) maxX) << 32) + 0xffffffff - fx) / dx) + 1;       \
++            core = (int32_t)(((((SkFixed3232) maxX) << 32) + 0xffffffff - fx) / dx) + 1;       \
 +        Clamp_S32_opaque_D32_nofilter_DX_shaderproc_core##SUFFIX(dst, src, core, fx, dx);          \
 +        count -= core;                                                                             \
 +        for (; count > 0; --count) {                                                               \
@@ -237,7 +237,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
      }
 --- a/third_party/skia/src/core/SkBitmapProcState.h
 +++ b/third_party/skia/src/core/SkBitmapProcState.h
-@@ -218,6 +218,10 @@ namespace SkOpts {
+@@ -211,6 +211,10 @@ namespace SkOpts {
      extern void (*S32_alpha_D32_filter_DXDY)(const SkBitmapProcState&,
                                               const uint32_t* xy, int count, SkPMColor*);
  
@@ -250,7 +250,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  
 --- a/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
 +++ b/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
-@@ -272,6 +272,530 @@ static unsigned clamp(SkFixed fx, int ma
+@@ -287,6 +287,530 @@ static unsigned clamp(SkFixed fx, int ma
      return SkTPin(fx >> 16, 0, max);
  }
  
@@ -500,12 +500,12 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +
 +        // we store y, x, x, x, x, x
 +        const unsigned maxX = s.fPixmap.width() - 1;
-+        SkFractionalInt fx;
++        SkFixed3232 fx;
 +        {
 +            const SkBitmapProcStateAutoMapper mapper(s, x, y);
 +            const unsigned maxY = s.fPixmap.height() - 1;
 +            *xy++ = tile(mapper.fixedY(), maxY);
-+            fx = mapper.fractionalIntX();
++            fx = mapper.fixed3232X();
 +        }
 +
 +        if (0 == maxX) {
@@ -514,23 +514,23 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +            return;
 +        }
 +
-+        const SkFractionalInt dx = s.fInvSxFractionalInt;
++        const SkFixed3232 dx = s.fInvSx;
 +
 +        // test if we don't need to apply the tile proc
-+        const SkFixed fixedFx = SkFractionalIntToFixed(fx);
-+        const SkFixed fixedDx = SkFractionalIntToFixed(dx);
++        const SkFixed fixedFx = SkFixed3232ToFixed(fx);
++        const SkFixed fixedDx = SkFixed3232ToFixed(dx);
 +        if (tryDecal && can_truncate_to_fixed_for_decal(fixedFx, fixedDx, count, maxX)) {
 +            decal_nofilter_scale_neon(xy, fixedFx, fixedDx, count);
 +            return;
 +        }
 +
 +        if (count >= 8) {
-+            SkFractionalInt dx2 = dx+dx;
-+            SkFractionalInt dx4 = dx2+dx2;
-+            SkFractionalInt dx8 = dx4+dx4;
++            SkFixed3232 dx2 = dx+dx;
++            SkFixed3232 dx4 = dx2+dx2;
++            SkFixed3232 dx8 = dx4+dx4;
 +
 +            // now build fx/fx+dx/fx+2dx/fx+3dx
-+            SkFractionalInt fx1, fx2, fx3;
++            SkFixed3232 fx1, fx2, fx3;
 +            int32x4_t lbase, hbase;
 +            int16_t *dst16 = (int16_t *)xy;
 +
@@ -538,11 +538,11 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +            fx2 = fx1+dx;
 +            fx3 = fx2+dx;
 +
-+            lbase = vdupq_n_s32(SkFractionalIntToFixed(fx));
-+            lbase = vsetq_lane_s32(SkFractionalIntToFixed(fx1), lbase, 1);
-+            lbase = vsetq_lane_s32(SkFractionalIntToFixed(fx2), lbase, 2);
-+            lbase = vsetq_lane_s32(SkFractionalIntToFixed(fx3), lbase, 3);
-+            hbase = vaddq_s32(lbase, vdupq_n_s32(SkFractionalIntToFixed(dx4)));
++            lbase = vdupq_n_s32(SkFixed3232ToFixed(fx));
++            lbase = vsetq_lane_s32(SkFixed3232ToFixed(fx1), lbase, 1);
++            lbase = vsetq_lane_s32(SkFixed3232ToFixed(fx2), lbase, 2);
++            lbase = vsetq_lane_s32(SkFixed3232ToFixed(fx3), lbase, 3);
++            hbase = vaddq_s32(lbase, vdupq_n_s32(SkFixed3232ToFixed(dx4)));
 +
 +            // store & bump
 +            while (count >= 8) {
@@ -554,8 +554,8 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +                vst1q_s16(dst16, fx8);
 +
 +                // but preserving base & on to the next
-+                lbase = vaddq_s32 (lbase, vdupq_n_s32(SkFractionalIntToFixed(dx8)));
-+                hbase = vaddq_s32 (hbase, vdupq_n_s32(SkFractionalIntToFixed(dx8)));
++                lbase = vaddq_s32 (lbase, vdupq_n_s32(SkFixed3232ToFixed(dx8)));
++                hbase = vaddq_s32 (hbase, vdupq_n_s32(SkFixed3232ToFixed(dx8)));
 +                dst16 += 8;
 +                count -= 8;
 +                fx += dx8;
@@ -565,7 +565,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +
 +        uint16_t* xx = (uint16_t*)xy;
 +        for (int i = count; i > 0; --i) {
-+            *xx++ = tile(SkFractionalIntToFixed(fx), maxX);
++            *xx++ = tile(SkFixed3232ToFixed(fx), maxX);
 +            fx += dx;
 +        }
 +    }
@@ -600,8 +600,8 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +
 +        const unsigned maxX = s.fPixmap.width() - 1;
 +        const SkFixed one = s.fFilterOneX;
-+        const SkFractionalInt dx = s.fInvSxFractionalInt;
-+        SkFractionalInt fx;
++        const SkFixed3232 dx = s.fInvSx;
++        SkFixed3232 fx;
 +
 +        {
 +            const SkBitmapProcStateAutoMapper mapper(s, x, y);
@@ -610,12 +610,12 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +            // compute our two Y values up front
 +            *xy++ = pack(fy, maxY, s.fFilterOneY);
 +            // now initialize fx
-+            fx = mapper.fractionalIntX();
++            fx = mapper.fixed3232X();
 +        }
 +
 +        // test if we don't need to apply the tile proc
-+        const SkFixed fixedFx = SkFractionalIntToFixed(fx);
-+        const SkFixed fixedDx = SkFractionalIntToFixed(dx);
++        const SkFixed fixedFx = SkFixed3232ToFixed(fx);
++        const SkFixed fixedDx = SkFixed3232ToFixed(dx);
 +        if (tryDecal && can_truncate_to_fixed_for_decal(fixedFx, fixedDx, count, maxX)) {
 +            decal_filter_scale_neon(xy, fixedFx, fixedDx, count);
 +            return;
@@ -631,13 +631,13 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +                    fx += dx;
 +                    --count;
 +                }
-+                while (count >= 0 && ((uintptr_t) xy & 0xf) && fx < ((SkFractionalInt) maxX << 32)) {
++                while (count >= 0 && ((uintptr_t) xy & 0xf) && fx < ((SkFixed3232) maxX << 32)) {
 +                    *xy++ = ((uint32_t)(fx >> 14) & 0xffffc000) + (uint32_t)(fx >> 32) + 1;
 +                    fx += dx;
 +                    --count;
 +                }
-+                if ((count -= 8-1) >= 0 && fx + 7*dx < ((SkFractionalInt) maxX << 32)) {
-+                    SkFractionalInt rem = (((SkFractionalInt) maxX << 32) - 7*dx - fx - 1) / 8;
++                if ((count -= 8-1) >= 0 && fx + 7*dx < ((SkFixed3232) maxX << 32)) {
++                    SkFixed3232 rem = (((SkFixed3232) maxX << 32) - 7*dx - fx - 1) / 8;
 +                    int32_t rem_hi = rem >> 32;
 +                    uint32_t rem_lo = (uint32_t) rem;
 +                    int32_t fx_hi = fx >> 32;
@@ -691,10 +691,10 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +                    : // Clobbers
 +                            "cc", "memory"
 +                    );
-+                    fx = ((SkFractionalInt) fx_hi << 32) | fx_lo;
++                    fx = ((SkFixed3232) fx_hi << 32) | fx_lo;
 +                }
 +                count += 8-1;
-+                while (count >= 0 && fx < ((SkFractionalInt) maxX << 32)) {
++                while (count >= 0 && fx < ((SkFixed3232) maxX << 32)) {
 +                    *xy++ = ((uint32_t)(fx >> 14) & 0xffffc000) + (uint32_t)(fx >> 32) + 1;
 +                    fx += dx;
 +                    --count;
@@ -706,7 +706,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +            } else {
 +                // Reflection case. Don't bother to optimize this as much -
 +                // not even sure if it's used!
-+                while (count >= 1 && fx >= ((SkFractionalInt) maxX << 32)) {
++                while (count >= 1 && fx >= ((SkFixed3232) maxX << 32)) {
 +                    *xy++ = (maxX << 18) + maxX;
 +                    fx += dx;
 +                    --count;
@@ -729,10 +729,10 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +        if (count >= 4) {
 +            int32x4_t wide_fx;
 +
-+            wide_fx = vdupq_n_s32(SkFractionalIntToFixed(fx));
-+            wide_fx = vsetq_lane_s32(SkFractionalIntToFixed(fx+dx), wide_fx, 1);
-+            wide_fx = vsetq_lane_s32(SkFractionalIntToFixed(fx+dx+dx), wide_fx, 2);
-+            wide_fx = vsetq_lane_s32(SkFractionalIntToFixed(fx+dx+dx+dx), wide_fx, 3);
++            wide_fx = vdupq_n_s32(SkFixed3232ToFixed(fx));
++            wide_fx = vsetq_lane_s32(SkFixed3232ToFixed(fx+dx), wide_fx, 1);
++            wide_fx = vsetq_lane_s32(SkFixed3232ToFixed(fx+dx+dx), wide_fx, 2);
++            wide_fx = vsetq_lane_s32(SkFixed3232ToFixed(fx+dx+dx+dx), wide_fx, 3);
 +
 +            while (count >= 4) {
 +                int32x4_t res;
@@ -741,7 +741,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +
 +                vst1q_u32(xy, vreinterpretq_u32_s32(res));
 +
-+                wide_fx += vdupq_n_s32(SkFractionalIntToFixed(dx+dx+dx+dx));
++                wide_fx += vdupq_n_s32(SkFixed3232ToFixed(dx+dx+dx+dx));
 +                fx += dx+dx+dx+dx;
 +                xy += 4;
 +                count -= 4;
@@ -749,7 +749,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +        }
 +
 +        while (--count >= 0) {
-+            *xy++ = pack(SkFractionalIntToFixed(fx), maxX, one);
++            *xy++ = pack(SkFixed3232ToFixed(fx), maxX, one);
 +            fx += dx;
 +        }
 +#ifndef __ARM_64BIT_STATE
@@ -781,7 +781,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  static const SkBitmapProcState::MatrixProc ClampX_ClampY_Procs[] = {
      nofilter_scale <clamp, clamp, true>, filter_scale <clamp, clamp, extract_low_bits_clamp_clamp, true>,
      nofilter_affine<clamp, clamp>,       filter_affine<clamp, clamp, extract_low_bits_clamp_clamp>,
-@@ -280,6 +804,9 @@ static const SkBitmapProcState::MatrixPr
+@@ -295,6 +819,9 @@ static const SkBitmapProcState::MatrixPr
      nofilter_scale <repeat, repeat, false>, filter_scale <repeat, repeat, extract_low_bits_general, false>,
      nofilter_affine<repeat, repeat>,        filter_affine<repeat, repeat, extract_low_bits_general>
  };

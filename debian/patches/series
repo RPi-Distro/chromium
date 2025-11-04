@@ -21,6 +21,7 @@ fixes/headless-gn.patch
 #fixes/make-pair.patch
 fixes/armhf-no-thumb.patch
 fixes/armhf-icf.patch
+fixes/chromium-142-iwyu-field-form-data.patch
 
 
 disable/tests.patch
@@ -46,6 +47,7 @@ system/rollup.patch
 trixie/adler1.patch
 trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
+trixie/rust-sanitize.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch
@@ -89,7 +91,6 @@ ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
 ppc64le/third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
 ppc64le/third_party/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
 ppc64le/third_party/0001-swiftshader-fix-build.patch
-ppc64le/third_party/0001-third-party-hwy-wrong-include.patch
 ppc64le/third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
 ppc64le/third_party/0002-third_party-lss-kernel-structs.patch
 

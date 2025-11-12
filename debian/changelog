@@ -1,4 +1,4 @@
-chromium (1:142.0.7444.59-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:142.0.7444.162-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -21,7 +21,30 @@ chromium (1:142.0.7444.59-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Tue, 04 Nov 2025 15:34:44 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 12 Nov 2025 21:27:55 +0000
+
+chromium (142.0.7444.162-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-13042: Inappropriate implementation in V8.
+      Reported by 303f06e3.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 12 Nov 2025 00:42:36 -0500
+
+chromium (142.0.7444.134-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-12725: Out of bounds write in WebGPU. Reported by Anonymous.
+    - CVE-2025-12726: Inappropriate implementation in Views.
+      Reported by Alesandro Ortiz.
+    - CVE-2025-12727: Inappropriate implementation in V8.
+      Reported by 303f06e3.
+    - CVE-2025-12728: Inappropriate implementation in Omnibox.
+      Reported by Hafiizh.
+    - CVE-2025-12729: Inappropriate implementation in Omnibox.
+      Reported by Khalil Zhani.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 05 Nov 2025 21:47:42 -0500
 
 chromium (142.0.7444.59-1~deb13u1) trixie-security; urgency=high
 

@@ -1,4 +1,4 @@
-chromium (1:142.0.7444.162-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:142.0.7444.175-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -21,7 +21,16 @@ chromium (1:142.0.7444.162-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Wed, 12 Nov 2025 21:27:55 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 25 Nov 2025 11:40:51 +0000
+
+chromium (142.0.7444.175-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-13223: Type Confusion in V8.
+      Reported by Clément Lecigne of Google's Threat Analysis Group.
+    - CVE-2025-13224: Type Confusion in V8. Reported by Google Big Sleep.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 18 Nov 2025 13:11:29 -0500
 
 chromium (142.0.7444.162-1~deb13u1) trixie-security; urgency=high
 

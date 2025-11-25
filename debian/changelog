@@ -1,4 +1,4 @@
-chromium (1:142.0.7444.162-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:142.0.7444.175-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -29,7 +29,16 @@ chromium (1:142.0.7444.162-1~deb12u1+rpt1) bookworm; urgency=medium
   * d/c: Remove system-config-printer from recommends
   * Disable the GL mappings for YUV formats
 
- -- Serge Schneider <serge@raspberrypi.com>  Wed, 12 Nov 2025 20:45:56 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 25 Nov 2025 11:29:33 +0000
+
+chromium (142.0.7444.175-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-13223: Type Confusion in V8.
+      Reported by Clément Lecigne of Google's Threat Analysis Group.
+    - CVE-2025-13224: Type Confusion in V8. Reported by Google Big Sleep.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 18 Nov 2025 13:11:29 -0500
 
 chromium (142.0.7444.162-1~deb12u1) bookworm-security; urgency=high
 

@@ -1,3 +1,13 @@
+chromium (143.0.7499.40-0) UNRELEASED; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/patches:
+    - bookworm/constexpr.patch: Refresh (source file moved).
+    - bookworm/gn-absl.patch: Refresh.
+    - bookworm/gn-path-exists2.patch: Refresh.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 18 Nov 2025 13:11:30 -0500
+
 chromium (142.0.7444.175-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

@@ -72,7 +72,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
    if ret <= -100:
 --- a/build/toolchain/gcc_toolchain.gni
 +++ b/build/toolchain/gcc_toolchain.gni
-@@ -805,6 +805,13 @@ template("gcc_rust_host_build_tools_tool
+@@ -794,6 +794,16 @@ template("gcc_rust_host_build_tools_tool
      forward_variables_from(invoker,
                             "*",
                             TESTONLY_AND_VISIBILITY + [ "toolchain_args" ])
@@ -83,10 +83,13 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 +    #cxx           = getenv("RUST_MACRO_CXX")
 +    extra_ldflags  = getenv("RUST_MACRO_LDFLAGS")
 +
++    # Avoid "Assignment had no effect" error when env var is unset
++    deb_build_arch = deb_build_arch
++
      toolchain_args = {
        # Populate toolchain args from the invoker.
        forward_variables_from(invoker.toolchain_args, "*")
-@@ -819,6 +826,29 @@ template("gcc_rust_host_build_tools_tool
+@@ -808,6 +818,29 @@ template("gcc_rust_host_build_tools_tool
        use_sanitizer_coverage = false
        generate_linker_map = false
        use_thin_lto = false
@@ -225,7 +228,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
  import subprocess
  import sys
  import tempfile
-@@ -183,6 +183,14 @@ def main(argv):
+@@ -227,6 +227,14 @@ def main(argv):
      if not options.exclude_imports:
        protoc_cmd += ["--include_imports"]
  

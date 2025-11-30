@@ -64,7 +64,6 @@ endif
 defines:=clang_use_chrome_plugins=false
 
 # use system rust
-export RUSTC_BOOTSTRAP=1
 export CLANG_MVERS:=$(shell $(CC) --version 2>/dev/null | sed -n 's/.* clang version //p' | cut -d. -f1)
 rust_sysroot=/usr
 defines+=rust_sysroot_absolute=\"$(rust_sysroot)\"

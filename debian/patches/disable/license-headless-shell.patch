@@ -1,0 +1,13 @@
+Don't generate the LICENSE.headless_shell file, since we don't need it, and
+the rule for it is annoyingly fragile.
+
+--- a/headless/BUILD.gn
++++ b/headless/BUILD.gn
+@@ -980,7 +980,6 @@ executable("headless_shell") {
+   deps = [ ":headless_shell_lib" ]
+ 
+   if (proprietary_codecs) {
+-    deps += [ ":generate_headless_shell_license_file" ]
+   }
+ 
+   if (!headless_use_embedded_resources) {

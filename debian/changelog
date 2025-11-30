@@ -1,12 +1,32 @@
-chromium (143.0.7499.40-0) UNRELEASED; urgency=high
+chromium (143.0.7499.40-0~deb12u1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/patches:
+    - fixes/headless-gn.patch: refresh.
+    - fixes/chromium-142-iwyu-field-form-data.patch: drop, merged upstream.
+    - disable/tests.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: sync from upstream.
+    - fixes/libpng-testonly.patch: add a workaround for a missing build target
+      that upstream forgot to include.
+    - trixie/rust-no-alloc-shim.patch: mark nightly feature 'no_mangle' as
+      unsafe to make rustc happy.
+    - trixie/cookie-string-view.patch: add a workaround for missing clang-19
+      feature.
 
   [ Daniel Richard G. ]
   * d/patches:
+    - debianization/cross-build.patch: Avoid "Assignment had no effect"
+      error from GN when running outside of d/rules.
+    - debianization/rustc-bootstrap.patch: Move RUSTC_BOOTSTRAP=1 here.
+    - disable/license-headless-shell.patch: Don't generate the (unused)
+      LICENSE.headless_shell file, as the rule tends to break easily.
+    - fixes/headless-gn.patch: No longer needed, thanks to previous patch.
     - bookworm/constexpr.patch: Refresh (source file moved).
     - bookworm/gn-absl.patch: Refresh.
     - bookworm/gn-path-exists2.patch: Refresh.
+  * d/rules: Move RUSTC_BOOTSTRAP=1 environment setting into patch.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 18 Nov 2025 13:11:30 -0500
+ -- Andres Salomon <dilinger@debian.org>  Fri, 28 Nov 2025 19:23:49 -0500
 
 chromium (142.0.7444.175-1~deb12u1) bookworm-security; urgency=high
 

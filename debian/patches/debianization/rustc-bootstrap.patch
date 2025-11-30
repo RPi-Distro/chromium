@@ -1,0 +1,17 @@
+Set RUSTC_BOOTSTRAP=1 in the environment so that stable versions of rustc
+allow the use of -Z* compiler options, rather than erroring out with
+
+  error: the option `Z` is only accepted on the nightly compiler
+
+--- a/build/rust/gni_impl/rustc_wrapper.py
++++ b/build/rust/gni_impl/rustc_wrapper.py
+@@ -249,6 +249,9 @@ def main():
+     env[k] = v
+     fixed_env_vars.append(k)
+ 
++  # Debian: Allow -Z* compiler options
++  env['RUSTC_BOOTSTRAP'] = '1'
++
+   try:
+     if args.v:
+       print(' '.join(f'{k}={shlex.quote(v)}' for k, v in env.items()),

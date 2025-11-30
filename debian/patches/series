@@ -4,6 +4,7 @@ debianization/master-preferences.patch
 debianization/clang-version.patch
 debianization/swiftshader-use-llvm-16.patch
 debianization/cross-build.patch
+debianization/rustc-bootstrap.patch
 
 fixes/ps-print.patch
 fixes/widevine-locations.patch
@@ -18,12 +19,12 @@ fixes/armhf-timespec.patch
 fixes/updater-test.patch
 #fixes/absl-optional.patch
 #fixes/font-gc-asan.patch
-fixes/headless-gn.patch
+#fixes/headless-gn.patch
 #fixes/stdatomic.patch
 #fixes/make-pair.patch
 fixes/armhf-no-thumb.patch
 fixes/armhf-icf.patch
-fixes/chromium-142-iwyu-field-form-data.patch
+fixes/libpng-testonly.patch
 
 
 disable/tests.patch
@@ -39,6 +40,7 @@ disable/widevine-cdm-cu.patch
 disable/clang-version-check.patch
 disable/screen-ai-blob.patch
 disable/node-version-ck.patch
+disable/license-headless-shell.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -51,6 +53,7 @@ trixie/adler1.patch
 trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
+trixie/cookie-string-view.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

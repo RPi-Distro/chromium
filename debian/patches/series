@@ -88,6 +88,7 @@ bookworm/gn-hpp11.patch
 #bookworm/rust-box-to-vec.patch
 bookworm/gn-path-exists2.patch
 bookworm/rust-unsafe-extern.patch
+bookworm/node-esm-dirname.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch

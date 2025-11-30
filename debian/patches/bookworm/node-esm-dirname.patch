@@ -1,0 +1,37 @@
+Avoid the following Node.js error on jammy:
+
+  FAILED: gen/third_party/devtools-frontend/src/front_end/.well-known/appspecific/com.chrome.devtools.json
+  python3 ../../third_party/node/node.py ../../third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs gen/third_party/devtools-frontend/src/front_end/.well-known/appspecific/com.chrome.devtools.json
+  Traceback (most recent call last):
+    File ".../out/Release/../../third_party/node/node.py", line 43, in <module>
+      RunNode(sys.argv[1:])
+    File ".../out/Release/../../third_party/node/node.py", line 38, in RunNode
+      raise RuntimeError('Command \'%s\' failed\n%s' % (' '.join(cmd), err))
+  RuntimeError: Command '.../out/Release/../../third_party/node/linux/node-linux-x64/bin/node ../../third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs gen/third_party/devtools-frontend/src/front_end/.well-known/appspecific/com.chrome.devtools.json' failed
+  node:internal/errors:491
+      ErrorCaptureStackTrace(err);
+      ^
+
+  TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined
+      at new NodeError (node:internal/errors:400:5)
+      at validateString (node:internal/validators:163:11)
+      at dirname (node:path:1276:5)
+      at file://.../third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs:12:27
+      at ModuleJob.run (node:internal/modules/esm/module_job:194:25) {
+    code: 'ERR_INVALID_ARG_TYPE'
+  }
+
+  Node.js v18.13.0
+
+--- a/third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs
++++ b/third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs
+@@ -9,7 +9,8 @@ import { writeIfChanged } from './ninja/
+ 
+ const [, , outputLocation] = process.argv;
+ 
+-const root = join(dirname(dirname(import.meta.dirname)), 'front_end');
++import { fileURLToPath } from 'url';
++const root = join(dirname(dirname(dirname(fileURLToPath(import.meta.url)))), 'front_end');
+ 
+ // We use a pre-generated v4 UUID for the namespace
+ const NAMESPACE = '2ba62548-f4e9-11ef-9cd2-0242ac120002';

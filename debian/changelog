@@ -60,9 +60,6 @@ chromium (143.0.7499.40-1~deb12u1) bookworm-security; urgency=high
       upstream sources
     - ppc64le/fixes/fix-clang-selection.patch: Refresh for upstream changes
 
-  [ Jianfeng Liu ]
-  * Add loong64 support, with patches in d/patches/loongarch64/.
-
  -- Andres Salomon <dilinger@debian.org>  Wed, 03 Dec 2025 01:54:50 -0500
 
 chromium (142.0.7444.175-1~deb12u1) bookworm-security; urgency=high

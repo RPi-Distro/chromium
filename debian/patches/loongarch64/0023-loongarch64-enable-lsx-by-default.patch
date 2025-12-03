@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Thu, 15 May 2025 17:35:33 +0800
+Subject: loongarch64: enable lsx by default
+
+---
+ build/config/loongarch64.gni | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/config/loongarch64.gni b/build/config/loongarch64.gni
+index 9a95ec9151..a9dc9d28db 100644
+--- a/build/config/loongarch64.gni
++++ b/build/config/loongarch64.gni
+@@ -7,7 +7,7 @@ import("//build/config/v8_target_cpu.gni")
+ if (current_cpu == "loong64") {
+   declare_args() {
+     # LOONGARCH64 SIMD Arch compilation flag.
+-    loongarch64_use_lsx = false
++    loongarch64_use_lsx = true
+     loongarch64_use_lasx = false
+   }
+ }
+-- 
+2.51.0
+

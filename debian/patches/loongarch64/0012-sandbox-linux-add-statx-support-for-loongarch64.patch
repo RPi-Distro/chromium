@@ -1,0 +1,404 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Fri, 30 May 2025 16:05:15 +0800
+Subject: sandbox/linux: add statx support for loongarch64
+
+---
+ sandbox/linux/services/syscall_wrappers.cc    | 54 ++++++++++++++++++-
+ sandbox/linux/services/syscall_wrappers.h     |  2 +
+ sandbox/linux/syscall_broker/broker_client.cc | 15 ++++++
+ sandbox/linux/syscall_broker/broker_client.h  |  3 ++
+ sandbox/linux/syscall_broker/broker_command.h |  1 +
+ .../syscall_broker/broker_file_permission.h   |  1 +
+ sandbox/linux/syscall_broker/broker_host.cc   | 18 ++++++-
+ .../linux/syscall_broker/broker_process.cc    |  3 ++
+ .../syscall_broker/syscall_dispatcher.cc      | 15 ++++++
+ .../linux/syscall_broker/syscall_dispatcher.h |  3 ++
+ sandbox/linux/system_headers/linux_stat.h     | 44 ++++++++++++++-
+ .../policy/linux/bpf_broker_policy_linux.cc   |  6 +++
+ sandbox/policy/linux/sandbox_linux.cc         | 13 +++++
+ 13 files changed, 173 insertions(+), 5 deletions(-)
+
+diff --git a/sandbox/linux/services/syscall_wrappers.cc b/sandbox/linux/services/syscall_wrappers.cc
+index bae85cec1d..005e82150d 100644
+--- a/sandbox/linux/services/syscall_wrappers.cc
++++ b/sandbox/linux/services/syscall_wrappers.cc
+@@ -10,6 +10,7 @@
+ #include "sandbox/linux/services/syscall_wrappers.h"
+ 
+ #include <fcntl.h>
++#include <linux/stat.h>
+ #include <pthread.h>
+ #include <sched.h>
+ #include <setjmp.h>
+@@ -170,9 +171,53 @@ int sys_sigaction(int signum,
+   return sigaction(signum, act, oldact);
+ }
+ 
++// follow glibc __cp_stat64_statx
++void statx_to_stat(struct kernel_stat* to, struct kernel_statx* from) {
++  memset(to, 0, sizeof(struct kernel_stat));
++  to->st_dev = ((from->stx_dev_minor & 0xff) | (from->stx_dev_major << 8) |
++                ((from->stx_dev_minor & ~0xff) << 12));
++  to->st_rdev = ((from->stx_rdev_minor & 0xff) | (from->stx_rdev_major << 8) |
++                 ((from->stx_rdev_minor & ~0xff) << 12));
++  to->st_ino = from->stx_ino;
++  to->st_mode = from->stx_mode;
++  to->st_nlink = from->stx_nlink;
++  to->st_uid = from->stx_uid;
++  to->st_gid = from->stx_gid;
++  to->st_atime_ = from->stx_atime.tv_sec;
++  to->st_atime_nsec_ = from->stx_atime.tv_nsec;
++  to->st_mtime_ = from->stx_mtime.tv_sec;
++  to->st_mtime_nsec_ = from->stx_mtime.tv_nsec;
++  to->st_ctime_ = from->stx_ctime.tv_sec;
++  to->st_ctime_nsec_ = from->stx_ctime.tv_nsec;
++  to->st_size = from->stx_size;
++  to->st_blocks = from->stx_blocks;
++  to->st_blksize = from->stx_blksize;
++}
++
++int sys_statx(int fd,
++              const char* path,
++              int flags,
++              unsigned int mask,
++              struct kernel_statx* statx_buf) {
++#if defined(__NR_statx)
++  int res = syscall(__NR_statx, fd, path, flags, mask, statx_buf);
++  if (res == 0)
++    MSAN_UNPOISON(statx_buf, sizeof(*statx_buf));
++  return res;
++#else  // defined(__NR_statx)
++  RAW_CHECK(false);
++  return -ENOSYS;
++#endif
++}
++
+ int sys_stat(const char* path, struct kernel_stat* stat_buf) {
+   int res;
+-#if !defined(__NR_stat)
++#if defined(__NR_statx)
++  kernel_statx statx_buf;
++  res = syscall(__NR_statx, AT_FDCWD, path, AT_NO_AUTOMOUNT, STATX_BASIC_STATS, &statx_buf);
++  if (res == 0)
++    statx_to_stat(stat_buf, &statx_buf);
++#elif !defined(__NR_stat)
+   res = syscall(__NR_newfstatat, AT_FDCWD, path, stat_buf, 0);
+ #else
+   res = syscall(__NR_stat, path, stat_buf);
+@@ -184,7 +229,12 @@ int sys_stat(const char* path, struct kernel_stat* stat_buf) {
+ 
+ int sys_lstat(const char* path, struct kernel_stat* stat_buf) {
+   int res;
+-#if !defined(__NR_lstat)
++#if defined(__NR_statx)
++  kernel_statx statx_buf;
++  res = syscall(__NR_statx, AT_FDCWD, path, AT_NO_AUTOMOUNT | AT_SYMLINK_NOFOLLOW, STATX_BASIC_STATS, &statx_buf);
++  if (res == 0)
++    statx_to_stat(stat_buf, &statx_buf);
++#elif !defined(__NR_lstat)
+   res = syscall(__NR_newfstatat, AT_FDCWD, path, stat_buf, AT_SYMLINK_NOFOLLOW);
+ #else
+   res = syscall(__NR_lstat, path, stat_buf);
+diff --git a/sandbox/linux/services/syscall_wrappers.h b/sandbox/linux/services/syscall_wrappers.h
+index d591dbce44..c599979c4c 100644
+--- a/sandbox/linux/services/syscall_wrappers.h
++++ b/sandbox/linux/services/syscall_wrappers.h
+@@ -19,6 +19,7 @@ struct cap_hdr;
+ struct cap_data;
+ struct kernel_stat;
+ struct kernel_stat64;
++struct kernel_statx;
+ struct landlock_ruleset_attr;
+ 
+ namespace sandbox {
+@@ -92,6 +93,7 @@ SANDBOX_EXPORT int sys_sigaction(int signum,
+ // architectures, with the same capabilities as stat() and lstat().
+ SANDBOX_EXPORT int sys_stat(const char* path, struct kernel_stat* stat_buf);
+ SANDBOX_EXPORT int sys_lstat(const char* path, struct kernel_stat* stat_buf);
++SANDBOX_EXPORT int sys_statx(int fd, const char* path, int flags, unsigned int mask, struct kernel_statx* statx_buf);
+ 
+ // Takes care of unpoisoning |stat_buf| for MSAN. Check-fails if fstatat64() is
+ // not a supported syscall on the current platform.
+diff --git a/sandbox/linux/syscall_broker/broker_client.cc b/sandbox/linux/syscall_broker/broker_client.cc
+index 848af1020d..7e9f214183 100644
+--- a/sandbox/linux/syscall_broker/broker_client.cc
++++ b/sandbox/linux/syscall_broker/broker_client.cc
+@@ -198,6 +198,21 @@ int BrokerClient::Stat64(const char* pathname,
+                            sizeof(*sb));
+ }
+ 
++int BrokerClient::Statx(const char* pathname,
++                         bool follow_links,
++                         struct kernel_statx* sb) const {
++  if (!pathname || !sb)
++    return -EFAULT;
++
++  if (fast_check_in_client_ &&
++      !CommandStatIsSafe(policy_->allowed_command_set,
++                         *policy_->file_permissions, pathname)) {
++    return -policy_->file_permissions->denied_errno();
++  }
++  return StatFamilySyscall(COMMAND_STATX, pathname, follow_links, sb,
++                           sizeof(*sb));
++}
++
+ int BrokerClient::Unlink(const char* path) const {
+   if (!path)
+     return -EFAULT;
+diff --git a/sandbox/linux/syscall_broker/broker_client.h b/sandbox/linux/syscall_broker/broker_client.h
+index 9d0fdee5f3..1c7f951436 100644
+--- a/sandbox/linux/syscall_broker/broker_client.h
++++ b/sandbox/linux/syscall_broker/broker_client.h
+@@ -67,6 +67,9 @@ class SANDBOX_EXPORT BrokerClient : public SyscallDispatcher {
+   int Stat64(const char* pathname,
+              bool follow_links,
+              struct kernel_stat64* sb) const override;
++  int Statx(const char* pathname,
++             bool follow_links,
++             struct kernel_statx* sb) const override;
+   int Unlink(const char* unlink) const override;
+   int InotifyAddWatch(int fd,
+                       const char* pathname,
+diff --git a/sandbox/linux/syscall_broker/broker_command.h b/sandbox/linux/syscall_broker/broker_command.h
+index d44c42fe2b..5fd22d8186 100644
+--- a/sandbox/linux/syscall_broker/broker_command.h
++++ b/sandbox/linux/syscall_broker/broker_command.h
+@@ -42,6 +42,7 @@ enum BrokerCommand {
+   COMMAND_RMDIR,
+   COMMAND_STAT,
+   COMMAND_STAT64,
++  COMMAND_STATX,
+   COMMAND_UNLINK,
+   COMMAND_INOTIFY_ADD_WATCH,
+ 
+diff --git a/sandbox/linux/syscall_broker/broker_file_permission.h b/sandbox/linux/syscall_broker/broker_file_permission.h
+index 0b9fb9c04e..4202dc1889 100644
+--- a/sandbox/linux/syscall_broker/broker_file_permission.h
++++ b/sandbox/linux/syscall_broker/broker_file_permission.h
+@@ -5,6 +5,7 @@
+ #ifndef SANDBOX_LINUX_SYSCALL_BROKER_BROKER_FILE_PERMISSION_H_
+ #define SANDBOX_LINUX_SYSCALL_BROKER_BROKER_FILE_PERMISSION_H_
+ 
++#include <cstdint>
+ #include <bitset>
+ #include <cstdint>
+ #include <string>
+diff --git a/sandbox/linux/syscall_broker/broker_host.cc b/sandbox/linux/syscall_broker/broker_host.cc
+index bf1339b061..ca5793ecc0 100644
+--- a/sandbox/linux/syscall_broker/broker_host.cc
++++ b/sandbox/linux/syscall_broker/broker_host.cc
+@@ -302,6 +302,21 @@ void BrokerHost::StatFileForIPC(BrokerCommand command_type,
+     RAW_CHECK(reply->AddIntToMessage(0));
+     RAW_CHECK(
+         reply->AddDataToMessage(reinterpret_cast<char*>(&sb), sizeof(sb)));
++#elif defined(__loongarch__)
++    // handle COMMAND_STATX
++    DCHECK(command_type == COMMAND_STATX);
++    struct kernel_statx sb;
++
++    int sts = sandbox::sys_statx(AT_FDCWD, file_to_access,
++                                     follow_links ? 0 : AT_SYMLINK_NOFOLLOW,
++				     STATX_BASIC_STATS, &sb);
++    if (sts < 0) {
++      RAW_CHECK(reply->AddIntToMessage(-errno));
++      return;
++    }
++    RAW_CHECK(reply->AddIntToMessage(0));
++    RAW_CHECK(
++        reply->AddDataToMessage(reinterpret_cast<char*>(&sb), sizeof(sb)));
+ #else  // defined(__NR_fstatat64)
+     // We should not reach here on 64-bit systems, as the *stat*64() are only
+     // necessary on 32-bit.
+@@ -441,7 +456,8 @@ bool BrokerHost::HandleRemoteCommand(BrokerSimpleMessage* message,
+       break;
+     }
+     case COMMAND_STAT:
+-    case COMMAND_STAT64: {
++    case COMMAND_STAT64:
++    case COMMAND_STATX: {
+       const char* requested_filename;
+       if (!message->ReadString(&requested_filename)) {
+         return false;
+diff --git a/sandbox/linux/syscall_broker/broker_process.cc b/sandbox/linux/syscall_broker/broker_process.cc
+index cd13970eb6..0cc25ef897 100644
+--- a/sandbox/linux/syscall_broker/broker_process.cc
++++ b/sandbox/linux/syscall_broker/broker_process.cc
+@@ -169,6 +169,9 @@ bool BrokerProcess::IsSyscallBrokerable(int sysno, bool fast_check) const {
+ #if defined(__NR_fstatat64)
+     case __NR_fstatat64:
+ #endif
++#if defined(__NR_statx)
++    case __NR_statx:
++#endif
+ #if defined(__x86_64__) || defined(__aarch64__) || defined(__powerpc64__)
+     case __NR_newfstatat:
+ #endif
+diff --git a/sandbox/linux/syscall_broker/syscall_dispatcher.cc b/sandbox/linux/syscall_broker/syscall_dispatcher.cc
+index 2c019f92b8..11de52b42e 100644
+--- a/sandbox/linux/syscall_broker/syscall_dispatcher.cc
++++ b/sandbox/linux/syscall_broker/syscall_dispatcher.cc
+@@ -29,6 +29,8 @@ int SyscallDispatcher::DefaultStatForTesting(const char* pathname,
+   return Stat64(pathname, follow_links, sb);
+ #elif defined(__NR_newfstatat)
+   return Stat(pathname, follow_links, sb);
++#elif defined(__NR_statx)
++  return Statx(pathname, follow_links, sb);
+ #endif
+ }
+ 
+@@ -172,6 +174,19 @@ int SyscallDispatcher::DispatchSyscall(const arch_seccomp_data& args) {
+       return Stat64(reinterpret_cast<const char*>(args.args[0]), true,
+                     reinterpret_cast<struct kernel_stat64*>(args.args[1]));
+ #endif
++#if defined(__NR_statx)
++    case __NR_statx:
++      // we have ensured that the statx does not have AT_EMPTY_PATH in HandleViaBroker()
++      // so this is stat/lstat instead of fstat
++      // see PerformStatat
++      if (static_cast<int>(args.args[0]) != AT_FDCWD) {
++        return -EPERM;
++      }
++
++      return Statx(reinterpret_cast<const char*>(args.args[1]),
++		   !(static_cast<int>(args.args[2]) & AT_SYMLINK_NOFOLLOW),
++                   reinterpret_cast<struct kernel_statx*>(args.args[4]));
++#endif
+ #if defined(__NR_lstat)
+     case __NR_lstat:
+       // See https://crbug.com/847096
+diff --git a/sandbox/linux/syscall_broker/syscall_dispatcher.h b/sandbox/linux/syscall_broker/syscall_dispatcher.h
+index 906c37d922..1804f48837 100644
+--- a/sandbox/linux/syscall_broker/syscall_dispatcher.h
++++ b/sandbox/linux/syscall_broker/syscall_dispatcher.h
+@@ -49,6 +49,9 @@ class SANDBOX_EXPORT SyscallDispatcher {
+   virtual int Stat64(const char* pathname,
+                      bool follow_links,
+                      struct kernel_stat64* sb) const = 0;
++  virtual int Statx(const char* pathname,
++                     bool follow_links,
++                     struct kernel_statx* sb) const = 0;
+ 
+   // Emulates unlink()/unlinkat().
+   virtual int Unlink(const char* unlink) const = 0;
+diff --git a/sandbox/linux/system_headers/linux_stat.h b/sandbox/linux/system_headers/linux_stat.h
+index d71e2fb0b8..dbdba71351 100644
+--- a/sandbox/linux/system_headers/linux_stat.h
++++ b/sandbox/linux/system_headers/linux_stat.h
+@@ -150,7 +150,7 @@ struct kernel_stat {
+   int st_blocks;
+   int st_pad4[14];
+ };
+-#elif defined(__aarch64__)
++#elif defined(__aarch64__) || defined(__loongarch__)
+ struct kernel_stat {
+   unsigned long st_dev;
+   unsigned long st_ino;
+@@ -197,6 +197,40 @@ struct kernel_stat {
+ };
+ #endif
+ 
++// from linux include/uapi/linux/stat.h
++struct kernel_statx_timestamp {
++  long tv_sec;
++  unsigned int tv_nsec;
++  int __reserved;
++};
++
++struct kernel_statx {
++  unsigned int stx_mask;
++  unsigned int stx_blksize;
++  unsigned long stx_attributes;
++  unsigned int stx_nlink;
++  unsigned int stx_uid;
++  unsigned int stx_gid;
++  unsigned short stx_mode;
++  unsigned short __spare0[1];
++  unsigned long stx_ino;
++  unsigned long stx_size;
++  unsigned long stx_blocks;
++  unsigned long stx_attributes_mask;
++  struct kernel_statx_timestamp stx_atime;
++  struct kernel_statx_timestamp stx_btime;
++  struct kernel_statx_timestamp stx_ctime;
++  struct kernel_statx_timestamp stx_mtime;
++  unsigned int stx_rdev_major;
++  unsigned int stx_rdev_minor;
++  unsigned int stx_dev_major;
++  unsigned int stx_dev_minor;
++  unsigned long stx_mnt_id;
++  unsigned int stx_dio_mem_align;
++  unsigned int stx_dio_offset_align;
++  unsigned long __spare3[12];
++};
++
+ #if !defined(AT_EMPTY_PATH)
+ #define AT_EMPTY_PATH 0x1000
+ #endif
+@@ -229,8 +263,14 @@ using default_stat_struct = struct kernel_stat;
+ #define __NR_fstatat_default __NR_newfstatat
+ #define __NR_fstat_default __NR_fstat
+ 
++#elif defined(__NR_statx)
++
++namespace sandbox {
++using default_stat_struct = struct kernel_statx;
++}  // namespace sandbox
++
+ #else
+-#error "one of fstatat64 and newfstatat must be defined"
++#error "one of fstatat64, newfstatat and statx must be defined"
+ #endif
+ 
+ #endif  // SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_STAT_H_
+diff --git a/sandbox/policy/linux/bpf_broker_policy_linux.cc b/sandbox/policy/linux/bpf_broker_policy_linux.cc
+index 87a0cc1faf..3702bf91ba 100644
+--- a/sandbox/policy/linux/bpf_broker_policy_linux.cc
++++ b/sandbox/policy/linux/bpf_broker_policy_linux.cc
+@@ -87,6 +87,12 @@ ResultExpr BrokerProcessPolicy::EvaluateSyscall(int sysno) const {
+         return Allow();
+       break;
+ #endif
++#if defined(__NR_statx)
++    case __NR_statx:
++      if (allowed_command_set_.test(syscall_broker::COMMAND_STAT))
++        return Allow();
++      break;
++#endif
+ #if defined(__NR_lstat)
+     case __NR_lstat:
+       if (allowed_command_set_.test(syscall_broker::COMMAND_STAT))
+diff --git a/sandbox/policy/linux/sandbox_linux.cc b/sandbox/policy/linux/sandbox_linux.cc
+index 38a8de5f72..a7e9f4b73a 100644
+--- a/sandbox/policy/linux/sandbox_linux.cc
++++ b/sandbox/policy/linux/sandbox_linux.cc
+@@ -580,6 +580,7 @@ bpf_dsl::ResultExpr SandboxLinux::HandleViaBroker(int sysno) const {
+   const bpf_dsl::ResultExpr handle_via_broker =
+       bpf_dsl::Trap(syscall_broker::BrokerClient::SIGSYS_Handler,
+                     broker_process_->GetBrokerClientSignalBased());
++#if !defined(__loongarch__)
+   if (sysno == __NR_fstatat_default) {
+     // This may be an fstatat(fd, "", stat_buf, AT_EMPTY_PATH), which should be
+     // rewritten as fstat(fd, stat_buf). This should be consistent with how the
+@@ -590,6 +591,18 @@ bpf_dsl::ResultExpr SandboxLinux::HandleViaBroker(int sysno) const {
+     return bpf_dsl::If((flags & AT_EMPTY_PATH) == AT_EMPTY_PATH,
+                        RewriteFstatatSIGSYS(BPFBasePolicy::GetFSDeniedErrno()))
+         .Else(handle_via_broker);
++#else
++  if (sysno == __NR_statx) {
++    // This may be a statx(fd, "", AT_EMPTY_PATH, mask, statx_buf), and we allow it.
++    // Otherwise, we expect a statx(AT_FDCWD, path, flags, mask, statx_buf).
++    // However, it is possible to pass a non-empty path even when AT_EMPTY_PATH
++    // is set. But there are currently no easy way to validate the argument in
++    // seccomp bpf.
++    const bpf_dsl::Arg<int> flags(2);
++    return bpf_dsl::If((flags & AT_EMPTY_PATH) == AT_EMPTY_PATH,
++                       bpf_dsl::Allow())
++        .Else(handle_via_broker);
++#endif
+   } else {
+     return handle_via_broker;
+   }
+-- 
+2.51.0
+

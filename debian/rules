@@ -11,6 +11,9 @@ export DEB_RULES_REQUIRES_ROOT=no
 ifeq (armhf,$(DEB_HOST_ARCH))
 # avoid "argument unused during compilation" warnings on armhf
 arg_hardening = +all,-stackclash
+else ifeq (loong64,$(DEB_HOST_ARCH))
+# avoid page crashing on loong64
+arg_hardening = +all,-stackprotector
 else
 # enable all build hardening flags
 arg_hardening = +all
@@ -93,6 +96,11 @@ defines+=host_cpu=\"arm\" use_v4l2_codec=true use_vaapi=false arm_use_neon=true
 endif
 ifeq (ppc64el,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"ppc64\" use_vaapi=true
+endif
+ifeq (loong64,$(DEB_HOST_ARCH))
+# Use libffi from system for loong64 to pass build
+# xnnpack doesn't support loongarch now, so disable it
+defines+=host_cpu=\"loong64\" use_system_libffi=true build_tflite_with_xnnpack=false use_vaapi=true
 endif
 
 ifdef cross_pkg_config

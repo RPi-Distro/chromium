@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Fri, 30 May 2025 14:26:39 +0800
+Subject: loong64: sandbox: seccomp-bpf-helpers: fix build for loongarch64
+
+---
+ sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc b/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+index 5b6731bc4f..1e1d36f016 100644
+--- a/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
++++ b/sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc
+@@ -386,6 +386,7 @@ intptr_t SIGSYSSchedHandler(const struct arch_seccomp_data& args,
+ 
+ intptr_t SIGSYSFstatatHandler(const struct arch_seccomp_data& args,
+                               void* fs_denied_errno) {
++#if !defined(__loongarch__)
+   if (args.nr == __NR_fstatat_default) {
+     if (*reinterpret_cast<const char*>(args.args[1]) == '\0' &&
+         args.args[3] == static_cast<uint64_t>(AT_EMPTY_PATH)) {
+@@ -403,6 +404,7 @@ intptr_t SIGSYSFstatatHandler(const struct arch_seccomp_data& args,
+     }
+     return -reinterpret_cast<intptr_t>(fs_denied_errno);
+   }
++#endif
+ 
+   CrashSIGSYS_Handler(args, fs_denied_errno);
+ 
+-- 
+2.51.0
+

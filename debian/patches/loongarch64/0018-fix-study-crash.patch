@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Thu, 15 May 2025 16:52:07 +0800
+Subject: fix study crash
+
+---
+ components/variations/proto/study.proto                        | 2 ++
+ .../variations/service/variations_field_trial_creator.cc       | 3 +++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/components/variations/proto/study.proto b/components/variations/proto/study.proto
+index b7536f4d59..3410f4dbd9 100644
+--- a/components/variations/proto/study.proto
++++ b/components/variations/proto/study.proto
+@@ -265,6 +265,8 @@ message Study {
+ 
+     // A POSIX-only value, indicating an OpenPOWER host
+     PPC64 = 5;
++
++    LOONGARCH64 = 6;
+   }
+ 
+   // Enum to pass as optional bool.
+diff --git a/components/variations/service/variations_field_trial_creator.cc b/components/variations/service/variations_field_trial_creator.cc
+index cfb6cfa9f5..8d5e42a28e 100644
+--- a/components/variations/service/variations_field_trial_creator.cc
++++ b/components/variations/service/variations_field_trial_creator.cc
+@@ -102,6 +102,9 @@ Study::CpuArchitecture GetCurrentCpuArchitecture() {
+   if (process_arch == "ARM") {
+     return Study::ARM32;
+   }
++  if (process_arch == "LOONGARCH_64") {
++    return Study::LOONGARCH64;
++  }
+   if (process_arch == "x86") {
+     return Study::X86_32;
+   }
+-- 
+2.51.0
+

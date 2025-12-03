@@ -1,6 +1,29 @@
-chromium (143.0.7499.40-0~deb12u1) UNRELEASED; urgency=high
+chromium (143.0.7499.40-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream stable release.
+    - CVE-2025-13630: Type Confusion in V8.
+      Reported by Shreyas Penkar (@streypaws).
+    - CVE-2025-13631: Inappropriate implementation in Google Updater.
+      Reported by Jota Domingos.
+    - CVE-2025-13632: Inappropriate implementation in DevTools.
+      Reported by Leandro Teles.
+    - CVE-2025-13633: Use after free in Digital Credentials.
+      Reported by Chrome.
+    - CVE-2025-13634: Inappropriate implementation in Downloads.
+      Reported by Eric Lawrence of Microsoft.
+    - CVE-2025-13720: Bad cast in Loader. Reported by Chrome.
+    - CVE-2025-13721: Race in v8. Reported by Chrome.
+    - CVE-2025-13635: Inappropriate implementation in Downloads.
+      Reported by Hafiizh.
+    - CVE-2025-13636: Inappropriate implementation in Split View.
+      Reported by Khalil Zhani.
+    - CVE-2025-13637: Inappropriate implementation in Downloads.
+      Reported by Hafiizh.
+    - CVE-2025-13638: Use after free in Media Stream. Reported by sherkito.
+    - CVE-2025-13639: Inappropriate implementation in WebRTC.
+      Reported by Philipp Hancke.
+    - CVE-2025-13640: Inappropriate implementation in Passwords.
+      Reported by Anonymous.
   * d/patches:
     - fixes/headless-gn.patch: refresh.
     - fixes/chromium-142-iwyu-field-form-data.patch: drop, merged upstream.
@@ -31,7 +54,16 @@ chromium (143.0.7499.40-0~deb12u1) UNRELEASED; urgency=high
     - bookworm/node-esm-dirname.patch: add workaround for older node 18.
   * d/rules: Move RUSTC_BOOTSTRAP=1 environment setting into patch.
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 28 Nov 2025 19:23:49 -0500
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - ppc64le/third_party/0002-regenerate-xnn-buildgn.patch: Regenerate from
+      upstream sources
+    - ppc64le/fixes/fix-clang-selection.patch: Refresh for upstream changes
+
+  [ Jianfeng Liu ]
+  * Add loong64 support, with patches in d/patches/loongarch64/.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 03 Dec 2025 01:54:50 -0500
 
 chromium (142.0.7444.175-1~deb12u1) bookworm-security; urgency=high
 

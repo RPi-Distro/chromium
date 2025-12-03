@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Thu, 15 May 2025 16:49:45 +0800
+Subject: sys_info: add loongarch64 architecture string
+
+---
+ base/system/sys_info.cc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/base/system/sys_info.cc b/base/system/sys_info.cc
+index 75dd14cc04..7c7fa80889 100644
+--- a/base/system/sys_info.cc
++++ b/base/system/sys_info.cc
+@@ -258,6 +258,8 @@ std::string SysInfo::ProcessCPUArchitecture() {
+   return "PPC_64";
+ #elif defined(ARCH_CPU_RISCV64)
+   return "RISCV_64";
++#elif defined(ARCH_CPU_LOONGARCH64)
++  return "LOONGARCH_64";
+ #else
+   return std::string();
+ #endif
+-- 
+2.51.0
+

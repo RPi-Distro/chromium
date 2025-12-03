@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Fri, 30 May 2025 10:58:06 +0800
+Subject: loong64: sandbox: sandbox/linux/seccomp-bpf: Add loongarch64 syscall
+ stub
+
+---
+ sandbox/linux/seccomp-bpf/syscall.cc | 35 +++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/sandbox/linux/seccomp-bpf/syscall.cc b/sandbox/linux/seccomp-bpf/syscall.cc
+index 9a634fa647..05bd7ed464 100644
+--- a/sandbox/linux/seccomp-bpf/syscall.cc
++++ b/sandbox/linux/seccomp-bpf/syscall.cc
+@@ -19,7 +19,7 @@ namespace sandbox {
+ namespace {
+ 
+ #if defined(ARCH_CPU_X86_FAMILY) || defined(ARCH_CPU_ARM_FAMILY) || \
+-    defined(ARCH_CPU_MIPS_FAMILY) || defined (ARCH_CPU_PPC64_FAMILY)
++    defined(ARCH_CPU_MIPS_FAMILY) || defined (ARCH_CPU_PPC64_FAMILY) || defined(ARCH_CPU_LOONGARCH_FAMILY)
+ // Number that's not currently used by any Linux kernel ABIs.
+ const int kInvalidSyscallNumber = 0x351d3;
+ #else
+@@ -351,6 +351,27 @@ asm(// We need to be able to tell the kernel exactly where we made a
+     "neg 3, 3\n"
+     "4: blr\n"
+ 
++    ".cfi_endproc\n"
++    ".size SyscallAsm, .-SyscallAsm\n"
++#elif defined(__loongarch__)
++    ".text\n"
++    ".align 2\n"
++    ".type SyscallAsm, %function\n"
++    "SyscallAsm:\n"
++    ".cfi_startproc\n"
++    "bge $a0, $zero, 1f\n"
++    "la.pcrel $a0, 2f\n"
++    "b 2f\n"
++    "1:ld.d $a5, $a6, 40\n"
++    "ld.d $a4, $a6, 32\n"
++    "ld.d $a3, $a6, 24\n"
++    "ld.d $a2, $a6, 16\n"
++    "ld.d $a1, $a6, 8\n"
++    "move $a7, $a0\n"
++    "ld.d $a0, $a6, 0\n"
++    // Enter the kernel
++    "syscall 0\n"
++    "2:ret\n"
+     ".cfi_endproc\n"
+     ".size SyscallAsm, .-SyscallAsm\n"
+ #endif
+@@ -472,6 +493,18 @@ intptr_t Syscall::Call(int nr,
+ 
+ #elif defined(__powerpc64__)
+   intptr_t ret = SyscallAsm(nr, args);
++#elif defined(__loongarch__)
++  intptr_t ret;
++  {
++    register intptr_t inout __asm__("$r4") = nr;
++    register const intptr_t* data __asm__("$r10") = args;
++    asm volatile("bl SyscallAsm\n"
++                 : "=r"(inout)
++                 : "0"(inout), "r"(data)
++                 : "memory", "$r5", "$r6", "$r7", "$r8", "$r9", "$r11", "$r1");
++    ret = inout;
++  }
++
+ #else
+ #error "Unimplemented architecture"
+ #endif
+-- 
+2.51.0
+

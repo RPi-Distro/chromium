@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Thu, 15 May 2025 16:57:11 +0800
+Subject: boringssl: add loongarch support
+
+---
+ third_party/boringssl/src/include/openssl/target.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/third_party/boringssl/src/include/openssl/target.h b/third_party/boringssl/src/include/openssl/target.h
+index 52e8b62833..29d9f303f7 100644
+--- a/third_party/boringssl/src/include/openssl/target.h
++++ b/third_party/boringssl/src/include/openssl/target.h
+@@ -57,6 +57,8 @@
+ #define OPENSSL_32_BIT
+ #elif defined(__myriad2__)
+ #define OPENSSL_32_BIT
++#elif defined(__loongarch__) && __SIZEOF_POINTER__ == 8
++#define OPENSSL_64_BIT
+ #else
+ // The list above enumerates the platforms that BoringSSL supports. For these
+ // platforms we keep a reasonable bar of not breaking them: automated test
+-- 
+2.51.0
+

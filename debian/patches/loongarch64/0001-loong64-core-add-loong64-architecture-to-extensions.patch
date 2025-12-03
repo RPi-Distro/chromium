@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Fri, 30 May 2025 09:53:17 +0800
+Subject: loong64: core: add loong64 architecture to extensions
+
+---
+ .../extensions/api/runtime/chrome_runtime_api_delegate.cc   | 2 ++
+ extensions/common/api/runtime.json                          | 6 ++++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc b/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+index 6a15df000f..95900abb50 100644
+--- a/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
++++ b/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+@@ -380,6 +380,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatformInfo(PlatformInfo* info) {
+     info->arch = extensions::api::runtime::PlatformArch::kRiscv64;
+   } else if (arch == "ppc64") {
+     info->arch = extensions::api::runtime::PlatformArch::kPpc64;
++  } else if (arch == "loongarch64") {
++    info->arch = extensions::api::runtime::PlatformArch::kLoongarch64;
+   } else {
+     NOTREACHED();
+   }
+diff --git a/extensions/common/api/runtime.json b/extensions/common/api/runtime.json
+index 90bc9cc829..7fef580b94 100644
+--- a/extensions/common/api/runtime.json
++++ b/extensions/common/api/runtime.json
+@@ -100,7 +100,8 @@
+             {"name": "mips", "description": "Specifies the processer architecture as mips."},
+             {"name": "mips64", "description": "Specifies the processer architecture as mips64."},
+             {"name": "riscv64", "description": "Specifies the processer architecture as riscv64."},
+-            {"name": "ppc64", "description": "Specifies the processer architecture as ppc64."}
++            {"name": "ppc64", "description": "Specifies the processer architecture as ppc64."},
++            {"name": "loongarch64", "description": "Specifies the processer architecture as loongarch64."}
+          ],
+         "description": "The machine's processor architecture."
+       },
+@@ -114,7 +115,8 @@
+           {"name": "x86-64", "description": "Specifies the native client architecture as x86-64."},
+           {"name": "mips", "description": "Specifies the native client architecture as mips."},
+           {"name": "mips64", "description": "Specifies the native client architecture as mips64."},
+-          {"name": "ppc64", "description": "Specifies the native client architecture as ppc64."}
++          {"name": "ppc64", "description": "Specifies the native client architecture as ppc64."},
++          {"name": "loongarch64", "description": "Specifies the native client architecture as loongarch64."}
+         ]
+       },
+       {
+-- 
+2.51.0
+

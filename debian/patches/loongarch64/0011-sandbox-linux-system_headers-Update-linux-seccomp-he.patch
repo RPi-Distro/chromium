@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Fri, 30 May 2025 16:00:52 +0800
+Subject: sandbox/linux/system_headers: Update linux seccomp header for
+ loongarch64
+
+---
+ sandbox/linux/system_headers/linux_seccomp.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/sandbox/linux/system_headers/linux_seccomp.h b/sandbox/linux/system_headers/linux_seccomp.h
+index 38737ad310..3f052af11a 100644
+--- a/sandbox/linux/system_headers/linux_seccomp.h
++++ b/sandbox/linux/system_headers/linux_seccomp.h
+@@ -42,6 +42,10 @@
+ #define EM_PPC64 21
+ #endif
+ 
++#ifndef EM_LOONGARCH64
++#define EM_LOONGARCH64 258
++#endif
++
+ #ifndef __AUDIT_ARCH_64BIT
+ #define __AUDIT_ARCH_64BIT 0x80000000
+ #endif
+@@ -80,6 +84,10 @@
+ #define AUDIT_ARCH_PPC64LE (EM_PPC64 | __AUDIT_ARCH_64BIT | __AUDIT_ARCH_LE)
+ #endif
+ 
++#ifndef AUDIT_ARCH_LOONGARCH64
++#define AUDIT_ARCH_LOONGARCH64 (EM_LOONGARCH64 | __AUDIT_ARCH_64BIT | __AUDIT_ARCH_LE)
++#endif
++
+ // For prctl.h
+ #ifndef PR_SET_SECCOMP
+ #define PR_SET_SECCOMP               22
+-- 
+2.51.0
+

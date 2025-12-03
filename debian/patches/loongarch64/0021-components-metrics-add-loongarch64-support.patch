@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Thu, 15 May 2025 17:19:52 +0800
+Subject: components/metrics: add loongarch64 support
+
+---
+ components/metrics/debug/metrics_internals_utils.cc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/components/metrics/debug/metrics_internals_utils.cc b/components/metrics/debug/metrics_internals_utils.cc
+index b63ffa6dfa..f2dc230772 100644
+--- a/components/metrics/debug/metrics_internals_utils.cc
++++ b/components/metrics/debug/metrics_internals_utils.cc
+@@ -73,6 +73,8 @@ std::string CpuArchitectureToString(
+       return "arm32";
+     case variations::Study::TRANSLATED_X86_64:
+       return "translated_x86_64";
++    case variations::Study::LOONGARCH64:
++      return "loongarch64";
+   }
+   NOTREACHED();
+ }
+-- 
+2.51.0
+

@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Fri, 30 May 2025 10:08:34 +0800
+Subject: loong64: sandbox: Enable seccomp_bpf for loongarch64
+
+---
+ sandbox/features.gni | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sandbox/features.gni b/sandbox/features.gni
+index 1312860c77..4ebf5144e8 100644
+--- a/sandbox/features.gni
++++ b/sandbox/features.gni
+@@ -10,4 +10,4 @@ use_seccomp_bpf = (is_linux || is_chromeos || is_android) &&
+                   (current_cpu == "x86" || current_cpu == "x64" ||
+                    current_cpu == "arm" || current_cpu == "arm64" ||
+                    current_cpu == "mipsel" || current_cpu == "mips64el" ||
+-                   current_cpu == "ppc64")
++                   current_cpu == "ppc64" || current_cpu == "loong64")
+-- 
+2.51.0
+

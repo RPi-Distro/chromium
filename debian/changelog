@@ -1,4 +1,4 @@
-chromium (143.0.7499.40-1) unstable; urgency=high
+chromium (143.0.7499.40-1~deb13u1) trixie-security; urgency=high
 
   * New upstream stable release.
     - CVE-2025-13630: Type Confusion in V8.

@@ -1,6 +1,6 @@
 --- a/gpu/ipc/client/shared_image_interface_proxy.cc
 +++ b/gpu/ipc/client/shared_image_interface_proxy.cc
-@@ -131,7 +131,7 @@ Mailbox SharedImageInterfaceProxy::Creat
+@@ -130,7 +130,7 @@ Mailbox SharedImageInterfaceProxy::Creat
  
    if (handle_to_populate->is_null()) {
      if (!host_->IsLost()) {
@@ -11,7 +11,7 @@
    }
 --- a/gpu/ipc/service/gpu_channel.cc
 +++ b/gpu/ipc/service/gpu_channel.cc
-@@ -475,7 +475,7 @@ void GpuChannelMessageFilter::CreateGpuM
+@@ -464,7 +464,7 @@ void GpuChannelMessageFilter::CreateGpuM
      }
    }
    if (handle.is_null()) {

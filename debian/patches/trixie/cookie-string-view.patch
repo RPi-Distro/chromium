@@ -1,0 +1,32 @@
+author: Andres Salomon <dilinger@debian.org>
+
+revert one std::string -> string_view conversion due to the following erorr:
+
+
+../../net/cookies/cookie_util.cc:844:31: error: no viable conversion from 'const_iterator' (aka 'const char *') to 'std::string::const_iterator' (aka '__wrap_iter<const char *>')
+  844 |   std::string::const_iterator i = header_value.begin();
+      |                               ^   ~~~~~~~~~~~~~~~~~~~~
+
+
+--- a/net/cookies/cookie_util.cc
++++ b/net/cookies/cookie_util.cc
+@@ -839,7 +839,7 @@ bool IsCookiePartitionedValid(const GURL
+   return result;
+ }
+ 
+-void ParseRequestCookieLine(std::string_view header_value,
++void ParseRequestCookieLine(const std::string& header_value,
+                             ParsedRequestCookies* parsed_cookies) {
+   std::string::const_iterator i = header_value.begin();
+   while (i != header_value.end()) {
+--- a/net/cookies/cookie_util.h
++++ b/net/cookies/cookie_util.h
+@@ -301,7 +301,7 @@ using ParsedRequestCookies = std::vector
+ // these will appear in |parsed_cookies| as well. The cookie header can be
+ // written by non-Chromium consumers (such as extensions), so the header may not
+ // be well-formed.
+-NET_EXPORT void ParseRequestCookieLine(std::string_view header_value,
++NET_EXPORT void ParseRequestCookieLine(const std::string& header_value,
+                                        ParsedRequestCookies* parsed_cookies);
+ 
+ // Writes all cookies of |parsed_cookies| into a HTTP Request header value

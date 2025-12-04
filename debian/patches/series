@@ -1,10 +1,13 @@
 debianization/manpage.patch
 debianization/sandbox.patch
+#debianization/master-preferences.patch
 debianization/clang-version.patch
 debianization/swiftshader-use-llvm-16.patch
 debianization/cross-build.patch
+debianization/rustc-bootstrap.patch
 
 fixes/ps-print.patch
+#fixes/widevine-locations.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/gentoo-stylesheet.patch
@@ -16,16 +19,17 @@ fixes/armhf-timespec.patch
 fixes/updater-test.patch
 #fixes/absl-optional.patch
 #fixes/font-gc-asan.patch
-fixes/headless-gn.patch
+#fixes/headless-gn.patch
 #fixes/stdatomic.patch
 #fixes/make-pair.patch
 fixes/armhf-no-thumb.patch
 fixes/armhf-icf.patch
-fixes/chromium-142-iwyu-field-form-data.patch
+fixes/libpng-testonly.patch
 
 
 disable/tests.patch
 disable/tests-swiftshader.patch
+#disable/signin.patch
 disable/android.patch
 disable/catapult.patch
 disable/font-tests.patch
@@ -36,6 +40,7 @@ disable/widevine-cdm-cu.patch
 disable/clang-version-check.patch
 disable/screen-ai-blob.patch
 disable/node-version-ck.patch
+disable/license-headless-shell.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -48,6 +53,8 @@ trixie/adler1.patch
 trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
+trixie/cookie-string-view.patch
+trixie/rust-is-multiple-of.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch
@@ -145,6 +152,31 @@ ppc64le/fixes/fix-unknown-warning-option-messages.diff
 # These patches enable full POWER ISA 3.0 (POWER9) acceleration when applied
 # They will not work on POWER8 (ISA 2.07) or below
 #ppc64le/core/baseline-isa-3-0.patch
+
+# These patches enable support for loongarch64
+loongarch64/0001-loong64-core-add-loong64-architecture-to-extensions.patch
+loongarch64/0002-loong64-sandbox-Enable-seccomp_bpf-for-loongarch64.patch
+loongarch64/0003-sandbox-linux-Implement-support-for-loong64-syscalls.patch
+loongarch64/0004-loong64-sandbox-sandbox-linux-Update-syscall-helpers.patch
+loongarch64/0005-loong64-sandbox-sandbox-linux-bpf_dsl-Update-syscall.patch
+loongarch64/0006-loong64-sandbox-sandbox-linux-system_headers-Update-.patch
+loongarch64/0007-loong64-sandbox-sandbox-linux-seccomp-bpf-Add-loonga.patch
+loongarch64/0008-loong64-sandbox-sandbox-linux-services-credentials.c.patch
+loongarch64/0009-loong64-sandbox-sandbox-linux-bpf_dsl-Modify-seccomp.patch
+loongarch64/0010-loong64-sandbox-seccomp-bpf-helpers-fix-build-for-lo.patch
+loongarch64/0011-sandbox-linux-system_headers-Update-linux-seccomp-he.patch
+loongarch64/0012-sandbox-linux-add-statx-support-for-loongarch64.patch
+loongarch64/0013-swiftshader-support-for-loongarch.patch
+loongarch64/0014-crashpad-support-for-loongarch.patch
+loongarch64/0015-ffmpeg-support-for-loongarch.patch
+loongarch64/0016-medium-cmodel-support-for-loongarch64.patch
+loongarch64/0017-sys_info-add-loongarch64-architecture-string.patch
+loongarch64/0018-fix-study-crash.patch
+loongarch64/0019-boringssl-add-loongarch-support.patch
+loongarch64/0020-user_agent-add-loongarch-architecture-support.patch
+loongarch64/0021-components-metrics-add-loongarch64-support.patch
+loongarch64/0022-blink-fix-lsx-code-of-webgl_image_conversion_lsx.patch
+loongarch64/0023-loongarch64-enable-lsx-by-default.patch
 
 # Raspberry Pi OS patches
 rpi/0007-Widevide-Add.patch

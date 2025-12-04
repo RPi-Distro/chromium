@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Fri, 30 May 2025 10:46:48 +0800
+Subject: loong64: sandbox: sandbox/linux/bpf_dsl: Update syscall ranges for
+ loongarch64
+
+---
+ sandbox/linux/bpf_dsl/linux_syscall_ranges.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/sandbox/linux/bpf_dsl/linux_syscall_ranges.h b/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+index 986e4f6187..e40e728135 100644
+--- a/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
++++ b/sandbox/linux/bpf_dsl/linux_syscall_ranges.h
+@@ -63,6 +63,13 @@
+ #define MAX_PUBLIC_SYSCALL __NR_syscalls
+ #define MAX_SYSCALL MAX_PUBLIC_SYSCALL
+ 
++#elif defined(__loongarch__)
++
++#include <asm-generic/unistd.h>
++#define MIN_SYSCALL 0u
++#define MAX_PUBLIC_SYSCALL __NR_syscalls
++#define MAX_SYSCALL MAX_PUBLIC_SYSCALL
++
+ #else
+ #error "Unsupported architecture"
+ #endif
+-- 
+2.51.0
+

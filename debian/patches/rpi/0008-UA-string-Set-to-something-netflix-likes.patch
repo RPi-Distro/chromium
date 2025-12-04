@@ -27,7 +27,7 @@ Subject: [PATCH 08/17] UA string: Set to something netflix likes
  #endif
    );
    return os_version;
-@@ -864,7 +864,7 @@ std::string BuildOSCpuInfoFromOSVersionA
+@@ -861,7 +861,7 @@ std::string BuildOSCpuInfoFromOSVersionA
    base::StringAppendF(&os_cpu,
  #if BUILDFLAG(IS_MAC)
                        "%s Mac OS X %s", cpu_type.c_str(), os_version.c_str()

@@ -1,6 +1,6 @@
 --- a/media/capture/capture_switches.cc
 +++ b/media/capture/capture_switches.cc
-@@ -48,7 +48,7 @@ BASE_FEATURE(kTabCaptureInfobarLinks, ba
+@@ -50,7 +50,7 @@ BASE_FEATURE(kTabCaptureInfobarLinks, ba
  #if defined(WEBRTC_USE_PIPEWIRE)
  // Controls whether the PipeWire support for cameras is enabled on the
  // Wayland display server.

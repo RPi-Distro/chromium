@@ -44,7 +44,7 @@ libs.
    public_deps = [
      # string_view.h was once part of :strings, so string_view.h is
      # re-exported for backwards compatibility.
-@@ -107,6 +109,7 @@ absl_source_set("internal") {
+@@ -127,6 +129,7 @@ absl_test("resize_and_overwrite_test") {
  
  absl_source_set("str_format") {
    public = [ "str_format.h" ]
@@ -97,8 +97,8 @@ libs.
 +  visibility = [ "*" ]
    deps = [
      ":config",
-     ":core_headers",
-@@ -83,6 +84,7 @@ absl_source_set("config") {
+   ]
+@@ -91,6 +92,7 @@ absl_source_set("config") {
      "options.h",
      "policy_checks.h",
    ]
@@ -106,7 +106,7 @@ libs.
  }
  
  absl_source_set("cycleclock_internal") {
-@@ -121,6 +123,7 @@ absl_source_set("core_headers") {
+@@ -129,6 +131,7 @@ absl_source_set("core_headers") {
      "port.h",
      "thread_annotations.h",
    ]
@@ -176,7 +176,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -32,6 +33,7 @@ absl_test("any_invocable_test") {
+@@ -34,6 +35,7 @@ absl_test("any_invocable_test") {
  absl_source_set("bind_front") {
    sources = [ "internal/front_binder.h" ]
    public = [ "bind_front.h" ]
@@ -184,7 +184,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/container:compressed_tuple",
      "//third_party/abseil-cpp/absl/meta:type_traits",
-@@ -61,6 +63,7 @@ absl_test("function_ref_test") {
+@@ -67,6 +69,7 @@ absl_test("function_ref_test") {
  
  absl_source_set("overload") {
    public = [ "overload.h" ]

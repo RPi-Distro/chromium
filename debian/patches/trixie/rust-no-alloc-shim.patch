@@ -20,7 +20,7 @@ Date:   Mon Jun 30 07:45:33 2025 -0700
  
 +    // TODO(crbug.com/422538133) Remove after rolling past
 +    // https://github.com/rust-lang/rust/pull/141061
-+    #[no_mangle]
++    #[unsafe(no_mangle)]
 +    #[linkage = "weak"]
 +    static __rust_no_alloc_shim_is_unstable: u8 = 0;
 +

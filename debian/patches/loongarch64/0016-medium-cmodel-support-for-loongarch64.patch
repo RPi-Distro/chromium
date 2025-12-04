@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Thu, 3 Apr 2025 04:44:31 +0000
+Subject: medium cmodel support for loongarch64
+
+---
+ build/rust/gni_impl/rust_target.gni | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/build/rust/gni_impl/rust_target.gni b/build/rust/gni_impl/rust_target.gni
+index f400a023cb..31e4ef2185 100644
+--- a/build/rust/gni_impl/rust_target.gni
++++ b/build/rust/gni_impl/rust_target.gni
+@@ -439,6 +439,9 @@ template("rust_target") {
+       if (_rustc_metadata != "") {
+         rustflags += [ "-Cmetadata=${_rustc_metadata}" ]
+       }
++      if (current_cpu == "loong64") {
++        rustflags += [ "-Ccode-model=medium" ]
++      }
+       rustenv = _rustenv
+ 
+       if (_generate_crate_root) {
+-- 
+2.51.0
+

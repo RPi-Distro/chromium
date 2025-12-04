@@ -1,22 +1,24 @@
---- a/ui/ozone/common/native_pixmap_egl_binding.cc
-+++ b/ui/ozone/common/native_pixmap_egl_binding.cc
-@@ -64,12 +64,19 @@ EGLint FourCC(gfx::BufferFormat format)
+--- a/ui/gfx/linux/drm_util_linux.cc
++++ b/ui/gfx/linux/drm_util_linux.cc
+@@ -40,6 +40,7 @@ int GetFourCCFormatFromBufferFormat(gfx:
        return DRM_FORMAT_ABGR2101010;
-     case gfx::BufferFormat::BGRA_1010102:
-       return DRM_FORMAT_ARGB2101010;
+     case gfx::BufferFormat::RGBA_F16:
+       return DRM_FORMAT_ABGR16161616F;
 +#if 0
      case gfx::BufferFormat::YVU_420:
        return DRM_FORMAT_YVU420;
      case gfx::BufferFormat::YUV_420_BIPLANAR:
-       return DRM_FORMAT_NV12;
+@@ -48,6 +49,13 @@ int GetFourCCFormatFromBufferFormat(gfx:
+       return DRM_FORMAT_INVALID;
      case gfx::BufferFormat::P010:
        return DRM_FORMAT_P010;
 +#else
 +    case gfx::BufferFormat::YVU_420:
 +    case gfx::BufferFormat::YUV_420_BIPLANAR:
++    case gfx::BufferFormat::YUVA_420_TRIPLANAR:
 +    case gfx::BufferFormat::P010:
 +      return DRM_FORMAT_INVALID;
 +#endif
-     case gfx::BufferFormat::RGBA_F16:
-       return DRM_FORMAT_ABGR16161616F;
-     case gfx::BufferFormat::RGBA_4444:
+   }
+   return DRM_FORMAT_INVALID;
+ }

@@ -6,9 +6,9 @@ use the gn debian system binary.
 
 --- a/tools/licenses/licenses.py
 +++ b/tools/licenses/licenses.py
-@@ -806,6 +806,7 @@ def FindThirdPartyDirs(root, extra_third
- # //buildtools.
- def _GnBinary():
+@@ -842,6 +842,7 @@ def _GnBinary():
+     return [sys.executable, gn_path]
+ 
    exe = 'gn'
 +  return exe
    if sys.platform.startswith('linux'):

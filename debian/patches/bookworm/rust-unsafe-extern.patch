@@ -1,0 +1,27 @@
+Work around errors like these, due to older Rust code convention generated
+by jammy and noble's version of rust-bindgen:
+
+  FAILED: obj/build/rust/allocator/liballoc_error_handler_impl_ffi.rlib
+  [...]
+  error: extern blocks must be unsafe
+   --> ./gen/build/rust/allocator/alloc_error_handler_impl_ffi/bindings.rs:3:244
+    |
+  3 | ... ; extern "C" { # [link_name = "\u{1}_ZN23rust_allocator_internal24alloc_error_handler_implEv"] pub fn alloc_error_handler_impl () ; } ...
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+--- a/build/rust/gni_impl/run_bindgen.py
++++ b/build/rust/gni_impl/run_bindgen.py
+@@ -113,6 +113,13 @@ def main():
+         pass
+       raise
+ 
++    # Debian workaround for older rust-bindgen
++    with open(args.output, 'r+') as f:
++      rs = f.read()
++      assert not 'unsafe extern "C" {' in rs, 'Edit no longer necessary'
++      rs = rs.replace('extern "C" {', 'unsafe extern "C" {')
++      f.seek(0)
++      f.write(rs)
+ 
+ if __name__ == '__main__':
+   main()

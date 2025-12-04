@@ -1,0 +1,142 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jianfeng Liu <liujianfeng1994@gmail.com>
+Date: Thu, 15 May 2025 17:32:53 +0800
+Subject: blink: fix lsx code of webgl_image_conversion_lsx
+
+---
+ .../loongarch64/webgl_image_conversion_lsx.h  | 88 +++++++++----------
+ 1 file changed, 44 insertions(+), 44 deletions(-)
+
+diff --git a/third_party/blink/renderer/platform/graphics/cpu/loongarch64/webgl_image_conversion_lsx.h b/third_party/blink/renderer/platform/graphics/cpu/loongarch64/webgl_image_conversion_lsx.h
+index 114f3c112e..1e2096f651 100644
+--- a/third_party/blink/renderer/platform/graphics/cpu/loongarch64/webgl_image_conversion_lsx.h
++++ b/third_party/blink/renderer/platform/graphics/cpu/loongarch64/webgl_image_conversion_lsx.h
+@@ -91,19 +91,19 @@ ALWAYS_INLINE void PackOneRowOfRGBA8LittleToRA8(const uint8_t*& source,
+   v4f32 mask_falpha = __lsx_vffint_s_w(mask_lalpha);
+   v16u8 ra_index = {0,19, 4,23, 8,27, 12,31};
+   for (unsigned i = 0; i < pixels_per_row_trunc; i += 4) {
+-    v16u8 bgra = *((__m128i*)(source));
++    __m128i bgra = *((__m128i*)(source));
+     //if A !=0, A=0; else A=0xFF
+-    v4f32 alpha_factor = __lsx_vseq_b(bgra, mask_zero);
++    __m128i alpha_factor = __lsx_vseq_b(bgra, mask_zero);
+     //if A!=0, A=A; else A=0xFF
+     alpha_factor = __lsx_vor_v(bgra, alpha_factor);
+     alpha_factor = __lsx_vsrli_w(alpha_factor, 24);
+-    alpha_factor = __lsx_vffint_s_w(alpha_factor);
+-    alpha_factor = __lsx_vfdiv_s(mask_falpha, alpha_factor);
++    alpha_factor = (__m128i) __lsx_vffint_s_w(alpha_factor);
++    alpha_factor = (__m128i) __lsx_vfdiv_s((__m128) mask_falpha, (__m128) alpha_factor);
+ 
+-    v16u8 component_r = __lsx_vand_v(bgra, mask_lalpha);
+-    component_r = __lsx_vffint_s_w(component_r);
+-    component_r = __lsx_vfmul_s(component_r, alpha_factor);
+-    component_r = __lsx_vftintrz_w_s(component_r);
++    __m128i component_r = __lsx_vand_v(bgra, mask_lalpha);
++    component_r = (__m128i) __lsx_vffint_s_w(component_r);
++    component_r = (__m128i) __lsx_vfmul_s((__m128) component_r, (__m128) alpha_factor);
++    component_r = __lsx_vftintrz_w_s((__m128) component_r);
+ 
+     v2u64 ra = __lsx_vshuf_b(bgra, component_r, ra_index);
+     __lsx_vstelm_d(ra, destination, 0, 0);
+@@ -138,19 +138,19 @@ ALWAYS_INLINE void PackOneRowOfRGBA8LittleToR8(const uint8_t*& source,
+   v4u32 mask_lalpha = __lsx_vreplgr2vr_w(0x0ff);
+   v4f32 mask_falpha = __lsx_vffint_s_w(mask_lalpha);
+   for (unsigned i = 0; i < pixels_per_row_trunc; i += 4) {
+-    v16u8 bgra = *((__m128i*)(source));
++    __m128i bgra = *((__m128i*)(source));
+     //if A !=0, A=0; else A=0xFF
+-    v4f32 alpha_factor = __lsx_vseq_b(bgra, mask_zero);
++    __m128i alpha_factor = __lsx_vseq_b(bgra, mask_zero);
+     //if A!=0, A=A; else A=0xFF
+     alpha_factor = __lsx_vor_v(bgra, alpha_factor);
+     alpha_factor = __lsx_vsrli_w(alpha_factor, 24);
+-    alpha_factor = __lsx_vffint_s_w(alpha_factor);
+-    alpha_factor = __lsx_vfdiv_s(mask_falpha, alpha_factor);
++    alpha_factor = (__m128i) __lsx_vffint_s_w(alpha_factor);
++    alpha_factor = (__m128i) __lsx_vfdiv_s((__m128) mask_falpha, (__m128) alpha_factor);
+ 
+-    v16u8 component_r = __lsx_vand_v(bgra, mask_lalpha);
+-    component_r = __lsx_vffint_s_w(component_r);
+-    component_r = __lsx_vfmul_s(component_r, alpha_factor);
+-    component_r = __lsx_vftintrz_w_s(component_r);
++    __m128i component_r = __lsx_vand_v(bgra, mask_lalpha);
++    component_r = (__m128i) __lsx_vffint_s_w(component_r);
++    component_r = (__m128i) __lsx_vfmul_s((__m128) component_r, (__m128) alpha_factor);
++    component_r = __lsx_vftintrz_w_s((__m128) component_r);
+ 
+     component_r = __lsx_vpickev_b(component_r, component_r);
+     component_r = __lsx_vpickev_b(component_r, component_r);
+@@ -172,41 +172,41 @@ ALWAYS_INLINE void PackOneRowOfRGBA8LittleToRGBA8(const uint8_t*& source,
+   v4f32 mask_falpha = __lsx_vffint_s_w(mask_lalpha);
+   v16u8 rgba_index = {0,1,2,19, 4,5,6,23, 8,9,10,27, 12,13,14,31};
+   for (unsigned i = 0; i < pixels_per_row_trunc; i += 4) {
+-    v16u8 bgra = *((__m128i*)(source));
++    __m128i bgra = *((__m128i*)(source));
+     //if A !=0, A=0; else A=0xFF
+-    v4f32 alpha_factor = __lsx_vseq_b(bgra, mask_zero);
++    __m128i alpha_factor = __lsx_vseq_b(bgra, mask_zero);
+     //if A!=0, A=A; else A=0xFF
+     alpha_factor = __lsx_vor_v(bgra, alpha_factor);
+     alpha_factor = __lsx_vsrli_w(alpha_factor, 24);
+-    alpha_factor = __lsx_vffint_s_w(alpha_factor);
+-    alpha_factor = __lsx_vfdiv_s(mask_falpha, alpha_factor);
++    alpha_factor = (__m128i) __lsx_vffint_s_w(alpha_factor);
++    alpha_factor = (__m128i) __lsx_vfdiv_s((__m128) mask_falpha, (__m128) alpha_factor);
+ 
+     v16u8 bgra_01 = __lsx_vilvl_b(mask_zero, bgra);
+     v16u8 bgra_23 = __lsx_vilvh_b(mask_zero, bgra);
+-    v16u8 bgra_0 = __lsx_vilvl_b(mask_zero, bgra_01);
+-    v16u8 bgra_1 = __lsx_vilvh_b(mask_zero, bgra_01);
+-    v16u8 bgra_2 = __lsx_vilvl_b(mask_zero, bgra_23);
+-    v16u8 bgra_3 = __lsx_vilvh_b(mask_zero, bgra_23);
+-
+-    bgra_0 = __lsx_vffint_s_w(bgra_0);
+-    bgra_1 = __lsx_vffint_s_w(bgra_1);
+-    bgra_2 = __lsx_vffint_s_w(bgra_2);
+-    bgra_3 = __lsx_vffint_s_w(bgra_3);
+-
+-    v4f32 alpha_factor_0 = __lsx_vreplvei_w(alpha_factor, 0);
+-    v4f32 alpha_factor_1 = __lsx_vreplvei_w(alpha_factor, 1);
+-    v4f32 alpha_factor_2 = __lsx_vreplvei_w(alpha_factor, 2);
+-    v4f32 alpha_factor_3 = __lsx_vreplvei_w(alpha_factor, 3);
+-
+-    bgra_0 = __lsx_vfmul_s(alpha_factor_0, bgra_0);
+-    bgra_1 = __lsx_vfmul_s(alpha_factor_1, bgra_1);
+-    bgra_2 = __lsx_vfmul_s(alpha_factor_2, bgra_2);
+-    bgra_3 = __lsx_vfmul_s(alpha_factor_3, bgra_3);
+-
+-    bgra_0 = __lsx_vftintrz_w_s(bgra_0);
+-    bgra_1 = __lsx_vftintrz_w_s(bgra_1);
+-    bgra_2 = __lsx_vftintrz_w_s(bgra_2);
+-    bgra_3 = __lsx_vftintrz_w_s(bgra_3);
++    __m128i bgra_0 = __lsx_vilvl_b(mask_zero, bgra_01);
++    __m128i bgra_1 = __lsx_vilvh_b(mask_zero, bgra_01);
++    __m128i bgra_2 = __lsx_vilvl_b(mask_zero, bgra_23);
++    __m128i bgra_3 = __lsx_vilvh_b(mask_zero, bgra_23);
++
++    bgra_0 = (__m128i) __lsx_vffint_s_w(bgra_0);
++    bgra_1 = (__m128i) __lsx_vffint_s_w(bgra_1);
++    bgra_2 = (__m128i) __lsx_vffint_s_w(bgra_2);
++    bgra_3 = (__m128i) __lsx_vffint_s_w(bgra_3);
++
++    __m128i alpha_factor_0 = __lsx_vreplvei_w(alpha_factor, 0);
++    __m128i alpha_factor_1 = __lsx_vreplvei_w(alpha_factor, 1);
++    __m128i alpha_factor_2 = __lsx_vreplvei_w(alpha_factor, 2);
++    __m128i alpha_factor_3 = __lsx_vreplvei_w(alpha_factor, 3);
++
++    bgra_0 = (__m128i) __lsx_vfmul_s((__m128) alpha_factor_0, (__m128) bgra_0);
++    bgra_1 = (__m128i) __lsx_vfmul_s((__m128) alpha_factor_1, (__m128) bgra_1);
++    bgra_2 = (__m128i) __lsx_vfmul_s((__m128) alpha_factor_2, (__m128) bgra_2);
++    bgra_3 = (__m128i) __lsx_vfmul_s((__m128) alpha_factor_3, (__m128) bgra_3);
++
++    bgra_0 = __lsx_vftintrz_w_s((__m128) bgra_0);
++    bgra_1 = __lsx_vftintrz_w_s((__m128) bgra_1);
++    bgra_2 = __lsx_vftintrz_w_s((__m128) bgra_2);
++    bgra_3 = __lsx_vftintrz_w_s((__m128) bgra_3);
+ 
+     bgra_01 = __lsx_vpickev_b(bgra_1, bgra_0);
+     bgra_23 = __lsx_vpickev_b(bgra_3, bgra_2);
+-- 
+2.51.0
+

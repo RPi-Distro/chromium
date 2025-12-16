@@ -1,4 +1,4 @@
-chromium (1:143.0.7499.40-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:143.0.7499.109-1~deb12u1+rpt1) UNRELEASED; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -29,7 +29,19 @@ chromium (1:143.0.7499.40-1~deb12u1+rpt1) bookworm; urgency=medium
   * d/c: Remove system-config-printer from recommends
   * Disable the GL mappings for YUV formats
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 04 Dec 2025 15:33:27 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 16 Dec 2025 18:39:06 +0000
+
+chromium (143.0.7499.109-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-????-?????: Under coordination.
+    - CVE-2025-14372: Use after free in Password Manager.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2025-14373: Inappropriate implementation in Toolbar.
+      Reported by Khalil Zhani.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 10 Dec 2025 22:14:03 -0500
 
 chromium (143.0.7499.40-1~deb12u1) bookworm-security; urgency=high
 

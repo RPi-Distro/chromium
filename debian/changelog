@@ -1,4 +1,4 @@
-chromium (1:143.0.7499.40-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:143.0.7499.109-1~deb13u1+rpt1) UNRELEASED; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -21,7 +21,30 @@ chromium (1:143.0.7499.40-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 04 Dec 2025 16:36:04 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 16 Dec 2025 18:18:53 +0000
+
+chromium (143.0.7499.109-1~deb13u1) trixie-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-????-?????: Under coordination.
+    - CVE-2025-14372: Use after free in Password Manager.
+      Reported by Weipeng Jiang (@Krace) of VRI.
+    - CVE-2025-14373: Inappropriate implementation in Toolbar.
+      Reported by Khalil Zhani.
+
+  [ Jianfeng Liu ]
+  * set use_av1_hw_decoder=true for arm64 and add build dep
+    linux-libc-dev (>= 6.5). This will enable V4L2 stateful/stateless AV1
+    decoder found on some arm SoCs.
+  * d/patches:
+    - upstream/fix-rk3588-v4l2-av1-decoder.patch: Fixes upstream issue
+      https://crbug.com/464638992. This patch is backported from v145
+      and will fix green frame issue when playing av1 video on RK3588.
+    - ppc64le/sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch:
+      fix FTBFS on ppc64el related to conflicting kernel_stat patches.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 10 Dec 2025 22:14:03 -0500
 
 chromium (143.0.7499.40-1~deb13u1) trixie-security; urgency=high
 

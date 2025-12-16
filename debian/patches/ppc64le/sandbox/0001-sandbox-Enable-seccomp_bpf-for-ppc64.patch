@@ -1086,12 +1086,12 @@ Index: chromium-143.0.7499.40/sandbox/linux/system_headers/linux_stat.h
 +   long            st_size;
 +   unsigned long   st_blksize;
 +   unsigned long   st_blocks;
-+   // unsigned long   st_atime;
-+   unsigned long   st_atime_nsec;
-+   //unsigned long   st_mtime;
-+   unsigned long   st_mtime_nsec;
-+   //unsigned long   st_ctime;
-+   unsigned long   st_ctime_nsec;
++   unsigned long   st_atime_;
++   unsigned long   st_atime_nsec_;
++   unsigned long   st_mtime_;
++   unsigned long   st_mtime_nsec_;
++   unsigned long   st_ctime_;
++   unsigned long   st_ctime_nsec_;
 +   unsigned long   __unused4;
 +   unsigned long   __unused5;
 +   unsigned long   __unused6;

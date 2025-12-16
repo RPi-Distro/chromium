@@ -97,6 +97,7 @@ Build-Depends:
  fonts-ipafont-gothic,
  fonts-ipafont-mincho,
  cross-exe-wrapper <cross>,
+ linux-libc-dev (>= 6.5),
 Build-Conflicts:
  bindgen-0.56,
  bindgen-0.65,

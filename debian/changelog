@@ -1,3 +1,12 @@
+chromium (143.0.7499.149-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2025-14765: Use after free in WebGPU. Reported by Anonymous.
+    - CVE-2025-14766: Out of bounds read and write in V8.
+      Reported by Shaheen Fazim.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 16 Dec 2025 19:32:58 -0500
+
 chromium (143.0.7499.109-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]

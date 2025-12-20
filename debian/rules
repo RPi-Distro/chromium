@@ -101,7 +101,7 @@ ifeq (ppc64el,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"ppc64\" use_vaapi=true
 endif
 ifeq (loong64,$(DEB_HOST_ARCH))
-# Use libffi from system for loong64 to pass build
+# use shared libffi for loong64 to pass build (see bugs.debian.org/1107859)
 # xnnpack doesn't support loongarch now, so disable it
 defines+=host_cpu=\"loong64\" use_system_libffi=true build_tflite_with_xnnpack=false use_vaapi=true
 endif
@@ -247,7 +247,7 @@ override_dh_auto_clean:
 
 ifdef FROM_GOOGLE
 # official distribution server
-url=https://gsdview.appspot.com/chromium-browser-official
+url=https://commondatastorage.googleapis.com/chromium-browser-official
 tarfile=$(extract)-lite.tar
 else
 url=https://github.com/chromium-linux-tarballs/chromium-tarballs/releases/download/$(version)

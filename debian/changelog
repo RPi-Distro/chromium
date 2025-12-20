@@ -1,11 +1,17 @@
-chromium (143.0.7499.149-1~deb12u1) bookworm-security; urgency=high
+chromium (143.0.7499.169-1~deb12u1) bookworm-security; urgency=high
 
+  [ Andres Salomon ]
   * New upstream security release.
     - CVE-2025-14765: Use after free in WebGPU. Reported by Anonymous.
     - CVE-2025-14766: Out of bounds read and write in V8.
       Reported by Shaheen Fazim.
+  * d/rules: change (google-specific) upstream tarball url.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 16 Dec 2025 19:32:58 -0500
+  [ Daniel Richard G. ]
+  * d/patches/debianization/cross-build.patch: Update changes to the protoc
+    wrapper to cover additional cases of non-emulated Python execution.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 19 Dec 2025 21:44:43 -0500
 
 chromium (143.0.7499.109-1~deb12u1) bookworm-security; urgency=high
 

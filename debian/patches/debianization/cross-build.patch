@@ -228,7 +228,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
  import subprocess
  import sys
  import tempfile
-@@ -227,6 +227,14 @@ def main(argv):
+@@ -227,6 +227,16 @@ def main(argv):
      if not options.exclude_imports:
        protoc_cmd += ["--include_imports"]
  
@@ -236,9 +236,11 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 +  wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
 +  if wrapper_env:
 +    protoc_cmd[0:0] = wrapper_env.split()
-+    if options.plugin and options.plugin.endswith('.py'):
-+      # Don't invoke a Python script via the wrapper
-+      del os.environ['HOST_EXEC_WRAPPER']
++    for arg in options.plugin, options.protoc_gen_js, options.protoc_gen_ts:
++      if arg and arg.endswith('.py'):
++        # Don't invoke a Python script via the wrapper
++        del os.environ['HOST_EXEC_WRAPPER']
++        break
 +
    dependency_file_data = None
    if options.descriptor_set_out and options.descriptor_set_dependency_file:

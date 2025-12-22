@@ -268,7 +268,7 @@ override_dh_auto_clean:
 
 ifdef FROM_GOOGLE
 # official distribution server
-url=https://gsdview.appspot.com/chromium-browser-official
+url=https://commondatastorage.googleapis.com/chromium-browser-official
 tarfile=$(extract)-lite.tar
 else
 url=https://github.com/chromium-linux-tarballs/chromium-tarballs/releases/download/$(version)

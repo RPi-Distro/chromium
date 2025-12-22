@@ -1,8 +1,6 @@
-diff --git a/media/gpu/v4l2/v4l2_utils.cc b/media/gpu/v4l2/v4l2_utils.cc
-index d4cac5573c89f..27cb4830490f8 100644
 --- a/media/gpu/v4l2/v4l2_utils.cc
 +++ b/media/gpu/v4l2/v4l2_utils.cc
-@@ -511,6 +511,9 @@ std::vector<uint32_t> EnumerateSupportedPixFmts(const IoctlAsCallback& ioctl_cb,
+@@ -511,6 +511,9 @@ std::vector<uint32_t> EnumerateSupported
                        : "pixel format: ")
                << FourccToString(fmtdesc.pixelformat) << " ("
                << fmtdesc.description << ")";

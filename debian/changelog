@@ -1,4 +1,4 @@
-chromium (1:143.0.7499.109-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:143.0.7499.169-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,22 @@ chromium (1:143.0.7499.109-1~deb12u1+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Tue, 16 Dec 2025 18:44:01 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 22 Dec 2025 09:45:39 +0000
+
+chromium (143.0.7499.169-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2025-14765: Use after free in WebGPU. Reported by Anonymous.
+    - CVE-2025-14766: Out of bounds read and write in V8.
+      Reported by Shaheen Fazim.
+  * d/rules: change (google-specific) upstream tarball url.
+
+  [ Daniel Richard G. ]
+  * d/patches/debianization/cross-build.patch: Update changes to the protoc
+    wrapper to cover additional cases of non-emulated Python execution.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 19 Dec 2025 21:44:43 -0500
 
 chromium (143.0.7499.109-1~deb12u1) bookworm-security; urgency=high
 

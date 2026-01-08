@@ -126,7 +126,6 @@ defines+=is_debug=false \
          angle_build_tests=false \
          build_angle_perftests=false \
          treat_warnings_as_errors=false \
-         toolchain_supports_rust_thin_lto=false \
          clang_warning_suppression_file=\"\" \
          use_qt5=false use_qt6=false \
          is_cfi=false \

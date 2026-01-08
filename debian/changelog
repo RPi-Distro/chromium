@@ -1,3 +1,14 @@
+chromium (143.0.7499.192-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-0628: Insufficient policy enforcement in WebView tag.
+      Reported by Gal Weizman.
+  * d/rules:
+    - enable verbose build logs (closes: #1111693).
+    - disable thinLTO for rust (closes: #1124150).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 07 Jan 2026 07:06:08 -0500
+
 chromium (143.0.7499.169-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]

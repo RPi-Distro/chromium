@@ -126,6 +126,7 @@ defines+=is_debug=false \
          angle_build_tests=false \
          build_angle_perftests=false \
          treat_warnings_as_errors=false \
+         toolchain_supports_rust_thin_lto=false \
          clang_warning_suppression_file=\"\" \
          use_qt5=false use_qt6=false \
          is_cfi=false \
@@ -206,7 +207,7 @@ override_dh_auto_configure: test_armhf_neon set_up_bindgen
 
 override_dh_auto_build-arch:
 	gn gen out/Release --args="$(defines)"
-	ninja -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
+	ninja -v -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
 	cp out/Release/chrome out/Release/chromium
 	cp out/Release/content_shell out/Release/chromium-shell
 	cp out/Release/headless_shell out/Release/chromium-headless-shell
@@ -218,7 +219,7 @@ override_dh_auto_build-arch:
 
 override_dh_auto_build-indep:
 	gn gen out/Release --args="$(defines)"
-	ninja -j$(njobs) -C out/Release packed_resources
+	ninja -v -j$(njobs) -C out/Release packed_resources
 	rm -f out/Release/locales/en-US.pak
 
 override_dh_auto_install-arch:

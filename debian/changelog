@@ -1,3 +1,11 @@
+chromium (144.0.7559.59-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/patches/bookworm/eslint.patch: Refresh, and add another
+    import.meta.dirname conversion.
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 11 Jan 2026 00:00:00 -0500
+
 chromium (143.0.7499.192-1~deb12u1) bookworm-security; urgency=high
 
   * New upstream security release.

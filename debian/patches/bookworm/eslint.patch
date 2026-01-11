@@ -32,9 +32,25 @@ to this error:
  _ESLINT_CONFIG_TEMPLATE = """import path from 'path';
 +import url from 'url';
  
- import defaultConfig from '%(config_base)s';
+ import {defaultConfig} from '%(config_base)s';
  
-@@ -25,7 +26,7 @@ export default [
+@@ -25,13 +26,14 @@ export default [
+   {
+     languageOptions: {
+       parserOptions: {
+-        'project': [path.join(import.meta.dirname, './%(tsconfig)s')],
++        'project': [path.join(path.dirname(url.fileURLToPath(import.meta.url)), './%(tsconfig)s')],
+       },
+     },
+   },
+ ];"""
+ 
+ _ESLINT_CONFIG_WITH_WEBUI_MISSING_DEPS_TEMPLATE = """import path from 'path';
++import url from 'url';
+ 
+ import {defaultConfig, webComponentMissingDepsConfig} from '%(config_base)s';
+ 
+@@ -41,7 +43,7 @@ export default [
    {
      languageOptions: {
        parserOptions: {

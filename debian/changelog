@@ -1,3 +1,33 @@
+chromium (144.0.7559.59-1~deb13u1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/copyright: delete a copy of clang-22 in the openscreen build directory.
+  * d/control: add rustfmt as a build dependency.
+  * d/rules: make DEB_BUILD_OPTIONS=terse work.
+  * d/patches:
+    - disable/tests.patch: refresh.
+    - trixie/rust-sanitize.patch: refresh.
+    - bookworm/bindgen.patch: refresh.
+    - fixes/force-rust-nightly.patch: add workaround to force
+      rustc_nightly_capability, as we're using an up-to-date rust.
+    - trixie/value-or.patch: add clang-19 workarounds to help
+      calling value_or() with ambiguous values.
+    - fixes/autofill-binarypb.patch: add patch to fix build for us stripping
+      out binary-only files containing city/state autofill aliases.
+
+  [ Daniel Richard G. ]
+  * d/patches/trixie/adler1.patch: Refresh to follow use of if-else.
+
+  [ Timothy Pearson ]
+  * d/patches:
+    - trixie/nodejs-set-intersection.patch: avoid using node >=22 intersection
+  * d/patches/ppc64le:
+    - ppc64le/third_party/0002-regenerate-xnn-buildgn.patch: Regenerate from
+      upstream sources
+    - fixes/fix-clang-selection.patch: Drop due to upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Sat, 10 Jan 2026 04:39:05 -0500
+
 chromium (143.0.7499.192-1~deb13u1) trixie-security; urgency=high
 
   * New upstream security release.

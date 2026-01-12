@@ -27,10 +27,10 @@ fix should probably go upstream.
 +  junk = []
 +  not_needed(["junk"])
 +  junk = [
+     "allowlist-item=DAV1D_MAX_THREADS",
      "allowlist-item=dav1d_close",
      "allowlist-item=dav1d_data_unref",
-     "allowlist-item=dav1d_data_wrap",
-@@ -42,6 +46,10 @@ rust_bindgen_generator("crabbyavif_libyu
+@@ -45,6 +49,10 @@ rust_bindgen_generator("crabbyavif_libyu
    bindgen_flags = [
      "no-doc-comments",
      "generate=functions,types,vars,methods,constructors,destructors",
@@ -43,12 +43,12 @@ fix should probably go upstream.
      "allowlist-item=ABGRToJ420",
 --- a/build/rust/rust_bindgen_generator.gni
 +++ b/build/rust/rust_bindgen_generator.gni
-@@ -18,7 +18,7 @@ if (host_os == "win") {
+@@ -26,7 +26,7 @@ if (!use_chromium_rust_toolchain &&
  
  # On Windows, the libclang.dll is beside the bindgen.exe, otherwise it is in
  # ../lib.
 -_libclang_path = rust_bindgen_root
 +_libclang_path = clang_base_path
- if (host_os == "win") {
-   _libclang_path += "/bin"
- } else {
+ if (!use_chromium_rust_toolchain &&
+     (host_cpu == "ppc64" || host_cpu == "s390x")) {
+   _libclang_path = rust_sysroot_absolute + "/lib64"

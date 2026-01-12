@@ -16,7 +16,9 @@ chromium (144.0.7559.59-1~deb13u1) UNRELEASED; urgency=high
       out binary-only files containing city/state autofill aliases.
 
   [ Daniel Richard G. ]
-  * d/patches/trixie/adler1.patch: Refresh to follow use of if-else.
+  * d/patches:
+    - trixie/adler1.patch: Refresh to follow use of if-else.
+    - trixie/libxml2-no-xxe.patch: Add workaround for older libxml2.
 
   [ Timothy Pearson ]
   * d/patches:

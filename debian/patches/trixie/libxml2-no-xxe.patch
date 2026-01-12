@@ -1,0 +1,43 @@
+Description: Drop use of XML_PARSE_NO_XXE for older LibXML2
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+Work around this compile error:
+
+  FAILED: obj/third_party/blink/renderer/core/core/xml_document_parser.o
+  [...]
+  ../../third_party/blink/renderer/core/xml/parser/xml_document_parser.cc:768:16: error: use of undeclared identifier 'XML_PARSE_NO_XXE'
+    768 |     options |= XML_PARSE_NO_XXE;
+        |                ^
+  ../../third_party/blink/renderer/core/xml/parser/xml_document_parser.cc:804:16: error: use of undeclared identifier 'XML_PARSE_NO_XXE'
+    804 |     options |= XML_PARSE_NO_XXE;
+        |                ^
+  2 errors generated.
+
+LibXML2 gained XML_PARSE_NO_XXE in 2.13.0.
+
+--- a/third_party/blink/renderer/core/xml/parser/xml_document_parser.cc
++++ b/third_party/blink/renderer/core/xml/parser/xml_document_parser.cc
+@@ -764,9 +764,11 @@ scoped_refptr<XMLParserContext> XMLParse
+   // external entities and DTDs here, but not in xmlReadMemory of
+   // XmlDocPtrForString and in XSLTStyleSheet::Parse in order not to overlap
+   // with XSLT deprecation.
++#ifdef XML_PARSE_NO_XXE
+   if (RuntimeEnabledFeatures::XMLNoExternalEntitiesEnabled()) {
+     options |= XML_PARSE_NO_XXE;
+   }
++#endif
+ 
+   xmlCtxtUseOptions(parser, options);
+   parser->_private = user_data;
+@@ -800,9 +802,11 @@ scoped_refptr<XMLParserContext> XMLParse
+   // external entities and DTDs here, but not in xmlReadMemory of
+   // XmlDocPtrForString and in XSLTStyleSheet::Parse in order not to overlap
+   // with XSLT deprecation.
++#ifdef XML_PARSE_NO_XXE
+   if (RuntimeEnabledFeatures::XMLNoExternalEntitiesEnabled()) {
+     options |= XML_PARSE_NO_XXE;
+   }
++#endif
+ 
+   xmlCtxtUseOptions(parser, options);
+ 

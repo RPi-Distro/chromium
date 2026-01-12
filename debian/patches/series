@@ -56,9 +56,10 @@ trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
+trixie/rust-is-multiple-of.patch
+trixie/libxml2-no-xxe.patch
 trixie/value-or.patch
 trixie/nodejs-set-intersection.patch
-trixie/rust-is-multiple-of.patch
 
 #bookworm/strlcpy.patch
 bookworm/dq-forward-iterator.patch

@@ -18,6 +18,7 @@ chromium (144.0.7559.59-1~deb12u1) UNRELEASED; urgency=high
   [ Daniel Richard G. ]
   * d/patches:
     - trixie/adler1.patch: Refresh to follow use of if-else.
+    - trixie/libxml2-no-xxe.patch: Add workaround for older libxml2.
     - bookworm/eslint.patch: Refresh, and add another import.meta.dirname
       conversion.
 

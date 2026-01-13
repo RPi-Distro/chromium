@@ -2,7 +2,7 @@ chromium (144.0.7559.59-1~deb12u1) UNRELEASED; urgency=high
 
   * New upstream stable release.
   * d/copyright: delete a copy of clang-22 in the openscreen build directory.
-  * d/control: add rustfmt as a build dependency.
+  * d/control: add rustfmt-web as a build dependency.
   * d/rules: make DEB_BUILD_OPTIONS=terse work.
   * d/patches:
     - disable/tests.patch: refresh.

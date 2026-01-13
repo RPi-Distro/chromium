@@ -91,6 +91,7 @@ bookworm/gn-hpp11.patch
 #bookworm/rust-split-at-checked.patch
 #bookworm/crabbyav1f-macro-scope.patch
 #bookworm/rust-box-to-vec.patch
+bookworm/path-rustfmt.patch
 bookworm/gn-path-exists2.patch
 bookworm/rust-unsafe-extern.patch
 bookworm/node-esm-dirname.patch

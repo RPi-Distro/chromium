@@ -14,6 +14,9 @@ chromium (144.0.7559.59-1~deb12u1) UNRELEASED; urgency=high
       calling value_or() with ambiguous values.
     - fixes/autofill-binarypb.patch: add patch to fix build for us stripping
       out binary-only files containing city/state autofill aliases.
+    - bookworm/path-rustfmt.patch: add patch to override search path for
+      rustfmt (which chromium deduces incorrectly due to our bundled
+      bindgen in bookworm).
 
   [ Daniel Richard G. ]
   * d/patches:

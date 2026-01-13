@@ -1,0 +1,23 @@
+--- a/ui/webui/resources/tools/webui_eslint_plugin.js
++++ b/ui/webui/resources/tools/webui_eslint_plugin.js
+@@ -368,8 +368,8 @@
+         for (const tagName of tagNames) {
+           const expectedImportedFilenames = getExpectedImportFilenames(tagName);
+ 
+-          if (importedFilenames.intersection(expectedImportedFilenames).size >
+-              0) {
++          // Set.intersection is only available in node 22 and higher
++          if (new Set([...importedFilenames].filter((i) => expectedImportedFilenames.has(i))).size > 0) {
+             continue;
+           }
+ 
+@@ -386,8 +386,7 @@
+           }
+ 
+           if (lazyImportedFileNames !== null &&
+-              lazyImportedFileNames.intersection(expectedImportedFilenames)
+-                      .size > 0) {
++            (new Set([...lazyImportedFileNames].filter((i) => expectedImportedFilenames.has(i))).size > 0)) {
+             // Handle case where the dependency is imported lazily (meaning in
+             // lazy_load.ts).
+             continue;

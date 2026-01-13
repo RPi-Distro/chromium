@@ -1,7 +1,7 @@
-Index: chromium-143.0.7499.40/components/variations/proto/study.proto
+Index: chromium-144.0.7559.59/components/variations/proto/study.proto
 ===================================================================
---- chromium-143.0.7499.40.orig/components/variations/proto/study.proto
-+++ chromium-143.0.7499.40/components/variations/proto/study.proto
+--- chromium-144.0.7559.59.orig/components/variations/proto/study.proto
++++ chromium-144.0.7559.59/components/variations/proto/study.proto
 @@ -293,6 +293,9 @@ message Study {
      // A Mac-only value, indicating an x86-64 binary running on an arm64 host
      // via "Rosetta 2" binary translation.
@@ -12,11 +12,11 @@ Index: chromium-143.0.7499.40/components/variations/proto/study.proto
    }
  
    // Enum to pass as optional bool.
-Index: chromium-143.0.7499.40/components/variations/service/variations_field_trial_creator.cc
+Index: chromium-144.0.7559.59/components/variations/service/variations_field_trial_creator.cc
 ===================================================================
---- chromium-143.0.7499.40.orig/components/variations/service/variations_field_trial_creator.cc
-+++ chromium-143.0.7499.40/components/variations/service/variations_field_trial_creator.cc
-@@ -105,6 +105,9 @@ Study::CpuArchitecture GetCurrentCpuArch
+--- chromium-144.0.7559.59.orig/components/variations/service/variations_field_trial_creator.cc
++++ chromium-144.0.7559.59/components/variations/service/variations_field_trial_creator.cc
+@@ -108,6 +108,9 @@ Study::CpuArchitecture GetCurrentCpuArch
    if (process_arch == "x86") {
      return Study::X86_32;
    }

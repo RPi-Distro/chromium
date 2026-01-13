@@ -23,6 +23,7 @@ Build-Depends:
  rustc-web:any (>= 1.84),
  libstd-rust-dev (>= 1.84),
  bindgen:native,
+ rustfmt,
  python3:any,
  pkgconf,
  ninja-build,

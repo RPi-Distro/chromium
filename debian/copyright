@@ -146,6 +146,7 @@ Files-Excluded:
  third_party/openh264/BUILD.gn
  third_party/openh264/src
  third_party/openscreen/src/buildtools
+ third_party/openscreen/src/third_party/llvm-build
  third_party/opus
  third_party/pdfium/third_party/libopenjpeg
  third_party/pyelftools

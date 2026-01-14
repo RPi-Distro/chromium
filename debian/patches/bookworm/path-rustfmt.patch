@@ -11,5 +11,5 @@ search for rustfmt; so we need to override that.
 -_rustfmt_path = "${rust_bindgen_root}/bin/rustfmt"
 +_rustfmt_path = "/usr/bin/rustfmt"
  if (!use_chromium_rust_toolchain &&
-     (host_cpu == "s390x")) {
+     (host_cpu == "ppc64" || host_cpu == "s390x")) {
    _rustfmt_path = rust_sysroot_absolute + "/bin/rustfmt"

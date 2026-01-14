@@ -1,6 +1,21 @@
-chromium (144.0.7559.59-1~deb13u1) UNRELEASED; urgency=high
+chromium (144.0.7559.59-1~deb13u1) trixie-security; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2026-0899: Out of bounds memory access in V8. Reported by @p1nky4745.
+    - CVE-2026-0900: Inappropriate implementation in V8. Reported by Google.
+    - CVE-2026-0901: Inappropriate implementation in Blink.
+      Reported by Irvan Kurniawan (sourc7).
+    - CVE-2026-0902: Inappropriate implementation in V8. Reported by 303f06e3.
+    - CVE-2026-0903: Insufficient validation of untrusted input in Downloads.
+      Reported by Azur.
+    - CVE-2026-0904: Incorrect security UI in Digital Credentials.
+      Reported by Hafiizh.
+    - CVE-2026-0905: Insufficient policy enforcement in Network.
+      Reported by Google.
+    - CVE-2026-0906: Incorrect security UI. Reported by Khalil Zhani.
+    - CVE-2026-0907: Incorrect security UI in Split View. Reported by Hafiizh.
+    - CVE-2026-0908: Use after free in ANGLE. Reported by Glitchers BoB 14th.
   * d/copyright: delete a copy of clang-22 in the openscreen build directory.
   * d/control: add rustfmt as a build dependency.
   * d/rules: make DEB_BUILD_OPTIONS=terse work.
@@ -28,7 +43,7 @@ chromium (144.0.7559.59-1~deb13u1) UNRELEASED; urgency=high
       upstream sources
     - fixes/fix-clang-selection.patch: Drop due to upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Sat, 10 Jan 2026 04:39:05 -0500
+ -- Andres Salomon <dilinger@debian.org>  Tue, 13 Jan 2026 22:11:21 -0500
 
 chromium (143.0.7499.192-1~deb13u1) trixie-security; urgency=high
 

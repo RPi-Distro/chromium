@@ -182,7 +182,6 @@ defines+=enable_hangout_services_extension=true
 # enable the validating decode otherwise we get a fatal GPU error
 defines+=enable_validating_command_decoder=true
 
-
 # handle parallel build options
 njobs=1
 ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
@@ -194,6 +193,12 @@ ifeq (armhf,$(DEB_HOST_ARCH))
 threads=$(intcmp $(njobs),20,$(njobs),20)
 else
 threads=$(njobs)
+endif
+
+# whether to use ninja -v or not
+CR_VERBOSE=-v
+ifneq (,$(filter terse,$(DEB_BUILD_OPTIONS)))
+	CR_VERBOSE=
 endif
 
 DIST := $(shell dpkg-parsechangelog -l debian/changelog  | sed -n 's/^Distribution: //p')
@@ -233,7 +238,7 @@ override_dh_auto_configure: test_armhf_neon
 
 override_dh_auto_build-arch:
 	gn gen out/Release --args="$(defines)" --threads="$(threads)"
-	ninja -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
+	ninja $(CR_VERBOSE) -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
 	cp out/Release/chrome out/Release/chromium
 	cp out/Release/content_shell out/Release/chromium-shell
 	cp out/Release/headless_shell out/Release/chromium-headless-shell
@@ -245,7 +250,7 @@ override_dh_auto_build-arch:
 
 override_dh_auto_build-indep:
 	gn gen out/Release --args="$(defines)" --threads="$(threads)"
-	ninja -j$(njobs) -C out/Release packed_resources
+	ninja $(CR_VERBOSE) -j$(njobs) -C out/Release packed_resources
 	rm -f out/Release/locales/en-US.pak
 
 override_dh_auto_install-arch:

@@ -1,0 +1,53 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Error processing node <?xml version="1.0" encoding="UTF-8"?>
+<include compress="gzip" file="alternative_state_name_maps/DE.binarypb" name="IDR_STATE_NAME_MAP_DE_ALTERNATIVES" type="BINDATA" />: [Errno 2] No such file or directory: '../../components/autofill/core/browser/geo/alternative_state_name_maps/DE.binarypb'
+
+Unfortunately, the two (non-empty) binarypb files originate from
+<https://chrome-internal.googlesource.com/chrome/components/autofill_alternative_state_name_maps.git>,
+which is not public. I can only assume that the source files (.textpb or
+.textproto) are located in this internal repository, but only Googlers
+know. We could probably reverse engineer it, but it might be easier to
+just get some of their employees to make this stuff public.
+
+protoc --decode_raw shows, for example:
+
+1: "DE"
+2 {
+  1: "bayern"
+  2: "by"
+  3: "bavaria"
+}
+
+
+--- a/components/autofill/core/browser/geo/autofill_alternative_state_name_map_resources.grd
++++ b/components/autofill/core/browser/geo/autofill_alternative_state_name_map_resources.grd
+@@ -60,7 +60,7 @@
+             <include name="IDR_STATE_NAME_MAP_CX_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_CY_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_CZ_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+-            <include name="IDR_STATE_NAME_MAP_DE_ALTERNATIVES" file="alternative_state_name_maps/DE.binarypb" type="BINDATA" compress="gzip"/>
++            <include name="IDR_STATE_NAME_MAP_DE_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_DJ_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_DK_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_DM_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+@@ -71,7 +71,7 @@
+             <include name="IDR_STATE_NAME_MAP_EG_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_EH_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_ER_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+-            <include name="IDR_STATE_NAME_MAP_ES_ALTERNATIVES" file="alternative_state_name_maps/ES.binarypb" type="BINDATA" compress="gzip"/>
++            <include name="IDR_STATE_NAME_MAP_ES_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_ET_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_FI_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+             <include name="IDR_STATE_NAME_MAP_FJ_ALTERNATIVES" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+@@ -239,4 +239,4 @@
+             <include name="IDR_STATE_NAME_MAP_END" file="alternative_state_name_maps/EMTPY.binarypb" type="BINDATA" compress="gzip"/>
+         </includes>
+     </release>
+-</grit>
+\ No newline at end of file
++</grit>
+--- /dev/null
++++ b/components/autofill/core/browser/geo/alternative_state_name_maps/EMTPY.binarypb
+@@ -0,0 +1 @@
++ 

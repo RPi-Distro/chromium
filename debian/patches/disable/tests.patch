@@ -7,10 +7,10 @@
 -                "test",
                ]
    deps = [ ":frontend_indexer_tsconfig" ]
-   public_deps = [
+   public_deps = [ "scripts/component_docs" ]
 --- a/components/update_client/BUILD.gn
 +++ b/components/update_client/BUILD.gn
-@@ -360,8 +360,6 @@ source_set("unit_tests") {
+@@ -355,8 +355,6 @@ source_set("unit_tests") {
      "//third_party/puffin:libpuffpatch",
      "//third_party/re2",
    ]

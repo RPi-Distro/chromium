@@ -1,7 +1,7 @@
-Index: chromium-143.0.7499.40/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+Index: chromium-144.0.7559.59/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
 ===================================================================
---- chromium-143.0.7499.40.orig/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
-+++ chromium-143.0.7499.40/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+--- chromium-144.0.7559.59.orig/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
++++ chromium-144.0.7559.59/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
 @@ -383,6 +383,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatfo
      info->arch = extensions::api::runtime::PlatformArch::kMips64;
    } else if (arch == "riscv64") {
@@ -11,10 +11,10 @@ Index: chromium-143.0.7499.40/chrome/browser/extensions/api/runtime/chrome_runti
    } else {
      NOTREACHED();
    }
-Index: chromium-143.0.7499.40/extensions/common/api/runtime.json
+Index: chromium-144.0.7559.59/extensions/common/api/runtime.json
 ===================================================================
---- chromium-143.0.7499.40.orig/extensions/common/api/runtime.json
-+++ chromium-143.0.7499.40/extensions/common/api/runtime.json
+--- chromium-144.0.7559.59.orig/extensions/common/api/runtime.json
++++ chromium-144.0.7559.59/extensions/common/api/runtime.json
 @@ -98,7 +98,8 @@
              {"name": "x86-64", "description": "Specifies the processer architecture as x86-64."},
              {"name": "mips", "description": "Specifies the processer architecture as mips."},

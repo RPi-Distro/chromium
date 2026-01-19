@@ -1,6 +1,6 @@
 --- a/media/base/media_switches.cc
 +++ b/media/base/media_switches.cc
-@@ -722,6 +722,13 @@ BASE_FEATURE(kVaapiVp9SModeHWEncoding, b
+@@ -742,6 +742,13 @@ BASE_FEATURE(kVaapiVp9SModeHWEncoding, b
  BASE_FEATURE(kVSyncMjpegDecoding, base::FEATURE_DISABLED_BY_DEFAULT);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
@@ -16,7 +16,7 @@
               base::FEATURE_DISABLED_BY_DEFAULT);
 --- a/media/base/media_switches.h
 +++ b/media/base/media_switches.h
-@@ -375,6 +375,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
+@@ -329,6 +329,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kVSyncMjpegDecoding);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
@@ -78,7 +78,7 @@
    return new VideoDecodeAcceleratorTestSuite(
 --- a/media/gpu/test/video_decode_accelerator_tests.cc
 +++ b/media/gpu/test/video_decode_accelerator_tests.cc
-@@ -432,6 +432,10 @@ TEST_F(VideoDecoderTest, FlushAtEndOfStr
+@@ -431,6 +431,10 @@ TEST_F(VideoDecoderTest, FlushAtEndOfStr
  // Flush the decoder somewhere mid-stream, then continue as normal. This is a
  // contrived use case to exercise important V4L2 stateful areas.
  TEST_F(VideoDecoderTest, DISABLED_FlushMidStream) {
@@ -89,7 +89,7 @@
    auto tvp = CreateDecoderListener(g_env->Video());
  
    tvp->Play();
-@@ -563,6 +567,12 @@ TEST_F(VideoDecoderTest, ResetAfterFirst
+@@ -562,6 +566,12 @@ TEST_F(VideoDecoderTest, ResetAfterFirst
        g_env->Video()->Codec() != media::VideoCodec::kHEVC)
      GTEST_SKIP();
  

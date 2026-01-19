@@ -1,0 +1,15 @@
+On bookworm we're using a bundled bindgen, which screws up chromium's
+search for rustfmt; so we need to override that.
+
+
+--- a/build/rust/rust_bindgen_generator.gni
++++ b/build/rust/rust_bindgen_generator.gni
+@@ -16,7 +16,7 @@ if (host_os == "win") {
+   _bindgen_path = "${_bindgen_path}.exe"
+ }
+ 
+-_rustfmt_path = "${rust_bindgen_root}/bin/rustfmt"
++_rustfmt_path = "/usr/bin/rustfmt"
+ if (!use_chromium_rust_toolchain &&
+     (host_cpu == "ppc64" || host_cpu == "s390x")) {
+   _rustfmt_path = rust_sysroot_absolute + "/bin/rustfmt"

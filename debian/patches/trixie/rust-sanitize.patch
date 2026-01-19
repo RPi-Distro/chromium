@@ -8,7 +8,7 @@ taken from https://github.com/ungoogled-software/ungoogled-chromium/pull/3514
 
 --- a/third_party/crabbyavif/src/src/capi/io.rs
 +++ b/third_party/crabbyavif/src/src/capi/io.rs
-@@ -207,7 +207,6 @@
+@@ -207,7 +207,6 @@ impl Drop for avifIOWrapper {
  }
  
  impl crate::decoder::IO for avifIOWrapper {
@@ -18,7 +18,7 @@ taken from https://github.com/ungoogled-software/ungoogled-chromium/pull/3514
          let res = unsafe {
 --- a/third_party/crabbyavif/src/src/reformat/libyuv.rs
 +++ b/third_party/crabbyavif/src/src/reformat/libyuv.rs
-@@ -372,7 +372,6 @@
+@@ -372,7 +372,6 @@ fn find_conversion_function(
  // Returns Ok(Some(false)) if only YUV was converted and alpha
  // needs to be imported separately.
  // Returns Ok(None) if the conversion is not implemented.
@@ -26,7 +26,7 @@ taken from https://github.com/ungoogled-software/ungoogled-chromium/pull/3514
  pub(crate) fn yuv_to_rgb(image: &image::Image, rgb: &mut rgb::Image) -> AvifResult<Option<bool>> {
      if (rgb.depth != 8 && rgb.depth != 10) || !image.depth_valid() {
          return Ok(None); // Not implemented.
-@@ -833,7 +833,6 @@
+@@ -833,7 +832,6 @@ fn rgb_to_yuv_conversion_function(
      }
  }
  
@@ -41,6 +41,6 @@ taken from https://github.com/ungoogled-software/ungoogled-chromium/pull/3514
  
  #![deny(unsafe_op_in_unsafe_fn)]
 -#![cfg_attr(feature = "disable_cfi", feature(sanitize))]
- 
- #[macro_use]
- mod internal_utils;
+ // Clippy flags this as a false positive for some of the uses in this library. Disable this clippy
+ // warning.
+ #![allow(clippy::cast_slice_from_raw_parts)]

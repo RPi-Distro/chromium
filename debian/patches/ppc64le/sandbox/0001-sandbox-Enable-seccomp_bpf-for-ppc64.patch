@@ -107,7 +107,7 @@ Index: chromium-144.0.7559.59/sandbox/linux/system_headers/ppc64_linux_syscalls.
 ===================================================================
 --- /dev/null
 +++ chromium-144.0.7559.59/sandbox/linux/system_headers/ppc64_linux_syscalls.h
-@@ -0,0 +1,25 @@
+@@ -0,0 +1,28 @@
 +// Copyright 2014 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -130,6 +130,9 @@ Index: chromium-144.0.7559.59/sandbox/linux/system_headers/ppc64_linux_syscalls.
 +#endif
 +#if !defined(__NR_shmat)
 +#define __NR_shmat      397
++#endif
++#if !defined(__NR_mseal)
++#define __NR_mseal      462
 +#endif
 +
 +#endif  // SANDBOX_LINUX_SYSTEM_HEADERS_PPC64_LINUX_SYSCALLS_H_

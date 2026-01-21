@@ -127,10 +127,7 @@ Files-Excluded:
  third_party/libpng
  third_party/libsecret
  third_party/libusb
- third_party/libxml/BUILD.gn
- third_party/libxml/linux
  third_party/libxml/mac
- third_party/libxml/src
  third_party/libxml/win32
  third_party/libxslt
  third_party/llvm*

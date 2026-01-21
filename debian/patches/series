@@ -27,6 +27,7 @@ fixes/armhf-icf.patch
 fixes/libpng-testonly.patch
 fixes/force-rust-nightly.patch
 fixes/autofill-binarypb.patch
+fixes/bindgen-paths.patch
 
 # Fixes upstream bug 464638992. We can drop it at v145.
 upstream/fix-rk3588-v4l2-av1-decoder.patch
@@ -54,12 +55,12 @@ system/rapidjson.patch
 system/rollup.patch
 
 trixie/adler1.patch
-trixie/libxml-parseerr.patch
+#trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 trixie/rust-is-multiple-of.patch
-trixie/libxml2-no-xxe.patch
+#trixie/libxml2-no-xxe.patch
 trixie/value-or.patch
 trixie/nodejs-set-intersection.patch
 
@@ -141,7 +142,6 @@ ppc64le/fixes/fix-breakpad-compile.patch
 ppc64le/fixes/fix-partition-alloc-compile.patch
 ppc64le/fixes/fix-page-allocator-overflow.patch
 ppc64le/fixes/fix-different-data-layouts.patch
-ppc64le/fixes/bindgen.patch
 
 ppc64le/v8/0001-Enable-ppc64-pointer-compression.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch

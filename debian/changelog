@@ -1,3 +1,11 @@
+chromium (144.0.7559.109-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-1504: Inappropriate implementation in Background Fetch API.
+      Reported by Luan Herrera (@lbherrera_).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 28 Jan 2026 20:19:05 -0500
+
 chromium (144.0.7559.96-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]

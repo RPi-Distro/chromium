@@ -1,4 +1,4 @@
-chromium (1:144.0.7559.59-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:144.0.7559.109-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -22,7 +22,40 @@ chromium (1:144.0.7559.59-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 19 Jan 2026 10:53:20 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 02 Feb 2026 14:19:28 +0000
+
+chromium (144.0.7559.109-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-1504: Inappropriate implementation in Background Fetch API.
+      Reported by Luan Herrera (@lbherrera_).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 28 Jan 2026 20:19:05 -0500
+
+chromium (144.0.7559.96-1~deb13u1) trixie-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-1220: Race in V8. Reported by @p1nky4745.
+  * d/scripts/unbundle: switch to bundled libxml2, so that we get features of
+    XML_PARSE_NO_XXE (which disables loading of external content) in
+    trixie/bookworm.
+  * d/copyright: stop deleting the bundled libxml2.
+  * d/clean: stop deleting the libxml2 symlink.
+  * d/control: drop libxml2-dev build dep.
+  * d/patches:
+    - trixie/libxml-parseerr.patch: drop; we're using bundled libxml.
+    - trixie/libxml2-no-xxe.patch: drop; we're using bundled libxml.
+
+  [ Daniel Richard G. ]
+  * d/patches/bookworm/bindgen.patch: Move the libclang edit from here ...
+  * d/patches/fixes/bindgen-paths.patch: ... over to this new patch, which
+    takes a simpler approach that is easier to override later in the series ...
+  * d/patches/ppc64le/fixes/bindgen.patch: ... and makes this patch redundant.
+  * d/patches/ppc64le/sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch:
+    Add a __NR_mseal definition that is needed in the Ubuntu builds.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 20 Jan 2026 20:25:10 -0500
 
 chromium (144.0.7559.59-1~deb13u1) trixie-security; urgency=high
 

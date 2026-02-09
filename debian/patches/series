@@ -29,6 +29,8 @@ fixes/force-rust-nightly.patch
 fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 
+CVE-2026-1861.patch
+CVE-2026-1862.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

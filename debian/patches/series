@@ -31,6 +31,8 @@ fixes/bindgen-paths.patch
 
 # Fixes upstream bug 464638992. We can drop it at v145.
 upstream/fix-rk3588-v4l2-av1-decoder.patch
+CVE-2026-1861.patch
+CVE-2026-1862.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

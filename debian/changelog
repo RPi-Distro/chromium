@@ -1,4 +1,4 @@
-chromium (1:144.0.7559.109-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:144.0.7559.109-2~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -22,7 +22,16 @@ chromium (1:144.0.7559.109-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 02 Feb 2026 14:19:28 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Feb 2026 08:18:05 +0000
+
+chromium (144.0.7559.109-2~deb13u1) trixie-security; urgency=high
+
+  * Backport security fixes:
+    - CVE-2026-1861: Heap buffer overflow in libvpx. Reported by Google.
+    - CVE-2026-1862: Type Confusion in V8.
+      Reported by Chaoyuan Peng (@ret2happy).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 03 Feb 2026 22:40:28 -0500
 
 chromium (144.0.7559.109-1~deb13u1) trixie-security; urgency=high
 

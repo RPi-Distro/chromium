@@ -3,7 +3,7 @@ origin: https://raw.githubusercontent.com/Eloston/ungoogled-chromium/master/reso
 
 --- a/chrome/browser/ui/webui/signin/inline_login_handler_impl.cc
 +++ b/chrome/browser/ui/webui/signin/inline_login_handler_impl.cc
-@@ -400,17 +400,6 @@ void InlineSigninHelper::OnClientOAuthSu
+@@ -405,17 +405,6 @@ void InlineSigninHelper::OnClientOAuthSu
          signin_metrics::SourceForRefreshTokenOperation::
              kInlineLoginHandler_Signin);
    } else {
@@ -23,10 +23,10 @@ origin: https://raw.githubusercontent.com/Eloston/ungoogled-chromium/master/reso
  
 --- a/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -245,7 +245,7 @@ void PrimaryAccountManager::RegisterProf
-       prefs::kGoogleServicesSyncingGaiaIdMigratedToSignedIn, std::string());
-   registry->RegisterStringPref(
+@@ -322,7 +322,7 @@ void PrimaryAccountManager::RegisterProf
        prefs::kGoogleServicesSyncingUsernameMigratedToSignedIn, std::string());
+   registry->RegisterIntegerPref(prefs::kGoogleServicesSyncingUserMigrationType,
+                                 /*SyncToSigninMigrationType::kUnknown=*/0);
 -  registry->RegisterBooleanPref(prefs::kSigninAllowed, true);
 +  registry->RegisterBooleanPref(prefs::kSigninAllowed, false);
    registry->RegisterBooleanPref(prefs::kSignedInWithCredentialProvider, false);

@@ -1,0 +1,6 @@
+debian/esbuild/esbuild_0.25.1-1_ppc64el.deb
+debian/esbuild/esbuild_0.25.1-1_amd64.deb
+debian/esbuild/esbuild_0.25.1-1_i386.deb
+debian/esbuild/esbuild_0.25.1-1_arm64.deb
+debian/esbuild/esbuild_0.25.1-1_loong64.deb
+debian/esbuild/esbuild_0.25.1-1_armhf.deb

@@ -68,6 +68,7 @@ trixie/rust-is-multiple-of.patch
 trixie/gn-string-hash.patch
 trixie/value-or.patch
 trixie/nodejs-set-intersection.patch
+trixie/gn-len.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

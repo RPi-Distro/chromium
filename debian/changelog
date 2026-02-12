@@ -94,6 +94,7 @@ chromium (145.0.7632.45-1~deb12u1) UNRELEASED; urgency=high
     - gn-absl.patch: Refresh.
     - node-esm-dirname.patch: Address a new instance of the problem.
     - node18-import.patch: Address a new instance of the problem.
+    - trixie/rust-is-multiple-of.patch: Drop the -Zallow-features= bit.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 06 Feb 2026 19:15:37 -0500
 

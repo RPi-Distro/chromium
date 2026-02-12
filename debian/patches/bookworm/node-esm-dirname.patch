@@ -35,3 +35,23 @@ Avoid the following Node.js error on jammy:
  
  // We use a pre-generated v4 UUID for the namespace
  const NAMESPACE = '2ba62548-f4e9-11ef-9cd2-0242ac120002';
+--- a/third_party/devtools-frontend/src/scripts/devtools_paths.js
++++ b/third_party/devtools-frontend/src/scripts/devtools_paths.js
+@@ -13,6 +13,8 @@
+ import os from 'node:os';
+ import path from 'node:path';
+ 
++import url from 'url';
++
+ /**
+  * You would think we can use import.meta.filename here but we cannot because import.meta.filename
+  * has any symlinks resolved. This means we can't use it to tell if the user is
+@@ -66,7 +68,7 @@ export function isInChromiumDirectory()
+  * If it's standalone, it will be /path/to/devtools-frontend
+  */
+ export function devtoolsRootPath() {
+-  return path.dirname(import.meta.dirname);
++  return path.dirname(path.dirname(url.fileURLToPath(import.meta.url)));
+ }
+ 
+ /**

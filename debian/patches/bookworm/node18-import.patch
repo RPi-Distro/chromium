@@ -16,3 +16,13 @@ SyntaxError: Cannot use import statement outside a module
 +  "version": "1.0.0",
 +  "type": "module"
 +}
+--- a/third_party/devtools-frontend/src/package.json
++++ b/third_party/devtools-frontend/src/package.json
+@@ -12,6 +12,7 @@
+   ],
+   "license": "BSD-3-Clause",
+   "name": "chrome-devtools-frontend",
++  "type": "module",
+   "repository": {
+     "type": "git",
+     "url": "git+https://github.com/ChromeDevTools/devtools-frontend.git"

@@ -87,6 +87,10 @@ chromium (145.0.7632.45-1~deb13u1) UNRELEASED; urgency=high
       update for upstream changes.
     - loongarch64/0016-medium-cmodel-support-for-loongarch64.patch: refresh.
 
+  [ Daniel Richard G. ]
+  * d/patches/trixie/rust-is-multiple-of.patch: Drop the -Zallow-features=
+    edit, as that is now handled in disable/rustc-allow-features.patch .
+
  -- Andres Salomon <dilinger@debian.org>  Fri, 06 Feb 2026 19:15:37 -0500
 
 chromium (144.0.7559.109-2~deb13u1) trixie-security; urgency=high

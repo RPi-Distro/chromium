@@ -1,0 +1,43 @@
+../../chrome/utility/safe_browsing/archive_analysis_delegate.h:12:10: fatal error: 'third_party/unrar/google/unrar_delegates.h' file not found
+
+--- a/chrome/utility/safe_browsing/archive_analysis_delegate.h
++++ b/chrome/utility/safe_browsing/archive_analysis_delegate.h
+@@ -9,7 +9,6 @@
+ 
+ #include "base/files/file.h"
+ #include "chrome/utility/safe_browsing/zip_writer_delegate.h"
+-#include "third_party/unrar/google/unrar_delegates.h"
+ #include "third_party/zlib/google/zip_reader.h"
+ 
+ namespace safe_browsing {
+--- a/chrome/services/file_util/obfuscated_archive_analysis_delegate.h
++++ b/chrome/services/file_util/obfuscated_archive_analysis_delegate.h
+@@ -7,7 +7,6 @@
+ 
+ #include "chrome/utility/safe_browsing/archive_analysis_delegate.h"
+ #include "components/enterprise/obfuscation/core/utils.h"
+-#include "third_party/unrar/google/unrar_wrapper.h"
+ 
+ namespace safe_browsing {
+ 
+--- a/chrome/services/file_util/regular_archive_analysis_delegate.h
++++ b/chrome/services/file_util/regular_archive_analysis_delegate.h
+@@ -6,7 +6,6 @@
+ #define CHROME_SERVICES_FILE_UTIL_REGULAR_ARCHIVE_ANALYSIS_DELEGATE_H_
+ 
+ #include "chrome/utility/safe_browsing/archive_analysis_delegate.h"
+-#include "third_party/unrar/google/unrar_delegates.h"
+ 
+ namespace safe_browsing {
+ 
+--- a/chrome/services/file_util/regular_archive_analysis_delegate.cc
++++ b/chrome/services/file_util/regular_archive_analysis_delegate.cc
+@@ -8,8 +8,6 @@
+ 
+ #include "base/files/file.h"
+ #include "chrome/utility/safe_browsing/zip_writer_delegate.h"
+-#include "third_party/unrar/google/unrar_delegates.h"
+-#include "third_party/unrar/google/unrar_wrapper.h"
+ #include "third_party/zlib/google/zip_reader.h"
+ 
+ namespace safe_browsing {

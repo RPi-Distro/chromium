@@ -1,0 +1,41 @@
+error[E0658]: the target feature `avx512f` is currently unstable
+  --> ./../../third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/mod.rs:17:1
+   |
+   = note: in this expansion of `simd_function!` (#1)
+  ::: ./../../third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/mod.rs:32:13
+   |
+   = note: in this macro invocation (#2)
+  ::: ./../../third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/mod.rs:83:1
+   |
+   = note: in this expansion of `$crate::simd_function_body_avx512!` (#2)
+   |
+  ::: ../../third_party/rust/chromium_crates_io/vendor/jxl-v0_2/src/render/stages/ycbcr.rs:34:1
+   |
+34 | / simd_function!(
+35 | |     ycbcr_to_rgb_simd_dispatch,
+36 | |     d: D,
+37 | |     fn ycbcr_to_rgb_simd(
+...  |
+80 | | );
+   | |_- in this macro invocation (#1)
+   |
+   = note: see issue #44839 <https://github.com/rust-lang/rust/issues/44839> for more information
+   = help: add `#![feature(avx512_target_feature)]` to the crate attributes to enable
+   = note: this compiler was built on 2025-02-17; consider upgrading it if it is out of date
+
+
+--- a/third_party/rust/chromium_crates_io/vendor/jxl-v0_2/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl-v0_2/src/lib.rs
+@@ -3,6 +3,12 @@
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
++#![feature(unsigned_is_multiple_of)]
++#![feature(target_feature_11)]
++#![feature(avx512_target_feature)]
++#![feature(non_null_from_ref)]
++#![feature(let_chains)]
++
+ #![deny(unsafe_code)]
+ pub mod api;
+ pub mod bit_reader;

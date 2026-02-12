@@ -20,7 +20,7 @@ index f400a023cb..31e4ef2185 100644
 +      }
        rustenv = _rustenv
  
-       if (_generate_crate_root) {
+       sources = _rust_sources
 -- 
 2.51.0
 

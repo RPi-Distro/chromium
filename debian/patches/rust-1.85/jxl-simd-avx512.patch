@@ -20,7 +20,7 @@ and fixed in newer versions of rustc.
  // license that can be found in the LICENSE file.
  
  #![allow(clippy::too_many_arguments)]
-+#![feature(stdarch_x86_avx512)]
++#![cfg_attr(target_arch = "x86_64", feature(stdarch_x86_avx512))]
 +#![feature(target_feature_11)]
 +#![feature(avx512_target_feature)]
 +#![feature(slice_as_chunks)]

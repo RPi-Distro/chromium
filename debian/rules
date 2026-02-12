@@ -222,7 +222,7 @@ override_dh_auto_configure: test_armhf_neon
 	cp -ra /usr/share/nodejs/rollup third_party/node/node_modules/
 	- test -L third_party/devtools-frontend/src/node_modules/rollup3 || ln -s /usr/share/nodejs/rollup third_party/devtools-frontend/src/node_modules/rollup3
 	# use debian's esbuild
-	cp -ra /usr/lib/x86_64-linux-gnu/nodejs/esbuild third_party/devtools-frontend/src/node_modules/
+	cp -ra /usr/lib/$(DEB_BUILD_MULTIARCH)/nodejs/esbuild third_party/devtools-frontend/src/node_modules/
 	mkdir -p third_party/devtools-frontend/src/third_party/esbuild
 	#cp debian/esbuild/root/usr/bin/esbuild third_party/devtools-frontend/src/third_party/esbuild/esbuild
 	cp /usr/bin/esbuild third_party/devtools-frontend/src/third_party/esbuild/

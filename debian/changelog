@@ -1,6 +1,26 @@
 chromium (145.0.7632.45-1~deb13u1) UNRELEASED; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2026-2313: Use after free in CSS. Reported by Han Zheng (HexHive),
+      Wenhao Fang (University of St. Andrews), and Qinying Wang (HexHive).
+    - CVE-2026-2314: Heap buffer overflow in Codecs. Reported by Google.
+    - CVE-2026-2315: Inappropriate implementation in WebGPU.
+      Reported by Google.
+    - CVE-2026-2316: Insufficient policy enforcement in Frames.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-2317: Inappropriate implementation in Animation.
+      Reported by Brendan Draper.
+    - CVE-2026-2318: Inappropriate implementation in PictureInPicture.
+      Reported by Shaheen Fazim.
+    - CVE-2026-2319: Race in DevTools. Reported by Anonymous.
+    - CVE-2026-2320: Inappropriate implementation in File input.
+      Reported by Alesandro Ortiz.
+    - CVE-2026-2321: Use after free in Ozone. Reported by Google.
+    - CVE-2026-2322: Inappropriate implementation in File input.
+      Reported by Robbe Van Roey | PinkDraconian.
+    - CVE-2026-2323: Inappropriate implementation in Downloads.
+      Reported by Hafiizh.
   * d/copyright:
     - delete third_party/litert/src, Google's new WebAI thing.
     - delete esbuild directory so we can use debian's esbuild.
@@ -41,7 +61,7 @@ chromium (145.0.7632.45-1~deb13u1) UNRELEASED; urgency=high
       dependencies
   * d/patches/ppc64le:
     - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: Remove
-      obsolete Clang 7 workaround
+      obsolete Clang 7 workaround and refresh for upstream changes
     - ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
       refresh for upstream changes
     - ppc64le/third_party/0002-regenerate-xnn-buildgn.patch: Regenerate from
@@ -54,6 +74,12 @@ chromium (145.0.7632.45-1~deb13u1) UNRELEASED; urgency=high
       Regenerate from upstream sources
     - ppc64le/sandbox/0009-sandbox-ignore-byte-span-error.patch: Work around upstream
       byte_span_from_ref issues
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    - loongarch64/0012-sandbox-linux-add-statx-support-for-loongarch64.patch:
+      update for upstream changes.
+    - loongarch64/0016-medium-cmodel-support-for-loongarch64.patch: refresh.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 06 Feb 2026 19:15:37 -0500
 

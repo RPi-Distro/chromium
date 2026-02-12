@@ -4188,9 +4188,9 @@ Index: chromium-145.0.7632.45/third_party/boringssl/src/crypto/fipsmodule/aes/in
 +#elif defined(OPENSSL_PPC64LE)
 +#define GHASH_ASM_PPC64LE
 +#define GCM_FUNCREF
-+void gcm_init_p8(u128 Htable[16], const uint64_t Xi[2]);
-+void gcm_gmult_p8(uint8_t Xi[16], const u128 Htable[16]);
-+void gcm_ghash_p8(uint8_t Xi[16], const u128 Htable[16], const uint8_t *inp,
++extern "C" void gcm_init_p8(u128 Htable[16], const uint64_t Xi[2]);
++extern "C" void gcm_gmult_p8(uint8_t Xi[16], const u128 Htable[16]);
++extern "C" void gcm_ghash_p8(uint8_t Xi[16], const u128 Htable[16], const uint8_t *inp,
 +                  size_t len);
  #endif
  #endif  // OPENSSL_NO_ASM
@@ -8882,3 +8882,59 @@ Index: chromium-145.0.7632.45/third_party/boringssl/src/gen/sources.gni
    "crypto/crypto.cc",
    "crypto/curve25519/curve25519.cc",
    "crypto/curve25519/curve25519_64_adx.cc",
+Index: chromium-145.0.7632.45/third_party/boringssl/src/gen/sources.bzl
+===================================================================
+--- chromium-145.0.7632.45.orig/third_party/boringssl/src/gen/sources.bzl
++++ chromium-145.0.7632.45/third_party/boringssl/src/gen/sources.bzl
+@@ -115,6 +115,7 @@
+     "gen/bcm/aesni-x86-linux.S",
+     "gen/bcm/aesni-x86_64-apple.S",
+     "gen/bcm/aesni-x86_64-linux.S",
++    "gen/bcm/aesp8-ppc-linux.S",
+     "gen/bcm/aesv8-armv7-linux.S",
+     "gen/bcm/aesv8-armv8-apple.S",
+     "gen/bcm/aesv8-armv8-linux.S",
+@@ -146,6 +147,7 @@
+     "gen/bcm/ghash-x86-linux.S",
+     "gen/bcm/ghash-x86_64-apple.S",
+     "gen/bcm/ghash-x86_64-linux.S",
++    "gen/bcm/ghashp8-ppc-linux.S",
+     "gen/bcm/ghashv8-armv7-linux.S",
+     "gen/bcm/ghashv8-armv8-apple.S",
+     "gen/bcm/ghashv8-armv8-linux.S",
+@@ -365,6 +367,7 @@
+     "crypto/cpu_arm_freebsd.cc",
+     "crypto/cpu_arm_linux.cc",
+     "crypto/cpu_intel.cc",
++    "crypto/cpu_ppc64le.cc",
+     "crypto/crypto.cc",
+     "crypto/curve25519/curve25519.cc",
+     "crypto/curve25519/curve25519_64_adx.cc",
+Index: chromium-145.0.7632.45/third_party/perfetto/buildtools/grpc/BUILD.gn
+===================================================================
+--- chromium-145.0.7632.45.orig/third_party/perfetto/buildtools/grpc/BUILD.gn
++++ chromium-145.0.7632.45/third_party/perfetto/buildtools/grpc/BUILD.gn
+@@ -99,6 +99,7 @@
+     "src/third_party/boringssl-with-bazel/src/crypto/cpu_arm_freebsd.cc",
+     "src/third_party/boringssl-with-bazel/src/crypto/cpu_arm_linux.cc",
+     "src/third_party/boringssl-with-bazel/src/crypto/cpu_arm_linux.h",
++    "src/third_party/boringssl-with-bazel/src/crypto/cpu_ppc64le.cc",
+     "src/third_party/boringssl-with-bazel/src/crypto/cpu_intel.cc",
+     "src/third_party/boringssl-with-bazel/src/crypto/crypto.cc",
+     "src/third_party/boringssl-with-bazel/src/crypto/curve25519/asm/x25519-asm-arm.S",
+@@ -422,6 +423,7 @@
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/aesv8-gcm-armv8-apple.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/aesv8-gcm-armv8-linux.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/aesv8-gcm-armv8-win.S",
++    "src/third_party/boringssl-with-bazel/src/gen/bcm/aesp8-ppc-linux.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/armv4-mont-linux.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/armv8-mont-apple.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/armv8-mont-linux.S",
+@@ -435,6 +437,7 @@
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/co-586-apple.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/co-586-linux.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/ghash-armv4-linux.S",
++    "src/third_party/boringssl-with-bazel/src/gen/bcm/ghashp8-ppc-linux.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/ghash-neon-armv8-apple.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/ghash-neon-armv8-linux.S",
+     "src/third_party/boringssl-with-bazel/src/gen/bcm/ghash-neon-armv8-win.S",

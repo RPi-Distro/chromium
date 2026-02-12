@@ -1,0 +1,1302 @@
+error[E0658]: use of unstable library feature `stdarch_x86_avx512`
+  --> ../../third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx512.rs:96:23
+   |
+96 | pub struct MaskAvx512(__mmask16, Avx512Descriptor);
+   |                       ^^^^^^^^^
+   |
+   = note: see issue #111137 <https://github.com/rust-lang/rust/issues/111137> for more information
+   = help: add `#![feature(stdarch_x86_avx512)]` to the crate attributes to enable
+   = note: this compiler was built on 2025-02-17; consider upgrading it if it is out of date
+
+
+Also, rustc-1.85 doesn't like target_feature(enable = "avx2") for safe
+functions. The issue is described in
+https://internals.rust-lang.org/t/how-to-make-core-arch-simd-intrinsics-safe/16716
+and fixed in newer versions of rustc.
+
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/lib.rs
+@@ -4,6 +4,10 @@
+ // license that can be found in the LICENSE file.
+ 
+ #![allow(clippy::too_many_arguments)]
++#![feature(stdarch_x86_avx512)]
++#![feature(target_feature_11)]
++#![feature(avx512_target_feature)]
++#![feature(slice_as_chunks)]
+ 
+ use std::{
+     fmt::Debug,
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx.rs
+@@ -20,7 +20,7 @@ use std::{
+ /// Used by both store_interleaved_8 and transpose_square.
+ #[target_feature(enable = "avx2")]
+ #[inline]
+-fn transpose_8x8_core(
++unsafe fn transpose_8x8_core(
+     r0: __m256,
+     r1: __m256,
+     r2: __m256,
+@@ -204,7 +204,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_2_impl(a: __m256, b: __m256, dest: &mut [MaybeUninit<f32>]) {
++        unsafe fn store_interleaved_2_impl(a: __m256, b: __m256, dest: &mut [MaybeUninit<f32>]) {
+             assert!(dest.len() >= 2 * F32VecAvx::LEN);
+             // a = [a0, a1, a2, a3, a4, a5, a6, a7], b = [b0, b1, b2, b3, b4, b5, b6, b7]
+             // Output: [a0, b0, a1, b1, a2, b2, a3, b3, a4, b4, a5, b5, a6, b6, a7, b7]
+@@ -229,7 +229,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_3_impl(
++        unsafe fn store_interleaved_3_impl(
+             a: __m256,
+             b: __m256,
+             c: __m256,
+@@ -287,7 +287,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     ) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_4_impl(
++        unsafe fn store_interleaved_4_impl(
+             a: __m256,
+             b: __m256,
+             c: __m256,
+@@ -353,7 +353,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     ) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_8_impl(
++        unsafe fn store_interleaved_8_impl(
+             r0: __m256,
+             r1: __m256,
+             r2: __m256,
+@@ -387,11 +387,11 @@ unsafe impl F32SimdVec for F32VecAvx {
+     }
+ 
+     fn_avx!(this: F32VecAvx, fn mul_add(mul: F32VecAvx, add: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_fmadd_ps(this.0, mul.0, add.0), this.1)
++        unsafe { F32VecAvx(_mm256_fmadd_ps(this.0, mul.0, add.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn neg_mul_add(mul: F32VecAvx, add: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_fnmadd_ps(this.0, mul.0, add.0), this.1)
++        unsafe { F32VecAvx(_mm256_fnmadd_ps(this.0, mul.0, add.0), this.1) }
+     });
+ 
+     #[inline(always)]
+@@ -407,22 +407,23 @@ unsafe impl F32SimdVec for F32VecAvx {
+     }
+ 
+     fn_avx!(this: F32VecAvx, fn abs() -> F32VecAvx {
+-        F32VecAvx(_mm256_andnot_ps(_mm256_set1_ps(-0.0), this.0), this.1)
++        unsafe { F32VecAvx(_mm256_andnot_ps(_mm256_set1_ps(-0.0), this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn floor() -> F32VecAvx {
+-        F32VecAvx(_mm256_floor_ps(this.0), this.1)
++        unsafe { F32VecAvx(_mm256_floor_ps(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn sqrt() -> F32VecAvx {
+-        F32VecAvx(_mm256_sqrt_ps(this.0), this.1)
++        unsafe { F32VecAvx(_mm256_sqrt_ps(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn neg() -> F32VecAvx {
+-        F32VecAvx(_mm256_xor_ps(_mm256_set1_ps(-0.0), this.0), this.1)
++        unsafe { F32VecAvx(_mm256_xor_ps(_mm256_set1_ps(-0.0), this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn copysign(sign: F32VecAvx) -> F32VecAvx {
++        unsafe {
+         let sign_mask = _mm256_castsi256_ps(_mm256_set1_epi32(i32::MIN));
+         F32VecAvx(
+             _mm256_or_ps(
+@@ -431,33 +432,34 @@ unsafe impl F32SimdVec for F32VecAvx {
+             ),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn max(other: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_max_ps(this.0, other.0), this.1)
++        unsafe { F32VecAvx(_mm256_max_ps(this.0, other.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn min(other: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_min_ps(this.0, other.0), this.1)
++        unsafe { F32VecAvx(_mm256_min_ps(this.0, other.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn gt(other: F32VecAvx) -> MaskAvx {
+-        MaskAvx(_mm256_cmp_ps::<{_CMP_GT_OQ}>(this.0, other.0), this.1)
++        unsafe { MaskAvx(_mm256_cmp_ps::<{_CMP_GT_OQ}>(this.0, other.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn as_i32() -> I32VecAvx {
+-        I32VecAvx(_mm256_cvtps_epi32(this.0), this.1)
++        unsafe { I32VecAvx(_mm256_cvtps_epi32(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx, fn bitcast_to_i32() -> I32VecAvx {
+-        I32VecAvx(_mm256_castps_si256(this.0), this.1)
++        unsafe { I32VecAvx(_mm256_castps_si256(this.0), this.1) }
+     });
+ 
+     #[inline(always)]
+     fn round_store_u8(self, dest: &mut [u8]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn round_store_u8_impl(v: __m256, dest: &mut [u8]) {
++        unsafe fn round_store_u8_impl(v: __m256, dest: &mut [u8]) {
+             assert!(dest.len() >= F32VecAvx::LEN);
+             // Round to nearest integer
+             let rounded = _mm256_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
+@@ -484,7 +486,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn round_store_u16(self, dest: &mut [u16]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn round_store_u16_impl(v: __m256, dest: &mut [u16]) {
++        unsafe fn round_store_u16_impl(v: __m256, dest: &mut [u16]) {
+             assert!(dest.len() >= F32VecAvx::LEN);
+             // Round to nearest integer
+             let rounded = _mm256_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
+@@ -545,52 +547,52 @@ unsafe impl F32SimdVec for F32VecAvx {
+ impl Add<F32VecAvx> for F32VecAvx {
+     type Output = F32VecAvx;
+     fn_avx!(this: F32VecAvx, fn add(rhs: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_add_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx(_mm256_add_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Sub<F32VecAvx> for F32VecAvx {
+     type Output = F32VecAvx;
+     fn_avx!(this: F32VecAvx, fn sub(rhs: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_sub_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx(_mm256_sub_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Mul<F32VecAvx> for F32VecAvx {
+     type Output = F32VecAvx;
+     fn_avx!(this: F32VecAvx, fn mul(rhs: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_mul_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx(_mm256_mul_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Div<F32VecAvx> for F32VecAvx {
+     type Output = F32VecAvx;
+     fn_avx!(this: F32VecAvx, fn div(rhs: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_div_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx(_mm256_div_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl AddAssign<F32VecAvx> for F32VecAvx {
+     fn_avx!(this: &mut F32VecAvx, fn add_assign(rhs: F32VecAvx) {
+-        this.0 = _mm256_add_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm256_add_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl SubAssign<F32VecAvx> for F32VecAvx {
+     fn_avx!(this: &mut F32VecAvx, fn sub_assign(rhs: F32VecAvx) {
+-        this.0 = _mm256_sub_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm256_sub_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl MulAssign<F32VecAvx> for F32VecAvx {
+     fn_avx!(this: &mut F32VecAvx, fn mul_assign(rhs: F32VecAvx) {
+-        this.0 = _mm256_mul_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm256_mul_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl DivAssign<F32VecAvx> for F32VecAvx {
+     fn_avx!(this: &mut F32VecAvx, fn div_assign(rhs: F32VecAvx) {
+-        this.0 = _mm256_div_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm256_div_ps(this.0, rhs.0) }
+     });
+ }
+ 
+@@ -626,11 +628,11 @@ impl I32SimdVec for I32VecAvx {
+     }
+ 
+     fn_avx!(this: I32VecAvx, fn as_f32() -> F32VecAvx {
+-        F32VecAvx(_mm256_cvtepi32_ps(this.0), this.1)
++        unsafe { F32VecAvx(_mm256_cvtepi32_ps(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: I32VecAvx, fn bitcast_to_f32() -> F32VecAvx {
+-        F32VecAvx(_mm256_castsi256_ps(this.0), this.1)
++        unsafe { F32VecAvx(_mm256_castsi256_ps(this.0), this.1) }
+     });
+ 
+     #[inline(always)]
+@@ -639,31 +641,37 @@ impl I32SimdVec for I32VecAvx {
+     }
+ 
+     fn_avx!(this: I32VecAvx, fn abs() -> I32VecAvx {
++        unsafe {
+         I32VecAvx(
+             _mm256_abs_epi32(this.0),
+             this.1)
++        }
+     });
+ 
+     fn_avx!(this: I32VecAvx, fn gt(rhs: I32VecAvx) -> MaskAvx {
++        unsafe {
+         MaskAvx(
+             _mm256_castsi256_ps(_mm256_cmpgt_epi32(this.0, rhs.0)),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_avx!(this: I32VecAvx, fn lt_zero() -> MaskAvx {
+-        I32VecAvx(_mm256_setzero_si256(), this.1).gt(this)
++        unsafe { I32VecAvx(_mm256_setzero_si256(), this.1).gt(this) }
+     });
+ 
+     fn_avx!(this: I32VecAvx, fn eq(rhs: I32VecAvx) -> MaskAvx {
++        unsafe {
+         MaskAvx(
+             _mm256_castsi256_ps(_mm256_cmpeq_epi32(this.0, rhs.0)),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_avx!(this: I32VecAvx, fn eq_zero() -> MaskAvx {
+-        this.eq(I32VecAvx(_mm256_setzero_si256(), this.1))
++        unsafe { this.eq(I32VecAvx(_mm256_setzero_si256(), this.1)) }
+     });
+ 
+     #[inline(always)]
+@@ -679,122 +687,124 @@ impl I32SimdVec for I32VecAvx {
+     }
+ 
+     fn_avx!(this: I32VecAvx, fn mul_wide_take_high(rhs: I32VecAvx) -> I32VecAvx {
++        unsafe {
+         let l = _mm256_mul_epi32(this.0, rhs.0);
+         let h = _mm256_mul_epi32(_mm256_srli_epi64::<32>(this.0), _mm256_srli_epi64::<32>(rhs.0));
+         let p0 = _mm256_unpacklo_epi32(l, h);
+         let p1 = _mm256_unpackhi_epi32(l, h);
+         I32VecAvx(_mm256_unpackhi_epi64(p0, p1), this.1)
++        }
+     });
+ }
+ 
+ impl Add<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn add(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_add_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_add_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Sub<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn sub(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_sub_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_sub_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Mul<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn mul(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_mul_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_mul_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Shl<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn shl(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_sllv_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_sllv_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Shr<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn shr(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_srav_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_srav_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Neg for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn neg() -> I32VecAvx {
+-        I32VecAvx(_mm256_setzero_si256(), this.1) - this
++        unsafe { I32VecAvx(_mm256_setzero_si256(), this.1) - this }
+     });
+ }
+ 
+ impl BitAnd<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn bitand(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_and_si256(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_and_si256(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitOr<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn bitor(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_or_si256(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_or_si256(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitXor<I32VecAvx> for I32VecAvx {
+     type Output = I32VecAvx;
+     fn_avx!(this: I32VecAvx, fn bitxor(rhs: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_xor_si256(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_xor_si256(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl AddAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn add_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_add_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm256_add_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl SubAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn sub_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_sub_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm256_sub_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl MulAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn mul_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_mul_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm256_mul_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl ShlAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn shl_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_sllv_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm256_sllv_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl ShrAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn shr_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_srav_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm256_srav_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitAndAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn bitand_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_and_si256(this.0, rhs.0)
++        unsafe { this.0 = _mm256_and_si256(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitOrAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn bitor_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_or_si256(this.0, rhs.0)
++        unsafe { this.0 = _mm256_or_si256(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitXorAssign<I32VecAvx> for I32VecAvx {
+     fn_avx!(this: &mut I32VecAvx, fn bitxor_assign(rhs: I32VecAvx) {
+-        this.0 = _mm256_xor_si256(this.0, rhs.0)
++        unsafe { this.0 = _mm256_xor_si256(this.0, rhs.0) }
+     });
+ }
+ 
+@@ -823,36 +833,36 @@ impl SimdMask for MaskAvx {
+     type Descriptor = AvxDescriptor;
+ 
+     fn_avx!(this: MaskAvx, fn if_then_else_f32(if_true: F32VecAvx, if_false: F32VecAvx) -> F32VecAvx {
+-        F32VecAvx(_mm256_blendv_ps(if_false.0, if_true.0, this.0), this.1)
++        unsafe { F32VecAvx(_mm256_blendv_ps(if_false.0, if_true.0, this.0), this.1) }
+     });
+ 
+     fn_avx!(this: MaskAvx, fn if_then_else_i32(if_true: I32VecAvx, if_false: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_blendv_epi8(if_false.0, if_true.0, _mm256_castps_si256(this.0)), this.1)
++        unsafe { I32VecAvx(_mm256_blendv_epi8(if_false.0, if_true.0, _mm256_castps_si256(this.0)), this.1) }
+     });
+ 
+     fn_avx!(this: MaskAvx, fn maskz_i32(v: I32VecAvx) -> I32VecAvx {
+-        I32VecAvx(_mm256_andnot_si256(_mm256_castps_si256(this.0), v.0), this.1)
++        unsafe { I32VecAvx(_mm256_andnot_si256(_mm256_castps_si256(this.0), v.0), this.1) }
+     });
+ 
+     fn_avx!(this: MaskAvx, fn all() -> bool {
+-        _mm256_movemask_ps(this.0) == 0b11111111
++        unsafe { _mm256_movemask_ps(this.0) == 0b11111111 }
+     });
+ 
+     fn_avx!(this: MaskAvx, fn andnot(rhs: MaskAvx) -> MaskAvx {
+-        MaskAvx(_mm256_andnot_ps(this.0, rhs.0), this.1)
++        unsafe { MaskAvx(_mm256_andnot_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitAnd<MaskAvx> for MaskAvx {
+     type Output = MaskAvx;
+     fn_avx!(this: MaskAvx, fn bitand(rhs: MaskAvx) -> MaskAvx {
+-        MaskAvx(_mm256_and_ps(this.0, rhs.0), this.1)
++        unsafe { MaskAvx(_mm256_and_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitOr<MaskAvx> for MaskAvx {
+     type Output = MaskAvx;
+     fn_avx!(this: MaskAvx, fn bitor(rhs: MaskAvx) -> MaskAvx {
+-        MaskAvx(_mm256_or_ps(this.0, rhs.0), this.1)
++        unsafe { MaskAvx(_mm256_or_ps(this.0, rhs.0), this.1) }
+     });
+ }
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx512.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx512.rs
+@@ -122,7 +122,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn store_interleaved_2_impl(a: __m512, b: __m512, dest: &mut [MaybeUninit<f32>]) {
++        unsafe fn store_interleaved_2_impl(a: __m512, b: __m512, dest: &mut [MaybeUninit<f32>]) {
+             assert!(dest.len() >= 2 * F32VecAvx512::LEN);
+             // a = [a0..a15], b = [b0..b15]
+             // Output: [a0, b0, a1, b1, ..., a15, b15]
+@@ -157,7 +157,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn store_interleaved_3_impl(
++        unsafe fn store_interleaved_3_impl(
+             a: __m512,
+             b: __m512,
+             c: __m512,
+@@ -207,7 +207,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     ) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn store_interleaved_4_impl(
++        unsafe fn store_interleaved_4_impl(
+             a: __m512,
+             b: __m512,
+             c: __m512,
+@@ -311,7 +311,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     ) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn store_interleaved_8_impl(
++        unsafe fn store_interleaved_8_impl(
+             a: __m512,
+             b: __m512,
+             c: __m512,
+@@ -439,11 +439,11 @@ unsafe impl F32SimdVec for F32VecAvx512
+     }
+ 
+     fn_avx!(this: F32VecAvx512, fn mul_add(mul: F32VecAvx512, add: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_fmadd_ps(this.0, mul.0, add.0), this.1)
++        unsafe { F32VecAvx512(_mm512_fmadd_ps(this.0, mul.0, add.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn neg_mul_add(mul: F32VecAvx512, add: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_fnmadd_ps(this.0, mul.0, add.0), this.1)
++        unsafe { F32VecAvx512(_mm512_fnmadd_ps(this.0, mul.0, add.0), this.1) }
+     });
+ 
+     #[inline(always)]
+@@ -459,18 +459,19 @@ unsafe impl F32SimdVec for F32VecAvx512
+     }
+ 
+     fn_avx!(this: F32VecAvx512, fn abs() -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_abs_ps(this.0), this.1)
++        unsafe { F32VecAvx512(_mm512_abs_ps(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn floor() -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_roundscale_ps::<{ _MM_FROUND_FLOOR }>(this.0), this.1)
++        unsafe { F32VecAvx512(_mm512_roundscale_ps::<{ _MM_FROUND_FLOOR }>(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn sqrt() -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_sqrt_ps(this.0), this.1)
++        unsafe { F32VecAvx512(_mm512_sqrt_ps(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn neg() -> F32VecAvx512 {
++        unsafe {
+         F32VecAvx512(
+             _mm512_castsi512_ps(_mm512_xor_si512(
+                 _mm512_set1_epi32(i32::MIN),
+@@ -478,9 +479,11 @@ unsafe impl F32SimdVec for F32VecAvx512
+             )),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn copysign(sign: F32VecAvx512) -> F32VecAvx512 {
++        unsafe {
+         let sign_mask = _mm512_set1_epi32(i32::MIN);
+         F32VecAvx512(
+             _mm512_castsi512_ps(_mm512_or_si512(
+@@ -489,33 +492,34 @@ unsafe impl F32SimdVec for F32VecAvx512
+             )),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn max(other: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_max_ps(this.0, other.0), this.1)
++        unsafe { F32VecAvx512(_mm512_max_ps(this.0, other.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn min(other: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_min_ps(this.0, other.0), this.1)
++        unsafe { F32VecAvx512(_mm512_min_ps(this.0, other.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn gt(other: F32VecAvx512) -> MaskAvx512 {
+-        MaskAvx512(_mm512_cmp_ps_mask::<{_CMP_GT_OQ}>(this.0, other.0), this.1)
++        unsafe { MaskAvx512(_mm512_cmp_ps_mask::<{_CMP_GT_OQ}>(this.0, other.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn as_i32() -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_cvtps_epi32(this.0), this.1)
++        unsafe { I32VecAvx512(_mm512_cvtps_epi32(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: F32VecAvx512, fn bitcast_to_i32() -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_castps_si512(this.0), this.1)
++        unsafe { I32VecAvx512(_mm512_castps_si512(this.0), this.1) }
+     });
+ 
+     #[inline(always)]
+     fn round_store_u8(self, dest: &mut [u8]) {
+         #[target_feature(enable = "avx512f", enable = "avx512bw")]
+         #[inline]
+-        fn round_store_u8_impl(v: __m512, dest: &mut [u8]) {
++        unsafe fn round_store_u8_impl(v: __m512, dest: &mut [u8]) {
+             assert!(dest.len() >= F32VecAvx512::LEN);
+             // Round to nearest integer
+             let rounded = _mm512_roundscale_ps::<{ _MM_FROUND_TO_NEAREST_INT }>(v);
+@@ -537,7 +541,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     fn round_store_u16(self, dest: &mut [u16]) {
+         #[target_feature(enable = "avx512f", enable = "avx512bw")]
+         #[inline]
+-        fn round_store_u16_impl(v: __m512, dest: &mut [u16]) {
++        unsafe fn round_store_u16_impl(v: __m512, dest: &mut [u16]) {
+             assert!(dest.len() >= F32VecAvx512::LEN);
+             // Round to nearest integer
+             let rounded = _mm512_roundscale_ps::<{ _MM_FROUND_TO_NEAREST_INT }>(v);
+@@ -561,7 +565,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     fn transpose_square(d: Self::Descriptor, data: &mut [Self::UnderlyingArray], stride: usize) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn transpose16x16f32(d: Avx512Descriptor, data: &mut [[f32; 16]], stride: usize) {
++        unsafe fn transpose16x16f32(d: Avx512Descriptor, data: &mut [[f32; 16]], stride: usize) {
+             assert!(data.len() > stride * 15);
+ 
+             let r0 = F32VecAvx512::load_array(d, &data[0]).0;
+@@ -721,52 +725,52 @@ unsafe impl F32SimdVec for F32VecAvx512
+ impl Add<F32VecAvx512> for F32VecAvx512 {
+     type Output = F32VecAvx512;
+     fn_avx!(this: F32VecAvx512, fn add(rhs: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_add_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx512(_mm512_add_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Sub<F32VecAvx512> for F32VecAvx512 {
+     type Output = F32VecAvx512;
+     fn_avx!(this: F32VecAvx512, fn sub(rhs: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_sub_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx512(_mm512_sub_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Mul<F32VecAvx512> for F32VecAvx512 {
+     type Output = F32VecAvx512;
+     fn_avx!(this: F32VecAvx512, fn mul(rhs: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_mul_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx512(_mm512_mul_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Div<F32VecAvx512> for F32VecAvx512 {
+     type Output = F32VecAvx512;
+     fn_avx!(this: F32VecAvx512, fn div(rhs: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_div_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecAvx512(_mm512_div_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl AddAssign<F32VecAvx512> for F32VecAvx512 {
+     fn_avx!(this: &mut F32VecAvx512, fn add_assign(rhs: F32VecAvx512) {
+-        this.0 = _mm512_add_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm512_add_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl SubAssign<F32VecAvx512> for F32VecAvx512 {
+     fn_avx!(this: &mut F32VecAvx512, fn sub_assign(rhs: F32VecAvx512) {
+-        this.0 = _mm512_sub_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm512_sub_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl MulAssign<F32VecAvx512> for F32VecAvx512 {
+     fn_avx!(this: &mut F32VecAvx512, fn mul_assign(rhs: F32VecAvx512) {
+-        this.0 = _mm512_mul_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm512_mul_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl DivAssign<F32VecAvx512> for F32VecAvx512 {
+     fn_avx!(this: &mut F32VecAvx512, fn div_assign(rhs: F32VecAvx512) {
+-        this.0 = _mm512_div_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm512_div_ps(this.0, rhs.0) }
+     });
+ }
+ 
+@@ -802,11 +806,11 @@ impl I32SimdVec for I32VecAvx512 {
+     }
+ 
+     fn_avx!(this: I32VecAvx512, fn as_f32() -> F32VecAvx512 {
+-         F32VecAvx512(_mm512_cvtepi32_ps(this.0), this.1)
++         unsafe { F32VecAvx512(_mm512_cvtepi32_ps(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: I32VecAvx512, fn bitcast_to_f32() -> F32VecAvx512 {
+-         F32VecAvx512(_mm512_castsi512_ps(this.0), this.1)
++         unsafe { F32VecAvx512(_mm512_castsi512_ps(this.0), this.1) }
+     });
+ 
+     #[inline(always)]
+@@ -815,23 +819,23 @@ impl I32SimdVec for I32VecAvx512 {
+     }
+ 
+     fn_avx!(this: I32VecAvx512, fn abs() -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_abs_epi32(this.0), this.1)
++        unsafe { I32VecAvx512(_mm512_abs_epi32(this.0), this.1) }
+     });
+ 
+     fn_avx!(this: I32VecAvx512, fn gt(rhs: I32VecAvx512) -> MaskAvx512 {
+-        MaskAvx512(_mm512_cmpgt_epi32_mask(this.0, rhs.0), this.1)
++        unsafe { MaskAvx512(_mm512_cmpgt_epi32_mask(this.0, rhs.0), this.1) }
+     });
+ 
+     fn_avx!(this: I32VecAvx512, fn lt_zero() -> MaskAvx512 {
+-        I32VecAvx512(_mm512_setzero_epi32(), this.1).gt(this)
++        unsafe { I32VecAvx512(_mm512_setzero_epi32(), this.1).gt(this) }
+     });
+ 
+     fn_avx!(this: I32VecAvx512, fn eq(rhs: I32VecAvx512) -> MaskAvx512 {
+-        MaskAvx512(_mm512_cmpeq_epi32_mask(this.0, rhs.0), this.1)
++        unsafe { MaskAvx512(_mm512_cmpeq_epi32_mask(this.0, rhs.0), this.1) }
+     });
+ 
+     fn_avx!(this: I32VecAvx512, fn eq_zero() -> MaskAvx512 {
+-        I32VecAvx512(_mm512_setzero_epi32(), this.1).eq(this)
++        unsafe { I32VecAvx512(_mm512_setzero_epi32(), this.1).eq(this) }
+     });
+ 
+     #[inline(always)]
+@@ -847,121 +851,123 @@ impl I32SimdVec for I32VecAvx512 {
+     }
+ 
+     fn_avx!(this: I32VecAvx512, fn mul_wide_take_high(rhs: I32VecAvx512) -> I32VecAvx512 {
++        unsafe {
+         let l = _mm512_mul_epi32(this.0, rhs.0);
+         let h = _mm512_mul_epi32(_mm512_srli_epi64::<32>(this.0), _mm512_srli_epi64::<32>(rhs.0));
+         let idx = _mm512_setr_epi32(1, 17, 3, 19, 5, 21, 7, 23, 9, 25, 11, 27, 13, 29, 15, 31);
+         I32VecAvx512(_mm512_permutex2var_epi32(l, idx, h), this.1)
++        }
+     });
+ }
+ 
+ impl Add<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn add(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_add_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_add_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Sub<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn sub(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_sub_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_sub_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Mul<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn mul(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_mul_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_mul_epi32(this.0, rhs.0), this.1)}
+     });
+ }
+ 
+ impl Neg for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn neg() -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_setzero_epi32(), this.1) - this
++        unsafe { I32VecAvx512(_mm512_setzero_epi32(), this.1) - this }
+     });
+ }
+ 
+ impl Shl<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn shl(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_sllv_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_sllv_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Shr<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn shr(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_srav_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_srav_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitAnd<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn bitand(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_and_si512(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_and_si512(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitOr<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn bitor(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_or_si512(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_or_si512(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitXor<I32VecAvx512> for I32VecAvx512 {
+     type Output = I32VecAvx512;
+     fn_avx!(this: I32VecAvx512, fn bitxor(rhs: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_xor_si512(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_xor_si512(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl AddAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn add_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_add_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm512_add_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl SubAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn sub_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_sub_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm512_sub_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl MulAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn mul_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_mul_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm512_mul_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl ShlAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn shl_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_sllv_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm512_sllv_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl ShrAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn shr_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_srav_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm512_srav_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitAndAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn bitand_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_and_si512(this.0, rhs.0)
++        unsafe { this.0 = _mm512_and_si512(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitOrAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn bitor_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_or_si512(this.0, rhs.0)
++        unsafe { this.0 = _mm512_or_si512(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitXorAssign<I32VecAvx512> for I32VecAvx512 {
+     fn_avx!(this: &mut I32VecAvx512, fn bitxor_assign(rhs: I32VecAvx512) {
+-        this.0 = _mm512_xor_si512(this.0, rhs.0)
++        unsafe { this.0 = _mm512_xor_si512(this.0, rhs.0) }
+     });
+ }
+ 
+@@ -990,15 +996,15 @@ impl SimdMask for MaskAvx512 {
+     type Descriptor = Avx512Descriptor;
+ 
+     fn_avx!(this: MaskAvx512, fn if_then_else_f32(if_true: F32VecAvx512, if_false: F32VecAvx512) -> F32VecAvx512 {
+-        F32VecAvx512(_mm512_mask_blend_ps(this.0, if_false.0, if_true.0), this.1)
++        unsafe { F32VecAvx512(_mm512_mask_blend_ps(this.0, if_false.0, if_true.0), this.1) }
+     });
+ 
+     fn_avx!(this: MaskAvx512, fn if_then_else_i32(if_true: I32VecAvx512, if_false: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_mask_blend_epi32(this.0, if_false.0, if_true.0), this.1)
++        unsafe { I32VecAvx512(_mm512_mask_blend_epi32(this.0, if_false.0, if_true.0), this.1) }
+     });
+ 
+     fn_avx!(this: MaskAvx512, fn maskz_i32(v: I32VecAvx512) -> I32VecAvx512 {
+-        I32VecAvx512(_mm512_mask_set1_epi32(v.0, this.0, 0), this.1)
++        unsafe { I32VecAvx512(_mm512_mask_set1_epi32(v.0, this.0, 0), this.1) }
+     });
+ 
+     fn_avx!(this: MaskAvx512, fn all() -> bool {
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/sse42.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/sse42.rs
+@@ -117,7 +117,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_2_impl(a: __m128, b: __m128, dest: &mut [MaybeUninit<f32>]) {
++        unsafe fn store_interleaved_2_impl(a: __m128, b: __m128, dest: &mut [MaybeUninit<f32>]) {
+             assert!(dest.len() >= 2 * F32VecSse42::LEN);
+             // a = [a0, a1, a2, a3], b = [b0, b1, b2, b3]
+             // lo = [a0, b0, a1, b1], hi = [a2, b2, a3, b3]
+@@ -139,7 +139,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_3_impl(
++        unsafe fn store_interleaved_3_impl(
+             a: __m128,
+             b: __m128,
+             c: __m128,
+@@ -199,7 +199,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     ) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_4_impl(
++        unsafe fn store_interleaved_4_impl(
+             a: __m128,
+             b: __m128,
+             c: __m128,
+@@ -247,7 +247,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     ) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_8_impl(
++        unsafe fn store_interleaved_8_impl(
+             a: __m128,
+             b: __m128,
+             c: __m128,
+@@ -318,32 +318,37 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     }
+ 
+     fn_sse42!(this: F32VecSse42, fn abs() -> F32VecSse42 {
++        unsafe {
+         F32VecSse42(
+             _mm_castsi128_ps(_mm_andnot_si128(
+                 _mm_set1_epi32(i32::MIN),
+                 _mm_castps_si128(this.0),
+             )),
+             this.1)
++        }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn floor() -> F32VecSse42 {
+-        F32VecSse42(_mm_floor_ps(this.0), this.1)
++        unsafe { F32VecSse42(_mm_floor_ps(this.0), this.1) }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn sqrt() -> F32VecSse42 {
+-        F32VecSse42(_mm_sqrt_ps(this.0), this.1)
++        unsafe { F32VecSse42(_mm_sqrt_ps(this.0), this.1) }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn neg() -> F32VecSse42 {
++        unsafe {
+         F32VecSse42(
+             _mm_castsi128_ps(_mm_xor_si128(
+                 _mm_set1_epi32(i32::MIN),
+                 _mm_castps_si128(this.0),
+             )),
+             this.1)
++        }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn copysign(sign: F32VecSse42) -> F32VecSse42 {
++        unsafe {
+         let sign_mask = _mm_castsi128_ps(_mm_set1_epi32(i32::MIN));
+         F32VecSse42(
+             _mm_or_ps(
+@@ -352,33 +357,34 @@ unsafe impl F32SimdVec for F32VecSse42 {
+             ),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn max(other: F32VecSse42) -> F32VecSse42 {
+-        F32VecSse42(_mm_max_ps(this.0, other.0), this.1)
++        unsafe { F32VecSse42(_mm_max_ps(this.0, other.0), this.1) }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn min(other: F32VecSse42) -> F32VecSse42 {
+-        F32VecSse42(_mm_min_ps(this.0, other.0), this.1)
++        unsafe { F32VecSse42(_mm_min_ps(this.0, other.0), this.1) }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn gt(other: F32VecSse42) -> MaskSse42 {
+-        MaskSse42(_mm_cmpgt_ps(this.0, other.0), this.1)
++        unsafe { MaskSse42(_mm_cmpgt_ps(this.0, other.0), this.1) }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn as_i32() -> I32VecSse42 {
+-        I32VecSse42(_mm_cvtps_epi32(this.0), this.1)
++        unsafe { I32VecSse42(_mm_cvtps_epi32(this.0), this.1) }
+     });
+ 
+     fn_sse42!(this: F32VecSse42, fn bitcast_to_i32() -> I32VecSse42 {
+-        I32VecSse42(_mm_castps_si128(this.0), this.1)
++        unsafe { I32VecSse42(_mm_castps_si128(this.0), this.1) }
+     });
+ 
+     #[inline(always)]
+     fn round_store_u8(self, dest: &mut [u8]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn round_store_u8_impl(v: __m128, dest: &mut [u8]) {
++        unsafe fn round_store_u8_impl(v: __m128, dest: &mut [u8]) {
+             assert!(dest.len() >= F32VecSse42::LEN);
+             // Round to nearest integer
+             let rounded = _mm_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
+@@ -402,7 +408,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     fn round_store_u16(self, dest: &mut [u16]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn round_store_u16_impl(v: __m128, dest: &mut [u16]) {
++        unsafe fn round_store_u16_impl(v: __m128, dest: &mut [u16]) {
+             assert!(dest.len() >= F32VecSse42::LEN);
+             // Round to nearest integer
+             let rounded = _mm_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
+@@ -426,7 +432,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     fn transpose_square(d: Self::Descriptor, data: &mut [Self::UnderlyingArray], stride: usize) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn transpose4x4f32(d: Sse42Descriptor, data: &mut [[f32; 4]], stride: usize) {
++        unsafe fn transpose4x4f32(d: Sse42Descriptor, data: &mut [[f32; 4]], stride: usize) {
+             assert!(data.len() > stride * 3);
+ 
+             let p0 = F32VecSse42::load_array(d, &data[0]).0;
+@@ -460,52 +466,52 @@ unsafe impl F32SimdVec for F32VecSse42 {
+ impl Add<F32VecSse42> for F32VecSse42 {
+     type Output = F32VecSse42;
+     fn_sse42!(this: F32VecSse42, fn add(rhs: F32VecSse42) -> F32VecSse42 {
+-        F32VecSse42(_mm_add_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecSse42(_mm_add_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Sub<F32VecSse42> for F32VecSse42 {
+     type Output = F32VecSse42;
+     fn_sse42!(this: F32VecSse42, fn sub(rhs: F32VecSse42) -> F32VecSse42 {
+-        F32VecSse42(_mm_sub_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecSse42(_mm_sub_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Mul<F32VecSse42> for F32VecSse42 {
+     type Output = F32VecSse42;
+     fn_sse42!(this: F32VecSse42, fn mul(rhs: F32VecSse42) -> F32VecSse42 {
+-        F32VecSse42(_mm_mul_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecSse42(_mm_mul_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Div<F32VecSse42> for F32VecSse42 {
+     type Output = F32VecSse42;
+     fn_sse42!(this: F32VecSse42, fn div(rhs: F32VecSse42) -> F32VecSse42 {
+-        F32VecSse42(_mm_div_ps(this.0, rhs.0), this.1)
++        unsafe { F32VecSse42(_mm_div_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl AddAssign<F32VecSse42> for F32VecSse42 {
+     fn_sse42!(this: &mut F32VecSse42, fn add_assign(rhs: F32VecSse42) {
+-        this.0 = _mm_add_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm_add_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl SubAssign<F32VecSse42> for F32VecSse42 {
+     fn_sse42!(this: &mut F32VecSse42, fn sub_assign(rhs: F32VecSse42) {
+-        this.0 = _mm_sub_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm_sub_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl MulAssign<F32VecSse42> for F32VecSse42 {
+     fn_sse42!(this: &mut F32VecSse42, fn mul_assign(rhs: F32VecSse42) {
+-        this.0 = _mm_mul_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm_mul_ps(this.0, rhs.0) }
+     });
+ }
+ 
+ impl DivAssign<F32VecSse42> for F32VecSse42 {
+     fn_sse42!(this: &mut F32VecSse42, fn div_assign(rhs: F32VecSse42) {
+-        this.0 = _mm_div_ps(this.0, rhs.0)
++        unsafe { this.0 = _mm_div_ps(this.0, rhs.0) }
+     });
+ }
+ 
+@@ -541,11 +547,11 @@ impl I32SimdVec for I32VecSse42 {
+     }
+ 
+     fn_sse42!(this: I32VecSse42, fn as_f32() -> F32VecSse42 {
+-        F32VecSse42(_mm_cvtepi32_ps(this.0), this.1)
++        unsafe { F32VecSse42(_mm_cvtepi32_ps(this.0), this.1) }
+     });
+ 
+     fn_sse42!(this: I32VecSse42, fn bitcast_to_f32() -> F32VecSse42 {
+-        F32VecSse42(_mm_castsi128_ps(this.0), this.1)
++        unsafe { F32VecSse42(_mm_castsi128_ps(this.0), this.1) }
+     });
+ 
+     #[inline(always)]
+@@ -554,33 +560,39 @@ impl I32SimdVec for I32VecSse42 {
+     }
+ 
+     fn_sse42!(this: I32VecSse42, fn abs() -> I32VecSse42 {
++        unsafe {
+         I32VecSse42(
+             _mm_abs_epi32(
+                 this.0,
+             ),
+             this.1)
++        }
+     });
+ 
+     fn_sse42!(this: I32VecSse42, fn gt(rhs: I32VecSse42) -> MaskSse42 {
++        unsafe {
+         MaskSse42(
+             _mm_castsi128_ps(_mm_cmpgt_epi32(this.0, rhs.0)),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_sse42!(this: I32VecSse42, fn lt_zero() -> MaskSse42 {
+-        I32VecSse42(_mm_setzero_si128(), this.1).gt(this)
++        unsafe { I32VecSse42(_mm_setzero_si128(), this.1).gt(this) }
+     });
+ 
+     fn_sse42!(this: I32VecSse42, fn eq(rhs: I32VecSse42) -> MaskSse42 {
++        unsafe {
+         MaskSse42(
+             _mm_castsi128_ps(_mm_cmpeq_epi32(this.0, rhs.0)),
+             this.1,
+         )
++        }
+     });
+ 
+     fn_sse42!(this: I32VecSse42, fn eq_zero() -> MaskSse42 {
+-        this.eq(I32VecSse42(_mm_setzero_si128(), this.1))
++        unsafe { this.eq(I32VecSse42(_mm_setzero_si128(), this.1)) }
+     });
+ 
+     #[inline(always)]
+@@ -596,96 +608,98 @@ impl I32SimdVec for I32VecSse42 {
+     }
+ 
+     fn_sse42!(this: I32VecSse42, fn mul_wide_take_high(rhs: I32VecSse42) -> I32VecSse42 {
++        unsafe {
+         let l = _mm_mul_epi32(this.0, rhs.0);
+         let h = _mm_mul_epi32(_mm_srli_epi64::<32>(this.0), _mm_srli_epi64::<32>(rhs.0));
+         let p0 = _mm_unpacklo_epi32(l, h);
+         let p1 = _mm_unpackhi_epi32(l, h);
+         I32VecSse42(_mm_unpackhi_epi64(p0, p1), this.1)
++        }
+     });
+ }
+ 
+ impl Add<I32VecSse42> for I32VecSse42 {
+     type Output = I32VecSse42;
+     fn_sse42!(this: I32VecSse42, fn add(rhs: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_add_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecSse42(_mm_add_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Sub<I32VecSse42> for I32VecSse42 {
+     type Output = I32VecSse42;
+     fn_sse42!(this: I32VecSse42, fn sub(rhs: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_sub_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecSse42(_mm_sub_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Mul<I32VecSse42> for I32VecSse42 {
+     type Output = I32VecSse42;
+     fn_sse42!(this: I32VecSse42, fn mul(rhs: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_mul_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecSse42(_mm_mul_epi32(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl Neg for I32VecSse42 {
+     type Output = I32VecSse42;
+     fn_sse42!(this: I32VecSse42, fn neg() -> I32VecSse42 {
+-        I32VecSse42(_mm_setzero_si128(), this.1) - this
++        unsafe { I32VecSse42(_mm_setzero_si128(), this.1) - this }
+     });
+ }
+ 
+ impl BitAnd<I32VecSse42> for I32VecSse42 {
+     type Output = I32VecSse42;
+     fn_sse42!(this: I32VecSse42, fn bitand(rhs: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_and_si128(this.0, rhs.0), this.1)
++        unsafe { I32VecSse42(_mm_and_si128(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitOr<I32VecSse42> for I32VecSse42 {
+     type Output = I32VecSse42;
+     fn_sse42!(this: I32VecSse42, fn bitor(rhs: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_or_si128(this.0, rhs.0), this.1)
++        unsafe { I32VecSse42(_mm_or_si128(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitXor<I32VecSse42> for I32VecSse42 {
+     type Output = I32VecSse42;
+     fn_sse42!(this: I32VecSse42, fn bitxor(rhs: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_xor_si128(this.0, rhs.0), this.1)
++        unsafe { I32VecSse42(_mm_xor_si128(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl AddAssign<I32VecSse42> for I32VecSse42 {
+     fn_sse42!(this: &mut I32VecSse42, fn add_assign(rhs: I32VecSse42) {
+-        this.0 = _mm_add_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm_add_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl SubAssign<I32VecSse42> for I32VecSse42 {
+     fn_sse42!(this: &mut I32VecSse42, fn sub_assign(rhs: I32VecSse42) {
+-        this.0 = _mm_sub_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm_sub_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl MulAssign<I32VecSse42> for I32VecSse42 {
+     fn_sse42!(this: &mut I32VecSse42, fn mul_assign(rhs: I32VecSse42) {
+-        this.0 = _mm_mul_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm_mul_epi32(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitAndAssign<I32VecSse42> for I32VecSse42 {
+     fn_sse42!(this: &mut I32VecSse42, fn bitand_assign(rhs: I32VecSse42) {
+-        this.0 = _mm_and_si128(this.0, rhs.0)
++        unsafe { this.0 = _mm_and_si128(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitOrAssign<I32VecSse42> for I32VecSse42 {
+     fn_sse42!(this: &mut I32VecSse42, fn bitor_assign(rhs: I32VecSse42) {
+-        this.0 = _mm_or_si128(this.0, rhs.0)
++        unsafe { this.0 = _mm_or_si128(this.0, rhs.0) }
+     });
+ }
+ 
+ impl BitXorAssign<I32VecSse42> for I32VecSse42 {
+     fn_sse42!(this: &mut I32VecSse42, fn bitxor_assign(rhs: I32VecSse42) {
+-        this.0 = _mm_xor_si128(this.0, rhs.0)
++        unsafe { this.0 = _mm_xor_si128(this.0, rhs.0) }
+     });
+ }
+ 
+@@ -714,36 +728,36 @@ impl SimdMask for MaskSse42 {
+     type Descriptor = Sse42Descriptor;
+ 
+     fn_sse42!(this: MaskSse42, fn if_then_else_f32(if_true: F32VecSse42, if_false: F32VecSse42) -> F32VecSse42 {
+-        F32VecSse42(_mm_blendv_ps(if_false.0, if_true.0, this.0), this.1)
++        unsafe { F32VecSse42(_mm_blendv_ps(if_false.0, if_true.0, this.0), this.1) }
+     });
+ 
+     fn_sse42!(this: MaskSse42, fn if_then_else_i32(if_true: I32VecSse42, if_false: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_blendv_epi8(if_false.0, if_true.0, _mm_castps_si128(this.0)), this.1)
++        unsafe { I32VecSse42(_mm_blendv_epi8(if_false.0, if_true.0, _mm_castps_si128(this.0)), this.1) }
+     });
+ 
+     fn_sse42!(this: MaskSse42, fn maskz_i32(v: I32VecSse42) -> I32VecSse42 {
+-        I32VecSse42(_mm_andnot_si128(_mm_castps_si128(this.0), v.0), this.1)
++        unsafe { I32VecSse42(_mm_andnot_si128(_mm_castps_si128(this.0), v.0), this.1) }
+     });
+ 
+     fn_sse42!(this: MaskSse42, fn all() -> bool {
+-        _mm_movemask_ps(this.0) == 0b1111
++        unsafe { _mm_movemask_ps(this.0) == 0b1111 }
+     });
+ 
+     fn_sse42!(this: MaskSse42, fn andnot(rhs: MaskSse42) -> MaskSse42 {
+-        MaskSse42(_mm_andnot_ps(this.0, rhs.0), this.1)
++        unsafe { MaskSse42(_mm_andnot_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitAnd<MaskSse42> for MaskSse42 {
+     type Output = MaskSse42;
+     fn_sse42!(this: MaskSse42, fn bitand(rhs: MaskSse42) -> MaskSse42 {
+-        MaskSse42(_mm_and_ps(this.0, rhs.0), this.1)
++        unsafe { MaskSse42(_mm_and_ps(this.0, rhs.0), this.1) }
+     });
+ }
+ 
+ impl BitOr<MaskSse42> for MaskSse42 {
+     type Output = MaskSse42;
+     fn_sse42!(this: MaskSse42, fn bitor(rhs: MaskSse42) -> MaskSse42 {
+-        MaskSse42(_mm_or_ps(this.0, rhs.0), this.1)
++        unsafe { MaskSse42(_mm_or_ps(this.0, rhs.0), this.1) }
+     });
+ }
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_2/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_2/src/lib.rs
+@@ -3,6 +3,10 @@
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
++#![feature(unsigned_is_multiple_of)]
++#![feature(target_feature_11)]
++#![feature(avx512_target_feature)]
++
+ mod idct2d;
+ mod reinterpreting_dct2d;
+ pub mod transform;

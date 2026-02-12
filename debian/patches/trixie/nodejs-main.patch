@@ -1,0 +1,20 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Node 22.x supports import.meta.main, but older versions of nodejs used
+"if (require.main===module)" instead. On 20.x and older, this statement
+always evaluates to false and the script runs successfully but never
+executes runMain(). It's super annoying because there are no error
+messages; it's just the css.js files are never actually generated. The
+build later fails due to the missing dependency.
+
+--- a/third_party/devtools-frontend/src/scripts/build/generate_css_js_files.js
++++ b/third_party/devtools-frontend/src/scripts/build/generate_css_js_files.js
+@@ -80,6 +80,6 @@ async function runMain() {
+   );
+ }
+ 
+-if (import.meta.main) {
++//if (import.meta.main) {
+   runMain();
+-}
++//}

@@ -58,6 +58,9 @@ system/rollup.patch
 
 llvm-19/static-assert.patch
 
+#rust-1.85/jxl-simd-avx512.patch
+#rust-1.85/jxl-features.patch
+
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
@@ -69,6 +72,7 @@ trixie/gn-string-hash.patch
 trixie/value-or.patch
 trixie/nodejs-set-intersection.patch
 trixie/gn-len.patch
+#trixie/nodejs-main.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

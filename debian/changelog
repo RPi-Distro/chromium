@@ -59,6 +59,7 @@ chromium (145.0.7632.45-1~deb13u1) UNRELEASED; urgency=high
     - rust-1.85/jxl-simd-avx512.patch: enable unstable features for
       jxl_simd, and also mark a bunch of avx-related calls as unsafe due to
       an older rustc bug.
+    - rust-1.85/parsing.patch: add unstable let_chains features.
 
   [ Timothy Pearson ]
   * d/patches:

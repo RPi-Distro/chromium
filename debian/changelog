@@ -54,6 +54,11 @@ chromium (145.0.7632.45-1~deb13u1) UNRELEASED; urgency=high
     - llvm-19/static-assert.patch: add build fixes specific to clang-19.
     - disable/unrar.patch: add another build fix for deleting unrar.
     - trixie/gn-len.patch: add build fix for trixie's older gn.
+    - trixie/nodejs-main.patch: add build fix for trixie's older nodejs.
+    - rust-1.85/jxl-features.patch: enable some unstable features for jxl.
+    - rust-1.85/jxl-simd-avx512.patch: enable unstable features for
+      jxl_simd, and also mark a bunch of avx-related calls as unsafe due to
+      an older rustc bug.
 
   [ Timothy Pearson ]
   * d/patches:

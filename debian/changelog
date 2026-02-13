@@ -1,4 +1,4 @@
-chromium (145.0.7632.45-1~deb12u1) UNRELEASED; urgency=high
+chromium (145.0.7632.45-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -95,8 +95,10 @@ chromium (145.0.7632.45-1~deb12u1) UNRELEASED; urgency=high
     - node-esm-dirname.patch: Address a new instance of the problem.
     - node18-import.patch: Address a new instance of the problem.
     - trixie/rust-is-multiple-of.patch: Drop the -Zallow-features= bit.
+    - disable/rustc-allow-features.patch: move the -Zallow-features=
+      flag here so that it's separate from individual rust fixes.
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 06 Feb 2026 19:15:37 -0500
+ -- Andres Salomon <dilinger@debian.org>  Thu, 12 Feb 2026 19:35:48 -0500
 
 chromium (144.0.7559.109-2~deb12u1) bookworm-security; urgency=high
 

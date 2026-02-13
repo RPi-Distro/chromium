@@ -48,6 +48,7 @@ disable/node-version-ck.patch
 disable/license-headless-shell.patch
 disable/enterprise-tests.patch
 disable/unrar.patch
+disable/rustc-allow-features.patch
 
 system/icu-shim.patch
 system/jpeg.patch

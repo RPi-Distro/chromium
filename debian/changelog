@@ -60,6 +60,8 @@ chromium (145.0.7632.45-1~deb12u1) UNRELEASED; urgency=high
       jxl_simd, and also mark a bunch of avx-related calls as unsafe due to
       an older rustc bug.
     - rust-1.85/parsing.patch: add unstable let_chains features.
+    - bookworm/dav1d-drop-hdr.patch: add fix for older dav1d library by
+      dropping a video HDR feature.
 
   [ Timothy Pearson ]
   * d/patches:

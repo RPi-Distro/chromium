@@ -109,6 +109,7 @@ bookworm/path-rustfmt.patch
 bookworm/gn-path-exists2.patch
 bookworm/rust-unsafe-extern.patch
 bookworm/node-esm-dirname.patch
+bookworm/dav1d-drop-hdr.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch

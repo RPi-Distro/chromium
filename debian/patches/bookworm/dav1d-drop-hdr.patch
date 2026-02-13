@@ -1,0 +1,50 @@
+Revert the following commit, because bookworm's dav1d doesn't have n_itut_t35:
+
+commit 894c483e762a4eeaadb1e6d42da25eebfdd9dfbb
+Author: Maryla <maryla@google.com>
+Date:   Wed Dec 17 03:47:49 2025 -0800
+
+    Iterate through all ITU-T T.35 blobs
+    
+    A single frame may have multiple ITU-T T.35 metadata blobs of different
+    types, such as HDR10+ metadata and AGTM (ST 2094-50) metadata.
+    Previously, the AGTM metadata would only be detected if it was first.
+    
+    Bug: 395659818
+    Change-Id: I47945f060f222fc25b43303cc4ff3d7d96bc6b74
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7265645
+    Reviewed-by: Colin Blundell <blundell@chromium.org>
+    Commit-Queue: Maryla Ustarroz-Calonge <maryla@google.com>
+    Reviewed-by: ccameron chromium <ccameron@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1559864}
+
+--- a/media/filters/dav1d_video_decoder.cc
++++ b/media/filters/dav1d_video_decoder.cc
+@@ -474,19 +474,14 @@ bool Dav1dVideoDecoder::DecodeBuffer(sco
+ 
+     if (p->itut_t35) {
+       // SAFETY: The best we can do is trust the size provided by Dav1d.
+-      auto t35s = UNSAFE_BUFFERS(
+-          base::span<const Dav1dITUTT35>(p->itut_t35, p->n_itut_t35));
+-      for (const auto& t35 : t35s) {
+-        // SAFETY: The best we can do is trust the size provided by Dav1d.
+-        auto t35_payload_span = UNSAFE_BUFFERS(
+-            base::span<const uint8_t>(t35.payload, t35.payload_size));
+-        if (auto agtm =
+-                GetSerializedAgtmItutT35(t35.country_code, t35_payload_span)) {
+-          gfx::HDRMetadata hdr_metadata = config_.hdr_metadata();
+-          // Overwrite existing AGTM metadata if any.
+-          hdr_metadata.setSerializedAgtm(agtm);
+-          config_.set_hdr_metadata(hdr_metadata);
+-        }
++      auto t35_payload_span = UNSAFE_BUFFERS(base::span<const uint8_t>(
++          p->itut_t35->payload, p->itut_t35->payload_size));
++      if (auto agtm = GetSerializedAgtmItutT35(p->itut_t35->country_code,
++                                               t35_payload_span)) {
++        gfx::HDRMetadata hdr_metadata = config_.hdr_metadata();
++        // Overwrite existing AGTM metadata if any.
++        hdr_metadata.setSerializedAgtm(agtm);
++        config_.set_hdr_metadata(hdr_metadata);
+       }
+     }
+ 

@@ -1,3 +1,10 @@
+chromium (145.0.7632.75-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-2441: Use after free in CSS. Reported by Shaheen Fazim.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 13 Feb 2026 04:52:11 -0500
+
 chromium (145.0.7632.45-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]

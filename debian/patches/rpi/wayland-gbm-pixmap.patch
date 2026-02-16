@@ -43,9 +43,9 @@
 -      // imported as wl_buffer.
 -      auto* gbm_device = buffer_manager_->GetGbmDevice();
 -      if (!gbm_device || !gbm_device->CanCreateBufferForFormat(
--                             GetFourCCFormatFromBufferFormat(format))) {
+-                             GetFourCCFormatFromSharedImageFormat(format))) {
 -        return false;
 -      }
      } else {
-       if (supported_buffer_formats_.find(format) ==
-           supported_buffer_formats_.end()) {
+       if (supported_formats_.find(format) == supported_formats_.end()) {
+         return false;

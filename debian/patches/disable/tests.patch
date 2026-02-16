@@ -1,16 +1,16 @@
 --- a/third_party/devtools-frontend/src/BUILD.gn
 +++ b/third_party/devtools-frontend/src/BUILD.gn
-@@ -27,7 +27,6 @@ group("devtools_all_files") {
- 
+@@ -28,7 +28,6 @@ group("devtools_all_files") {
    data_deps = devtools_frontend_resources_deps + [
                  "front_end:web_test_resources",
+                 "scripts/hosted_mode",
 -                "test",
                ]
    deps = [ ":frontend_indexer_tsconfig" ]
    public_deps = [ "scripts/component_docs" ]
 --- a/components/update_client/BUILD.gn
 +++ b/components/update_client/BUILD.gn
-@@ -355,8 +355,6 @@ source_set("unit_tests") {
+@@ -357,8 +357,6 @@ source_set("unit_tests") {
      "//third_party/puffin:libpuffpatch",
      "//third_party/re2",
    ]

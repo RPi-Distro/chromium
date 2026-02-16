@@ -1,0 +1,10 @@
+--- a/third_party/swiftshader/third_party/llvm-16.0/llvm/include/llvm/CodeGen/ResourcePriorityQueue.h
++++ b/third_party/swiftshader/third_party/llvm-16.0/llvm/include/llvm/CodeGen/ResourcePriorityQueue.h
+@@ -17,6 +17,7 @@
+ #define LLVM_CODEGEN_RESOURCEPRIORITYQUEUE_H
+ 
+ #include "llvm/CodeGen/ScheduleDAG.h"
++#include "llvm/CodeGen/DFAPacketizer.h"
+ 
+ namespace llvm {
+   class DFAPacketizer;

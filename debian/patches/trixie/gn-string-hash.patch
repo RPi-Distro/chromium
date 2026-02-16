@@ -1,0 +1,53 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Work around a missing string_hash(), not present in trixie's gn version.
+
+
+ERROR at //build/rust/gni_impl/rust_target.gni:51:17: Unknown function.
+    _dir_hash = string_hash(get_label_info(":${_target_name}", "dir"))
+                ^----------
+
+--- a/build/rust/gni_impl/rust_target.gni
++++ b/build/rust/gni_impl/rust_target.gni
+@@ -48,7 +48,8 @@ template("rust_target") {
+   if (defined(invoker.crate_name)) {
+     _crate_name = invoker.crate_name
+   } else {
+-    _dir_hash = string_hash(get_label_info(":${_target_name}", "dir"))
++    lbl = get_label_info(":${_target_name}", "dir")
++    _dir_hash = string_join("", exec_script("//stringhash.py", [ lbl ], "list lines"))
+     _crate_name = "${_target_name}_${_dir_hash}"
+   }
+   _generate_crate_root =
+--- a/build/dotfile_settings.gni
++++ b/build/dotfile_settings.gni
+@@ -16,6 +16,8 @@ build_dotfile_settings = {
+     "//build/config/ios/ios_sdk.gni",
+     "//build/config/ios/rules.gni",
+     "//build/config/linux/atk/BUILD.gn",
++    "//build/rust/gni_impl/rust_target.gni",
++    "//build/rust/rust_static_library.gni",
+     "//build/config/linux/atspi2/BUILD.gn",
+     "//build/config/linux/BUILD.gn",
+     "//build/config/linux/dri/BUILD.gn",
+--- /dev/null
++++ b/stringhash.py
+@@ -0,0 +1,6 @@
++# string_hash() implementation for older versions of gn
++
++import hashlib
++import sys
++
++print(hashlib.sha256(sys.argv[1].encode('UTF-8')).hexdigest()[:8])
+--- a/build/rust/rust_static_library.gni
++++ b/build/rust/rust_static_library.gni
+@@ -187,7 +187,8 @@ template("rust_static_library") {
+       if (defined(invoker.crate_name)) {
+         _crate_name = invoker.crate_name
+       } else {
+-        _dir_hash = string_hash(get_label_info(":${_target_name}", "dir"))
++        lbl = get_label_info(":${_target_name}", "dir")
++        _dir_hash = string_join("", exec_script("//stringhash.py", [ lbl ], "list lines"))
+         _crate_name = "${_target_name}_${_dir_hash}"
+       }
+ 

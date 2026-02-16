@@ -99,6 +99,8 @@ Files-Excluded:
  third_party/dawn/tools/golang
  third_party/depot_tools/ninja*
  third_party/devtools-frontend/src/node_modules/.bin
+ third_party/devtools-frontend/src/node_modules/@rollup/rollup-linux-x64-gnu
+ third_party/devtools-frontend/src/node_modules/esbuild
  third_party/devtools-frontend/src/third_party/esbuild/esbuild
  third_party/devtools-frontend/src/third_party/image_diff
  third_party/dom_distiller_js/dist/js/domdistiller_wrapped.js
@@ -130,6 +132,7 @@ Files-Excluded:
  third_party/libxml/mac
  third_party/libxml/win32
  third_party/libxslt
+ third_party/litert/src
  third_party/llvm*
  third_party/lzma_sdk/bin
  third_party/nearby/src

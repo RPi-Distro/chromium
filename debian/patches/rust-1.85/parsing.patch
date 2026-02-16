@@ -1,0 +1,21 @@
+error[E0658]: `let` expressions in this position are unstable
+  --> ../../components/user_data_importer/utility/parsing_ffi/zip_archive.rs:89:16
+   |
+89 |             if let Ok(file) = self.archive.by_index(i)
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: see issue #53667 <https://github.com/rust-lang/rust/issues/53667> for more information
+   = help: add `#![feature(let_chains)]` to the crate attributes to enable
+   = note: this compiler was built on 2025-02-17; consider upgrading it if it is out of date
+
+--- a/components/user_data_importer/utility/parsing_ffi/lib.rs
++++ b/components/user_data_importer/utility/parsing_ffi/lib.rs
+@@ -2,6 +2,8 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#![feature(let_chains)]
++
+ mod history;
+ mod json;
+ mod models;

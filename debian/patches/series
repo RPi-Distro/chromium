@@ -28,11 +28,9 @@ fixes/libpng-testonly.patch
 fixes/force-rust-nightly.patch
 fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
+fixes/swiftshader-dependencies.patch
 
-# Fixes upstream bug 464638992. We can drop it at v145.
-upstream/fix-rk3588-v4l2-av1-decoder.patch
-CVE-2026-1861.patch
-CVE-2026-1862.patch
+upstream/disable-unrar.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -48,6 +46,9 @@ disable/clang-version-check.patch
 disable/screen-ai-blob.patch
 disable/node-version-ck.patch
 disable/license-headless-shell.patch
+disable/enterprise-tests.patch
+disable/unrar.patch
+disable/rustc-allow-features.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -56,6 +57,12 @@ system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
 
+llvm-19/static-assert.patch
+
+rust-1.85/jxl-simd-avx512.patch
+rust-1.85/jxl-features.patch
+rust-1.85/parsing.patch
+
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
@@ -63,8 +70,11 @@ trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 trixie/rust-is-multiple-of.patch
 #trixie/libxml2-no-xxe.patch
+trixie/gn-string-hash.patch
 trixie/value-or.patch
 trixie/nodejs-set-intersection.patch
+trixie/gn-len.patch
+trixie/nodejs-main.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch
@@ -102,6 +112,7 @@ i386/support-i386.patch
 
 # POWER support
 ppc64le/sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch
+ppc64le/sandbox/0009-sandbox-ignore-byte-span-error.patch
 
 ppc64le/third_party/0001-third_party-angle-Include-missing-header-cstddef-in-.patch
 ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
@@ -198,7 +209,6 @@ rpi/0013-v4l2_stateful-Add-info-line-to-indicate-V4L2-decode.patch
 rpi/0014-v4l2decode-Restrict-instances-to-2.patch
 rpi/0015-v4l2decode-Fix-instance-counting-if-instance-limit-e.patch
 rpi/0016-gbm_pixmap-Avoid-spamming-BO-create-failures.patch
-rpi/0101-libyuv-Use-more-effective-NEON-detection.patch
 rpi/0201-skia-Add-armv7-optimizations.patch
 rpi/master-preferences.patch
 rpi/title-bar-default-system.patch-v35

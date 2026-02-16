@@ -9,7 +9,7 @@ Subject: [PATCH 16/17] gbm_pixmap: Avoid spamming BO create failures
 
 --- a/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
 +++ b/ui/ozone/platform/wayland/gpu/gbm_pixmap_wayland.cc
-@@ -91,6 +91,13 @@ bool GbmPixmapWayland::InitializeBuffer(
+@@ -90,6 +90,13 @@ bool GbmPixmapWayland::InitializeBuffer(
    }
  
    if (!gbm_bo_) {

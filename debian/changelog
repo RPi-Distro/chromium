@@ -1,4 +1,4 @@
-chromium (1:144.0.7559.109-2~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:145.0.7632.75-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,116 @@ chromium (1:144.0.7559.109-2~deb12u1+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 09 Feb 2026 08:09:19 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 16 Feb 2026 12:45:32 +0000
+
+chromium (145.0.7632.75-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-2441: Use after free in CSS. Reported by Shaheen Fazim.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 13 Feb 2026 04:52:11 -0500
+
+chromium (145.0.7632.45-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2026-2313: Use after free in CSS. Reported by Han Zheng (HexHive),
+      Wenhao Fang (University of St. Andrews), and Qinying Wang (HexHive).
+    - CVE-2026-2314: Heap buffer overflow in Codecs. Reported by Google.
+    - CVE-2026-2315: Inappropriate implementation in WebGPU.
+      Reported by Google.
+    - CVE-2026-2316: Insufficient policy enforcement in Frames.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-2317: Inappropriate implementation in Animation.
+      Reported by Brendan Draper.
+    - CVE-2026-2318: Inappropriate implementation in PictureInPicture.
+      Reported by Shaheen Fazim.
+    - CVE-2026-2319: Race in DevTools. Reported by Anonymous.
+    - CVE-2026-2320: Inappropriate implementation in File input.
+      Reported by Alesandro Ortiz.
+    - CVE-2026-2321: Use after free in Ozone. Reported by Google.
+    - CVE-2026-2322: Inappropriate implementation in File input.
+      Reported by Robbe Van Roey | PinkDraconian.
+    - CVE-2026-2323: Inappropriate implementation in Downloads.
+      Reported by Hafiizh.
+  * d/copyright:
+    - delete third_party/litert/src, Google's new WebAI thing.
+    - delete esbuild directory so we can use debian's esbuild.
+    - delete new rollup binary rollup-linux-x64-gnu.
+  * d/rules:
+    - build with webnn_use_tflite=false to fix build.
+    - disable building a bunch more unit tests.
+    - copy esbuild libs and binary from the system.
+  * d/control:
+    - build-dep on libpthreadpool-dev.
+    - build-dep on esbuild.
+  * d/patches:
+    - CVE-2026-1861.patch: drop, merged upstream.
+    - CVE-2026-1862.patch: drop, merged upstream.
+    - upstream/fix-rk3588-v4l2-av1-decoder.patch: drop, merged upstream.
+    - debianization/manpage.patch: refresh.
+    - debianization/rustc-bootstrap.patch: refresh.
+    - fixes/armhf-no-thumb.patch: rework patch due to upstream dropping
+      non-thumb.
+    - disable/tests.patch: refresh.
+    - disable/signin.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/widevine-cdm-cu.patch: refresh.
+    - upstream/disable-unrar.patch: add upstream fix for disabling unrar.
+    - trixie/gn-string-hash.patch: add a workaround for older gn missing
+      string_hash() function.
+    - disable/enterprise-tests.patch: add patch to fix build error
+      related to building unnecessary unit tests.
+    - system/rollup.patch: update for upstream changes around switching
+      some rollup calls to esbuild and away from rollup-wasm.
+    - llvm-19/static-assert.patch: add build fixes specific to clang-19.
+    - disable/unrar.patch: add another build fix for deleting unrar.
+    - trixie/gn-len.patch: add build fix for trixie's older gn.
+    - trixie/nodejs-main.patch: add build fix for trixie's older nodejs.
+    - rust-1.85/jxl-features.patch: enable some unstable features for jxl.
+    - rust-1.85/jxl-simd-avx512.patch: enable unstable features for
+      jxl_simd, and also mark a bunch of avx-related calls as unsafe due to
+      an older rustc bug.
+    - rust-1.85/parsing.patch: add unstable let_chains features.
+    - bookworm/dav1d-drop-hdr.patch: add fix for older dav1d library by
+      dropping a video HDR feature.
+
+  [ Timothy Pearson ]
+  * d/patches:
+    - patches/fixes/swiftshader-dependencies.patch: Fix SwiftShader include
+      dependencies
+  * d/patches/ppc64le:
+    - ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch: Remove
+      obsolete Clang 7 workaround and refresh for upstream changes
+    - ppc64le/third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - ppc64le/third_party/0002-regenerate-xnn-buildgn.patch: Regenerate from
+      upstream sources
+    - ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.pa:
+      refresh for upstream changes
+    - ppc64le/fixes/fix-page-allocator-overflow.patch: Refresh for upstream
+      changes
+    - ppc64le/third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      Regenerate from upstream sources
+    - ppc64le/sandbox/0009-sandbox-ignore-byte-span-error.patch: Work around upstream
+      byte_span_from_ref issues
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    - loongarch64/0012-sandbox-linux-add-statx-support-for-loongarch64.patch:
+      update for upstream changes.
+    - loongarch64/0016-medium-cmodel-support-for-loongarch64.patch: refresh.
+
+  [ Daniel Richard G. ]
+  * d/patches/bookworm:
+    - gn-absl.patch: Refresh.
+    - node-esm-dirname.patch: Address a new instance of the problem.
+    - node18-import.patch: Address a new instance of the problem.
+    - trixie/rust-is-multiple-of.patch: Drop the -Zallow-features= bit.
+    - disable/rustc-allow-features.patch: move the -Zallow-features=
+      flag here so that it's separate from individual rust fixes.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 12 Feb 2026 19:35:48 -0500
 
 chromium (144.0.7559.109-2~deb12u1) bookworm-security; urgency=high
 

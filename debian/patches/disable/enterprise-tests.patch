@@ -1,0 +1,24 @@
+I don't actually know why this is needed; as far as I can tell, none of the
+enterprise_companion stuff changed between v144 and v145.. But some gn
+dependency is clearly pulling in the integration tests (which are deleted
+along w/ the rest of the enterprise_companion stuff).
+
+--- a/chrome/enterprise_companion/BUILD.gn
++++ b/chrome/enterprise_companion/BUILD.gn
+@@ -285,7 +285,7 @@ copy("integration_test_service_files") {
+   visibility = [ ":enterprise_companion_integration_tests" ]
+ }
+ 
+-test("enterprise_companion_integration_tests") {
++if (false) {
+   testonly = true
+ 
+   sources = [
+@@ -483,7 +483,6 @@ group("all") {
+ 
+   deps = [
+     ":client",
+-    ":enterprise_companion_integration_tests",
+     ":enterprise_companion_tests",
+   ]
+   if (!is_official_build) {

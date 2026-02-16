@@ -1,0 +1,14 @@
+author: Andres Salomon <dilinger@debian.org>
+desc: trixie's older gn lacks len(), so disable this assert.
+
+--- a/build/rust/rust_bindgen.gni
++++ b/build/rust/rust_bindgen.gni
+@@ -112,7 +112,7 @@ template("rust_bindgen") {
+   # Calculate `_generated_bindings_rs`.
+   _bindgen_outputs = get_target_outputs(":$_rust_bindgen_generator_target_name")
+   _bindgen_rs_outputs = filter_include(_bindgen_outputs, [ "*.rs" ])
+-  assert(len(_bindgen_rs_outputs) == 1)
++#  assert(len(_bindgen_rs_outputs) == 1)
+   _generated_bindings_rs = _bindgen_rs_outputs[0]
+ 
+   rust_static_library(target_name) {

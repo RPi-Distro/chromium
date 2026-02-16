@@ -28,15 +28,15 @@ libs.
 
 --- a/third_party/abseil-cpp/absl/strings/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/strings/BUILD.gn
-@@ -8,6 +8,7 @@ import("//third_party/abseil-cpp/absl.gn
+@@ -7,6 +7,7 @@ import("//third_party/abseil-cpp/absl.gn
+ 
  absl_source_set("string_view") {
-   sources = [ "string_view.cc" ]
-   public = [ "string_view.h" ]
+   sources = [ "string_view.h" ]
 +  visibility = [ "*" ]
    deps = [
-     "//third_party/abseil-cpp/absl/base",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -57,6 +58,7 @@ absl_source_set("strings") {
+     "//third_party/abseil-cpp/absl/base:core_headers",
+@@ -54,6 +55,7 @@ absl_source_set("strings") {
      "strip.h",
      "substitute.h",
    ]
@@ -44,7 +44,7 @@ libs.
    public_deps = [
      # string_view.h was once part of :strings, so string_view.h is
      # re-exported for backwards compatibility.
-@@ -127,6 +129,7 @@ absl_test("resize_and_overwrite_test") {
+@@ -144,6 +146,7 @@ absl_test("append_and_overwrite_test") {
  
  absl_source_set("str_format") {
    public = [ "str_format.h" ]
@@ -80,7 +80,7 @@ libs.
      "//third_party/abseil-cpp/absl/utility",
 --- a/third_party/abseil-cpp/absl/meta/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/meta/BUILD.gn
-@@ -6,6 +6,7 @@ import("//third_party/abseil-cpp/absl.gn
+@@ -29,6 +29,7 @@ absl_test("requires_test") {
  
  absl_source_set("type_traits") {
    public = [ "type_traits.h" ]
@@ -95,10 +95,10 @@ libs.
  absl_source_set("nullability") {
    public = [ "nullability.h" ]
 +  visibility = [ "*" ]
-   deps = [
-     ":config",
-   ]
-@@ -91,6 +92,7 @@ absl_source_set("config") {
+   deps = [ ":config" ]
+ }
+ 
+@@ -89,6 +90,7 @@ absl_source_set("config") {
      "options.h",
      "policy_checks.h",
    ]
@@ -106,7 +106,7 @@ libs.
  }
  
  absl_source_set("cycleclock_internal") {
-@@ -129,6 +131,7 @@ absl_source_set("core_headers") {
+@@ -127,6 +129,7 @@ absl_source_set("core_headers") {
      "port.h",
      "thread_annotations.h",
    ]

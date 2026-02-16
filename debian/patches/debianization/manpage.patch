@@ -5,7 +5,7 @@ forwarded: http://code.google.com/p/chromium/issues/detail?id=73591
 --- a/chrome/app/resources/manpage.1.in
 +++ b/chrome/app/resources/manpage.1.in
 @@ -20,6 +20,23 @@ This manpage only describes invocation,
- @@MENUNAME@@ has hundreds of undocumented command-line flags that are added
+ @@MENUNAME has hundreds of undocumented command-line flags that are added
  and removed at the whim of the developers.  Here, we document relatively
  stable flags.
 +

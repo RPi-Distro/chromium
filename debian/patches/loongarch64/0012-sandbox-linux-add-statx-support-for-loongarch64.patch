@@ -190,8 +190,8 @@ index bf1339b061..ca5793ecc0 100644
 +++ b/sandbox/linux/syscall_broker/broker_host.cc
 @@ -302,6 +302,21 @@ void BrokerHost::StatFileForIPC(BrokerCommand command_type,
      RAW_CHECK(reply->AddIntToMessage(0));
-     RAW_CHECK(
-         reply->AddDataToMessage(reinterpret_cast<char*>(&sb), sizeof(sb)));
+     RAW_CHECK(reply->AddDataToMessage(
+         base::byte_span_from_ref(reinterpret_cast<char*>(&sb))));
 +#elif defined(__loongarch__)
 +    // handle COMMAND_STATX
 +    DCHECK(command_type == COMMAND_STATX);
@@ -206,7 +206,7 @@ index bf1339b061..ca5793ecc0 100644
 +    }
 +    RAW_CHECK(reply->AddIntToMessage(0));
 +    RAW_CHECK(
-+        reply->AddDataToMessage(reinterpret_cast<char*>(&sb), sizeof(sb)));
++        reply->AddDataToMessage(base::byte_span_from_ref(reinterpret_cast<char*>(&sb))));
  #else  // defined(__NR_fstatat64)
      // We should not reach here on 64-bit systems, as the *stat*64() are only
      // necessary on 32-bit.

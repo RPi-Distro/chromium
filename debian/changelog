@@ -1,4 +1,4 @@
-chromium (1:145.0.7632.75-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:145.0.7632.109-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -22,7 +22,19 @@ chromium (1:145.0.7632.75-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 16 Feb 2026 13:26:33 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 19 Feb 2026 18:52:42 +0000
+
+chromium (145.0.7632.109-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-2648: Heap buffer overflow in PDFium. Reported by soiax.
+    - CVE-2026-2649: Integer overflow in V8.
+      Reported by JunYoung Park(@candymate) of KAIST Hacking Lab.
+    - CVE-2026-2650: Heap buffer overflow in Media. Reported by Google.
+  * d/patches/rust-1.85/jxl-simd-avx512.patch: mark neon functions as
+    unsafe to fix arm64 builds.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 18 Feb 2026 16:22:12 -0500
 
 chromium (145.0.7632.75-1~deb13u1) trixie-security; urgency=high
 

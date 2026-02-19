@@ -1,4 +1,4 @@
-chromium (1:145.0.7632.75-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:145.0.7632.109-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,19 @@ chromium (1:145.0.7632.75-1~deb12u1+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 16 Feb 2026 12:45:32 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 19 Feb 2026 18:58:56 +0000
+
+chromium (145.0.7632.109-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-2648: Heap buffer overflow in PDFium. Reported by soiax.
+    - CVE-2026-2649: Integer overflow in V8.
+      Reported by JunYoung Park(@candymate) of KAIST Hacking Lab.
+    - CVE-2026-2650: Heap buffer overflow in Media. Reported by Google.
+  * d/patches/rust-1.85/jxl-simd-avx512.patch: mark neon functions as
+    unsafe to fix arm64 builds.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 18 Feb 2026 16:22:12 -0500
 
 chromium (145.0.7632.75-1~deb12u1) bookworm-security; urgency=high
 

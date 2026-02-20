@@ -1,3 +1,9 @@
+chromium (145.0.7632.109-1~deb13u3) trixie-security; urgency=high
+
+  * d/rules: drop CVE check for security-uploads (no functional change).
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Feb 2026 20:50:42 -0500
+
 chromium (145.0.7632.109-1~deb13u2) trixie-security; urgency=high
 
   * d/patches/rust-1.85/jxl-simd-avx512.patch: try again; rustc didn't

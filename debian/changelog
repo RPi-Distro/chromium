@@ -1,4 +1,4 @@
-chromium (1:145.0.7632.109-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:145.0.7632.109-1~deb13u3+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -22,7 +22,20 @@ chromium (1:145.0.7632.109-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 19 Feb 2026 18:52:42 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Sat, 21 Feb 2026 17:29:49 +0000
+
+chromium (145.0.7632.109-1~deb13u3) trixie-security; urgency=high
+
+  * d/rules: drop CVE check for security-uploads (no functional change).
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Feb 2026 20:50:42 -0500
+
+chromium (145.0.7632.109-1~deb13u2) trixie-security; urgency=high
+
+  * d/patches/rust-1.85/jxl-simd-avx512.patch: try again; rustc didn't
+    like where I marked some of the neon functions as unsafe.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Feb 2026 15:40:38 -0500
 
 chromium (145.0.7632.109-1~deb13u1) trixie-security; urgency=high
 

@@ -1320,386 +1320,400 @@ and fixed in newer versions of rustc.
              assert!(data.len() > 3 * stride);
  
              let p0 = F32VecNeon::load_array(d, &data[0]).0;
-@@ -328,58 +328,58 @@ unsafe impl F32SimdVec for F32VecNeon {
-     crate::impl_f32_array_interface!();
+@@ -329,57 +329,60 @@ unsafe impl F32SimdVec for F32VecNeon {
  
      fn_neon! {
--        fn mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
-+        unsafe fn mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vfmaq_f32(add.0, this.0, mul.0), this.1)
+         fn mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vfmaq_f32(add.0, this.0, mul.0), this.1)
++            unsafe { F32VecNeon(vfmaq_f32(add.0, this.0, mul.0), this.1) }
          }
  
--        fn neg_mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
-+        unsafe fn neg_mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vfmsq_f32(add.0, this.0, mul.0), this.1)
+         fn neg_mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vfmsq_f32(add.0, this.0, mul.0), this.1)
++            unsafe { F32VecNeon(vfmsq_f32(add.0, this.0, mul.0), this.1) }
          }
  
--        fn abs(this: F32VecNeon) -> F32VecNeon {
-+        unsafe fn abs(this: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vabsq_f32(this.0), this.1)
+         fn abs(this: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vabsq_f32(this.0), this.1)
++            unsafe { F32VecNeon(vabsq_f32(this.0), this.1) }
          }
  
--        fn floor(this: F32VecNeon) -> F32VecNeon {
-+        unsafe fn floor(this: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vrndmq_f32(this.0), this.1)
+         fn floor(this: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vrndmq_f32(this.0), this.1)
++            unsafe { F32VecNeon(vrndmq_f32(this.0), this.1) }
          }
  
--        fn sqrt(this: F32VecNeon) -> F32VecNeon {
-+        unsafe fn sqrt(this: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vsqrtq_f32(this.0), this.1)
+         fn sqrt(this: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vsqrtq_f32(this.0), this.1)
++            unsafe { F32VecNeon(vsqrtq_f32(this.0), this.1) }
          }
  
--        fn neg(this: F32VecNeon) -> F32VecNeon {
-+        unsafe fn neg(this: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vnegq_f32(this.0), this.1)
+         fn neg(this: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vnegq_f32(this.0), this.1)
++            unsafe { F32VecNeon(vnegq_f32(this.0), this.1) }
          }
  
--        fn copysign(this: F32VecNeon, sign: F32VecNeon) -> F32VecNeon {
-+        unsafe fn copysign(this: F32VecNeon, sign: F32VecNeon) -> F32VecNeon {
+         fn copysign(this: F32VecNeon, sign: F32VecNeon) -> F32VecNeon {
++            unsafe {
              F32VecNeon(
                  vbslq_f32(vdupq_n_u32(0x8000_0000), sign.0, this.0),
                  this.1,
              )
++            }
          }
  
--        fn max(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
-+        unsafe fn max(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vmaxq_f32(this.0, other.0), this.1)
+         fn max(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vmaxq_f32(this.0, other.0), this.1)
++            unsafe { F32VecNeon(vmaxq_f32(this.0, other.0), this.1) }
          }
  
--        fn min(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
-+        unsafe fn min(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vminq_f32(this.0, other.0), this.1)
+         fn min(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vminq_f32(this.0, other.0), this.1)
++            unsafe { F32VecNeon(vminq_f32(this.0, other.0), this.1) }
          }
  
--        fn gt(this: F32VecNeon, other: F32VecNeon) -> MaskNeon {
-+        unsafe fn gt(this: F32VecNeon, other: F32VecNeon) -> MaskNeon {
-             MaskNeon(vcgtq_f32(this.0, other.0), this.1)
+         fn gt(this: F32VecNeon, other: F32VecNeon) -> MaskNeon {
+-            MaskNeon(vcgtq_f32(this.0, other.0), this.1)
++            unsafe { MaskNeon(vcgtq_f32(this.0, other.0), this.1) }
          }
  
--        fn as_i32(this: F32VecNeon) -> I32VecNeon {
-+        unsafe fn as_i32(this: F32VecNeon) -> I32VecNeon {
-             I32VecNeon(vcvtq_s32_f32(this.0), this.1)
+         fn as_i32(this: F32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vcvtq_s32_f32(this.0), this.1)
++            unsafe { I32VecNeon(vcvtq_s32_f32(this.0), this.1) }
          }
  
--        fn bitcast_to_i32(this: F32VecNeon) -> I32VecNeon {
-+        unsafe fn bitcast_to_i32(this: F32VecNeon) -> I32VecNeon {
-             I32VecNeon(vreinterpretq_s32_f32(this.0), this.1)
+         fn bitcast_to_i32(this: F32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vreinterpretq_s32_f32(this.0), this.1)
++            unsafe { I32VecNeon(vreinterpretq_s32_f32(this.0), this.1) }
          }
  
--        fn round_store_u8(this: F32VecNeon, dest: &mut [u8]) {
-+        unsafe fn round_store_u8(this: F32VecNeon, dest: &mut [u8]) {
+         fn round_store_u8(this: F32VecNeon, dest: &mut [u8]) {
++            unsafe {
              assert!(dest.len() >= F32VecNeon::LEN);
              // Round to nearest integer
              let rounded = vrndnq_f32(this.0);
-@@ -394,7 +394,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+@@ -389,12 +392,12 @@ unsafe impl F32SimdVec for F32VecNeon {
+             let u8s = vqmovn_u16(vcombine_u16(u16s, u16s));
+             // Store lower 4 bytes
+             // SAFETY: we checked dest has enough space
+-            unsafe {
+                 vst1_lane_u32::<0>(dest.as_mut_ptr() as *mut u32, vreinterpret_u32_u8(u8s));
              }
          }
  
--        fn round_store_u16(this: F32VecNeon, dest: &mut [u16]) {
-+        unsafe fn round_store_u16(this: F32VecNeon, dest: &mut [u16]) {
+         fn round_store_u16(this: F32VecNeon, dest: &mut [u16]) {
++            unsafe {
              assert!(dest.len() >= F32VecNeon::LEN);
              // Round to nearest integer
              let rounded = vrndnq_f32(this.0);
-@@ -413,7 +413,7 @@ unsafe impl F32SimdVec for F32VecNeon {
- impl Add<F32VecNeon> for F32VecNeon {
+@@ -403,7 +406,6 @@ unsafe impl F32SimdVec for F32VecNeon {
+             let u16s = vqmovun_s32(i32s);
+             // Store 4 u16s (8 bytes)
+             // SAFETY: we checked dest has enough space
+-            unsafe {
+                 vst1_u16(dest.as_mut_ptr(), u16s);
+             }
+         }
+@@ -414,7 +416,7 @@ impl Add<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
--        fn add(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-+        unsafe fn add(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vaddq_f32(this.0, rhs.0), this.1)
+         fn add(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vaddq_f32(this.0, rhs.0), this.1)
++            unsafe { F32VecNeon(vaddq_f32(this.0, rhs.0), this.1) }
          }
      }
-@@ -422,7 +422,7 @@ impl Add<F32VecNeon> for F32VecNeon {
- impl Sub<F32VecNeon> for F32VecNeon {
+ }
+@@ -423,7 +425,7 @@ impl Sub<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
--        fn sub(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-+        unsafe fn sub(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vsubq_f32(this.0, rhs.0), this.1)
+         fn sub(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vsubq_f32(this.0, rhs.0), this.1)
++            unsafe { F32VecNeon(vsubq_f32(this.0, rhs.0), this.1) }
          }
      }
-@@ -431,7 +431,7 @@ impl Sub<F32VecNeon> for F32VecNeon {
- impl Mul<F32VecNeon> for F32VecNeon {
+ }
+@@ -432,7 +434,7 @@ impl Mul<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
--        fn mul(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-+        unsafe fn mul(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vmulq_f32(this.0, rhs.0), this.1)
+         fn mul(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vmulq_f32(this.0, rhs.0), this.1)
++            unsafe { F32VecNeon(vmulq_f32(this.0, rhs.0), this.1) }
          }
      }
-@@ -440,7 +440,7 @@ impl Mul<F32VecNeon> for F32VecNeon {
- impl Div<F32VecNeon> for F32VecNeon {
+ }
+@@ -441,7 +443,7 @@ impl Div<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
--        fn div(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-+        unsafe fn div(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
-             F32VecNeon(vdivq_f32(this.0, rhs.0), this.1)
+         fn div(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vdivq_f32(this.0, rhs.0), this.1)
++           unsafe { F32VecNeon(vdivq_f32(this.0, rhs.0), this.1) }
          }
      }
-@@ -448,7 +448,7 @@ impl Div<F32VecNeon> for F32VecNeon {
- 
+ }
+@@ -449,7 +451,7 @@ impl Div<F32VecNeon> for F32VecNeon {
  impl AddAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
--        fn add_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-+        unsafe fn add_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-             this.0 = vaddq_f32(this.0, rhs.0);
+         fn add_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
+-            this.0 = vaddq_f32(this.0, rhs.0);
++            unsafe  { this.0 = vaddq_f32(this.0, rhs.0); }
          }
      }
-@@ -456,7 +456,7 @@ impl AddAssign<F32VecNeon> for F32VecNeo
- 
+ }
+@@ -457,7 +459,7 @@ impl AddAssign<F32VecNeon> for F32VecNeo
  impl SubAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
--        fn sub_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-+        unsafe fn sub_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-             this.0 = vsubq_f32(this.0, rhs.0);
+         fn sub_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
+-            this.0 = vsubq_f32(this.0, rhs.0);
++            unsafe { this.0 = vsubq_f32(this.0, rhs.0); }
          }
      }
-@@ -464,7 +464,7 @@ impl SubAssign<F32VecNeon> for F32VecNeo
- 
+ }
+@@ -465,7 +467,7 @@ impl SubAssign<F32VecNeon> for F32VecNeo
  impl MulAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
--        fn mul_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-+        unsafe fn mul_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-             this.0 = vmulq_f32(this.0, rhs.0);
+         fn mul_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
+-            this.0 = vmulq_f32(this.0, rhs.0);
++            unsafe  { this.0 = vmulq_f32(this.0, rhs.0); }
          }
      }
-@@ -472,7 +472,7 @@ impl MulAssign<F32VecNeon> for F32VecNeo
- 
+ }
+@@ -473,7 +475,7 @@ impl MulAssign<F32VecNeon> for F32VecNeo
  impl DivAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
--        fn div_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-+        unsafe fn div_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
-             this.0 = vdivq_f32(this.0, rhs.0);
+         fn div_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
+-            this.0 = vdivq_f32(this.0, rhs.0);
++            unsafe { this.0 = vdivq_f32(this.0, rhs.0); }
          }
      }
-@@ -510,39 +510,39 @@ impl I32SimdVec for I32VecNeon {
-     }
+ }
+@@ -511,43 +513,45 @@ impl I32SimdVec for I32VecNeon {
  
      fn_neon! {
--        fn abs(this: I32VecNeon) -> I32VecNeon {
-+        unsafe fn abs(this: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vabsq_s32(this.0), this.1)
+         fn abs(this: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vabsq_s32(this.0), this.1)
++            unsafe { I32VecNeon(vabsq_s32(this.0), this.1) }
          }
  
--        fn as_f32(this: I32VecNeon) -> F32VecNeon {
-+        unsafe fn as_f32(this: I32VecNeon) -> F32VecNeon {
-             F32VecNeon(vcvtq_f32_s32(this.0), this.1)
+         fn as_f32(this: I32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vcvtq_f32_s32(this.0), this.1)
++            unsafe { F32VecNeon(vcvtq_f32_s32(this.0), this.1) }
          }
  
--        fn bitcast_to_f32(this: I32VecNeon) -> F32VecNeon {
-+        unsafe fn bitcast_to_f32(this: I32VecNeon) -> F32VecNeon {
-             F32VecNeon(vreinterpretq_f32_s32(this.0), this.1)
+         fn bitcast_to_f32(this: I32VecNeon) -> F32VecNeon {
+-            F32VecNeon(vreinterpretq_f32_s32(this.0), this.1)
++          unsafe {  F32VecNeon(vreinterpretq_f32_s32(this.0), this.1) }
          }
  
--        fn bitcast_to_u32(this: I32VecNeon) -> U32VecNeon {
-+        unsafe fn bitcast_to_u32(this: I32VecNeon) -> U32VecNeon {
-             U32VecNeon(vreinterpretq_u32_s32(this.0), this.1)
+         fn bitcast_to_u32(this: I32VecNeon) -> U32VecNeon {
+-            U32VecNeon(vreinterpretq_u32_s32(this.0), this.1)
++            unsafe  { U32VecNeon(vreinterpretq_u32_s32(this.0), this.1) }
          }
  
--        fn gt(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
-+        unsafe fn gt(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
-             MaskNeon(vcgtq_s32(this.0, other.0), this.1)
+         fn gt(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
+-            MaskNeon(vcgtq_s32(this.0, other.0), this.1)
++            unsafe { MaskNeon(vcgtq_s32(this.0, other.0), this.1) }
          }
  
--        fn lt_zero(this: I32VecNeon) -> MaskNeon {
-+        unsafe fn lt_zero(this: I32VecNeon) -> MaskNeon {
-             MaskNeon(vcltzq_s32(this.0), this.1)
+         fn lt_zero(this: I32VecNeon) -> MaskNeon {
+-            MaskNeon(vcltzq_s32(this.0), this.1)
++            unsafe  { MaskNeon(vcltzq_s32(this.0), this.1) }
          }
  
--        fn eq(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
-+        unsafe fn eq(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
-             MaskNeon(vceqq_s32(this.0, other.0), this.1)
+         fn eq(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
+-            MaskNeon(vceqq_s32(this.0, other.0), this.1)
++            unsafe { MaskNeon(vceqq_s32(this.0, other.0), this.1) }
          }
  
--        fn eq_zero(this: I32VecNeon) -> MaskNeon {
-+        unsafe fn eq_zero(this: I32VecNeon) -> MaskNeon {
-             MaskNeon(vceqzq_s32(this.0), this.1)
+         fn eq_zero(this: I32VecNeon) -> MaskNeon {
+-            MaskNeon(vceqzq_s32(this.0), this.1)
++            unsafe  { MaskNeon(vceqzq_s32(this.0), this.1) }
          }
  
--        fn mul_wide_take_high(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+        unsafe fn mul_wide_take_high(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
+         fn mul_wide_take_high(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
++            unsafe  {
              let l = vmull_s32(vget_low_s32(this.0), vget_low_s32(rhs.0));
              let l = vreinterpretq_s32_s64(l);
              let h = vmull_high_s32(this.0, rhs.0);
-@@ -567,7 +567,7 @@ impl I32SimdVec for I32VecNeon {
- impl Add<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
--        fn add(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+        unsafe fn add(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vaddq_s32(this.0, rhs.0), this.1)
+             let h = vreinterpretq_s32_s64(h);
+             I32VecNeon(vuzp2q_s32(l, h), this.1)
++            }
          }
      }
-@@ -576,7 +576,7 @@ impl Add<I32VecNeon> for I32VecNeon {
- impl Sub<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
--        fn sub(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+        unsafe fn sub(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vsubq_s32(this.0, rhs.0), this.1)
-         }
-     }
-@@ -585,7 +585,7 @@ impl Sub<I32VecNeon> for I32VecNeon {
- impl Mul<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
--        fn mul(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+        unsafe fn mul(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vmulq_s32(this.0, rhs.0), this.1)
-         }
-     }
-@@ -594,7 +594,7 @@ impl Mul<I32VecNeon> for I32VecNeon {
- impl Neg for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
--        fn neg(this: I32VecNeon) -> I32VecNeon {
-+        unsafe fn neg(this: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vnegq_s32(this.0), this.1)
-         }
-     }
-@@ -603,7 +603,7 @@ impl Neg for I32VecNeon {
- impl BitAnd<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
--        fn bitand(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+        unsafe fn bitand(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vandq_s32(this.0, rhs.0), this.1)
-         }
-     }
-@@ -612,7 +612,7 @@ impl BitAnd<I32VecNeon> for I32VecNeon {
- impl BitOr<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
--        fn bitor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+        unsafe fn bitor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vorrq_s32(this.0, rhs.0), this.1)
-         }
-     }
-@@ -621,7 +621,7 @@ impl BitOr<I32VecNeon> for I32VecNeon {
- impl BitXor<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
--        fn bitxor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+        unsafe fn bitxor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(veorq_s32(this.0, rhs.0), this.1)
-         }
-     }
-@@ -629,7 +629,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
  
+@@ -568,7 +572,7 @@ impl Add<I32VecNeon> for I32VecNeon {
+     type Output = I32VecNeon;
+     fn_neon! {
+         fn add(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vaddq_s32(this.0, rhs.0), this.1)
++            unsafe { I32VecNeon(vaddq_s32(this.0, rhs.0), this.1) }
+         }
+     }
+ }
+@@ -577,7 +581,7 @@ impl Sub<I32VecNeon> for I32VecNeon {
+     type Output = I32VecNeon;
+     fn_neon! {
+         fn sub(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vsubq_s32(this.0, rhs.0), this.1)
++            unsafe { I32VecNeon(vsubq_s32(this.0, rhs.0), this.1) }
+         }
+     }
+ }
+@@ -586,7 +590,7 @@ impl Mul<I32VecNeon> for I32VecNeon {
+     type Output = I32VecNeon;
+     fn_neon! {
+         fn mul(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vmulq_s32(this.0, rhs.0), this.1)
++            unsafe { I32VecNeon(vmulq_s32(this.0, rhs.0), this.1) }
+         }
+     }
+ }
+@@ -595,7 +599,7 @@ impl Neg for I32VecNeon {
+     type Output = I32VecNeon;
+     fn_neon! {
+         fn neg(this: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vnegq_s32(this.0), this.1)
++            unsafe { I32VecNeon(vnegq_s32(this.0), this.1) }
+         }
+     }
+ }
+@@ -604,7 +608,7 @@ impl BitAnd<I32VecNeon> for I32VecNeon {
+     type Output = I32VecNeon;
+     fn_neon! {
+         fn bitand(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vandq_s32(this.0, rhs.0), this.1)
++            unsafe { I32VecNeon(vandq_s32(this.0, rhs.0), this.1) }
+         }
+     }
+ }
+@@ -613,7 +617,7 @@ impl BitOr<I32VecNeon> for I32VecNeon {
+     type Output = I32VecNeon;
+     fn_neon! {
+         fn bitor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vorrq_s32(this.0, rhs.0), this.1)
++            unsafe { I32VecNeon(vorrq_s32(this.0, rhs.0), this.1) }
+         }
+     }
+ }
+@@ -622,7 +626,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
+     type Output = I32VecNeon;
+     fn_neon! {
+         fn bitxor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(veorq_s32(this.0, rhs.0), this.1)
++            unsafe { I32VecNeon(veorq_s32(this.0, rhs.0), this.1) }
+         }
+     }
+ }
+@@ -630,7 +634,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
  impl AddAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
--        fn add_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-+        unsafe fn add_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-             this.0 = vaddq_s32(this.0, rhs.0)
+         fn add_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
+-            this.0 = vaddq_s32(this.0, rhs.0)
++            unsafe { this.0 = vaddq_s32(this.0, rhs.0) }
          }
      }
-@@ -637,7 +637,7 @@ impl AddAssign<I32VecNeon> for I32VecNeo
- 
+ }
+@@ -638,7 +642,7 @@ impl AddAssign<I32VecNeon> for I32VecNeo
  impl SubAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
--        fn sub_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-+        unsafe fn sub_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-             this.0 = vsubq_s32(this.0, rhs.0)
+         fn sub_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
+-            this.0 = vsubq_s32(this.0, rhs.0)
++            unsafe { this.0 = vsubq_s32(this.0, rhs.0) }
          }
      }
-@@ -645,7 +645,7 @@ impl SubAssign<I32VecNeon> for I32VecNeo
- 
+ }
+@@ -646,7 +650,7 @@ impl SubAssign<I32VecNeon> for I32VecNeo
  impl MulAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
--        fn mul_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-+        unsafe fn mul_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-             this.0 = vmulq_s32(this.0, rhs.0)
+         fn mul_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
+-            this.0 = vmulq_s32(this.0, rhs.0)
++            unsafe { this.0 = vmulq_s32(this.0, rhs.0) }
          }
      }
-@@ -653,7 +653,7 @@ impl MulAssign<I32VecNeon> for I32VecNeo
- 
+ }
+@@ -654,7 +658,7 @@ impl MulAssign<I32VecNeon> for I32VecNeo
  impl BitAndAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
--        fn bitand_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-+        unsafe fn bitand_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-             this.0 = vandq_s32(this.0, rhs.0);
+         fn bitand_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
+-            this.0 = vandq_s32(this.0, rhs.0);
++            unsafe { this.0 = vandq_s32(this.0, rhs.0); }
          }
      }
-@@ -661,7 +661,7 @@ impl BitAndAssign<I32VecNeon> for I32Vec
- 
+ }
+@@ -662,7 +666,7 @@ impl BitAndAssign<I32VecNeon> for I32Vec
  impl BitOrAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
--        fn bitor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-+        unsafe fn bitor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-             this.0 = vorrq_s32(this.0, rhs.0);
+         fn bitor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
+-            this.0 = vorrq_s32(this.0, rhs.0);
++            unsafe { this.0 = vorrq_s32(this.0, rhs.0); }
          }
      }
-@@ -669,7 +669,7 @@ impl BitOrAssign<I32VecNeon> for I32VecN
- 
+ }
+@@ -670,7 +674,7 @@ impl BitOrAssign<I32VecNeon> for I32VecN
  impl BitXorAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
--        fn bitxor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-+        unsafe fn bitxor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
-             this.0 = veorq_s32(this.0, rhs.0);
+         fn bitxor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
+-            this.0 = veorq_s32(this.0, rhs.0);
++            unsafe { this.0 = veorq_s32(this.0, rhs.0); }
          }
      }
-@@ -685,7 +685,7 @@ impl U32SimdVec for U32VecNeon {
-     const LEN: usize = 4;
+ }
+@@ -686,7 +690,7 @@ impl U32SimdVec for U32VecNeon {
  
      fn_neon! {
--        fn bitcast_to_i32(this: U32VecNeon) -> I32VecNeon {
-+        unsafe fn bitcast_to_i32(this: U32VecNeon) -> I32VecNeon {
-             I32VecNeon(vreinterpretq_s32_u32(this.0), this.1)
+         fn bitcast_to_i32(this: U32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vreinterpretq_s32_u32(this.0), this.1)
++            unsafe { I32VecNeon(vreinterpretq_s32_u32(this.0), this.1) }
          }
      }
-@@ -705,7 +705,7 @@ impl SimdMask for MaskNeon {
-     type Descriptor = NeonDescriptor;
  
-     fn_neon! {
--        fn if_then_else_f32(
-+        unsafe fn if_then_else_f32(
-             this: MaskNeon,
+@@ -710,7 +714,7 @@ impl SimdMask for MaskNeon {
              if_true: F32VecNeon,
              if_false: F32VecNeon,
-@@ -713,7 +713,7 @@ impl SimdMask for MaskNeon {
-             F32VecNeon(vbslq_f32(this.0, if_true.0, if_false.0), this.1)
+         ) -> F32VecNeon {
+-            F32VecNeon(vbslq_f32(this.0, if_true.0, if_false.0), this.1)
++            unsafe { F32VecNeon(vbslq_f32(this.0, if_true.0, if_false.0), this.1) }
          }
  
--        fn if_then_else_i32(
-+        unsafe fn if_then_else_i32(
-             this: MaskNeon,
+         fn if_then_else_i32(
+@@ -718,19 +722,19 @@ impl SimdMask for MaskNeon {
              if_true: I32VecNeon,
              if_false: I32VecNeon,
-@@ -721,15 +721,15 @@ impl SimdMask for MaskNeon {
-             I32VecNeon(vbslq_s32(this.0, if_true.0, if_false.0), this.1)
+         ) -> I32VecNeon {
+-            I32VecNeon(vbslq_s32(this.0, if_true.0, if_false.0), this.1)
++            unsafe { I32VecNeon(vbslq_s32(this.0, if_true.0, if_false.0), this.1) }
          }
  
--        fn maskz_i32(this: MaskNeon, v: I32VecNeon) -> I32VecNeon {
-+        unsafe fn maskz_i32(this: MaskNeon, v: I32VecNeon) -> I32VecNeon {
-             I32VecNeon(vbicq_s32(v.0, vreinterpretq_s32_u32(this.0)), this.1)
+         fn maskz_i32(this: MaskNeon, v: I32VecNeon) -> I32VecNeon {
+-            I32VecNeon(vbicq_s32(v.0, vreinterpretq_s32_u32(this.0)), this.1)
++            unsafe { I32VecNeon(vbicq_s32(v.0, vreinterpretq_s32_u32(this.0)), this.1) }
          }
  
--        fn andnot(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
-+        unsafe fn andnot(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
-             MaskNeon(vbicq_u32(rhs.0, this.0), this.1)
+         fn andnot(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
+-            MaskNeon(vbicq_u32(rhs.0, this.0), this.1)
++            unsafe { MaskNeon(vbicq_u32(rhs.0, this.0), this.1) }
          }
  
--        fn all(this: MaskNeon) -> bool {
-+        unsafe fn all(this: MaskNeon) -> bool {
-             vminvq_u32(this.0) == u32::MAX
+         fn all(this: MaskNeon) -> bool {
+-            vminvq_u32(this.0) == u32::MAX
++            unsafe { vminvq_u32(this.0) == u32::MAX }
          }
      }
-@@ -738,7 +738,7 @@ impl SimdMask for MaskNeon {
- impl BitAnd<MaskNeon> for MaskNeon {
+ }
+@@ -739,7 +743,7 @@ impl BitAnd<MaskNeon> for MaskNeon {
      type Output = MaskNeon;
      fn_neon! {
--        fn bitand(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
-+        unsafe fn bitand(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
-             MaskNeon(vandq_u32(this.0, rhs.0), this.1)
+         fn bitand(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
+-            MaskNeon(vandq_u32(this.0, rhs.0), this.1)
++            unsafe { MaskNeon(vandq_u32(this.0, rhs.0), this.1) }
          }
      }
-@@ -747,7 +747,7 @@ impl BitAnd<MaskNeon> for MaskNeon {
- impl BitOr<MaskNeon> for MaskNeon {
+ }
+@@ -748,7 +752,7 @@ impl BitOr<MaskNeon> for MaskNeon {
      type Output = MaskNeon;
      fn_neon! {
--        fn bitor(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
-+        unsafe fn bitor(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
-             MaskNeon(vorrq_u32(this.0, rhs.0), this.1)
+         fn bitor(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
+-            MaskNeon(vorrq_u32(this.0, rhs.0), this.1)
++            unsafe { MaskNeon(vorrq_u32(this.0, rhs.0), this.1) }
          }
      }
+ }

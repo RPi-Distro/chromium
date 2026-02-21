@@ -1,4 +1,4 @@
-chromium (1:145.0.7632.109-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:145.0.7632.109-1~deb12u3+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,20 @@ chromium (1:145.0.7632.109-1~deb12u1+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 19 Feb 2026 18:58:56 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Sat, 21 Feb 2026 17:07:58 +0000
+
+chromium (145.0.7632.109-1~deb12u3) bookworm-security; urgency=high
+
+  * d/rules: drop CVE check for security-uploads (no functional change).
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Feb 2026 21:06:50 -0500
+
+chromium (145.0.7632.109-1~deb12u2) bookworm-security; urgency=high
+
+  * d/patches/rust-1.85/jxl-simd-avx512.patch: try again; rustc didn't
+    like where I marked some of the neon functions as unsafe.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Feb 2026 15:40:38 -0500
 
 chromium (145.0.7632.109-1~deb12u1) bookworm-security; urgency=high
 

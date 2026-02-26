@@ -42,6 +42,7 @@ disable/google-api-warning.patch
 disable/third-party-cookies.patch
 disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
+disable/glic.patch
 disable/clang-version-check.patch
 disable/screen-ai-blob.patch
 disable/node-version-ck.patch

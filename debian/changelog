@@ -1,4 +1,4 @@
-chromium (1:145.0.7632.109-1~deb12u3+rpt1) bookworm; urgency=medium
+chromium (1:145.0.7632.116-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,20 @@ chromium (1:145.0.7632.109-1~deb12u3+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Sat, 21 Feb 2026 17:07:58 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 27 Feb 2026 14:22:47 +0000
+
+chromium (145.0.7632.116-1~deb12u1) bookworm-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-3061: Out of bounds read in Media. Reported by Luke Francis.
+    - CVE-2026-3062: Out of bounds read and write in Tint.
+      Reported by cinzinga.
+    - CVE-2026-3063: Inappropriate implementation in DevTools.
+      Reported by M. Fauzan Wijaya (Gh05t666nero).
+  * d/patches/disable/glic.patch: add a patch to fix build with disabled
+    Gemini Live in Chrome (glic).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 25 Feb 2026 22:14:31 -0500
 
 chromium (145.0.7632.109-1~deb12u3) bookworm-security; urgency=high
 

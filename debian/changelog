@@ -1,4 +1,4 @@
-chromium (1:145.0.7632.109-1~deb13u3+rpt1) trixie; urgency=medium
+chromium (1:145.0.7632.116-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -22,7 +22,20 @@ chromium (1:145.0.7632.109-1~deb13u3+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Sat, 21 Feb 2026 17:29:49 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 27 Feb 2026 15:15:04 +0000
+
+chromium (145.0.7632.116-1~deb13u1) trixie-security; urgency=high
+
+  * New upstream security release.
+    - CVE-2026-3061: Out of bounds read in Media. Reported by Luke Francis.
+    - CVE-2026-3062: Out of bounds read and write in Tint.
+      Reported by cinzinga.
+    - CVE-2026-3063: Inappropriate implementation in DevTools.
+      Reported by M. Fauzan Wijaya (Gh05t666nero).
+  * d/patches/disable/glic.patch: add a patch to fix build with disabled
+    Gemini Live in Chrome (glic).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 25 Feb 2026 22:14:31 -0500
 
 chromium (145.0.7632.109-1~deb13u3) trixie-security; urgency=high
 

@@ -28,6 +28,7 @@ fixes/libpng-testonly.patch
 fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
+fixes/bytemuck.patch
 
 
 disable/tests.patch

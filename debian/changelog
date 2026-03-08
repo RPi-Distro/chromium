@@ -22,6 +22,13 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - fixes/clang-19-crash.patch: add build fix; delete code that makes
       clang-19++ crash.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh
+      for upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+
  -- Andres Salomon <dilinger@debian.org>  Sun, 08 Mar 2026 04:33:59 -0400
 
 chromium (145.0.7632.159-1) unstable; urgency=high

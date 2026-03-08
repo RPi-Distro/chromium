@@ -1,3 +1,20 @@
+chromium (146.0.7680.65-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/patches:
+    - upstream/disable-unrar.patch: drop, merged upstream.
+    - disable/signin.patch: drop part of the patch. This patch should be
+      reviewed in the future and coordinated w/ ungoogled-chromium, since
+      it originally came from them.
+    - disable/license-headless-shell.patch: refresh.
+    - disable/unrar.patch: refresh.
+    - system/rollup.patch: refresh.
+    - bookworm/foreach.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: sync from ungoogled-chromium.
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 08 Mar 2026 04:33:59 -0400
+
 chromium (145.0.7632.159-1) unstable; urgency=high
 
   [ Andres Salomon ]

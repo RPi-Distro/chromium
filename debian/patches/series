@@ -30,7 +30,6 @@ fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 
-upstream/disable-unrar.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

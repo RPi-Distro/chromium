@@ -329,11 +329,11 @@ Index: chromium-146.0.7680.65/third_party/boringssl/src/crypto/cpu_ppc64le.cc
 +#endif
 +
 +void OPENSSL_cpuid_setup(void) {
-+  OPENSSL_ppc64le_hwcap2 = getauxval(AT_HWCAP2);
++  bssl::OPENSSL_ppc64le_hwcap2 = getauxval(AT_HWCAP2);
 +}
 +
 +int CRYPTO_is_PPC64LE_vcrypto_capable(void) {
-+  return (OPENSSL_ppc64le_hwcap2 & PPC_FEATURE2_HAS_VCRYPTO) != 0;
++  return (bssl::OPENSSL_ppc64le_hwcap2 & PPC_FEATURE2_HAS_VCRYPTO) != 0;
 +}
 +
 +#endif  // OPENSSL_PPC64LE
@@ -4974,7 +4974,7 @@ Index: chromium-146.0.7680.65/third_party/boringssl/src/crypto/fipsmodule/sha/in
  
  BSSL_NAMESPACE_BEGIN
  
-+#if defined(OPENSSL_PPC64LE)
++#if defined(OPENSSL_PPC64LE) && defined(OPENSSL_NO_ASM)
 +// POWER has an intrinsics-based implementation of SHA-1 and thus the functions
 +// normally defined in assembly are available even with |OPENSSL_NO_ASM| in
 +// this case.
@@ -5370,7 +5370,7 @@ Index: chromium-146.0.7680.65/third_party/boringssl/src/crypto/internal.h
  
  #if !defined(OPENSSL_NO_ASM) &&                         \
 -    (defined(OPENSSL_X86) || defined(OPENSSL_X86_64) || \
-+    (defined(OPENSSL_X86) || defined(OPENSSL_X86_64) || defined(OPENSSL_PPC64LE) \
++    (defined(OPENSSL_X86) || defined(OPENSSL_X86_64) || defined(OPENSSL_PPC64LE) || \
       (!defined(OPENSSL_STATIC_ARMCAP) &&                \
        (defined(OPENSSL_ARM) || defined(OPENSSL_AARCH64))))
 -// x86, x86_64, and the ARMs need to record the result of a cpuid/getauxval call

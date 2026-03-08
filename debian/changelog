@@ -2,6 +2,8 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+  * d/rules: update rustc version string for new upstream expectations of
+    no spaces.
   * d/patches:
     - upstream/disable-unrar.patch: drop, merged upstream.
     - disable/signin.patch: drop part of the patch. This patch should be

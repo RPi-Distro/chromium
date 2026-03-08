@@ -301,3 +301,13 @@ Parts of this taken from ungoogled-chromium.
  
  source_set("glic") {
    sources = []
+--- a/chrome/browser/ui/views/tabs/glic/BUILD.gn
++++ b/chrome/browser/ui/views/tabs/glic/BUILD.gn
+@@ -4,7 +4,6 @@
+ 
+ import("//chrome/common/features.gni")
+ 
+-assert(enable_glic)
+ 
+ source_set("glic") {
+   sources = [ "glic_actor_constants.h" ]

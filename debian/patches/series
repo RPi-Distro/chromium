@@ -25,7 +25,6 @@ fixes/updater-test.patch
 fixes/armhf-no-thumb.patch
 fixes/armhf-icf.patch
 fixes/libpng-testonly.patch
-fixes/force-rust-nightly.patch
 fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch

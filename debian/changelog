@@ -16,6 +16,7 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - bookworm/foreach.patch: refresh.
     - ungoogled/disable-privacy-sandbox.patch: sync from ungoogled-chromium.
     - disable/catapult.patch: update to remove some more catapult deps.
+    - fixes/force-rust-nightly.patch: drop, no longer needed.
 
  -- Andres Salomon <dilinger@debian.org>  Sun, 08 Mar 2026 04:33:59 -0400
 

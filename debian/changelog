@@ -7,6 +7,7 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - disable/signin.patch: drop part of the patch. This patch should be
       reviewed in the future and coordinated w/ ungoogled-chromium, since
       it originally came from them.
+    - disable/glic.patch: add a few more glic assert removals.
     - disable/license-headless-shell.patch: refresh.
     - disable/unrar.patch: refresh.
     - system/rollup.patch: refresh.

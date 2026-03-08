@@ -298,7 +298,7 @@ Index: chromium-146.0.7680.65/third_party/boringssl/src/crypto/cpu_ppc64le.cc
 ===================================================================
 --- /dev/null
 +++ chromium-146.0.7680.65/third_party/boringssl/src/crypto/cpu_ppc64le.cc
-@@ -0,0 +1,38 @@
+@@ -0,0 +1,40 @@
 +/* Copyright (c) 2016, Google Inc.
 + *
 + * Permission to use, copy, modify, and/or distribute this software for any
@@ -321,6 +321,8 @@ Index: chromium-146.0.7680.65/third_party/boringssl/src/crypto/cpu_ppc64le.cc
 +
 +#include "internal.h"
 +
++using namespace bssl;
++
 +
 +#if !defined(PPC_FEATURE2_HAS_VCRYPTO)
 +// PPC_FEATURE2_HAS_VCRYPTO was taken from section 4.1.2.3 of the “OpenPOWER
@@ -328,12 +330,12 @@ Index: chromium-146.0.7680.65/third_party/boringssl/src/crypto/cpu_ppc64le.cc
 +#define PPC_FEATURE2_HAS_VCRYPTO 0x02000000
 +#endif
 +
-+void OPENSSL_cpuid_setup(void) {
-+  bssl::OPENSSL_ppc64le_hwcap2 = getauxval(AT_HWCAP2);
++void bssl::OPENSSL_cpuid_setup(void) {
++  OPENSSL_ppc64le_hwcap2 = getauxval(AT_HWCAP2);
 +}
 +
-+int CRYPTO_is_PPC64LE_vcrypto_capable(void) {
-+  return (bssl::OPENSSL_ppc64le_hwcap2 & PPC_FEATURE2_HAS_VCRYPTO) != 0;
++int bssl::CRYPTO_is_PPC64LE_vcrypto_capable(void) {
++  return (OPENSSL_ppc64le_hwcap2 & PPC_FEATURE2_HAS_VCRYPTO) != 0;
 +}
 +
 +#endif  // OPENSSL_PPC64LE

@@ -96,6 +96,8 @@ bookworm/foreach.patch
 # bullseye/openh264.patch
 # bullseye/webui.patch
 
+trixie/clang-22.patch
+
 # patches for system libhwy-dev
 #fixes/highway-include-path.patch
 

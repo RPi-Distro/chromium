@@ -24,6 +24,10 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
       clang-19++ crash.
     - llvm-19/keyfactory.patch: add build fix for what I suspect is a clang-19
       issue.
+    - loongarch64/0018-fix-study-crash.patch: refresh.
+    - ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch:
+      refresh.
+    - ppc64le/fixes/fix-study-crash.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

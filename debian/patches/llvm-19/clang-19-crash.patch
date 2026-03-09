@@ -19,14 +19,12 @@ clang++-19: note: diagnostic msg:
 
 --- a/services/network/public/cpp/permissions_policy/origin_with_possible_wildcards.cc
 +++ b/services/network/public/cpp/permissions_policy/origin_with_possible_wildcards.cc
-@@ -93,8 +93,8 @@ bool OriginWithPossibleWildcards::DoesMa
-                                  network::CSPSourceContext::PermissionsPolicy);
+@@ -94,7 +94,7 @@ bool OriginWithPossibleWildcards::DoesMa
  }
  
--bool operator==(const OriginWithPossibleWildcards& lhs,
+ bool operator==(const OriginWithPossibleWildcards& lhs,
 -                const OriginWithPossibleWildcards& rhs) = default;
-+//bool operator==(const OriginWithPossibleWildcards& lhs,
-+//                const OriginWithPossibleWildcards& rhs) = default;
++                const OriginWithPossibleWildcards& rhs) { return lhs.csp_source == rhs.csp_source; }
  
  std::strong_ordering operator<=>(const OriginWithPossibleWildcards& lhs,
                                   const OriginWithPossibleWildcards& rhs) {

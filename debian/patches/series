@@ -61,6 +61,7 @@ llvm-19/static-assert.patch
 llvm-19/keyfactory.patch
 llvm-19/clang-19-crash.patch
 llvm-19/clone-traits.patch
+llvm-19/octal.patch
 
 #rust-1.85/jxl-simd-avx512.patch
 #rust-1.85/jxl-features.patch

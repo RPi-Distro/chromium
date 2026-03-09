@@ -29,6 +29,7 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
       refresh.
     - ppc64le/fixes/fix-study-crash.patch: refresh.
     - llvm-19/clone-traits.patch: add patch to remove a static assertion.
+    - llvm-19/octal.patch: add patch to work around 0o666 vs 0666 support.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

@@ -29,7 +29,6 @@ fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
-fixes/clang-19-crash.patch
 
 
 disable/tests.patch
@@ -60,6 +59,7 @@ system/rollup.patch
 
 llvm-19/static-assert.patch
 llvm-19/keyfactory.patch
+llvm-19/clang-19-crash.patch
 
 #rust-1.85/jxl-simd-avx512.patch
 #rust-1.85/jxl-features.patch

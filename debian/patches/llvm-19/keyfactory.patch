@@ -1,3 +1,5 @@
+Author: Andres Salomon <diliger@debian.org>
+
 can't increment there, mate!
 
 ../../components/enterprise/client_certificates/core/private_key_factory.cc:126:14: error: expression is not assignable

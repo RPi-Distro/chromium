@@ -17,7 +17,8 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - ungoogled/disable-privacy-sandbox.patch: sync from ungoogled-chromium.
     - disable/catapult.patch: update to remove some more catapult deps.
     - fixes/force-rust-nightly.patch: drop, no longer needed.
-    - trixie/clang-22.patch: add a build fix for a feature added to llvm-23.
+    - llvm-22/ignore-for-ubsan.patch: add a build fix for a compiler
+      flag/feature added to llvm-23.
     - fixes/bytemuck.patch: add rust build fix in bytemuck.
     - llvm-19/clang-19-crash.patch: add build fix; delete code that makes
       clang-19++ crash.

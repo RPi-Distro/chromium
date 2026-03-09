@@ -28,6 +28,7 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch:
       refresh.
     - ppc64le/fixes/fix-study-crash.patch: refresh.
+    - llvm-19/clone-traits.patch: add patch to remove a static assertion.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

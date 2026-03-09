@@ -59,6 +59,7 @@ system/rapidjson.patch
 system/rollup.patch
 
 llvm-19/static-assert.patch
+llvm-19/keyfactory.patch
 
 #rust-1.85/jxl-simd-avx512.patch
 #rust-1.85/jxl-features.patch

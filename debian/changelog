@@ -21,6 +21,8 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - fixes/bytemuck.patch: add rust build fix in bytemuck.
     - fixes/clang-19-crash.patch: add build fix; delete code that makes
       clang-19++ crash.
+    - llvm-19/keyfactory.patch: add build fix for what I suspect is a clang-19
+      issue.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

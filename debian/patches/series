@@ -30,6 +30,7 @@ fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 
+upstream/profile.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

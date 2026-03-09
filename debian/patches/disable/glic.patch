@@ -311,3 +311,135 @@ Parts of this taken from ungoogled-chromium.
  
  source_set("glic") {
    sources = [ "glic_actor_constants.h" ]
+--- a/chrome/browser/ui/webui/tabs/tabs_mojom_traits.cc
++++ b/chrome/browser/ui/webui/tabs/tabs_mojom_traits.cc
+@@ -141,12 +141,14 @@ bool EnumTraits<MojoTabAlertState, Nativ
+     case MojoTabAlertState::kActorWaitingOnUser:
+       *out = NativeTabAlertState::kActorWaitingOnUser;
+       return true;
++#if BUILDFLAG(ENABLE_GLIC)
+     case MojoTabAlertState::kGlicAccessing:
+       *out = NativeTabAlertState::kGlicAccessing;
+       return true;
+     case MojoTabAlertState::kGlicSharing:
+       *out = NativeTabAlertState::kGlicSharing;
+       return true;
++#endif
+   }
+   NOTREACHED();
+ }
+--- a/chrome/browser/ui/views/tabs/tab_strip_action_container.h
++++ b/chrome/browser/ui/views/tabs/tab_strip_action_container.h
+@@ -6,6 +6,7 @@
+ #define CHROME_BROWSER_UI_VIEWS_TABS_TAB_STRIP_ACTION_CONTAINER_H_
+ 
+ #include "base/memory/raw_ptr.h"
++#if BUILDFLAG(ENABLE_GLIC)
+ #include "chrome/browser/glic/browser_ui/glic_button_controller_delegate.h"
+ #include "chrome/browser/ui/tabs/glic_nudge_controller.h"
+ #include "chrome/browser/ui/tabs/glic_nudge_delegate.h"
+@@ -13,6 +14,7 @@
+ #include "chrome/browser/ui/views/glic/glic_button_interface.h"
+ #include "chrome/browser/ui/views/tabs/glic/glic_actor_task_icon.h"
+ #include "chrome/browser/ui/views/tabs/glic/tab_strip_glic_button.h"
++#endif
+ #include "chrome/browser/ui/views/tabs/tab_search_container.h"
+ #include "chrome/common/buildflags.h"
+ #include "ui/gfx/animation/animation.h"
+@@ -34,9 +36,7 @@ class GlicAndActorButtonsContainer;
+ 
+ class TabStripActionContainer : public views::View,
+                                 public views::AnimationDelegateViews,
+-                                public views::MouseWatcherListener,
+-                                public GlicNudgeDelegate,
+-                                public glic::GlicButtonControllerDelegate {
++                                public views::MouseWatcherListener {
+   METADATA_HEADER(TabStripActionContainer, views::View)
+ 
+  public:
+@@ -90,8 +90,7 @@ class TabStripActionContainer : public v
+   };
+ 
+   explicit TabStripActionContainer(
+-      BrowserWindowInterface* browser_window_interface,
+-      tabs::GlicNudgeController* glic_nudge_controller);
++      BrowserWindowInterface* browser_window_interface);
+   TabStripActionContainer(const TabStripActionContainer&) = delete;
+   TabStripActionContainer& operator=(const TabStripActionContainer&) = delete;
+   ~TabStripActionContainer() override;
+@@ -100,15 +99,11 @@ class TabStripActionContainer : public v
+     return animation_session_.get();
+   }
+ 
+-  views::LabelButton* GetGlicButton() { return glic_button_; }
+-
+-  glic::GlicActorTaskIcon* glic_actor_task_icon() {
+-    return glic_actor_task_icon_;
+-  }
+ 
+   // views::MouseWatcherListener:
+   void MouseMovedOutOfHost() override;
+ 
++#if BUILDFLAG(ENABLE_GLIC)
+   // GlicNudgeDelegate:
+   void OnTriggerGlicNudgeUI(std::string label) override;
+   void OnHideGlicNudgeUI() override;
+@@ -122,7 +117,6 @@ class TabStripActionContainer : public v
+   void ShowGlicActorTaskIcon();
+   void HideGlicActorTaskIcon();
+   bool GetIsShowingGlicActorTaskIconNudge();
+-#if BUILDFLAG(ENABLE_GLIC)
+   views::FlexLayoutView* glic_actor_button_container();
+   void TriggerGlicActorNudge(const std::u16string nudge_text);
+   void ShowGlicActorNudge(const std::u16string nudge_text);
+@@ -195,13 +189,9 @@ class TabStripActionContainer : public v
+ 
+   // The button currently holding the lock to be shown/hidden.
+   raw_ptr<TabStripNudgeButton> locked_expansion_button_ = nullptr;
+-  raw_ptr<tabs::GlicNudgeController> glic_nudge_controller_ = nullptr;
+ 
+   raw_ptr<views::Separator> separator_ = nullptr;
+ 
+-  raw_ptr<GlicAndActorButtonsContainer> glic_actor_button_container_ = nullptr;
+-  raw_ptr<glic::TabStripGlicButton> glic_button_ = nullptr;
+-  raw_ptr<glic::GlicActorTaskIcon> glic_actor_task_icon_ = nullptr;
+ 
+   const raw_ptr<BrowserWindowInterface> browser_window_interface_ = nullptr;
+ 
+--- a/chrome/browser/contextual_cueing/contextual_cueing_page_data.cc
++++ b/chrome/browser/contextual_cueing/contextual_cueing_page_data.cc
+@@ -116,12 +116,6 @@ void ContextualCueingPageData::FindMatch
+                     : std::nullopt}));
+         return;
+       } else if (config.has_cue_label()) {
+-        std::move(cueing_decision_callback_)
+-            .Run(base::ok(CueingResult{
+-                l10n_util::GetStringUTF8(
+-                    IDS_GLIC_BUTTON_ENTRYPOINT_ASK_ABOUT_THIS_PAGE_LABEL),
+-                /*prompt_suggestion=*/"",
+-                /*is_dynamic=*/false, /*auto_open_eligible=*/false}));
+         return;
+       }
+     } else if (decision == kNeedsPdfPageCount) {
+--- a/chrome/browser/skills/skills_ui_tab_controller.cc
++++ b/chrome/browser/skills/skills_ui_tab_controller.cc
+@@ -28,7 +28,6 @@
+ DEFINE_USER_DATA(skills::SkillsUiTabController);
+ 
+ namespace {
+-using glic::mojom::SkillSource;
+ 
+ constexpr base::TimeDelta kNotifyTimeoutSeconds = base::Seconds(60);
+ constexpr base::TimeDelta kGlicPanelPollIntervalMilliseconds =
+--- a/chrome/browser/ui/webui/tab_search/tab_search_page_handler.cc
++++ b/chrome/browser/ui/webui/tab_search/tab_search_page_handler.cc
+@@ -1499,8 +1499,7 @@ tab_search::mojom::TabPtr TabSearchPageH
+                                 alert == tabs::TabAlert::kAudioRecording ||
+                                 alert == tabs::TabAlert::kVideoRecording ||
+                                 alert == tabs::TabAlert::kAudioPlaying ||
+-                                alert == tabs::TabAlert::kAudioMuting ||
+-                                alert == tabs::TabAlert::kGlicAccessing;
++                                alert == tabs::TabAlert::kAudioMuting;
+                        });
+ 
+   return tab_data;

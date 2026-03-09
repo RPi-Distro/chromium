@@ -443,3 +443,14 @@ Parts of this taken from ungoogled-chromium.
                         });
  
    return tab_data;
+--- a/chrome/browser/ui/views/frame/horizontal_tab_strip_region_view.cc
++++ b/chrome/browser/ui/views/frame/horizontal_tab_strip_region_view.cc
+@@ -244,7 +244,7 @@ HorizontalTabStripRegionView::Horizontal
+       (browser->GetType() == BrowserWindowInterface::Type::TYPE_NORMAL)) {
+     if (features::HasTabSearchToolbarButton()) {
+       tab_strip_action_container = std::make_unique<TabStripActionContainer>(
+-          browser, browser->GetFeatures().glic_nudge_controller());
++          browser);
+ 
+       tab_strip_action_container->SetProperty(views::kCrossAxisAlignmentKey,
+                                               views::LayoutAlignment::kStart);

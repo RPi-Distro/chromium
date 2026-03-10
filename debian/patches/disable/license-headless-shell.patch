@@ -3,8 +3,8 @@ the rule for it is annoyingly fragile.
 
 --- a/headless/BUILD.gn
 +++ b/headless/BUILD.gn
-@@ -980,7 +980,6 @@ executable("headless_shell") {
-   deps = [ ":headless_shell_lib" ]
+@@ -945,7 +945,6 @@ executable("headless_shell") {
+   ]
  
    if (proprietary_codecs) {
 -    deps += [ ":generate_headless_shell_license_file" ]

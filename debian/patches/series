@@ -63,6 +63,7 @@ llvm-19/keyfactory.patch
 llvm-19/clang-19-crash.patch
 llvm-19/clone-traits.patch
 llvm-19/octal.patch
+llvm-19/value-or.patch
 
 #rust-1.85/jxl-simd-avx512.patch
 #rust-1.85/jxl-features.patch
@@ -73,7 +74,6 @@ trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 trixie/gn-string-hash.patch
-trixie/value-or.patch
 trixie/nodejs-set-intersection.patch
 #trixie/nodejs-main.patch
 

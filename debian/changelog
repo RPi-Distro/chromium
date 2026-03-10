@@ -31,6 +31,8 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - llvm-19/clone-traits.patch: add patch to remove a static assertion.
     - llvm-19/octal.patch: add patch to work around 0o666 vs 0666 support.
     - upstream/profile.patch: add header inclusion build fix from upstream.
+    - trixie/value-or.patch: move to llvm-19/ directory & also add another
+      place that clang-19 gets confused during build.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

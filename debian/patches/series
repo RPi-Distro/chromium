@@ -50,6 +50,7 @@ disable/license-headless-shell.patch
 disable/enterprise-tests.patch
 disable/unrar.patch
 disable/rustc-allow-features.patch
+disable/lint.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -89,6 +90,7 @@ bookworm/clang19.patch
 bookworm/gn-allowlist.patch
 #bookworm/constexpr3.patch
 bookworm/foreach.patch
+#bookworm/node18-compat.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch

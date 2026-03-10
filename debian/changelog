@@ -1,4 +1,4 @@
-chromium (1:145.0.7632.116-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:145.0.7632.159-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,37 @@ chromium (1:145.0.7632.116-1~deb12u1+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 27 Feb 2026 14:22:47 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 10 Mar 2026 07:11:57 +0000
+
+chromium (145.0.7632.159-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-3536: Integer overflow in ANGLE. Reported by cinzinga.
+    - CVE-2026-3537: Object lifecycle issue in PowerVR.
+      Reported by Zhihua Yao of KunLun Lab.
+    - CVE-2026-3538: Integer overflow in Skia.
+      Reported by Symeon Paraschoudis.
+    - CVE-2026-3539: Object lifecycle issue in DevTools.
+      Reported by Zhenpeng (Leo) Lin at depthfirst.
+    - CVE-2026-3540: Inappropriate implementation in WebAudio.
+      Reported by Davi Antônio Cruz.
+    - CVE-2026-3541: Inappropriate implementation in CSS. Reported by Syn4pse.
+    - CVE-2026-3542: Inappropriate implementation in WebAssembly.
+      Reported by qymag1c.
+    - CVE-2026-3543: Inappropriate implementation in V8. Reported by qymag1c.
+    - CVE-2026-3544: Heap buffer overflow in WebCodecs.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-3545: Insufficient data validation in Navigation.
+      Reported by Google.
+
+  [ Daniel Richard G. ]
+  * Re-bundle libxslt, to fix crashes due to an ABI incompatibility between
+    the bundled libxml2 and the system libxml2 used by the system libxslt.
+    - d/clean, d/control, d/copyright: Remove libxslt references.
+    - d/scripts/unbundle: Add entry for libxslt.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 04 Mar 2026 18:24:02 -0500
 
 chromium (145.0.7632.116-1~deb12u1) bookworm-security; urgency=high
 

@@ -131,7 +131,6 @@ Files-Excluded:
  third_party/libusb
  third_party/libxml/mac
  third_party/libxml/win32
- third_party/libxslt
  third_party/litert/src
  third_party/llvm*
  third_party/lzma_sdk/bin

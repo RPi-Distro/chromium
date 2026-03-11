@@ -25,12 +25,13 @@ fixes/updater-test.patch
 fixes/armhf-no-thumb.patch
 fixes/armhf-icf.patch
 fixes/libpng-testonly.patch
-fixes/force-rust-nightly.patch
 fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
+fixes/bytemuck.patch
+fixes/missing-dep.patch
 
-upstream/disable-unrar.patch
+upstream/profile.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -50,6 +51,7 @@ disable/license-headless-shell.patch
 disable/enterprise-tests.patch
 disable/unrar.patch
 disable/rustc-allow-features.patch
+disable/lint.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -59,6 +61,11 @@ system/rapidjson.patch
 system/rollup.patch
 
 llvm-19/static-assert.patch
+llvm-19/keyfactory.patch
+llvm-19/clang-19-crash.patch
+llvm-19/clone-traits.patch
+llvm-19/octal.patch
+llvm-19/value-or.patch
 
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
@@ -72,7 +79,6 @@ trixie/cookie-string-view.patch
 trixie/rust-is-multiple-of.patch
 #trixie/libxml2-no-xxe.patch
 trixie/gn-string-hash.patch
-trixie/value-or.patch
 trixie/nodejs-set-intersection.patch
 trixie/gn-len.patch
 trixie/nodejs-main.patch
@@ -112,6 +118,7 @@ bookworm/gn-path-exists2.patch
 bookworm/rust-unsafe-extern.patch
 bookworm/node-esm-dirname.patch
 bookworm/dav1d-drop-hdr.patch
+bookworm/node18-compat.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch
@@ -128,6 +135,8 @@ bookworm/dav1d-drop-hdr.patch
 # bullseye/constexpr.patch
 # bullseye/openh264.patch
 # bullseye/webui.patch
+
+llvm-22/ignore-for-ubsan.patch
 
 # patches for system libhwy-dev
 #fixes/highway-include-path.patch

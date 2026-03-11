@@ -1,3 +1,62 @@
+chromium (146.0.7680.71-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/rules: update rustc version string for new upstream expectations of
+    no spaces.
+  * d/patches:
+    - upstream/disable-unrar.patch: drop, merged upstream.
+    - disable/signin.patch: drop part of the patch. This patch should be
+      reviewed in the future and coordinated w/ ungoogled-chromium, since
+      it originally came from them.
+    - disable/glic.patch: add a bunch more glic removals.
+    - disable/license-headless-shell.patch: refresh.
+    - disable/unrar.patch: refresh.
+    - system/rollup.patch: refresh.
+    - bookworm/foreach.patch: refresh.
+    - ungoogled/disable-privacy-sandbox.patch: sync from ungoogled-chromium.
+    - disable/catapult.patch: update to remove some more catapult deps.
+    - fixes/force-rust-nightly.patch: drop, no longer needed.
+    - llvm-22/ignore-for-ubsan.patch: add a build fix for a compiler
+      flag/feature added to llvm-23.
+    - fixes/bytemuck.patch: add rust build fix in bytemuck.
+    - llvm-19/clang-19-crash.patch: add build fix; delete code that makes
+      clang-19++ crash.
+    - llvm-19/keyfactory.patch: add build fix for what I suspect is a clang-19
+      issue.
+    - loongarch64/0018-fix-study-crash.patch: refresh.
+    - ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch:
+      refresh.
+    - ppc64le/fixes/fix-study-crash.patch: refresh.
+    - llvm-19/clone-traits.patch: add patch to remove a static assertion.
+    - llvm-19/octal.patch: add patch to work around 0o666 vs 0666 support.
+    - upstream/profile.patch: add header inclusion build fix from upstream.
+    - trixie/value-or.patch: move to llvm-19/ directory & also add another
+      place that clang-19 gets confused during build.
+    - rust-1.85/jxl-features.patch: refresh [trixie, bookworm].
+    - rust-1.85/jxl-simd-avx512.patch: update for (numerous) upstream
+      changes, and added unsafe{} blocks to the macro definitions to shrink
+      this patch in the future [trixie, bookworm].
+    - fixes/missing-dep.patch: add patch for dependency-related build failure
+      that only happens sometimes.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh
+      for upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+
+  [ Daniel Richard G. ]
+  * d/patches:
+    - disable/lint.patch: New patch to disable CSS/JS linting tools.
+    - bookworm/node18-compat.patch: New patch to fix various compatibility
+      issues with nodejs 18 [bookworm].
+    - trixie/gn-len.patch: Zap another instance of len() for older GN
+      [trixie, bookworm].
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 08 Mar 2026 04:33:59 -0400
+
 chromium (145.0.7632.159-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

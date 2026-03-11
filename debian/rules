@@ -68,7 +68,7 @@ export CLANG_MVERS:=$(shell $(CC) --version 2>/dev/null | sed -n 's/.* clang ver
 rust_sysroot=/usr
 defines+=rust_sysroot_absolute=\"$(rust_sysroot)\"
 defines+=rust_bindgen_root=\"$(CURDIR)/debian/bindgen/root/usr\"
-defines+=rustc_version=\"$(shell $(rust_sysroot)/bin/rustc --version 2>/dev/null)\"
+defines+=rustc_version=\"$(shell $(rust_sysroot)/bin/rustc --version 2>/dev/null | awk -v OFS='-' '{print $$1,$$2}' )\"
 defines+=clang_base_path=\"/usr/lib/llvm-$(CLANG_MVERS)\"
 defines+=clang_version=\"$(CLANG_MVERS)\"
 

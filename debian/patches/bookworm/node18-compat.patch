@@ -1,0 +1,41 @@
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+Description: Fix various compatibility issues with Node.js 18
+
+--- a/third_party/node/node_modules/@sindresorhus/merge-streams/index.js
++++ b/third_party/node/node_modules/@sindresorhus/merge-streams/index.js
+@@ -1,5 +1,5 @@
+ import {on, once} from 'node:events';
+-import {PassThrough as PassThroughStream, getDefaultHighWaterMark} from 'node:stream';
++import {PassThrough as PassThroughStream} from 'node:stream';
+ import {finished} from 'node:stream/promises';
+ 
+ export default function mergeStreams(streams) {
+@@ -28,7 +28,7 @@ export default function mergeStreams(str
+ 
+ const getHighWaterMark = (streams, objectMode) => {
+ 	if (streams.length === 0) {
+-		return getDefaultHighWaterMark(objectMode);
++		return objectMode ? 16 : 65536;
+ 	}
+ 
+ 	const highWaterMarks = streams
+--- a/third_party/node/node_modules/meow/build/dependencies.js
++++ b/third_party/node/node_modules/meow/build/dependencies.js
+@@ -1008,7 +1008,7 @@ const minNodeVersion = (process && proce
+     ? Number(process.env.YARGS_MIN_NODE_VERSION)
+     : 20;
+ const nodeVersion = (_b = (_a = process === null || process === void 0 ? void 0 : process.versions) === null || _a === void 0 ? void 0 : _a.node) !== null && _b !== void 0 ? _b : (_c = process === null || process === void 0 ? void 0 : process.version) === null || _c === void 0 ? void 0 : _c.slice(1);
+-if (nodeVersion) {
++if (false) {
+     const major = Number(nodeVersion.match(/^([^.]+)/)[1]);
+     if (major < minNodeVersion) {
+         throw Error(`yargs parser supports a minimum Node.js version of ${minNodeVersion}. Read our version support policy: https://github.com/yargs/yargs-parser#supported-nodejs-versions`);
+@@ -8638,7 +8638,7 @@ function requireFixer () {
+ 	      this.warn('nonUrlHomepage');
+ 	      return delete data.homepage
+ 	    }
+-	    if (!URL.canParse(data.homepage)) {
++	    if (!data.homepage.match(/^https?:/)) {
+ 	      data.homepage = 'http://' + data.homepage;
+ 	    }
+ 	  },

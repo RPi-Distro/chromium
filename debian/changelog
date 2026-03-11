@@ -33,10 +33,12 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - upstream/profile.patch: add header inclusion build fix from upstream.
     - trixie/value-or.patch: move to llvm-19/ directory & also add another
       place that clang-19 gets confused during build.
-    - rust-1.85/jxl-features.patch: refresh.
+    - rust-1.85/jxl-features.patch: refresh [trixie, bookworm].
     - rust-1.85/jxl-simd-avx512.patch: update for (numerous) upstream
       changes, and added unsafe{} blocks to the macro definitions to shrink
-      this patch in the future [stable, oldstable].
+      this patch in the future [trixie, bookworm].
+    - fixes/missing-dep.patch: add patch for dependency-related build failure
+      that only happens sometimes.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

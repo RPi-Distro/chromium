@@ -45,6 +45,14 @@ chromium (146.0.7680.65-1) UNRELEASED; urgency=high
     - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
       refresh for upstream changes
 
+  [ Daniel Richard G. ]
+  * d/patches:
+    - disable/lint.patch: New patch to disable CSS/JS linting tools.
+    - bookworm/node18-compat.patch: New patch to fix various compatibility
+      issues with nodejs 18 [bookworm].
+    - trixie/gn-len.patch: Zap another instance of len() for older GN
+      [trixie, bookworm].
+
  -- Andres Salomon <dilinger@debian.org>  Sun, 08 Mar 2026 04:33:59 -0400
 
 chromium (145.0.7632.159-1) unstable; urgency=high

@@ -14,8 +14,8 @@ functions. The issue is described in
 https://internals.rust-lang.org/t/how-to-make-core-arch-simd-intrinsics-safe/16716
 and fixed in newer versions of rustc.
 
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/lib.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/lib.rs
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/lib.rs
 @@ -4,6 +4,10 @@
  // license that can be found in the LICENSE file.
  
@@ -27,8 +27,8 @@ and fixed in newer versions of rustc.
  
  use std::{
      fmt::Debug,
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx.rs
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx.rs
 @@ -20,7 +20,7 @@ use std::{
  /// Used by both store_interleaved_8 and transpose_square.
  #[target_feature(enable = "avx2")]
@@ -38,7 +38,16 @@ and fixed in newer versions of rustc.
      r0: __m256,
      r1: __m256,
      r2: __m256,
-@@ -204,7 +204,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -171,7 +171,7 @@ macro_rules! fn_avx {
+             #[target_feature(enable = "fma,avx2,f16c")]
+             #[inline]
+             fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
+-                $body
++                unsafe { $body }
+             }
+             // SAFETY: `self.1` is constructed iff avx2, fma, and f16c are available.
+             unsafe { inner(self, $($arg),*) }
+@@ -214,7 +214,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -47,7 +56,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= 2 * F32VecAvx::LEN);
              // a = [a0, a1, a2, a3, a4, a5, a6, a7], b = [b0, b1, b2, b3, b4, b5, b6, b7]
              // Output: [a0, b0, a1, b1, a2, b2, a3, b3, a4, b4, a5, b5, a6, b6, a7, b7]
-@@ -229,7 +229,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -239,7 +239,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -56,7 +65,7 @@ and fixed in newer versions of rustc.
              a: __m256,
              b: __m256,
              c: __m256,
-@@ -287,7 +287,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -297,7 +297,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      ) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -65,7 +74,7 @@ and fixed in newer versions of rustc.
              a: __m256,
              b: __m256,
              c: __m256,
-@@ -353,7 +353,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -363,7 +363,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      ) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -74,21 +83,34 @@ and fixed in newer versions of rustc.
              r0: __m256,
              r1: __m256,
              r2: __m256,
-@@ -387,11 +387,11 @@ unsafe impl F32SimdVec for F32VecAvx {
-     }
- 
-     fn_avx!(this: F32VecAvx, fn mul_add(mul: F32VecAvx, add: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_fmadd_ps(this.0, mul.0, add.0), this.1)
-+        unsafe { F32VecAvx(_mm256_fmadd_ps(this.0, mul.0, add.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn neg_mul_add(mul: F32VecAvx, add: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_fnmadd_ps(this.0, mul.0, add.0), this.1)
-+        unsafe { F32VecAvx(_mm256_fnmadd_ps(this.0, mul.0, add.0), this.1) }
-     });
- 
-     #[inline(always)]
-@@ -407,22 +407,23 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -400,7 +400,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn load_deinterleaved_2(d: Self::Descriptor, src: &[f32]) -> (Self, Self) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn load_deinterleaved_2_impl(src: &[f32]) -> (__m256, __m256) {
++        unsafe fn load_deinterleaved_2_impl(src: &[f32]) -> (__m256, __m256) {
+             assert!(src.len() >= 2 * F32VecAvx::LEN);
+             // Input: [a0, b0, a1, b1, a2, b2, a3, b3, a4, b4, a5, b5, a6, b6, a7, b7]
+             // Output: a = [a0, a1, a2, a3, a4, a5, a6, a7], b = [b0, b1, b2, b3, b4, b5, b6, b7]
+@@ -433,7 +433,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn load_deinterleaved_3(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn load_deinterleaved_3_impl(src: &[f32]) -> (__m256, __m256, __m256) {
++        unsafe fn load_deinterleaved_3_impl(src: &[f32]) -> (__m256, __m256, __m256) {
+             assert!(src.len() >= 3 * F32VecAvx::LEN);
+             // Input layout (24 floats):
+             // in0: [a0, b0, c0, a1, b1, c1, a2, b2]
+@@ -495,7 +495,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn load_deinterleaved_4(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self, Self) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn load_deinterleaved_4_impl(src: &[f32]) -> (__m256, __m256, __m256, __m256) {
++        unsafe fn load_deinterleaved_4_impl(src: &[f32]) -> (__m256, __m256, __m256, __m256) {
+             assert!(src.len() >= 4 * F32VecAvx::LEN);
+             // Input: [a0,b0,c0,d0, a1,b1,c1,d1, a2,b2,c2,d2, a3,b3,c3,d3, ...]
+             // Output: a = [a0..a7], b = [b0..b7], c = [c0..c7], d = [d0..d7]
+@@ -558,22 +558,23 @@ unsafe impl F32SimdVec for F32VecAvx {
      }
  
      fn_avx!(this: F32VecAvx, fn abs() -> F32VecAvx {
@@ -116,7 +138,7 @@ and fixed in newer versions of rustc.
          let sign_mask = _mm256_castsi256_ps(_mm256_set1_epi32(i32::MIN));
          F32VecAvx(
              _mm256_or_ps(
-@@ -431,33 +432,34 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -582,26 +583,27 @@ unsafe impl F32SimdVec for F32VecAvx {
              ),
              this.1,
          )
@@ -149,6 +171,7 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
+@@ -622,7 +624,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn round_store_u8(self, dest: &mut [u8]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -157,7 +180,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx::LEN);
              // Round to nearest integer
              let rounded = _mm256_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -484,7 +486,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -649,7 +651,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn round_store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -166,7 +189,25 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx::LEN);
              // Round to nearest integer
              let rounded = _mm256_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -545,52 +547,52 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -676,7 +678,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn load_f16_bits(d: Self::Descriptor, mem: &[u16]) -> Self {
+         #[target_feature(enable = "avx2,f16c")]
+         #[inline]
+-        fn load_f16_impl(d: AvxDescriptor, mem: &[u16]) -> F32VecAvx {
++        unsafe fn load_f16_impl(d: AvxDescriptor, mem: &[u16]) -> F32VecAvx {
+             assert!(mem.len() >= F32VecAvx::LEN);
+             // SAFETY: mem.len() >= 8 is checked above
+             let bits = unsafe { _mm_loadu_si128(mem.as_ptr() as *const __m128i) };
+@@ -690,7 +692,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+     fn store_f16_bits(self, dest: &mut [u16]) {
+         #[target_feature(enable = "avx2,f16c")]
+         #[inline]
+-        fn store_f16_bits_impl(v: __m256, dest: &mut [u16]) {
++        unsafe fn store_f16_bits_impl(v: __m256, dest: &mut [u16]) {
+             assert!(dest.len() >= F32VecAvx::LEN);
+             let bits = _mm256_cvtps_ph::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
+             // SAFETY: dest.len() >= 8 is checked above
+@@ -738,52 +740,52 @@ unsafe impl F32SimdVec for F32VecAvx {
  impl Add<F32VecAvx> for F32VecAvx {
      type Output = F32VecAvx;
      fn_avx!(this: F32VecAvx, fn add(rhs: F32VecAvx) -> F32VecAvx {
@@ -227,7 +268,7 @@ and fixed in newer versions of rustc.
      });
  }
  
-@@ -626,11 +628,11 @@ impl I32SimdVec for I32VecAvx {
+@@ -819,11 +821,11 @@ impl I32SimdVec for I32VecAvx {
      }
  
      fn_avx!(this: I32VecAvx, fn as_f32() -> F32VecAvx {
@@ -241,7 +282,7 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
-@@ -639,31 +641,37 @@ impl I32SimdVec for I32VecAvx {
+@@ -832,31 +834,37 @@ impl I32SimdVec for I32VecAvx {
      }
  
      fn_avx!(this: I32VecAvx, fn abs() -> I32VecAvx {
@@ -281,7 +322,7 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
-@@ -679,122 +687,124 @@ impl I32SimdVec for I32VecAvx {
+@@ -872,18 +880,20 @@ impl I32SimdVec for I32VecAvx {
      }
  
      fn_avx!(this: I32VecAvx, fn mul_wide_take_high(rhs: I32VecAvx) -> I32VecAvx {
@@ -293,8 +334,17 @@ and fixed in newer versions of rustc.
          I32VecAvx(_mm256_unpackhi_epi64(p0, p1), this.1)
 +        }
      });
- }
  
+     #[inline(always)]
+     fn store_u16(self, dest: &mut [u16]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_u16_impl(v: __m256i, dest: &mut [u16]) {
++        unsafe fn store_u16_impl(v: __m256i, dest: &mut [u16]) {
+             assert!(dest.len() >= I32VecAvx::LEN);
+             let tmp = _mm256_shuffle_epi8(
+                 v,
+@@ -906,111 +916,111 @@ impl I32SimdVec for I32VecAvx {
  impl Add<I32VecAvx> for I32VecAvx {
      type Output = I32VecAvx;
      fn_avx!(this: I32VecAvx, fn add(rhs: I32VecAvx) -> I32VecAvx {
@@ -314,8 +364,8 @@ and fixed in newer versions of rustc.
  impl Mul<I32VecAvx> for I32VecAvx {
      type Output = I32VecAvx;
      fn_avx!(this: I32VecAvx, fn mul(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_mul_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_mul_epi32(this.0, rhs.0), this.1) }
+-        I32VecAvx(_mm256_mullo_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx(_mm256_mullo_epi32(this.0, rhs.0), this.1) }
      });
  }
  
@@ -383,8 +433,8 @@ and fixed in newer versions of rustc.
  
  impl MulAssign<I32VecAvx> for I32VecAvx {
      fn_avx!(this: &mut I32VecAvx, fn mul_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_mul_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_mul_epi32(this.0, rhs.0) }
+-        this.0 = _mm256_mullo_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm256_mullo_epi32(this.0, rhs.0) }
      });
  }
  
@@ -423,7 +473,7 @@ and fixed in newer versions of rustc.
      });
  }
  
-@@ -823,36 +833,36 @@ impl SimdMask for MaskAvx {
+@@ -1039,36 +1049,36 @@ impl SimdMask for MaskAvx {
      type Descriptor = AvxDescriptor;
  
      fn_avx!(this: MaskAvx, fn if_then_else_f32(if_true: F32VecAvx, if_false: F32VecAvx) -> F32VecAvx {
@@ -467,9 +517,18 @@ and fixed in newer versions of rustc.
 +        unsafe { MaskAvx(_mm256_or_ps(this.0, rhs.0), this.1) }
      });
  }
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx512.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/avx512.rs
-@@ -122,7 +122,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx512.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx512.rs
+@@ -87,7 +87,7 @@ macro_rules! fn_avx {
+             #[target_feature(enable = "avx512f")]
+             #[inline]
+             fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
+-                $body
++                unsafe { $body }
+             }
+             // SAFETY: `self.1` is constructed iff avx512f is available.
+             unsafe { inner(self, $($arg),*) }
+@@ -130,7 +130,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -478,7 +537,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= 2 * F32VecAvx512::LEN);
              // a = [a0..a15], b = [b0..b15]
              // Output: [a0, b0, a1, b1, ..., a15, b15]
-@@ -157,7 +157,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -165,7 +165,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -487,7 +546,7 @@ and fixed in newer versions of rustc.
              a: __m512,
              b: __m512,
              c: __m512,
-@@ -207,7 +207,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -215,7 +215,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      ) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -496,7 +555,7 @@ and fixed in newer versions of rustc.
              a: __m512,
              b: __m512,
              c: __m512,
-@@ -311,7 +311,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -319,7 +319,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      ) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -505,21 +564,34 @@ and fixed in newer versions of rustc.
              a: __m512,
              b: __m512,
              c: __m512,
-@@ -439,11 +439,11 @@ unsafe impl F32SimdVec for F32VecAvx512
-     }
- 
-     fn_avx!(this: F32VecAvx512, fn mul_add(mul: F32VecAvx512, add: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_fmadd_ps(this.0, mul.0, add.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_fmadd_ps(this.0, mul.0, add.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn neg_mul_add(mul: F32VecAvx512, add: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_fnmadd_ps(this.0, mul.0, add.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_fnmadd_ps(this.0, mul.0, add.0), this.1) }
-     });
- 
-     #[inline(always)]
-@@ -459,18 +459,19 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -450,7 +450,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     fn load_deinterleaved_2(d: Self::Descriptor, src: &[f32]) -> (Self, Self) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn load_deinterleaved_2_impl(src: &[f32]) -> (__m512, __m512) {
++        unsafe fn load_deinterleaved_2_impl(src: &[f32]) -> (__m512, __m512) {
+             assert!(src.len() >= 2 * F32VecAvx512::LEN);
+             // Input: [a0,b0,a1,b1,...,a15,b15]
+             // Output: a = [a0..a15], b = [b0..b15]
+@@ -483,7 +483,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     fn load_deinterleaved_3(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn load_deinterleaved_3_impl(src: &[f32]) -> (__m512, __m512, __m512) {
++        unsafe fn load_deinterleaved_3_impl(src: &[f32]) -> (__m512, __m512, __m512) {
+             assert!(src.len() >= 3 * F32VecAvx512::LEN);
+             // Input layout (48 floats in 3x16-float vectors):
+             // in0: [a0,b0,c0,a1,b1,c1,a2,b2,c2,a3,b3,c3,a4,b4,c4,a5]
+@@ -540,7 +540,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+     fn load_deinterleaved_4(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self, Self) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn load_deinterleaved_4_impl(src: &[f32]) -> (__m512, __m512, __m512, __m512) {
++        unsafe fn load_deinterleaved_4_impl(src: &[f32]) -> (__m512, __m512, __m512, __m512) {
+             assert!(src.len() >= 4 * F32VecAvx512::LEN);
+             // Input: [a0,b0,c0,d0,a1,b1,c1,d1,...] (64 floats)
+             // Output: a = [a0..a15], b = [b0..b15], c = [c0..c15], d = [d0..d15]
+@@ -608,18 +608,19 @@ unsafe impl F32SimdVec for F32VecAvx512
      }
  
      fn_avx!(this: F32VecAvx512, fn abs() -> F32VecAvx512 {
@@ -542,7 +614,7 @@ and fixed in newer versions of rustc.
          F32VecAvx512(
              _mm512_castsi512_ps(_mm512_xor_si512(
                  _mm512_set1_epi32(i32::MIN),
-@@ -478,9 +479,11 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -627,9 +628,11 @@ unsafe impl F32SimdVec for F32VecAvx512
              )),
              this.1,
          )
@@ -554,7 +626,7 @@ and fixed in newer versions of rustc.
          let sign_mask = _mm512_set1_epi32(i32::MIN);
          F32VecAvx512(
              _mm512_castsi512_ps(_mm512_or_si512(
-@@ -489,33 +492,34 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -638,33 +641,34 @@ unsafe impl F32SimdVec for F32VecAvx512
              )),
              this.1,
          )
@@ -587,6 +659,15 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
+     fn prepare_table_bf16_8(_d: Avx512Descriptor, table: &[f32; 8]) -> Bf16Table8Avx512 {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn prepare_impl(table: &[f32; 8]) -> __m512 {
++        unsafe fn prepare_impl(table: &[f32; 8]) -> __m512 {
+             // SAFETY: avx512f is available from target_feature, and we load 8 elements,
+             // exactly as many as are present in `table`.
+             let table_256 = unsafe { _mm256_loadu_ps(table.as_ptr()) };
+@@ -689,7 +693,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn round_store_u8(self, dest: &mut [u8]) {
          #[target_feature(enable = "avx512f", enable = "avx512bw")]
          #[inline]
@@ -595,7 +676,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx512::LEN);
              // Round to nearest integer
              let rounded = _mm512_roundscale_ps::<{ _MM_FROUND_TO_NEAREST_INT }>(v);
-@@ -537,7 +541,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -711,7 +715,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn round_store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "avx512f", enable = "avx512bw")]
          #[inline]
@@ -604,7 +685,25 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx512::LEN);
              // Round to nearest integer
              let rounded = _mm512_roundscale_ps::<{ _MM_FROUND_TO_NEAREST_INT }>(v);
-@@ -561,7 +565,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -736,7 +740,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+         // AVX512 implies F16C, so we can always use hardware conversion
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn load_f16_impl(d: Avx512Descriptor, mem: &[u16]) -> F32VecAvx512 {
++        unsafe fn load_f16_impl(d: Avx512Descriptor, mem: &[u16]) -> F32VecAvx512 {
+             assert!(mem.len() >= F32VecAvx512::LEN);
+             // SAFETY: mem.len() >= 16 is checked above
+             let bits = unsafe { _mm256_loadu_si256(mem.as_ptr() as *const __m256i) };
+@@ -751,7 +755,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+         // AVX512 implies F16C, so we can always use hardware conversion
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn store_f16_bits_impl(v: __m512, dest: &mut [u16]) {
++        unsafe fn store_f16_bits_impl(v: __m512, dest: &mut [u16]) {
+             assert!(dest.len() >= F32VecAvx512::LEN);
+             let bits = _mm512_cvtps_ph::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
+             // SAFETY: dest.len() >= 16 is checked above
+@@ -765,7 +769,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn transpose_square(d: Self::Descriptor, data: &mut [Self::UnderlyingArray], stride: usize) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -613,7 +712,7 @@ and fixed in newer versions of rustc.
              assert!(data.len() > stride * 15);
  
              let r0 = F32VecAvx512::load_array(d, &data[0]).0;
-@@ -721,52 +725,52 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -925,52 +929,52 @@ unsafe impl F32SimdVec for F32VecAvx512
  impl Add<F32VecAvx512> for F32VecAvx512 {
      type Output = F32VecAvx512;
      fn_avx!(this: F32VecAvx512, fn add(rhs: F32VecAvx512) -> F32VecAvx512 {
@@ -674,7 +773,7 @@ and fixed in newer versions of rustc.
      });
  }
  
-@@ -802,11 +806,11 @@ impl I32SimdVec for I32VecAvx512 {
+@@ -1006,11 +1010,11 @@ impl I32SimdVec for I32VecAvx512 {
      }
  
      fn_avx!(this: I32VecAvx512, fn as_f32() -> F32VecAvx512 {
@@ -688,7 +787,7 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
-@@ -815,23 +819,23 @@ impl I32SimdVec for I32VecAvx512 {
+@@ -1019,23 +1023,23 @@ impl I32SimdVec for I32VecAvx512 {
      }
  
      fn_avx!(this: I32VecAvx512, fn abs() -> I32VecAvx512 {
@@ -717,7 +816,7 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
-@@ -847,121 +851,123 @@ impl I32SimdVec for I32VecAvx512 {
+@@ -1051,17 +1055,19 @@ impl I32SimdVec for I32VecAvx512 {
      }
  
      fn_avx!(this: I32VecAvx512, fn mul_wide_take_high(rhs: I32VecAvx512) -> I32VecAvx512 {
@@ -728,8 +827,17 @@ and fixed in newer versions of rustc.
          I32VecAvx512(_mm512_permutex2var_epi32(l, idx, h), this.1)
 +        }
      });
- }
  
+     #[inline(always)]
+     fn store_u16(self, dest: &mut [u16]) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn store_u16_impl(v: __m512i, dest: &mut [u16]) {
++        unsafe fn store_u16_impl(v: __m512i, dest: &mut [u16]) {
+             assert!(dest.len() >= I32VecAvx512::LEN);
+             let tmp = _mm512_cvtepi32_epi16(v);
+             // SAFETY: We just checked `dst` has enough space.
+@@ -1075,111 +1081,111 @@ impl I32SimdVec for I32VecAvx512 {
  impl Add<I32VecAvx512> for I32VecAvx512 {
      type Output = I32VecAvx512;
      fn_avx!(this: I32VecAvx512, fn add(rhs: I32VecAvx512) -> I32VecAvx512 {
@@ -749,8 +857,8 @@ and fixed in newer versions of rustc.
  impl Mul<I32VecAvx512> for I32VecAvx512 {
      type Output = I32VecAvx512;
      fn_avx!(this: I32VecAvx512, fn mul(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_mul_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_mul_epi32(this.0, rhs.0), this.1)}
+-        I32VecAvx512(_mm512_mullo_epi32(this.0, rhs.0), this.1)
++        unsafe { I32VecAvx512(_mm512_mullo_epi32(this.0, rhs.0), this.1) }
      });
  }
  
@@ -818,8 +926,8 @@ and fixed in newer versions of rustc.
  
  impl MulAssign<I32VecAvx512> for I32VecAvx512 {
      fn_avx!(this: &mut I32VecAvx512, fn mul_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_mul_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_mul_epi32(this.0, rhs.0) }
+-        this.0 = _mm512_mullo_epi32(this.0, rhs.0)
++        unsafe { this.0 = _mm512_mullo_epi32(this.0, rhs.0) }
      });
  }
  
@@ -858,7 +966,7 @@ and fixed in newer versions of rustc.
      });
  }
  
-@@ -990,15 +996,15 @@ impl SimdMask for MaskAvx512 {
+@@ -1208,15 +1214,15 @@ impl SimdMask for MaskAvx512 {
      type Descriptor = Avx512Descriptor;
  
      fn_avx!(this: MaskAvx512, fn if_then_else_f32(if_true: F32VecAvx512, if_false: F32VecAvx512) -> F32VecAvx512 {
@@ -877,9 +985,18 @@ and fixed in newer versions of rustc.
      });
  
      fn_avx!(this: MaskAvx512, fn all() -> bool {
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/sse42.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/x86_64/sse42.rs
-@@ -117,7 +117,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/sse42.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/sse42.rs
+@@ -75,7 +75,7 @@ macro_rules! fn_sse42 {
+             #[target_feature(enable = "sse4.2")]
+             #[inline]
+             fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
+-                $body
++                unsafe { $body }
+             }
+             // SAFETY: `self.1` is constructed iff sse42 are available.
+             unsafe { inner(self, $($arg),*) }
+@@ -123,7 +123,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -888,7 +1005,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= 2 * F32VecSse42::LEN);
              // a = [a0, a1, a2, a3], b = [b0, b1, b2, b3]
              // lo = [a0, b0, a1, b1], hi = [a2, b2, a3, b3]
-@@ -139,7 +139,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -145,7 +145,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -897,7 +1014,7 @@ and fixed in newer versions of rustc.
              a: __m128,
              b: __m128,
              c: __m128,
-@@ -199,7 +199,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -205,7 +205,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      ) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -906,7 +1023,7 @@ and fixed in newer versions of rustc.
              a: __m128,
              b: __m128,
              c: __m128,
-@@ -247,7 +247,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -253,7 +253,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      ) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -915,7 +1032,34 @@ and fixed in newer versions of rustc.
              a: __m128,
              b: __m128,
              c: __m128,
-@@ -318,32 +318,37 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -307,7 +307,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     fn load_deinterleaved_2(d: Self::Descriptor, src: &[f32]) -> (Self, Self) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn load_deinterleaved_2_impl(src: &[f32]) -> (__m128, __m128) {
++        unsafe fn load_deinterleaved_2_impl(src: &[f32]) -> (__m128, __m128) {
+             assert!(src.len() >= 2 * F32VecSse42::LEN);
+             // Input: [a0, b0, a1, b1, a2, b2, a3, b3]
+             // Output: a = [a0, a1, a2, a3], b = [b0, b1, b2, b3]
+@@ -335,7 +335,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     fn load_deinterleaved_3(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn load_deinterleaved_3_impl(src: &[f32]) -> (__m128, __m128, __m128) {
++        unsafe fn load_deinterleaved_3_impl(src: &[f32]) -> (__m128, __m128, __m128) {
+             assert!(src.len() >= 3 * F32VecSse42::LEN);
+             // Input: [a0, b0, c0, a1, b1, c1, a2, b2, c2, a3, b3, c3]
+             // Output: a = [a0, a1, a2, a3], b = [b0, b1, b2, b3], c = [c0, c1, c2, c3]
+@@ -385,7 +385,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     fn load_deinterleaved_4(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self, Self) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn load_deinterleaved_4_impl(src: &[f32]) -> (__m128, __m128, __m128, __m128) {
++        unsafe fn load_deinterleaved_4_impl(src: &[f32]) -> (__m128, __m128, __m128, __m128) {
+             assert!(src.len() >= 4 * F32VecSse42::LEN);
+             // Input: [a0, b0, c0, d0, a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3]
+             // Output: a = [a0, a1, a2, a3], b = [b0, b1, b2, b3], c = [c0, c1, c2, c3], d = [d0, d1, d2, d3]
+@@ -441,29 +441,33 @@ unsafe impl F32SimdVec for F32VecSse42 {
      }
  
      fn_sse42!(this: F32VecSse42, fn abs() -> F32VecSse42 {
@@ -951,20 +1095,7 @@ and fixed in newer versions of rustc.
      });
  
      fn_sse42!(this: F32VecSse42, fn copysign(sign: F32VecSse42) -> F32VecSse42 {
-+        unsafe {
-         let sign_mask = _mm_castsi128_ps(_mm_set1_epi32(i32::MIN));
-         F32VecSse42(
-             _mm_or_ps(
-@@ -352,33 +357,34 @@ unsafe impl F32SimdVec for F32VecSse42 {
-             ),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn max(other: F32VecSse42) -> F32VecSse42 {
--        F32VecSse42(_mm_max_ps(this.0, other.0), this.1)
-+        unsafe { F32VecSse42(_mm_max_ps(this.0, other.0), this.1) }
+@@ -482,26 +486,26 @@ unsafe impl F32SimdVec for F32VecSse42 {
      });
  
      fn_sse42!(this: F32VecSse42, fn min(other: F32VecSse42) -> F32VecSse42 {
@@ -988,6 +1119,24 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
+     fn prepare_table_bf16_8(_d: Sse42Descriptor, table: &[f32; 8]) -> Bf16Table8Sse42 {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn prepare_impl(table: &[f32; 8]) -> __m128i {
++        unsafe fn prepare_impl(table: &[f32; 8]) -> __m128i {
+             // Convert f32 table to BF16 packed in 128 bits (16 bytes for 8 entries)
+             // BF16 is the high 16 bits of f32
+             // SAFETY: table has exactly 8 elements and sse4.2 is available from target_feature
+@@ -536,7 +540,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+     ) -> Self {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn lookup_impl(bf16_table: __m128i, indices: __m128i) -> __m128 {
++        unsafe fn lookup_impl(bf16_table: __m128i, indices: __m128i) -> __m128 {
+             // Build shuffle mask efficiently using arithmetic on 32-bit indices.
+             // For each index i (0-7), we need to select bytes [2*i, 2*i+1] from bf16_table
+             // and place them in the high 16 bits of each 32-bit f32 lane (bytes 2,3),
+@@ -565,7 +569,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn round_store_u8(self, dest: &mut [u8]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -996,7 +1145,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecSse42::LEN);
              // Round to nearest integer
              let rounded = _mm_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -402,7 +408,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -589,7 +593,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn round_store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1005,7 +1154,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecSse42::LEN);
              // Round to nearest integer
              let rounded = _mm_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -426,7 +432,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -635,7 +639,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn transpose_square(d: Self::Descriptor, data: &mut [Self::UnderlyingArray], stride: usize) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1014,7 +1163,7 @@ and fixed in newer versions of rustc.
              assert!(data.len() > stride * 3);
  
              let p0 = F32VecSse42::load_array(d, &data[0]).0;
-@@ -460,52 +466,52 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -669,52 +673,52 @@ unsafe impl F32SimdVec for F32VecSse42 {
  impl Add<F32VecSse42> for F32VecSse42 {
      type Output = F32VecSse42;
      fn_sse42!(this: F32VecSse42, fn add(rhs: F32VecSse42) -> F32VecSse42 {
@@ -1075,7 +1224,7 @@ and fixed in newer versions of rustc.
      });
  }
  
-@@ -541,11 +547,11 @@ impl I32SimdVec for I32VecSse42 {
+@@ -750,11 +754,11 @@ impl I32SimdVec for I32VecSse42 {
      }
  
      fn_sse42!(this: I32VecSse42, fn as_f32() -> F32VecSse42 {
@@ -1089,7 +1238,7 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
-@@ -554,33 +560,39 @@ impl I32SimdVec for I32VecSse42 {
+@@ -763,33 +767,39 @@ impl I32SimdVec for I32VecSse42 {
      }
  
      fn_sse42!(this: I32VecSse42, fn abs() -> I32VecSse42 {
@@ -1131,119 +1280,7 @@ and fixed in newer versions of rustc.
      });
  
      #[inline(always)]
-@@ -596,96 +608,98 @@ impl I32SimdVec for I32VecSse42 {
-     }
- 
-     fn_sse42!(this: I32VecSse42, fn mul_wide_take_high(rhs: I32VecSse42) -> I32VecSse42 {
-+        unsafe {
-         let l = _mm_mul_epi32(this.0, rhs.0);
-         let h = _mm_mul_epi32(_mm_srli_epi64::<32>(this.0), _mm_srli_epi64::<32>(rhs.0));
-         let p0 = _mm_unpacklo_epi32(l, h);
-         let p1 = _mm_unpackhi_epi32(l, h);
-         I32VecSse42(_mm_unpackhi_epi64(p0, p1), this.1)
-+        }
-     });
- }
- 
- impl Add<I32VecSse42> for I32VecSse42 {
-     type Output = I32VecSse42;
-     fn_sse42!(this: I32VecSse42, fn add(rhs: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_add_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecSse42(_mm_add_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Sub<I32VecSse42> for I32VecSse42 {
-     type Output = I32VecSse42;
-     fn_sse42!(this: I32VecSse42, fn sub(rhs: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_sub_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecSse42(_mm_sub_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Mul<I32VecSse42> for I32VecSse42 {
-     type Output = I32VecSse42;
-     fn_sse42!(this: I32VecSse42, fn mul(rhs: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_mul_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecSse42(_mm_mul_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Neg for I32VecSse42 {
-     type Output = I32VecSse42;
-     fn_sse42!(this: I32VecSse42, fn neg() -> I32VecSse42 {
--        I32VecSse42(_mm_setzero_si128(), this.1) - this
-+        unsafe { I32VecSse42(_mm_setzero_si128(), this.1) - this }
-     });
- }
- 
- impl BitAnd<I32VecSse42> for I32VecSse42 {
-     type Output = I32VecSse42;
-     fn_sse42!(this: I32VecSse42, fn bitand(rhs: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_and_si128(this.0, rhs.0), this.1)
-+        unsafe { I32VecSse42(_mm_and_si128(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitOr<I32VecSse42> for I32VecSse42 {
-     type Output = I32VecSse42;
-     fn_sse42!(this: I32VecSse42, fn bitor(rhs: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_or_si128(this.0, rhs.0), this.1)
-+        unsafe { I32VecSse42(_mm_or_si128(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitXor<I32VecSse42> for I32VecSse42 {
-     type Output = I32VecSse42;
-     fn_sse42!(this: I32VecSse42, fn bitxor(rhs: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_xor_si128(this.0, rhs.0), this.1)
-+        unsafe { I32VecSse42(_mm_xor_si128(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl AddAssign<I32VecSse42> for I32VecSse42 {
-     fn_sse42!(this: &mut I32VecSse42, fn add_assign(rhs: I32VecSse42) {
--        this.0 = _mm_add_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm_add_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl SubAssign<I32VecSse42> for I32VecSse42 {
-     fn_sse42!(this: &mut I32VecSse42, fn sub_assign(rhs: I32VecSse42) {
--        this.0 = _mm_sub_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm_sub_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl MulAssign<I32VecSse42> for I32VecSse42 {
-     fn_sse42!(this: &mut I32VecSse42, fn mul_assign(rhs: I32VecSse42) {
--        this.0 = _mm_mul_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm_mul_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl BitAndAssign<I32VecSse42> for I32VecSse42 {
-     fn_sse42!(this: &mut I32VecSse42, fn bitand_assign(rhs: I32VecSse42) {
--        this.0 = _mm_and_si128(this.0, rhs.0)
-+        unsafe { this.0 = _mm_and_si128(this.0, rhs.0) }
-     });
- }
- 
- impl BitOrAssign<I32VecSse42> for I32VecSse42 {
-     fn_sse42!(this: &mut I32VecSse42, fn bitor_assign(rhs: I32VecSse42) {
--        this.0 = _mm_or_si128(this.0, rhs.0)
-+        unsafe { this.0 = _mm_or_si128(this.0, rhs.0) }
-     });
- }
- 
- impl BitXorAssign<I32VecSse42> for I32VecSse42 {
-     fn_sse42!(this: &mut I32VecSse42, fn bitxor_assign(rhs: I32VecSse42) {
--        this.0 = _mm_xor_si128(this.0, rhs.0)
-+        unsafe { this.0 = _mm_xor_si128(this.0, rhs.0) }
-     });
- }
- 
-@@ -714,36 +728,36 @@ impl SimdMask for MaskSse42 {
+@@ -943,36 +953,36 @@ impl SimdMask for MaskSse42 {
      type Descriptor = Sse42Descriptor;
  
      fn_sse42!(this: MaskSse42, fn if_then_else_f32(if_true: F32VecSse42, if_false: F32VecSse42) -> F32VecSse42 {
@@ -1287,8 +1324,8 @@ and fixed in newer versions of rustc.
 +        unsafe { MaskSse42(_mm_or_ps(this.0, rhs.0), this.1) }
      });
  }
---- a/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_2/src/lib.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_2/src/lib.rs
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_3/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_3/src/lib.rs
 @@ -3,6 +3,10 @@
  // Use of this source code is governed by a BSD-style
  // license that can be found in the LICENSE file.
@@ -1300,9 +1337,18 @@ and fixed in newer versions of rustc.
  mod idct2d;
  mod reinterpreting_dct2d;
  pub mod transform;
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/aarch64/neon.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_2/src/aarch64/neon.rs
-@@ -179,7 +179,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/aarch64/neon.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/aarch64/neon.rs
+@@ -87,7 +87,7 @@ macro_rules! fn_neon {
+             #[target_feature(enable = "neon")]
+             #[inline]
+             fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
+-                $body
++                unsafe { $body }
+             }
+             // SAFETY: `self.1` is constructed iff neon is available.
+             unsafe { inner(self, $($arg),*) }
+@@ -186,7 +186,7 @@ unsafe impl F32SimdVec for F32VecNeon {
      ) {
          #[target_feature(enable = "neon")]
          #[inline]
@@ -1311,7 +1357,7 @@ and fixed in newer versions of rustc.
              a: float32x4_t,
              b: float32x4_t,
              c: float32x4_t,
-@@ -270,7 +270,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+@@ -304,7 +304,7 @@ unsafe impl F32SimdVec for F32VecNeon {
      fn transpose_square(d: NeonDescriptor, data: &mut [[f32; 4]], stride: usize) {
          #[target_feature(enable = "neon")]
          #[inline]
@@ -1320,7 +1366,7 @@ and fixed in newer versions of rustc.
              assert!(data.len() > 3 * stride);
  
              let p0 = F32VecNeon::load_array(d, &data[0]).0;
-@@ -329,57 +329,60 @@ unsafe impl F32SimdVec for F32VecNeon {
+@@ -363,57 +363,60 @@ unsafe impl F32SimdVec for F32VecNeon {
  
      fn_neon! {
          fn mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
@@ -1392,7 +1438,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecNeon::LEN);
              // Round to nearest integer
              let rounded = vrndnq_f32(this.0);
-@@ -389,12 +392,12 @@ unsafe impl F32SimdVec for F32VecNeon {
+@@ -423,12 +426,12 @@ unsafe impl F32SimdVec for F32VecNeon {
              let u8s = vqmovn_u16(vcombine_u16(u16s, u16s));
              // Store lower 4 bytes
              // SAFETY: we checked dest has enough space
@@ -1406,7 +1452,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecNeon::LEN);
              // Round to nearest integer
              let rounded = vrndnq_f32(this.0);
-@@ -403,7 +406,6 @@ unsafe impl F32SimdVec for F32VecNeon {
+@@ -437,7 +440,6 @@ unsafe impl F32SimdVec for F32VecNeon {
              let u16s = vqmovun_s32(i32s);
              // Store 4 u16s (8 bytes)
              // SAFETY: we checked dest has enough space
@@ -1414,7 +1460,25 @@ and fixed in newer versions of rustc.
                  vst1_u16(dest.as_mut_ptr(), u16s);
              }
          }
-@@ -414,7 +416,7 @@ impl Add<F32VecNeon> for F32VecNeon {
+@@ -483,7 +485,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+     fn prepare_table_bf16_8(_d: NeonDescriptor, table: &[f32; 8]) -> Bf16Table8Neon {
+         #[target_feature(enable = "neon")]
+         #[inline]
+-        fn prepare_impl(table: &[f32; 8]) -> uint8x16_t {
++        unsafe fn prepare_impl(table: &[f32; 8]) -> uint8x16_t {
+             // Convert f32 table to BF16 packed in 128 bits (16 bytes for 8 entries)
+             // BF16 is the high 16 bits of f32
+             // SAFETY: neon is available from target_feature, and `table` is large
+@@ -511,7 +513,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+     fn table_lookup_bf16_8(d: NeonDescriptor, table: Bf16Table8Neon, indices: I32VecNeon) -> Self {
+         #[target_feature(enable = "neon")]
+         #[inline]
+-        fn lookup_impl(bf16_table: uint8x16_t, indices: int32x4_t) -> float32x4_t {
++        unsafe fn lookup_impl(bf16_table: uint8x16_t, indices: int32x4_t) -> float32x4_t {
+             // Build shuffle mask efficiently using arithmetic on 32-bit indices.
+             // For each index i (0-7), we need to select bytes [2*i, 2*i+1] from bf16_table
+             // and place them in the high 16 bits of each 32-bit f32 lane (bytes 2,3),
+@@ -542,7 +544,7 @@ impl Add<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
          fn add(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
@@ -1423,7 +1487,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -423,7 +425,7 @@ impl Sub<F32VecNeon> for F32VecNeon {
+@@ -551,7 +553,7 @@ impl Sub<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
          fn sub(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
@@ -1432,7 +1496,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -432,7 +434,7 @@ impl Mul<F32VecNeon> for F32VecNeon {
+@@ -560,7 +562,7 @@ impl Mul<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
          fn mul(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
@@ -1441,7 +1505,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -441,7 +443,7 @@ impl Div<F32VecNeon> for F32VecNeon {
+@@ -569,7 +571,7 @@ impl Div<F32VecNeon> for F32VecNeon {
      type Output = Self;
      fn_neon! {
          fn div(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
@@ -1450,7 +1514,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -449,7 +451,7 @@ impl Div<F32VecNeon> for F32VecNeon {
+@@ -577,7 +579,7 @@ impl Div<F32VecNeon> for F32VecNeon {
  impl AddAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
          fn add_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
@@ -1459,7 +1523,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -457,7 +459,7 @@ impl AddAssign<F32VecNeon> for F32VecNeo
+@@ -585,7 +587,7 @@ impl AddAssign<F32VecNeon> for F32VecNeo
  impl SubAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
          fn sub_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
@@ -1468,7 +1532,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -465,7 +467,7 @@ impl SubAssign<F32VecNeon> for F32VecNeo
+@@ -593,7 +595,7 @@ impl SubAssign<F32VecNeon> for F32VecNeo
  impl MulAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
          fn mul_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
@@ -1477,7 +1541,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -473,7 +475,7 @@ impl MulAssign<F32VecNeon> for F32VecNeo
+@@ -601,7 +603,7 @@ impl MulAssign<F32VecNeon> for F32VecNeo
  impl DivAssign<F32VecNeon> for F32VecNeon {
      fn_neon! {
          fn div_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
@@ -1486,7 +1550,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -511,43 +513,45 @@ impl I32SimdVec for I32VecNeon {
+@@ -639,43 +641,45 @@ impl I32SimdVec for I32VecNeon {
  
      fn_neon! {
          fn abs(this: I32VecNeon) -> I32VecNeon {
@@ -1540,7 +1604,7 @@ and fixed in newer versions of rustc.
          }
      }
  
-@@ -568,7 +572,7 @@ impl Add<I32VecNeon> for I32VecNeon {
+@@ -708,7 +712,7 @@ impl Add<I32VecNeon> for I32VecNeon {
      type Output = I32VecNeon;
      fn_neon! {
          fn add(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
@@ -1549,7 +1613,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -577,7 +581,7 @@ impl Sub<I32VecNeon> for I32VecNeon {
+@@ -717,7 +721,7 @@ impl Sub<I32VecNeon> for I32VecNeon {
      type Output = I32VecNeon;
      fn_neon! {
          fn sub(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
@@ -1558,7 +1622,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -586,7 +590,7 @@ impl Mul<I32VecNeon> for I32VecNeon {
+@@ -726,7 +730,7 @@ impl Mul<I32VecNeon> for I32VecNeon {
      type Output = I32VecNeon;
      fn_neon! {
          fn mul(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
@@ -1567,7 +1631,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -595,7 +599,7 @@ impl Neg for I32VecNeon {
+@@ -735,7 +739,7 @@ impl Neg for I32VecNeon {
      type Output = I32VecNeon;
      fn_neon! {
          fn neg(this: I32VecNeon) -> I32VecNeon {
@@ -1576,7 +1640,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -604,7 +608,7 @@ impl BitAnd<I32VecNeon> for I32VecNeon {
+@@ -744,7 +748,7 @@ impl BitAnd<I32VecNeon> for I32VecNeon {
      type Output = I32VecNeon;
      fn_neon! {
          fn bitand(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
@@ -1585,7 +1649,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -613,7 +617,7 @@ impl BitOr<I32VecNeon> for I32VecNeon {
+@@ -753,7 +757,7 @@ impl BitOr<I32VecNeon> for I32VecNeon {
      type Output = I32VecNeon;
      fn_neon! {
          fn bitor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
@@ -1594,7 +1658,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -622,7 +626,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
+@@ -762,7 +766,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
      type Output = I32VecNeon;
      fn_neon! {
          fn bitxor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
@@ -1603,7 +1667,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -630,7 +634,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
+@@ -770,7 +774,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
  impl AddAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
          fn add_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
@@ -1612,7 +1676,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -638,7 +642,7 @@ impl AddAssign<I32VecNeon> for I32VecNeo
+@@ -778,7 +782,7 @@ impl AddAssign<I32VecNeon> for I32VecNeo
  impl SubAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
          fn sub_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
@@ -1621,7 +1685,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -646,7 +650,7 @@ impl SubAssign<I32VecNeon> for I32VecNeo
+@@ -786,7 +790,7 @@ impl SubAssign<I32VecNeon> for I32VecNeo
  impl MulAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
          fn mul_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
@@ -1630,7 +1694,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -654,7 +658,7 @@ impl MulAssign<I32VecNeon> for I32VecNeo
+@@ -794,7 +798,7 @@ impl MulAssign<I32VecNeon> for I32VecNeo
  impl BitAndAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
          fn bitand_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
@@ -1639,7 +1703,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -662,7 +666,7 @@ impl BitAndAssign<I32VecNeon> for I32Vec
+@@ -802,7 +806,7 @@ impl BitAndAssign<I32VecNeon> for I32Vec
  impl BitOrAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
          fn bitor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
@@ -1648,7 +1712,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -670,7 +674,7 @@ impl BitOrAssign<I32VecNeon> for I32VecN
+@@ -810,7 +814,7 @@ impl BitOrAssign<I32VecNeon> for I32VecN
  impl BitXorAssign<I32VecNeon> for I32VecNeon {
      fn_neon! {
          fn bitxor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
@@ -1657,7 +1721,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -686,7 +690,7 @@ impl U32SimdVec for U32VecNeon {
+@@ -826,7 +830,7 @@ impl U32SimdVec for U32VecNeon {
  
      fn_neon! {
          fn bitcast_to_i32(this: U32VecNeon) -> I32VecNeon {
@@ -1666,7 +1730,7 @@ and fixed in newer versions of rustc.
          }
      }
  
-@@ -710,7 +714,7 @@ impl SimdMask for MaskNeon {
+@@ -850,7 +854,7 @@ impl SimdMask for MaskNeon {
              if_true: F32VecNeon,
              if_false: F32VecNeon,
          ) -> F32VecNeon {
@@ -1675,7 +1739,7 @@ and fixed in newer versions of rustc.
          }
  
          fn if_then_else_i32(
-@@ -718,19 +722,19 @@ impl SimdMask for MaskNeon {
+@@ -858,19 +862,19 @@ impl SimdMask for MaskNeon {
              if_true: I32VecNeon,
              if_false: I32VecNeon,
          ) -> I32VecNeon {
@@ -1699,7 +1763,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -739,7 +743,7 @@ impl BitAnd<MaskNeon> for MaskNeon {
+@@ -879,7 +883,7 @@ impl BitAnd<MaskNeon> for MaskNeon {
      type Output = MaskNeon;
      fn_neon! {
          fn bitand(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
@@ -1708,7 +1772,7 @@ and fixed in newer versions of rustc.
          }
      }
  }
-@@ -748,7 +752,7 @@ impl BitOr<MaskNeon> for MaskNeon {
+@@ -888,7 +892,7 @@ impl BitOr<MaskNeon> for MaskNeon {
      type Output = MaskNeon;
      fn_neon! {
          fn bitor(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {

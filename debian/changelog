@@ -1,7 +1,56 @@
-chromium (146.0.7680.71-1~deb12u1) UNRELEASED; urgency=high
+chromium (146.0.7680.71-1~deb12u1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2026-3913: Heap buffer overflow in WebML. Reported by Tobias Wienand
+    - CVE-2026-3914: Integer overflow in WebML. Reported by cinzinga.
+    - CVE-2026-3915: Heap buffer overflow in WebML. Reported by Tobias Wienand
+    - CVE-2026-3916: Out of bounds read in Web Speech.
+      Reported by Grischa Hauser.
+    - CVE-2026-3917: Use after free in Agents. Reported by Syn4pse.
+    - CVE-2026-3918: Use after free in WebMCP. Reported by Syn4pse.
+    - CVE-2026-3919: Use after free in Extensions. Reported by Huinian Yang
+      (@vmth6) of Amber Security Lab, OPPO Mobile Telecommunications Corp. Ltd
+    - CVE-2026-3920: Out of bounds memory access in WebML. Reported by Google.
+    - CVE-2026-3921: Use after free in TextEncoding.
+      Reported by Pranamya Keshkamat & Cantina.xyz.
+    - CVE-2026-3922: Use after free in MediaStream.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-3923: Use after free in WebMIDI.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-3924: Use after free in WindowDialog.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-3925: Incorrect security UI in LookalikeChecks.
+      Reported by NDevTK and Alesandro Ortiz.
+    - CVE-2026-3926: Out of bounds read in V8. Reported by qymag1c.
+    - CVE-2026-3927: Incorrect security UI in PictureInPicture.
+      Reported by Barath Stalin K.
+    - CVE-2026-3928: Insufficient policy enforcement in Extensions.
+      Reported by portsniffer443.
+    - CVE-2026-3929: Side-channel information leakage in ResourceTiming.
+      Reported by Povcfe of Tencent Security Xuanwu Lab.
+    - CVE-2026-3930: Unsafe navigation in Navigation.
+      Reported by Povcfe of Tencent Security Xuanwu Lab.
+    - CVE-2026-3931: Heap buffer overflow in Skia. Reported by Huinian Yang
+      (@vmth6) of Amber Security Lab, OPPO Mobile Telecommunications Corp. Ltd
+    - CVE-2026-3932: Insufficient policy enforcement in PDF.
+      Reported by Ayato Shitomi.
+    - CVE-2026-3934: Insufficient policy enforcement in ChromeDriver.
+      Reported by Povcfe of Tencent Security Xuanwu Lab.
+    - CVE-2026-3935: Incorrect security UI in WebAppInstalls.
+      Reported by Barath Stalin K.
+    - CVE-2026-3936: Use after free in WebView. Reported by Am4deu$.
+    - CVE-2026-3937: Incorrect security UI in Downloads.
+      Reported by Abhishek Kumar.
+    - CVE-2026-3938: Insufficient policy enforcement in Clipboard.
+      Reported by vicevirus.
+    - CVE-2026-3939: Insufficient policy enforcement in PDF. Reported by NDevTK
+    - CVE-2026-3940: Insufficient policy enforcement in DevTools.
+      Reported by Jorian Woltjer, Mian, bug_blitzer.
+    - CVE-2026-3941: Insufficient policy enforcement in DevTools.
+      Reported by Lyra Rebane (rebane2001).
+    - CVE-2026-3942: Incorrect security UI in PictureInPicture.
+      Reported by Barath Stalin K.
   * d/rules: update rustc version string for new upstream expectations of
     no spaces.
   * d/patches:
@@ -55,7 +104,7 @@ chromium (146.0.7680.71-1~deb12u1) UNRELEASED; urgency=high
     - trixie/gn-len.patch: Zap another instance of len() for older GN
       [trixie, bookworm].
 
- -- Andres Salomon <dilinger@debian.org>  Sun, 08 Mar 2026 04:33:59 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 11 Mar 2026 20:01:51 -0400
 
 chromium (145.0.7632.159-1~deb12u1) bookworm-security; urgency=high
 

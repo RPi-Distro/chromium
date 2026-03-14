@@ -1,3 +1,14 @@
+chromium (146.0.7680.80-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-3909: Out of bounds write in Skia.
+      Reported by Google Threat Analysis Group.
+    - CVE-2026-3910: Inappropriate implementation in V8.
+      Reported by Google Threat Analysis Group.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 11 Mar 2026 20:01:51 -0400
+
 chromium (146.0.7680.71-1) unstable; urgency=high
 
   [ Andres Salomon ]

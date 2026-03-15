@@ -1,3 +1,15 @@
+chromium (146.0.7680.80-1~deb13u1) trixie-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-3909: Out of bounds write in Skia.
+      Reported by Google Threat Analysis Group.
+    - CVE-2026-3910: Inappropriate implementation in V8.
+      Reported by Google Threat Analysis Group.
+  * d/patches/disable/glic.patch: drop an unnecessary pieces of the patch.
+
+ -- Andres Salomon <dilinger@debian.org>  Sat, 14 Mar 2026 22:15:19 -0400
+
 chromium (146.0.7680.71-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]

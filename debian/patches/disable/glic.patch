@@ -248,7 +248,22 @@ Parts of this taken from ungoogled-chromium.
    std::vector<base::CallbackListSubscription> tab_subscriptions_;
 --- a/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
 +++ b/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
-@@ -403,42 +403,6 @@ void ContextualCueingHelper::OnCueingDec
+@@ -175,14 +175,6 @@ void ContextualCueingHelper::DidFinishNa
+     return;
+   }
+ 
+-  // Make sure we always clear the nudge label anyway despite operating on
+-  // pages.
+-  auto* glic_nudge_controller = GetGlicNudgeController();
+-  if (glic_nudge_controller) {
+-    glic_nudge_controller->UpdateNudgeLabel(
+-        web_contents(), std::string(), /*prompt_suggestion=*/std::nullopt,
+-        tabs::GlicNudgeActivity::kNudgeIgnoredNavigation, base::DoNothing());
+-  }
+ 
+   // Do not report page loads for these types of navigations.
+   if (navigation_handle->IsErrorPage() ||
+@@ -403,52 +395,7 @@ void ContextualCueingHelper::OnCueingDec
      return;
    }
  
@@ -289,8 +304,18 @@ Parts of this taken from ungoogled-chromium.
 -    // Fall through to nudge if side panel open fails.
 -  }
  
-   GetGlicNudgeController()->UpdateNudgeLabel(
-       web_contents(), cue_label,
+-  GetGlicNudgeController()->UpdateNudgeLabel(
+-      web_contents(), cue_label,
+-      prompt_suggestion.empty() ? std::nullopt
+-                                : std::make_optional(prompt_suggestion),
+-      /*activity=*/std::nullopt,
+-      base::BindRepeating(&ContextualCueingService::OnNudgeActivity,
+-                          contextual_cueing_service_->GetWeakPtr(),
+-                          web_contents(), document_available_time,
+-                          decision_result->is_dynamic));
+ }
+ 
+ // static
 --- a/chrome/browser/ui/views/glic/BUILD.gn
 +++ b/chrome/browser/ui/views/glic/BUILD.gn
 @@ -4,7 +4,6 @@
@@ -343,19 +368,8 @@ Parts of this taken from ungoogled-chromium.
  }
 --- a/chrome/browser/contextual_cueing/contextual_cueing_page_data.cc
 +++ b/chrome/browser/contextual_cueing/contextual_cueing_page_data.cc
-@@ -105,23 +105,8 @@ void ContextualCueingPageData::FindMatch
-     auto decision = DidMatchCueingConditions(config);
-     if (decision == kAllowed) {
-       if (kUseDynamicCues.Get() && config.has_dynamic_cue_label()) {
--        std::move(cueing_decision_callback_)
--            .Run(base::ok(CueingResult{
--                config.dynamic_cue_label(), config.default_text(),
--                /*is_dynamic=*/true, config.auto_open_eligible(),
--                config.has_auto_send_params()
--                    ? std::make_optional(CueingResult::AutoSendParams{
--                          /*auto_send_eligible=*/
--                          config.auto_send_params().auto_send_eligible()})
--                    : std::nullopt}));
+@@ -116,12 +116,6 @@ void ContextualCueingPageData::FindMatch
+                     : std::nullopt}));
          return;
        } else if (config.has_cue_label()) {
 -        std::move(cueing_decision_callback_)
@@ -413,39 +427,6 @@ Parts of this taken from ungoogled-chromium.
      "//chrome/browser/optimization_guide",
      "//chrome/browser/optimization_guide:test_support",
      "//chrome/browser/safe_browsing",
---- a/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
-+++ b/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
-@@ -175,14 +175,6 @@ void ContextualCueingHelper::DidFinishNa
-     return;
-   }
- 
--  // Make sure we always clear the nudge label anyway despite operating on
--  // pages.
--  auto* glic_nudge_controller = GetGlicNudgeController();
--  if (glic_nudge_controller) {
--    glic_nudge_controller->UpdateNudgeLabel(
--        web_contents(), std::string(), /*prompt_suggestion=*/std::nullopt,
--        tabs::GlicNudgeActivity::kNudgeIgnoredNavigation, base::DoNothing());
--  }
- 
-   // Do not report page loads for these types of navigations.
-   if (navigation_handle->IsErrorPage() ||
-@@ -404,15 +396,6 @@ void ContextualCueingHelper::OnCueingDec
-   }
- 
- 
--  GetGlicNudgeController()->UpdateNudgeLabel(
--      web_contents(), cue_label,
--      prompt_suggestion.empty() ? std::nullopt
--                                : std::make_optional(prompt_suggestion),
--      /*activity=*/std::nullopt,
--      base::BindRepeating(&ContextualCueingService::OnNudgeActivity,
--                          contextual_cueing_service_->GetWeakPtr(),
--                          web_contents(), document_available_time,
--                          decision_result->is_dynamic));
- }
- 
- // static
 --- a/chrome/browser/contextual_tasks/contextual_tasks_side_panel_coordinator.cc
 +++ b/chrome/browser/contextual_tasks/contextual_tasks_side_panel_coordinator.cc
 @@ -341,14 +341,6 @@ void ContextualTasksSidePanelCoordinator
@@ -662,7 +643,7 @@ Parts of this taken from ungoogled-chromium.
  #include "chrome/browser/glic/public/glic_keyed_service_factory.h"
  #include "chrome/browser/media/router/media_router_feature.h"
  #include "chrome/browser/performance_manager/public/user_tuning/user_tuning_utils.h"
-@@ -88,7 +87,6 @@
+@@ -89,7 +88,6 @@
  #include "chrome/browser/ui/views/toolbar/split_tabs_button.h"
  #include "chrome/browser/ui/views/toolbar/toolbar_button.h"
  #include "chrome/browser/ui/views/toolbar/toolbar_controller.h"
@@ -670,7 +651,7 @@ Parts of this taken from ungoogled-chromium.
  #include "chrome/browser/ui/views/toolbar/webui_toolbar_web_view.h"
  #include "chrome/browser/ui/views/zoom/zoom_view_controller.h"
  #include "chrome/browser/ui/waap/initial_webui_window_metrics_manager.h"
-@@ -517,7 +515,6 @@ void ToolbarView::Init() {
+@@ -524,7 +522,6 @@ void ToolbarView::Init() {
  void ToolbarView::OnVerticalTabStripModeChanged(
      tabs::VerticalTabStripStateController* controller) {
    should_display_vertical_tabs_ = controller->ShouldDisplayVerticalTabs();
@@ -678,7 +659,7 @@ Parts of this taken from ungoogled-chromium.
  }
  
  #if BUILDFLAG(ENABLE_GLIC)
-@@ -663,6 +660,9 @@ void ToolbarView::SetGlicPanelIsOpen(boo
+@@ -670,6 +667,9 @@ void ToolbarView::SetGlicPanelIsOpen(boo
  
    glic_button_->SetGlicPanelIsOpen(open);
  }

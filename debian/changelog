@@ -1,4 +1,4 @@
-chromium (146.0.7680.80-1) UNRELEASED; urgency=high
+chromium (146.0.7680.80-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
@@ -6,8 +6,9 @@ chromium (146.0.7680.80-1) UNRELEASED; urgency=high
       Reported by Google Threat Analysis Group.
     - CVE-2026-3910: Inappropriate implementation in V8.
       Reported by Google Threat Analysis Group.
+  * d/patches/disable/glic.patch: drop an unnecessary pieces of the patch.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 11 Mar 2026 20:01:51 -0400
+ -- Andres Salomon <dilinger@debian.org>  Sat, 14 Mar 2026 22:15:19 -0400
 
 chromium (146.0.7680.71-1) unstable; urgency=high
 

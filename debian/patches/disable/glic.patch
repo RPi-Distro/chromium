@@ -5,44 +5,6 @@ Glic" stands for Gemini Live in Chrome (it's Google's AI thing).
 
 Parts of this taken from ungoogled-chromium.
 
---- a/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
-+++ b/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
-@@ -382,35 +382,6 @@ void ContextualCueingHelper::OnCueingDec
-     return;
-   }
- 
--  // Handle side panel auto-open case: bypass nudge and open panel directly.
--  // If auto-open fails or is disabled, falls through to standard nudge.
--  const bool should_open_side_panel =
--      decision_result->auto_open_eligible &&
--      base::FeatureList::IsEnabled(kEnableAutoOpenGlicSidePanel);
--
--  if (should_open_side_panel) {
--    auto* tab_interface = tabs::TabInterface::GetFromContents(web_contents());
--    auto* browser_window_interface = tab_interface->GetBrowserWindowInterface();
--    Profile* profile =
--        Profile::FromBrowserContext(web_contents()->GetBrowserContext());
--    auto* glic_service =
--        glic::GlicKeyedServiceFactory::GetGlicKeyedService(profile);
--    if (glic_service && browser_window_interface) {
--      const bool auto_send_prompt =
--          decision_result->auto_send_params.has_value() &&
--          decision_result->auto_send_params->auto_send_eligible &&
--          !prompt_suggestion.empty();
--      glic_service->ToggleUI(
--          browser_window_interface,
--          /*prevent_close=*/true,
--          glic::mojom::InvocationSource::kAutoOpenedByContextualCue,
--          prompt_suggestion.empty() ? std::nullopt
--                                    : std::make_optional(prompt_suggestion),
--          auto_send_prompt);
--      return;
--    }
--    // Fall through to nudge if side panel open fails.
--  }
- 
-   GetGlicNudgeController()->UpdateNudgeLabel(
-       web_contents(), cue_label,
 --- a/chrome/browser/extensions/api/pdf_viewer_private/BUILD.gn
 +++ b/chrome/browser/extensions/api/pdf_viewer_private/BUILD.gn
 @@ -18,7 +18,6 @@ source_set("pdf_viewer_private") {
@@ -53,8 +15,8 @@ Parts of this taken from ungoogled-chromium.
      "//chrome/browser/pdf",
      "//chrome/browser/pdf:pdf_pref_names",
      "//chrome/browser/profiles:profile",
-@@ -48,8 +47,6 @@ source_set("browser_tests") {
-   # sources = [ "pdf_viewer_private_browsertest.cc" ]
+@@ -46,8 +45,6 @@ source_set("browser_tests") {
+   sources = [ "pdf_viewer_private_browsertest.cc" ]
    deps = [
      ":pdf_viewer_private",
 -    "//chrome/browser/glic",
@@ -74,7 +36,7 @@ Parts of this taken from ungoogled-chromium.
  #include "chrome/browser/pdf/pdf_pref_names.h"
  #include "chrome/browser/pdf/pdf_viewer_stream_manager.h"
  #include "chrome/browser/profiles/profile.h"
-@@ -306,24 +303,7 @@ ExtensionFunction::ResponseAction PdfVie
+@@ -305,24 +302,7 @@ ExtensionFunction::ResponseAction PdfVie
      return RespondNow(Error("No tab."));
    }
  
@@ -179,18 +141,18 @@ Parts of this taken from ungoogled-chromium.
    enable_chrome_notifications = is_mac || is_win || is_linux
  
    # Enables inclusion of glic in the build.
--  enable_glic = is_mac || is_win || is_linux || is_chromeos
+-  enable_glic = is_mac || is_win || is_linux || is_chromeos || is_android
 +  enable_glic = false
  
-   # Enables inclusion of glic in the build on Android.
-   # This is temporary, and will eventually be replaced by enable_glic.
+   # Skips unmigrated actor files in the build on Android. This is temporary, and
+   # will eventually be removed once migration is done. Adding this flag likely
 --- a/chrome/browser/glic/BUILD.gn
 +++ b/chrome/browser/glic/BUILD.gn
-@@ -7,7 +7,6 @@ import("//build/config/ozone.gni")
- import("//chrome/common/features.gni")
+@@ -8,7 +8,6 @@ import("//chrome/common/features.gni")
+ import("//components/guest_view/buildflags/buildflags.gni")
  import("//mojo/public/tools/bindings/mojom.gni")
  
--assert(enable_glic || enable_glic_android)
+-assert(enable_glic)
  
  # TODO(b/430371855): This target should eventually become Glic's public target,
  # to be imported from external BUILD files. The "impl" source set below would
@@ -200,7 +162,7 @@ Parts of this taken from ungoogled-chromium.
  import("//chrome/common/features.gni")
  import("//mojo/public/tools/bindings/mojom.gni")
  
--assert(enable_glic || enable_glic_android)
+-assert(enable_glic)
  
  source_set("fre") {
    sources = [
@@ -209,7 +171,7 @@ Parts of this taken from ungoogled-chromium.
 @@ -1,6 +1,5 @@
  import("//chrome/common/features.gni")
  
--assert(enable_glic || enable_glic_android)
+-assert(enable_glic)
  
  source_set("shared") {
    sources = [
@@ -229,7 +191,7 @@ Parts of this taken from ungoogled-chromium.
  
  import("//ui/webui/resources/tools/build_webui.gni")
  
--assert(enable_glic || enable_glic_android)
+-assert(enable_glic)
  
  build_webui("build") {
    grd_prefix = "glic_fre"
@@ -245,11 +207,11 @@ Parts of this taken from ungoogled-chromium.
    sources = [
 --- a/chrome/browser/resources/glic/BUILD.gn
 +++ b/chrome/browser/resources/glic/BUILD.gn
-@@ -5,7 +5,6 @@
+@@ -7,7 +7,6 @@ import("//extensions/buildflags/buildfla
  import("//ui/webui/resources/tools/build_webui.gni")
  import("//ui/webui/resources/tools/optimize_webui.gni")
  
--assert(enable_glic || enable_glic_android)
+-assert(enable_glic)
  
  build_webui("build") {
    grd_prefix = "glic"
@@ -259,7 +221,7 @@ Parts of this taken from ungoogled-chromium.
  
  import("//chrome/common/features.gni")
  
--assert(enable_glic || enable_glic_android)
+-assert(enable_glic)
  
  source_set("test_support") {
    testonly = true
@@ -284,3 +246,523 @@ Parts of this taken from ungoogled-chromium.
  
    // Holds subscriptions for TabInterface callbacks.
    std::vector<base::CallbackListSubscription> tab_subscriptions_;
+--- a/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
++++ b/chrome/browser/contextual_cueing/contextual_cueing_helper.cc
+@@ -175,14 +175,6 @@ void ContextualCueingHelper::DidFinishNa
+     return;
+   }
+ 
+-  // Make sure we always clear the nudge label anyway despite operating on
+-  // pages.
+-  auto* glic_nudge_controller = GetGlicNudgeController();
+-  if (glic_nudge_controller) {
+-    glic_nudge_controller->UpdateNudgeLabel(
+-        web_contents(), std::string(), /*prompt_suggestion=*/std::nullopt,
+-        tabs::GlicNudgeActivity::kNudgeIgnoredNavigation, base::DoNothing());
+-  }
+ 
+   // Do not report page loads for these types of navigations.
+   if (navigation_handle->IsErrorPage() ||
+@@ -403,52 +395,7 @@ void ContextualCueingHelper::OnCueingDec
+     return;
+   }
+ 
+-  // Handle side panel auto-open case: bypass nudge and open panel directly.
+-  // If auto-open fails or is disabled, falls through to standard nudge.
+-  const bool should_open_side_panel =
+-      decision_result->auto_open_eligible &&
+-      base::FeatureList::IsEnabled(kEnableAutoOpenGlicSidePanel);
+-
+-  if (should_open_side_panel) {
+-    auto* tab_interface = tabs::TabInterface::GetFromContents(web_contents());
+-    auto* browser_window_interface = tab_interface->GetBrowserWindowInterface();
+-    Profile* profile =
+-        Profile::FromBrowserContext(web_contents()->GetBrowserContext());
+-    auto* glic_service =
+-        glic::GlicKeyedServiceFactory::GetGlicKeyedService(profile);
+-    if (glic_service && browser_window_interface) {
+-      const bool auto_send_prompt =
+-          decision_result->auto_send_params.has_value() &&
+-          decision_result->auto_send_params->auto_send_eligible &&
+-          !prompt_suggestion.empty();
+-
+-      glic::mojom::InvocationSource invocation_source =
+-          glic::mojom::InvocationSource::kAutoOpenedByContextualCue;
+-      if (web_contents()->GetContentsMimeType() == pdf::kPDFMimeType &&
+-          base::FeatureList::IsEnabled(features::kAutoOpenGlicForPdf)) {
+-        invocation_source = glic::mojom::InvocationSource::kAutoOpenedForPdf;
+-      }
+-
+-      glic_service->ToggleUI(browser_window_interface,
+-                             /*prevent_close=*/true, invocation_source,
+-                             prompt_suggestion.empty()
+-                                 ? std::nullopt
+-                                 : std::make_optional(prompt_suggestion),
+-                             auto_send_prompt);
+-      return;
+-    }
+-    // Fall through to nudge if side panel open fails.
+-  }
+ 
+-  GetGlicNudgeController()->UpdateNudgeLabel(
+-      web_contents(), cue_label,
+-      prompt_suggestion.empty() ? std::nullopt
+-                                : std::make_optional(prompt_suggestion),
+-      /*activity=*/std::nullopt,
+-      base::BindRepeating(&ContextualCueingService::OnNudgeActivity,
+-                          contextual_cueing_service_->GetWeakPtr(),
+-                          web_contents(), document_available_time,
+-                          decision_result->is_dynamic));
+ }
+ 
+ // static
+--- a/chrome/browser/ui/views/glic/BUILD.gn
++++ b/chrome/browser/ui/views/glic/BUILD.gn
+@@ -4,7 +4,6 @@
+ 
+ import("//chrome/common/features.gni")
+ 
+-assert(enable_glic)
+ 
+ source_set("glic") {
+   sources = []
+--- a/chrome/browser/ui/views/tabs/glic/BUILD.gn
++++ b/chrome/browser/ui/views/tabs/glic/BUILD.gn
+@@ -4,7 +4,6 @@
+ 
+ import("//chrome/common/features.gni")
+ 
+-assert(enable_glic)
+ 
+ source_set("glic") {
+   sources = [ "glic_actor_constants.h" ]
+--- a/chrome/browser/ui/webui/tabs/tabs_mojom_traits.cc
++++ b/chrome/browser/ui/webui/tabs/tabs_mojom_traits.cc
+@@ -79,12 +79,6 @@ MojoTabAlertState EnumTraits<MojoTabAler
+       return MojoTabAlertState::kActorAccessing;
+     case mojo::NativeTabAlertState::kActorWaitingOnUser:
+       return MojoTabAlertState::kActorWaitingOnUser;
+-#if BUILDFLAG(ENABLE_GLIC)
+-    case NativeTabAlertState::kGlicAccessing:
+-      return MojoTabAlertState::kGlicAccessing;
+-    case NativeTabAlertState::kGlicSharing:
+-      return MojoTabAlertState::kGlicSharing;
+-#endif  // BUILDFLAG(ENABLE_GLIC)
+   }
+   NOTREACHED();
+ }
+@@ -141,12 +135,14 @@ bool EnumTraits<MojoTabAlertState, Nativ
+     case MojoTabAlertState::kActorWaitingOnUser:
+       *out = NativeTabAlertState::kActorWaitingOnUser;
+       return true;
++#if BUILDFLAG(ENABLE_GLIC)
+     case MojoTabAlertState::kGlicAccessing:
+       *out = NativeTabAlertState::kGlicAccessing;
+       return true;
+     case MojoTabAlertState::kGlicSharing:
+       *out = NativeTabAlertState::kGlicSharing;
+       return true;
++#endif
+   }
+   NOTREACHED();
+ }
+--- a/chrome/browser/contextual_cueing/contextual_cueing_page_data.cc
++++ b/chrome/browser/contextual_cueing/contextual_cueing_page_data.cc
+@@ -116,12 +116,6 @@ void ContextualCueingPageData::FindMatch
+                     : std::nullopt}));
+         return;
+       } else if (config.has_cue_label()) {
+-        std::move(cueing_decision_callback_)
+-            .Run(base::ok(CueingResult{
+-                l10n_util::GetStringUTF8(
+-                    IDS_GLIC_BUTTON_ENTRYPOINT_ASK_ABOUT_THIS_PAGE_LABEL),
+-                /*prompt_suggestion=*/"",
+-                /*is_dynamic=*/false, /*auto_open_eligible=*/false}));
+         return;
+       }
+     } else if (decision == kNeedsPdfPageCount) {
+--- a/chrome/browser/skills/skills_ui_tab_controller.cc
++++ b/chrome/browser/skills/skills_ui_tab_controller.cc
+@@ -28,7 +28,6 @@
+ DEFINE_USER_DATA(skills::SkillsUiTabController);
+ 
+ namespace {
+-using glic::mojom::SkillSource;
+ 
+ constexpr base::TimeDelta kNotifyTimeoutSeconds = base::Seconds(60);
+ constexpr base::TimeDelta kGlicPanelPollIntervalMilliseconds =
+--- a/chrome/browser/ui/webui/tab_search/tab_search_page_handler.cc
++++ b/chrome/browser/ui/webui/tab_search/tab_search_page_handler.cc
+@@ -1499,8 +1499,7 @@ tab_search::mojom::TabPtr TabSearchPageH
+                                 alert == tabs::TabAlert::kAudioRecording ||
+                                 alert == tabs::TabAlert::kVideoRecording ||
+                                 alert == tabs::TabAlert::kAudioPlaying ||
+-                                alert == tabs::TabAlert::kAudioMuting ||
+-                                alert == tabs::TabAlert::kGlicAccessing;
++                                alert == tabs::TabAlert::kAudioMuting;
+                        });
+ 
+   return tab_data;
+--- a/chrome/browser/actor/actor_keyed_service_factory.cc
++++ b/chrome/browser/actor/actor_keyed_service_factory.cc
+@@ -15,9 +15,7 @@ namespace actor {
+ // static
+ ActorKeyedService* ActorKeyedServiceFactory::GetActorKeyedService(
+     content::BrowserContext* browser_context) {
+-  return static_cast<ActorKeyedService*>(
+-      GetInstance()->GetServiceForBrowserContext(browser_context,
+-                                                 /*create=*/true));
++  return nullptr;
+ }
+ 
+ // static
+--- a/chrome/browser/actor/BUILD.gn
++++ b/chrome/browser/actor/BUILD.gn
+@@ -394,8 +394,6 @@ source_set("browser_tests") {
+     ":tools_test_support",
+     "ui:event_dispatcher",
+     "//chrome/browser/affiliations",
+-    "//chrome/browser/glic",
+-    "//chrome/browser/glic/test_support",
+     "//chrome/browser/optimization_guide",
+     "//chrome/browser/optimization_guide:test_support",
+     "//chrome/browser/safe_browsing",
+--- a/chrome/browser/contextual_tasks/contextual_tasks_side_panel_coordinator.cc
++++ b/chrome/browser/contextual_tasks/contextual_tasks_side_panel_coordinator.cc
+@@ -341,14 +341,6 @@ void ContextualTasksSidePanelCoordinator
+   ObserveWebContentsOnActiveTab();
+   NotifyActiveTaskContextProvider();
+ 
+-  // Hide the GLIC nudge when the side panel is opened.
+-  if (auto* glic_nudge_controller =
+-          browser_window_->GetFeatures().glic_nudge_controller()) {
+-    glic_nudge_controller->UpdateNudgeLabel(
+-        active_tab_interface->GetContents(), "", std::nullopt,
+-        tabs::GlicNudgeActivity::kNudgeIgnoredOpenedContextualTasksSidePanel,
+-        base::DoNothing());
+-  }
+ }
+ 
+ void ContextualTasksSidePanelCoordinator::Close() {
+--- a/chrome/browser/glic/public/glic_enabling.cc
++++ b/chrome/browser/glic/public/glic_enabling.cc
+@@ -341,35 +341,11 @@ GlicGlobalEnabling::GlicGlobalEnabling(D
+ GlicGlobalEnabling::~GlicGlobalEnabling() = default;
+ 
+ bool GlicGlobalEnabling::IsEnabledByFlags() {
+-  // It is important that this value not change at runtime in production. Any
+-  // future updates to this function must maintain that property.
+-  bool is_enabled = base::FeatureList::IsEnabled(features::kGlic) &&
+-                    locale_enablement_.value_or(true) &&
+-                    country_enablement_.value_or(true);
+-#if BUILDFLAG(IS_CHROMEOS)
+-  static const bool supported_system_requirements = [] {
+-    constexpr base::ByteCount kMinimumMemoryThreshold = base::GiB(8);
+-
+-    // TODO(b:468055370): Remove the bypassing once the glic is fully launched.
+-    const bool bypass_cbx_requirement =
+-        base::FeatureList::IsEnabled(
+-            chromeos::features::kGlicEnableFor8GbDevices) &&
+-        base::SysInfo::AmountOfPhysicalMemory() >= kMinimumMemoryThreshold;
+-
+-    return (bypass_cbx_requirement ||
+-            base::FeatureList::IsEnabled(
+-                chromeos::features::kFeatureManagementGlic));
+-  }();
+-
+-  is_enabled = is_enabled && supported_system_requirements;
+-#endif  // BUILDFLAG(IS_CHROMEOS)
+-  return is_enabled;
++  return false;
+ }
+ 
+ bool GlicEnabling::IsEnabledByFlags() {
+-  return g_browser_process->GetFeatures()
+-      ->glic_global_enabling()
+-      .IsEnabledByFlags();
++  return false;
+ }
+ 
+ bool GlicEnabling::IsProfileEligible(const Profile* profile) {
+--- a/chrome/browser/ui/BUILD.gn
++++ b/chrome/browser/ui/BUILD.gn
+@@ -1462,8 +1462,6 @@ static_library("ui") {
+       "//chrome/browser/ui/shared_highlighting",
+       "//chrome/browser/ui/tab_sharing",
+       "//chrome/browser/ui/tab_sharing:impl",
+-      "//chrome/browser/ui/tabs:glic",
+-      "//chrome/browser/ui/tabs:glic_impl",
+       "//chrome/browser/ui/tabs/organization",
+       "//chrome/browser/ui/tabs/organization:impl",
+       "//chrome/browser/ui/tabs/saved_tab_groups",
+@@ -1826,7 +1824,6 @@ static_library("ui") {
+ 
+       # TODO(crbug.com/364501603): Remove this circular dependency when
+       # c/b/ui/views/tabs/tab_strip_action_container.h gets componentized.
+-      "//chrome/browser/ui/tabs:glic_impl",
+ 
+       # TODO(crbug.com/438226511): Remove this circular dependency when the following headers
+       # get componentized:
+--- a/chrome/browser/ui/tab_search_feature.cc
++++ b/chrome/browser/ui/tab_search_feature.cc
+@@ -12,6 +12,6 @@ namespace features {
+ bool HasTabSearchToolbarButton() {
+   // It is important that this value not change at runtime in production. Any
+   // future updates to this function must maintain that property.
+-  return glic::GlicEnabling::IsEnabledByFlags();
++  return true;
+ }
+ }  // namespace features
+--- a/chrome/browser/ui/tabs/alert/tab_alert_controller.cc
++++ b/chrome/browser/ui/tabs/alert/tab_alert_controller.cc
+@@ -178,7 +178,6 @@ std::u16string TabAlertController::GetTa
+     case TabAlert::kActorWaitingOnUser:
+       return l10n_util::GetStringUTF16(
+           IDS_TOOLTIP_TAB_ALERT_STATE_ACTOR_ACCESSING);
+-    case TabAlert::kGlicAccessing:
+ #if BUILDFLAG(ENABLE_GLIC)
+       return l10n_util::GetStringUTF16(
+           IDS_TOOLTIP_TAB_ALERT_STATE_GLIC_ACCESSING);
+--- a/chrome/browser/ui/tabs/tab_features.cc
++++ b/chrome/browser/ui/tabs/tab_features.cc
+@@ -366,23 +366,6 @@ void TabFeatures::Init(TabInterface& tab
+                   tab, &tab, side_panel_registry_.get());
+     }
+ #endif  // BUILDFLAG(ENABLE_GLIC)
+-    // TODO(crbug.com/433973411): Move this logic to a helper function.
+-    if (base::FeatureList::IsEnabled(features::kGlicActorUi) &&
+-        profile->IsRegularProfile()) {
+-      // The associated tab is passed to CreateInstance twice: for dependency
+-      // injection callbacks and as a direct constructor argument.
+-      actor_ui_tab_controller_ =
+-          GetUserDataFactory().CreateInstance<actor::ui::ActorUiTabController>(
+-              tab, tab, actor::ActorKeyedService::Get(profile));
+-    }
+-    actor_tab_data_ =
+-        GetUserDataFactory().CreateInstance<actor::ActorTabData>(tab, &tab);
+-
+-    if (base::FeatureList::IsEnabled(features::kSkillsEnabled)) {
+-      skills_ui_tab_controller_ =
+-          GetUserDataFactory().CreateInstance<skills::SkillsUiTabController>(
+-              tab, tab);
+-    }
+   }  // IsInNormalWindow() end.
+ 
+   // This block instantiates the page action controllers that depends on the
+--- a/chrome/browser/ui/tabs/tab_strip_api/converters/tab_converters.cc
++++ b/chrome/browser/ui/tabs/tab_strip_api/converters/tab_converters.cc
+@@ -203,10 +203,6 @@ tabs::TabAlert FromMojo(mojom::AlertStat
+       return tabs::TabAlert::kAudioRecording;
+     case mojom::AlertState::kVideoRecording:
+       return tabs::TabAlert::kVideoRecording;
+-    case mojom::AlertState::kGlicAccessing:
+-      return tabs::TabAlert::kGlicAccessing;
+-    case mojom::AlertState::kGlicSharing:
+-      return tabs::TabAlert::kGlicSharing;
+     case mojom::AlertState::kActorAccessing:
+       return tabs::TabAlert::kActorAccessing;
+     case mojom::AlertState::kActorWaitingOnUser:
+--- a/chrome/browser/ui/views/glic/glic_button_interface.h
++++ b/chrome/browser/ui/views/glic/glic_button_interface.h
+@@ -18,13 +18,7 @@ namespace glic {
+ class GlicButtonInterface {
+  public:
+   static views::LabelButton* FromBrowser(BrowserWindowInterface* browser) {
+-    if (!browser) {
+       return nullptr;
+-    }
+-
+-    BrowserView* browser_view = BrowserView::GetBrowserViewForBrowser(browser);
+-    CHECK(browser_view);
+-    return browser_view->GetGlicButton();
+   }
+ };
+ }  // namespace glic
+--- a/chrome/browser/ui/views/toolbar/BUILD.gn
++++ b/chrome/browser/ui/views/toolbar/BUILD.gn
+@@ -34,7 +34,6 @@ source_set("toolbar") {
+     "toolbar_button_menu_highlighter.h",
+     "toolbar_chip_button.h",
+     "toolbar_controller.h",
+-    "toolbar_glic_button.h",
+     "toolbar_icon_container_view.h",
+     "toolbar_ink_drop_util.h",
+     "toolbar_view.h",
+@@ -46,7 +45,6 @@ source_set("toolbar") {
+   public_deps = [
+     "//base",
+     "//build:buildflag_header_h",
+-    "//chrome/browser/glic",
+     "//chrome/browser/ui:browser_element_identifiers",
+     "//chrome/browser/ui/browser_window",
+     "//chrome/browser/ui/color:color_headers",
+@@ -58,7 +56,6 @@ source_set("toolbar") {
+     "//chrome/browser/ui/views",
+     "//chrome/browser/ui/views/frame",
+     "//chrome/browser/ui/views/frame:toolbar_button_provider",
+-    "//chrome/browser/ui/views/glic",
+     "//chrome/browser/ui/views/location_bar",
+     "//chrome/browser/ui/webui/webui_toolbar",
+     "//components/bookmarks/browser",
+@@ -114,7 +111,6 @@ source_set("impl") {
+     "toolbar_button_menu_highlighter.cc",
+     "toolbar_chip_button.cc",
+     "toolbar_controller.cc",
+-    "toolbar_glic_button.cc",
+     "toolbar_icon_container_view.cc",
+     "toolbar_ink_drop_util.cc",
+     "toolbar_view.cc",
+@@ -167,7 +163,6 @@ source_set("impl") {
+     "//chrome/browser/ui/omnibox",
+     "//chrome/browser/ui/profiles",
+     "//chrome/browser/ui/safety_hub",
+-    "//chrome/browser/ui/tabs:glic",
+     "//chrome/browser/ui/tabs:tab_enums",
+     "//chrome/browser/ui/tabs:tab_strip",
+     "//chrome/browser/ui/tabs:tab_strip_model_observer",
+@@ -176,12 +171,10 @@ source_set("impl") {
+     "//chrome/browser/ui/views/contextual_tasks",
+     "//chrome/browser/ui/views/download",
+     "//chrome/browser/ui/views/frame:toolbar_button_provider",
+-    "//chrome/browser/ui/views/glic",
+     "//chrome/browser/ui/views/interaction",
+     "//chrome/browser/ui/views/page_action",
+     "//chrome/browser/ui/views/side_panel",
+     "//chrome/browser/ui/views/side_panel:side_panel_enums",
+-    "//chrome/browser/ui/views/tabs/glic",
+     "//chrome/browser/ui/waap",
+     "//chrome/browser/ui/waap:window_metrics_manager",
+     "//chrome/browser/ui/web_applications",
+--- a/chrome/browser/ui/views/toolbar/toolbar_view.cc
++++ b/chrome/browser/ui/views/toolbar/toolbar_view.cc
+@@ -23,7 +23,6 @@
+ #include "chrome/app/chrome_command_ids.h"
+ #include "chrome/browser/command_updater.h"
+ #include "chrome/browser/glic/public/glic_enabling.h"
+-#include "chrome/browser/glic/public/glic_keyed_service.h"
+ #include "chrome/browser/glic/public/glic_keyed_service_factory.h"
+ #include "chrome/browser/media/router/media_router_feature.h"
+ #include "chrome/browser/performance_manager/public/user_tuning/user_tuning_utils.h"
+@@ -89,7 +88,6 @@
+ #include "chrome/browser/ui/views/toolbar/split_tabs_button.h"
+ #include "chrome/browser/ui/views/toolbar/toolbar_button.h"
+ #include "chrome/browser/ui/views/toolbar/toolbar_controller.h"
+-#include "chrome/browser/ui/views/toolbar/toolbar_glic_button.h"
+ #include "chrome/browser/ui/views/toolbar/webui_toolbar_web_view.h"
+ #include "chrome/browser/ui/views/zoom/zoom_view_controller.h"
+ #include "chrome/browser/ui/waap/initial_webui_window_metrics_manager.h"
+@@ -524,7 +522,6 @@ void ToolbarView::Init() {
+ void ToolbarView::OnVerticalTabStripModeChanged(
+     tabs::VerticalTabStripStateController* controller) {
+   should_display_vertical_tabs_ = controller->ShouldDisplayVerticalTabs();
+-  UpdateGlicButtonVisibility();
+ }
+ 
+ #if BUILDFLAG(ENABLE_GLIC)
+@@ -670,6 +667,9 @@ void ToolbarView::SetGlicPanelIsOpen(boo
+ 
+   glic_button_->SetGlicPanelIsOpen(open);
+ }
++#else
++void ToolbarView::SetGlicShowState(bool show) { }
++void ToolbarView::SetGlicPanelIsOpen(bool open) { }
+ #endif  // ENABLE_GLIC
+ 
+ void ToolbarView::AnimationEnded(const gfx::Animation* animation) {
+--- a/chrome/browser/ui/views/tabs/tab_strip_action_container.h
++++ b/chrome/browser/ui/views/tabs/tab_strip_action_container.h
+@@ -9,7 +9,6 @@
+ #include "chrome/browser/glic/browser_ui/glic_button_controller_delegate.h"
+ #include "chrome/browser/ui/tabs/glic_nudge_controller.h"
+ #include "chrome/browser/ui/tabs/glic_nudge_delegate.h"
+-#include "chrome/browser/ui/views/glic/glic_button.h"
+ #include "chrome/browser/ui/views/glic/glic_button_interface.h"
+ #include "chrome/browser/ui/views/tabs/glic/glic_actor_task_icon.h"
+ #include "chrome/browser/ui/views/tabs/glic/tab_strip_glic_button.h"
+@@ -35,7 +34,6 @@ class GlicAndActorButtonsContainer;
+ class TabStripActionContainer : public views::View,
+                                 public views::AnimationDelegateViews,
+                                 public views::MouseWatcherListener,
+-                                public GlicNudgeDelegate,
+                                 public glic::GlicButtonControllerDelegate {
+   METADATA_HEADER(TabStripActionContainer, views::View)
+ 
+@@ -109,10 +107,6 @@ class TabStripActionContainer : public v
+   // views::MouseWatcherListener:
+   void MouseMovedOutOfHost() override;
+ 
+-  // GlicNudgeDelegate:
+-  void OnTriggerGlicNudgeUI(std::string label) override;
+-  void OnHideGlicNudgeUI() override;
+-  bool GetIsShowingGlicNudge() override;
+ 
+   // GlicButtonControllerDelegate:
+   void SetGlicShowState(bool show) override;
+--- a/chrome/browser/ui/views/tabs/tab_strip_action_container.cc
++++ b/chrome/browser/ui/views/tabs/tab_strip_action_container.cc
+@@ -532,41 +532,6 @@ void TabStripActionContainer::OnGlicActo
+ 
+ #endif  // BUILDFLAG(ENABLE_GLIC)
+ 
+-void TabStripActionContainer::OnTriggerGlicNudgeUI(std::string label) {
+-#if BUILDFLAG(ENABLE_GLIC)
+-  if (GetIsShowingGlicActorTaskIconNudge()) {
+-    return;
+-  }
+-
+-  CHECK(glic_button_);
+-  if (!label.empty()) {
+-    glic_button_->SetNudgeLabel(std::move(label));
+-    ShowTabStripNudge(glic_button_);
+-  }
+-
+-#else
+-  NOTREACHED();
+-#endif  // BUILDFLAG(ENABLE_GLIC)
+-}
+-
+-void TabStripActionContainer::OnHideGlicNudgeUI() {
+-#if BUILDFLAG(ENABLE_GLIC)
+-
+-  CHECK(glic_button_);
+-  HideTabStripNudge(glic_button_);
+-
+-#else
+-  NOTREACHED();
+-#endif  // BUILDFLAG(ENABLE_GLIC)
+-}
+-
+-bool TabStripActionContainer::GetIsShowingGlicNudge() {
+-#if BUILDFLAG(ENABLE_GLIC)
+-  return glic_button_ && glic_button_->GetIsShowingNudge();
+-#else
+-  return false;
+-#endif  // BUILDFLAG(ENABLE_GLIC)
+-}
+ 
+ #if BUILDFLAG(ENABLE_GLIC)
+ views::FlexLayoutView* TabStripActionContainer::glic_actor_button_container() {
+@@ -670,23 +635,6 @@ void TabStripActionContainer::HideGlicAc
+ }
+ 
+ void TabStripActionContainer::FinalizeHideGlicActorTaskIcon() {
+-  // 1. Reset Nudge State
+-  if (glic_actor_task_icon_->GetIsShowingNudge()) {
+-    if (animation_session_ &&
+-        animation_session_->button() == glic_actor_task_icon_) {
+-      animation_session_.reset();
+-    }
+-    glic_actor_task_icon_->SetIsShowingNudge(false);
+-  }
+-  glic_actor_task_icon_->SetVisible(false);
+-  glic_actor_task_icon_->SetTaskIconToDefault();
+-  glic_button_ = AddChildView(std::move(glic_button_));
+-  glic_actor_button_container_->SetVisible(false);
+-  glic_button_->Expand();
+-  glic_button_->ResetSplitButtonCornerStyling();
+-  // Reset the animation mode for the next time the icon is shown.
+-  glic_actor_task_icon_->SetAnimationMode(TaskIconAnimationMode::kEntry);
+-  UpdateGlicActorButtonContainerBorders();
+ #if !BUILDFLAG(IS_MAC)
+   // Re-add the separator so it's ordered after the GlicButton.
+   separator_ = AddChildView(std::move(separator_));

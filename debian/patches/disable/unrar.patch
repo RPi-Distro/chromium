@@ -32,8 +32,8 @@
  
 --- a/chrome/services/file_util/regular_archive_analysis_delegate.cc
 +++ b/chrome/services/file_util/regular_archive_analysis_delegate.cc
-@@ -8,8 +8,6 @@
- 
+@@ -9,8 +9,6 @@
+ #include "base/containers/span.h"
  #include "base/files/file.h"
  #include "chrome/utility/safe_browsing/zip_writer_delegate.h"
 -#include "third_party/unrar/google/unrar_delegates.h"

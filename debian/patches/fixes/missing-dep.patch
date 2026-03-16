@@ -1,0 +1,20 @@
+Author: Andres Salomon <dilinger@debian.org>
+
+Fix a missing dependency:
+
+../../chrome/browser/skills/skills_update_observer.h:13:10: fatal error: 'chrome/browser/glic/host/glic.mojom.h' file not found
+
+This could go upstream.
+
+diff --git a/chrome/browser/BUILD.gn b/chrome/browser/BUILD.gn
+index e61c053fa0405..8e65b54639500 100644
+--- a/chrome/browser/BUILD.gn
++++ b/chrome/browser/BUILD.gn
+@@ -8461,6 +8461,7 @@ static_library("browser_generated_files") {
+     "//chrome/browser/regional_capabilities",
+     "//chrome/browser/resource_coordinator:mojo_bindings",
+     "//chrome/browser/sharing:buildflags",
++    "//chrome/browser/glic:mojo_bindings",
+     "//chrome/browser/ui/webui/app_service_internals:mojo_bindings",
+     "//chrome/browser/ui/webui/location_internals:mojo_bindings",
+     "//chrome/browser/ui/webui/omnibox:mojo_bindings",

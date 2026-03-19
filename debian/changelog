@@ -1,13 +1,13 @@
-chromium (146.0.7680.153-1) UNRELEASED; urgency=high
+chromium (146.0.7680.153-1) unstable; urgency=high
 
   [ Andres Salomon ]
-  * New upstream security release.
+  * New upstream (security?) release.
   * d/patches/disable/glic.patch: refresh for upstream tab nudging changes
 
   [ Jianfeng Liu ]
   * add upstreamed patch of boringssl to fix loong64 build (closes: #1130569)
 
- -- Andres Salomon <dilinger@debian.org>  Sat, 14 Mar 2026 22:15:19 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Mar 2026 19:35:31 -0400
 
 chromium (146.0.7680.80-1) unstable; urgency=high
 

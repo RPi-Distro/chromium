@@ -1,3 +1,56 @@
+chromium (146.0.7680.153-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-4439: Out of bounds memory access in WebGL.
+      Reported by Goodluck.
+    - CVE-2026-4440: Out of bounds read and write in WebGL.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4441: Use after free in Base. Reported by Google.
+    - CVE-2026-4442: Heap buffer overflow in CSS. Reported by Syn4pse.
+    - CVE-2026-4443: Heap buffer overflow in WebAudio.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4444: Stack buffer overflow in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4445: Use after free in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4446: Use after free in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4447: Inappropriate implementation in V8. Reported by Erge.
+    - CVE-2026-4448: Heap buffer overflow in ANGLE.
+      Reported by M. Fauzan Wijaya (Gh05t666nero).
+    - CVE-2026-4449: Use after free in Blink. Reported by Syn4pse.
+    - CVE-2026-4450: Out of bounds write in V8. Reported by qymag1c.
+    - CVE-2026-4451: Insufficient validation of untrusted input in
+      Navigation. Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4452: Integer overflow in ANGLE. Reported by cinzinga.
+    - CVE-2026-4453: Integer overflow in Dawn. Reported by sweetchip.
+    - CVE-2026-4454: Use after free in Network.
+      Reported by heapracer (@heapracer).
+    - CVE-2026-4455: Heap buffer overflow in PDFium.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4456: Use after free in Digital Credentials API.
+      Reported by sean wong.
+    - CVE-2026-4457: Type Confusion in V8.
+      Reported by Zhenpeng (Leo) Lin at depthfirst.
+    - CVE-2026-4458: Use after free in Extensions. Reported by Shaheen Fazim.
+    - CVE-2026-4459: Out of bounds read and write in WebAudio. Reported by
+      Jihyeon Jeong (Compsec Lab, Seoul National University / Research Intern)
+    - CVE-2026-4460: Out of bounds read in Skia.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4461: Inappropriate implementation in V8. Reported by Google.
+    - CVE-2026-4462: Out of bounds read in Blink.
+      Reported by heapracer (@heapracer).
+    - CVE-2026-4463: Heap buffer overflow in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4464: Integer overflow in ANGLE. Reported by heesun.
+  * d/patches/disable/glic.patch: refresh for upstream tab nudging changes
+
+  [ Jianfeng Liu ]
+  * add upstreamed patch of boringssl to fix loong64 build (closes: #1130569)
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Mar 2026 19:35:31 -0400
+
 chromium (146.0.7680.80-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

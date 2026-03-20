@@ -32,6 +32,7 @@ fixes/bytemuck.patch
 fixes/missing-dep.patch
 
 upstream/profile.patch
+upstream/fix-boringssl-loong64.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

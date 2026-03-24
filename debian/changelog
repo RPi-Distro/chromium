@@ -1,3 +1,18 @@
+chromium (146.0.7680.164-1) UNRELEASED; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/copyright: Exclude *.pb (protobuf) binary files.
+  * d/patches: Various ungoogled-chromium-related updates.
+    - disable/glic.patch: Drop, replaced with disable-ai.patch from the
+      ungoogled-chromium project.
+    - ungoogled/disable-ai.patch: Import new patch from ungoogled-chromium
+      that zaps glic, screen_ai, and various other adjacent AI-based features.
+    - ungoogled/disable-mei-preload.patch: Import patch to allow building
+      without *.pb files.
+    - ungoogled/disable-privacy-sandbox.patch: Update imported patch.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 19 Mar 2026 19:35:32 -0400
+
 chromium (146.0.7680.153-1) unstable; urgency=high
 
   [ Andres Salomon ]

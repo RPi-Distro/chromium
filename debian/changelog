@@ -1,4 +1,4 @@
-chromium (146.0.7680.164-1) UNRELEASED; urgency=high
+chromium (146.0.7680.164-2) UNRELEASED; urgency=high
 
   [ Daniel Richard G. ]
   * d/copyright: Exclude *.pb (protobuf) binary files.
@@ -12,6 +12,26 @@ chromium (146.0.7680.164-1) UNRELEASED; urgency=high
     - ungoogled/disable-privacy-sandbox.patch: Update imported patch.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 19 Mar 2026 19:35:32 -0400
+
+chromium (146.0.7680.164-1) unstable; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-4673: Heap buffer overflow in WebAudio.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4674: Out of bounds read in CSS. Reported by Syn4pse.
+    - CVE-2026-4675: Heap buffer overflow in WebGL.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-4676: Use after free in Dawn.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-4677: Out of bounds read in WebAudio.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4678: Use after free in WebGPU. Reported by Google.
+    - CVE-2026-4679: Integer overflow in Fonts.
+      Reported by GF, Un3xploitable Of DeadSec.
+    - CVE-2026-4680: Use after free in FedCM. Reported by Shaheen Fazim.
+
+ -- Andres Salomon <dilinger@debian.org>  Mon, 23 Mar 2026 21:26:56 -0400
 
 chromium (146.0.7680.153-1) unstable; urgency=high
 

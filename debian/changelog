@@ -1,4 +1,4 @@
-chromium (1:146.0.7680.153-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:146.0.7680.164-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,27 @@ chromium (1:146.0.7680.153-1~deb12u1+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Sun, 22 Mar 2026 21:00:26 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 25 Mar 2026 13:47:52 +0000
+
+chromium (146.0.7680.164-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-4673: Heap buffer overflow in WebAudio.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4674: Out of bounds read in CSS. Reported by Syn4pse.
+    - CVE-2026-4675: Heap buffer overflow in WebGL.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-4676: Use after free in Dawn.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-4677: Out of bounds read in WebAudio.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-4678: Use after free in WebGPU. Reported by Google.
+    - CVE-2026-4679: Integer overflow in Fonts.
+      Reported by GF, Un3xploitable Of DeadSec.
+    - CVE-2026-4680: Use after free in FedCM. Reported by Shaheen Fazim.
+
+ -- Andres Salomon <dilinger@debian.org>  Mon, 23 Mar 2026 21:26:56 -0400
 
 chromium (146.0.7680.153-1~deb12u1) bookworm-security; urgency=high
 

@@ -16,6 +16,11 @@ chromium (146.0.7680.164-2) UNRELEASED; urgency=high
     - third_party/0005-blink-add-audio-vector-support.patch: Fix FBTFS from
       upstream adding vector-accelerated audio delay functions
 
+  [ Jianfeng Liu ]
+  * d/patches/upstream:
+    - Fix-blink-compilation-for-platforms-other-than-x86-and-arm.patch: Fix
+      FBTFS from upstream for blink audio delay function on loong64
+
  -- Andres Salomon <dilinger@debian.org>  Thu, 19 Mar 2026 19:35:32 -0400
 
 chromium (146.0.7680.164-1) unstable; urgency=high

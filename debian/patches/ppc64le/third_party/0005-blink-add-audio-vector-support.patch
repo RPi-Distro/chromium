@@ -194,7 +194,7 @@
 +#if !(defined(ARCH_CPU_X86_FAMILY) || defined(CPU_ARM_NEON) || defined(ARCH_CPU_PPC64_FAMILY))
  // Default scalar versions if simd/neon are not available.
  std::tuple<size_t, size_t> Delay::ProcessARateVector(
-     float* destination,
+     base::span<float> destination,
 diff -urN a/third_party/blink/renderer/platform/BUILD.gn b/third_party/blink/renderer/platform/BUILD.gn
 --- a/third_party/blink/renderer/platform/BUILD.gn
 +++ b/third_party/blink/renderer/platform/BUILD.gn

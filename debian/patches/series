@@ -33,6 +33,7 @@ fixes/missing-dep.patch
 
 upstream/profile.patch
 upstream/fix-boringssl-loong64.patch
+upstream/Fix-blink-compilation-for-platforms-other-than-x86-and-arm.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

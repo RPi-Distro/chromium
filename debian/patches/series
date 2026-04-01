@@ -44,7 +44,6 @@ disable/google-api-warning.patch
 disable/third-party-cookies.patch
 disable/driver-chrome-path.patch
 disable/widevine-cdm-cu.patch
-disable/glic.patch
 disable/clang-version-check.patch
 disable/screen-ai-blob.patch
 disable/node-version-ck.patch
@@ -116,6 +115,8 @@ llvm-22/ignore-for-ubsan.patch
 #fixes/highway-include-path.patch
 
 # Ungoogled Chromium
+ungoogled/disable-ai.patch
+ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
 
 # i386 support
@@ -171,6 +172,7 @@ ppc64le/v8/0001-Enable-ppc64-pointer-compression.patch
 ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
+ppc64le/third_party/0005-blink-add-audio-vector-support.patch
 
 ppc64le/core/add-ppc64-architecture-string.patch
 ppc64le/core/add-ppc64-pthread-stack-size.patch

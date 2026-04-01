@@ -5,6 +5,7 @@ chromium (146.0.7680.177-1) UNRELEASED; urgency=high
   * d/patches:
     - upstream/Fix-blink-compilation-for-platforms-other-than-x86-and-arm.patch:
       drop, merged upstream.
+    - ungoogled/disable-ai.patch: resync with u-c.
 
   [ Daniel Richard G. ]
   * d/copyright: Exclude *.pb (protobuf) binary files.

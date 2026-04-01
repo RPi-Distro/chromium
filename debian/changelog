@@ -1,7 +1,42 @@
-chromium (146.0.7680.177-1) UNRELEASED; urgency=high
+chromium (146.0.7680.177-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
+    - CVE-2026-5272: Heap buffer overflow in GPU.
+      Reported by inspector-ambitious.
+    - CVE-2026-5273: Use after free in CSS. Reported by Anonymous.
+    - CVE-2026-5274: Integer overflow in Codecs.
+      Reported by heapracer (@heapracer).
+    - CVE-2026-5275: Heap buffer overflow in ANGLE.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5276: Insufficient policy enforcement in WebUSB.
+      Reported by Ariel Simon.
+    - CVE-2026-5277: Integer overflow in ANGLE.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5278: Use after free in Web MIDI.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5279: Object corruption in V8.
+      Reported by Hyeonjun Ahn (@_deayzl).
+    - CVE-2026-5280: Use after free in WebCodecs.
+      Reported by heapracer (@heapracer).
+    - CVE-2026-5281: Use after free in Dawn.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-5282: Out of bounds read in WebCodecs.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5283: Inappropriate implementation in ANGLE.
+      Reported by sweetchip.
+    - CVE-2026-5284: Use after free in Dawn.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-5285: Use after free in WebGL.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5286: Use after free in Dawn. Reported by sweetchip.
+    - CVE-2026-5287: Use after free in PDF. Reported by Syn4pse.
+    - CVE-2026-5288: Use after free in WebView. Reported by Google.
+    - CVE-2026-5289: Use after free in Navigation. Reported by Google.
+    - CVE-2026-5290: Use after free in Compositing. Reported by Google.
+    - CVE-2026-5291: Inappropriate implementation in WebGL.
+      Reported by heapracer (@heapracer).
+    - CVE-2026-5292: Out of bounds read in WebCodecs. Reported by Google.
   * d/patches:
     - upstream/Fix-blink-compilation-for-platforms-other-than-x86-and-arm.patch:
       drop, merged upstream.
@@ -28,7 +63,7 @@ chromium (146.0.7680.177-1) UNRELEASED; urgency=high
     - Fix-blink-compilation-for-platforms-other-than-x86-and-arm.patch: Fix
       FBTFS from upstream for blink audio delay function on loong64
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 03:22:34 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
 
 chromium (146.0.7680.164-1) unstable; urgency=high
 

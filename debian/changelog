@@ -1,4 +1,10 @@
-chromium (146.0.7680.164-2) UNRELEASED; urgency=high
+chromium (146.0.7680.177-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+  * d/patches:
+    - upstream/Fix-blink-compilation-for-platforms-other-than-x86-and-arm.patch:
+      drop, merged upstream.
 
   [ Daniel Richard G. ]
   * d/copyright: Exclude *.pb (protobuf) binary files.
@@ -21,7 +27,7 @@ chromium (146.0.7680.164-2) UNRELEASED; urgency=high
     - Fix-blink-compilation-for-platforms-other-than-x86-and-arm.patch: Fix
       FBTFS from upstream for blink audio delay function on loong64
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 19 Mar 2026 19:35:32 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 03:22:34 -0400
 
 chromium (146.0.7680.164-1) unstable; urgency=high
 

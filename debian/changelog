@@ -1,3 +1,24 @@
+chromium (147.0.7727.49-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/patches:
+    - upstream/profile.patch: drop, merged upstream.
+    - upstream/fix-boringssl-loong64.patch: drop, merged upstream.
+    - debianization/clang-version.patch: refresh.
+    - disable/signin.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/unrar.patch: drop, merged upstream.
+    - trixie/nodejs-set-intersection.patch: update for upstream refactoring.
+    - bookworm/clang19.patch: -fno-lifetime-dse is unsupported. Also move
+      to llvm-19 directory.
+    - ungoogled/disable-ai.patch: sync from ungoogled-chromium project.
+  * d/rules:
+    - drop "enable_glic=false", as upstream now forces their AI on everyone;
+      but we've got a patch to strip it out.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
+
 chromium (146.0.7680.177-1) unstable; urgency=high
 
   [ Andres Salomon ]

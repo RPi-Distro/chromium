@@ -21,6 +21,14 @@ chromium (147.0.7727.49-1) UNRELEASED; urgency=high
     - drop "enable_glic=false", as upstream now forces their AI on everyone;
       but we strip it out with ungoogled/disable-ai.patch.
 
+  [ Daniel Richard G. ]
+  * d/patches:
+    - bookworm/gn-absl.patch: Add visibility specifier to absl/crc:crc32,
+      and re-sort the patch to keep the edits organized.
+    - trixie/gn-len.patch: Refresh.
+    - trixie/gn-module-name.patch: New patch to address older GN not knowing
+      about the {{cc_module_name}} substitution.
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
 
 chromium (146.0.7680.177-1) unstable; urgency=high

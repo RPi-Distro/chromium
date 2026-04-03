@@ -78,12 +78,14 @@ trixie/gn-string-hash.patch
 trixie/nodejs-set-intersection.patch
 #trixie/gn-len.patch
 #trixie/nodejs-main.patch
+#trixie/gn-module-name.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch
 bookworm/bindgen.patch
 #bookworm/constflatset.patch
 bookworm/gn-allowlist.patch
+#bookworm/gn-absl.patch
 #bookworm/constexpr3.patch
 bookworm/foreach.patch
 #bookworm/node18-compat.patch

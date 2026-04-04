@@ -33,6 +33,16 @@ chromium (147.0.7727.49-1) UNRELEASED; urgency=high
     - trixie/gn-module-name.patch: New patch to address older GN not knowing
       about the {{cc_module_name}} substitution [trixie, bookworm].
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh for
+      upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: regenerate
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
 
 chromium (146.0.7680.177-1) unstable; urgency=high

@@ -21,6 +21,7 @@ chromium (147.0.7727.49-1) UNRELEASED; urgency=high
       removals that clang 19 needs.
     - rust-1.85/image.patch: enable nightly features for image_v0.25
       [trixie, bookworm].
+    - bookworm/constexpr.patch: update/refresh for renamed file [bookworm].
   * d/rules:
     - drop "enable_glic=false", as upstream now forces their AI on everyone;
       but we strip it out with ungoogled/disable-ai.patch.

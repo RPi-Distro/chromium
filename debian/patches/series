@@ -5,6 +5,7 @@ debianization/clang-version.patch
 debianization/swiftshader-use-llvm-16.patch
 debianization/cross-build.patch
 debianization/rustc-bootstrap.patch
+debianization/safe-libcxx.patch
 
 fixes/ps-print.patch
 fixes/widevine-locations.patch
@@ -31,8 +32,6 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/missing-dep.patch
 
-upstream/profile.patch
-upstream/fix-boringssl-loong64.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -49,7 +48,6 @@ disable/screen-ai-blob.patch
 disable/node-version-ck.patch
 disable/license-headless-shell.patch
 disable/enterprise-tests.patch
-disable/unrar.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
 
@@ -66,6 +64,7 @@ llvm-19/clang-19-crash.patch
 llvm-19/clone-traits.patch
 llvm-19/octal.patch
 llvm-19/value-or.patch
+llvm-19/clang19.patch
 
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
@@ -82,13 +81,14 @@ trixie/gn-string-hash.patch
 trixie/nodejs-set-intersection.patch
 trixie/gn-len.patch
 trixie/nodejs-main.patch
+trixie/gn-module-name.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch
 bookworm/bindgen.patch
-bookworm/clang19.patch
 #bookworm/constflatset.patch
 bookworm/gn-allowlist.patch
+#bookworm/gn-absl.patch
 #bookworm/constexpr3.patch
 bookworm/foreach.patch
 #bookworm/node18-compat.patch

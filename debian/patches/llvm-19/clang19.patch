@@ -1,0 +1,33 @@
+warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-nontrivial-memaccess'? [-Wunknown-warning-option]
+
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -618,7 +618,6 @@ config("compiler") {
+     # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
+     # for discussion.
+     if (!is_wasm) {
+-      cflags += [ "-fno-lifetime-dse" ]
+     }
+ 
+     # TODO(hans): Remove this once Clang generates better optimized debug info
+@@ -2223,10 +2222,8 @@ config("default_warnings") {
+       "-Wno-thread-safety-reference-return",
+ 
+       # TODO(crbug.com/376641662): Fix and re-enable.
+-      "-Wno-nontrivial-memcall",
+ 
+       # TODO(crbug.com/432275627): Fix and re-enable.
+-      "-Wno-uninitialized-const-pointer",
+     ]
+ 
+     cflags_cc += [
+--- a/v8/BUILD.gn
++++ b/v8/BUILD.gn
+@@ -1871,7 +1871,6 @@ config("strict_warnings") {
+     }
+     cflags += [ "-Wmissing-field-initializers" ]
+     if (v8_current_cpu != "ppc64" && v8_current_cpu != "s390x") {
+-      cflags += [ "-Wunnecessary-virtual-specifier" ]
+     }
+   }
+ }

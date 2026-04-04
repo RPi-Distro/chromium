@@ -1,6 +1,6 @@
---- a/ui/webui/resources/tools/webui_eslint_plugin.js
-+++ b/ui/webui/resources/tools/webui_eslint_plugin.js
-@@ -368,8 +368,8 @@
+--- a/ui/webui/resources/tools/eslint/web_component_missing_deps.js
++++ b/ui/webui/resources/tools/eslint/web_component_missing_deps.js
+@@ -135,8 +135,8 @@ export const webComponentMissingDeps = E
          for (const tagName of tagNames) {
            const expectedImportedFilenames = getExpectedImportFilenames(tagName);
  
@@ -11,7 +11,7 @@
              continue;
            }
  
-@@ -386,8 +386,7 @@
+@@ -153,8 +153,7 @@ export const webComponentMissingDeps = E
            }
  
            if (lazyImportedFileNames !== null &&

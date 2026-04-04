@@ -6,10 +6,10 @@ lld vs gold).
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -411,7 +411,7 @@ config("compiler") {
-     }
- 
-     if (use_lld) {
+@@ -1048,7 +1048,7 @@ config("linker") {
+       ldflags += [ "--ld-path=" +
+                    rebase_path(experimental_linker_path, root_build_dir) ]
+     } else if (use_lld) {
 -      ldflags += [ "-fuse-ld=lld" ]
 +      ldflags += [ "-fuse-ld=lld-19" ]
        if (lld_path != "") {

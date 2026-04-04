@@ -1,3 +1,50 @@
+chromium (147.0.7727.49-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/patches:
+    - upstream/profile.patch: drop, merged upstream.
+    - upstream/fix-boringssl-loong64.patch: drop, merged upstream.
+    - debianization/clang-version.patch: refresh.
+    - disable/signin.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - disable/unrar.patch: drop, merged upstream.
+    - trixie/nodejs-set-intersection.patch: update for upstream refactoring.
+    - bookworm/clang19.patch: -fno-lifetime-dse is unsupported. Also move
+      to llvm-19 directory.
+    - ungoogled/disable-ai.patch: sync from ungoogled-chromium project.
+    - debianization/safe-libcxx.patch: add a patch to force building with
+      libc++'s LIBCPP_HARDENING_MODE turned on. See
+      https://issues.chromium.org/issues/485696265 for the
+      (security-related) rationale.
+    - llvm-19/static-assert.patch: add another chunk of static_assert()
+      removals that clang 19 needs.
+    - rust-1.85/image.patch: enable nightly features for image_v0.25
+      [trixie, bookworm].
+  * d/rules:
+    - drop "enable_glic=false", as upstream now forces their AI on everyone;
+      but we strip it out with ungoogled/disable-ai.patch.
+
+  [ Daniel Richard G. ]
+  * d/patches:
+    - bookworm/gn-absl.patch: Add visibility specifier to absl/crc:crc32,
+      and re-sort the patch to keep the edits organized.
+    - trixie/gn-len.patch: Refresh.
+    - trixie/gn-module-name.patch: New patch to address older GN not knowing
+      about the {{cc_module_name}} substitution [trixie, bookworm].
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh for
+      upstream changes
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: regenerate
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
+
 chromium (146.0.7680.177-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

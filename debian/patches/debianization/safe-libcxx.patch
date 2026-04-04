@@ -1,0 +1,20 @@
+Author: Andres Salomon <dilinger@debian.org>
+
+ERROR at //v8/BUILD.gn:791:1: Assertion failed.
+assert(!v8_enable_sandbox || use_safe_libcxx,
+
+We certainly don't want to disable the V8 sandbox, but since we're using a
+custom libcxx setting enable_safe_libcxx=true in d/rules does nothing. So
+we have to force this with a patch.
+
+--- a/build/config/c++/c++.gni
++++ b/build/config/c++/c++.gni
+@@ -92,7 +92,7 @@ declare_args() {
+ # The saigo libc++ is distinct from the custom hermetic libc++. However, since
+ # the Chrome team controls the saigo toolchain, it is safe to unconditionally
+ # enable libc++ hardening there as well.
+-use_safe_libcxx = use_custom_libcxx && enable_safe_libcxx
++use_safe_libcxx = true
+ 
+ # libc++abi needs to be exported from executables to be picked up by shared
+ # libraries on certain instrumented builds.

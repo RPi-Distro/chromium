@@ -69,6 +69,7 @@ llvm-19/clang19.patch
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
 rust-1.85/parsing.patch
+rust-1.85/image.patch
 
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch

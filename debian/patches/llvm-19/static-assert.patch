@@ -66,7 +66,7 @@ compiler can't do compile-time asserts.
    // is a pair of 256-bit keys, concatenated.
    DCHECK(ReservedBitsAreZero(eid));
  
--  const auto [aes_key_bytes, hmac_key_bytes] = key.split_at<32>();
+-  auto [aes_key_bytes, hmac_key_bytes] = key.split_at<32>();
 -  static_assert(aes_key_bytes.size() == 32u);
 -  static_assert(hmac_key_bytes.size() == 32u);
 +  auto [aes_key_bytes, hmac_key_bytes] = key.split_at<32>();

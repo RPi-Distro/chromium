@@ -1,0 +1,15 @@
+author: Andres Salomon <dilinger@debian.org>
+
+Enable more unstable rust features.
+
+--- a/third_party/rust/chromium_crates_io/vendor/image-v0_25/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/image-v0_25/src/lib.rs
+@@ -118,6 +118,8 @@
+ #![deny(missing_copy_implementations)]
+ #![cfg_attr(all(test, feature = "benchmarks"), feature(test))]
+ #![cfg_attr(docsrs, feature(doc_cfg))]
++#![feature(slice_as_chunks)]
++#![feature(unsigned_is_multiple_of)]
+ 
+ #[cfg(all(test, feature = "benchmarks"))]
+ extern crate test;

@@ -19,6 +19,8 @@ chromium (147.0.7727.49-1) UNRELEASED; urgency=high
       (security-related) rationale.
     - llvm-19/static-assert.patch: add another chunk of static_assert()
       removals that clang 19 needs.
+    - rust-1.85/image.patch: enable nightly features for image_v0.25
+      [trixie, bookworm].
   * d/rules:
     - drop "enable_glic=false", as upstream now forces their AI on everyone;
       but we strip it out with ungoogled/disable-ai.patch.
@@ -29,7 +31,7 @@ chromium (147.0.7727.49-1) UNRELEASED; urgency=high
       and re-sort the patch to keep the edits organized.
     - trixie/gn-len.patch: Refresh.
     - trixie/gn-module-name.patch: New patch to address older GN not knowing
-      about the {{cc_module_name}} substitution.
+      about the {{cc_module_name}} substitution [trixie, bookworm].
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
 

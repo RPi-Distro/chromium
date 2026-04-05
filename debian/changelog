@@ -44,6 +44,11 @@ chromium (147.0.7727.49-1) UNRELEASED; urgency=high
       changes
     - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: regenerate
 
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0024-disable-BROTLI_MODEL-macro-for-some-targets.patch: add upstream
+      patch to fix brotil on loong64
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
 
 chromium (146.0.7680.177-1) unstable; urgency=high

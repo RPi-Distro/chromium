@@ -14,7 +14,7 @@
        "accessibility/caption_bubble_context_browser.h",
        "accessibility/embedded_a11y_extension_loader.cc",
        "accessibility/embedded_a11y_extension_loader.h",
-@@ -4112,8 +4108,6 @@ static_library("browser") {
+@@ -4114,8 +4110,6 @@ static_library("browser") {
        "//chrome/app:command_ids",
        "//chrome/app/theme:chrome_unscaled_resources_grit",
        "//chrome/app/vector_icons",
@@ -23,7 +23,7 @@
        "//chrome/browser/accessibility_annotator/content_annotator",
        "//chrome/browser/actor/ui",
        "//chrome/browser/actor/ui:actor_overlay",
-@@ -4160,10 +4154,6 @@ static_library("browser") {
+@@ -4162,10 +4156,6 @@ static_library("browser") {
        "//chrome/browser/record_replay",
        "//chrome/browser/record_replay:impl",
        "//chrome/browser/resource_coordinator",
@@ -34,7 +34,7 @@
        "//chrome/browser/sharing_hub",
        "//chrome/browser/smart_card",
        "//chrome/browser/themes",
-@@ -4241,7 +4231,6 @@ static_library("browser") {
+@@ -4243,7 +4233,6 @@ static_library("browser") {
        "//chrome/browser/ui/webui:webui_util",
        "//chrome/browser/ui/webui/access_code_cast",
        "//chrome/browser/ui/webui/app_service_internals",
@@ -42,7 +42,7 @@
        "//chrome/browser/ui/webui/color_pipeline_internals",
        "//chrome/browser/ui/webui/commerce",
        "//chrome/browser/ui/webui/commerce:impl",
-@@ -4342,9 +4331,6 @@ static_library("browser") {
+@@ -4344,9 +4333,6 @@ static_library("browser") {
        "//components/webauthn/core/browser",
        "//components/webauthn/core/browser:passkey_model",
        "//services/device/public/cpp/hid",
@@ -52,7 +52,7 @@
        "//third_party/crashpad/crashpad/client:common",
        "//third_party/zxcvbn-cpp",
        "//ui/views",
-@@ -4537,8 +4523,6 @@ static_library("browser") {
+@@ -4539,8 +4525,6 @@ static_library("browser") {
        sources += [
          "accessibility/soda_installer_impl.cc",
          "accessibility/soda_installer_impl.h",
@@ -61,7 +61,7 @@
          "download/bubble/download_bubble_accessible_alerts_map.cc",
          "download/bubble/download_bubble_accessible_alerts_map.h",
          "download/bubble/download_bubble_display_info.cc",
-@@ -4590,8 +4574,6 @@ static_library("browser") {
+@@ -4592,8 +4576,6 @@ static_library("browser") {
          "profiles/profile_activity_metrics_recorder.h",
          "profiles/profile_list_desktop.cc",
          "profiles/profile_list_desktop.h",
@@ -70,7 +70,7 @@
          "signin/force_signin_verifier.cc",
          "signin/force_signin_verifier.h",
        ]
-@@ -5428,7 +5410,6 @@ static_library("browser") {
+@@ -5430,7 +5412,6 @@ static_library("browser") {
        "//chrome/browser/policy:system_features_disable_list",
        "//chrome/browser/push_notification",
        "//chrome/browser/resources:app_icon_resources",
@@ -78,7 +78,7 @@
        "//chrome/browser/sharesheet",
        "//chrome/browser/support_tool/ash",
        "//chrome/browser/ui/ash/accelerator",
-@@ -5693,7 +5674,6 @@ static_library("browser") {
+@@ -5695,7 +5676,6 @@ static_library("browser") {
        "//remoting/host/chromeos:browser_interop",
        "//remoting/host/chromeos:features",
        "//services/device/public/cpp/geolocation",
@@ -1069,15 +1069,10 @@
  #include "chrome/renderer/searchbox/searchbox_extension.h"
  #endif  // !BUILDFLAG(IS_ANDROID)
  
-@@ -336,20 +335,6 @@ void ChromeRenderFrameObserver::DidCommi
- }
+@@ -341,14 +340,6 @@ void ChromeRenderFrameObserver::DidClear
+     SearchBoxExtension::Install(render_frame()->GetWebFrame());
+   }
  
- void ChromeRenderFrameObserver::DidClearWindowObject() {
--#if !BUILDFLAG(IS_ANDROID)
--  if (process_state::IsInstantProcess()) {
--    SearchBoxExtension::Install(render_frame()->GetWebFrame());
--  }
--
 -  // Install ReadAnythingAppController on render frames with the Read Anything
 -  // url, which is chrome-untrusted. ReadAnythingAppController installs v8
 -  // bindings in the chrome.readingMode namespace which are consumed by
@@ -1086,10 +1081,9 @@
 -      chrome::kChromeUIUntrustedReadAnythingSidePanelURL) {
 -    ReadAnythingAppController::Install(render_frame());
 -  }
--#endif  // !BUILDFLAG(IS_ANDROID)
+ #endif  // !BUILDFLAG(IS_ANDROID)
  #if BUILDFLAG(ENABLE_GUEST_VIEW) && !BUILDFLAG(ENABLE_EXTENSIONS_CORE)
    guest_view::SlimWebViewBindings::MaybeInstall(*render_frame());
- #endif  // BUILDFLAG(ENABLE_GUEST_VIEW) && !BUILDFLAG(ENABLE_EXTENSIONS_CORE)
 --- a/chrome/test/BUILD.gn
 +++ b/chrome/test/BUILD.gn
 @@ -2703,9 +2703,6 @@ if (!is_android) {

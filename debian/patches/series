@@ -123,7 +123,6 @@ bookworm/node18-compat.patch
 # unused patches:
 # bookworm/blink-attrib.patch
 # bookworm/clang16.patch
-# bookworm/constexpr.patch
 # bookworm/lex-3way.patch
 # bookworm/more-spaceships.patch
 # bookworm/signer-lambda.patch

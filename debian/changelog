@@ -1,7 +1,107 @@
-chromium (147.0.7727.49-1~deb13u1) UNRELEASED; urgency=high
+chromium (147.0.7727.55-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2026-5858: Heap buffer overflow in WebML.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5859: Integer overflow in WebML. Reported by Anonymous.
+    - CVE-2026-5860: Use after free in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5861: Use after free in V8. Reported by 5shain.
+    - CVE-2026-5862: Inappropriate implementation in V8. Reported by Google.
+    - CVE-2026-5863: Inappropriate implementation in V8. Reported by Google.
+    - CVE-2026-5864: Heap buffer overflow in WebAudio. Reported by Syn4pse.
+    - CVE-2026-5865: Type Confusion in V8.
+      Reported by Project WhatForLunch (@pjwhatforlunch).
+    - CVE-2026-5866: Use after free in Media.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5867: Heap buffer overflow in WebML. Reported by Syn4pse.
+    - CVE-2026-5868: Heap buffer overflow in ANGLE. Reported by cinzinga.
+    - CVE-2026-5869: Heap buffer overflow in WebML.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5870: Integer overflow in Skia. Reported by Google.
+    - CVE-2026-5871: Type Confusion in V8. Reported by Google.
+    - CVE-2026-5872: Use after free in Blink. Reported by Google.
+    - CVE-2026-5873: Out of bounds read and write in V8. Reported by Google.
+    - CVE-2026-5874: Use after free in PrivateAI. Reported by Krace.
+    - CVE-2026-5875: Policy bypass in Blink.
+      Reported by Lyra Rebane (rebane2001).
+    - CVE-2026-5876: Side-channel information leakage in Navigation.
+      Reported by Lyra Rebane (rebane2001).
+    - CVE-2026-5877: Use after free in Navigation.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2026-5878: Incorrect security UI in Blink.
+      Reported by Shaheen Fazim.
+    - CVE-2026-5879: Insufficient validation of untrusted input in ANGLE.
+      Reported by parkminchan, working for SSD Labs Korea.
+    - CVE-2026-5880: Incorrect security UI in browser UI.
+    - CVE-2026-5881: Policy bypass in LocalNetworkAccess. Reported by asnine.
+    - CVE-2026-5882: Incorrect security UI in Fullscreen.
+    - CVE-2026-5883: Use after free in Media. Reported by sherkito.
+    - CVE-2026-5884: Insufficient validation of untrusted input in Media.
+      Reported by xmzyshypnc.
+    - CVE-2026-5885: Insufficient validation of untrusted input in WebML.
+      Reported by Bryan Bernhart.
+    - CVE-2026-5886: Out of bounds read in WebAudio.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5887: Insufficient validation of untrusted input in Downloads.
+      Reported by daffainfo.
+    - CVE-2026-5888: Uninitialized Use in WebCodecs. Reported by Identified by
+      the Octane Security Team: Giovanni Vignone, Paolo Gentry,
+      Robert van Eijk.
+    - CVE-2026-5889: Cryptographic Flaw in PDFium. Reported by mlafon.
+    - CVE-2026-5890: Race in WebCodecs. Reported by Casper Woudenberg.
+    - CVE-2026-5891: Insufficient policy enforcement in browser UI.
+      Reported by Tianyi Hu.
+    - CVE-2026-5892: Insufficient policy enforcement in PWAs.
+      Reported by Tianyi Hu.
+    - CVE-2026-5893: Race in V8. Reported by QYmag1c.
+    - CVE-2026-5894: Inappropriate implementation in PDF.
+      Reported by Povcfe of Tencent Security Xuanwu Lab.
+    - CVE-2026-5895: Incorrect security UI in Omnibox.
+      Reported by Renwa Hiwa @RenwaX23.
+    - CVE-2026-5896: Policy bypass in Audio.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-5897: Incorrect security UI in Downloads.
+      Reported by Farras Givari.
+    - CVE-2026-5898: Incorrect security UI in Omnibox.
+      Reported by saidinahikam032.
+    - CVE-2026-5899: Incorrect security UI in History Navigation.
+      Reported by Islam Rzayev.
+    - CVE-2026-5900: Policy bypass in Downloads.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-5901: Policy bypass in DevTools.
+      Reported by Povcfe of Tencent Security Xuanwu Lab.
+    - CVE-2026-5902: Race in Media. Reported by Luke Francis.
+    - CVE-2026-5903: Policy bypass in IFrameSandbox. Reported by @Ciarands.
+    - CVE-2026-5904: Use after free in V8.
+      Reported by Zhenpeng (Leo) Lin at depthfirst.
+    - CVE-2026-5905: Incorrect security UI in Permissions.
+      Reported by daffainfo.
+    - CVE-2026-5906: Incorrect security UI in Omnibox.
+      Reported by mohamedhesham9173.
+    - CVE-2026-5907: Insufficient data validation in Media.
+      Reported by Luke Francis.
+    - CVE-2026-5908: Integer overflow in Media.
+      Reported by Ameen Basha M K & Mohammed Yasar B.
+    - CVE-2026-5909: Integer overflow in Media.
+      Reported by Mohammed Yasar B & Ameen Basha M K.
+    - CVE-2026-5910: Integer overflow in Media.
+      Reported by Ameen Basha M K & Mohammed Yasar B.
+    - CVE-2026-5911: Policy bypass in ServiceWorkers. Reported by lebr0nli
+      of National Yang Ming Chiao Tung University, Dept. of CS, Security
+      and Systems Lab.
+    - CVE-2026-5912: Integer overflow in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-5913: Out of bounds read in Blink.
+      Reported by Vitaly Simonovich.
+    - CVE-2026-5914: Type Confusion in CSS. Reported by Syn4pse.
+    - CVE-2026-5915: Insufficient validation of untrusted input in WebML.
+      Reported by ningxin.hu@intel.com.
+    - CVE-2026-5918: Inappropriate implementation in Navigation.
+      Reported by Google.
+    - CVE-2026-5919: Insufficient validation of untrusted input in WebSockets.
+      Reported by Richard Belisle.
   * d/patches:
     - upstream/profile.patch: drop, merged upstream.
     - upstream/fix-boringssl-loong64.patch: drop, merged upstream.
@@ -13,6 +113,7 @@ chromium (147.0.7727.49-1~deb13u1) UNRELEASED; urgency=high
     - bookworm/clang19.patch: -fno-lifetime-dse is unsupported. Also move
       to llvm-19 directory.
     - ungoogled/disable-ai.patch: sync from ungoogled-chromium project.
+      Also re-add code that creates new tab's search bar (closes: #1132651).
     - debianization/safe-libcxx.patch: add a patch to force building with
       libc++'s LIBCPP_HARDENING_MODE turned on. See
       https://issues.chromium.org/issues/485696265 for the
@@ -21,6 +122,7 @@ chromium (147.0.7727.49-1~deb13u1) UNRELEASED; urgency=high
       removals that clang 19 needs.
     - rust-1.85/image.patch: enable nightly features for image_v0.25
       [trixie, bookworm].
+    - bookworm/constexpr.patch: update/refresh for renamed file [bookworm].
   * d/rules:
     - drop "enable_glic=false", as upstream now forces their AI on everyone;
       but we strip it out with ungoogled/disable-ai.patch.
@@ -43,7 +145,12 @@ chromium (147.0.7727.49-1~deb13u1) UNRELEASED; urgency=high
       changes
     - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: regenerate
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 01 Apr 2026 12:42:51 -0400
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0024-disable-BROTLI_MODEL-macro-for-some-targets.patch: add upstream
+      patch to fix brotil on loong64
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 09 Apr 2026 03:34:02 -0400
 
 chromium (146.0.7680.177-1~deb13u1) trixie-security; urgency=high
 

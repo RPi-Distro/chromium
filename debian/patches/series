@@ -90,6 +90,7 @@ bookworm/bindgen.patch
 #bookworm/constflatset.patch
 bookworm/gn-allowlist.patch
 #bookworm/gn-absl.patch
+#bookworm/constexpr.patch
 #bookworm/constexpr3.patch
 bookworm/foreach.patch
 #bookworm/node18-compat.patch
@@ -97,7 +98,6 @@ bookworm/foreach.patch
 # unused patches:
 # bookworm/blink-attrib.patch
 # bookworm/clang16.patch
-# bookworm/constexpr.patch
 # bookworm/lex-3way.patch
 # bookworm/more-spaceships.patch
 # bookworm/signer-lambda.patch
@@ -212,3 +212,4 @@ loongarch64/0020-user_agent-add-loongarch-architecture-support.patch
 loongarch64/0021-components-metrics-add-loongarch64-support.patch
 loongarch64/0022-blink-fix-lsx-code-of-webgl_image_conversion_lsx.patch
 loongarch64/0023-loongarch64-enable-lsx-by-default.patch
+loongarch64/0024-disable-BROTLI_MODEL-macro-for-some-targets.patch

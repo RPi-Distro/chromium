@@ -57,7 +57,7 @@ Subject: [PATCH 10/17] Video decode: Add BGR4 format (used by Pi H264 V4L2)
      // Opaque format that can only be scanned out as an overlay or composited by
 --- a/media/mojo/services/gpu_mojo_media_client_linux.cc
 +++ b/media/mojo/services/gpu_mojo_media_client_linux.cc
-@@ -89,6 +89,7 @@ std::vector<Fourcc> GetPreferredRenderab
+@@ -85,6 +85,7 @@ std::vector<Fourcc> GetPreferredRenderab
    // color depth (P010 -> AR24), it should be optimized for zero-copy path in
    // the future.
    renderable_fourccs.emplace_back(Fourcc::AR24);

@@ -126,7 +126,6 @@ defines+=is_debug=false \
          safe_browsing_use_unrar=false \
          enable_vr=false \
          enable_enterprise_companion=false \
-         enable_glic=false \
          build_dawn_tests=false \
          enable_iterator_debugging=false \
          angle_has_histograms=false \

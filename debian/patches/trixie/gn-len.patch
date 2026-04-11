@@ -3,16 +3,16 @@ desc: trixie's older gn lacks len().
 
 --- a/base/BUILD.gn
 +++ b/base/BUILD.gn
-@@ -2881,8 +2881,7 @@ buildflag_header("plist_size_buildflags"
-   header = "app_plist_size_buildflags.h"
-   header_dir = "base/apple"
+@@ -2882,8 +2882,7 @@ if (is_mac) {
+     header = "app_plist_size_buildflags.h"
+     header_dir = "base/apple"
  
--  plist_file = read_file("//chrome/app/app-Info.plist", "string")
--  flags = [ "APP_INFO_PLIST_FILE_SIZE=" + len(plist_file) ]
-+  flags = [ "APP_INFO_PLIST_FILE_SIZE=" + "unknown" ]
+-    plist_file = read_file("//chrome/app/app-Info.plist", "string")
+-    flags = [ "APP_INFO_PLIST_FILE_SIZE=" + len(plist_file) ]
++    flags = [ "APP_INFO_PLIST_FILE_SIZE=" + "unknown" ]
+   }
  }
  
- # This is the subset of files from base that should not be used with a dynamic
 --- a/build/rust/rust_bindgen.gni
 +++ b/build/rust/rust_bindgen.gni
 @@ -112,7 +112,6 @@ template("rust_bindgen") {

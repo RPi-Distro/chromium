@@ -10,7 +10,7 @@ Subject: [PATCH 17/22] disable browser sign in feature by default
 
 --- a/chrome/browser/signin/account_consistency_mode_manager.cc
 +++ b/chrome/browser/signin/account_consistency_mode_manager.cc
-@@ -121,7 +121,7 @@ AccountConsistencyModeManager::~AccountC
+@@ -146,7 +146,7 @@ AccountConsistencyModeManager::~AccountC
  // static
  void AccountConsistencyModeManager::RegisterProfilePrefs(
      user_prefs::PrefRegistrySyncable* registry) {
@@ -21,12 +21,12 @@ Subject: [PATCH 17/22] disable browser sign in feature by default
  // static
 --- a/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -322,7 +322,7 @@ void PrimaryAccountManager::RegisterProf
+@@ -388,7 +388,7 @@ void PrimaryAccountManager::RegisterProf
        prefs::kGoogleServicesSyncingUsernameMigratedToSignedIn, std::string());
    registry->RegisterIntegerPref(prefs::kGoogleServicesSyncingUserMigrationType,
                                  /*SyncToSigninMigrationType::kUnknown=*/0);
 -  registry->RegisterBooleanPref(prefs::kSigninAllowed, true);
 +  registry->RegisterBooleanPref(prefs::kSigninAllowed, false);
    registry->RegisterBooleanPref(prefs::kSignedInWithCredentialProvider, false);
-   registry->RegisterBooleanPref(kExplicitBrowserSigninWithoutFeatureEnabled,
-                                 false);
+   registry->RegisterBooleanPref(prefs::kExplicitBrowserSignin, false);
+   registry->RegisterBooleanPref(

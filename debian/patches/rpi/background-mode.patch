@@ -1,0 +1,18 @@
+description: disable background mode by default
+author: Serge Schneider <serge@raspberrypi.com>
+
+Background mode keeps Chromium running after all windows are closed.
+This changes the default to disabled; users can re-enable it in
+  Settings -> System -> Continue running background apps when Chromium is closed
+
+--- a/chrome/browser/background/extensions/background_mode_manager.cc
++++ b/chrome/browser/background/extensions/background_mode_manager.cc
+@@ -347,7 +347,7 @@ BackgroundModeManager::~BackgroundModeMa
+ 
+ // static
+ void BackgroundModeManager::RegisterPrefs(PrefRegistrySimple* registry) {
+-  registry->RegisterBooleanPref(prefs::kBackgroundModeEnabled, true);
++  registry->RegisterBooleanPref(prefs::kBackgroundModeEnabled, false);
+ }
+ 
+ void BackgroundModeManager::RegisterProfile(Profile* profile) {

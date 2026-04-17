@@ -236,3 +236,4 @@ rpi/enable-AcceleratedVideoDecodeLinux.patch
 rpi/v4l2-bgr4-only.patch
 rpi/notification_fix.patch
 rpi/v4l2_startup.patch
+rpi/background-mode.patch

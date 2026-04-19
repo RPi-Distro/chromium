@@ -1,3 +1,10 @@
+chromium (147.0.7727.101-2) UNRELEASED; urgency=high
+
+  [ Jochen Sprickerhof ]
+  * Make chromium.png icon reproducible (closes: #1134412).
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 19 Apr 2026 15:05:28 -0400
+
 chromium (147.0.7727.101-1) unstable; urgency=high
 
   [ Andres Salomon ]

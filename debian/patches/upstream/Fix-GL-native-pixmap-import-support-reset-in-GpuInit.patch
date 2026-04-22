@@ -1,0 +1,80 @@
+From 322bec355809269d85a8a5f277ce3e64a2e868d1 Mon Sep 17 00:00:00 2001
+From: Saifuddin Hitawala <hitawala@chromium.org>
+Date: Wed, 22 Apr 2026 11:36:01 -0700
+Subject: [PATCH] Fix GL native pixmap import support reset in GpuInit
+
+In GpuInit::InitializeAndStartSandbox(), the support for GL native
+pixmap import was being set on gpu_feature_info_ before being
+overwritten by ComputeGpuFeatureInfo(). This caused these flags to
+be reset to false, leading to media pipeline failures on certain
+Wayland configurations.
+
+This CL fixes the issue by moving setting of these flags after the
+block where gpu_feature_info_ is written by ComputeGpuFeatureInfo().
+
+Bug: 501115509
+Change-Id: I9e18eacf949a2377dd98a2cce9cd43e0ae7cc2a5
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7776335
+Commit-Queue: Saifuddin Hitawala <hitawala@chromium.org>
+Reviewed-by: Kyle Charbonneau <kylechar@chromium.org>
+Reviewed-by: Mingjing Zhang <mjzhang@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#1618991}
+---
+ gpu/ipc/service/gpu_init.cc | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/gpu/ipc/service/gpu_init.cc b/gpu/ipc/service/gpu_init.cc
+index 5f017dc4e1..4a0532581e 100644
+--- a/gpu/ipc/service/gpu_init.cc
++++ b/gpu/ipc/service/gpu_init.cc
+@@ -795,23 +795,6 @@ bool GpuInit::InitializeAndStartSandbox(base::CommandLine* command_line,
+     }
+   }
+ 
+-#if BUILDFLAG(IS_OZONE)
+-  // We need to get supported formats before sandboxing to avoid an known
+-  // issue which breaks the camera preview. (b/166850715)
+-  {
+-    TRACE_EVENT("gpu,startup", "ui::ozone::IsFormatSupportedForTexturing");
+-    auto* surface_factory =
+-        ui::OzonePlatform::GetInstance()->GetSurfaceFactoryOzone();
+-    auto* gl_ozone = surface_factory->GetCurrentGLOzone();
+-    if (gl_ozone) {
+-      gpu_feature_info_.supports_nv12_gl_native_pixmap =
+-          gl_ozone->CanImportNativePixmap(viz::MultiPlaneFormat::kNV12);
+-      gpu_feature_info_.supports_p010_gl_native_pixmap =
+-          gl_ozone->CanImportNativePixmap(viz::MultiPlaneFormat::kP010);
+-    }
+-  }
+-#endif  // BUILDFLAG(IS_OZONE)
+-
+ #if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+   // Driver may create a compatibility profile context when collect graphics
+   // information on Linux platform. Try to collect graphics information
+@@ -834,6 +817,23 @@ bool GpuInit::InitializeAndStartSandbox(base::CommandLine* command_line,
+   }
+ #endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+ 
++#if BUILDFLAG(IS_OZONE)
++  // We need to get supported formats before sandboxing to avoid an known
++  // issue which breaks the camera preview. (b/166850715)
++  {
++    TRACE_EVENT("gpu,startup", "ui::ozone::CanImportNativePixmap");
++    auto* surface_factory =
++        ui::OzonePlatform::GetInstance()->GetSurfaceFactoryOzone();
++    auto* gl_ozone = surface_factory->GetCurrentGLOzone();
++    if (gl_ozone) {
++      gpu_feature_info_.supports_nv12_gl_native_pixmap =
++          gl_ozone->CanImportNativePixmap(viz::MultiPlaneFormat::kNV12);
++      gpu_feature_info_.supports_p010_gl_native_pixmap =
++          gl_ozone->CanImportNativePixmap(viz::MultiPlaneFormat::kP010);
++    }
++  }
++#endif  // BUILDFLAG(IS_OZONE)
++
+   if (gl_use_swiftshader_) {
+     AdjustInfoToSwiftShader();
+   }
+-- 
+2.54.0
+

@@ -11,6 +11,13 @@ chromium (147.0.7727.116-1) unstable; urgency=high
   [ Jochen Sprickerhof ]
   * Make chromium.png icon reproducible (closes: #1134412).
 
+  [ Jianfeng Liu ]
+  * d/patches:
+    - upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch:
+      Fixes upstream issue https://crbug.com/501115509. This issue is
+      introduced in v147, and unfortunately the fix won't get into v147. This
+      issue affects both vaapi and v4l2 decoding under ozone wayland.
+
  -- Andres Salomon <dilinger@debian.org>  Thu, 23 Apr 2026 20:10:12 -0400
 
 chromium (147.0.7727.101-1) unstable; urgency=high

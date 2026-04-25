@@ -1,3 +1,18 @@
+chromium (147.0.7727.116-2) UNRELEASED; urgency=medium
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    - upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch:
+      Fixes upstream issue https://crbug.com/501115509. This issue is
+      introduced in v147, and unfortunately the fix won't get into v147. This
+      issue affects both vaapi and v4l2 decoding under ozone wayland.
+    - fixes/enable-widevine-on-arm64-linux-platform.patch: Enable widevine
+      support on arm64. There is no official support for widevine on arm64
+      linux while there are libwidevine binaries extracted from chromeos,
+      which can work on linux (closes: #1052440).
+
+ -- Jianfeng Liu <liujianfeng1994@gmail.com>  Fri, 24 Apr 2026 10:45:33 +0800
+
 chromium (147.0.7727.116-1) unstable; urgency=high
 
   [ Andres Salomon ]
@@ -10,13 +25,6 @@ chromium (147.0.7727.116-1) unstable; urgency=high
 
   [ Jochen Sprickerhof ]
   * Make chromium.png icon reproducible (closes: #1134412).
-
-  [ Jianfeng Liu ]
-  * d/patches:
-    - upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch:
-      Fixes upstream issue https://crbug.com/501115509. This issue is
-      introduced in v147, and unfortunately the fix won't get into v147. This
-      issue affects both vaapi and v4l2 decoding under ozone wayland.
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 23 Apr 2026 20:10:12 -0400
 

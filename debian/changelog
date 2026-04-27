@@ -1,4 +1,4 @@
-chromium (1:147.0.7727.101-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:147.0.7727.116-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,7 +30,22 @@ chromium (1:147.0.7727.101-1~deb12u1+rpt1) bookworm; urgency=medium
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 17 Apr 2026 18:53:14 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 27 Apr 2026 14:20:47 +0100
+
+chromium (147.0.7727.116-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-6919: Use after free in DevTools.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-6920: Out of bounds read in GPU.
+      Reported by tatiwari of Microsoft.
+    - CVE-2026-6921: Race in GPU. Reported by soiax.
+
+  [ Jochen Sprickerhof ]
+  * Make chromium.png icon reproducible (closes: #1134412).
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 23 Apr 2026 20:10:12 -0400
 
 chromium (147.0.7727.101-1~deb12u1) bookworm-security; urgency=high
 

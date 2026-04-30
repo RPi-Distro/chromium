@@ -9,6 +9,7 @@ debianization/safe-libcxx.patch
 
 fixes/ps-print.patch
 fixes/widevine-locations.patch
+fixes/enable-widevine-on-arm64-linux-platform.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/gentoo-stylesheet.patch
@@ -32,6 +33,7 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/missing-dep.patch
 
+upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

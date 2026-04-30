@@ -1,3 +1,57 @@
+chromium (147.0.7727.137-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-7363: Use after free in Canvas. Reported by heapracer.
+    - CVE-2026-7361: Use after free in iOS. Reported by Google.
+    - CVE-2026-7344: Use after free in Accessibility. Reported by Google.
+    - CVE-2026-7343: Use after free in Views. Reported by Google.
+    - CVE-2026-7333: Use after free in GPU.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-7360: Insufficient validation of untrusted input in Compositing.
+      Reported by Google.
+    - CVE-2026-7359: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-7358: Use after free in Animation. Reported by Google.
+    - CVE-2026-7334: Use after free in Views. Reported by Batuhan Eşref KOÇ.
+    - CVE-2026-7357: Use after free in GPU. Reported by Google.
+    - CVE-2026-7356: Use after free in Navigation. Reported by Google.
+    - CVE-2026-7354: Out of bounds read and write in Angle. Reported by Google.
+    - CVE-2026-7353: Heap buffer overflow in Skia. Reported by Google.
+    - CVE-2026-7352: Use after free in Media. Reported by Google.
+    - CVE-2026-7351: Race in MHTML. Reported by Google.
+    - CVE-2026-7350: Use after free in WebMIDI. Reported by Google.
+    - CVE-2026-7349: Use after free in Cast. Reported by Google.
+    - CVE-2026-7348: Use after free in Codecs. Reported by Google.
+    - CVE-2026-7335: Use after free in media.
+      Reported by Jungwoo Lee (@physicube) and Wongi Lee (@_qwerty_po).
+    - CVE-2026-7336: Use after free in WebRTC. Reported by Mozilla.
+    - CVE-2026-7337: Type Confusion in V8. Reported by q@calif.io.
+    - CVE-2026-7347: Use after free in Chromoting. Reported by Google.
+    - CVE-2026-7346: Inappropriate implementation in Tint. Reported by Google.
+    - CVE-2026-7345: Insufficient validation of untrusted input in Feedback.
+      Reported by Google.
+    - CVE-2026-7338: Use after free in Cast. Reported by Krace.
+    - CVE-2026-7342: Use after free in WebView. Reported by Google.
+    - CVE-2026-7341: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-7339: Heap buffer overflow in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-7340: Integer overflow in ANGLE.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-7355: Use after free in Media. Reported by Google.
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    - upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch:
+      Fixes upstream issue https://crbug.com/501115509. This issue is
+      introduced in v147, and unfortunately the fix won't get into v147. This
+      issue affects both vaapi and v4l2 decoding under ozone wayland.
+    - fixes/enable-widevine-on-arm64-linux-platform.patch: Enable widevine
+      support on arm64. There is no official support for widevine on arm64
+      linux while there are libwidevine binaries extracted from chromeos,
+      which can work on linux (closes: #1052440).
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 29 Apr 2026 04:36:38 -0400
+
 chromium (147.0.7727.116-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

@@ -33,7 +33,6 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/missing-dep.patch
 
-upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

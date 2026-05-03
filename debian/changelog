@@ -5,6 +5,12 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
   * d/copyright:
     - drop gperf binary that upstream now includes.
     - update for dropping of "khronos" from opengl paths.
+  * d/patches:
+    - upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch:
+      drop, merged upstream.
+    - disable/lint.patch: refresh.
+    - trixie/nodejs-set-intersection.patch: refresh for file rename.
+    - ungoogled/disable-ai.patch: sync from u-c.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

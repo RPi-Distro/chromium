@@ -66,6 +66,7 @@ llvm-19/clone-traits.patch
 llvm-19/octal.patch
 llvm-19/value-or.patch
 llvm-19/clang19.patch
+llvm-19/iota.patch
 
 #rust-1.85/jxl-simd-avx512.patch
 #rust-1.85/jxl-features.patch

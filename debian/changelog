@@ -19,6 +19,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - trixie/gn-inputs.patch, trixie/gn-inputs2.patch: add patches to
       revert gn "inputs" usage, which isn't supported by our older
       generate-ninja package.
+    - llvm-22/ignore-for-ubsan.patch: add another bit to remove the same
+      unsupported compiler flag.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

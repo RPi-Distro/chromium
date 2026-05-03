@@ -5,6 +5,7 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
   * d/copyright:
     - drop gperf binary that upstream now includes.
     - update for dropping of "khronos" from opengl paths.
+  * d/rules: copy gperf binary from /usr/bin into build tree.
   * d/clean:
     - update for harfbuzz-ng to harfbuzz rename.
   * d/patches:

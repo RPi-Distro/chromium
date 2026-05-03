@@ -13,6 +13,9 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - disable/lint.patch: refresh.
     - trixie/nodejs-set-intersection.patch: refresh for file rename.
     - ungoogled/disable-ai.patch: sync from u-c.
+    - trixie/gn-inputs.patch, trixie/gn-inputs2.patch: add patches to
+      revert gn "inputs" usage, which isn't supported by our older
+      generate-ninja package.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

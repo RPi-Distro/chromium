@@ -26,6 +26,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
       for value_or() type ambiguity.
     - trixie/revert-v8-sanitize.patch: add patch to revert v8 gn-related
       changes that cause the build to fail w/ older gn.
+    - llvm-19/raw-ref-map-find.patch: add patch to work around older
+      clang-19 std::map::find() limitation.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

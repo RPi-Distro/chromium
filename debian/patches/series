@@ -85,6 +85,7 @@ trixie/nodejs-set-intersection.patch
 #trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
+trixie/revert-v8-sanitize.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

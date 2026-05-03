@@ -22,6 +22,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - llvm-22/ignore-for-ubsan.patch: add another bit to remove the same
       unsupported compiler flag.
     - llvm-19/iota.patch: add build fix for missing std::ranges::iota().
+    - upstream/turboshaft.patch: add build fix pulled from (v8) upstream
+      for value_or() type ambiguity.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

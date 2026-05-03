@@ -33,6 +33,7 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/missing-dep.patch
 
+upstream/turboshaft.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

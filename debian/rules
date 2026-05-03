@@ -125,6 +125,7 @@ defines+=is_debug=false \
          use_custom_libcxx=false \
          optimize_webui=false \
          webnn_use_tflite=false \
+         webnn_use_litert=false \
          use_unofficial_version_number=false \
          safe_browsing_use_unrar=false \
          enable_vr=false \

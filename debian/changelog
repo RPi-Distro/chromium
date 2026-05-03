@@ -5,6 +5,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
   * d/copyright:
     - drop gperf binary that upstream now includes.
     - update for dropping of "khronos" from opengl paths.
+  * d/clean:
+    - update for harfbuzz-ng to harfbuzz rename.
   * d/patches:
     - upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch:
       drop, merged upstream.

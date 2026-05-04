@@ -1,5 +1,5 @@
---- a/ui/webui/resources/tools/eslint/web_component_missing_deps.js
-+++ b/ui/webui/resources/tools/eslint/web_component_missing_deps.js
+--- a/ui/webui/resources/tools/eslint/web_component_missing_deps.ts
++++ b/ui/webui/resources/tools/eslint/web_component_missing_deps.ts
 @@ -135,8 +135,8 @@ export const webComponentMissingDeps = E
          for (const tagName of tagNames) {
            const expectedImportedFilenames = getExpectedImportFilenames(tagName);

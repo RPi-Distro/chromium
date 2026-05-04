@@ -1,3 +1,36 @@
+chromium (148.0.7778.96-1~deb13u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/copyright:
+    - drop gperf binary that upstream now includes.
+    - update for dropping of "khronos" from opengl paths.
+  * d/rules:
+    - copy gperf binary from /usr/bin into build tree.
+    - set webnn_use_litert=false.
+  * d/clean:
+    - update for harfbuzz-ng to harfbuzz rename.
+  * d/patches:
+    - upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch:
+      drop, merged upstream.
+    - disable/lint.patch: refresh.
+    - trixie/nodejs-set-intersection.patch: refresh for file rename.
+    - ungoogled/disable-ai.patch: sync from u-c.
+    - trixie/gn-inputs.patch, trixie/gn-inputs2.patch: add patches to
+      revert gn "inputs" usage, which isn't supported by our older
+      generate-ninja package.
+    - llvm-22/ignore-for-ubsan.patch: add another bit to remove the same
+      unsupported compiler flag.
+    - llvm-19/iota.patch: add build fix for missing std::ranges::iota().
+    - upstream/turboshaft.patch: add build fix pulled from (v8) upstream
+      for value_or() type ambiguity.
+    - trixie/revert-v8-sanitize.patch: add patch to revert v8 gn-related
+      changes that cause the build to fail w/ older gn.
+    - llvm-19/raw-ref-map-find.patch: add patch to work around older
+      clang-19 std::map::find() limitation.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
+
 chromium (147.0.7727.137-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]

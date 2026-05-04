@@ -28,6 +28,12 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
       changes that cause the build to fail w/ older gn.
     - llvm-19/raw-ref-map-find.patch: add patch to work around older
       clang-19 std::map::find() limitation.
+    - rust-1.85/jxl-features.patch: refresh for new version. [trixie,
+      bookworm]
+    - rust-1.85/jxl-simd-avx512.patch: refresh for new version, and also
+      drop large portions of this patch that add unsafe{} to macro calls
+      (since I already added an unsafe block in the macro definition).
+      [trixie, bookworm]
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

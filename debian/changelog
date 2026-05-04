@@ -32,8 +32,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
       bookworm].
     - rust-1.85/jxl-simd-avx512.patch: refresh for new version, and also
       drop large portions of this patch that add unsafe{} to macro calls
-      (since I already added an unsafe block in the macro definition)
-      [trixie, bookworm].
+      (since I already added an unsafe block in the macro definition).
+      And mark more functions as unsafe [trixie, bookworm].
     - trixie/adler1.patch: refresh [trixie, bookworm].
     - trixie/rust-is-multiple-of.patch: refresh & move to rust-1.85/
       directory [trixie, bookworm].

@@ -34,6 +34,7 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
       drop large portions of this patch that add unsafe{} to macro calls
       (since I already added an unsafe block in the macro definition).
       [trixie, bookworm]
+    - trixie/adler1.patch: refresh. [trixie, bookworm]
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

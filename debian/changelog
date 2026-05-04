@@ -39,6 +39,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
       directory [trixie, bookworm].
     - rust-1.85/file_as_c_str.patch: add patch to work around lack of
       std::panic::file_as_c_str() [trixie, bookworm].
+    - rust-1.85/mojo-features.patch: add patch to enable some newer
+      rust features in mojom parser [trixie, bookworm].
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

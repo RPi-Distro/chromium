@@ -75,6 +75,7 @@ llvm-19/raw-ref-map-find.patch
 #rust-1.85/image.patch
 #rust-1.85/rust-is-multiple-of.patch
 #rust-1.85/file_as_c_str.patch
+#rust-1.85/mojo-features.patch
 
 #trixie/adler1.patch
 #trixie/libxml-parseerr.patch

@@ -37,6 +37,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - trixie/adler1.patch: refresh [trixie, bookworm].
     - trixie/rust-is-multiple-of.patch: refresh & move to rust-1.85/
       directory [trixie, bookworm].
+    - rust-1.85/file_as_c_str.patch: add patch to work around lack of
+      std::panic::file_as_c_str() [trixie, bookworm].
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

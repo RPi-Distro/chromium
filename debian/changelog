@@ -28,6 +28,45 @@ chromium (148.0.7778.96-1~deb13u1) UNRELEASED; urgency=high
       changes that cause the build to fail w/ older gn.
     - llvm-19/raw-ref-map-find.patch: add patch to work around older
       clang-19 std::map::find() limitation.
+    - rust-1.85/jxl-features.patch: refresh for new version [trixie,
+      bookworm].
+    - rust-1.85/jxl-simd-avx512.patch: refresh for new version, and also
+      drop large portions of this patch that add unsafe{} to macro calls
+      (since I already added an unsafe block in the macro definition).
+      And mark more functions as unsafe [trixie, bookworm].
+    - trixie/adler1.patch: refresh [trixie, bookworm].
+    - trixie/rust-is-multiple-of.patch: refresh & move to rust-1.85/
+      directory [trixie, bookworm].
+    - rust-1.85/file_as_c_str.patch: add patch to work around lack of
+      std::panic::file_as_c_str() [trixie, bookworm].
+    - rust-1.85/mojo-features.patch: add patch to enable some newer
+      rust features in mojom parser [trixie, bookworm].
+    - rust-1.85/zip8.patch: add patch to enable some newer rust features
+      in zip [trixie, bookworm].
+    - bookworm/constexpr.patch: refresh for moved file [bookworm].
+    - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
+    - bookworm/eslint.patch: drop, no longer needed [bookworm].
+    - ungoogled/remove-navigation-source-param.patch: add patch from u-c
+      to drop the "&source=chrome.ob" that shows up when you search for
+      something via omnibox.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch refresh for upstream
+      changes
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
+    - fixes/fix-different-data-layouts.patch: refresh for upstream changes
+
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0004-loong64-sandbox-sandbox-linux-Update-syscall-helpers.patch: Refresh
+      for upstream changes
+    - 0024-disable-BROTLI_MODEL-macro-for-some-targets.patch: Drop, merged
+      upstream
+
+  [ Daniel Richard G. ]
+  * d/patches/llvm-19/clang19.patch: Also drop -Wlifetime-safety-permissive
+    flag from v8 build, as clang-19 (and 20) doesn't recognize it.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

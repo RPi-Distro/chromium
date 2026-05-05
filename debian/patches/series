@@ -74,13 +74,16 @@ rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
 rust-1.85/parsing.patch
 rust-1.85/image.patch
+rust-1.85/rust-is-multiple-of.patch
+rust-1.85/file_as_c_str.patch
+rust-1.85/mojo-features.patch
+rust-1.85/zip8.patch
 
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
-trixie/rust-is-multiple-of.patch
 #trixie/libxml2-no-xxe.patch
 trixie/gn-string-hash.patch
 trixie/nodejs-set-intersection.patch
@@ -100,6 +103,7 @@ bookworm/gn-allowlist.patch
 #bookworm/constexpr.patch
 #bookworm/constexpr3.patch
 bookworm/foreach.patch
+#bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
 
 # unused patches:
@@ -126,6 +130,7 @@ llvm-22/ignore-for-ubsan.patch
 ungoogled/disable-ai.patch
 ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
+ungoogled/remove-navigation-source-param.patch
 
 # i386 support
 i386/support-i386.patch
@@ -219,4 +224,3 @@ loongarch64/0020-user_agent-add-loongarch-architecture-support.patch
 loongarch64/0021-components-metrics-add-loongarch64-support.patch
 loongarch64/0022-blink-fix-lsx-code-of-webgl_image_conversion_lsx.patch
 loongarch64/0023-loongarch64-enable-lsx-by-default.patch
-loongarch64/0024-disable-BROTLI_MODEL-macro-for-some-targets.patch

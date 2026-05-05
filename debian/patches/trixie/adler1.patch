@@ -1,16 +1,16 @@
-author: Andres Salomon <dilinger@debian.org>
+Author: Andres Salomon <dilinger@debian.org>
 
 We don't have adler2 yet:
 cp: cannot stat 'default_for_rust_host_build_tools/obj/build/rust/std/libadler2.rlib': No such file or directory
 
 --- a/build/rust/std/BUILD.gn
 +++ b/build/rust/std/BUILD.gn
-@@ -55,7 +55,7 @@ if (toolchain_has_rust) {
-       "miniz_oxide",
-       "object",
-     ]
--    if (rustc_nightly_capability) {
-+    if (false) {
-       stdlib_files += [ "adler2" ]
-     } else {
-       stdlib_files += [ "adler" ]
+@@ -48,7 +48,7 @@ if (toolchain_has_rust) {
+     # These are no longer present in the Windows toolchain.
+     stdlib_files += [
+       "addr2line",
+-      "adler2",
++      "adler",
+       "gimli",
+       "libc",
+       "memchr",

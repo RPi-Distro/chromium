@@ -64,6 +64,10 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - 0024-disable-BROTLI_MODEL-macro-for-some-targets.patch: Drop, merged
       upstream
 
+  [ Daniel Richard G. ]
+  * d/patches/llvm-19/clang19.patch: Also drop -Wlifetime-safety-permissive
+    flag from v8 build, as clang-19 (and 20) doesn't recognize it.
+
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 
 chromium (147.0.7727.137-1) unstable; urgency=high

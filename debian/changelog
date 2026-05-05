@@ -45,6 +45,10 @@ chromium (148.0.7778.96-1~deb12u1) UNRELEASED; urgency=high
       in zip [trixie, bookworm].
     - bookworm/constexpr.patch: refresh for moved file [bookworm].
     - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
+    - bookworm/eslint.patch: drop, no longer needed [bookworm].
+    - ungoogled/remove-navigation-source-param.patch: add patch from u-c
+      to drop the "&source=chrome.ob" that shows up when you search for
+      something via omnibox.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:
@@ -59,6 +63,10 @@ chromium (148.0.7778.96-1~deb12u1) UNRELEASED; urgency=high
       for upstream changes
     - 0024-disable-BROTLI_MODEL-macro-for-some-targets.patch: Drop, merged
       upstream
+
+  [ Daniel Richard G. ]
+  * d/patches/llvm-19/clang19.patch: Also drop -Wlifetime-safety-permissive
+    flag from v8 build, as clang-19 (and 20) doesn't recognize it.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

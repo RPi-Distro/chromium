@@ -53,6 +53,13 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - third_party/skia-vsx-instructions.patch: refresh for upstream changes
     - fixes/fix-different-data-layouts.patch: refresh for upstream changes
 
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0004-loong64-sandbox-sandbox-linux-Update-syscall-helpers.patch: Refresh
+      for upstream changes
+    - 0024-disable-BROTLI_MODEL-macro-for-some-targets.patch: Drop, merged
+      upstream
+
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 
 chromium (147.0.7727.137-1) unstable; urgency=high

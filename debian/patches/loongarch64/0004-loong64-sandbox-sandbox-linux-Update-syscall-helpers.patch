@@ -43,8 +43,8 @@ index 0358c04f9d..fc47727aad 100644
    }
 +#endif
  
-   if (SyscallSets::IsFileSystem(sysno) ||
-       SyscallSets::IsCurrentDirectory(sysno)) {
+ #if defined(__NR_prlimit64)
+   if (sysno == __NR_prlimit64) {
 diff --git a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
 index 15960b3aa0..683b18bbee 100644
 --- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc

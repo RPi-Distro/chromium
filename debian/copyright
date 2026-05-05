@@ -91,10 +91,10 @@ Files-Excluded:
  third_party/crashpad/crashpad/handler/win
  third_party/dav1d
  third_party/dawn/third_party/dxc
- third_party/dawn/third_party/khronos/EGL-Registry/sdk
- third_party/dawn/third_party/khronos/OpenGL-Registry/ABI/new.gif
- third_party/dawn/third_party/khronos/OpenGL-Registry/extensions
- third_party/dawn/third_party/khronos/OpenGL-Registry/specs
+ third_party/dawn/third_party/EGL-Registry/src/sdk
+ third_party/dawn/third_party/OpenGL-Registry/src/ABI/new.gif
+ third_party/dawn/third_party/OpenGL-Registry/extensions
+ third_party/dawn/third_party/OpenGL-Registry/specs
  third_party/dawn/third_party/ninja
  third_party/dawn/third_party/webgpu-cts
  third_party/dawn/tools/golang
@@ -116,6 +116,7 @@ Files-Excluded:
  third_party/fontconfig
  third_party/freetype
  third_party/google_input_tools/src/chrome/os/inputview/_locales/*.js
+ third_party/gperf
  third_party/harfbuzz-ng/harfbuzz.gni
  third_party/harfbuzz-ng/src
  third_party/icu/source/data

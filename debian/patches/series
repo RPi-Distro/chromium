@@ -33,7 +33,7 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/missing-dep.patch
 
-upstream/Fix-GL-native-pixmap-import-support-reset-in-GpuInit.patch
+upstream/turboshaft.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -67,11 +67,17 @@ llvm-19/clone-traits.patch
 llvm-19/octal.patch
 llvm-19/value-or.patch
 llvm-19/clang19.patch
+llvm-19/iota.patch
+llvm-19/raw-ref-map-find.patch
 
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
 rust-1.85/parsing.patch
 rust-1.85/image.patch
+rust-1.85/rust-is-multiple-of.patch
+rust-1.85/file_as_c_str.patch
+rust-1.85/mojo-features.patch
+rust-1.85/zip8.patch
 
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch
@@ -85,6 +91,9 @@ trixie/nodejs-set-intersection.patch
 trixie/gn-len.patch
 trixie/nodejs-main.patch
 trixie/gn-module-name.patch
+trixie/gn-inputs.patch
+trixie/gn-inputs2.patch
+trixie/revert-v8-sanitize.patch
 
 #bookworm/strlcpy.patch
 bookworm/dq-forward-iterator.patch

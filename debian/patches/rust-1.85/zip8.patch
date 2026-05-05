@@ -1,0 +1,12 @@
+--- a/third_party/rust/chromium_crates_io/vendor/zip-v8/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/zip-v8/src/lib.rs
+@@ -28,6 +28,9 @@
+ //! | AES encryption                  | ✅                                    | ✅                                                       |
+ //! | ZipCrypto deprecated encryption | ✅                                    | ✅                                                       |
+ //!
++#![feature(let_chains)]
++#![feature(unsigned_is_multiple_of)]
++
+ 
+ #![cfg_attr(docsrs, feature(doc_cfg))]
+ #![warn(clippy::all, rust_2018_idioms)]

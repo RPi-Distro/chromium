@@ -114,6 +114,7 @@ defines+=is_debug=false \
          use_custom_libcxx=false \
          optimize_webui=false \
          webnn_use_tflite=false \
+         webnn_use_litert=false \
          use_unofficial_version_number=false \
          rtc_video_psnr=false \
          safe_browsing_use_unrar=false \
@@ -218,6 +219,8 @@ override_dh_auto_configure: test_armhf_neon set_up_bindgen
 	mkdir -p third_party/devtools-frontend/src/third_party/esbuild
 	#cp debian/esbuild/root/usr/bin/esbuild third_party/devtools-frontend/src/third_party/esbuild/esbuild
 	cp /usr/bin/esbuild third_party/devtools-frontend/src/third_party/esbuild/
+	mkdir -p third_party/gperf/cipd/bin/
+	cp /usr/bin/gperf third_party/gperf/cipd/bin/
 	# output compiler information
 	$(CXX) --version
 	# prefer unbundled (system) libraries
@@ -256,6 +259,7 @@ override_dh_auto_clean:
 	rm -rf debian/esbuild/root
 	rm -rf third_party/devtools-frontend/src/third_party/esbuild
 	rm -rf third_party/devtools-frontend/src/node_modules/esbuild
+	rm -rf third_party/gperf
 	rm -rf third_party/node/linux/node-linux-x64
 	rm -rf out
 	rm -rf third_party/node/node_modules/rollup

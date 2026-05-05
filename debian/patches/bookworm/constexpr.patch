@@ -21,8 +21,8 @@ author: Andres Salomon <dilinger@debian.org>
      kViewportWidthQueryParamKey, kViewportHeightQueryParamKey,
      kXSRFTokenQueryParamKey,     kSecActQueryParamKey,
      kModeParameterKey,           kToolbeltModeParameterKey};
---- a/chrome/browser/ui/views/tabs/recent_activity_bubble_dialog_view.cc
-+++ b/chrome/browser/ui/views/tabs/recent_activity_bubble_dialog_view.cc
+--- a/chrome/browser/ui/views/tabs/groups/recent_activity_bubble_dialog_view.cc
++++ b/chrome/browser/ui/views/tabs/groups/recent_activity_bubble_dialog_view.cc
 @@ -78,7 +78,7 @@ using collaboration::messaging::TabMessa
  namespace {
  

@@ -43,7 +43,8 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
       rust features in mojom parser [trixie, bookworm].
     - rust-1.85/zip8.patch: add patch to enable some newer rust features
       in zip [trixie, bookworm].
-
+    - bookworm/constexpr.patch: refresh for moved file [bookworm].
+    - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

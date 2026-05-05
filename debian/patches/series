@@ -101,6 +101,7 @@ bookworm/gn-allowlist.patch
 #bookworm/constexpr.patch
 #bookworm/constexpr3.patch
 bookworm/foreach.patch
+#bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
 
 # unused patches:

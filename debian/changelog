@@ -43,7 +43,22 @@ chromium (148.0.7778.96-1~deb12u1) UNRELEASED; urgency=high
       rust features in mojom parser [trixie, bookworm].
     - rust-1.85/zip8.patch: add patch to enable some newer rust features
       in zip [trixie, bookworm].
+    - bookworm/constexpr.patch: refresh for moved file [bookworm].
+    - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch refresh for upstream
+      changes
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
+    - fixes/fix-different-data-layouts.patch: refresh for upstream changes
+
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0004-loong64-sandbox-sandbox-linux-Update-syscall-helpers.patch: Refresh
+      for upstream changes
+    - 0024-disable-BROTLI_MODEL-macro-for-some-targets.patch: Drop, merged
+      upstream
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 

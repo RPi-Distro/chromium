@@ -84,7 +84,6 @@ trixie/adler1.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
-trixie/rust-is-multiple-of.patch
 #trixie/libxml2-no-xxe.patch
 trixie/gn-string-hash.patch
 trixie/nodejs-set-intersection.patch

@@ -46,6 +46,13 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - bookworm/constexpr.patch: refresh for moved file [bookworm].
     - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch refresh for upstream
+      changes
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
+    - fixes/fix-different-data-layouts.patch: refresh for upstream changes
+
  -- Andres Salomon <dilinger@debian.org>  Fri, 01 May 2026 19:59:05 -0400
 
 chromium (147.0.7727.137-1) unstable; urgency=high

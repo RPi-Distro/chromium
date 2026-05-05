@@ -46,6 +46,9 @@ chromium (148.0.7778.96-1) UNRELEASED; urgency=high
     - bookworm/constexpr.patch: refresh for moved file [bookworm].
     - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
     - bookworm/eslint.patch: drop, no longer needed [bookworm].
+    - ungoogled/remove-navigation-source-param.patch: add patch from u-c
+      to drop the "&source=chrome.ob" that shows up when you search for
+      something via omnibox.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

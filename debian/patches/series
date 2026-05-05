@@ -128,6 +128,7 @@ llvm-22/ignore-for-ubsan.patch
 ungoogled/disable-ai.patch
 ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
+ungoogled/remove-navigation-source-param.patch
 
 # i386 support
 i386/support-i386.patch

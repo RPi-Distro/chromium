@@ -112,7 +112,6 @@ bookworm/less-void.patch
 #bookworm/stdarch-arm.patch
 bookworm/modff.patch
 bookworm/foreach.patch
-bookworm/eslint.patch
 #bookworm/crabbyav1f.patch
 bookworm/node18-import.patch
 bookworm/fmodf.patch

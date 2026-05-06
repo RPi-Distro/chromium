@@ -1,4 +1,4 @@
-chromium (148.0.7778.96-2) UNRELEASED; urgency=high
+chromium (148.0.7778.96-2) unstable; urgency=high
 
   [ Andres Salomon ]
   * d/rules: update for new script path in debian's esbuild package
@@ -6,7 +6,7 @@ chromium (148.0.7778.96-2) UNRELEASED; urgency=high
   * d/control: add build-dep on esbuild-wasm for sid but not older
     distributions.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 06 May 2026 18:20:04 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 06 May 2026 19:24:54 -0400
 
 chromium (148.0.7778.96-1) unstable; urgency=high
 

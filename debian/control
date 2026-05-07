@@ -39,7 +39,7 @@ Build-Depends:
  node-rollup-plugin-terser:native,
  rollup,
  esbuild,
- esbuild (<< 0.28.0) | esbuild-wasm,
+ esbuild-wasm,
  xz-utils,
  xcb-proto,
  xfonts-base,

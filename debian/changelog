@@ -1,3 +1,11 @@
+chromium (148.0.7778.96-3) unstable; urgency=high
+
+  [ Andres Salomon ]
+  * d/control: switch to hardcoding esbuild-wasm build-dep, since buildds
+    aren't smart enough to handle OR build-deps.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 06 May 2026 21:28:00 -0400
+
 chromium (148.0.7778.96-2) unstable; urgency=high
 
   [ Andres Salomon ]

@@ -2,7 +2,8 @@ chromium (148.0.7778.96-4) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
   * rust-1.85/file_as_c_str.patch: fix build on non-x86 archs, as char*
-    signed-ness is apparently different there versus arm & ppc64.
+    signed-ness is apparently different there versus arm & ppc64 [trixie,
+    bookworm].
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 06 May 2026 21:28:00 -0400
 

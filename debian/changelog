@@ -1,6 +1,7 @@
-chromium (148.0.7778.96-4) UNRELEASED; urgency=high
+chromium (148.0.7778.167-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
+  * New upstream security release.
   * rust-1.85/file_as_c_str.patch: fix build on non-x86 archs, as char*
     signed-ness is apparently different there versus arm & ppc64 [trixie,
     bookworm].

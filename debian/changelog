@@ -1,12 +1,120 @@
-chromium (148.0.7778.167-1) UNRELEASED; urgency=high
+chromium (148.0.7778.167-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
+    - CVE-2026-8509: Heap buffer overflow in WebML.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-8510: Integer overflow in Skia. Reported by q@calif.io.
+    - CVE-2026-8511: Use after free in UI. Reported by Google.
+    - CVE-2026-8512: Use after free in FileSystem. Reported by Google.
+    - CVE-2026-8513: Use after free in Input. Reported by Google.
+    - CVE-2026-8514: Use after free in Aura. Reported by Google.
+    - CVE-2026-8515: Use after free in HID. Reported by Google.
+    - CVE-2026-8516: Insufficient validation of untrusted input in
+      DataTransfer. Reported by Google.
+    - CVE-2026-8517: Object lifecycle issue in WebShare. Reported by Google.
+    - CVE-2026-8518: Use after free in Blink. Reported by Google.
+    - CVE-2026-8519: Integer overflow in ANGLE. Reported by Google.
+    - CVE-2026-8520: Race in Payments. Reported by Google.
+    - CVE-2026-8521: Use after free in Tab Groups. Reported by Google.
+    - CVE-2026-8522: Use after free in Downloads. Reported by Google.
+    - CVE-2026-8523: Use after free in Mojo.
+      Reported by Paul Seekamp / nullenc0de.
+    - CVE-2026-8558: Out of bounds write in Fonts. Reported by Matej Smycka.
+    - CVE-2026-8524: Out of bounds write in WebAudio.
+      Reported by Brendan Dolan-Gavitt, XBOW.
+    - CVE-2026-8525: Heap buffer overflow in ANGLE.
+      Reported by Nathaniel Oh (@calysteon).
+    - CVE-2026-8526: Out of bounds write in WebRTC.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-8527: Insufficient validation of untrusted input in Downloads.
+      Reported by rachmat.abdul.ro.
+    - CVE-2026-8528: Insufficient validation of untrusted input in
+      SiteIsolation. Reported by Google.
+    - CVE-2026-8529: Heap buffer overflow in Codecs. Reported by Google.
+    - CVE-2026-8530: Use after free in Network. Reported by Google.
+    - CVE-2026-8531: Heap buffer overflow in WebML. Reported by Syn4pse.
+    - CVE-2026-8532: Integer overflow in XML. Reported by Google.
+    - CVE-2026-8533: Use after free in Accessibility. Reported by Google.
+    - CVE-2026-8534: Integer overflow in GPU. Reported by Google.
+    - CVE-2026-8535: Out of bounds read in Media. Reported by Google.
+    - CVE-2026-8536: Insufficient validation of untrusted input in
+      ReadingMode. Reported by Google.
+    - CVE-2026-8537: Insufficient policy enforcement in ViewTransitions.
+      Reported by Google.
+    - CVE-2026-8538: Insufficient validation of untrusted input in GPU.
+      Reported by Google.
+    - CVE-2026-8539: Script injection in SanitizerAPI.
+      Reported by Jungwoo Lee (@physicube) and Wongi Lee (@_qwerty_po).
+    - CVE-2026-8540: Type Confusion in V8. Reported by Google.
+    - CVE-2026-8541: Out of bounds read in UI. Reported by Google.
+    - CVE-2026-8542: Use after free in Core. Reported by Google.
+    - CVE-2026-8543: Out of bounds read in FileSystem. Reported by Google.
+    - CVE-2026-8544: Use after free in Media. Reported by Google.
+    - CVE-2026-8545: Object corruption in Compositing. Reported by Google.
+    - CVE-2026-8546: Out of bounds read in GPU. Reported by Google.
+    - CVE-2026-8547: Insufficient policy enforcement in Passwords.
+      Reported by Google.
+    - CVE-2026-8548: Out of bounds write in Media. Reported by Google.
+    - CVE-2026-8549: Use after free in Media. Reported by Google.
+    - CVE-2026-8550: Use after free in Google Lens. Reported by Google.
+    - CVE-2026-8551: Use after free in Downloads. Reported by Google.
+    - CVE-2026-8552: Heap buffer overflow in GPU. Reported by Google.
+    - CVE-2026-8553: Use after free in GPU. Reported by Google.
+    - CVE-2026-8554: Type Confusion in ANGLE. Reported by Google.
+    - CVE-2026-8555: Use after free in GTK. Reported by Google.
+    - CVE-2026-8556: Inappropriate implementation in ANGLE. Reported by Google
+    - CVE-2026-8557: Use after free in Accessibility. Reported by Google.
+    - CVE-2026-8559: Integer overflow in Internationalization.
+      Reported by Google.
+    - CVE-2026-8560: Heap buffer overflow in SwiftShader.
+      Reported by Cassidy Kim(@cassidy6564).
+    - CVE-2026-8561: Incorrect security UI in Fullscreen. Reported by
+      Wolfgang Ettlinger (aff. Certitude Consulting GmbH) Alexander Hurbean
+      (aff. Certitude Consulting GmbH).
+    - CVE-2026-8562: Side-channel information leakage in Navigation.
+      Reported by Google.
+    - CVE-2026-8563: Insufficient policy enforcement in IFrame Sandbox.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-8564: Incorrect security UI in Downloads.
+      Reported by Alesandro Ortiz https://AlesandroOrtiz.com.
+    - CVE-2026-8565: Inappropriate implementation in Downloads.
+      Reported by Farras Givari.
+    - CVE-2026-8566: Insufficient policy enforcement in Payments.
+      Reported by Jorian Woltjer.
+    - CVE-2026-8567: Integer overflow in ANGLE. Reported by cinzinga.
+    - CVE-2026-8568: Insufficient policy enforcement in AI.
+      Reported by Tianyi Hu.
+    - CVE-2026-8569: Out of bounds write in Codecs. Reported by Google.
+    - CVE-2026-8570: Type Confusion in V8. Reported by Google.
+    - CVE-2026-8571: Insufficient policy enforcement in GPU.
+      Reported by Mark Blaszczyk.
+    - CVE-2026-8572: Insufficient policy enforcement in Network.
+      Reported by Google.
+    - CVE-2026-8573: Integer overflow in Codecs. Reported by Google.
+    - CVE-2026-8574: Use after free in Core. Reported by Google.
+    - CVE-2026-8575: Use after free in UI. Reported by Google.
+    - CVE-2026-8576: Inappropriate implementation in CORS. Reported by Google
+    - CVE-2026-8577: Integer overflow in Fonts. Reported by Google.
+    - CVE-2026-8578: Out of bounds read in GPU. Reported by Google.
+    - CVE-2026-8579: Insufficient validation of untrusted input in Skia.
+      Reported by Google.
+    - CVE-2026-8580: Use after free in Mojo. Reported by Google.
+    - CVE-2026-8581: Use after free in GPU. Reported by Google.
+    - CVE-2026-8582: Object lifecycle issue in Dawn. Reported by Google.
+    - CVE-2026-8583: Insufficient policy enforcement in WebXR.
+      Reported by Google.
+    - CVE-2026-8584: Inappropriate implementation in Views. Reported by Google
+    - CVE-2026-8585: Inappropriate implementation in Media. Reported by Google
+    - CVE-2026-8586: Inappropriate implementation in Chromoting.
+      Reported by Google.
+    - CVE-2026-8587: Use after free in Extensions.
+      Reported by zh1x1an1221 of Ant Group Tianqiong Security Lab.
   * rust-1.85/file_as_c_str.patch: fix build on non-x86 archs, as char*
     signed-ness is apparently different there versus arm & ppc64 [trixie,
     bookworm].
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 06 May 2026 21:28:00 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 14 May 2026 16:39:29 -0400
 
 chromium (148.0.7778.96-3) unstable; urgency=high
 

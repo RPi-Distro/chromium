@@ -11,7 +11,7 @@
    }
 --- a/gpu/ipc/service/gpu_channel.cc
 +++ b/gpu/ipc/service/gpu_channel.cc
-@@ -455,7 +455,7 @@ void GpuChannelMessageFilter::CreateGpuM
+@@ -456,7 +456,7 @@ void GpuChannelMessageFilter::CreateGpuM
      }
    }
    if (handle.is_null()) {

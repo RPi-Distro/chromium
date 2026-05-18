@@ -24,7 +24,7 @@
  }
 --- a/ui/ozone/platform/wayland/ozone_platform_wayland.cc
 +++ b/ui/ozone/platform/wayland/ozone_platform_wayland.cc
-@@ -72,8 +72,6 @@
+@@ -73,8 +73,6 @@
  #endif
  
  #if defined(WAYLAND_GBM)
@@ -33,7 +33,7 @@
  #include "ui/ozone/platform/wayland/common/drm_render_node_path_finder.h"
  #endif
  
-@@ -205,15 +203,6 @@ class OzonePlatformWayland : public Ozon
+@@ -206,15 +204,6 @@ class OzonePlatformWayland : public Ozon
        if (!buffer_manager_->SupportsFormat(format)) {
          return false;
        }

@@ -21,7 +21,7 @@ Subject: [PATCH 17/22] disable browser sign in feature by default
  // static
 --- a/components/signin/internal/identity_manager/primary_account_manager.cc
 +++ b/components/signin/internal/identity_manager/primary_account_manager.cc
-@@ -388,7 +388,7 @@ void PrimaryAccountManager::RegisterProf
+@@ -363,7 +363,7 @@ void PrimaryAccountManager::RegisterProf
        prefs::kGoogleServicesSyncingUsernameMigratedToSignedIn, std::string());
    registry->RegisterIntegerPref(prefs::kGoogleServicesSyncingUserMigrationType,
                                  /*SyncToSigninMigrationType::kUnknown=*/0);

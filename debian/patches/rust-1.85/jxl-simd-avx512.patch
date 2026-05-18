@@ -14,8 +14,55 @@ functions. The issue is described in
 https://internals.rust-lang.org/t/how-to-make-core-arch-simd-intrinsics-safe/16716
 and fixed in newer versions of rustc.
 
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/lib.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/lib.rs
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/aarch64/neon.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/aarch64/neon.rs
+@@ -91,7 +91,7 @@ macro_rules! fn_neon {
+             #[target_feature(enable = "neon")]
+             #[inline]
+             fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
+-                $body
++                unsafe { $body }
+             }
+             // SAFETY: `self.1` is constructed iff neon is available.
+             unsafe { inner(self, $($arg),*) }
+@@ -190,7 +190,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+     ) {
+         #[target_feature(enable = "neon")]
+         #[inline]
+-        fn store_interleaved_8_impl(
++        unsafe fn store_interleaved_8_impl(
+             a: float32x4_t,
+             b: float32x4_t,
+             c: float32x4_t,
+@@ -308,7 +308,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+     fn transpose_square(d: NeonDescriptor, data: &mut [[f32; 4]], stride: usize) {
+         #[target_feature(enable = "neon")]
+         #[inline]
+-        fn transpose4x4f32(d: NeonDescriptor, data: &mut [[f32; 4]], stride: usize) {
++        unsafe fn transpose4x4f32(d: NeonDescriptor, data: &mut [[f32; 4]], stride: usize) {
+             assert!(data.len() > 3 * stride);
+ 
+             let p0 = F32VecNeon::load_array(d, &data[0]).0;
+@@ -489,7 +489,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+     fn prepare_table_bf16_8(_d: NeonDescriptor, table: &[f32; 8]) -> Bf16Table8Neon {
+         #[target_feature(enable = "neon")]
+         #[inline]
+-        fn prepare_impl(table: &[f32; 8]) -> uint8x16_t {
++        unsafe fn prepare_impl(table: &[f32; 8]) -> uint8x16_t {
+             // Convert f32 table to BF16 packed in 128 bits (16 bytes for 8 entries)
+             // BF16 is the high 16 bits of f32
+             // SAFETY: neon is available from target_feature, and `table` is large
+@@ -517,7 +517,7 @@ unsafe impl F32SimdVec for F32VecNeon {
+     fn table_lookup_bf16_8(d: NeonDescriptor, table: Bf16Table8Neon, indices: I32VecNeon) -> Self {
+         #[target_feature(enable = "neon")]
+         #[inline]
+-        fn lookup_impl(bf16_table: uint8x16_t, indices: int32x4_t) -> float32x4_t {
++        unsafe fn lookup_impl(bf16_table: uint8x16_t, indices: int32x4_t) -> float32x4_t {
+             // Build shuffle mask efficiently using arithmetic on 32-bit indices.
+             // For each index i (0-7), we need to select bytes [2*i, 2*i+1] from bf16_table
+             // and place them in the high 16 bits of each 32-bit f32 lane (bytes 2,3),
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/lib.rs
 @@ -4,6 +4,10 @@
  // license that can be found in the LICENSE file.
  
@@ -27,8 +74,8 @@ and fixed in newer versions of rustc.
  
  use std::{
      fmt::Debug,
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx.rs
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/x86_64/avx.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/x86_64/avx.rs
 @@ -20,7 +20,7 @@ use std::{
  /// Used by both store_interleaved_8 and transpose_square.
  #[target_feature(enable = "avx2")]
@@ -38,7 +85,7 @@ and fixed in newer versions of rustc.
      r0: __m256,
      r1: __m256,
      r2: __m256,
-@@ -171,7 +171,7 @@ macro_rules! fn_avx {
+@@ -173,7 +173,7 @@ macro_rules! fn_avx {
              #[target_feature(enable = "fma,avx2,f16c")]
              #[inline]
              fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
@@ -47,7 +94,7 @@ and fixed in newer versions of rustc.
              }
              // SAFETY: `self.1` is constructed iff avx2, fma, and f16c are available.
              unsafe { inner(self, $($arg),*) }
-@@ -214,7 +214,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -216,7 +216,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -56,7 +103,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= 2 * F32VecAvx::LEN);
              // a = [a0, a1, a2, a3, a4, a5, a6, a7], b = [b0, b1, b2, b3, b4, b5, b6, b7]
              // Output: [a0, b0, a1, b1, a2, b2, a3, b3, a4, b4, a5, b5, a6, b6, a7, b7]
-@@ -239,7 +239,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -241,7 +241,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -65,7 +112,7 @@ and fixed in newer versions of rustc.
              a: __m256,
              b: __m256,
              c: __m256,
-@@ -297,7 +297,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -299,7 +299,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      ) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -74,7 +121,7 @@ and fixed in newer versions of rustc.
              a: __m256,
              b: __m256,
              c: __m256,
-@@ -363,7 +363,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -365,7 +365,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      ) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -83,7 +130,7 @@ and fixed in newer versions of rustc.
              r0: __m256,
              r1: __m256,
              r2: __m256,
-@@ -400,7 +400,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -402,7 +402,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn load_deinterleaved_2(d: Self::Descriptor, src: &[f32]) -> (Self, Self) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -92,7 +139,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 2 * F32VecAvx::LEN);
              // Input: [a0, b0, a1, b1, a2, b2, a3, b3, a4, b4, a5, b5, a6, b6, a7, b7]
              // Output: a = [a0, a1, a2, a3, a4, a5, a6, a7], b = [b0, b1, b2, b3, b4, b5, b6, b7]
-@@ -433,7 +433,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -435,7 +435,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn load_deinterleaved_3(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -101,7 +148,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 3 * F32VecAvx::LEN);
              // Input layout (24 floats):
              // in0: [a0, b0, c0, a1, b1, c1, a2, b2]
-@@ -495,7 +495,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -497,7 +497,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn load_deinterleaved_4(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self, Self) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -110,68 +157,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 4 * F32VecAvx::LEN);
              // Input: [a0,b0,c0,d0, a1,b1,c1,d1, a2,b2,c2,d2, a3,b3,c3,d3, ...]
              // Output: a = [a0..a7], b = [b0..b7], c = [c0..c7], d = [d0..d7]
-@@ -558,22 +558,23 @@ unsafe impl F32SimdVec for F32VecAvx {
-     }
- 
-     fn_avx!(this: F32VecAvx, fn abs() -> F32VecAvx {
--        F32VecAvx(_mm256_andnot_ps(_mm256_set1_ps(-0.0), this.0), this.1)
-+        unsafe { F32VecAvx(_mm256_andnot_ps(_mm256_set1_ps(-0.0), this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn floor() -> F32VecAvx {
--        F32VecAvx(_mm256_floor_ps(this.0), this.1)
-+        unsafe { F32VecAvx(_mm256_floor_ps(this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn sqrt() -> F32VecAvx {
--        F32VecAvx(_mm256_sqrt_ps(this.0), this.1)
-+        unsafe { F32VecAvx(_mm256_sqrt_ps(this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn neg() -> F32VecAvx {
--        F32VecAvx(_mm256_xor_ps(_mm256_set1_ps(-0.0), this.0), this.1)
-+        unsafe { F32VecAvx(_mm256_xor_ps(_mm256_set1_ps(-0.0), this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn copysign(sign: F32VecAvx) -> F32VecAvx {
-+        unsafe {
-         let sign_mask = _mm256_castsi256_ps(_mm256_set1_epi32(i32::MIN));
-         F32VecAvx(
-             _mm256_or_ps(
-@@ -582,26 +583,27 @@ unsafe impl F32SimdVec for F32VecAvx {
-             ),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn max(other: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_max_ps(this.0, other.0), this.1)
-+        unsafe { F32VecAvx(_mm256_max_ps(this.0, other.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn min(other: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_min_ps(this.0, other.0), this.1)
-+        unsafe { F32VecAvx(_mm256_min_ps(this.0, other.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn gt(other: F32VecAvx) -> MaskAvx {
--        MaskAvx(_mm256_cmp_ps::<{_CMP_GT_OQ}>(this.0, other.0), this.1)
-+        unsafe { MaskAvx(_mm256_cmp_ps::<{_CMP_GT_OQ}>(this.0, other.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn as_i32() -> I32VecAvx {
--        I32VecAvx(_mm256_cvtps_epi32(this.0), this.1)
-+        unsafe { I32VecAvx(_mm256_cvtps_epi32(this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx, fn bitcast_to_i32() -> I32VecAvx {
--        I32VecAvx(_mm256_castps_si256(this.0), this.1)
-+        unsafe { I32VecAvx(_mm256_castps_si256(this.0), this.1) }
-     });
- 
-     #[inline(always)]
-@@ -622,7 +624,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -624,7 +624,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn round_store_u8(self, dest: &mut [u8]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -180,7 +166,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx::LEN);
              // Round to nearest integer
              let rounded = _mm256_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -649,7 +651,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -657,7 +657,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn round_store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -189,16 +175,16 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx::LEN);
              // Round to nearest integer
              let rounded = _mm256_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -676,7 +678,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+@@ -684,7 +684,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn load_f16_bits(d: Self::Descriptor, mem: &[u16]) -> Self {
          #[target_feature(enable = "avx2,f16c")]
          #[inline]
 -        fn load_f16_impl(d: AvxDescriptor, mem: &[u16]) -> F32VecAvx {
 +        unsafe fn load_f16_impl(d: AvxDescriptor, mem: &[u16]) -> F32VecAvx {
              assert!(mem.len() >= F32VecAvx::LEN);
-             // SAFETY: mem.len() >= 8 is checked above
-             let bits = unsafe { _mm_loadu_si128(mem.as_ptr() as *const __m128i) };
-@@ -690,7 +692,7 @@ unsafe impl F32SimdVec for F32VecAvx {
+             // SAFETY: mem.len() >= 8 is checked above. _mm_loadu_si128 supports unaligned loads.
+             let bits = unsafe { _mm_loadu_si128(mem.as_ptr().cast()) };
+@@ -698,7 +698,7 @@ unsafe impl F32SimdVec for F32VecAvx {
      fn store_f16_bits(self, dest: &mut [u16]) {
          #[target_feature(enable = "avx2,f16c")]
          #[inline]
@@ -206,136 +192,8 @@ and fixed in newer versions of rustc.
 +        unsafe fn store_f16_bits_impl(v: __m256, dest: &mut [u16]) {
              assert!(dest.len() >= F32VecAvx::LEN);
              let bits = _mm256_cvtps_ph::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-             // SAFETY: dest.len() >= 8 is checked above
-@@ -738,52 +740,52 @@ unsafe impl F32SimdVec for F32VecAvx {
- impl Add<F32VecAvx> for F32VecAvx {
-     type Output = F32VecAvx;
-     fn_avx!(this: F32VecAvx, fn add(rhs: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_add_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx(_mm256_add_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Sub<F32VecAvx> for F32VecAvx {
-     type Output = F32VecAvx;
-     fn_avx!(this: F32VecAvx, fn sub(rhs: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_sub_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx(_mm256_sub_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Mul<F32VecAvx> for F32VecAvx {
-     type Output = F32VecAvx;
-     fn_avx!(this: F32VecAvx, fn mul(rhs: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_mul_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx(_mm256_mul_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Div<F32VecAvx> for F32VecAvx {
-     type Output = F32VecAvx;
-     fn_avx!(this: F32VecAvx, fn div(rhs: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_div_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx(_mm256_div_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl AddAssign<F32VecAvx> for F32VecAvx {
-     fn_avx!(this: &mut F32VecAvx, fn add_assign(rhs: F32VecAvx) {
--        this.0 = _mm256_add_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_add_ps(this.0, rhs.0) }
-     });
- }
- 
- impl SubAssign<F32VecAvx> for F32VecAvx {
-     fn_avx!(this: &mut F32VecAvx, fn sub_assign(rhs: F32VecAvx) {
--        this.0 = _mm256_sub_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_sub_ps(this.0, rhs.0) }
-     });
- }
- 
- impl MulAssign<F32VecAvx> for F32VecAvx {
-     fn_avx!(this: &mut F32VecAvx, fn mul_assign(rhs: F32VecAvx) {
--        this.0 = _mm256_mul_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_mul_ps(this.0, rhs.0) }
-     });
- }
- 
- impl DivAssign<F32VecAvx> for F32VecAvx {
-     fn_avx!(this: &mut F32VecAvx, fn div_assign(rhs: F32VecAvx) {
--        this.0 = _mm256_div_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_div_ps(this.0, rhs.0) }
-     });
- }
- 
-@@ -819,11 +821,11 @@ impl I32SimdVec for I32VecAvx {
-     }
- 
-     fn_avx!(this: I32VecAvx, fn as_f32() -> F32VecAvx {
--        F32VecAvx(_mm256_cvtepi32_ps(this.0), this.1)
-+        unsafe { F32VecAvx(_mm256_cvtepi32_ps(this.0), this.1) }
-     });
- 
-     fn_avx!(this: I32VecAvx, fn bitcast_to_f32() -> F32VecAvx {
--        F32VecAvx(_mm256_castsi256_ps(this.0), this.1)
-+        unsafe { F32VecAvx(_mm256_castsi256_ps(this.0), this.1) }
-     });
- 
-     #[inline(always)]
-@@ -832,31 +834,37 @@ impl I32SimdVec for I32VecAvx {
-     }
- 
-     fn_avx!(this: I32VecAvx, fn abs() -> I32VecAvx {
-+        unsafe {
-         I32VecAvx(
-             _mm256_abs_epi32(this.0),
-             this.1)
-+        }
-     });
- 
-     fn_avx!(this: I32VecAvx, fn gt(rhs: I32VecAvx) -> MaskAvx {
-+        unsafe {
-         MaskAvx(
-             _mm256_castsi256_ps(_mm256_cmpgt_epi32(this.0, rhs.0)),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_avx!(this: I32VecAvx, fn lt_zero() -> MaskAvx {
--        I32VecAvx(_mm256_setzero_si256(), this.1).gt(this)
-+        unsafe { I32VecAvx(_mm256_setzero_si256(), this.1).gt(this) }
-     });
- 
-     fn_avx!(this: I32VecAvx, fn eq(rhs: I32VecAvx) -> MaskAvx {
-+        unsafe {
-         MaskAvx(
-             _mm256_castsi256_ps(_mm256_cmpeq_epi32(this.0, rhs.0)),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_avx!(this: I32VecAvx, fn eq_zero() -> MaskAvx {
--        this.eq(I32VecAvx(_mm256_setzero_si256(), this.1))
-+        unsafe { this.eq(I32VecAvx(_mm256_setzero_si256(), this.1)) }
-     });
- 
-     #[inline(always)]
-@@ -872,18 +880,20 @@ impl I32SimdVec for I32VecAvx {
-     }
- 
-     fn_avx!(this: I32VecAvx, fn mul_wide_take_high(rhs: I32VecAvx) -> I32VecAvx {
-+        unsafe {
-         let l = _mm256_mul_epi32(this.0, rhs.0);
-         let h = _mm256_mul_epi32(_mm256_srli_epi64::<32>(this.0), _mm256_srli_epi64::<32>(rhs.0));
-         let p0 = _mm256_unpacklo_epi32(l, h);
-         let p1 = _mm256_unpackhi_epi32(l, h);
-         I32VecAvx(_mm256_unpackhi_epi64(p0, p1), this.1)
-+        }
-     });
- 
-     #[inline(always)]
+             // SAFETY: dest.len() >= 8 is checked above. _mm_storeu_si128 supports unaligned stores.
+@@ -891,7 +891,7 @@ impl I32SimdVec for I32VecAvx {
      fn store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "avx2")]
          #[inline]
@@ -344,182 +202,72 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= I32VecAvx::LEN);
              let tmp = _mm256_shuffle_epi8(
                  v,
-@@ -906,111 +916,111 @@ impl I32SimdVec for I32VecAvx {
- impl Add<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn add(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_add_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_add_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Sub<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn sub(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_sub_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_sub_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Mul<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn mul(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_mullo_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_mullo_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Shl<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn shl(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_sllv_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_sllv_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Shr<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn shr(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_srav_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_srav_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Neg for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn neg() -> I32VecAvx {
--        I32VecAvx(_mm256_setzero_si256(), this.1) - this
-+        unsafe { I32VecAvx(_mm256_setzero_si256(), this.1) - this }
-     });
- }
- 
- impl BitAnd<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn bitand(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_and_si256(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_and_si256(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitOr<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn bitor(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_or_si256(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_or_si256(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitXor<I32VecAvx> for I32VecAvx {
-     type Output = I32VecAvx;
-     fn_avx!(this: I32VecAvx, fn bitxor(rhs: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_xor_si256(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx(_mm256_xor_si256(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl AddAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn add_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_add_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_add_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl SubAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn sub_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_sub_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_sub_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl MulAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn mul_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_mullo_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_mullo_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl ShlAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn shl_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_sllv_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_sllv_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl ShrAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn shr_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_srav_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_srav_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl BitAndAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn bitand_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_and_si256(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_and_si256(this.0, rhs.0) }
-     });
- }
- 
- impl BitOrAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn bitor_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_or_si256(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_or_si256(this.0, rhs.0) }
-     });
- }
- 
- impl BitXorAssign<I32VecAvx> for I32VecAvx {
-     fn_avx!(this: &mut I32VecAvx, fn bitxor_assign(rhs: I32VecAvx) {
--        this.0 = _mm256_xor_si256(this.0, rhs.0)
-+        unsafe { this.0 = _mm256_xor_si256(this.0, rhs.0) }
-     });
- }
- 
-@@ -1039,36 +1049,36 @@ impl SimdMask for MaskAvx {
-     type Descriptor = AvxDescriptor;
- 
-     fn_avx!(this: MaskAvx, fn if_then_else_f32(if_true: F32VecAvx, if_false: F32VecAvx) -> F32VecAvx {
--        F32VecAvx(_mm256_blendv_ps(if_false.0, if_true.0, this.0), this.1)
-+        unsafe { F32VecAvx(_mm256_blendv_ps(if_false.0, if_true.0, this.0), this.1) }
-     });
- 
-     fn_avx!(this: MaskAvx, fn if_then_else_i32(if_true: I32VecAvx, if_false: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_blendv_epi8(if_false.0, if_true.0, _mm256_castps_si256(this.0)), this.1)
-+        unsafe { I32VecAvx(_mm256_blendv_epi8(if_false.0, if_true.0, _mm256_castps_si256(this.0)), this.1) }
-     });
- 
-     fn_avx!(this: MaskAvx, fn maskz_i32(v: I32VecAvx) -> I32VecAvx {
--        I32VecAvx(_mm256_andnot_si256(_mm256_castps_si256(this.0), v.0), this.1)
-+        unsafe { I32VecAvx(_mm256_andnot_si256(_mm256_castps_si256(this.0), v.0), this.1) }
-     });
- 
-     fn_avx!(this: MaskAvx, fn all() -> bool {
--        _mm256_movemask_ps(this.0) == 0b11111111
-+        unsafe { _mm256_movemask_ps(this.0) == 0b11111111 }
-     });
- 
-     fn_avx!(this: MaskAvx, fn andnot(rhs: MaskAvx) -> MaskAvx {
--        MaskAvx(_mm256_andnot_ps(this.0, rhs.0), this.1)
-+        unsafe { MaskAvx(_mm256_andnot_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitAnd<MaskAvx> for MaskAvx {
-     type Output = MaskAvx;
-     fn_avx!(this: MaskAvx, fn bitand(rhs: MaskAvx) -> MaskAvx {
--        MaskAvx(_mm256_and_ps(this.0, rhs.0), this.1)
-+        unsafe { MaskAvx(_mm256_and_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitOr<MaskAvx> for MaskAvx {
-     type Output = MaskAvx;
-     fn_avx!(this: MaskAvx, fn bitor(rhs: MaskAvx) -> MaskAvx {
--        MaskAvx(_mm256_or_ps(this.0, rhs.0), this.1)
-+        unsafe { MaskAvx(_mm256_or_ps(this.0, rhs.0), this.1) }
-     });
- }
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx512.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/avx512.rs
-@@ -87,7 +87,7 @@ macro_rules! fn_avx {
+@@ -914,7 +914,7 @@ impl I32SimdVec for I32VecAvx {
+     fn store_u8(self, dest: &mut [u8]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_u8_impl(v: __m256i, dest: &mut [u8]) {
++        unsafe fn store_u8_impl(v: __m256i, dest: &mut [u8]) {
+             assert!(dest.len() >= I32VecAvx::LEN);
+             let tmp = _mm256_shuffle_epi8(
+                 v,
+@@ -1111,7 +1111,7 @@ unsafe impl U8SimdVec for U8VecAvx {
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<u8>]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_2_impl(a: __m256i, b: __m256i, dest: &mut [MaybeUninit<u8>]) {
++        unsafe fn store_interleaved_2_impl(a: __m256i, b: __m256i, dest: &mut [MaybeUninit<u8>]) {
+             assert!(dest.len() >= 2 * U8VecAvx::LEN);
+             // a = [A0..A15 | A16..A31]
+             // b = [B0..B15 | B16..B31]
+@@ -1138,7 +1138,7 @@ unsafe impl U8SimdVec for U8VecAvx {
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<u8>]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_3_impl(
++        unsafe fn store_interleaved_3_impl(
+             a: __m256i,
+             b: __m256i,
+             c: __m256i,
+@@ -1239,7 +1239,7 @@ unsafe impl U8SimdVec for U8VecAvx {
+     ) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_4_impl(
++        unsafe fn store_interleaved_4_impl(
+             a: __m256i,
+             b: __m256i,
+             c: __m256i,
+@@ -1315,7 +1315,7 @@ unsafe impl U16SimdVec for U16VecAvx {
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<u16>]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_2_impl(a: __m256i, b: __m256i, dest: &mut [MaybeUninit<u16>]) {
++        unsafe fn store_interleaved_2_impl(a: __m256i, b: __m256i, dest: &mut [MaybeUninit<u16>]) {
+             assert!(dest.len() >= 2 * U16VecAvx::LEN);
+             // a = [A0..A7 | A8..A15]
+             // b = [B0..B7 | B8..B15]
+@@ -1342,7 +1342,7 @@ unsafe impl U16SimdVec for U16VecAvx {
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<u16>]) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_3_impl(
++        unsafe fn store_interleaved_3_impl(
+             a: __m256i,
+             b: __m256i,
+             c: __m256i,
+@@ -1443,7 +1443,7 @@ unsafe impl U16SimdVec for U16VecAvx {
+     ) {
+         #[target_feature(enable = "avx2")]
+         #[inline]
+-        fn store_interleaved_4_impl(
++        unsafe fn store_interleaved_4_impl(
+             a: __m256i,
+             b: __m256i,
+             c: __m256i,
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/x86_64/avx512.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/x86_64/avx512.rs
+@@ -91,7 +91,7 @@ macro_rules! fn_avx {
              #[target_feature(enable = "avx512f")]
              #[inline]
              fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
@@ -528,7 +276,7 @@ and fixed in newer versions of rustc.
              }
              // SAFETY: `self.1` is constructed iff avx512f is available.
              unsafe { inner(self, $($arg),*) }
-@@ -130,7 +130,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -134,7 +134,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -537,7 +285,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= 2 * F32VecAvx512::LEN);
              // a = [a0..a15], b = [b0..b15]
              // Output: [a0, b0, a1, b1, ..., a15, b15]
-@@ -165,7 +165,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -169,7 +169,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -546,7 +294,7 @@ and fixed in newer versions of rustc.
              a: __m512,
              b: __m512,
              c: __m512,
-@@ -215,7 +215,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -219,7 +219,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      ) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -555,7 +303,7 @@ and fixed in newer versions of rustc.
              a: __m512,
              b: __m512,
              c: __m512,
-@@ -319,7 +319,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -323,7 +323,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      ) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -564,7 +312,7 @@ and fixed in newer versions of rustc.
              a: __m512,
              b: __m512,
              c: __m512,
-@@ -450,7 +450,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -454,7 +454,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn load_deinterleaved_2(d: Self::Descriptor, src: &[f32]) -> (Self, Self) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -573,7 +321,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 2 * F32VecAvx512::LEN);
              // Input: [a0,b0,a1,b1,...,a15,b15]
              // Output: a = [a0..a15], b = [b0..b15]
-@@ -483,7 +483,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -487,7 +487,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn load_deinterleaved_3(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -582,7 +330,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 3 * F32VecAvx512::LEN);
              // Input layout (48 floats in 3x16-float vectors):
              // in0: [a0,b0,c0,a1,b1,c1,a2,b2,c2,a3,b3,c3,a4,b4,c4,a5]
-@@ -540,7 +540,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -544,7 +544,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn load_deinterleaved_4(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self, Self) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -591,74 +339,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 4 * F32VecAvx512::LEN);
              // Input: [a0,b0,c0,d0,a1,b1,c1,d1,...] (64 floats)
              // Output: a = [a0..a15], b = [b0..b15], c = [c0..c15], d = [d0..d15]
-@@ -608,18 +608,19 @@ unsafe impl F32SimdVec for F32VecAvx512
-     }
- 
-     fn_avx!(this: F32VecAvx512, fn abs() -> F32VecAvx512 {
--        F32VecAvx512(_mm512_abs_ps(this.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_abs_ps(this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn floor() -> F32VecAvx512 {
--        F32VecAvx512(_mm512_roundscale_ps::<{ _MM_FROUND_FLOOR }>(this.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_roundscale_ps::<{ _MM_FROUND_FLOOR }>(this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn sqrt() -> F32VecAvx512 {
--        F32VecAvx512(_mm512_sqrt_ps(this.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_sqrt_ps(this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn neg() -> F32VecAvx512 {
-+        unsafe {
-         F32VecAvx512(
-             _mm512_castsi512_ps(_mm512_xor_si512(
-                 _mm512_set1_epi32(i32::MIN),
-@@ -627,9 +628,11 @@ unsafe impl F32SimdVec for F32VecAvx512
-             )),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn copysign(sign: F32VecAvx512) -> F32VecAvx512 {
-+        unsafe {
-         let sign_mask = _mm512_set1_epi32(i32::MIN);
-         F32VecAvx512(
-             _mm512_castsi512_ps(_mm512_or_si512(
-@@ -638,33 +641,34 @@ unsafe impl F32SimdVec for F32VecAvx512
-             )),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn max(other: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_max_ps(this.0, other.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_max_ps(this.0, other.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn min(other: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_min_ps(this.0, other.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_min_ps(this.0, other.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn gt(other: F32VecAvx512) -> MaskAvx512 {
--        MaskAvx512(_mm512_cmp_ps_mask::<{_CMP_GT_OQ}>(this.0, other.0), this.1)
-+        unsafe { MaskAvx512(_mm512_cmp_ps_mask::<{_CMP_GT_OQ}>(this.0, other.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn as_i32() -> I32VecAvx512 {
--        I32VecAvx512(_mm512_cvtps_epi32(this.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_cvtps_epi32(this.0), this.1) }
-     });
- 
-     fn_avx!(this: F32VecAvx512, fn bitcast_to_i32() -> I32VecAvx512 {
--        I32VecAvx512(_mm512_castps_si512(this.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_castps_si512(this.0), this.1) }
-     });
- 
-     #[inline(always)]
+@@ -668,7 +668,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn prepare_table_bf16_8(_d: Avx512Descriptor, table: &[f32; 8]) -> Bf16Table8Avx512 {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -667,7 +348,7 @@ and fixed in newer versions of rustc.
              // SAFETY: avx512f is available from target_feature, and we load 8 elements,
              // exactly as many as are present in `table`.
              let table_256 = unsafe { _mm256_loadu_ps(table.as_ptr()) };
-@@ -689,7 +693,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -693,7 +693,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn round_store_u8(self, dest: &mut [u8]) {
          #[target_feature(enable = "avx512f", enable = "avx512bw")]
          #[inline]
@@ -676,7 +357,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx512::LEN);
              // Round to nearest integer
              let rounded = _mm512_roundscale_ps::<{ _MM_FROUND_TO_NEAREST_INT }>(v);
-@@ -711,7 +715,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -715,7 +715,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn round_store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "avx512f", enable = "avx512bw")]
          #[inline]
@@ -685,16 +366,16 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecAvx512::LEN);
              // Round to nearest integer
              let rounded = _mm512_roundscale_ps::<{ _MM_FROUND_TO_NEAREST_INT }>(v);
-@@ -736,7 +740,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+@@ -740,7 +740,7 @@ unsafe impl F32SimdVec for F32VecAvx512
          // AVX512 implies F16C, so we can always use hardware conversion
          #[target_feature(enable = "avx512f")]
          #[inline]
 -        fn load_f16_impl(d: Avx512Descriptor, mem: &[u16]) -> F32VecAvx512 {
 +        unsafe fn load_f16_impl(d: Avx512Descriptor, mem: &[u16]) -> F32VecAvx512 {
              assert!(mem.len() >= F32VecAvx512::LEN);
-             // SAFETY: mem.len() >= 16 is checked above
-             let bits = unsafe { _mm256_loadu_si256(mem.as_ptr() as *const __m256i) };
-@@ -751,7 +755,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+             // SAFETY: mem.len() >= 16 is checked above.
+             let bits = unsafe { _mm256_loadu_si256(mem.as_ptr().cast()) };
+@@ -755,7 +755,7 @@ unsafe impl F32SimdVec for F32VecAvx512
          // AVX512 implies F16C, so we can always use hardware conversion
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -702,8 +383,8 @@ and fixed in newer versions of rustc.
 +        unsafe fn store_f16_bits_impl(v: __m512, dest: &mut [u16]) {
              assert!(dest.len() >= F32VecAvx512::LEN);
              let bits = _mm512_cvtps_ph::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-             // SAFETY: dest.len() >= 16 is checked above
-@@ -765,7 +769,7 @@ unsafe impl F32SimdVec for F32VecAvx512
+             // SAFETY: dest.len() >= 16 is checked above.
+@@ -769,7 +769,7 @@ unsafe impl F32SimdVec for F32VecAvx512
      fn transpose_square(d: Self::Descriptor, data: &mut [Self::UnderlyingArray], stride: usize) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -712,123 +393,7 @@ and fixed in newer versions of rustc.
              assert!(data.len() > stride * 15);
  
              let r0 = F32VecAvx512::load_array(d, &data[0]).0;
-@@ -925,52 +929,52 @@ unsafe impl F32SimdVec for F32VecAvx512
- impl Add<F32VecAvx512> for F32VecAvx512 {
-     type Output = F32VecAvx512;
-     fn_avx!(this: F32VecAvx512, fn add(rhs: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_add_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_add_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Sub<F32VecAvx512> for F32VecAvx512 {
-     type Output = F32VecAvx512;
-     fn_avx!(this: F32VecAvx512, fn sub(rhs: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_sub_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_sub_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Mul<F32VecAvx512> for F32VecAvx512 {
-     type Output = F32VecAvx512;
-     fn_avx!(this: F32VecAvx512, fn mul(rhs: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_mul_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_mul_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Div<F32VecAvx512> for F32VecAvx512 {
-     type Output = F32VecAvx512;
-     fn_avx!(this: F32VecAvx512, fn div(rhs: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_div_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_div_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl AddAssign<F32VecAvx512> for F32VecAvx512 {
-     fn_avx!(this: &mut F32VecAvx512, fn add_assign(rhs: F32VecAvx512) {
--        this.0 = _mm512_add_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_add_ps(this.0, rhs.0) }
-     });
- }
- 
- impl SubAssign<F32VecAvx512> for F32VecAvx512 {
-     fn_avx!(this: &mut F32VecAvx512, fn sub_assign(rhs: F32VecAvx512) {
--        this.0 = _mm512_sub_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_sub_ps(this.0, rhs.0) }
-     });
- }
- 
- impl MulAssign<F32VecAvx512> for F32VecAvx512 {
-     fn_avx!(this: &mut F32VecAvx512, fn mul_assign(rhs: F32VecAvx512) {
--        this.0 = _mm512_mul_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_mul_ps(this.0, rhs.0) }
-     });
- }
- 
- impl DivAssign<F32VecAvx512> for F32VecAvx512 {
-     fn_avx!(this: &mut F32VecAvx512, fn div_assign(rhs: F32VecAvx512) {
--        this.0 = _mm512_div_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_div_ps(this.0, rhs.0) }
-     });
- }
- 
-@@ -1006,11 +1010,11 @@ impl I32SimdVec for I32VecAvx512 {
-     }
- 
-     fn_avx!(this: I32VecAvx512, fn as_f32() -> F32VecAvx512 {
--         F32VecAvx512(_mm512_cvtepi32_ps(this.0), this.1)
-+         unsafe { F32VecAvx512(_mm512_cvtepi32_ps(this.0), this.1) }
-     });
- 
-     fn_avx!(this: I32VecAvx512, fn bitcast_to_f32() -> F32VecAvx512 {
--         F32VecAvx512(_mm512_castsi512_ps(this.0), this.1)
-+         unsafe { F32VecAvx512(_mm512_castsi512_ps(this.0), this.1) }
-     });
- 
-     #[inline(always)]
-@@ -1019,23 +1023,23 @@ impl I32SimdVec for I32VecAvx512 {
-     }
- 
-     fn_avx!(this: I32VecAvx512, fn abs() -> I32VecAvx512 {
--        I32VecAvx512(_mm512_abs_epi32(this.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_abs_epi32(this.0), this.1) }
-     });
- 
-     fn_avx!(this: I32VecAvx512, fn gt(rhs: I32VecAvx512) -> MaskAvx512 {
--        MaskAvx512(_mm512_cmpgt_epi32_mask(this.0, rhs.0), this.1)
-+        unsafe { MaskAvx512(_mm512_cmpgt_epi32_mask(this.0, rhs.0), this.1) }
-     });
- 
-     fn_avx!(this: I32VecAvx512, fn lt_zero() -> MaskAvx512 {
--        I32VecAvx512(_mm512_setzero_epi32(), this.1).gt(this)
-+        unsafe { I32VecAvx512(_mm512_setzero_epi32(), this.1).gt(this) }
-     });
- 
-     fn_avx!(this: I32VecAvx512, fn eq(rhs: I32VecAvx512) -> MaskAvx512 {
--        MaskAvx512(_mm512_cmpeq_epi32_mask(this.0, rhs.0), this.1)
-+        unsafe { MaskAvx512(_mm512_cmpeq_epi32_mask(this.0, rhs.0), this.1) }
-     });
- 
-     fn_avx!(this: I32VecAvx512, fn eq_zero() -> MaskAvx512 {
--        I32VecAvx512(_mm512_setzero_epi32(), this.1).eq(this)
-+        unsafe { I32VecAvx512(_mm512_setzero_epi32(), this.1).eq(this) }
-     });
- 
-     #[inline(always)]
-@@ -1051,17 +1055,19 @@ impl I32SimdVec for I32VecAvx512 {
-     }
- 
-     fn_avx!(this: I32VecAvx512, fn mul_wide_take_high(rhs: I32VecAvx512) -> I32VecAvx512 {
-+        unsafe {
-         let l = _mm512_mul_epi32(this.0, rhs.0);
-         let h = _mm512_mul_epi32(_mm512_srli_epi64::<32>(this.0), _mm512_srli_epi64::<32>(rhs.0));
-         let idx = _mm512_setr_epi32(1, 17, 3, 19, 5, 21, 7, 23, 9, 25, 11, 27, 13, 29, 15, 31);
-         I32VecAvx512(_mm512_permutex2var_epi32(l, idx, h), this.1)
-+        }
-     });
- 
-     #[inline(always)]
+@@ -1065,7 +1065,7 @@ impl I32SimdVec for I32VecAvx512 {
      fn store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "avx512f")]
          #[inline]
@@ -837,157 +402,72 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= I32VecAvx512::LEN);
              let tmp = _mm512_cvtepi32_epi16(v);
              // SAFETY: We just checked `dst` has enough space.
-@@ -1075,111 +1081,111 @@ impl I32SimdVec for I32VecAvx512 {
- impl Add<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn add(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_add_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_add_epi32(this.0, rhs.0), this.1) }
-     });
- }
+@@ -1079,7 +1079,7 @@ impl I32SimdVec for I32VecAvx512 {
+     fn store_u8(self, dest: &mut [u8]) {
+         #[target_feature(enable = "avx512f")]
+         #[inline]
+-        fn store_u8_impl(v: __m512i, dest: &mut [u8]) {
++        unsafe fn store_u8_impl(v: __m512i, dest: &mut [u8]) {
+             assert!(dest.len() >= I32VecAvx512::LEN);
+             let tmp_vec = _mm512_cvtepi32_epi8(v);
+             // SAFETY: We just checked `dst` has enough space.
+@@ -1260,7 +1260,7 @@ unsafe impl U8SimdVec for U8VecAvx512 {
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<u8>]) {
+         #[target_feature(enable = "avx512f,avx512bw")]
+         #[inline]
+-        fn impl_u8_2(a: __m512i, b: __m512i, dest: &mut [MaybeUninit<u8>]) {
++        unsafe fn impl_u8_2(a: __m512i, b: __m512i, dest: &mut [MaybeUninit<u8>]) {
+             assert!(dest.len() >= 2 * U8VecAvx512::LEN);
+             let lo = _mm512_unpacklo_epi8(a, b);
+             let hi = _mm512_unpackhi_epi8(a, b);
+@@ -1284,7 +1284,7 @@ unsafe impl U8SimdVec for U8VecAvx512 {
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<u8>]) {
+         #[target_feature(enable = "avx512f,avx512bw")]
+         #[inline]
+-        fn impl_u8_3(a: __m512i, b: __m512i, c: __m512i, dest: &mut [MaybeUninit<u8>]) {
++        unsafe fn impl_u8_3(a: __m512i, b: __m512i, c: __m512i, dest: &mut [MaybeUninit<u8>]) {
+             assert!(dest.len() >= 3 * U8VecAvx512::LEN);
  
- impl Sub<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn sub(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_sub_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_sub_epi32(this.0, rhs.0), this.1) }
-     });
- }
+             let mask_a0 = _mm512_broadcast_i32x4(_mm_setr_epi8(
+@@ -1373,7 +1373,7 @@ unsafe impl U8SimdVec for U8VecAvx512 {
+     ) {
+         #[target_feature(enable = "avx512f,avx512bw")]
+         #[inline]
+-        fn impl_u8_4(a: __m512i, b: __m512i, c: __m512i, d: __m512i, dest: &mut [MaybeUninit<u8>]) {
++        unsafe fn impl_u8_4(a: __m512i, b: __m512i, c: __m512i, d: __m512i, dest: &mut [MaybeUninit<u8>]) {
+             assert!(dest.len() >= 4 * U8VecAvx512::LEN);
+             let ab_lo = _mm512_unpacklo_epi8(a, b);
+             let ab_hi = _mm512_unpackhi_epi8(a, b);
+@@ -1451,7 +1451,7 @@ unsafe impl U16SimdVec for U16VecAvx512
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<u16>]) {
+         #[target_feature(enable = "avx512f,avx512bw")]
+         #[inline]
+-        fn impl_u16_2(a: __m512i, b: __m512i, dest: &mut [MaybeUninit<u16>]) {
++        unsafe fn impl_u16_2(a: __m512i, b: __m512i, dest: &mut [MaybeUninit<u16>]) {
+             assert!(dest.len() >= 2 * U16VecAvx512::LEN);
+             let lo = _mm512_unpacklo_epi16(a, b);
+             let hi = _mm512_unpackhi_epi16(a, b);
+@@ -1475,7 +1475,7 @@ unsafe impl U16SimdVec for U16VecAvx512
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<u16>]) {
+         #[target_feature(enable = "avx512f,avx512bw")]
+         #[inline]
+-        fn impl_u16_3(a: __m512i, b: __m512i, c: __m512i, dest: &mut [MaybeUninit<u16>]) {
++        unsafe fn impl_u16_3(a: __m512i, b: __m512i, c: __m512i, dest: &mut [MaybeUninit<u16>]) {
+             assert!(dest.len() >= 3 * U16VecAvx512::LEN);
  
- impl Mul<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn mul(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_mullo_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_mullo_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Neg for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn neg() -> I32VecAvx512 {
--        I32VecAvx512(_mm512_setzero_epi32(), this.1) - this
-+        unsafe { I32VecAvx512(_mm512_setzero_epi32(), this.1) - this }
-     });
- }
- 
- impl Shl<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn shl(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_sllv_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_sllv_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Shr<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn shr(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_srav_epi32(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_srav_epi32(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitAnd<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn bitand(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_and_si512(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_and_si512(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitOr<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn bitor(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_or_si512(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_or_si512(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitXor<I32VecAvx512> for I32VecAvx512 {
-     type Output = I32VecAvx512;
-     fn_avx!(this: I32VecAvx512, fn bitxor(rhs: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_xor_si512(this.0, rhs.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_xor_si512(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl AddAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn add_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_add_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_add_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl SubAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn sub_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_sub_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_sub_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl MulAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn mul_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_mullo_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_mullo_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl ShlAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn shl_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_sllv_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_sllv_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl ShrAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn shr_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_srav_epi32(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_srav_epi32(this.0, rhs.0) }
-     });
- }
- 
- impl BitAndAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn bitand_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_and_si512(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_and_si512(this.0, rhs.0) }
-     });
- }
- 
- impl BitOrAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn bitor_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_or_si512(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_or_si512(this.0, rhs.0) }
-     });
- }
- 
- impl BitXorAssign<I32VecAvx512> for I32VecAvx512 {
-     fn_avx!(this: &mut I32VecAvx512, fn bitxor_assign(rhs: I32VecAvx512) {
--        this.0 = _mm512_xor_si512(this.0, rhs.0)
-+        unsafe { this.0 = _mm512_xor_si512(this.0, rhs.0) }
-     });
- }
- 
-@@ -1208,15 +1214,15 @@ impl SimdMask for MaskAvx512 {
-     type Descriptor = Avx512Descriptor;
- 
-     fn_avx!(this: MaskAvx512, fn if_then_else_f32(if_true: F32VecAvx512, if_false: F32VecAvx512) -> F32VecAvx512 {
--        F32VecAvx512(_mm512_mask_blend_ps(this.0, if_false.0, if_true.0), this.1)
-+        unsafe { F32VecAvx512(_mm512_mask_blend_ps(this.0, if_false.0, if_true.0), this.1) }
-     });
- 
-     fn_avx!(this: MaskAvx512, fn if_then_else_i32(if_true: I32VecAvx512, if_false: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_mask_blend_epi32(this.0, if_false.0, if_true.0), this.1)
-+        unsafe { I32VecAvx512(_mm512_mask_blend_epi32(this.0, if_false.0, if_true.0), this.1) }
-     });
- 
-     fn_avx!(this: MaskAvx512, fn maskz_i32(v: I32VecAvx512) -> I32VecAvx512 {
--        I32VecAvx512(_mm512_mask_set1_epi32(v.0, this.0, 0), this.1)
-+        unsafe { I32VecAvx512(_mm512_mask_set1_epi32(v.0, this.0, 0), this.1) }
-     });
- 
-     fn_avx!(this: MaskAvx512, fn all() -> bool {
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/sse42.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/x86_64/sse42.rs
-@@ -75,7 +75,7 @@ macro_rules! fn_sse42 {
+             let mask_a0 = _mm512_broadcast_i32x4(_mm_setr_epi8(
+@@ -1567,7 +1567,7 @@ unsafe impl U16SimdVec for U16VecAvx512
+     ) {
+         #[target_feature(enable = "avx512f,avx512bw")]
+         #[inline]
+-        fn impl_u16_4(
++        unsafe fn impl_u16_4(
+             a: __m512i,
+             b: __m512i,
+             c: __m512i,
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/x86_64/sse42.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_4/src/x86_64/sse42.rs
+@@ -77,7 +77,7 @@ macro_rules! fn_sse42 {
              #[target_feature(enable = "sse4.2")]
              #[inline]
              fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
@@ -996,7 +476,7 @@ and fixed in newer versions of rustc.
              }
              // SAFETY: `self.1` is constructed iff sse42 are available.
              unsafe { inner(self, $($arg),*) }
-@@ -123,7 +123,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -125,7 +125,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1005,7 +485,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= 2 * F32VecSse42::LEN);
              // a = [a0, a1, a2, a3], b = [b0, b1, b2, b3]
              // lo = [a0, b0, a1, b1], hi = [a2, b2, a3, b3]
-@@ -145,7 +145,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -147,7 +147,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<f32>]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1014,7 +494,7 @@ and fixed in newer versions of rustc.
              a: __m128,
              b: __m128,
              c: __m128,
-@@ -205,7 +205,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -207,7 +207,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      ) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1023,7 +503,7 @@ and fixed in newer versions of rustc.
              a: __m128,
              b: __m128,
              c: __m128,
-@@ -253,7 +253,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -255,7 +255,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      ) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1032,7 +512,7 @@ and fixed in newer versions of rustc.
              a: __m128,
              b: __m128,
              c: __m128,
-@@ -307,7 +307,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -309,7 +309,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn load_deinterleaved_2(d: Self::Descriptor, src: &[f32]) -> (Self, Self) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1041,7 +521,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 2 * F32VecSse42::LEN);
              // Input: [a0, b0, a1, b1, a2, b2, a3, b3]
              // Output: a = [a0, a1, a2, a3], b = [b0, b1, b2, b3]
-@@ -335,7 +335,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -337,7 +337,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn load_deinterleaved_3(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1050,7 +530,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 3 * F32VecSse42::LEN);
              // Input: [a0, b0, c0, a1, b1, c1, a2, b2, c2, a3, b3, c3]
              // Output: a = [a0, a1, a2, a3], b = [b0, b1, b2, b3], c = [c0, c1, c2, c3]
-@@ -385,7 +385,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -387,7 +387,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn load_deinterleaved_4(d: Self::Descriptor, src: &[f32]) -> (Self, Self, Self, Self) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1059,66 +539,7 @@ and fixed in newer versions of rustc.
              assert!(src.len() >= 4 * F32VecSse42::LEN);
              // Input: [a0, b0, c0, d0, a1, b1, c1, d1, a2, b2, c2, d2, a3, b3, c3, d3]
              // Output: a = [a0, a1, a2, a3], b = [b0, b1, b2, b3], c = [c0, c1, c2, c3], d = [d0, d1, d2, d3]
-@@ -441,29 +441,33 @@ unsafe impl F32SimdVec for F32VecSse42 {
-     }
- 
-     fn_sse42!(this: F32VecSse42, fn abs() -> F32VecSse42 {
-+        unsafe {
-         F32VecSse42(
-             _mm_castsi128_ps(_mm_andnot_si128(
-                 _mm_set1_epi32(i32::MIN),
-                 _mm_castps_si128(this.0),
-             )),
-             this.1)
-+        }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn floor() -> F32VecSse42 {
--        F32VecSse42(_mm_floor_ps(this.0), this.1)
-+        unsafe { F32VecSse42(_mm_floor_ps(this.0), this.1) }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn sqrt() -> F32VecSse42 {
--        F32VecSse42(_mm_sqrt_ps(this.0), this.1)
-+        unsafe { F32VecSse42(_mm_sqrt_ps(this.0), this.1) }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn neg() -> F32VecSse42 {
-+        unsafe {
-         F32VecSse42(
-             _mm_castsi128_ps(_mm_xor_si128(
-                 _mm_set1_epi32(i32::MIN),
-                 _mm_castps_si128(this.0),
-             )),
-             this.1)
-+        }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn copysign(sign: F32VecSse42) -> F32VecSse42 {
-@@ -482,26 +486,26 @@ unsafe impl F32SimdVec for F32VecSse42 {
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn min(other: F32VecSse42) -> F32VecSse42 {
--        F32VecSse42(_mm_min_ps(this.0, other.0), this.1)
-+        unsafe { F32VecSse42(_mm_min_ps(this.0, other.0), this.1) }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn gt(other: F32VecSse42) -> MaskSse42 {
--        MaskSse42(_mm_cmpgt_ps(this.0, other.0), this.1)
-+        unsafe { MaskSse42(_mm_cmpgt_ps(this.0, other.0), this.1) }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn as_i32() -> I32VecSse42 {
--        I32VecSse42(_mm_cvtps_epi32(this.0), this.1)
-+        unsafe { I32VecSse42(_mm_cvtps_epi32(this.0), this.1) }
-     });
- 
-     fn_sse42!(this: F32VecSse42, fn bitcast_to_i32() -> I32VecSse42 {
--        I32VecSse42(_mm_castps_si128(this.0), this.1)
-+        unsafe { I32VecSse42(_mm_castps_si128(this.0), this.1) }
-     });
- 
-     #[inline(always)]
+@@ -503,7 +503,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn prepare_table_bf16_8(_d: Sse42Descriptor, table: &[f32; 8]) -> Bf16Table8Sse42 {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1127,7 +548,7 @@ and fixed in newer versions of rustc.
              // Convert f32 table to BF16 packed in 128 bits (16 bytes for 8 entries)
              // BF16 is the high 16 bits of f32
              // SAFETY: table has exactly 8 elements and sse4.2 is available from target_feature
-@@ -536,7 +540,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -538,7 +538,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      ) -> Self {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1136,7 +557,7 @@ and fixed in newer versions of rustc.
              // Build shuffle mask efficiently using arithmetic on 32-bit indices.
              // For each index i (0-7), we need to select bytes [2*i, 2*i+1] from bf16_table
              // and place them in the high 16 bits of each 32-bit f32 lane (bytes 2,3),
-@@ -565,7 +569,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -567,7 +567,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn round_store_u8(self, dest: &mut [u8]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1145,7 +566,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecSse42::LEN);
              // Round to nearest integer
              let rounded = _mm_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -589,7 +593,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -596,7 +596,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn round_store_u16(self, dest: &mut [u16]) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1154,7 +575,7 @@ and fixed in newer versions of rustc.
              assert!(dest.len() >= F32VecSse42::LEN);
              // Round to nearest integer
              let rounded = _mm_round_ps::<{ _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC }>(v);
-@@ -635,7 +639,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
+@@ -648,7 +648,7 @@ unsafe impl F32SimdVec for F32VecSse42 {
      fn transpose_square(d: Self::Descriptor, data: &mut [Self::UnderlyingArray], stride: usize) {
          #[target_feature(enable = "sse4.2")]
          #[inline]
@@ -1163,169 +584,80 @@ and fixed in newer versions of rustc.
              assert!(data.len() > stride * 3);
  
              let p0 = F32VecSse42::load_array(d, &data[0]).0;
-@@ -669,52 +673,52 @@ unsafe impl F32SimdVec for F32VecSse42 {
- impl Add<F32VecSse42> for F32VecSse42 {
-     type Output = F32VecSse42;
-     fn_sse42!(this: F32VecSse42, fn add(rhs: F32VecSse42) -> F32VecSse42 {
--        F32VecSse42(_mm_add_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecSse42(_mm_add_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Sub<F32VecSse42> for F32VecSse42 {
-     type Output = F32VecSse42;
-     fn_sse42!(this: F32VecSse42, fn sub(rhs: F32VecSse42) -> F32VecSse42 {
--        F32VecSse42(_mm_sub_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecSse42(_mm_sub_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Mul<F32VecSse42> for F32VecSse42 {
-     type Output = F32VecSse42;
-     fn_sse42!(this: F32VecSse42, fn mul(rhs: F32VecSse42) -> F32VecSse42 {
--        F32VecSse42(_mm_mul_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecSse42(_mm_mul_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl Div<F32VecSse42> for F32VecSse42 {
-     type Output = F32VecSse42;
-     fn_sse42!(this: F32VecSse42, fn div(rhs: F32VecSse42) -> F32VecSse42 {
--        F32VecSse42(_mm_div_ps(this.0, rhs.0), this.1)
-+        unsafe { F32VecSse42(_mm_div_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl AddAssign<F32VecSse42> for F32VecSse42 {
-     fn_sse42!(this: &mut F32VecSse42, fn add_assign(rhs: F32VecSse42) {
--        this.0 = _mm_add_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm_add_ps(this.0, rhs.0) }
-     });
- }
- 
- impl SubAssign<F32VecSse42> for F32VecSse42 {
-     fn_sse42!(this: &mut F32VecSse42, fn sub_assign(rhs: F32VecSse42) {
--        this.0 = _mm_sub_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm_sub_ps(this.0, rhs.0) }
-     });
- }
- 
- impl MulAssign<F32VecSse42> for F32VecSse42 {
-     fn_sse42!(this: &mut F32VecSse42, fn mul_assign(rhs: F32VecSse42) {
--        this.0 = _mm_mul_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm_mul_ps(this.0, rhs.0) }
-     });
- }
- 
- impl DivAssign<F32VecSse42> for F32VecSse42 {
-     fn_sse42!(this: &mut F32VecSse42, fn div_assign(rhs: F32VecSse42) {
--        this.0 = _mm_div_ps(this.0, rhs.0)
-+        unsafe { this.0 = _mm_div_ps(this.0, rhs.0) }
-     });
- }
- 
-@@ -750,11 +754,11 @@ impl I32SimdVec for I32VecSse42 {
-     }
- 
-     fn_sse42!(this: I32VecSse42, fn as_f32() -> F32VecSse42 {
--        F32VecSse42(_mm_cvtepi32_ps(this.0), this.1)
-+        unsafe { F32VecSse42(_mm_cvtepi32_ps(this.0), this.1) }
-     });
- 
-     fn_sse42!(this: I32VecSse42, fn bitcast_to_f32() -> F32VecSse42 {
--        F32VecSse42(_mm_castsi128_ps(this.0), this.1)
-+        unsafe { F32VecSse42(_mm_castsi128_ps(this.0), this.1) }
-     });
- 
-     #[inline(always)]
-@@ -763,33 +767,39 @@ impl I32SimdVec for I32VecSse42 {
-     }
- 
-     fn_sse42!(this: I32VecSse42, fn abs() -> I32VecSse42 {
-+        unsafe {
-         I32VecSse42(
-             _mm_abs_epi32(
-                 this.0,
-             ),
-             this.1)
-+        }
-     });
- 
-     fn_sse42!(this: I32VecSse42, fn gt(rhs: I32VecSse42) -> MaskSse42 {
-+        unsafe {
-         MaskSse42(
-             _mm_castsi128_ps(_mm_cmpgt_epi32(this.0, rhs.0)),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_sse42!(this: I32VecSse42, fn lt_zero() -> MaskSse42 {
--        I32VecSse42(_mm_setzero_si128(), this.1).gt(this)
-+        unsafe { I32VecSse42(_mm_setzero_si128(), this.1).gt(this) }
-     });
- 
-     fn_sse42!(this: I32VecSse42, fn eq(rhs: I32VecSse42) -> MaskSse42 {
-+        unsafe {
-         MaskSse42(
-             _mm_castsi128_ps(_mm_cmpeq_epi32(this.0, rhs.0)),
-             this.1,
-         )
-+        }
-     });
- 
-     fn_sse42!(this: I32VecSse42, fn eq_zero() -> MaskSse42 {
--        this.eq(I32VecSse42(_mm_setzero_si128(), this.1))
-+        unsafe { this.eq(I32VecSse42(_mm_setzero_si128(), this.1)) }
-     });
- 
-     #[inline(always)]
-@@ -943,36 +953,36 @@ impl SimdMask for MaskSse42 {
-     type Descriptor = Sse42Descriptor;
- 
-     fn_sse42!(this: MaskSse42, fn if_then_else_f32(if_true: F32VecSse42, if_false: F32VecSse42) -> F32VecSse42 {
--        F32VecSse42(_mm_blendv_ps(if_false.0, if_true.0, this.0), this.1)
-+        unsafe { F32VecSse42(_mm_blendv_ps(if_false.0, if_true.0, this.0), this.1) }
-     });
- 
-     fn_sse42!(this: MaskSse42, fn if_then_else_i32(if_true: I32VecSse42, if_false: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_blendv_epi8(if_false.0, if_true.0, _mm_castps_si128(this.0)), this.1)
-+        unsafe { I32VecSse42(_mm_blendv_epi8(if_false.0, if_true.0, _mm_castps_si128(this.0)), this.1) }
-     });
- 
-     fn_sse42!(this: MaskSse42, fn maskz_i32(v: I32VecSse42) -> I32VecSse42 {
--        I32VecSse42(_mm_andnot_si128(_mm_castps_si128(this.0), v.0), this.1)
-+        unsafe { I32VecSse42(_mm_andnot_si128(_mm_castps_si128(this.0), v.0), this.1) }
-     });
- 
-     fn_sse42!(this: MaskSse42, fn all() -> bool {
--        _mm_movemask_ps(this.0) == 0b1111
-+        unsafe { _mm_movemask_ps(this.0) == 0b1111 }
-     });
- 
-     fn_sse42!(this: MaskSse42, fn andnot(rhs: MaskSse42) -> MaskSse42 {
--        MaskSse42(_mm_andnot_ps(this.0, rhs.0), this.1)
-+        unsafe { MaskSse42(_mm_andnot_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitAnd<MaskSse42> for MaskSse42 {
-     type Output = MaskSse42;
-     fn_sse42!(this: MaskSse42, fn bitand(rhs: MaskSse42) -> MaskSse42 {
--        MaskSse42(_mm_and_ps(this.0, rhs.0), this.1)
-+        unsafe { MaskSse42(_mm_and_ps(this.0, rhs.0), this.1) }
-     });
- }
- 
- impl BitOr<MaskSse42> for MaskSse42 {
-     type Output = MaskSse42;
-     fn_sse42!(this: MaskSse42, fn bitor(rhs: MaskSse42) -> MaskSse42 {
--        MaskSse42(_mm_or_ps(this.0, rhs.0), this.1)
-+        unsafe { MaskSse42(_mm_or_ps(this.0, rhs.0), this.1) }
-     });
- }
---- a/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_3/src/lib.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_3/src/lib.rs
+@@ -831,7 +831,7 @@ impl I32SimdVec for I32VecSse42 {
+         // _mm_packs_epi32 saturates i32 to i16, which preserves low 16 bits for values in range
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_u16_impl(v: __m128i, dest: &mut [u16]) {
++        unsafe fn store_u16_impl(v: __m128i, dest: &mut [u16]) {
+             assert!(dest.len() >= I32VecSse42::LEN);
+             // Truncate i32 -> u16 using shuffle
+             let shuffle_mask =
+@@ -856,7 +856,7 @@ impl I32SimdVec for I32VecSse42 {
+     fn store_u8(self, dest: &mut [u8]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_u8_impl(v: __m128i, dest: &mut [u8]) {
++        unsafe fn store_u8_impl(v: __m128i, dest: &mut [u8]) {
+             assert!(dest.len() >= I32VecSse42::LEN);
+             // Truncate i32 -> u8 using shuffle
+             let shuffle_mask =
+@@ -1021,7 +1021,7 @@ unsafe impl U8SimdVec for U8VecSse42 {
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<u8>]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_2_impl(a: __m128i, b: __m128i, dest: &mut [MaybeUninit<u8>]) {
++        unsafe fn store_interleaved_2_impl(a: __m128i, b: __m128i, dest: &mut [MaybeUninit<u8>]) {
+             assert!(dest.len() >= 2 * U8VecSse42::LEN);
+             let lo = _mm_unpacklo_epi8(a, b);
+             let hi = _mm_unpackhi_epi8(a, b);
+@@ -1040,7 +1040,7 @@ unsafe impl U8SimdVec for U8VecSse42 {
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<u8>]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_3_impl(
++        unsafe fn store_interleaved_3_impl(
+             a: __m128i,
+             b: __m128i,
+             c: __m128i,
+@@ -1104,7 +1104,7 @@ unsafe impl U8SimdVec for U8VecSse42 {
+     ) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_4_impl(
++        unsafe fn store_interleaved_4_impl(
+             a: __m128i,
+             b: __m128i,
+             c: __m128i,
+@@ -1174,7 +1174,7 @@ unsafe impl U16SimdVec for U16VecSse42 {
+     fn store_interleaved_2_uninit(a: Self, b: Self, dest: &mut [MaybeUninit<u16>]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_2_impl(a: __m128i, b: __m128i, dest: &mut [MaybeUninit<u16>]) {
++        unsafe fn store_interleaved_2_impl(a: __m128i, b: __m128i, dest: &mut [MaybeUninit<u16>]) {
+             assert!(dest.len() >= 2 * U16VecSse42::LEN);
+             let lo = _mm_unpacklo_epi16(a, b);
+             let hi = _mm_unpackhi_epi16(a, b);
+@@ -1193,7 +1193,7 @@ unsafe impl U16SimdVec for U16VecSse42 {
+     fn store_interleaved_3_uninit(a: Self, b: Self, c: Self, dest: &mut [MaybeUninit<u16>]) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_3_impl(
++        unsafe fn store_interleaved_3_impl(
+             a: __m128i,
+             b: __m128i,
+             c: __m128i,
+@@ -1257,7 +1257,7 @@ unsafe impl U16SimdVec for U16VecSse42 {
+     ) {
+         #[target_feature(enable = "sse4.2")]
+         #[inline]
+-        fn store_interleaved_4_impl(
++        unsafe fn store_interleaved_4_impl(
+             a: __m128i,
+             b: __m128i,
+             c: __m128i,
+--- a/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_4/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/jxl_transforms-v0_4/src/lib.rs
 @@ -3,6 +3,10 @@
  // Use of this source code is governed by a BSD-style
  // license that can be found in the LICENSE file.
@@ -1337,447 +669,3 @@ and fixed in newer versions of rustc.
  mod idct2d;
  mod reinterpreting_dct2d;
  pub mod transform;
---- a/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/aarch64/neon.rs
-+++ b/third_party/rust/chromium_crates_io/vendor/jxl_simd-v0_3/src/aarch64/neon.rs
-@@ -87,7 +87,7 @@ macro_rules! fn_neon {
-             #[target_feature(enable = "neon")]
-             #[inline]
-             fn inner($this: $self_ty, $($arg: $ty),*) $(-> $ret)? {
--                $body
-+                unsafe { $body }
-             }
-             // SAFETY: `self.1` is constructed iff neon is available.
-             unsafe { inner(self, $($arg),*) }
-@@ -186,7 +186,7 @@ unsafe impl F32SimdVec for F32VecNeon {
-     ) {
-         #[target_feature(enable = "neon")]
-         #[inline]
--        fn store_interleaved_8_impl(
-+        unsafe fn store_interleaved_8_impl(
-             a: float32x4_t,
-             b: float32x4_t,
-             c: float32x4_t,
-@@ -304,7 +304,7 @@ unsafe impl F32SimdVec for F32VecNeon {
-     fn transpose_square(d: NeonDescriptor, data: &mut [[f32; 4]], stride: usize) {
-         #[target_feature(enable = "neon")]
-         #[inline]
--        fn transpose4x4f32(d: NeonDescriptor, data: &mut [[f32; 4]], stride: usize) {
-+        unsafe fn transpose4x4f32(d: NeonDescriptor, data: &mut [[f32; 4]], stride: usize) {
-             assert!(data.len() > 3 * stride);
- 
-             let p0 = F32VecNeon::load_array(d, &data[0]).0;
-@@ -363,57 +363,60 @@ unsafe impl F32SimdVec for F32VecNeon {
- 
-     fn_neon! {
-         fn mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vfmaq_f32(add.0, this.0, mul.0), this.1)
-+            unsafe { F32VecNeon(vfmaq_f32(add.0, this.0, mul.0), this.1) }
-         }
- 
-         fn neg_mul_add(this: F32VecNeon, mul: F32VecNeon, add: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vfmsq_f32(add.0, this.0, mul.0), this.1)
-+            unsafe { F32VecNeon(vfmsq_f32(add.0, this.0, mul.0), this.1) }
-         }
- 
-         fn abs(this: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vabsq_f32(this.0), this.1)
-+            unsafe { F32VecNeon(vabsq_f32(this.0), this.1) }
-         }
- 
-         fn floor(this: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vrndmq_f32(this.0), this.1)
-+            unsafe { F32VecNeon(vrndmq_f32(this.0), this.1) }
-         }
- 
-         fn sqrt(this: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vsqrtq_f32(this.0), this.1)
-+            unsafe { F32VecNeon(vsqrtq_f32(this.0), this.1) }
-         }
- 
-         fn neg(this: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vnegq_f32(this.0), this.1)
-+            unsafe { F32VecNeon(vnegq_f32(this.0), this.1) }
-         }
- 
-         fn copysign(this: F32VecNeon, sign: F32VecNeon) -> F32VecNeon {
-+            unsafe {
-             F32VecNeon(
-                 vbslq_f32(vdupq_n_u32(0x8000_0000), sign.0, this.0),
-                 this.1,
-             )
-+            }
-         }
- 
-         fn max(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vmaxq_f32(this.0, other.0), this.1)
-+            unsafe { F32VecNeon(vmaxq_f32(this.0, other.0), this.1) }
-         }
- 
-         fn min(this: F32VecNeon, other: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vminq_f32(this.0, other.0), this.1)
-+            unsafe { F32VecNeon(vminq_f32(this.0, other.0), this.1) }
-         }
- 
-         fn gt(this: F32VecNeon, other: F32VecNeon) -> MaskNeon {
--            MaskNeon(vcgtq_f32(this.0, other.0), this.1)
-+            unsafe { MaskNeon(vcgtq_f32(this.0, other.0), this.1) }
-         }
- 
-         fn as_i32(this: F32VecNeon) -> I32VecNeon {
--            I32VecNeon(vcvtq_s32_f32(this.0), this.1)
-+            unsafe { I32VecNeon(vcvtq_s32_f32(this.0), this.1) }
-         }
- 
-         fn bitcast_to_i32(this: F32VecNeon) -> I32VecNeon {
--            I32VecNeon(vreinterpretq_s32_f32(this.0), this.1)
-+            unsafe { I32VecNeon(vreinterpretq_s32_f32(this.0), this.1) }
-         }
- 
-         fn round_store_u8(this: F32VecNeon, dest: &mut [u8]) {
-+            unsafe {
-             assert!(dest.len() >= F32VecNeon::LEN);
-             // Round to nearest integer
-             let rounded = vrndnq_f32(this.0);
-@@ -423,12 +426,12 @@ unsafe impl F32SimdVec for F32VecNeon {
-             let u8s = vqmovn_u16(vcombine_u16(u16s, u16s));
-             // Store lower 4 bytes
-             // SAFETY: we checked dest has enough space
--            unsafe {
-                 vst1_lane_u32::<0>(dest.as_mut_ptr() as *mut u32, vreinterpret_u32_u8(u8s));
-             }
-         }
- 
-         fn round_store_u16(this: F32VecNeon, dest: &mut [u16]) {
-+            unsafe {
-             assert!(dest.len() >= F32VecNeon::LEN);
-             // Round to nearest integer
-             let rounded = vrndnq_f32(this.0);
-@@ -437,7 +440,6 @@ unsafe impl F32SimdVec for F32VecNeon {
-             let u16s = vqmovun_s32(i32s);
-             // Store 4 u16s (8 bytes)
-             // SAFETY: we checked dest has enough space
--            unsafe {
-                 vst1_u16(dest.as_mut_ptr(), u16s);
-             }
-         }
-@@ -483,7 +485,7 @@ unsafe impl F32SimdVec for F32VecNeon {
-     fn prepare_table_bf16_8(_d: NeonDescriptor, table: &[f32; 8]) -> Bf16Table8Neon {
-         #[target_feature(enable = "neon")]
-         #[inline]
--        fn prepare_impl(table: &[f32; 8]) -> uint8x16_t {
-+        unsafe fn prepare_impl(table: &[f32; 8]) -> uint8x16_t {
-             // Convert f32 table to BF16 packed in 128 bits (16 bytes for 8 entries)
-             // BF16 is the high 16 bits of f32
-             // SAFETY: neon is available from target_feature, and `table` is large
-@@ -511,7 +513,7 @@ unsafe impl F32SimdVec for F32VecNeon {
-     fn table_lookup_bf16_8(d: NeonDescriptor, table: Bf16Table8Neon, indices: I32VecNeon) -> Self {
-         #[target_feature(enable = "neon")]
-         #[inline]
--        fn lookup_impl(bf16_table: uint8x16_t, indices: int32x4_t) -> float32x4_t {
-+        unsafe fn lookup_impl(bf16_table: uint8x16_t, indices: int32x4_t) -> float32x4_t {
-             // Build shuffle mask efficiently using arithmetic on 32-bit indices.
-             // For each index i (0-7), we need to select bytes [2*i, 2*i+1] from bf16_table
-             // and place them in the high 16 bits of each 32-bit f32 lane (bytes 2,3),
-@@ -542,7 +544,7 @@ impl Add<F32VecNeon> for F32VecNeon {
-     type Output = Self;
-     fn_neon! {
-         fn add(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vaddq_f32(this.0, rhs.0), this.1)
-+            unsafe { F32VecNeon(vaddq_f32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -551,7 +553,7 @@ impl Sub<F32VecNeon> for F32VecNeon {
-     type Output = Self;
-     fn_neon! {
-         fn sub(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vsubq_f32(this.0, rhs.0), this.1)
-+            unsafe { F32VecNeon(vsubq_f32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -560,7 +562,7 @@ impl Mul<F32VecNeon> for F32VecNeon {
-     type Output = Self;
-     fn_neon! {
-         fn mul(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vmulq_f32(this.0, rhs.0), this.1)
-+            unsafe { F32VecNeon(vmulq_f32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -569,7 +571,7 @@ impl Div<F32VecNeon> for F32VecNeon {
-     type Output = Self;
-     fn_neon! {
-         fn div(this: F32VecNeon, rhs: F32VecNeon) -> F32VecNeon {
--            F32VecNeon(vdivq_f32(this.0, rhs.0), this.1)
-+           unsafe { F32VecNeon(vdivq_f32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -577,7 +579,7 @@ impl Div<F32VecNeon> for F32VecNeon {
- impl AddAssign<F32VecNeon> for F32VecNeon {
-     fn_neon! {
-         fn add_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
--            this.0 = vaddq_f32(this.0, rhs.0);
-+            unsafe  { this.0 = vaddq_f32(this.0, rhs.0); }
-         }
-     }
- }
-@@ -585,7 +587,7 @@ impl AddAssign<F32VecNeon> for F32VecNeo
- impl SubAssign<F32VecNeon> for F32VecNeon {
-     fn_neon! {
-         fn sub_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
--            this.0 = vsubq_f32(this.0, rhs.0);
-+            unsafe { this.0 = vsubq_f32(this.0, rhs.0); }
-         }
-     }
- }
-@@ -593,7 +595,7 @@ impl SubAssign<F32VecNeon> for F32VecNeo
- impl MulAssign<F32VecNeon> for F32VecNeon {
-     fn_neon! {
-         fn mul_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
--            this.0 = vmulq_f32(this.0, rhs.0);
-+            unsafe  { this.0 = vmulq_f32(this.0, rhs.0); }
-         }
-     }
- }
-@@ -601,7 +603,7 @@ impl MulAssign<F32VecNeon> for F32VecNeo
- impl DivAssign<F32VecNeon> for F32VecNeon {
-     fn_neon! {
-         fn div_assign(this: &mut F32VecNeon, rhs: F32VecNeon) {
--            this.0 = vdivq_f32(this.0, rhs.0);
-+            unsafe { this.0 = vdivq_f32(this.0, rhs.0); }
-         }
-     }
- }
-@@ -639,43 +641,45 @@ impl I32SimdVec for I32VecNeon {
- 
-     fn_neon! {
-         fn abs(this: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vabsq_s32(this.0), this.1)
-+            unsafe { I32VecNeon(vabsq_s32(this.0), this.1) }
-         }
- 
-         fn as_f32(this: I32VecNeon) -> F32VecNeon {
--            F32VecNeon(vcvtq_f32_s32(this.0), this.1)
-+            unsafe { F32VecNeon(vcvtq_f32_s32(this.0), this.1) }
-         }
- 
-         fn bitcast_to_f32(this: I32VecNeon) -> F32VecNeon {
--            F32VecNeon(vreinterpretq_f32_s32(this.0), this.1)
-+          unsafe {  F32VecNeon(vreinterpretq_f32_s32(this.0), this.1) }
-         }
- 
-         fn bitcast_to_u32(this: I32VecNeon) -> U32VecNeon {
--            U32VecNeon(vreinterpretq_u32_s32(this.0), this.1)
-+            unsafe  { U32VecNeon(vreinterpretq_u32_s32(this.0), this.1) }
-         }
- 
-         fn gt(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
--            MaskNeon(vcgtq_s32(this.0, other.0), this.1)
-+            unsafe { MaskNeon(vcgtq_s32(this.0, other.0), this.1) }
-         }
- 
-         fn lt_zero(this: I32VecNeon) -> MaskNeon {
--            MaskNeon(vcltzq_s32(this.0), this.1)
-+            unsafe  { MaskNeon(vcltzq_s32(this.0), this.1) }
-         }
- 
-         fn eq(this: I32VecNeon, other: I32VecNeon) -> MaskNeon {
--            MaskNeon(vceqq_s32(this.0, other.0), this.1)
-+            unsafe { MaskNeon(vceqq_s32(this.0, other.0), this.1) }
-         }
- 
-         fn eq_zero(this: I32VecNeon) -> MaskNeon {
--            MaskNeon(vceqzq_s32(this.0), this.1)
-+            unsafe  { MaskNeon(vceqzq_s32(this.0), this.1) }
-         }
- 
-         fn mul_wide_take_high(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
-+            unsafe  {
-             let l = vmull_s32(vget_low_s32(this.0), vget_low_s32(rhs.0));
-             let l = vreinterpretq_s32_s64(l);
-             let h = vmull_high_s32(this.0, rhs.0);
-             let h = vreinterpretq_s32_s64(h);
-             I32VecNeon(vuzp2q_s32(l, h), this.1)
-+            }
-         }
-     }
- 
-@@ -708,7 +712,7 @@ impl Add<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
-         fn add(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vaddq_s32(this.0, rhs.0), this.1)
-+            unsafe { I32VecNeon(vaddq_s32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -717,7 +721,7 @@ impl Sub<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
-         fn sub(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vsubq_s32(this.0, rhs.0), this.1)
-+            unsafe { I32VecNeon(vsubq_s32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -726,7 +730,7 @@ impl Mul<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
-         fn mul(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vmulq_s32(this.0, rhs.0), this.1)
-+            unsafe { I32VecNeon(vmulq_s32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -735,7 +739,7 @@ impl Neg for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
-         fn neg(this: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vnegq_s32(this.0), this.1)
-+            unsafe { I32VecNeon(vnegq_s32(this.0), this.1) }
-         }
-     }
- }
-@@ -744,7 +748,7 @@ impl BitAnd<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
-         fn bitand(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vandq_s32(this.0, rhs.0), this.1)
-+            unsafe { I32VecNeon(vandq_s32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -753,7 +757,7 @@ impl BitOr<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
-         fn bitor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vorrq_s32(this.0, rhs.0), this.1)
-+            unsafe { I32VecNeon(vorrq_s32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -762,7 +766,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
-     type Output = I32VecNeon;
-     fn_neon! {
-         fn bitxor(this: I32VecNeon, rhs: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(veorq_s32(this.0, rhs.0), this.1)
-+            unsafe { I32VecNeon(veorq_s32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -770,7 +774,7 @@ impl BitXor<I32VecNeon> for I32VecNeon {
- impl AddAssign<I32VecNeon> for I32VecNeon {
-     fn_neon! {
-         fn add_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
--            this.0 = vaddq_s32(this.0, rhs.0)
-+            unsafe { this.0 = vaddq_s32(this.0, rhs.0) }
-         }
-     }
- }
-@@ -778,7 +782,7 @@ impl AddAssign<I32VecNeon> for I32VecNeo
- impl SubAssign<I32VecNeon> for I32VecNeon {
-     fn_neon! {
-         fn sub_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
--            this.0 = vsubq_s32(this.0, rhs.0)
-+            unsafe { this.0 = vsubq_s32(this.0, rhs.0) }
-         }
-     }
- }
-@@ -786,7 +790,7 @@ impl SubAssign<I32VecNeon> for I32VecNeo
- impl MulAssign<I32VecNeon> for I32VecNeon {
-     fn_neon! {
-         fn mul_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
--            this.0 = vmulq_s32(this.0, rhs.0)
-+            unsafe { this.0 = vmulq_s32(this.0, rhs.0) }
-         }
-     }
- }
-@@ -794,7 +798,7 @@ impl MulAssign<I32VecNeon> for I32VecNeo
- impl BitAndAssign<I32VecNeon> for I32VecNeon {
-     fn_neon! {
-         fn bitand_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
--            this.0 = vandq_s32(this.0, rhs.0);
-+            unsafe { this.0 = vandq_s32(this.0, rhs.0); }
-         }
-     }
- }
-@@ -802,7 +806,7 @@ impl BitAndAssign<I32VecNeon> for I32Vec
- impl BitOrAssign<I32VecNeon> for I32VecNeon {
-     fn_neon! {
-         fn bitor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
--            this.0 = vorrq_s32(this.0, rhs.0);
-+            unsafe { this.0 = vorrq_s32(this.0, rhs.0); }
-         }
-     }
- }
-@@ -810,7 +814,7 @@ impl BitOrAssign<I32VecNeon> for I32VecN
- impl BitXorAssign<I32VecNeon> for I32VecNeon {
-     fn_neon! {
-         fn bitxor_assign(this: &mut I32VecNeon, rhs: I32VecNeon) {
--            this.0 = veorq_s32(this.0, rhs.0);
-+            unsafe { this.0 = veorq_s32(this.0, rhs.0); }
-         }
-     }
- }
-@@ -826,7 +830,7 @@ impl U32SimdVec for U32VecNeon {
- 
-     fn_neon! {
-         fn bitcast_to_i32(this: U32VecNeon) -> I32VecNeon {
--            I32VecNeon(vreinterpretq_s32_u32(this.0), this.1)
-+            unsafe { I32VecNeon(vreinterpretq_s32_u32(this.0), this.1) }
-         }
-     }
- 
-@@ -850,7 +854,7 @@ impl SimdMask for MaskNeon {
-             if_true: F32VecNeon,
-             if_false: F32VecNeon,
-         ) -> F32VecNeon {
--            F32VecNeon(vbslq_f32(this.0, if_true.0, if_false.0), this.1)
-+            unsafe { F32VecNeon(vbslq_f32(this.0, if_true.0, if_false.0), this.1) }
-         }
- 
-         fn if_then_else_i32(
-@@ -858,19 +862,19 @@ impl SimdMask for MaskNeon {
-             if_true: I32VecNeon,
-             if_false: I32VecNeon,
-         ) -> I32VecNeon {
--            I32VecNeon(vbslq_s32(this.0, if_true.0, if_false.0), this.1)
-+            unsafe { I32VecNeon(vbslq_s32(this.0, if_true.0, if_false.0), this.1) }
-         }
- 
-         fn maskz_i32(this: MaskNeon, v: I32VecNeon) -> I32VecNeon {
--            I32VecNeon(vbicq_s32(v.0, vreinterpretq_s32_u32(this.0)), this.1)
-+            unsafe { I32VecNeon(vbicq_s32(v.0, vreinterpretq_s32_u32(this.0)), this.1) }
-         }
- 
-         fn andnot(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
--            MaskNeon(vbicq_u32(rhs.0, this.0), this.1)
-+            unsafe { MaskNeon(vbicq_u32(rhs.0, this.0), this.1) }
-         }
- 
-         fn all(this: MaskNeon) -> bool {
--            vminvq_u32(this.0) == u32::MAX
-+            unsafe { vminvq_u32(this.0) == u32::MAX }
-         }
-     }
- }
-@@ -879,7 +883,7 @@ impl BitAnd<MaskNeon> for MaskNeon {
-     type Output = MaskNeon;
-     fn_neon! {
-         fn bitand(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
--            MaskNeon(vandq_u32(this.0, rhs.0), this.1)
-+            unsafe { MaskNeon(vandq_u32(this.0, rhs.0), this.1) }
-         }
-     }
- }
-@@ -888,7 +892,7 @@ impl BitOr<MaskNeon> for MaskNeon {
-     type Output = MaskNeon;
-     fn_neon! {
-         fn bitor(this: MaskNeon, rhs: MaskNeon) -> MaskNeon {
--            MaskNeon(vorrq_u32(this.0, rhs.0), this.1)
-+            unsafe { MaskNeon(vorrq_u32(this.0, rhs.0), this.1) }
-         }
-     }
- }

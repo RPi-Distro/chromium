@@ -9,6 +9,7 @@ debianization/safe-libcxx.patch
 
 fixes/ps-print.patch
 #fixes/widevine-locations.patch
+#fixes/enable-widevine-on-arm64-linux-platform.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/gentoo-stylesheet.patch
@@ -32,6 +33,7 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/missing-dep.patch
 
+upstream/turboshaft.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -65,24 +67,32 @@ llvm-19/clone-traits.patch
 llvm-19/octal.patch
 llvm-19/value-or.patch
 llvm-19/clang19.patch
+llvm-19/iota.patch
+llvm-19/raw-ref-map-find.patch
 
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
 rust-1.85/parsing.patch
 rust-1.85/image.patch
+rust-1.85/rust-is-multiple-of.patch
+rust-1.85/file_as_c_str.patch
+rust-1.85/mojo-features.patch
+rust-1.85/zip8.patch
 
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
-trixie/rust-is-multiple-of.patch
 #trixie/libxml2-no-xxe.patch
 trixie/gn-string-hash.patch
 trixie/nodejs-set-intersection.patch
 trixie/gn-len.patch
 trixie/nodejs-main.patch
 trixie/gn-module-name.patch
+trixie/gn-inputs.patch
+trixie/gn-inputs2.patch
+trixie/revert-v8-sanitize.patch
 
 #bookworm/strlcpy.patch
 bookworm/dq-forward-iterator.patch
@@ -102,7 +112,6 @@ bookworm/less-void.patch
 #bookworm/stdarch-arm.patch
 bookworm/modff.patch
 bookworm/foreach.patch
-bookworm/eslint.patch
 #bookworm/crabbyav1f.patch
 bookworm/node18-import.patch
 bookworm/fmodf.patch
@@ -145,6 +154,7 @@ llvm-22/ignore-for-ubsan.patch
 ungoogled/disable-ai.patch
 ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
+ungoogled/remove-navigation-source-param.patch
 
 # i386 support
 i386/support-i386.patch

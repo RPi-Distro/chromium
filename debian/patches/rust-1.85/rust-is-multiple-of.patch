@@ -1,0 +1,37 @@
+author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+Avoid Rust compilation errors like
+
+  FAILED: obj/third_party/rust/toktrie/v1/lib/libtoktrie_lib.rlib
+  [...]
+  error[E0658]: use of unstable library feature `unsigned_is_multiple_of`
+    --> ../../third_party/rust/chromium_crates_io/vendor/toktrie-v1/src/bytes.rs:17:21
+     |
+  17 |     if !bytes.len().is_multiple_of(size_of::<T>()) {
+     |                     ^^^^^^^^^^^^^^
+     |
+     = note: see issue #128101 <https://github.com/rust-lang/rust/issues/128101> for more information
+     = help: add `#![feature(unsigned_is_multiple_of)]` to the crate attributes to enable
+     = note: this compiler was built on 2025-03-15; consider upgrading it if it is out of date
+
+--- a/third_party/rust/chromium_crates_io/vendor/llguidance-v1/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/llguidance-v1/src/lib.rs
+@@ -22,6 +22,7 @@
+ //! 4. Repeat until a stop result is returned.
+ //!
+ //! See the `sample_parser` crate for a complete usage example.
++#![feature(unsigned_is_multiple_of)]
+ 
+ #![allow(clippy::comparison_chain)]
+ #![allow(clippy::needless_range_loop)]
+--- a/third_party/rust/chromium_crates_io/vendor/toktrie-v1/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/toktrie-v1/src/lib.rs
+@@ -22,6 +22,8 @@
+ //! The [`Recognizer`] trait expresses byte-level constraints that can be
+ //! applied to the trie as a byte-stack interface for trie-based filtering.
+ 
++#![feature(unsigned_is_multiple_of)]
++
+ use serde::{Deserialize, Serialize};
+ 
+ pub mod bytes;

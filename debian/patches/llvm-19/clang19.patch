@@ -2,7 +2,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -618,7 +618,6 @@ config("compiler") {
+@@ -630,7 +630,6 @@ config("compiler") {
      # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
      # for discussion.
      if (!is_wasm) {
@@ -10,7 +10,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
      }
  
      # TODO(hans): Remove this once Clang generates better optimized debug info
-@@ -2223,10 +2222,8 @@ config("default_warnings") {
+@@ -2270,10 +2269,8 @@ config("default_warnings") {
        "-Wno-thread-safety-reference-return",
  
        # TODO(crbug.com/376641662): Fix and re-enable.
@@ -23,7 +23,15 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
      cflags_cc += [
 --- a/v8/BUILD.gn
 +++ b/v8/BUILD.gn
-@@ -1871,7 +1871,6 @@ config("strict_warnings") {
+@@ -1797,7 +1797,6 @@ config("toolchain") {
+   if (is_clang) {
+     cflags += [ "-Wunreachable-code" ]
+     if (v8_current_cpu != "ppc64" && v8_current_cpu != "s390x") {
+-      cflags += [ "-Wlifetime-safety-permissive" ]
+     }
+ 
+     if ((v8_current_cpu != "x64" && v8_current_cpu != "ia32") ||
+@@ -1900,7 +1899,6 @@ config("strict_warnings") {
      }
      cflags += [ "-Wmissing-field-initializers" ]
      if (v8_current_cpu != "ppc64" && v8_current_cpu != "s390x") {

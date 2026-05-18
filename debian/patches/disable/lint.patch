@@ -24,8 +24,8 @@ that breaks on older systems.
  
      forward_variables_from(invoker,
                             [
-@@ -39,6 +39,9 @@ template("eslint_ts") {
-     }
+@@ -44,6 +44,9 @@ template("eslint_ts") {
+     config_base = "${root_gen_dir}/ui/webui/resources/tools/eslint/eslint_ts.config_base.js"
  
      args = [
 +             rebase_path(target_gen_dir + "/eslint.config.mjs", root_build_dir),

@@ -11,7 +11,7 @@ trying to use h/w decode.
 
 --- a/media/gpu/v4l2/legacy/v4l2_video_decoder_backend_stateful.cc
 +++ b/media/gpu/v4l2/legacy/v4l2_video_decoder_backend_stateful.cc
-@@ -137,6 +137,7 @@ bool V4L2StatefulVideoDecoderBackend::In
+@@ -131,6 +131,7 @@ bool V4L2StatefulVideoDecoderBackend::In
    framerate_control_ = std::make_unique<V4L2FrameRateControl>(
        base::BindRepeating(&V4L2Device::Ioctl, device_), task_runner_);
  

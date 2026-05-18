@@ -1,0 +1,11 @@
+--- a/mojo/public/rust/mojom_value_parser/lib_core.rs
++++ b/mojo/public/rust/mojom_value_parser/lib_core.rs
+@@ -10,6 +10,8 @@
+ //! depend on this crate; instead, they should use the `mojom_value_parser`
+ //! crate (rooted in `lib_pub.rs`), which only exports the `api` module and some
+ //! fundamental types.
++#![feature(let_chains)]
++#![feature(const_type_id)]
+ 
+ mod api;
+ mod ast;

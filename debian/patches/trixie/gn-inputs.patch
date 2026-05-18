@@ -1,0 +1,130 @@
+Revert the following commit:
+
+commit 9193ab90af24c23ee983e0a8da9bed45712f0d26
+Author: Takuto Ikuta <tikuta@chromium.org>
+Date:   Tue Mar 31 20:28:37 2026 -0700
+
+    Reland "build: Use tool inputs instead of siso config for rust actions"
+    
+    This reverts commit 080e6a7ab8ed54261b495db2b84140d6c5062af7.
+    
+    Reason for revert: Added inputs for remote action in cog build.
+    
+    Original change's description:
+    > Revert "build: Use tool inputs instead of siso config for rust actions"
+    >
+    > This reverts commit 3c3ae5ec818626d8efdaefd62ceb07dbbe5c6adf.
+    >
+    > Reason for revert: broke Cider build
+    >
+    > Original change's description:
+    > > build: Use tool inputs instead of siso config for rust actions
+    > >
+    > > Also remove unused filegroups.
+    > >
+    > > Bug: 491242305
+    > > Change-Id: If8da44a4741db7eced84ba20c1b69f4543b14217
+    > > Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7710197
+    > > Commit-Queue: Takuto Ikuta <tikuta@chromium.org>
+    > > Reviewed-by: Junji Watanabe <jwata@google.com>
+    > > Cr-Commit-Position: refs/heads/main@{#1607564}
+    >
+    > Bug: 491242305, 498008190
+    > No-Presubmit: true
+    > No-Tree-Checks: true
+    > No-Try: true
+    > Bug: 491242305
+    > Change-Id: I2c9eb13d1a0bbed06b8b85353c6286bc542d74b1
+    > Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7716738
+    > Bot-Commit: Rubber Stamper <rubber-stamper@appspot.gserviceaccount.com>
+    > Auto-Submit: Takuto Ikuta <tikuta@chromium.org>
+    > Commit-Queue: Rubber Stamper <rubber-stamper@appspot.gserviceaccount.com>
+    > Cr-Commit-Position: refs/heads/main@{#1607814}
+    
+    Bug: 491242305, 498008190
+    Bug: 491242305
+    Change-Id: I3c992a83dd50bb9695e9ab27f58906d16f05c367
+    Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7719879
+    Reviewed-by: Junji Watanabe <jwata@google.com>
+    Commit-Queue: Takuto Ikuta <tikuta@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#1608267}
+
+--- a/build/config/siso/rust.star
++++ b/build/config/siso/rust.star
+@@ -19,11 +19,19 @@ def __filegroups(ctx):
+         "third_party/rust-toolchain:toolchain": {
+             "type": "glob",
+             "includes": [
++                "bin/rustc",
+                 "lib/*.so",
+                 "lib/libclang.so.*",
++                "lib/rustlib/src/rust/library/std/src/lib.rs",
+                 "lib/rustlib/x86_64-unknown-linux-gnu/lib/*",
+             ],
+         },
++        "third_party/rust:rustlib": {
++            "type": "glob",
++            "includes": [
++                "*.rs",
++            ],
++        },
+         "build/linux/debian_bullseye_amd64-sysroot:rustlink": {
+             "type": "glob",
+             "includes": [
+@@ -287,6 +295,7 @@ def __step_config(ctx, step_config):
+             "command_prefix": "python3 ../../build/rust/gni_impl/run_build_script.py",
+             "inputs": [
+                 "third_party/rust-toolchain:toolchain",
++                "third_party/rust:rustlib",
+             ],
+             "handler": "rust_build_handler",
+             "remote": remote and config.get(ctx, "cog"),
+@@ -297,6 +306,7 @@ def __step_config(ctx, step_config):
+             "command_prefix": "python3 ../../build/rust/std/find_std_rlibs.py",
+             "inputs": [
+                 "third_party/rust-toolchain:toolchain",
++                "third_party/rust-toolchain/lib/rustlib:rlib",
+             ],
+             "remote": remote and config.get(ctx, "cog"),
+             "timeout": "2m",
+--- a/build/rust/cargo_crate.gni
++++ b/build/rust/cargo_crate.gni
+@@ -455,13 +455,6 @@ template("cargo_crate") {
+         _rustflags_txt,
+         rustc_print_cfg_path,
+       ]
+-
+-      if (host_os == "win") {
+-        inputs += [ "//third_party/rust-toolchain/bin/rustc.exe" ]
+-      } else {
+-        inputs += [ "//third_party/rust-toolchain/bin/rustc" ]
+-      }
+-
+       build_script_target = ":${_build_script_name}($rust_macro_toolchain)"
+       deps = [
+         ":${_build_script_name}_write_rustflags",
+--- a/build/rust/std/BUILD.gn
++++ b/build/rust/std/BUILD.gn
+@@ -267,12 +267,6 @@ if (toolchain_has_rust) {
+       out_libdir = rebase_path(target_out_dir, root_build_dir)
+       out_depfile = rebase_path(depfile, root_build_dir)
+ 
+-      if (host_os == "win") {
+-        inputs = [ "//third_party/rust-toolchain/bin/rustc.exe" ]
+-      } else {
+-        inputs = [ "//third_party/rust-toolchain/bin/rustc" ]
+-      }
+-
+       # For the rustc sysroot we must include even the rlibs we don't pass to
+       # the C++ linker.
+       all_stdlibs_to_copy = stdlib_files + skip_stdlib_files
+--- a/build/toolchain/gcc_toolchain.gni
++++ b/build/toolchain/gcc_toolchain.gni
+@@ -681,7 +681,6 @@ template("single_gcc_toolchain") {
+         "//build/action_helpers.py",
+         "//build/gn_helpers.py",
+         "//build/rust/gni_impl/rustc_wrapper.py",
+-        "//third_party/rust-toolchain/bin/rustc",
+       ]
+ 
+       # RSP manipulation due to https://bugs.chromium.org/p/gn/issues/detail?id=249

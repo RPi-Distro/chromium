@@ -1,6 +1,6 @@
 --- a/media/gpu/v4l2/legacy/v4l2_video_decoder_backend_stateful.cc
 +++ b/media/gpu/v4l2/legacy/v4l2_video_decoder_backend_stateful.cc
-@@ -325,6 +325,8 @@ void V4L2StatefulVideoDecoderBackend::On
+@@ -319,6 +319,8 @@ void V4L2StatefulVideoDecoderBackend::On
  
    // Try to progress on our work since we may have dequeued input buffers.
    DoDecodeWork();
@@ -9,7 +9,7 @@
  }
  
  void V4L2StatefulVideoDecoderBackend::EnqueueOutputBuffers() {
-@@ -554,6 +556,9 @@ bool V4L2StatefulVideoDecoderBackend::In
+@@ -548,6 +550,9 @@ bool V4L2StatefulVideoDecoderBackend::In
      // request will be processed in OnChangeResolutionDone(), when the CAPTURE
      // queue starts streaming.
      DVLOGF(2) << "Flush request to be processed after CAPTURE queue starts";
@@ -21,7 +21,7 @@
    return true;
 --- a/media/gpu/v4l2/v4l2_device.cc
 +++ b/media/gpu/v4l2/v4l2_device.cc
-@@ -145,6 +145,12 @@ bool V4L2Device::Open(Type type, uint32_
+@@ -142,6 +142,12 @@ bool V4L2Device::Open(Type type, uint32_
      return false;
    }
  
@@ -34,11 +34,11 @@
    return true;
  }
  
-@@ -352,28 +358,55 @@ int V4L2Device::Ioctl(int request, void*
+@@ -348,28 +354,55 @@ int V4L2Device::Ioctl(int request, void*
  }
  
  bool V4L2Device::Poll(bool poll_device, bool* event_pending) {
--  struct pollfd pollfds[2];
+-  std::array<struct pollfd, 2> pollfds;
 -  nfds_t nfds;
 -  int pollfd = -1;
 -
@@ -69,7 +69,7 @@
      nfds++;
 -  }
  
--  if (HANDLE_EINTR(poll(pollfds, nfds, -1)) == -1) {
+-  if (HANDLE_EINTR(poll(pollfds.data(), nfds, -1)) == -1) {
 -    VPLOGF(1) << "poll() failed";
 -    return false;
 +    if (poll_device) {
@@ -109,7 +109,7 @@
  }
  
  void* V4L2Device::Mmap(void* addr,
-@@ -401,6 +434,19 @@ bool V4L2Device::SetDevicePollInterrupt(
+@@ -397,6 +430,19 @@ bool V4L2Device::SetDevicePollInterrupt(
    return true;
  }
  
@@ -129,7 +129,7 @@
  bool V4L2Device::ClearDevicePollInterrupt() {
    DVLOGF(5);
  
-@@ -663,9 +709,31 @@ bool V4L2Device::StopPolling() {
+@@ -657,9 +703,31 @@ bool V4L2Device::StopPolling() {
  void V4L2Device::SchedulePoll() {
    DCHECK_CALLED_ON_VALID_SEQUENCE(client_sequence_checker_);
  
@@ -200,7 +200,7 @@
  
 --- a/media/gpu/v4l2/v4l2_queue.cc
 +++ b/media/gpu/v4l2/v4l2_queue.cc
-@@ -1458,11 +1458,15 @@ std::pair<bool, V4L2ReadableBufferRef> V
+@@ -1453,11 +1453,15 @@ std::pair<bool, V4L2ReadableBufferRef> V
      // should not call this method after the last buffer is dequeued.
      switch (errno) {
        case EAGAIN:

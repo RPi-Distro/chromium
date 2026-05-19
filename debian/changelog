@@ -1,3 +1,10 @@
+chromium (148.0.7778.178-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 19 May 2026 18:28:20 -0400
+
 chromium (148.0.7778.167-1) unstable; urgency=high
 
   [ Andres Salomon ]

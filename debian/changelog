@@ -1,4 +1,4 @@
-chromium (1:148.0.7778.167-1~deb13u1+rpt1) UNRELEASED; urgency=medium
+chromium (1:148.0.7778.167-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -13,7 +13,7 @@ chromium (1:148.0.7778.167-1~deb13u1+rpt1) UNRELEASED; urgency=medium
     version
   * Move chromium-l10n to recommends
   * d/c: Add rpi-chromium-mods to chromium Recommends
-  * Limit gn threads to 20 on armhf to avoid allocation errors
+  * Limit gn threads to 5 on armhf to avoid allocation errors
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
   * Disable background mode by default
@@ -27,7 +27,7 @@ chromium (1:148.0.7778.167-1~deb13u1+rpt1) UNRELEASED; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 18 May 2026 13:40:50 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 19 May 2026 14:32:11 +0100
 
 chromium (148.0.7778.167-1~deb13u1) trixie-security; urgency=high
 

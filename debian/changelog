@@ -1,4 +1,4 @@
-chromium (148.0.7778.178-1) UNRELEASED; urgency=high
+chromium (148.0.7778.178-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.

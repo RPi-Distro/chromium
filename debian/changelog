@@ -2,6 +2,29 @@ chromium (148.0.7778.178-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
+    - CVE-2026-9111: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-9110: Inappropriate implementation in UI. Reported by Google.
+    - CVE-2026-9112: Use after free in GPU.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-9113: Out of bounds read in GPU.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-9114: Use after free in QUIC. Reported by Google.
+    - CVE-2026-9115: Insufficient policy enforcement in Service Worker.
+      Reported by Google.
+    - CVE-2026-9116: Insufficient policy enforcement in ServiceWorker.
+      Reported by Google.
+    - CVE-2026-9117: Type Confusion in GFX. Reported by Google.
+    - CVE-2026-9118: Use after free in XR. Reported by Google.
+    - CVE-2026-9119: Heap buffer overflow in WebRTC. Reported by Google.
+    - CVE-2026-9120: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-9126: Use after free in DOM. Reported by Google.
+    - CVE-2026-9121: Out of bounds read in GPU.
+      Reported by David Korczynski (Adalogics) .
+    - CVE-2026-9122: Out of bounds read in GPU.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-9123: Heap buffer overflow in Chromecast. Reported by Google.
+    - CVE-2026-9124: Insufficient validation of untrusted input in Input.
+      Reported by Google.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 19 May 2026 18:28:20 -0400
 

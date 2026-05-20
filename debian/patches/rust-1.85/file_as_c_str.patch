@@ -21,7 +21,7 @@ error[E0599]: no method named `file_as_c_str` found for reference `&Location<'_>
      }
  }
  
-+#[cfg(any(target_arch="x86", target_arch="x86_64"))]
++#[cfg(any(target_arch="x86", target_arch="x86_64", target_arch="loongarch64"))]
  fn panic_hook(info: &PanicHookInfo<'_>) {
      print_rust_log(
          &format_args!("{info}"),

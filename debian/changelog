@@ -1,3 +1,184 @@
+chromium (148.0.7778.215-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-9872: Out of bounds write in GPU. Reported by cinzinga.
+    - CVE-2026-9873: Use after free in Network. Reported by cinzinga.
+    - CVE-2026-9874: Use after free in Dawn. Reported by Anonymous.
+    - CVE-2026-9875: Out of bounds read in WebGL. Reported by Anonymous.
+    - CVE-2026-9876: Use after free in WebGL. Reported by happy2me.
+    - CVE-2026-9877: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9878: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9879: Out of bounds write in ANGLE. Reported by Google.
+    - CVE-2026-9880: Insufficient validation of untrusted input in WebGL.
+      Reported by Google.
+    - CVE-2026-9881: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-9882: Integer overflow in ANGLE. Reported by Google.
+    - CVE-2026-9883: Use after free in Base. Reported by Google.
+    - CVE-2026-9884: Use after free in Browser. Reported by Google.
+    - CVE-2026-9885: Insufficient validation of untrusted input in UI.
+      Reported by Google.
+    - CVE-2026-9886: Use after free in Base. Reported by Google.
+    - CVE-2026-9887: Use after free in Proxy. Reported by Google.
+    - CVE-2026-9888: Use after free in WebView. Reported by Google.
+    - CVE-2026-9889: Out of bounds read and write in Dawn. Reported by Google.
+    - CVE-2026-9890: Use after free in XR. Reported by Google.
+    - CVE-2026-9891: Use after free in Extensions. Reported by Google.
+    - CVE-2026-9892: Inappropriate implementation in Skia. Reported by Google.
+    - CVE-2026-9893: Use after free in Skia. Reported by Google.
+    - CVE-2026-9894: Use after free in GPU. Reported by tohafrit.
+    - CVE-2026-9895: Out of bounds read in GPU.
+      Reported by 86ac1f1587b71893ed2ad792cd7dde32.
+    - CVE-2026-9896: Out of bounds write in V8. Reported by 303f06e3.
+    - CVE-2026-9897: Use after free in DOM. Reported by Google.
+    - CVE-2026-9898: Insufficient validation of untrusted input in GPU.
+      Reported by Google.
+    - CVE-2026-9899: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9900: Out of bounds write in ANGLE. Reported by Google.
+    - CVE-2026-9901: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9902: Use after free in Accessibility. Reported by Google.
+    - CVE-2026-9903: Insufficient validation of untrusted input in
+      Site Isolation. Reported by Google.
+    - CVE-2026-9904: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9905: Use after free in Accessibility. Reported by Google.
+    - CVE-2026-9906: Out of bounds write in GPU. Reported by Google.
+    - CVE-2026-9907: Out of bounds read in Dawn. Reported by Google.
+    - CVE-2026-9908: Out of bounds read in ANGLE. Reported by Google.
+    - CVE-2026-9909: Integer overflow in Skia. Reported by Google.
+    - CVE-2026-9910: Out of bounds memory access in ANGLE. Reported by Google.
+    - CVE-2026-9911: Integer overflow in ANGLE. Reported by Google.
+    - CVE-2026-9912: Inappropriate implementation in GPU. Reported by Google.
+    - CVE-2026-9913: Inappropriate implementation in ANGLE. Reported by Google
+    - CVE-2026-9914: Insufficient validation of untrusted input in ANGLE.
+      Reported by Google.
+    - CVE-2026-9915: Heap buffer overflow in ANGLE. Reported by Google.
+    - CVE-2026-9916: Out of bounds write in ANGLE. Reported by Google.
+    - CVE-2026-9917: Uninitialized Use in WebGL. Reported by Google.
+    - CVE-2026-9918: Inappropriate implementation in Tint. Reported by Google.
+    - CVE-2026-9919: Out of bounds read in WebGL. Reported by Google.
+    - CVE-2026-9920: Uninitialized Use in GPU. Reported by Google.
+    - CVE-2026-9921: Uninitialized Use in WebGL. Reported by Google.
+    - CVE-2026-9922: Use after free in GPU. Reported by Google.
+    - CVE-2026-9923: Use after free in Skia. Reported by Google.
+    - CVE-2026-9924: Heap buffer overflow in ANGLE. Reported by Google.
+    - CVE-2026-9925: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9926: Heap buffer overflow in ANGLE. Reported by Google.
+    - CVE-2026-9927: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9928: Out of bounds read in ANGLE.
+      Reported by Jeff Muizelaar - Mozilla.
+    - CVE-2026-9929: Inappropriate implementation in WebGL. Reported by Google
+    - CVE-2026-9930: Out of bounds write in Dawn. Reported by Google.
+    - CVE-2026-9931: Use after free in GPU. Reported by Google.
+    - CVE-2026-9932: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9933: Use after free in Input. Reported by Google.
+    - CVE-2026-9934: Use after free in Aura. Reported by Google.
+    - CVE-2026-9935: Uninitialized Use in ANGLE. Reported by Google.
+    - CVE-2026-9936: Use after free in GFX. Reported by Google.
+    - CVE-2026-9937: Use after free in UI. Reported by Google.
+    - CVE-2026-9938: Inappropriate implementation in V8. Reported by Google.
+    - CVE-2026-9939: Heap buffer overflow in WebCodecs. Reported by Google.
+    - CVE-2026-9940: Heap buffer overflow in ANGLE. Reported by Google.
+    - CVE-2026-9941: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9942: Uninitialized Use in ANGLE. Reported by Google.
+    - CVE-2026-9943: Out of bounds read in WebGL. Reported by Google.
+    - CVE-2026-9944: Uninitialized Use in ANGLE. Reported by Google.
+    - CVE-2026-9945: Use after free in Media. Reported by Google.
+    - CVE-2026-9946: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-9947: Use after free in XML. Reported by Google.
+    - CVE-2026-9948: Use after free in Views. Reported by Google.
+    - CVE-2026-9949: Use after free in Core. Reported by Google.
+    - CVE-2026-9950: Insufficient validation of untrusted input in iOS.
+      Reported by Google.
+    - CVE-2026-9951: Use after free in UI. Reported by Google.
+    - CVE-2026-9952: Use after free in WebAudio. Reported by Google.
+    - CVE-2026-9953: Out of bounds read in ANGLE. Reported by Google.
+    - CVE-2026-9954: Use after free in TabStrip.
+      Reported by yueliu of Microsoft.
+    - CVE-2026-9955: Inappropriate implementation in iOS. Reported by Google.
+    - CVE-2026-9956: Use after free in iOS. Reported by Google.
+    - CVE-2026-9957: Use after free in PDF. Reported by Google.
+    - CVE-2026-9958: Use after free in PDFium. Reported by Google.
+    - CVE-2026-9959: Race in WebRTC. Reported by Google.
+    - CVE-2026-9960: Integer overflow in PDFium. Reported by Google.
+    - CVE-2026-9961: Use after free in SurfaceCapture. Reported by Google.
+    - CVE-2026-9962: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-9963: Uninitialized Use in iOS. Reported by Google.
+    - CVE-2026-9964: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-9965: Out of bounds write in ANGLE. Reported by Google.
+    - CVE-2026-9966: Integer overflow in XML. Reported by Google.
+    - CVE-2026-9967: Out of bounds write in GPU. Reported by Google.
+    - CVE-2026-9968: Integer overflow in V8. Reported by Google.
+    - CVE-2026-9969: Insufficient validation of untrusted input in ANGLE.
+      Reported by Google.
+    - CVE-2026-9970: Use after free in WebGL. Reported by TFGC.
+    - CVE-2026-9971: Inappropriate implementation in iOS. Reported by Google.
+    - CVE-2026-9972: Uninitialized Use in Gamepad. Reported by Google.
+    - CVE-2026-9973: Out of bounds write in V8. Reported by amyb of OpenAI.
+    - CVE-2026-9974: Out of bounds write in GPU. Reported by Google.
+    - CVE-2026-9975: Out of bounds read and write in ANGLE. Reported by Google
+    - CVE-2026-9976: Inappropriate implementation in USB. Reported by Google.
+    - CVE-2026-9977: Insufficient validation of untrusted input in WebShare.
+      Reported by Google.
+    - CVE-2026-9978: Use after free in Glic. Reported by Google.
+    - CVE-2026-9979: Insufficient validation of untrusted input in Input.
+      Reported by Google.
+    - CVE-2026-9980: Insufficient validation of untrusted input in Printing.
+      Reported by Google.
+    - CVE-2026-9981: Inappropriate implementation in Skia. Reported by Google.
+    - CVE-2026-9982: Insufficient validation of untrusted input in ANGLE.
+      Reported by Google.
+    - CVE-2026-9983: Type Confusion in Skia. Reported by Google.
+    - CVE-2026-9984: Use after free in UI. Reported by Google.
+    - CVE-2026-9985: Insufficient validation of untrusted input in Media.
+      Reported by Google.
+    - CVE-2026-9986: Insufficient validation of untrusted input in
+      OptimizationGuide. Reported by Google.
+    - CVE-2026-9987: Insufficient validation of untrusted input in
+      WebAppInstalls. Reported by Google.
+    - CVE-2026-9988: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-9989: Inappropriate implementation in Media. Reported by Google
+    - CVE-2026-9990: Use after free in WebAppInstalls. Reported by Google.
+    - CVE-2026-9991: Inappropriate implementation in Media. Reported by Google
+    - CVE-2026-9992: Use after free in Network. Reported by Google.
+    - CVE-2026-9993: Use after free in Views. Reported by Google.
+    - CVE-2026-9994: Use after free in Core. Reported by Google.
+    - CVE-2026-9995: Use after free in WebXR. Reported by Google.
+    - CVE-2026-9996: Out of bounds read in WebRTC. Reported by Google.
+    - CVE-2026-9997: Use after free in Input. Reported by Google.
+    - CVE-2026-9998: Integer overflow in Skia. Reported by Google.
+    - CVE-2026-9999: Inappropriate implementation in ANGLE. Reported by Google
+    - CVE-2026-10000: Use after free in Passwords. Reported by Google.
+    - CVE-2026-10001: Use after free in PerformanceManager. Reported by Google
+    - CVE-2026-10002: Use after free in PDFium. Reported by Google.
+    - CVE-2026-10003: Use after free in Views. Reported by Google.
+    - CVE-2026-10004: Insufficient validation of untrusted input in Passwords.
+      Reported by Google.
+    - CVE-2026-10005: Use after free in WebAppInstalls. Reported by Google.
+    - CVE-2026-10006: Race in WebAudio. Reported by Google.
+    - CVE-2026-10007: Use after free in SVG. Reported by Google.
+    - CVE-2026-10008: Uninitialized Use in GPU. Reported by Google.
+    - CVE-2026-10009: Integer overflow in Skia. Reported by Google.
+    - CVE-2026-10010: Inappropriate implementation in Input.
+      Reported by Google.
+    - CVE-2026-10011: Inappropriate implementation in Skia. Reported by Google
+    - CVE-2026-10012: Use after free in Skia. Reported by Google.
+    - CVE-2026-10013: Use after free in WebCodecs. Reported by Google.
+    - CVE-2026-10014: Use after free in WebMIDI. Reported by Google.
+    - CVE-2026-10015: Integer overflow in WTF. Reported by Google.
+    - CVE-2026-10016: Use after free in DOM. Reported by pwn2addr.
+    - CVE-2026-10017: Out of bounds read in Headless.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-10018: Integer overflow in ANGLE. Reported by Rahul Raj.
+    - CVE-2026-10019: Integer overflow in ANGLE.
+      Reported by Mufeed VH from Winfunc Research (winfunc.com).
+    - CVE-2026-10020: Insufficient validation of untrusted input in Skia.
+      Reported by Google.
+    - CVE-2026-10021: Insufficient validation of untrusted input in USB.
+      Reported by Google.
+    - CVE-2026-10022: Type Confusion in V8. Reported by ggwhyp.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 29 May 2026 11:48:56 -0400
+
 chromium (148.0.7778.178-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

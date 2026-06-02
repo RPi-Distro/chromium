@@ -19,15 +19,15 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
        ]
        if (!is_android) {
          if (!is_castos && !is_fuchsia) {
-@@ -1212,7 +1211,6 @@ if (use_blink && !is_cronet_build) {
+@@ -1211,7 +1210,6 @@ if (use_blink && !is_cronet_build) {
        "//third_party/blink/public:blink_devtools_inspector_resources",
        "//third_party/blink/public/mojom:mojom_platform_js_data_deps",
        "//third_party/blink/renderer/core:gen_files_for_web_tests",
 -      "//third_party/catapult/third_party/typ",
        "//third_party/hyphenation-patterns:test_data",
        "//tools/imagediff",
-       "//ui/base:goldctl",
-@@ -1488,10 +1486,6 @@ if (use_blink && !is_cronet_build) {
+     ]
+@@ -1470,10 +1468,6 @@ if (use_blink && !is_cronet_build) {
        "//third_party/blink/web_tests/VirtualTestSuites",
        "//third_party/blink/web_tests/W3CImportExpectations",
        "//third_party/blink/web_tests/paint/invalidation/repaint-overlay/",
@@ -38,98 +38,9 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
        "//third_party/depot_tools/pylint-2.7",
        "//third_party/depot_tools/pylint_main.py",
        "//third_party/depot_tools/pylintrc-2.7",
---- a/tools/binary_size/BUILD.gn
-+++ b/tools/binary_size/BUILD.gn
-@@ -22,7 +22,6 @@ python_library("sizes_py") {
-   pydeps_file = "sizes.pydeps"
-   data_deps = [
-     "//build/util:test_results",
--    "//third_party/catapult/tracing:convert_chart_json",
-   ]
- }
- 
---- a/chrome/test/BUILD.gn
-+++ b/chrome/test/BUILD.gn
-@@ -12819,7 +12819,6 @@ if (!is_android) {
-       "//chrome/test/data/password/captured_sites/",
-       "//chrome/test/data/web_page_replay_go_helper_scripts/automation_helper.js",
-       "//components/test/data/autofill/web_page_replay_support_files/",
--      "//third_party/catapult/telemetry/telemetry/bin/",
-     ]
- 
-     if (is_linux || is_chromeos || is_win) {
-@@ -12923,7 +12922,6 @@ if (!is_android) {
-     deps = [ "//tools/perf/chrome_telemetry_build:telemetry_chrome_test" ]
- 
-     data = [
--      "//third_party/catapult/telemetry/telemetry/internal/bin/",
-       "//tools/perf/run_telemetry_tests",
-       "//testing/scripts/run_telemetry_as_googletest.py",
-     ]
---- a/tools/grit/BUILD.gn
-+++ b/tools/grit/BUILD.gn
-@@ -33,7 +33,6 @@ group("grit_python_unittests") {
-   data = [
-     "//testing/scripts/run_isolated_script_test.py",
-     "//tools/grit/",
--    "//third_party/catapult/third_party/typ/",
-     "//third_party/node/",
-   ]
- }
---- a/tools/metrics/BUILD.gn
-+++ b/tools/metrics/BUILD.gn
-@@ -65,7 +65,6 @@ group("metrics_python_tests") {
-     # The run_isolated_script_test.py script and its dependencies.
-     "//testing/scripts/run_isolated_script_test.py",
-     "//testing/scripts/common.py",
--    "//third_party/catapult/third_party/typ/",
- 
-     # Scripts we depend on. Their unit tests are also included.
-     "//tools/json_comment_eater/json_comment_eater.py",
---- a/tools/perf/chrome_telemetry_build/BUILD.gn
-+++ b/tools/perf/chrome_telemetry_build/BUILD.gn
-@@ -194,7 +194,6 @@ group("telemetry_chrome_test_without_chr
-   ]
-   data_deps = [
-     "//testing:test_scripts_shared",
--    "//third_party/catapult:telemetry_chrome_test_support",
-     "//tools/metrics:metrics_python_tests",
-   ]
- 
-@@ -246,7 +245,5 @@ group("telemetry_chrome_test_without_chr
-       "//build/android:devil_chromium_py",
-       "//build/android:stack_tools",
-     ]
--  } else if (!is_fuchsia) {
--    data_deps += [ "//third_party/catapult/telemetry:bitmaptools" ]
-   }
- }
---- a/tools/polymer/BUILD.gn
-+++ b/tools/polymer/BUILD.gn
-@@ -8,7 +8,6 @@ group("polymer_tools_python_unittests")
-   data = [
-     "//testing/scripts/run_isolated_script_test.py",
-     "//tools/polymer/",
--    "//third_party/catapult/third_party/typ/",
-   ]
-   data_deps = [ "//testing:test_scripts_shared" ]
- }
---- a/tools/gritsettings/resource_ids.spec
-+++ b/tools/gritsettings/resource_ids.spec
-@@ -1427,10 +1427,6 @@
-     "META": {"sizes": {"includes": [20]}},
-     "includes": [8280],
-   },
--  "<(SHARED_INTERMEDIATE_DIR)/content/browser/tracing/tracing_resources.grd": {
--    "META": {"sizes": {"includes": [20],}},
--    "includes": [8300],
--  },
-   "<(SHARED_INTERMEDIATE_DIR)/content/browser/webrtc/resources/resources.grd": {
-     "META": {"sizes": {"includes": [20],}},
-     "includes": [8320],
 --- a/chrome/chrome_paks.gni
 +++ b/chrome/chrome_paks.gni
-@@ -256,8 +256,6 @@ template("chrome_extra_paks") {
+@@ -261,8 +261,6 @@ template("chrome_extra_paks") {
          "$root_gen_dir/chrome/webui_gallery_resources.pak",
          "$root_gen_dir/chrome/webui_toolbar_resources.pak",
          "$root_gen_dir/chrome/whats_new_resources.pak",
@@ -138,7 +49,7 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
        ]
        deps += [
          "//chrome/browser/actor/resources:browser_resources",
-@@ -273,7 +271,6 @@ template("chrome_extra_paks") {
+@@ -280,7 +278,6 @@ template("chrome_extra_paks") {
          "//chrome/browser/resources/tab_group_home:resources",
          "//chrome/browser/resources/webnn_internals:resources",
          "//chrome/browser/resources/webui_toolbar:resources",
@@ -146,22 +57,34 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
        ]
        if (is_chrome_branded) {
          sources += [
---- a/content/shell/BUILD.gn
-+++ b/content/shell/BUILD.gn
-@@ -587,13 +587,6 @@ repack("pak") {
-     sources += [ "$root_gen_dir/content/webxr_internals_resources.pak" ]
-   }
+--- a/chrome/test/BUILD.gn
++++ b/chrome/test/BUILD.gn
+@@ -12514,7 +12514,6 @@ if (!is_android) {
+       "//chrome/test/data/password/captured_sites/",
+       "//chrome/test/data/web_page_replay_go_helper_scripts/automation_helper.js",
+       "//components/test/data/autofill/web_page_replay_support_files/",
+-      "//third_party/catapult/telemetry/telemetry/bin/",
+     ]
  
--  if (!is_android && !is_ios) {
--    deps += [ "//content/browser/tracing:resources" ]
--    sources += [
--      "$root_gen_dir/content/browser/tracing/tracing_resources.pak",
--      "$root_gen_dir/content/traces_internals_resources.pak",
--    ]
--  }
+     if (is_linux || is_chromeos || is_win) {
+@@ -12620,7 +12619,6 @@ if (!is_android) {
+     deps = [ "//tools/perf/chrome_telemetry_build:telemetry_chrome_test" ]
  
-   if (is_ios) {
-     sources += [
+     data = [
+-      "//third_party/catapult/telemetry/telemetry/internal/bin/",
+       "//tools/perf/run_telemetry_tests",
+       "//testing/scripts/run_telemetry_as_googletest.py",
+     ]
+--- a/content/browser/BUILD.gn
++++ b/content/browser/BUILD.gn
+@@ -3606,7 +3606,6 @@ source_set("browser") {
+       "//components/speech",
+       "//components/vector_icons",
+       "//components/webauthn/json",
+-      "//content/browser/tracing:resources",
+       "//media/mojo/mojom:speech_recognition",
+       "//ui/base",
+     ]
 --- a/content/browser/tracing/BUILD.gn
 +++ /dev/null
 @@ -1,39 +0,0 @@
@@ -223,6 +146,31 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
  
    source->SetRequestFilter(base::BindRepeating(OnShouldHandleRequest),
                             base::BindRepeating(OnTracingRequest));
+--- a/content/shell/BUILD.gn
++++ b/content/shell/BUILD.gn
+@@ -588,13 +588,6 @@ repack("pak") {
+     sources += [ "$root_gen_dir/content/webxr_internals_resources.pak" ]
+   }
+ 
+-  if (!is_android && !is_ios) {
+-    deps += [ "//content/browser/tracing:resources" ]
+-    sources += [
+-      "$root_gen_dir/content/browser/tracing/tracing_resources.pak",
+-      "$root_gen_dir/content/traces_internals_resources.pak",
+-    ]
+-  }
+ 
+   if (is_ios) {
+     sources += [
+--- a/mojo/public/tools/BUILD.gn
++++ b/mojo/public/tools/BUILD.gn
+@@ -17,6 +17,5 @@ group("mojo_python_unittests") {
+   ]
+   data_deps = [
+     "//testing:test_scripts_shared",
+-    "//third_party/catapult/third_party/typ/",
+   ]
+ }
 --- a/testing/BUILD.gn
 +++ b/testing/BUILD.gn
 @@ -78,7 +78,6 @@ group("run_perf_test") {
@@ -233,15 +181,16 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
    ]
  
    if (is_android) {
---- a/mojo/public/tools/BUILD.gn
-+++ b/mojo/public/tools/BUILD.gn
-@@ -17,6 +17,5 @@ group("mojo_python_unittests") {
+--- a/third_party/blink/tools/BUILD.gn
++++ b/third_party/blink/tools/BUILD.gn
+@@ -34,7 +34,6 @@ group("wpt_tests_isolate") {
    ]
    data_deps = [
      "//testing:test_scripts_shared",
--    "//third_party/catapult/third_party/typ/",
+-    "//third_party/catapult/third_party/typ",
+     "//tools/imagediff",
    ]
- }
+   if (!is_ios) {
 --- a/third_party/webrtc/test/BUILD.gn
 +++ b/third_party/webrtc/test/BUILD.gn
 @@ -382,10 +382,6 @@ rtc_library("perf_test") {
@@ -255,7 +204,7 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
    } else {
      sources += [ "testsupport/perf_test_histogram_writer_no_protobuf.cc" ]
    }
-@@ -818,7 +814,6 @@ if (rtc_include_tests) {
+@@ -827,7 +823,6 @@ if (rtc_include_tests) {
  
        if (rtc_enable_protobuf) {
          sources += [ "testsupport/perf_test_histogram_writer_unittest.cc" ]
@@ -263,36 +212,26 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
        }
  
        data = test_support_unittests_resources
---- a/tools/perf/core/perfetto_binary_roller/BUILD.gn
-+++ b/tools/perf/core/perfetto_binary_roller/BUILD.gn
-@@ -7,7 +7,6 @@ import("//build/util/generate_wrapper.gn
- generate_wrapper("upload_trace_processor") {
-   testonly = true
+--- a/tools/binary_size/BUILD.gn
++++ b/tools/binary_size/BUILD.gn
+@@ -22,7 +22,6 @@ python_library("sizes_py") {
+   pydeps_file = "sizes.pydeps"
    data_deps = [
--    "//third_party/catapult:telemetry_chrome_test_support",
-     "//third_party/perfetto/src/trace_processor:trace_processor_shell",
+     "//build/util:test_results",
+-    "//third_party/catapult/tracing:convert_chart_json",
    ]
+ }
+ 
+--- a/tools/grit/BUILD.gn
++++ b/tools/grit/BUILD.gn
+@@ -33,7 +33,6 @@ group("grit_python_unittests") {
    data = [
---- a/third_party/blink/tools/BUILD.gn
-+++ b/third_party/blink/tools/BUILD.gn
-@@ -34,7 +34,6 @@ group("wpt_tests_isolate") {
+     "//testing/scripts/run_isolated_script_test.py",
+     "//tools/grit/",
+-    "//third_party/catapult/third_party/typ/",
+     "//third_party/node/",
    ]
-   data_deps = [
-     "//testing:test_scripts_shared",
--    "//third_party/catapult/third_party/typ",
-     "//tools/imagediff",
-   ]
-   if (!is_ios) {
---- a/content/browser/BUILD.gn
-+++ b/content/browser/BUILD.gn
-@@ -3584,7 +3584,6 @@ source_set("browser") {
-       "//components/speech",
-       "//components/vector_icons",
-       "//components/webauthn/json",
--      "//content/browser/tracing:resources",
-       "//media/mojo/mojom:speech_recognition",
-       "//ui/base",
-     ]
+ }
 --- a/tools/grit/grit.pydeps
 +++ b/tools/grit/grit.pydeps
 @@ -1,22 +1,5 @@
@@ -318,3 +257,64 @@ Stuff like chai, jszip, and node-d3 are packaged for debian already.
  //tools/grit/grit.py
  //tools/grit/grit/__init__.py
  //tools/grit/grit/clique.py
+--- a/tools/gritsettings/resource_ids.spec
++++ b/tools/gritsettings/resource_ids.spec
+@@ -1509,10 +1509,6 @@
+     "META": {"sizes": {"includes": [20]}},
+     "includes": [8280],
+   },
+-  "<(SHARED_INTERMEDIATE_DIR)/content/browser/tracing/tracing_resources.grd": {
+-    "META": {"sizes": {"includes": [20],}},
+-    "includes": [8300],
+-  },
+   "<(SHARED_INTERMEDIATE_DIR)/content/browser/webrtc/resources/resources.grd": {
+     "META": {"sizes": {"includes": [20],}},
+     "includes": [8320],
+--- a/tools/metrics/BUILD.gn
++++ b/tools/metrics/BUILD.gn
+@@ -65,7 +65,6 @@ group("metrics_python_tests") {
+     # The run_isolated_script_test.py script and its dependencies.
+     "//testing/scripts/run_isolated_script_test.py",
+     "//testing/scripts/common.py",
+-    "//third_party/catapult/third_party/typ/",
+ 
+     # Scripts we depend on. Their unit tests are also included.
+     "//tools/json_comment_eater/json_comment_eater.py",
+--- a/tools/perf/chrome_telemetry_build/BUILD.gn
++++ b/tools/perf/chrome_telemetry_build/BUILD.gn
+@@ -194,7 +194,6 @@ group("telemetry_chrome_test_without_chr
+   ]
+   data_deps = [
+     "//testing:test_scripts_shared",
+-    "//third_party/catapult:telemetry_chrome_test_support",
+     "//tools/metrics:metrics_python_tests",
+   ]
+ 
+@@ -246,7 +245,5 @@ group("telemetry_chrome_test_without_chr
+       "//build/android:devil_chromium_py",
+       "//build/android:stack_tools",
+     ]
+-  } else if (!is_fuchsia) {
+-    data_deps += [ "//third_party/catapult/telemetry:bitmaptools" ]
+   }
+ }
+--- a/tools/perf/core/perfetto_binary_roller/BUILD.gn
++++ b/tools/perf/core/perfetto_binary_roller/BUILD.gn
+@@ -7,7 +7,6 @@ import("//build/util/generate_wrapper.gn
+ generate_wrapper("upload_trace_processor") {
+   testonly = true
+   data_deps = [
+-    "//third_party/catapult:telemetry_chrome_test_support",
+     "//third_party/perfetto/src/trace_processor:trace_processor_shell",
+   ]
+   data = [
+--- a/tools/polymer/BUILD.gn
++++ b/tools/polymer/BUILD.gn
+@@ -8,7 +8,6 @@ group("polymer_tools_python_unittests")
+   data = [
+     "//testing/scripts/run_isolated_script_test.py",
+     "//tools/polymer/",
+-    "//third_party/catapult/third_party/typ/",
+   ]
+   data_deps = [ "//testing:test_scripts_shared" ]
+ }

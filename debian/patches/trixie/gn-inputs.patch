@@ -89,7 +89,7 @@ Date:   Tue Mar 31 20:28:37 2026 -0700
              "timeout": "2m",
 --- a/build/rust/cargo_crate.gni
 +++ b/build/rust/cargo_crate.gni
-@@ -455,13 +455,6 @@ template("cargo_crate") {
+@@ -462,13 +462,6 @@ template("cargo_crate") {
          _rustflags_txt,
          rustc_print_cfg_path,
        ]
@@ -105,7 +105,7 @@ Date:   Tue Mar 31 20:28:37 2026 -0700
          ":${_build_script_name}_write_rustflags",
 --- a/build/rust/std/BUILD.gn
 +++ b/build/rust/std/BUILD.gn
-@@ -267,12 +267,6 @@ if (toolchain_has_rust) {
+@@ -268,12 +268,6 @@ if (toolchain_has_rust) {
        out_libdir = rebase_path(target_out_dir, root_build_dir)
        out_depfile = rebase_path(depfile, root_build_dir)
  
@@ -118,13 +118,3 @@ Date:   Tue Mar 31 20:28:37 2026 -0700
        # For the rustc sysroot we must include even the rlibs we don't pass to
        # the C++ linker.
        all_stdlibs_to_copy = stdlib_files + skip_stdlib_files
---- a/build/toolchain/gcc_toolchain.gni
-+++ b/build/toolchain/gcc_toolchain.gni
-@@ -681,7 +681,6 @@ template("single_gcc_toolchain") {
-         "//build/action_helpers.py",
-         "//build/gn_helpers.py",
-         "//build/rust/gni_impl/rustc_wrapper.py",
--        "//third_party/rust-toolchain/bin/rustc",
-       ]
- 
-       # RSP manipulation due to https://bugs.chromium.org/p/gn/issues/detail?id=249

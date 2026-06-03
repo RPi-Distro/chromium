@@ -4,29 +4,50 @@ ERROR at //build/config/BUILDCONFIG.gn:700:11: Unable to load "/chromium-141.0.7
 
 --- a/build/config/BUILDCONFIG.gn
 +++ b/build/config/BUILDCONFIG.gn
-@@ -575,11 +575,10 @@ foreach(_target_type,
+@@ -585,7 +585,7 @@ foreach(_target_type,
+         # When clang is used, some target may use clang module. This dependency
          # is required for things to work, regardless of whether the libc++
          # module is used in this target or not.
-         public_deps += [
--          "//buildtools/third_party/libc++:custom_headers",
--          "//buildtools/third_party/libc++:libcxx_headers",
-         ]
+-        public_deps += [ "//buildtools/third_party/libc++:headers" ]
++        public_deps += [  ]
        }
  
-+      use_libcxx_modules = false
        if (!defined(use_libcxx_modules)) {
-         use_libcxx_modules = is_clang
-       }
-@@ -696,11 +695,10 @@ foreach(_target_type,
+@@ -623,7 +623,7 @@ foreach(_target_type,
+ 
+       if (use_libcxx_modules) {
+         # Add a dependency needed for Clang modules builds.
+-        deps += [ "//buildtools/third_party/libc++:all_modules" ]
++        deps += [ ]
+ 
+         if (!defined(invoker.generate_modulemap) &&
+             defined(generate_modulemap)) {
+@@ -723,7 +723,7 @@ foreach(_target_type,
+         # When clang is used, some target may use clang module. This dependency
          # is required for things to work, regardless of whether the libc++
          # module is used in this target or not.
-         public_deps += [
--          "//buildtools/third_party/libc++:custom_headers",
--          "//buildtools/third_party/libc++:libcxx_headers",
-         ]
+-        public_deps += [ "//buildtools/third_party/libc++:headers" ]
++        public_deps += [  ]
        }
  
-+      use_libcxx_modules = false
        if (!defined(use_libcxx_modules)) {
-         use_libcxx_modules = is_clang
-       }
+@@ -761,7 +761,7 @@ foreach(_target_type,
+ 
+       if (use_libcxx_modules) {
+         # Add a dependency needed for Clang modules builds.
+-        deps += [ "//buildtools/third_party/libc++:all_modules" ]
++        deps += [ ]
+ 
+         if (!defined(invoker.generate_modulemap) &&
+             defined(generate_modulemap)) {
+--- a/build/modules/BUILD.gn
++++ b/build/modules/BUILD.gn
+@@ -5,8 +5,6 @@
+ import("//build/config/c++/c++.gni")
+ import("//build/config/clang/clang.gni")
+ import("//build/config/sysroot.gni")
+-import("//buildtools/third_party/libc++/libcxx_headers.gni")
+-import("//buildtools/third_party/libc++/modules.gni")
+ 
+ group("modules") {
+   deps = [ "//build/modules/modularize:no_modules" ]

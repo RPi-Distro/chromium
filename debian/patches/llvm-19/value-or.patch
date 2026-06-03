@@ -53,3 +53,14 @@
  }
  
  #endif  // BUILDFLAG(ENTERPRISE_CACHE_ENCRYPTION)
+--- a/content/browser/service_worker/service_worker_version.cc
++++ b/content/browser/service_worker/service_worker_version.cc
+@@ -847,7 +847,7 @@ bool ServiceWorkerVersion::FinishRequest
+     }
+   } else {
+     // Equivalent to the previous, non-optional iterator behavior. Maybe unsafe.
+-    request_timeouts_.erase(request->timeout_iter.value_or({}));
++    request_timeouts_.erase(request->timeout_iter.value_or(std::set<InflightRequestTimeoutInfo>::iterator{}));
+   }
+   inflight_requests_.Remove(request_id);
+   // TODO(crbug.com/40864997): remove the following DCHECK when the cause

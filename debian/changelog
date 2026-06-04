@@ -29,6 +29,9 @@ chromium (149.0.7827.53-1) UNRELEASED; urgency=high
     - llvm-19/value-or.patch: add another clang-19 build workaround.
     - llvm-19/const-profile.patch: add patch to work around const-related
       clang-19 build failure.
+    - rust-1.85/file_as_c_str.patch: rework patch due to upstream changes
+      [trixie, bookworm].
+    - rust-1.85/zip8.patch: refresh [trixie, bookworm].
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 02 Jun 2026 16:16:57 -0400
 

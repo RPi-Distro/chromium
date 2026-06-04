@@ -36,9 +36,9 @@ chromium (149.0.7827.53-1) UNRELEASED; urgency=high
 
   [ Daniel Richard G. ]
   * d/patches:
-    - bookworm/bindgen.patch: Refresh.
+    - bookworm/bindgen.patch: Refresh [bookworm].
     - bookworm/gn-absl.patch: Update absl_source_set("no_destructor") with
-      visibility directive, and refresh.
+      visibility directive, and refresh [bookworm].
     - rust-1.85/mojo-features.patch: Add feature to new Rust source file
       [trixie, bookworm].
 

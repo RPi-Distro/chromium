@@ -32,6 +32,7 @@ chromium (149.0.7827.53-1) UNRELEASED; urgency=high
     - rust-1.85/file_as_c_str.patch: rework patch due to upstream changes
       [trixie, bookworm].
     - rust-1.85/zip8.patch: refresh [trixie, bookworm].
+    - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
 
   [ Daniel Richard G. ]
   * d/patches:

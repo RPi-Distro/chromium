@@ -1,3 +1,59 @@
+chromium (149.0.7827.53-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/patches:
+    - upstream/turboshaft.patch: drop, merged upstream.
+    - fixes/enable-widevine-on-arm64-linux-platform.patch: drop, merged
+      upstream.
+    - debianization/clang-version.patch: refresh.
+    - fixes/armhf-icf.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - llvm-19/clang19.patch: add more bits to drop unsupported warning and
+      diagnostic flags.
+    - trixie/gn-inputs.patch: drop portion of patch due to upstream changes.
+    - trixie/gn-inputs2.patch: refresh.
+    - bookworm/bindgen.patch: drop due to upgraded bindgen [sid, trixie].
+    - bookworm/gn-allowlist.patch: drop due to upgraded generate-ninja [sid,
+      trixie].
+    - llvm-22/ignore-for-ubsan.patch: update for upstream reworking.
+    - ungoogled/disable-ai.patch: sync from u-c.
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+    - ungoogled/remove-navigation-source-param.patch: sync from u-c.
+    - trixie/gn-expand-dir-allowlist.patch: add new patch to work around
+      older generate-ninja.
+    - fixes/libcpp-headers.patch: update for upstream changes reworking how
+      this was done.
+    - disable/libei.patch: add patch to fix build failure due to libei
+      removal.
+    - llvm-19/value-or.patch: add another clang-19 build workaround.
+    - llvm-19/const-profile.patch: add patch to work around const-related
+      clang-19 build failure.
+    - rust-1.85/file_as_c_str.patch: rework patch due to upstream changes
+      [trixie, bookworm].
+    - rust-1.85/zip8.patch: refresh [trixie, bookworm].
+
+  [ Daniel Richard G. ]
+  * d/patches:
+    - bookworm/bindgen.patch: Refresh.
+    - bookworm/gn-absl.patch: Update absl_source_set("no_destructor") with
+      visibility directive, and refresh.
+    - rust-1.85/mojo-features.patch: Add feature to new Rust source file
+      [trixie, bookworm].
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 02 Jun 2026 16:16:57 -0400
+
+chromium (148.0.7778.215-2) unstable; urgency=high
+
+  [ Juan Manuel Méndez Rey ]
+  * Team upload.
+  * d/patches/fixes/bytemuck.patch: select bytemuck's core::simd impls by rust
+    version rather than date, fixing FTBFS with rustc 1.95 (which removed
+    core::simd::LaneCount) while still building on rust < 1.95
+    (trixie/bookworm). Affects the default chromium build too.
+
+ -- Juan Manuel Méndez Rey <vejeta@gmail.com>  Mon, 01 Jun 2026 17:06:05 +0200
+
 chromium (148.0.7778.215-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

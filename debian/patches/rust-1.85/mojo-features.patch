@@ -9,3 +9,13 @@
  
  mod api;
  mod ast;
+--- a/mojo/public/rust/system/lib.rs
++++ b/mojo/public/rust/system/lib.rs
+@@ -1,6 +1,7 @@
+ // Copyright 2025 The Chromium Authors
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
++#![feature(ptr_as_ref_unchecked)]
+ 
+ pub mod data_pipe;
+ pub mod message;

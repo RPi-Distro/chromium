@@ -44,7 +44,15 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/base/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/base/BUILD.gn
-@@ -48,6 +48,7 @@ absl_source_set("no_destructor") {
+@@ -40,6 +40,7 @@ absl_source_set("log_severity") {
+ 
+ absl_source_set("no_destructor") {
+   public = [ "no_destructor.h" ]
++  visibility = [ "*" ]
+   deps = [
+     ":config",
+     ":nullability",
+@@ -48,6 +49,7 @@ absl_source_set("no_destructor") {
  
  absl_source_set("nullability") {
    public = [ "nullability.h" ]
@@ -52,7 +60,7 @@ libs.
    deps = [ ":config" ]
  }
  
-@@ -99,6 +100,7 @@ absl_source_set("config") {
+@@ -99,6 +101,7 @@ absl_source_set("config") {
      "options.h",
      "policy_checks.h",
    ]
@@ -60,7 +68,7 @@ libs.
  }
  
  absl_source_set("cycleclock_internal") {
-@@ -137,6 +139,7 @@ absl_source_set("core_headers") {
+@@ -137,6 +140,7 @@ absl_source_set("core_headers") {
      "port.h",
      "thread_annotations.h",
    ]
@@ -214,7 +222,7 @@ libs.
    public_deps = [
      # string_view.h was once part of :strings, so string_view.h is
      # re-exported for backwards compatibility.
-@@ -144,6 +146,7 @@ absl_test("append_and_overwrite_test") {
+@@ -145,6 +147,7 @@ absl_test("append_and_overwrite_test") {
  
  absl_source_set("str_format") {
    public = [ "str_format.h" ]
@@ -224,7 +232,7 @@ libs.
      ":string_view",
 --- a/third_party/abseil-cpp/absl/types/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/types/BUILD.gn
-@@ -17,6 +17,7 @@ absl_source_set("any") {
+@@ -36,6 +36,7 @@ absl_test("source_location_test") {
  absl_source_set("span") {
    public = [ "span.h" ]
    sources = [ "internal/span.h" ]
@@ -232,7 +240,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/algorithm",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -46,6 +47,7 @@ absl_test("span_test") {
+@@ -82,6 +83,7 @@ absl_source_set("any_span") {
  
  absl_source_set("optional") {
    public = [ "optional.h" ]
@@ -240,7 +248,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/utility",
-@@ -54,6 +56,7 @@ absl_source_set("optional") {
+@@ -90,6 +92,7 @@ absl_source_set("optional") {
  
  absl_source_set("variant") {
    public = [ "variant.h" ]

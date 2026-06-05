@@ -7,10 +7,11 @@ This causes various toolchain failures of the form:
 While resolving toolchains for target @@rules_python+//python:current_py_toolchain
 	@@bazel_tools//tools/python:toolchain_type
 
-diff -ur third_party/xnnpack/BUILD.gn /home/nonroot/xnnpack/BUILD.gn
---- a/third_party/xnnpack/BUILD.gn
-+++ n/third_party/xnnpack/BUILD.gn
-@@ -34,10 +34,10 @@
+Index: chromium-149.0.7827.53/third_party/xnnpack/BUILD.gn
+===================================================================
+--- chromium-149.0.7827.53.orig/third_party/xnnpack/BUILD.gn
++++ chromium-149.0.7827.53/third_party/xnnpack/BUILD.gn
+@@ -34,10 +34,10 @@ config("xnnpack_public_config") {
    }
  
    defines = [
@@ -25,7 +26,7 @@ diff -ur third_party/xnnpack/BUILD.gn /home/nonroot/xnnpack/BUILD.gn
  }
  
  config("xnnpack_private_config") {
-@@ -48,1990 +48,2292 @@
+@@ -48,1990 +48,2292 @@ config("xnnpack_private_config") {
    ]
  }
  
@@ -4276,7 +4277,7 @@ diff -ur third_party/xnnpack/BUILD.gn /home/nonroot/xnnpack/BUILD.gn
      ]
    }
  } else {
-@@ -2041,6 +2343,7 @@
+@@ -2041,6 +2343,7 @@ if (current_cpu == "x64" || current_cpu
    }
  }
  
@@ -4284,7 +4285,7 @@ diff -ur third_party/xnnpack/BUILD.gn /home/nonroot/xnnpack/BUILD.gn
  if (build_with_chromium) {
    source_set("xnnpack") {
      public = [ "src/include/xnnpack.h" ]
-@@ -2051,38 +2354,38 @@
+@@ -2051,38 +2354,38 @@ if (build_with_chromium) {
      configs += [ ":xnnpack_private_config" ]
  
      sources = [
@@ -4351,7 +4352,7 @@ diff -ur third_party/xnnpack/BUILD.gn /home/nonroot/xnnpack/BUILD.gn
  
      public_configs = [ ":xnnpack_public_config" ]
    }
-@@ -2099,38 +2402,38 @@
+@@ -2099,38 +2402,38 @@ if (build_with_internal_optimization_gui
      configs += [ ":xnnpack_private_config" ]
  
      sources = [
@@ -4418,7 +4419,7 @@ diff -ur third_party/xnnpack/BUILD.gn /home/nonroot/xnnpack/BUILD.gn
  
      public_configs = [ ":xnnpack_public_config" ]
  
-@@ -2141,60925 +2444,71699 @@
+@@ -2141,60925 +2444,71699 @@ if (build_with_internal_optimization_gui
  }
  
  if (current_cpu == "x64" || current_cpu == "x86") {

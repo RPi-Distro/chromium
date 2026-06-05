@@ -53,6 +53,8 @@ chromium (149.0.7827.53-1) UNRELEASED; urgency=high
     - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: regenerate
     - third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
       regenerate
+    - third_party/0001-third_party-libvpx-Disable-vsx-on-ppc64.patch: ensure
+      VSX is disabled until VP9 artifacting can be fixed upstream
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 02 Jun 2026 16:16:57 -0400
 

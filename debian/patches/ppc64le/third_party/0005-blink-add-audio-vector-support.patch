@@ -206,6 +206,6 @@ diff -urN a/third_party/blink/renderer/platform/BUILD.gn b/third_party/blink/ren
 +    sources += [ "audio/cpu/ppc64/delay_altivec.cc" ]
 +  }
 +
-   if (use_webaudio_pffft) {
+   if (!is_mac) {
      include_dirs += [ "//third_party/pffft/src" ]
      deps += [ "//third_party/pffft" ]

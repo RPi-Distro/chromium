@@ -42,6 +42,18 @@ chromium (149.0.7827.53-1) UNRELEASED; urgency=high
     - rust-1.85/mojo-features.patch: Add feature to new Rust source file
       [trixie, bookworm].
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-third_party-libvpx-Remove-bad-ppc64-config.patch:
+      refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - third_party/0005-blink-add-audio-vector-support.patch: refresh for
+      upstream changes
+    - libaom/0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: regenerate
+    - third_party/0003-third_party-libvpx-Add-ppc64-generated-config.patch:
+      regenerate
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 02 Jun 2026 16:16:57 -0400
 
 chromium (148.0.7778.215-2) unstable; urgency=high

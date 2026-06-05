@@ -32,6 +32,7 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 #fixes/missing-dep.patch
 
+upstream/0001-Fix-build-for-CPU-yield-on-LoongArch.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -223,3 +224,4 @@ loongarch64/0020-user_agent-add-loongarch-architecture-support.patch
 loongarch64/0021-components-metrics-add-loongarch64-support.patch
 loongarch64/0022-blink-fix-lsx-code-of-webgl_image_conversion_lsx.patch
 loongarch64/0023-loongarch64-enable-lsx-by-default.patch
+loongarch64/0024-fix-libyuv-lsx.patch

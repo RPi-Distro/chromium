@@ -1,5 +1,7 @@
---- a/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
-+++ b/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
+Index: chromium-149.0.7827.53/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
+===================================================================
+--- /dev/null
++++ chromium-149.0.7827.53/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
 @@ -0,0 +1,183 @@
 +// Copyright 2016 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
@@ -184,9 +186,11 @@
 +}
 +
 +}  // namespace blink
---- a/third_party/blink/renderer/platform/audio/delay.cc
-+++ b/third_party/blink/renderer/platform/audio/delay.cc
-@@ -99,7 +99,7 @@
+Index: chromium-149.0.7827.53/third_party/blink/renderer/platform/audio/delay.cc
+===================================================================
+--- chromium-149.0.7827.53.orig/third_party/blink/renderer/platform/audio/delay.cc
++++ chromium-149.0.7827.53/third_party/blink/renderer/platform/audio/delay.cc
+@@ -99,7 +99,7 @@ double Delay::DelayTime(float sample_rat
    return desired_delay_frames_ / sample_rate;
  }
  
@@ -195,10 +199,11 @@
  // Default scalar versions if simd/neon are not available.
  std::tuple<size_t, size_t> Delay::ProcessARateVector(
      base::span<float> destination,
-diff -urN a/third_party/blink/renderer/platform/BUILD.gn b/third_party/blink/renderer/platform/BUILD.gn
---- a/third_party/blink/renderer/platform/BUILD.gn
-+++ b/third_party/blink/renderer/platform/BUILD.gn
-@@ -1962,6 +1962,10 @@
+Index: chromium-149.0.7827.53/third_party/blink/renderer/platform/BUILD.gn
+===================================================================
+--- chromium-149.0.7827.53.orig/third_party/blink/renderer/platform/BUILD.gn
++++ chromium-149.0.7827.53/third_party/blink/renderer/platform/BUILD.gn
+@@ -1974,6 +1974,10 @@ component("platform") {
      sources += [ "audio/cpu/arm/delay_neon.cc" ]
    }
  
@@ -206,6 +211,6 @@ diff -urN a/third_party/blink/renderer/platform/BUILD.gn b/third_party/blink/ren
 +    sources += [ "audio/cpu/ppc64/delay_altivec.cc" ]
 +  }
 +
-   if (use_webaudio_pffft) {
+   if (!is_mac) {
      include_dirs += [ "//third_party/pffft/src" ]
      deps += [ "//third_party/pffft" ]

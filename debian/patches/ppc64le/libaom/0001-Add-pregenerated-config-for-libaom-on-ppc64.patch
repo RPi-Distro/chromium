@@ -1,7 +1,7 @@
-Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 ===================================================================
 --- /dev/null
-+++ chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
++++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 @@ -0,0 +1,101 @@
 +;
 +; Copyright (c) 2026, Alliance for Open Media. All rights reserved.
@@ -104,10 +104,10 @@ Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/confi
 +HAVE_VSX equ 1
 +HAVE_WXWIDGETS equ 0
 +STATIC_LINK_JXL equ 0
-Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
+Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 ===================================================================
 --- /dev/null
-+++ chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
++++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 @@ -0,0 +1,13 @@
 +/*
 + * Copyright (c) 2026, Alliance for Open Media. All rights reserved.
@@ -122,10 +122,10 @@ Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/confi
 +#include "aom/aom_codec.h"
 +static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_DECODER=0 -DCONFIG_AV1_ENCODER=1 -DCONFIG_SVT_AV1=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=0 -DCONFIG_QUANT_MATRIX=0 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_DENOISE=0 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
-Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 ===================================================================
 --- /dev/null
-+++ chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
++++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 @@ -0,0 +1,104 @@
 +/*
 + * Copyright (c) 2026, Alliance for Open Media. All rights reserved.
@@ -231,10 +231,10 @@ Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/confi
 +#define HAVE_WXWIDGETS 0
 +#define STATIC_LINK_JXL 0
 +#endif  // AOM_CONFIG_H_
-Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
++++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 @@ -0,0 +1,1177 @@
 +/*
 + * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
@@ -1413,10 +1413,10 @@ Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif  // AOM_DSP_RTCD_H_
-Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
++++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 @@ -0,0 +1,88 @@
 +/*
 + * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
@@ -1506,10 +1506,10 @@ Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif  // AOM_SCALE_RTCD_H_
-Index: chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-147.0.7727.49/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
++++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 @@ -0,0 +1,402 @@
 +/*
 + * Copyright (c) 2017, Alliance for Open Media. All rights reserved.

@@ -1,8 +1,24 @@
-Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
+commit 50e76d04c69447701ea1bcea8e77b72d0b8b4489
+Author: Timothy Pearson <tpearson@raptorengineering.com>
+Date:   Thu Jun 4 08:04:34 2026 -0500
+
+    woinewf
+
+Index: chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
-@@ -0,0 +1,316 @@
++++ chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vp8_rtcd.h
+@@ -0,0 +1,330 @@
++/*
++ *  Copyright (c) 2017 The WebM project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
 +// This file is generated. Do not edit.
 +#ifndef VP8_RTCD_H_
 +#define VP8_RTCD_H_
@@ -311,19 +327,33 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp8_r
 +#include "vpx_config.h"
 +
 +#ifdef RTCD_C
-+static void setup_rtcd_internal(void) {}
++#include "vpx_ports/ppc.h"
++static void setup_rtcd_internal(void) {
++  int flags = ppc_simd_caps();
++  (void)flags;
++}
 +#endif
 +
 +#ifdef __cplusplus
 +}  // extern "C"
 +#endif
 +
-+#endif
-Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
++#endif  // VP8_RTCD_H_
+Index: chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
-@@ -0,0 +1,267 @@
++++ chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vp9_rtcd.h
+@@ -0,0 +1,246 @@
++/*
++ *  Copyright (c) 2017 The WebM project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
 +// This file is generated. Do not edit.
 +#ifndef VP9_RTCD_H_
 +#define VP9_RTCD_H_
@@ -342,6 +372,9 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +#include "vp9/common/vp9_enums.h"
 +#include "vp9/common/vp9_filter.h"
 +#include "vpx/vpx_integer.h"
++#if !CONFIG_REALTIME_ONLY && CONFIG_VP9_ENCODER
++#include "vp9/encoder/vp9_temporal_filter.h"
++#endif
 +
 +struct macroblockd;
 +
@@ -411,20 +444,6 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +                  int tx_type);
 +#define vp9_fht8x8 vp9_fht8x8_c
 +
-+void vp9_filter_by_weight16x16_c(const uint8_t* src,
-+                                 int src_stride,
-+                                 uint8_t* dst,
-+                                 int dst_stride,
-+                                 int src_weight);
-+#define vp9_filter_by_weight16x16 vp9_filter_by_weight16x16_c
-+
-+void vp9_filter_by_weight8x8_c(const uint8_t* src,
-+                               int src_stride,
-+                               uint8_t* dst,
-+                               int dst_stride,
-+                               int src_weight);
-+#define vp9_filter_by_weight8x8 vp9_filter_by_weight8x8_c
-+
 +void vp9_fwht4x4_c(const int16_t* input, tran_low_t* output, int stride);
 +#define vp9_fwht4x4 vp9_fwht4x4_c
 +
@@ -476,30 +495,6 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +                                int tx_type,
 +                                int bd);
 +#define vp9_highbd_iht8x8_64_add vp9_highbd_iht8x8_64_add_c
-+
-+void vp9_highbd_mbpost_proc_across_ip_c(uint16_t* src,
-+                                        int pitch,
-+                                        int rows,
-+                                        int cols,
-+                                        int flimit);
-+#define vp9_highbd_mbpost_proc_across_ip vp9_highbd_mbpost_proc_across_ip_c
-+
-+void vp9_highbd_mbpost_proc_down_c(uint16_t* dst,
-+                                   int pitch,
-+                                   int rows,
-+                                   int cols,
-+                                   int flimit);
-+#define vp9_highbd_mbpost_proc_down vp9_highbd_mbpost_proc_down_c
-+
-+void vp9_highbd_post_proc_down_and_across_c(const uint16_t* src_ptr,
-+                                            uint16_t* dst_ptr,
-+                                            int src_pixels_per_line,
-+                                            int dst_pixels_per_line,
-+                                            int rows,
-+                                            int cols,
-+                                            int flimit);
-+#define vp9_highbd_post_proc_down_and_across \
-+  vp9_highbd_post_proc_down_and_across_c
 +
 +void vp9_highbd_quantize_fp_c(const tran_low_t* coeff_ptr,
 +                              intptr_t n_coeffs,
@@ -583,19 +578,23 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vp9_r
 +#include "vpx_config.h"
 +
 +#ifdef RTCD_C
-+static void setup_rtcd_internal(void) {}
++#include "vpx_ports/ppc.h"
++static void setup_rtcd_internal(void) {
++  int flags = ppc_simd_caps();
++  (void)flags;
++}
 +#endif
 +
 +#ifdef __cplusplus
 +}  // extern "C"
 +#endif
 +
-+#endif
-Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
++#endif  // VP9_RTCD_H_
+Index: chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
 ===================================================================
 --- /dev/null
-+++ chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
-@@ -0,0 +1,107 @@
++++ chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_config.asm
+@@ -0,0 +1,109 @@
 +@ This file was created from a .asm file
 +@  using the ads2gas.pl script.
 +.syntax unified
@@ -618,10 +617,12 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +.equ HAVE_NEON_DOTPROD ,  0
 +.equ HAVE_NEON_I8MM ,  0
 +.equ HAVE_SVE ,  0
++.equ HAVE_SVE2 ,  0
 +.equ HAVE_MIPS32 ,  0
 +.equ HAVE_DSPR2 ,  0
 +.equ HAVE_MSA ,  0
 +.equ HAVE_MIPS64 ,  0
++.equ HAVE_X86_ASM ,  0
 +.equ HAVE_MMX ,  0
 +.equ HAVE_SSE ,  0
 +.equ HAVE_SSE2 ,  0
@@ -637,6 +638,7 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +.equ HAVE_LASX ,  0
 +.equ HAVE_VPX_PORTS ,  1
 +.equ HAVE_PTHREAD_H ,  1
++.equ HAVE_PTHREAD_SETNAME_NP ,  1
 +.equ HAVE_UNISTD_H ,  0
 +.equ CONFIG_DEPENDENCY_TRACKING ,  1
 +.equ CONFIG_EXTERNAL_BUILD ,  1
@@ -658,7 +660,7 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +.equ CONFIG_DC_RECON ,  0
 +.equ CONFIG_RUNTIME_CPU_DETECT ,  0
 +.equ CONFIG_POSTPROC ,  1
-+.equ CONFIG_VP9_POSTPROC ,  1
++.equ CONFIG_VP9_POSTPROC ,  0
 +.equ CONFIG_MULTITHREAD ,  1
 +.equ CONFIG_INTERNAL_STATS ,  0
 +.equ CONFIG_VP8_ENCODER ,  1
@@ -698,15 +700,14 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +.equ CONFIG_FP_MB_STATS ,  0
 +.equ CONFIG_EMULATE_HARDWARE ,  0
 +.equ CONFIG_NON_GREEDY_MV ,  0
-+.equ CONFIG_RATE_CTRL ,  0
 +.equ CONFIG_COLLECT_COMPONENT_TIMING ,  0
 +.equ DECODE_WIDTH_LIMIT ,  16384
 +.equ DECODE_HEIGHT_LIMIT ,  16384
 +    .section .note.GNU-stack,"",%progbits
-Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
+Index: chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
 ===================================================================
 --- /dev/null
-+++ chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
++++ chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_config.c
 @@ -0,0 +1,10 @@
 +/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
 +/*  */
@@ -716,13 +717,13 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +/* in the file PATENTS.  All contributing project authors may */
 +/* be found in the AUTHORS file in the root of the source tree. */
 +#include "vpx/vpx_codec.h"
-+static const char* const cfg = "--target=generic-gnu --enable-vp9-highbitdepth --enable-external-build --enable-postproc --enable-multi-res-encoding --enable-temporal-denoising --enable-vp9-temporal-denoising --enable-vp9-postproc --size-limit=16384x16384 --enable-realtime-only --disable-install-docs --disable-libyuv";
++static const char* const cfg = "--target=generic-gnu --enable-vp9-highbitdepth --enable-external-build --enable-postproc --enable-multi-res-encoding --enable-temporal-denoising --enable-vp9-temporal-denoising --disable-vp9-postproc --size-limit=16384x16384 --enable-realtime-only --disable-install-docs --disable-libyuv --enable-unit-tests --disable-vsx";
 +const char *vpx_codec_build_config(void) {return cfg;}
-Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
+Index: chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
 ===================================================================
 --- /dev/null
-+++ chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
-@@ -0,0 +1,116 @@
++++ chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_config.h
+@@ -0,0 +1,118 @@
 +/* Copyright (c) 2011 The WebM project authors. All Rights Reserved. */
 +/*  */
 +/* Use of this source code is governed by a BSD-style license */
@@ -754,10 +755,12 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define HAVE_NEON_DOTPROD 0
 +#define HAVE_NEON_I8MM 0
 +#define HAVE_SVE 0
++#define HAVE_SVE2 0
 +#define HAVE_MIPS32 0
 +#define HAVE_DSPR2 0
 +#define HAVE_MSA 0
 +#define HAVE_MIPS64 0
++#define HAVE_X86_ASM 0
 +#define HAVE_MMX 0
 +#define HAVE_SSE 0
 +#define HAVE_SSE2 0
@@ -773,6 +776,7 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define HAVE_LASX 0
 +#define HAVE_VPX_PORTS 1
 +#define HAVE_PTHREAD_H 1
++#define HAVE_PTHREAD_SETNAME_NP 1
 +#define HAVE_UNISTD_H 0
 +#define CONFIG_DEPENDENCY_TRACKING 1
 +#define CONFIG_EXTERNAL_BUILD 1
@@ -794,7 +798,7 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define CONFIG_DC_RECON 0
 +#define CONFIG_RUNTIME_CPU_DETECT 0
 +#define CONFIG_POSTPROC 1
-+#define CONFIG_VP9_POSTPROC 1
++#define CONFIG_VP9_POSTPROC 0
 +#define CONFIG_MULTITHREAD 1
 +#define CONFIG_INTERNAL_STATS 0
 +#define CONFIG_VP8_ENCODER 1
@@ -834,16 +838,25 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_c
 +#define CONFIG_FP_MB_STATS 0
 +#define CONFIG_EMULATE_HARDWARE 0
 +#define CONFIG_NON_GREEDY_MV 0
-+#define CONFIG_RATE_CTRL 0
 +#define CONFIG_COLLECT_COMPONENT_TIMING 0
 +#define DECODE_WIDTH_LIMIT 16384
 +#define DECODE_HEIGHT_LIMIT 16384
 +#endif /* VPX_CONFIG_H */
-Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+Index: chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
-@@ -0,0 +1,4128 @@
++++ chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_dsp_rtcd.h
+@@ -0,0 +1,4142 @@
++/*
++ *  Copyright (c) 2017 The WebM project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
 +// This file is generated. Do not edit.
 +#ifndef VPX_DSP_RTCD_H_
 +#define VPX_DSP_RTCD_H_
@@ -4543,10 +4556,10 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +                       int h);
 +#define vpx_scaled_vert vpx_scaled_vert_c
 +
-+int64_t vpx_sse_c(const uint8_t* a,
-+                  int a_stride,
-+                  const uint8_t* b,
-+                  int b_stride,
++int64_t vpx_sse_c(const uint8_t* src,
++                  int src_stride,
++                  const uint8_t* ref,
++                  int ref_stride,
 +                  int width,
 +                  int height);
 +#define vpx_sse vpx_sse_c
@@ -4964,19 +4977,33 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_d
 +#include "vpx_config.h"
 +
 +#ifdef RTCD_C
-+static void setup_rtcd_internal(void) {}
++#include "vpx_ports/ppc.h"
++static void setup_rtcd_internal(void) {
++  int flags = ppc_simd_caps();
++  (void)flags;
++}
 +#endif
 +
 +#ifdef __cplusplus
 +}  // extern "C"
 +#endif
 +
-+#endif
-Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
++#endif  // VPX_DSP_RTCD_H_
+Index: chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
-@@ -0,0 +1,96 @@
++++ chromium-149.0.7827.53/third_party/libvpx/source/config/linux/ppc64/vpx_scale_rtcd.h
+@@ -0,0 +1,110 @@
++/*
++ *  Copyright (c) 2017 The WebM project authors. All Rights Reserved.
++ *
++ *  Use of this source code is governed by a BSD-style license
++ *  that can be found in the LICENSE file in the root of the source
++ *  tree. An additional intellectual property rights grant can be found
++ *  in the file PATENTS.  All contributing project authors may
++ *  be found in the AUTHORS file in the root of the source tree.
++ */
++
 +// This file is generated. Do not edit.
 +#ifndef VPX_SCALE_RTCD_H_
 +#define VPX_SCALE_RTCD_H_
@@ -5065,11 +5092,15 @@ Index: chromium-144.0.7559.59/third_party/libvpx/source/config/linux/ppc64/vpx_s
 +#include "vpx_config.h"
 +
 +#ifdef RTCD_C
-+static void setup_rtcd_internal(void) {}
++#include "vpx_ports/ppc.h"
++static void setup_rtcd_internal(void) {
++  int flags = ppc_simd_caps();
++  (void)flags;
++}
 +#endif
 +
 +#ifdef __cplusplus
 +}  // extern "C"
 +#endif
 +
-+#endif
++#endif  // VPX_SCALE_RTCD_H_

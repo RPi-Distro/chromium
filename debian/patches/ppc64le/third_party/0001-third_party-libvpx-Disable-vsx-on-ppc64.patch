@@ -1,0 +1,31 @@
+Index: chromium-149.0.7827.53/third_party/libvpx/generate_gni.sh
+===================================================================
+--- chromium-149.0.7827.53.orig/third_party/libvpx/generate_gni.sh
++++ chromium-149.0.7827.53/third_party/libvpx/generate_gni.sh
+@@ -407,6 +407,8 @@ x86_platforms="--enable-pic --as=yasm $D
+ # third_party\llvm-build\Release+Asserts\lib\clang\18\include\arm_sve.h(271,1):
+ # error: cannot mangle this built-in __SVInt8_t type yet
+ disable_sve="--disable-sve --disable-sve2"
++# VSX support is still broken upstream (causes artifacting in VP9 videos)
++disable_vsx="--disable-vsx"
+ 
+ gen_config_files linux/ia32 \
+   "--target=x86-linux-gcc ${all_platforms} ${x86_platforms}"
+@@ -424,7 +426,7 @@ gen_config_files linux/mipsel "--target=
+ gen_config_files linux/mips64el "--target=mips64-linux-gcc ${all_platforms}"
+ gen_config_files linux/loongarch \
+   "--target=loongarch64-linux-gcc ${all_platforms}"
+-gen_config_files linux/ppc64 "--target=ppc64le-linux-gcc ${all_platforms}"
++gen_config_files linux/ppc64 "--target=ppc64le-linux-gcc ${all_platforms} ${disable_vsx}"
+ gen_config_files linux/generic "--target=generic-gnu $HIGHBD ${all_platforms}"
+ gen_config_files win/arm64-highbd \
+   "--target=arm64-win64-vs15 ${all_platforms} ${HIGHBD} ${disable_sve}"
+@@ -484,7 +486,7 @@ gen_rtcd_header linux/arm64-highbd armv8
+ gen_rtcd_header linux/mipsel mipsel
+ gen_rtcd_header linux/mips64el mips64el
+ gen_rtcd_header linux/loongarch loongarch
+-gen_rtcd_header linux/ppc64 ppc
++gen_rtcd_header linux/ppc64 ppc "${disable_vsx}"
+ gen_rtcd_header linux/generic generic
+ gen_rtcd_header win/arm64-highbd armv8 "${require_neon} ${disable_sve}"
+ gen_rtcd_header win/ia32 x86 "${require_sse3}"

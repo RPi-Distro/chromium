@@ -702,6 +702,15 @@ chromium (149.0.7827.53-1) UNRELEASED; urgency=high
     - third_party/0001-third_party-libvpx-Disable-vsx-on-ppc64.patch: ensure
       VSX is disabled until VP9 artifacting can be fixed upstream
 
+  [ Jianfeng Liu ]
+  * d/patches/upstream:
+    - 0001-Fix-build-for-CPU-yield-on-LoongArch.patch: This is a patch aleady
+    merged to v150 to fix build on loongarch64.
+  * d/patches/loongarch64:
+    - 0024-fix-libyuv-lsx.patch: Upstream has bumped the version of libyuv
+    and it has broken build with lsx enabled on loongarch64. Add a patch to
+    fix the build first.
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 02 Jun 2026 16:16:57 -0400
 
 chromium (148.0.7778.215-2) unstable; urgency=high

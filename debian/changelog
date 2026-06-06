@@ -678,6 +678,7 @@ chromium (149.0.7827.53-1) UNRELEASED; urgency=high
       [trixie, bookworm].
     - rust-1.85/zip8.patch: refresh [trixie, bookworm].
     - bookworm/dav1d-drop-hdr.patch: refresh [bookworm].
+  * d/copyright: properly delete harfbuzz (due to harfbuzz-ng rename).
 
   [ Daniel Richard G. ]
   * d/patches:

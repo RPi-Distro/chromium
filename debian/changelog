@@ -3,6 +3,12 @@ chromium (149.0.7827.53-2) UNRELEASED; urgency=high
   [ Andres Salomon ]
   * d/patches/fixes/arm-logging.patch: add patch to fix build failure on arm*.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - 0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh for
+      upstream changes
+    - core/baseline-isa-3-0.patch: refresh
+
  -- Andres Salomon <dilinger@debian.org>  Sat, 06 Jun 2026 04:19:15 -0400
 
 chromium (149.0.7827.53-1) unstable; urgency=high

@@ -2,7 +2,7 @@ Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/confi
 ===================================================================
 --- /dev/null
 +++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
-@@ -0,0 +1,101 @@
+@@ -0,0 +1,100 @@
 +;
 +; Copyright (c) 2026, Alliance for Open Media. All rights reserved.
 +;
@@ -71,7 +71,6 @@ Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/confi
 +CONFIG_SHARED equ 0
 +CONFIG_SIZE_LIMIT equ 1
 +CONFIG_SPEED_STATS equ 0
-+CONFIG_SVT_AV1 equ 0
 +CONFIG_TFLITE equ 0
 +CONFIG_THREE_PASS equ 0
 +CONFIG_TUNE_BUTTERAUGLI equ 0
@@ -120,13 +119,13 @@ Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/confi
 + * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
 + */
 +#include "aom/aom_codec.h"
-+static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/build/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_DECODER=0 -DCONFIG_AV1_ENCODER=1 -DCONFIG_SVT_AV1=0 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=0 -DCONFIG_QUANT_MATRIX=0 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_DENOISE=0 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
++static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_DECODER=0 -DCONFIG_AV1_ENCODER=1 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=0 -DCONFIG_QUANT_MATRIX=0 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_DENOISE=0 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
 Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 ===================================================================
 --- /dev/null
 +++ chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
-@@ -0,0 +1,104 @@
+@@ -0,0 +1,103 @@
 +/*
 + * Copyright (c) 2026, Alliance for Open Media. All rights reserved.
 + *
@@ -197,7 +196,6 @@ Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/confi
 +#define CONFIG_SHARED 0
 +#define CONFIG_SIZE_LIMIT 1
 +#define CONFIG_SPEED_STATS 0
-+#define CONFIG_SVT_AV1 0
 +#define CONFIG_TFLITE 0
 +#define CONFIG_THREE_PASS 0
 +#define CONFIG_TUNE_BUTTERAUGLI 0
@@ -1737,7 +1735,7 @@ Index: chromium-149.0.7827.53/third_party/libaom/source/config/linux/ppc64/confi
 +void av1_get_horver_correlation_full_c(const int16_t *diff, int stride, int w, int h, float *hcorr, float *vcorr);
 +#define av1_get_horver_correlation_full av1_get_horver_correlation_full_c
 +
-+void av1_get_nz_map_contexts_c(const uint8_t *const levels, const int16_t *const scan, const uint16_t eob, const TX_SIZE tx_size, const TX_CLASS tx_class, int8_t *const coeff_contexts);
++void av1_get_nz_map_contexts_c(const uint8_t *const levels, const int16_t *const scan, const int eob, const TX_SIZE tx_size, const TX_CLASS tx_class, int8_t *const coeff_contexts);
 +#define av1_get_nz_map_contexts av1_get_nz_map_contexts_c
 +
 +void av1_highbd_inv_txfm_add_c(const tran_low_t *input, uint8_t *dest, int stride, const TxfmParam *txfm_param);

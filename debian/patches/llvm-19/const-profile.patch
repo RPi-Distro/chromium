@@ -1,0 +1,40 @@
+Remove const-ness from functions due to the follow (clang19-specific) error:
+
+/usr/bin/../include/c++/v1/__tree:2092:24: error: no matching function for call to object of type 'const value_compare' (aka 'const std::less<base::raw_ptr<Profile, partition_alloc::internal::RawPtrTraits::kMayDangle>>')
+
+--- a/chrome/browser/ui/startup/profile_launch_observer.cc
++++ b/chrome/browser/ui/startup/profile_launch_observer.cc
+@@ -35,7 +35,7 @@ void ProfileLaunchObserver::AddLaunched(
+ 
+ // static
+ bool ProfileLaunchObserver::HasBeenLaunchedAndBrowserOpen(
+-    const Profile* profile) {
++    Profile* profile) {
+   return GetInstance()->HasBeenLaunchedAndBrowserOpenInternal(profile);
+ }
+ 
+@@ -72,7 +72,7 @@ void ProfileLaunchObserver::OnProfileWil
+ }
+ 
+ bool ProfileLaunchObserver::HasBeenLaunchedAndBrowserOpenInternal(
+-    const Profile* profile) const {
++    Profile* profile) const {
+   return opened_profiles_.contains(profile) &&
+          launched_profiles_.contains(profile);
+ }
+--- a/chrome/browser/ui/startup/profile_launch_observer.h
++++ b/chrome/browser/ui/startup/profile_launch_observer.h
+@@ -47,11 +47,11 @@ class ProfileLaunchObserver : public Pro
+   static bool activated_profile();
+ 
+   // Only for HasPendingUncleanExit().
+-  static bool HasBeenLaunchedAndBrowserOpen(const Profile* profile);
++  static bool HasBeenLaunchedAndBrowserOpen(Profile* profile);
+ 
+   // Returns true if `profile` has been launched by
+   // StartupBrowserCreator::LaunchBrowser() and has at least one open window.
+-  bool HasBeenLaunchedAndBrowserOpenInternal(const Profile* profile) const;
++  bool HasBeenLaunchedAndBrowserOpenInternal(Profile* profile) const;
+   void AddLaunchedInternal(Profile* profile);
+   void Clear();
+   bool activated_profile_internal();

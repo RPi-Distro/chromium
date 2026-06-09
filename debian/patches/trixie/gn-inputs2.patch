@@ -78,27 +78,23 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
          {
              "name": "rust/clippy",
              "command_prefix": "python3 ../../build/rust/gni_impl/clippy_wrapper.py",
--            "inputs": rust_toolchain + [
-+            "inputs": rust_inputs + [
-                 "third_party/rust-toolchain/bin/clippy-driver",
-                 "build/rust/gni_impl/clippy_wrapper.py",
-             ],
+-            "inputs": rust_toolchain,
++            "inputs": rust_inputs,
+             "indirect_inputs": rust_link_indirect_inputs,
+             "remote": remote,
+             "timeout": "2m",
+@@ -325,7 +330,7 @@ def __step_config(ctx, step_config):
+             # TODO(b/356496947): need to run scandeps?
+             "name": "rust/bindgen",
+             "command_prefix": "python3 ../../build/rust/gni_impl/run_bindgen.py",
+-            "inputs": rust_toolchain + clang_inputs,
++            "inputs": rust_inputs + clang_inputs,
+             "remote": False,
+             "timeout": "2m",
+         },
 --- a/build/toolchain/gcc_toolchain.gni
 +++ b/build/toolchain/gcc_toolchain.gni
-@@ -677,12 +677,6 @@ template("single_gcc_toolchain") {
-       rustc = "$rust_compiler_prefix${rustc_bin}"
-       rustc_wrapper += " --rustc=$rustc"
- 
--      rustc_wrapper_inputs = [
--        "//build/action_helpers.py",
--        "//build/gn_helpers.py",
--        "//build/rust/gni_impl/rustc_wrapper.py",
--      ]
--
-       # RSP manipulation due to https://bugs.chromium.org/p/gn/issues/detail?id=249
-       tool("rust_staticlib") {
-         libname = "{{output_dir}}/{{target_output_name}}{{output_extension}}"
-@@ -707,7 +701,6 @@ template("single_gcc_toolchain") {
+@@ -712,7 +712,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $libname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -106,7 +102,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_rlib") {
-@@ -740,7 +733,6 @@ template("single_gcc_toolchain") {
+@@ -745,7 +744,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link,metadata=$rmetaname -o $rlibname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -114,7 +110,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_bin") {
-@@ -762,7 +754,6 @@ template("single_gcc_toolchain") {
+@@ -767,7 +765,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $exename -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -122,15 +118,23 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_cdylib") {
-@@ -785,7 +776,6 @@ template("single_gcc_toolchain") {
+@@ -790,7 +787,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $dllname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
 -        inputs = rustc_wrapper_inputs
        }
  
+       tool("rust_dylib") {
+@@ -815,7 +811,6 @@ template("single_gcc_toolchain") {
+             "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
+         command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link,metadata=$rmetaname -o $dllname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
+         rust_sysroot = rust_sysroot_relative
+-        inputs = rustc_wrapper_inputs
+       }
+ 
        tool("rust_macro") {
-@@ -808,7 +798,6 @@ template("single_gcc_toolchain") {
+@@ -838,7 +833,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $dllname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative

@@ -200,7 +200,7 @@
  
 --- a/media/gpu/v4l2/v4l2_queue.cc
 +++ b/media/gpu/v4l2/v4l2_queue.cc
-@@ -1453,11 +1453,15 @@ std::pair<bool, V4L2ReadableBufferRef> V
+@@ -1454,11 +1454,15 @@ std::pair<bool, V4L2ReadableBufferRef> V
      // should not call this method after the last buffer is dequeued.
      switch (errno) {
        case EAGAIN:

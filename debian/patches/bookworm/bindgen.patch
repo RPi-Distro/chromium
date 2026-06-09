@@ -20,8 +20,8 @@ breaking stuff..  Drop this for sid once bindgen gets upgraded.
 +  junk = [
      "allowlist-item=DAV1D_MAX_THREADS",
      "allowlist-item=dav1d_close",
-     "allowlist-item=dav1d_data_unref",
-@@ -45,6 +49,10 @@ rust_bindgen_generator("crabbyavif_libyu
+     "allowlist-item=dav1d_data_create",
+@@ -46,6 +50,10 @@ rust_bindgen_generator("crabbyavif_libyu
    bindgen_flags = [
      "no-doc-comments",
      "generate=functions,types,vars,methods,constructors,destructors",

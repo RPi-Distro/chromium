@@ -1,6 +1,8 @@
---- a/sandbox/linux/syscall_broker/broker_host.cc
-+++ b/sandbox/linux/syscall_broker/broker_host.cc
-@@ -287,7 +287,12 @@
+Index: chromium-149.0.7827.53/sandbox/linux/syscall_broker/broker_host.cc
+===================================================================
+--- chromium-149.0.7827.53.orig/sandbox/linux/syscall_broker/broker_host.cc
++++ chromium-149.0.7827.53/sandbox/linux/syscall_broker/broker_host.cc
+@@ -287,7 +287,12 @@ void BrokerHost::StatFileForIPC(BrokerCo
        return;
      }
      RAW_CHECK(reply->AddIntToMessage(0));

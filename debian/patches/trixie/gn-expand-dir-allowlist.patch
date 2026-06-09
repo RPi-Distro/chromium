@@ -1,0 +1,16 @@
+ERROR at //.gn:174:30: Assignment had no effect.
+expand_directory_allowlist = build_dotfile_settings.expand_directory_allowlist
+                             ^------------------------------------------------
+You set the variable "expand_directory_allowlist" here and it was unused before it went
+
+
+This variable was added in https://gn.googlesource.com/gn/+/42ace47bb426ca9705175d866bb9bdf168d5535f
+in April 2026.
+
+--- a/.gn
++++ b/.gn
+@@ -171,4 +171,3 @@ exec_script_allowlist =
+       "//third_party/blink/renderer/build/scripts/scripts.gni",
+     ]
+ 
+-expand_directory_allowlist = build_dotfile_settings.expand_directory_allowlist

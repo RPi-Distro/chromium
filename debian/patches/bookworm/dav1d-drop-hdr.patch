@@ -20,10 +20,10 @@ Date:   Wed Dec 17 03:47:49 2025 -0800
 
 --- a/media/filters/dav1d_video_decoder.cc
 +++ b/media/filters/dav1d_video_decoder.cc
-@@ -463,21 +463,6 @@ bool Dav1dVideoDecoder::DecodeBuffer(sco
-       continue;
+@@ -468,21 +468,6 @@ bool Dav1dVideoDecoder::DecodeBuffer(sco
      }
  
+     gfx::HDRMetadata hdr_metadata = config_.hdr_metadata();
 -    if (p->itut_t35) {
 -      // SAFETY: The best we can do is trust the size provided by Dav1d.
 -      auto t35s = UNSAFE_BUFFERS(
@@ -35,10 +35,10 @@ Date:   Wed Dec 17 03:47:49 2025 -0800
 -        if (auto agtm = GetAgtmFromT35WithCountryCode(t35.country_code,
 -                                                      t35_payload_span)) {
 -          // Overwrite existing AGTM metadata if any.
--          config_.writable_hdr_metadata().SetSerializedAgtm(agtm.value());
+-          hdr_metadata.SetSerializedAgtm(agtm.value());
 -        }
 -      }
 -    }
+     hdr_metadata_reordering_map_.MergeAndEraseMetadataForTimestamp(
+         base::Microseconds(p->m.timestamp), hdr_metadata);
  
-     auto frame = BindImageToVideoFrame(p.get());
-     if (!frame) {

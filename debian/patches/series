@@ -9,7 +9,6 @@ debianization/safe-libcxx.patch
 
 fixes/ps-print.patch
 #fixes/widevine-locations.patch
-#fixes/enable-widevine-on-arm64-linux-platform.patch
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/gentoo-stylesheet.patch
@@ -31,9 +30,9 @@ fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
-fixes/missing-dep.patch
+#fixes/missing-dep.patch
 
-upstream/turboshaft.patch
+upstream/0001-Fix-build-for-CPU-yield-on-LoongArch.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -52,6 +51,7 @@ disable/license-headless-shell.patch
 disable/enterprise-tests.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
+disable/libei.patch
 
 system/icu-shim.patch
 system/jpeg.patch
@@ -69,6 +69,7 @@ llvm-19/value-or.patch
 llvm-19/clang19.patch
 llvm-19/iota.patch
 llvm-19/raw-ref-map-find.patch
+llvm-19/const-profile.patch
 
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
@@ -93,12 +94,13 @@ trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
 trixie/revert-v8-sanitize.patch
+trixie/gn-expand-dir-allowlist.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch
-bookworm/bindgen.patch
+#bookworm/bindgen.patch
 #bookworm/constflatset.patch
-bookworm/gn-allowlist.patch
+#bookworm/gn-allowlist.patch
 #bookworm/gn-absl.patch
 #bookworm/constexpr.patch
 #bookworm/constexpr3.patch
@@ -141,6 +143,7 @@ ppc64le/sandbox/0009-sandbox-ignore-byte-span-error.patch
 
 ppc64le/third_party/0001-third_party-angle-Include-missing-header-cstddef-in-.patch
 ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
+ppc64le/third_party/0001-third_party-libvpx-Disable-vsx-on-ppc64.patch
 ppc64le/third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
 ppc64le/third_party/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
 ppc64le/third_party/0001-swiftshader-fix-build.patch
@@ -224,6 +227,7 @@ loongarch64/0020-user_agent-add-loongarch-architecture-support.patch
 loongarch64/0021-components-metrics-add-loongarch64-support.patch
 loongarch64/0022-blink-fix-lsx-code-of-webgl_image_conversion_lsx.patch
 loongarch64/0023-loongarch64-enable-lsx-by-default.patch
+loongarch64/0024-fix-libyuv-lsx.patch
 
 # Raspberry Pi OS patches
 rpi/0007-Widevide-Add.patch

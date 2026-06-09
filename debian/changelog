@@ -96,8 +96,10 @@ chromium (149.0.7827.102-1) UNRELEASED; urgency=high
     - CVE-2026-11700: Use after free in Tracing. Reported by Google.
     - CVE-2026-11701: Insufficient validation of untrusted input in Guest
       View. Reported by Google.
-  * d/patches/fixes/arm-logging.patch: add patch to hopefully fix build failure
-    on arm*.
+  * d/patches:
+    - fixes/arm-logging.patch: add patch to hopefully fix build failure
+      on arm*.
+    - loongarch64/0024-fix-libyuv-lsx.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

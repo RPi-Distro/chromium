@@ -1,6 +1,6 @@
 --- a/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
 +++ b/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
-@@ -292,6 +292,7 @@ WaylandSurfaceFactory::CreateNativePixma
+@@ -289,6 +289,7 @@ WaylandSurfaceFactory::CreateNativePixma
      viz::SharedImageFormat format,
      gfx::NativePixmapHandle handle) {
  #if defined(WAYLAND_GBM)
@@ -8,7 +8,7 @@
    auto* gbm_device = buffer_manager_->GetGbmDevice();
    if (gbm_device && gbm_device->CanCreateBufferForFormat(
                          GetFourCCFormatFromSharedImageFormat(format))) {
-@@ -309,6 +310,13 @@ WaylandSurfaceFactory::CreateNativePixma
+@@ -306,6 +307,13 @@ WaylandSurfaceFactory::CreateNativePixma
        return pixmap;
      }
    }

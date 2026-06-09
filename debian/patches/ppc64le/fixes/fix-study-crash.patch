@@ -1,6 +1,8 @@
---- a/components/variations/proto/study.proto
-+++ b/components/variations/proto/study.proto
-@@ -294,6 +294,9 @@ message Study {
+Index: chromium-149.0.7827.53/components/variations/proto/study.proto
+===================================================================
+--- chromium-149.0.7827.53.orig/components/variations/proto/study.proto
++++ chromium-149.0.7827.53/components/variations/proto/study.proto
+@@ -297,6 +297,9 @@ message Study {
      // A Mac-only value, indicating an x86-64 binary running on an arm64 host
      // via "Rosetta 2" binary translation.
      TRANSLATED_X86_64 = 4;
@@ -10,9 +12,11 @@
    }
  
    // Possible states of the policy restriction filter.
---- a/components/variations/service/variations_field_trial_creator.cc
-+++ b/components/variations/service/variations_field_trial_creator.cc
-@@ -107,6 +107,9 @@ Study::CpuArchitecture GetCurrentCpuArch
+Index: chromium-149.0.7827.53/components/variations/service/variations_field_trial_creator.cc
+===================================================================
+--- chromium-149.0.7827.53.orig/components/variations/service/variations_field_trial_creator.cc
++++ chromium-149.0.7827.53/components/variations/service/variations_field_trial_creator.cc
+@@ -101,6 +101,9 @@ Study::CpuArchitecture GetCurrentCpuArch
    if (process_arch == "x86") {
      return Study::X86_32;
    }

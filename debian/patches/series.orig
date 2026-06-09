@@ -8,7 +8,12 @@ debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
 
 fixes/ps-print.patch
+<<<<<<< HEAD
 #fixes/widevine-locations.patch
+#fixes/enable-widevine-on-arm64-linux-platform.patch
+=======
+fixes/widevine-locations.patch
+>>>>>>> debian/149.0.7827.53-1_deb12u1
 fixes/rust-clanglib.patch
 fixes/material-utils.patch
 fixes/gentoo-stylesheet.patch

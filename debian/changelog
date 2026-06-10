@@ -1,3 +1,11 @@
+chromium (149.0.7827.102-2) UNRELEASED; urgency=high
+
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64/0024-fix-libyuv-lsx.patch: drop due to upstream
+    reverting to version of libyuv that doesn't have lsx issue.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 10 Jun 2026 01:43:51 -0400
+
 chromium (149.0.7827.102-1) unstable; urgency=high
 
   [ Andres Salomon ]

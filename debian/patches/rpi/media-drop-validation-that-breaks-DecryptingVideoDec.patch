@@ -1,0 +1,56 @@
+From 68de0b165438f908a5ec4877005e4178599d6e97 Mon Sep 17 00:00:00 2001
+From: Nathan Hebert <nhebert@chromium.org>
+Date: Mon, 8 Jun 2026 21:37:31 -0700
+Subject: [PATCH] media: drop validation that breaks DecryptingVideoDecoder
+
+The DecryptingVideoDecoder (DVD) on ChromeOS appears to pass frames with
+invalid layout offsets over mojo. There were some recent fixes to expand
+the VideoFrame validations over mojo, which are causing the DVD to exit
+with a decode error. For users of certain ChromeOS devices with only
+Widevine L3 support, this error caused a regression where protected
+playback to stop working
+
+Relaxes the validation for frame offsets in order to fix the playback
+regression. This must be reverted after a fix for DVD lands.
+
+Bug: 521408887, 521576765
+Change-Id: Ibaeccf0211c7e42d4bc0e2c42f07866d693047d1
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7906023
+Commit-Queue: Nathan Hebert <nhebert@chromium.org>
+Reviewed-by: Vikram Pasupathy <vpasupathy@chromium.org>
+Reviewed-by: Xiaohan Wang <xhwang@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#1643684}
+---
+ media/base/video_frame_layout.cc | 7 -------
+ 1 file changed, 7 deletions(-)
+
+--- a/media/base/video_frame_layout.cc
++++ b/media/base/video_frame_layout.cc
+@@ -227,7 +227,6 @@ bool VideoFrameLayout::FitsInContiguousB
+               return planes_[a].offset < planes_[b].offset;
+             });
+ 
+-  size_t previous_plane_end = 0;
+   for (size_t i = 0; i < num_planes; ++i) {
+     size_t plane_idx = sorted_plane_indices[i];
+     const auto& plane = planes_[plane_idx];
+@@ -235,11 +234,6 @@ bool VideoFrameLayout::FitsInContiguousB
+       return false;
+     }
+ 
+-    // Check that planes do not overlap.
+-    if (plane.offset < previous_plane_end) {
+-      return false;
+-    }
+-
+     // No individual plane should have a size + offset > data_size.
+     base::CheckedNumeric<size_t> plane_end = plane.size;
+     plane_end += plane.offset;
+@@ -262,7 +256,6 @@ bool VideoFrameLayout::FitsInContiguousB
+         return false;
+       }
+     }
+-    previous_plane_end = plane_end.ValueOrDie();
+   }
+ 
+   return true;

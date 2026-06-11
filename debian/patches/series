@@ -31,6 +31,7 @@ fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 #fixes/missing-dep.patch
+fixes/arm-logging.patch
 
 upstream/0001-Fix-build-for-CPU-yield-on-LoongArch.patch
 
@@ -248,3 +249,4 @@ rpi/disable_IsV4L2DecoderStateful.patch
 rpi/wayland-gbm-pixmap.patch
 rpi/enable-AcceleratedVideoDecodeLinux.patch
 rpi/v4l2-bgr4-only.patch
+rpi/media-drop-validation-that-breaks-DecryptingVideoDec.patch

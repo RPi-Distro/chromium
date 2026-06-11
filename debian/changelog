@@ -1,4 +1,4 @@
-chromium (1:149.0.7827.53-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:149.0.7827.102-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -29,8 +29,121 @@ chromium (1:149.0.7827.53-1~deb12u1+rpt1) bookworm; urgency=medium
   * d/c: Remove system-config-printer from recommends
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
+  * media: drop validation that breaks DecryptingVideoDecoder
+    - Cherry pick of 009d73926c18d4fa9ec16998a0e0609accf85e78
 
- -- Serge Schneider <serge@raspberrypi.com>  Tue, 09 Jun 2026 15:37:40 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 11 Jun 2026 16:59:19 +0100
+
+chromium (149.0.7827.102-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-11628: Use after free in Ozone. Reported by Google.
+    - CVE-2026-11629: Use after free in Ozone. Reported by Google.
+    - CVE-2026-11630: Use after free in File Input. Reported by Google.
+    - CVE-2026-11631: Use after free in Aura. Reported by Google.
+    - CVE-2026-11632: Use after free in TabStrip. Reported by Google.
+    - CVE-2026-11633: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-11634: Use after free in Gamepad. Reported by Google.
+    - CVE-2026-11635: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-11636: Use after free in Autofill. Reported by Google.
+    - CVE-2026-11637: Use after free in Views. Reported by Google.
+    - CVE-2026-11638: Use after free in Printing. Reported by Google.
+    - CVE-2026-11639: Use after free in Compositing. Reported by Google.
+    - CVE-2026-11640: Integer overflow in libyuv. Reported by Google.
+    - CVE-2026-11641: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-11642: Use after free in Web Apps. Reported by Google.
+    - CVE-2026-11643: Use after free in Proxy. Reported by Google.
+    - CVE-2026-11644: Use after free in Views. Reported by Google.
+    - CVE-2026-11645: Out of bounds memory access in V8. Reported by 303f06e3
+    - CVE-2026-11646: Use after free in ViewTransitions.
+      Reported by Quac Tran.
+    - CVE-2026-11647: Use after free in Printing. Reported by Google.
+    - CVE-2026-11648: Use after free in FullScreen.
+      Reported by Mihnea Nicolau.
+    - CVE-2026-11649: Use after free in V8. Reported by Google.
+    - CVE-2026-11650: Use after free in V8. Reported by Google.
+    - CVE-2026-11651: Use after free in Network. Reported by Google.
+    - CVE-2026-11652: Use after free in Extensions. Reported by Google.
+    - CVE-2026-11653: Insufficient validation of untrusted input in
+      Extensions. Reported by Google.
+    - CVE-2026-11654: Use after free in CameraCapture. Reported by Google.
+    - CVE-2026-11655: Integer overflow in Media. Reported by Google.
+    - CVE-2026-11656: Use after free in ServiceWorker. Reported by Google.
+    - CVE-2026-11657: Use after free in Payments. Reported by Google.
+    - CVE-2026-11658: Insufficient validation of untrusted input in
+      Extensions. Reported by Google.
+    - CVE-2026-11659: Insufficient validation of untrusted input in UI.
+      Reported by Google.
+    - CVE-2026-11660: Insufficient validation of untrusted input in
+      New Tab Page. Reported by Google.
+    - CVE-2026-11661: Use after free in Views. Reported by Google.
+    - CVE-2026-11662: Type Confusion in Bindings. Reported by Google.
+    - CVE-2026-11663: Use after free in Skia. Reported by Google.
+    - CVE-2026-11664: Use after free in Payments. Reported by Google.
+    - CVE-2026-11665: Out of bounds read in Dawn. Reported by Google.
+    - CVE-2026-11666: Insufficient validation of untrusted input in Input.
+      Reported by Google.
+    - CVE-2026-11667: Out of bounds read in WebRTC. Reported by Google.
+    - CVE-2026-11668: Uninitialized Use in Codecs. Reported by Google.
+    - CVE-2026-11669: Integer overflow in Media. Reported by Google.
+    - CVE-2026-11670: Use after free in PDF. Reported by Google.
+    - CVE-2026-11671: Use after free in Navigation. Reported by Google.
+    - CVE-2026-11672: Out of bounds write in GPU. Reported by Google.
+    - CVE-2026-11673: Use after free in InterestGroups. Reported by Google.
+    - CVE-2026-11674: Use after free in Guest View. Reported by Google.
+    - CVE-2026-11675: Insufficient validation of untrusted input in Skia.
+      Reported by Google.
+    - CVE-2026-11676: Insufficient validation of untrusted input in Dawn.
+      Reported by Google.
+    - CVE-2026-11677: Race in Network. Reported by Google.
+    - CVE-2026-11678: Integer overflow in libyuv. Reported by Google.
+    - CVE-2026-11679: Use after free in Codecs. Reported by Google.
+    - CVE-2026-11680: Use after free in Media. Reported by Google.
+    - CVE-2026-11681: Use after free in Ozone. Reported by Google.
+    - CVE-2026-11682: Insufficient validation of untrusted input in Views.
+      Reported by Google.
+    - CVE-2026-11683: Use after free in WebCodecs. Reported by Google.
+    - CVE-2026-11684: Insufficient policy enforcement in Network.
+      Reported by Google.
+    - CVE-2026-11685: Insufficient data validation in MediaCapture.
+      Reported by Google.
+    - CVE-2026-11686: Insufficient validation of untrusted input in Dawn.
+      Reported by Google.
+    - CVE-2026-11687: Use after free in Dawn. Reported by Google.
+    - CVE-2026-11688: Object lifecycle issue in SVG. Reported by Google.
+    - CVE-2026-11689: Insufficient validation of untrusted input in
+      Passwords. Reported by Google.
+    - CVE-2026-11690: Out of bounds read and write in Media.
+      Reported by Google.
+    - CVE-2026-11691: Insufficient validation of untrusted input in
+      New Tab Page. Reported by Google.
+    - CVE-2026-11692: Use after free in Read Anything. Reported by Google.
+    - CVE-2026-11693: Inappropriate implementation in Plugins.
+      Reported by Google.
+    - CVE-2026-11694: Use after free in ServiceWorker. Reported by Google.
+    - CVE-2026-11695: Inappropriate implementation in Passwords.
+      Reported by Google.
+    - CVE-2026-11696: Uninitialized Use in Video. Reported by Google.
+    - CVE-2026-11697: Insufficient validation of untrusted input in UI.
+      Reported by Google.
+    - CVE-2026-11698: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-11699: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-11700: Use after free in Tracing. Reported by Google.
+    - CVE-2026-11701: Insufficient validation of untrusted input in Guest
+      View. Reported by Google.
+  * d/patches:
+    - fixes/arm-logging.patch: add patch to hopefully fix build failure
+      on arm*.
+    - loongarch64/0024-fix-libyuv-lsx.patch: refresh.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - 0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh for
+      upstream changes
+    - core/baseline-isa-3-0.patch: refresh
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 09 Jun 2026 04:00:45 -0400
 
 chromium (149.0.7827.53-1~deb12u1) bookworm-security; urgency=high
 

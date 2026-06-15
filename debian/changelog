@@ -1,4 +1,4 @@
-chromium (1:149.0.7827.102-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:149.0.7827.114-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -32,7 +32,51 @@ chromium (1:149.0.7827.102-1~deb12u1+rpt1) bookworm; urgency=medium
   * media: drop validation that breaks DecryptingVideoDecoder
     - Cherry pick of 009d73926c18d4fa9ec16998a0e0609accf85e78
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 11 Jun 2026 16:59:19 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 15 Jun 2026 12:33:24 +0100
+
+chromium (149.0.7827.114-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-12007: Use after free  Core. Reported by Google.
+    - CVE-2026-12008: Use after free  DigitalCredentials. Reported by Google.
+    - CVE-2026-12009: Insufficient validation of untrusted input
+      Accessibility. Reported by Google.
+    - CVE-2026-12010: Heap buffer overflow  GPU. Reported by Google.
+    - CVE-2026-12011: Use after free  WebMIDI. Reported by Google.
+    - CVE-2026-12012: Use after free  Network. Reported by Google.
+    - CVE-2026-12013: Use after free  Media.
+      Reported by Henock Habte, Independent Security Researcher.
+    - CVE-2026-12014: Use after free  Cast. Reported by Google.
+    - CVE-2026-12015: Use after free  Autofill. Reported by Google.
+    - CVE-2026-12016: Insufficient validation of untrusted input  DevTools.
+      Reported by Google.
+    - CVE-2026-12017: Insufficient validation of untrusted input
+      Extensions. Reported by Google.
+    - CVE-2026-12018: Inappropriate implementation  Mojo. Reported by Google.
+    - CVE-2026-12019: Out of bounds write  Codecs. Reported by Google.
+    - CVE-2026-12020: Use after free  Autofill. Reported by Google.
+    - CVE-2026-12022: Race  Safe Browsing. Reported by Google.
+    - CVE-2026-12023: Use after free  GPU. Reported by Google.
+    - CVE-2026-12024: Insufficient policy enforcement  DevTools.
+      Reported by Google.
+    - CVE-2026-12025: Insufficient validation of untrusted input  Network.
+      Reported by Google.
+    - CVE-2026-12026: Out of bounds read  Video. Reported by Google.
+    - CVE-2026-12027: Insufficient policy enforcement  Headless.
+      Reported by Google.
+    - CVE-2026-12028: Use after free  GPU. Reported by Google.
+    - CVE-2026-12029: Use after free  Video. Reported by Google.
+    - CVE-2026-12030: Heap buffer overflow  GPU. Reported by Google.
+    - CVE-2026-12031: Inappropriate implementation  Views. Reported by Google
+    - CVE-2026-12032: Inappropriate implementation  Passwords.
+      Reported by Google.
+    - CVE-2026-12033: Out of bounds read  VideoCapture. Reported by Google.
+    - CVE-2026-12034: Insufficient validation of untrusted input  Linux
+      Toolkit Theming. Reported by Google.
+    - CVE-2026-12035: Use after free  Views. Reported by Google.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 12 Jun 2026 17:27:35 -0400
 
 chromium (149.0.7827.102-1~deb12u1) bookworm-security; urgency=high
 

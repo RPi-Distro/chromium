@@ -1,8 +1,6 @@
 # unavoidable embed
-embedded-library usr/lib/chromium/chromium-shell: freetype
-embedded-library usr/lib/chromium/chromium-shell: libjsoncpp
-embedded-library usr/lib/chromium/chromium-shell: srtp
-embedded-library usr/lib/chromium/libtest_trace_processor.so: libjsoncpp
+embedded-library freetype [usr/lib/chromium/chromium-shell]
+embedded-library srtp     [usr/lib/chromium/chromium-shell]
 
 # too many upstream spelling mistakes
 spelling-error-in-binary

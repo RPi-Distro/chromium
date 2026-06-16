@@ -124,9 +124,9 @@ Provides:
 Breaks:
  chromium-lwn4chrome (<= 1.0-2),
  chromium-tt-rss-notifier (<= 0.5.2-2),
+ libsecret-1-0 (<< 0.18),
 Conflicts:
  libnettle4,
- libsecret-1-0 (<< 0.18),
  libgl1-mesa-swx11,
 Description: web browser
  Web browser that aims to build a safer, faster, and more stable internet

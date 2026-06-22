@@ -252,4 +252,3 @@ rpi/v4l2-bgr4-only.patch
 rpi/notification_fix.patch
 rpi/v4l2_startup.patch
 rpi/background-mode.patch
-rpi/media-drop-validation-that-breaks-DecryptingVideoDec.patch

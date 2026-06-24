@@ -2,6 +2,31 @@ chromium (149.0.7827.196-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
+    - CVE-2026-13028: Use after free in WebGL. Reported by anonymous.
+    - CVE-2026-13032: Use after free in WebGL. Reported by Google.
+    - CVE-2026-13033: Out of bounds read in Blink>InterestGroups.
+      Reported by Google.
+    - CVE-2026-13038: Use after free in Autofill. Reported by Google.
+    - CVE-2026-13021: Inappropriate implementation in
+      DeviceBoundSessionCredentials. Reported by Google.
+    - CVE-2026-13022: Inappropriate implementation in Autofill.
+      Reported by Google.
+    - CVE-2026-13023: Uninitialized Use in GPU. Reported by Google.
+    - CVE-2026-13024: Insufficient validation of untrusted input in
+      Navigation. Reported by Google.
+    - CVE-2026-13025: Insufficient validation of untrusted input in DevTools.
+      Reported by Google.
+    - CVE-2026-13026: Use after free in Digital Credentials.
+      Reported by Google.
+    - CVE-2026-13027: Use after free in FileSystem. Reported by Google.
+    - CVE-2026-13029: Use after free in Web Authentication. Reported by Google
+    - CVE-2026-13030: Uninitialized Use in GPU. Reported by Google.
+    - CVE-2026-13031: Use after free in Blink. Reported by Google.
+    - CVE-2026-13034: Inappropriate implementation in Passwords.
+      Reported by Google.
+    - CVE-2026-13035: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-13036: Use after free in Blink. Reported by Google.
+    - CVE-2026-13037: Use after free in WebView. Reported by Google.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 

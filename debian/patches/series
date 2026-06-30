@@ -37,7 +37,6 @@ fixes/arm-logging.patch
 disable/tests.patch
 disable/tests-swiftshader.patch
 disable/signin.patch
-disable/android.patch
 disable/catapult.patch
 disable/font-tests.patch
 disable/google-api-warning.patch

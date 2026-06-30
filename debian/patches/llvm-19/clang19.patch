@@ -2,7 +2,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -590,7 +590,7 @@ config("compiler") {
+@@ -578,7 +578,7 @@ config("compiler") {
      # Flags for diagnostics.
      cflags += [ "-fcolor-diagnostics" ]
      if (!is_win) {
@@ -11,7 +11,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
      } else {
        # Combine after https://github.com/llvm/llvm-project/pull/192241
        cflags += [ "/clang:-fdiagnostics-show-inlining-chain" ]
-@@ -629,7 +629,6 @@ config("compiler") {
+@@ -617,7 +617,6 @@ config("compiler") {
      # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
      # for discussion.
      if (!is_wasm) {
@@ -19,7 +19,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
      }
  
      # TODO(hans): Remove this once Clang generates better optimized debug info
-@@ -1917,7 +1916,7 @@ ubsan_hardening("c_array_bounds") {
+@@ -1578,7 +1577,7 @@ ubsan_hardening("c_array_bounds") {
    # the related warning about "unsafe-buffer-usage-in-static-sized-array",
    # since we know that the array bounds sanitizing will catch any out-of-
    # bounds accesses.
@@ -28,7 +28,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
  }
  
  # Enable UBSan subset to ensure we always hit `return` statement in non-void
-@@ -2255,13 +2254,10 @@ config("default_warnings") {
+@@ -1916,13 +1915,10 @@ config("default_warnings") {
        "-Wno-thread-safety-reference-return",
  
        # TODO(crbug.com/376641662): Fix and re-enable.
@@ -44,15 +44,15 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
      cflags_cc += [
 --- a/v8/BUILD.gn
 +++ b/v8/BUILD.gn
-@@ -1797,7 +1797,6 @@ config("toolchain") {
-   if (is_clang) {
-     cflags += [ "-Wunreachable-code" ]
-     if (v8_current_cpu != "ppc64" && v8_current_cpu != "s390x") {
+@@ -1807,7 +1807,6 @@ config("toolchain") {
+     # rolling the compiler update into V8 instead.
+     if (!build_with_chromium && v8_current_cpu != "ppc64" &&
+         v8_current_cpu != "s390x") {
 -      cflags += [ "-Wlifetime-safety-permissive" ]
      }
  
      if ((v8_current_cpu != "x64" && v8_current_cpu != "ia32") ||
-@@ -1900,7 +1899,6 @@ config("strict_warnings") {
+@@ -1910,7 +1909,6 @@ config("strict_warnings") {
      }
      cflags += [ "-Wmissing-field-initializers" ]
      if (v8_current_cpu != "ppc64" && v8_current_cpu != "s390x") {

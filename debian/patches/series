@@ -33,7 +33,6 @@ fixes/bytemuck.patch
 #fixes/missing-dep.patch
 fixes/arm-logging.patch
 
-upstream/0001-Fix-build-for-CPU-yield-on-LoongArch.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

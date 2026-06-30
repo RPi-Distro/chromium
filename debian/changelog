@@ -1,3 +1,19 @@
+chromium (150.0.7871.46-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/copyright:
+    - delete third_party/webpagereplay/.
+    - delete tsgo (typescript compiler in Go) binary.
+  * d/patches:
+    - upstream/0001-Fix-build-for-CPU-yield-on-LoongArch.patch: drop, merged
+      upstream.
+    - debianization/clang-version.patch: refresh.
+    - fixes/libcpp-headers.patch: refresh and drop part of patch due to
+      upstream changes.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
+
 chromium (149.0.7827.196-1) unstable; urgency=high
 
   [ Andres Salomon ]

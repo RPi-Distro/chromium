@@ -10,7 +10,7 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
       upstream.
     - disable/android.patch: drop, merged upstream.
     - debianization/clang-version.patch: refresh.
-    - fixes/libcpp-headers.patch: refresh and drop part of patch due to
+    - fixes/libcpp-headers.patch: rework parts of the patch due to
       upstream changes.
     - disable/catapult.patch: refresh.
     - disable/tests.patch: refresh.
@@ -19,6 +19,7 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/remove-navigation-source-param.patch: sync from u-c.
     - i386/support-i386.patch: refresh.
+    - upstream/sysroot.patch: add a new build fix pulled from upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 

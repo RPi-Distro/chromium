@@ -33,6 +33,7 @@ fixes/bytemuck.patch
 #fixes/missing-dep.patch
 fixes/arm-logging.patch
 
+upstream/sysroot.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

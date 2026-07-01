@@ -24,6 +24,9 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
       vendoring-related build fixes from upstream.
     - trixie/gn-additional-outputs.patch: add patch to partially revert usage
       of a newer generate-ninja feature.
+    - llvm-19/i18n-builder-enum.patch: add a workaround for clang-19 being
+      confused between a class declaration (with default template parameter)
+      and definition.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 

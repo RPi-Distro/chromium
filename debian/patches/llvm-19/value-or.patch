@@ -24,6 +24,17 @@
    request_->selected_challenge_option = std::move(selected_challenge_option);
  
    should_unmask_card_ = request_->card.masked() ||
+--- a/components/signin/public/base/hybrid_encryption_key.cc
++++ b/components/signin/public/base/hybrid_encryption_key.cc
+@@ -73,7 +73,7 @@ std::vector<uint8_t> HybridEncryptionKey
+       crypto::keypair::PublicKey::FromPrivateKey(private_key_);
+   auto result =
+       crypto::hpke::Seal(kHpkeParams, pub, plaintext, /*info=*/{}, /*ad=*/{});
+-  return result.value_or({});
++  return result.value_or(std::vector<uint8_t>{});
+ }
+ 
+ HybridEncryptionKey::HybridEncryptionKey(base::span<const uint8_t> private_key)
 --- a/content/browser/service_worker/service_worker_version.cc
 +++ b/content/browser/service_worker/service_worker_version.cc
 @@ -857,7 +857,7 @@ bool ServiceWorkerVersion::FinishRequest

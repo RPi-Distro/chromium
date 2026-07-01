@@ -27,8 +27,10 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
     - llvm-19/i18n-builder-enum.patch: add a workaround for clang-19 being
       confused between a class declaration (with default template parameter)
       and definition.
-    - llvm-19/00*-revert-v8-libm.patch: add 9 patches backing out using of
+    - llvm-19/00*-revert-v8-libm.patch: add 9 patches backing out usage of
       internal libc++/libm symbols; this requires a newer llvm than we have.
+    - llvm-19/value-or.patch: work around more places where value_or() can't
+      figure out the type of a passed init value.
 
   [ Daniel Richard G. ]
   * d/patches:

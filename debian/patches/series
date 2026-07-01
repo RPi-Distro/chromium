@@ -73,6 +73,15 @@ llvm-19/iota.patch
 llvm-19/raw-ref-map-find.patch
 llvm-19/const-profile.patch
 llvm-19/i18n-builder-enum.patch
+llvm-19/0001-revert-v8-libm.patch
+llvm-19/0002-revert-v8-libm.patch
+llvm-19/0003-revert-v8-libm.patch
+llvm-19/0004-revert-v8-libm.patch
+llvm-19/0005-revert-v8-libm.patch
+llvm-19/0007-revert-v8-libm.patch
+llvm-19/0008-revert-v8-libm.patch
+llvm-19/0009-revert-v8-libm.patch
+llvm-19/0011-revert-v8-libm.patch
 
 #rust-1.85/jxl-simd-avx512.patch
 #rust-1.85/jxl-features.patch

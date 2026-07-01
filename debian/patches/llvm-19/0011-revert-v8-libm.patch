@@ -1,0 +1,201 @@
+Revert the following:
+
+commit 96ce1682b7e68a119353f5de1972f6eb8d6bdc01
+Author: Nico Weber <thakis@chromium.org>
+Date:   Fri May 8 07:29:29 2026 -0400
+
+    Implement Math.cbrt() using LLVM's libm
+    
+    This is the first Math function using LLVM's libm, so this sets up
+    a tiny bit of infrastructure to be able to use it too.
+    
+    Every embedder of V8 that uses a GN build will have to add a change like
+    https://chromium-review.googlesource.com/c/chromium/src/+/7829957
+    
+    https://chromium-review.googlesource.com/c/v8/node-ci/+/7829133 picked
+    up that change for node-ci for the node_ci_linux64_rel bot.
+    
+    Bug: 510499297
+    Change-Id: I30424bd6a0bfea6f9d4b06c5a4e63963d7839714
+    Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7828379
+    Auto-Submit: Nico Weber <thakis@chromium.org>
+    Reviewed-by: Leszek Swirski <leszeks@chromium.org>
+    Commit-Queue: Leszek Swirski <leszeks@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#107185}
+
+--- a/v8/BUILD.bazel
++++ b/v8/BUILD.bazel
+@@ -4576,13 +4576,6 @@ cc_library(
+     strip_include_prefix = "noicu",
+ )
+ 
+-cc_library(
+-    name = "llvm_libc_headers",
+-    hdrs = glob(["third_party/llvm-libc/src/shared/**/*.h"]),
+-    includes = ["third_party/llvm-libc/src"],
+-    defines = ["LIBC_NAMESPACE=__llvm_libc_cr"],
+-)
+-
+ v8_library(
+     name = "v8_libbase",
+     srcs = [
+@@ -4591,7 +4584,6 @@ v8_library(
+     ],
+     copts = ["-Wno-implicit-fallthrough"],
+     deps = [
+-        ":llvm_libc_headers",
+         "@abseil-cpp//absl/synchronization",
+         "@abseil-cpp//absl/time",
+         "@abseil-cpp//absl/functional:overload",
+--- a/v8/BUILD.gn
++++ b/v8/BUILD.gn
+@@ -7441,8 +7441,6 @@ v8_component("v8_libbase") {
+     deps += [ ":libm" ]
+   }
+ 
+-  deps += [ "//third_party/llvm-libc:headers" ]
+-
+   # TODO(infra): Add support for qnx, freebsd, openbsd, netbsd, and solaris.
+ }
+ 
+--- a/v8/src/base/DEPS
++++ b/v8/src/base/DEPS
+@@ -7,9 +7,6 @@ include_rules = [
+ ]
+ 
+ specific_include_rules = {
+-  "ieee754.cc": [
+-    "+third_party/llvm-libc/src/shared/math.h"
+-  ],
+   "ieee754.h": [
+     "+third_party/glibc/src/sysdeps/ieee754/dbl-64/trig.h"
+   ],
+--- a/v8/src/base/ieee754.cc
++++ b/v8/src/base/ieee754.cc
+@@ -22,20 +22,6 @@
+ #include "src/base/macros.h"
+ #include "src/base/overflowing-math.h"
+ 
+-// TODO(thakis): Remove diagnostic pragmas once these are merged and upstream
+-// builds with -Wshadow:
+-// * https://github.com/llvm/llvm-project/pull/196337
+-// * https://github.com/llvm/llvm-project/pull/196342
+-// * https://github.com/llvm/llvm-project/pull/196346
+-#pragma GCC diagnostic push
+-#if defined(__has_warning)
+-#if __has_warning("-Wshadow")
+-#pragma GCC diagnostic ignored "-Wshadow"
+-#endif
+-#endif
+-#include "third_party/llvm-libc/src/shared/math.h"
+-#pragma GCC diagnostic pop
+-
+ namespace v8 {
+ namespace base {
+ namespace ieee754 {
+@@ -2352,7 +2338,89 @@ double expm1(double x) {
+   return y;
+ }
+ 
+-double cbrt(double x) { return LIBC_NAMESPACE::shared::cbrt(x); }
++double cbrt(double x) {
++  static const uint32_t
++      B1 = 715094163, /* B1 = (1023-1023/3-0.03306235651)*2**20 */
++      B2 = 696219795; /* B2 = (1023-1023/3-54/3-0.03306235651)*2**20 */
++
++  /* |1/cbrt(x) - p(x)| < 2**-23.5 (~[-7.93e-8, 7.929e-8]). */
++  static const double P0 = 1.87595182427177009643, /* 0x3FFE03E6, 0x0F61E692 */
++      P1 = -1.88497979543377169875,                /* 0xBFFE28E0, 0x92F02420 */
++      P2 = 1.621429720105354466140,                /* 0x3FF9F160, 0x4A49D6C2 */
++      P3 = -0.758397934778766047437,               /* 0xBFE844CB, 0xBEE751D9 */
++      P4 = 0.145996192886612446982;                /* 0x3FC2B000, 0xD4E4EDD7 */
++
++  int32_t hx;
++  double r, s, t = 0.0, w;
++  uint32_t sign;
++  uint32_t high, low;
++
++  EXTRACT_WORDS(hx, low, x);
++  sign = hx & 0x80000000; /* sign= sign(x) */
++  hx ^= sign;
++  if (hx >= 0x7FF00000) return (x + x); /* cbrt(NaN,INF) is itself */
++
++  /*
++   * Rough cbrt to 5 bits:
++   *    cbrt(2**e*(1+m) ~= 2**(e/3)*(1+(e%3+m)/3)
++   * where e is integral and >= 0, m is real and in [0, 1), and "/" and
++   * "%" are integer division and modulus with rounding towards minus
++   * infinity.  The RHS is always >= the LHS and has a maximum relative
++   * error of about 1 in 16.  Adding a bias of -0.03306235651 to the
++   * (e%3+m)/3 term reduces the error to about 1 in 32. With the IEEE
++   * floating point representation, for finite positive normal values,
++   * ordinary integer division of the value in bits magically gives
++   * almost exactly the RHS of the above provided we first subtract the
++   * exponent bias (1023 for doubles) and later add it back.  We do the
++   * subtraction virtually to keep e >= 0 so that ordinary integer
++   * division rounds towards minus infinity; this is also efficient.
++   */
++  if (hx < 0x00100000) {             /* zero or subnormal? */
++    if ((hx | low) == 0) return (x); /* cbrt(0) is itself */
++    SET_HIGH_WORD(t, 0x43500000);    /* set t= 2**54 */
++    t *= x;
++    GET_HIGH_WORD(high, t);
++    INSERT_WORDS(t, sign | ((high & 0x7FFFFFFF) / 3 + B2), 0);
++  } else {
++    INSERT_WORDS(t, sign | (hx / 3 + B1), 0);
++  }
++
++  /*
++   * New cbrt to 23 bits:
++   *    cbrt(x) = t*cbrt(x/t**3) ~= t*P(t**3/x)
++   * where P(r) is a polynomial of degree 4 that approximates 1/cbrt(r)
++   * to within 2**-23.5 when |r - 1| < 1/10.  The rough approximation
++   * has produced t such than |t/cbrt(x) - 1| ~< 1/32, and cubing this
++   * gives us bounds for r = t**3/x.
++   *
++   * Try to optimize for parallel evaluation as in k_tanf.c.
++   */
++  r = (t * t) * (t / x);
++  t = t * ((P0 + r * (P1 + r * P2)) + ((r * r) * r) * (P3 + r * P4));
++
++  /*
++   * Round t away from zero to 23 bits (sloppily except for ensuring that
++   * the result is larger in magnitude than cbrt(x) but not much more than
++   * 2 23-bit ulps larger).  With rounding towards zero, the error bound
++   * would be ~5/6 instead of ~4/6.  With a maximum error of 2 23-bit ulps
++   * in the rounded t, the infinite-precision error in the Newton
++   * approximation barely affects third digit in the final error
++   * 0.667; the error in the rounded t can be up to about 3 23-bit ulps
++   * before the final error is larger than 0.667 ulps.
++   */
++  uint64_t bits = base::bit_cast<uint64_t>(t);
++  bits = (bits + 0x80000000) & 0xFFFFFFFFC0000000ULL;
++  t = base::bit_cast<double>(bits);
++
++  /* one step Newton iteration to 53 bits with error < 0.667 ulps */
++  s = t * t;             /* t*t is exact */
++  r = x / s;             /* error <= 0.5 ulps; |r| < |t| */
++  w = t + t;             /* t+t is exact */
++  r = (r - t) / (w + r); /* r-t is exact; w+r ~= 3*t */
++  t = t + t * r;         /* error <= 0.5 + 0.5/3 + epsilon */
++
++  return (t);
++}
+ 
+ /* sin(x)
+  * Return sine function of x.
+--- a/v8/third_party/llvm-libc/BUILD.gn
++++ b/v8/third_party/llvm-libc/BUILD.gn
+@@ -10,11 +10,7 @@ config("config") {
+ 
+ group("llvm-libc-shared") {
+   # llvm-libc is only used as a dependency of libc++.
+-  visibility = [ "//buildtools/third_party/libc++" ]
++  visibility = [ "//buildtools/third_party/libc++:libc++" ]
+ 
+   public_configs = [ ":config" ]
+ }
+-
+-group("headers") {
+-  public_configs = [ ":config" ]
+-}

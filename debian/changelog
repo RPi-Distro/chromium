@@ -30,6 +30,12 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
     - llvm-19/00*-revert-v8-libm.patch: add 9 patches backing out using of
       internal libc++/libm symbols; this requires a newer llvm than we have.
 
+  [ Daniel Richard G. ]
+  * d/patches:
+    - bookworm/gn-absl.patch: Refresh.
+    - bookworm/gn-funcs.patch: Zap new usage of filter_labels_include().
+    - bookworm/node18-compat.patch: Fix more cases of nodejs v18 breakage.
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 
 chromium (149.0.7827.196-1) unstable; urgency=high

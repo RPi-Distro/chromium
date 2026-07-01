@@ -1,0 +1,118 @@
+author: Andres Salomon <dilinger@debian.org>
+
+filter_labels_{include,exclude} was added to gn in Feb 2024
+(https://gn.googlesource.com/gn/+/e05c0aa00938adc0797bda1e8f2c15675aa13c30%5E%21/),
+so obviously bookworm's gn doesn't have it.
+
+The old webrtc code just hardcoded abseil-cpp:absl if building
+with chromium, which is simple enough..
+
+--- a/third_party/webrtc/webrtc.gni
++++ b/third_party/webrtc/webrtc.gni
+@@ -675,16 +675,13 @@ template("rtc_source_set") {
+         "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
+ 
+     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
+-    if (build_with_chromium && defined(deps)) {
+-      absl_dependencies =
+-          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
+-      if (absl_dependencies != []) {
+-        filtered_deps =
+-            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
+-        deps = []
+-        deps = filtered_deps
++    if (build_with_chromium) {
++        if (!defined(deps)) {
++          deps = []
++        }
+         deps += [ "//third_party/abseil-cpp:absl" ]
+-      }
++    } else {
++        assert("not building with chromium??")
+     }
+   }
+ }
+@@ -767,16 +764,13 @@ template("rtc_static_library") {
+         "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
+ 
+     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
+-    if (build_with_chromium && defined(deps)) {
+-      absl_dependencies =
+-          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
+-      if (absl_dependencies != []) {
+-        filtered_deps =
+-            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
+-        deps = []
+-        deps = filtered_deps
++    if (build_with_chromium) {
++        if (!defined(deps)) {
++          deps = []
++        }
+         deps += [ "//third_party/abseil-cpp:absl" ]
+-      }
++    } else {
++        assert("not building with chromium??")
+     }
+   }
+ }
+@@ -910,16 +904,13 @@ template("rtc_library") {
+         "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
+ 
+     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
+-    if (build_with_chromium && defined(deps)) {
+-      absl_dependencies =
+-          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
+-      if (absl_dependencies != []) {
+-        filtered_deps =
+-            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
+-        deps = []
+-        deps = filtered_deps
++    if (build_with_chromium) {
++        if (!defined(deps)) {
++          deps = []
++        }
+         deps += [ "//third_party/abseil-cpp:absl" ]
+-      }
++    } else {
++        assert("not building with chromium??")
+     }
+   }
+ }
+@@ -962,22 +953,10 @@ template("rtc_executable") {
+       ]
+     }
+ 
+-    # Convert abseil dependencies to //third_party/abseil-cpp:absl_full when
+-    # build_with_chromium=true so that webrtc targets won't need exceptions to
+-    # depend on individual absl targets.
+-    # Note that //third_party/abseil-cpp:absl_full build target includes flags,
+-    # but //third_party/abseil-cpp:absl target - doesn't. That allows webrtc
+-    # executables, but not libraries to use absl flags.
+     if (build_with_chromium && defined(deps)) {
+-      absl_dependencies =
+-          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
+-      if (absl_dependencies != []) {
+-        filtered_deps =
+-            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
+-        deps = []
+-        deps = filtered_deps
+-        deps += [ "//third_party/abseil-cpp:absl_full" ]
+-      }
++      deps += [ "//third_party/abseil-cpp:absl" ]
++    } else {
++        assert("not building with chromium??")
+     }
+   }
+ }
+@@ -1504,11 +1483,6 @@ template("rtc_rust_cxx_bridge") {
+   assert(defined(invoker.source), "source must be specified")
+   assert(!defined(invoker.sources), "Use source instead of sources")
+ 
+-  # Explicitly assert that //build/rust:cxx_rustdeps is listed in deps.
+-  assert(defined(invoker.deps) &&
+-             filter_labels_include(invoker.deps,
+-                                   [ "//build/rust:cxx_rustdeps" ]) != [],
+-         "rtc_rust_cxx_bridge requires //build/rust:cxx_rustdeps in deps.")
+   assert(
+       !defined(invoker.crate_name),
+       "Custom crate_name is not allowed in WebRTC. Use webrtc::import! instead.")

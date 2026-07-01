@@ -22,6 +22,8 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
     - upstream/sysroot.patch: add a new build fix pulled from upstream.
     - upstream/ar-path1.patch, upstream/ar-path2.patch: add two more
       vendoring-related build fixes from upstream.
+    - trixie/gn-additional-outputs.patch: add patch to partially revert usage
+      of a newer generate-ninja feature.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 

@@ -52,3 +52,13 @@ ERROR at //build/config/BUILDCONFIG.gn:700:11: Unable to load "/chromium-141.0.7
    }
  
    modulemap = "${target_gen_dir}/module.modulemap"
+--- a/v8/BUILD.gn
++++ b/v8/BUILD.gn
+@@ -7417,7 +7417,6 @@ v8_component("v8_libbase") {
+     deps += [ ":libm" ]
+   }
+ 
+-  deps += [ "//third_party/llvm-libc:headers" ]
+ 
+   # TODO(infra): Add support for qnx, freebsd, openbsd, netbsd, and solaris.
+ }

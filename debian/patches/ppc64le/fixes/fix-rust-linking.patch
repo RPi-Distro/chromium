@@ -1,34 +1,60 @@
-Index: chromium-149.0.7827.53/build/toolchain/gcc_toolchain.gni
+Index: chromium-150.0.7871.46/build/toolchain/gcc_toolchain.gni
 ===================================================================
---- chromium-149.0.7827.53.orig/build/toolchain/gcc_toolchain.gni
-+++ chromium-149.0.7827.53/build/toolchain/gcc_toolchain.gni
-@@ -426,7 +426,13 @@ template("single_gcc_toolchain") {
-         # -soname flag is not available on aix ld
-         soname_flag = "-Wl,-soname=\"$soname\""
+--- chromium-150.0.7871.46.orig/build/toolchain/gcc_toolchain.gni
++++ chromium-150.0.7871.46/build/toolchain/gcc_toolchain.gni
+@@ -457,13 +457,25 @@ template("single_gcc_toolchain") {
+       } else {
+         main_so_file = sofile_with_symbols
        }
--      link_command = "$ld -shared $soname_flag {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" @\"$rspfile\" {{rlibs}}"
+-      link_command = "$ld -shared $soname_flag {{ldflags}}${extra_ldflags} -o \"$main_so_file\" "
 +      if (target_cpu == "ppc64") {
 +        # Work around linker failures due to Rust libraries and the use of whole-archive
-+        link_command = "$ld -shared $soname_flag -Wl,--start-group {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" @\"$rspfile\" {{rlibs}} -Wl,--end-group"
++        link_command = "$ld -shared $soname_flag -Wl,--start-group {{ldflags}}${extra_ldflags} -o \"$main_so_file\" "
 +      }
 +      else {
-+        link_command = "$ld -shared $soname_flag {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" @\"$rspfile\" {{rlibs}}"
++        link_command = "$ld -shared $soname_flag {{ldflags}}${extra_ldflags} -o \"$main_so_file\" "
++      }
+ 
+       if (use_mold_separate_debug_file) {
+         # TODO(40208899): See if it adding --detach for local builds helps.
+         link_command += "\"-Wl,--separate-debug-file=$sofile_with_symbols\" -Wl,--no-detach "
+       }
+-      link_command += "@\"$rspfile\" {{rlibs}}"
++      if (target_cpu == "ppc64") {
++        # Work around linker failures due to Rust libraries and the use of whole-archiv
++        link_command += "@\"$rspfile\" {{rlibs}}  -Wl,--end-group"
++      }
++      else {
++        link_command += "@\"$rspfile\" {{rlibs}}"
 +      }
  
        # Generate a map file to be used for binary size analysis.
        # Map file adds ~10% to the link time on a z620.
-@@ -538,7 +544,13 @@ template("single_gcc_toolchain") {
-         whole_archive_flag = "-Wl,--whole-archive"
-         no_whole_archive_flag = "-Wl,--no-whole-archive"
+@@ -575,13 +587,25 @@ template("single_gcc_toolchain") {
+       } else {
+         main_so_file = sofile_with_symbols
        }
--      command = "$ld -shared {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" $soname_flag @\"$rspfile\""
+-      command = "$ld -shared $soname_flag {{ldflags}}${extra_ldflags} -o \"$main_so_file\" "
 +      if (target_cpu == "ppc64") {
 +        # Work around linker failures due to Rust libraries and the use of whole-archive
-+        command = "$ld -shared -Wl,--start-group {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" $soname_flag @\"$rspfile\" -Wl,--end-group"
++        command = "$ld -shared -Wl,--start-group $soname_flag {{ldflags}}${extra_ldflags} -o \"$main_so_file\" "
 +      }
 +      else {
-+        command = "$ld -shared {{ldflags}}${extra_ldflags} -o \"$unstripped_sofile\" $soname_flag @\"$rspfile\""
++        command = "$ld -shared $soname_flag {{ldflags}}${extra_ldflags} -o \"$main_so_file\" "
 +      }
  
-       if (defined(invoker.strip)) {
-         strip_command = "${invoker.strip} -o \"$sofile\" \"$unstripped_sofile\""
+       if (use_mold_separate_debug_file) {
+         # TODO(40208899): See if it adding --detach for local builds helps.
+         command += "\"-Wl,--separate-debug-file=$sofile_with_symbols\" -Wl,--no-detach "
+       }
+-      command += "@\"$rspfile\" {{rlibs}}"
++      if (target_cpu == "ppc64") {
++        # Work around linker failures due to Rust libraries and the use of whole-archive
++        command += "@\"$rspfile\" -Wl,--end-group {{rlibs}}"
++      }
++      else {
++        command += "@\"$rspfile\" {{rlibs}}"
++      }
+ 
+       if (defined(invoker.strip) && !use_mold_separate_debug_file) {
+         strip_command =

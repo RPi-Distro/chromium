@@ -725,6 +725,17 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
       build for libyuv loongarch64.
     - loongarch64/0015-ffmpeg-support-for-loongarch.patch: Refresh.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - fixes/fix-rust-linking.patch: refresh for upstream changes
+    - fixes/fix-breakpad-compile.patch: refresh for upstream changes
+    - third_party/dawn-fix-ppc64le-detection.patch: refresh for upstream
+      changes
+    - 0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh for
+      upstream changes
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 
 chromium (149.0.7827.196-1) unstable; urgency=high

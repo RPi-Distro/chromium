@@ -35,16 +35,6 @@ Description: Fix various compatibility issues with Node.js 18
  // Generate an internal UID to make the regexp pattern harder to guess.
  var UID_LENGTH          = 16;
  var UID                 = generateUID();
---- a/third_party/devtools-frontend/src/scripts/build/build_ai_skills.mjs
-+++ b/third_party/devtools-frontend/src/scripts/build/build_ai_skills.mjs
-@@ -61,6 +61,6 @@ export const skill = ${JSON.stringify(sk
-   writeIfChanged(outputFile, outputContent);
- }
- 
--if (import.meta.main) {
-+if (true) {
-   runMain();
- }
 --- a/third_party/devtools-frontend/src/third_party/i18n/collect-strings.js
 +++ b/third_party/devtools-frontend/src/third_party/i18n/collect-strings.js
 @@ -5,6 +5,8 @@

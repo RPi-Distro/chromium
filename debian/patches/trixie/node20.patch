@@ -1,0 +1,13 @@
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+Description: Fix various compatibility issues with Node.js 20
+
+--- a/third_party/devtools-frontend/src/scripts/build/build_ai_skills.mjs
++++ b/third_party/devtools-frontend/src/scripts/build/build_ai_skills.mjs
+@@ -61,6 +61,6 @@ export const skill = ${JSON.stringify(sk
+   writeIfChanged(outputFile, outputContent);
+ }
+ 
+-if (import.meta.main) {
++if (true) {
+   runMain();
+ }

@@ -710,12 +710,16 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
       internal libc++/libm symbols; this requires a newer llvm than we have.
     - llvm-19/value-or.patch: work around more places where value_or() can't
       figure out the type of a passed init value.
+    - trixie/node20-compat.patch: break out part of Daniel's
+      node18-compat.patch (below) into one for trixie that also fixes nodejs
+      20 issues [trixie, bookworm].
 
   [ Daniel Richard G. ]
   * d/patches:
     - bookworm/gn-absl.patch: Refresh.
     - bookworm/gn-funcs.patch: Zap new usage of filter_labels_include().
-    - bookworm/node18-compat.patch: Fix more cases of nodejs v18 breakage.
+    - bookworm/node18-compat.patch: Fix more cases of nodejs v18 breakage
+      [bookworm].
     - trixie/gn-module-name.patch: add more spots where the workaround is
       needed [trixie, bookworm].
 

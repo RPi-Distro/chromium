@@ -107,6 +107,7 @@ trixie/gn-inputs2.patch
 trixie/revert-v8-sanitize.patch
 trixie/gn-expand-dir-allowlist.patch
 trixie/gn-additional-outputs.patch
+trixie/node20.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

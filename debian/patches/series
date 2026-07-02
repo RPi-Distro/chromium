@@ -36,6 +36,7 @@ fixes/arm-logging.patch
 upstream/sysroot.patch
 upstream/ar-path1.patch
 upstream/ar-path2.patch
+upstream/libyuv-loongarch-fix-row_lsx.cc-and-row_lasx.cc.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

@@ -719,6 +719,12 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
     - trixie/gn-module-name.patch: add more spots where the workaround is
       needed [trixie, bookworm].
 
+  [ Jianfeng Liu ]
+  * d/patches:
+    - upstream/libyuv-loongarch-fix-row_lsx.cc-and-row_lasx.cc.patch: Fix
+      build for libyuv loongarch64.
+    - loongarch64/0015-ffmpeg-support-for-loongarch.patch: Refresh.
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 
 chromium (149.0.7827.196-1) unstable; urgency=high

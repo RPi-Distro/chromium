@@ -716,6 +716,8 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
     - bookworm/gn-absl.patch: Refresh.
     - bookworm/gn-funcs.patch: Zap new usage of filter_labels_include().
     - bookworm/node18-compat.patch: Fix more cases of nodejs v18 breakage.
+    - trixie/gn-module-name.patch: add more spots where the workaround is
+      needed [trixie, bookworm].
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 

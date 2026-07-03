@@ -1,0 +1,43 @@
+base: Use udf instead of bkpt for ImmediateCrash() on ARMv7
+
+Upstream's TRAP_SEQUENCE1_() for 32-bit ARM is bkpt #0. On Raspberry Pi OS
+32-bit kernels (verified on 6.18.34+rpt-rpi-v7, Pi 3B), the kernel's
+hw_breakpoint layer consumes the BKPT debug-event Prefetch Abort without
+delivering any signal, and since the architectural exception return address
+for a Prefetch Abort is the aborting instruction itself (ARM ARM DDI 0406C
+B1.9.7), the CPU re-executes bkpt #0 forever. A minimal C program executing
+bkpt #0 with default signal dispositions spins at 100% CPU indefinitely
+with no pending/blocked/caught signals and nothing in dmesg.
+
+As a result, every base::ImmediateCrash() on armhf - including release-mode
+CHECK/NOTREACHED failures - hangs the process instead of terminating it.
+With chromium 149 (GpuPersistentCache enabled by default) a GPU-process
+shader-cache bind failure reaches ImmediateCrash() at startup, leaving the
+GPU process spinning at 100% CPU; the browser never detects the crash and
+hangs with no window (RPi-Distro/chromium#60).
+
+Use udf #0 instead, which raises SIGILL and terminates reliably on both
+32-bit kernels and 64-bit kernels running 32-bit userspace (verified on the
+Pi 3B). SIGILL is an ordinary fatal crash signal, so crashpad and the
+browser's GPU crash detection keep working. Upstream already uses udf #0 as
+TRAP_SEQUENCE2_() and tracks removing bkpt in crbug.com/40625592.
+--- a/base/immediate_crash.h
++++ b/base/immediate_crash.h
+@@ -76,12 +76,11 @@ extern "C" int __attribute__((weak)) __l
+ 
+ #elif defined(ARCH_CPU_ARMEL)
+ 
+-// bkpt will generate a SIGBUS when running on armv7 and a SIGTRAP when running
+-// as a 32 bit userspace app on arm64. There doesn't seem to be any way to
+-// cause a SIGTRAP from userspace without using a syscall (which would be a
+-// problem for sandboxing).
+-// TODO(crbug.com/40625592): Remove bkpt from this sequence.
+-#define TRAP_SEQUENCE1_() asm volatile("bkpt #0")
++// Upstream uses bkpt #0 here, but Raspberry Pi OS 32-bit kernels deliver no
++// signal for the BKPT debug event and the exception return re-executes the
++// instruction, so bkpt spins forever instead of crashing. udf raises SIGILL
++// on both 32-bit and 64-bit kernels.
++#define TRAP_SEQUENCE1_() asm volatile("udf #0")
+ #define TRAP_SEQUENCE2_() asm volatile("udf #0")
+ 
+ #elif defined(ARCH_CPU_ARM64)

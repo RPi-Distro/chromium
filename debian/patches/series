@@ -252,3 +252,4 @@ rpi/v4l2-bgr4-only.patch
 rpi/notification_fix.patch
 rpi/v4l2_startup.patch
 rpi/background-mode.patch
+rpi/0018-base-Use-udf-for-ImmediateCrash-on-ARMv7.patch

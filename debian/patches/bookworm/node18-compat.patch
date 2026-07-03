@@ -1,6 +1,17 @@
 Author: Daniel Richard G. <skunk@iSKUNK.ORG>
 Description: Fix various compatibility issues with Node.js 18
 
+--- a/third_party/devtools-frontend/src/node_modules/@rollup/plugin-terser/node_modules/serialize-javascript/index.js
++++ b/third_party/devtools-frontend/src/node_modules/@rollup/plugin-terser/node_modules/serialize-javascript/index.js
+@@ -6,6 +6,8 @@ See the accompanying LICENSE file for te
+ 
+ 'use strict';
+ 
++let crypto = require('crypto');
++
+ // Generate an internal UID to make the regexp pattern harder to guess.
+ var UID_LENGTH          = 16;
+ var UID                 = generateUID();
 --- a/third_party/node/node_modules/@sindresorhus/merge-streams/index.js
 +++ b/third_party/node/node_modules/@sindresorhus/merge-streams/index.js
 @@ -1,5 +1,5 @@

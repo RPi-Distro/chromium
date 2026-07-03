@@ -9,7 +9,7 @@ with chromium, which is simple enough..
 
 --- a/third_party/webrtc/webrtc.gni
 +++ b/third_party/webrtc/webrtc.gni
-@@ -672,16 +672,13 @@ template("rtc_source_set") {
+@@ -675,16 +675,13 @@ template("rtc_source_set") {
          "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
  
      # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
@@ -32,7 +32,7 @@ with chromium, which is simple enough..
      }
    }
  }
-@@ -764,16 +761,13 @@ template("rtc_static_library") {
+@@ -767,16 +764,13 @@ template("rtc_static_library") {
          "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
  
      # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
@@ -55,7 +55,7 @@ with chromium, which is simple enough..
      }
    }
  }
-@@ -906,16 +900,13 @@ template("rtc_library") {
+@@ -910,16 +904,13 @@ template("rtc_library") {
          "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
  
      # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
@@ -78,7 +78,7 @@ with chromium, which is simple enough..
      }
    }
  }
-@@ -958,22 +949,10 @@ template("rtc_executable") {
+@@ -962,22 +953,10 @@ template("rtc_executable") {
        ]
      }
  
@@ -104,3 +104,15 @@ with chromium, which is simple enough..
      }
    }
  }
+@@ -1504,11 +1483,6 @@ template("rtc_rust_cxx_bridge") {
+   assert(defined(invoker.source), "source must be specified")
+   assert(!defined(invoker.sources), "Use source instead of sources")
+ 
+-  # Explicitly assert that //build/rust:cxx_rustdeps is listed in deps.
+-  assert(defined(invoker.deps) &&
+-             filter_labels_include(invoker.deps,
+-                                   [ "//build/rust:cxx_rustdeps" ]) != [],
+-         "rtc_rust_cxx_bridge requires //build/rust:cxx_rustdeps in deps.")
+   assert(
+       !defined(invoker.crate_name),
+       "Custom crate_name is not allowed in WebRTC. Use webrtc::import! instead.")

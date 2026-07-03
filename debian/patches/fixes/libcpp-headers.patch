@@ -4,16 +4,7 @@ ERROR at //build/config/BUILDCONFIG.gn:700:11: Unable to load "/chromium-141.0.7
 
 --- a/build/config/BUILDCONFIG.gn
 +++ b/build/config/BUILDCONFIG.gn
-@@ -585,7 +585,7 @@ foreach(_target_type,
-         # When clang is used, some target may use clang module. This dependency
-         # is required for things to work, regardless of whether the libc++
-         # module is used in this target or not.
--        public_deps += [ "//buildtools/third_party/libc++:headers" ]
-+        public_deps += [  ]
-       }
- 
-       if (!defined(use_libcxx_modules)) {
-@@ -623,7 +623,7 @@ foreach(_target_type,
+@@ -617,7 +617,7 @@ foreach(_target_type,
  
        if (use_libcxx_modules) {
          # Add a dependency needed for Clang modules builds.
@@ -22,16 +13,7 @@ ERROR at //build/config/BUILDCONFIG.gn:700:11: Unable to load "/chromium-141.0.7
  
          if (!defined(invoker.generate_modulemap) &&
              defined(generate_modulemap)) {
-@@ -723,7 +723,7 @@ foreach(_target_type,
-         # When clang is used, some target may use clang module. This dependency
-         # is required for things to work, regardless of whether the libc++
-         # module is used in this target or not.
--        public_deps += [ "//buildtools/third_party/libc++:headers" ]
-+        public_deps += [  ]
-       }
- 
-       if (!defined(use_libcxx_modules)) {
-@@ -761,7 +761,7 @@ foreach(_target_type,
+@@ -748,7 +748,7 @@ foreach(_target_type,
  
        if (use_libcxx_modules) {
          # Add a dependency needed for Clang modules builds.
@@ -48,6 +30,25 @@ ERROR at //build/config/BUILDCONFIG.gn:700:11: Unable to load "/chromium-141.0.7
  import("//build/config/sysroot.gni")
 -import("//buildtools/third_party/libc++/libcxx_headers.gni")
 -import("//buildtools/third_party/libc++/modules.gni")
+ if (is_win) {
+   import("//build/toolchain/win/win_toolchain_data.gni")
+ }
+@@ -53,9 +51,7 @@ if (use_unified_system_module) {
+     }
+   }
  
- group("modules") {
-   deps = [ "//build/modules/modularize:no_modules" ]
+-  system_headers = libcxx_headers + [
+-                     "//buildtools/third_party/libc++/__config_site",
+-                     "//buildtools/third_party/libc++/__assertion_handler",
++  system_headers = [
+                    ]
+   root_include_dir = ""
+   extra_headers = []
+@@ -77,7 +73,6 @@ if (use_unified_system_module) {
+   }
+ 
+   if (root_include_dir != "") {
+-    system_headers += expand_directory("${sysroot}/${root_include_dir}", true)
+   }
+ 
+   modulemap = "${target_gen_dir}/module.modulemap"

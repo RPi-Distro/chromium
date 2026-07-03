@@ -1,0 +1,16 @@
+Author: Andres Salomon <dilinger@debian.org>
+
+error[E0599]: no function or associated item named `from_utf8` found for type `str` in the current scope
+
+Rust-1.87 added str::from_utf8(); older versions std::str::from_utf8(), so switch to that instead.
+
+--- a/services/data_decoder/xml/parser.rs
++++ b/services/data_decoder/xml/parser.rs
+@@ -8,6 +8,7 @@ use crate::cxx::ffi::Node;
+ use cxx::{CxxString, UniquePtr};
+ use std::fmt::Write;
+ use std::pin::Pin;
++use std::str;
+ use xml::attribute::OwnedAttribute;
+ use xml::namespace::Namespace;
+ use xml::reader::{EventReader, XmlEvent};

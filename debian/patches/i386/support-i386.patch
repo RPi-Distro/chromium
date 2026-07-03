@@ -12,7 +12,7 @@ we're on our own with bugs.
 
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -1500,9 +1500,7 @@ if (use_blink && !is_cronet_build) {
+@@ -1484,9 +1484,7 @@ if (use_blink && !is_cronet_build) {
  # modulemaps requires building targets on linux-x86
  if (!running_modularize) {
    # TODO(cassew): Add more OS's that don't support x86.
@@ -21,5 +21,5 @@ we're on our own with bugs.
 -      (target_os != "linux" || use_libfuzzer || !build_with_chromium)
 +  is_valid_x86_target = true
  
-   # Note: v8_target_cpu == arm allows using the V8 arm simulator on x86 for fuzzing.
-   assert(
+   # Note: v8_target_cpu == arm allows using the V8 arm simulator on x86 for
+   # fuzzing.

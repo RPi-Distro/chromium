@@ -166,10 +166,12 @@ Files-Excluded:
  third_party/tflite/src/tensorflow/examples/multibox_detector/data/surfers.jpg
  third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models/blazeface_mlkit_v1.tfl
  third_party/tflite/src/tensorflow/python
+ third_party/typescript/linux-amd64
  third_party/unrar
  third_party/updater
  third_party/webgl
  third_party/webgpu-cts/src
+ third_party/webpagereplay
  third_party/webrtc/data
  third_party/webrtc/examples
  third_party/webrtc/sdk

@@ -713,6 +713,8 @@ chromium (150.0.7871.46-1) UNRELEASED; urgency=high
     - trixie/node20-compat.patch: break out part of Daniel's
       node18-compat.patch (below) into one for trixie that also fixes nodejs
       20 issues [trixie, bookworm].
+    - rust-1.85/std-from-utf8.patch: add workaround for str::from_utf8 added
+      in 1.87 [trixie, bookworm].
 
   [ Daniel Richard G. ]
   * d/patches:

@@ -216,7 +216,7 @@ loongarch64/0008-loong64-sandbox-sandbox-linux-services-credentials.c.patch
 loongarch64/0009-loong64-sandbox-sandbox-linux-bpf_dsl-Modify-seccomp.patch
 loongarch64/0010-loong64-sandbox-seccomp-bpf-helpers-fix-build-for-lo.patch
 loongarch64/0011-sandbox-linux-system_headers-Update-linux-seccomp-he.patch
-loongarch64/0012-sandbox-linux-add-statx-support-for-loongarch64.patch
+#loongarch64/0012-sandbox-linux-add-statx-support-for-loongarch64.patch
 loongarch64/0013-swiftshader-support-for-loongarch.patch
 loongarch64/0014-crashpad-support-for-loongarch.patch
 loongarch64/0015-ffmpeg-support-for-loongarch.patch

@@ -710,12 +710,37 @@ chromium (150.0.7871.46-1~deb13u1) UNRELEASED; urgency=high
       internal libc++/libm symbols; this requires a newer llvm than we have.
     - llvm-19/value-or.patch: work around more places where value_or() can't
       figure out the type of a passed init value.
+    - trixie/node20-compat.patch: break out part of Daniel's
+      node18-compat.patch (below) into one for trixie that also fixes nodejs
+      20 issues [trixie, bookworm].
+    - rust-1.85/std-from-utf8.patch: add workaround for str::from_utf8 added
+      in 1.87 [trixie, bookworm].
 
   [ Daniel Richard G. ]
   * d/patches:
     - bookworm/gn-absl.patch: Refresh.
     - bookworm/gn-funcs.patch: Zap new usage of filter_labels_include().
-    - bookworm/node18-compat.patch: Fix more cases of nodejs v18 breakage.
+    - bookworm/node18-compat.patch: Fix more cases of nodejs v18 breakage
+      [bookworm].
+    - trixie/gn-module-name.patch: add more spots where the workaround is
+      needed [trixie, bookworm].
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    - upstream/libyuv-loongarch-fix-row_lsx.cc-and-row_lasx.cc.patch: Fix
+      build for libyuv loongarch64.
+    - loongarch64/0015-ffmpeg-support-for-loongarch.patch: Refresh.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - fixes/fix-rust-linking.patch: refresh for upstream changes
+    - fixes/fix-breakpad-compile.patch: refresh for upstream changes
+    - third_party/dawn-fix-ppc64le-detection.patch: refresh for upstream
+      changes
+    - 0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh for
+      upstream changes
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
 

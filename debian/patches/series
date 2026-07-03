@@ -36,6 +36,7 @@ fixes/arm-logging.patch
 upstream/sysroot.patch
 upstream/ar-path1.patch
 upstream/ar-path2.patch
+upstream/libyuv-loongarch-fix-row_lsx.cc-and-row_lasx.cc.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -91,6 +92,7 @@ rust-1.85/rust-is-multiple-of.patch
 rust-1.85/file_as_c_str.patch
 rust-1.85/mojo-features.patch
 rust-1.85/zip8.patch
+rust-1.85/std-from-utf8.patch
 
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch
@@ -108,6 +110,7 @@ trixie/gn-inputs2.patch
 trixie/revert-v8-sanitize.patch
 trixie/gn-expand-dir-allowlist.patch
 trixie/gn-additional-outputs.patch
+trixie/node20-compat.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

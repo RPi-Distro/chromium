@@ -681,6 +681,9 @@ chromium (150.0.7871.46-1~deb12u1) UNRELEASED; urgency=high
     - CVE-2026-14155: Insufficient policy enforcement in StorageAccessAPI.
       Reported by Google.
     - CVE-2026-14156: Policy bypass in StorageAccessAPI. Reported by Google.
+    - CVE-2026-13281: Integer overflow in Mojo. Reported by Google.
+    - CVE-2026-13282: Use after free in Payments. Reported by Google.
+    - CVE-2026-13283: Use after free in AdFilter. Reported by Google.
   * d/copyright:
     - delete third_party/webpagereplay/.
     - delete tsgo (typescript compiler in Go) binary.

@@ -249,3 +249,4 @@ rpi/disable_IsV4L2DecoderStateful.patch
 rpi/wayland-gbm-pixmap.patch
 rpi/enable-AcceleratedVideoDecodeLinux.patch
 rpi/v4l2-bgr4-only.patch
+rpi/0018-base-Use-udf-for-ImmediateCrash-on-ARMv7.patch

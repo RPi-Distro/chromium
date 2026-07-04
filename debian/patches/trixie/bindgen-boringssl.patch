@@ -1,0 +1,99 @@
+Author: Andres Salomon <dilinger@debian.org>
+
+error: expected identifier, found reserved keyword `gen`
+ --> /chromium-150.0.7871.46/out/Release/gen/third_party/boringssl/raw_bssl_sys_bindings/bindgen.rs:3:1157419
+ |
+ | ...NAME (method : * const X509V3_EXT_METHOD , gen : * const GENERAL_NAME , ret : * mut stack_st_CONF_VALUE) -> * mut stack_st_CONF_VALUE ...
+ |                                               ^^^ expected identifier, found reserved keyword
+ |
+help: escape `gen` to use it as an identifier
+
+bindgen 0.72 is smart enough to rename variables named 'gen' in the boringssl
+headers to 'gen_' in the generated rust code. 0.71 (in trixie) isn't that
+smart, so it errors out. Work around it by renaming it manually.
+
+--- a/third_party/boringssl/src/include/openssl/x509.h
++++ b/third_party/boringssl/src/include/openssl/x509.h
+@@ -2063,8 +2063,8 @@ struct GENERAL_NAME_st {
+ // GENERAL_NAME_new returns a new, empty `GENERAL_NAME`, or NULL on error.
+ OPENSSL_EXPORT GENERAL_NAME *GENERAL_NAME_new(void);
+ 
+-// GENERAL_NAME_free releases memory associated with `gen`.
+-OPENSSL_EXPORT void GENERAL_NAME_free(GENERAL_NAME *gen);
++// GENERAL_NAME_free releases memory associated with |gen|.
++OPENSSL_EXPORT void GENERAL_NAME_free(GENERAL_NAME *_gen);
+ 
+ // d2i_GENERAL_NAME parses up to `len` bytes from `*inp` as a DER-encoded X.509
+ // GeneralName (RFC 5280), as described in `d2i_SAMPLE`.
+@@ -2078,7 +2078,7 @@ OPENSSL_EXPORT int i2d_GENERAL_NAME(cons
+ // GENERAL_NAME_dup returns a newly-allocated copy of `gen`, or NULL on error.
+ // This function works by serializing the structure, so it will fail if `gen` is
+ // empty.
+-OPENSSL_EXPORT GENERAL_NAME *GENERAL_NAME_dup(const GENERAL_NAME *gen);
++OPENSSL_EXPORT GENERAL_NAME *GENERAL_NAME_dup(const GENERAL_NAME *_gen);
+ 
+ // GENERAL_NAMES_new returns a new, empty `GENERAL_NAMES`, or NULL on error.
+ OPENSSL_EXPORT GENERAL_NAMES *GENERAL_NAMES_new(void);
+@@ -2118,7 +2118,7 @@ OPENSSL_EXPORT void EDIPARTYNAME_free(ED
+ // WARNING: `gen` must be empty (typically as returned from `GENERAL_NAME_new`)
+ // before calling this function. If `gen` already contained a value, the
+ // previous contents will be leaked.
+-OPENSSL_EXPORT void GENERAL_NAME_set0_value(GENERAL_NAME *gen, int type,
++OPENSSL_EXPORT void GENERAL_NAME_set0_value(GENERAL_NAME *_gen, int type,
+                                             void *value);
+ 
+ // GENERAL_NAME_get0_value returns the in-memory representation of `gen`'s
+@@ -2133,7 +2133,7 @@ OPENSSL_EXPORT void GENERAL_NAME_set0_va
+ //
+ // WARNING: This function is not const-correct. The return value should be
+ // const. Callers should not mutate the returned object.
+-OPENSSL_EXPORT void *GENERAL_NAME_get0_value(const GENERAL_NAME *gen,
++OPENSSL_EXPORT void *GENERAL_NAME_get0_value(const GENERAL_NAME *_gen,
+                                              int *out_type);
+ 
+ // GENERAL_NAME_set0_othername sets `gen` to be an OtherName with type `oid` and
+@@ -2146,7 +2146,7 @@ OPENSSL_EXPORT void *GENERAL_NAME_get0_v
+ // WARNING: `gen` must be empty (typically as returned from `GENERAL_NAME_new`)
+ // before calling this function. If `gen` already contained a value, the
+ // previously contents will be leaked.
+-OPENSSL_EXPORT int GENERAL_NAME_set0_othername(GENERAL_NAME *gen,
++OPENSSL_EXPORT int GENERAL_NAME_set0_othername(GENERAL_NAME *_gen,
+                                                ASN1_OBJECT *oid,
+                                                ASN1_TYPE *value);
+ 
+@@ -2158,7 +2158,7 @@ OPENSSL_EXPORT int GENERAL_NAME_set0_oth
+ //
+ // WARNING: This function is not const-correct. `out_oid` and `out_value` are
+ // not const, but callers should not mutate the resulting objects.
+-OPENSSL_EXPORT int GENERAL_NAME_get0_otherName(const GENERAL_NAME *gen,
++OPENSSL_EXPORT int GENERAL_NAME_get0_otherName(const GENERAL_NAME *_gen,
+                                                ASN1_OBJECT **out_oid,
+                                                ASN1_TYPE **out_value);
+ 
+@@ -4191,7 +4191,7 @@ OPENSSL_EXPORT int X509V3_extensions_pri
+ //
+ // TODO(davidben): Actually, it just returns one and doesn't check for I/O or
+ // allocation errors. But it should return zero on error.
+-OPENSSL_EXPORT int GENERAL_NAME_print(BIO *out, const GENERAL_NAME *gen);
++OPENSSL_EXPORT int GENERAL_NAME_print(BIO *out, const GENERAL_NAME *_gen);
+ 
+ 
+ // Convenience functions.
+@@ -5003,7 +5003,7 @@ OPENSSL_EXPORT void X509V3_conf_free(CON
+ // human-readable print functions. If extracting a SAN list from a certificate,
+ // look at `gen` directly.
+ OPENSSL_EXPORT STACK_OF(CONF_VALUE) *i2v_GENERAL_NAME(
+-    const X509V3_EXT_METHOD *method, const GENERAL_NAME *gen,
++    const X509V3_EXT_METHOD *method, const GENERAL_NAME *_gen,
+     STACK_OF(CONF_VALUE) *ret);
+ 
+ // i2v_GENERAL_NAMES serializes `gen` as a list of `CONF_VALUE`s. If `ret` is
+@@ -5016,7 +5016,7 @@ OPENSSL_EXPORT STACK_OF(CONF_VALUE) *i2v
+ // human-readable print functions. If extracting a SAN list from a certificate,
+ // look at `gen` directly.
+ OPENSSL_EXPORT STACK_OF(CONF_VALUE) *i2v_GENERAL_NAMES(
+-    const X509V3_EXT_METHOD *method, const GENERAL_NAMES *gen,
++    const X509V3_EXT_METHOD *method, const GENERAL_NAMES *_gen,
+     STACK_OF(CONF_VALUE) *extlist);
+ 
+ // a2i_IPADDRESS decodes `ipasc` as the textual representation of an IPv4 or

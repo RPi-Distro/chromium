@@ -1,4 +1,4 @@
-chromium (150.0.7871.46-1~deb13u1) UNRELEASED; urgency=high
+chromium (150.0.7871.46-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -723,8 +723,9 @@ chromium (150.0.7871.46-1~deb13u1) UNRELEASED; urgency=high
 
   [ Daniel Richard G. ]
   * d/patches:
-    - bookworm/gn-absl.patch: Refresh.
-    - bookworm/gn-funcs.patch: Zap new usage of filter_labels_include().
+    - bookworm/gn-absl.patch: Refresh [bookworm].
+    - bookworm/gn-funcs.patch: Zap new usage of filter_labels_include()
+      [bookworm].
     - bookworm/node18-compat.patch: Fix more cases of nodejs v18 breakage
       [bookworm].
     - trixie/gn-module-name.patch: add more spots where the workaround is
@@ -747,7 +748,7 @@ chromium (150.0.7871.46-1~deb13u1) UNRELEASED; urgency=high
     - 0001-Add-pregenerated-config-for-libaom-on-ppc64.patch: refresh for
       upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 23 Jun 2026 20:40:58 -0400
+ -- Andres Salomon <dilinger@debian.org>  Sat, 04 Jul 2026 04:01:45 -0400
 
 chromium (149.0.7827.196-1~deb13u1) trixie-security; urgency=high
 

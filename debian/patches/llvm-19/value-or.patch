@@ -2,6 +2,70 @@
   238 |         const SkPoint last_point = path.getLastPt().value_or({0, 0});
       |                                    ~~~~~~~~~~~~~~~~~^~~~~~~~
 
+--- a/chrome/browser/net/profile_network_context_service.cc
++++ b/chrome/browser/net/profile_network_context_service.cc
+@@ -1329,7 +1329,7 @@ std::vector<uint8_t>
+ ProfileNetworkContextService::GetEncryptedCachePrimaryKey() {
+   std::string encoded_encrypted_primary_key = profile_->GetPrefs()->GetString(
+       enterprise_connectors::kEncryptedCachePrimaryKey);
+-  return base::Base64Decode(encoded_encrypted_primary_key).value_or({});
++  return base::Base64Decode(encoded_encrypted_primary_key).value_or(std::vector<uint8_t>{});
+ }
+ 
+ #endif  // BUILDFLAG(ENTERPRISE_CACHE_ENCRYPTION)
+--- a/components/autofill/core/browser/payments/full_card_request.cc
++++ b/components/autofill/core/browser/payments/full_card_request.cc
+@@ -132,7 +132,7 @@ void FullCardRequest::GetFullCardImpl(
+   request_->card = std::move(card);
+   request_->last_committed_primary_main_frame_origin =
+       last_committed_primary_main_frame_origin;
+-  request_->context_token = std::move(context_token).value_or({});
++  request_->context_token = std::move(context_token).value_or(std::string{});
+   request_->selected_challenge_option = std::move(selected_challenge_option);
+ 
+   should_unmask_card_ = request_->card.masked() ||
+--- a/components/signin/public/base/hybrid_encryption_key.cc
++++ b/components/signin/public/base/hybrid_encryption_key.cc
+@@ -73,7 +73,7 @@ std::vector<uint8_t> HybridEncryptionKey
+       crypto::keypair::PublicKey::FromPrivateKey(private_key_);
+   auto result =
+       crypto::hpke::Seal(kHpkeParams, pub, plaintext, /*info=*/{}, /*ad=*/{});
+-  return result.value_or({});
++  return result.value_or(std::vector<uint8_t>{});
+ }
+ 
+ HybridEncryptionKey::HybridEncryptionKey(base::span<const uint8_t> private_key)
+--- a/content/browser/service_worker/service_worker_version.cc
++++ b/content/browser/service_worker/service_worker_version.cc
+@@ -857,7 +857,7 @@ bool ServiceWorkerVersion::FinishRequest
+     }
+   } else {
+     // Equivalent to the previous, non-optional iterator behavior. Maybe unsafe.
+-    request_timeouts_.erase(request->timeout_iter.value_or({}));
++    request_timeouts_.erase(request->timeout_iter.value_or(std::set<InflightRequestTimeoutInfo>::iterator{}));
+   }
+   inflight_requests_.Remove(request_id);
+   // TODO(crbug.com/40864997): remove the following DCHECK when the cause
+--- a/gpu/command_buffer/service/raster_decoder.cc
++++ b/gpu/command_buffer/service/raster_decoder.cc
+@@ -2974,7 +2974,7 @@ error::Error RasterDecoderImpl::DoRaster
+ 
+   auto paint_buffer_opt =
+       GetSharedMemoryAsSpan(raster_shm_id, raster_shm_offset, raster_shm_size);
+-  if (paint_buffer_opt.value_or({}).empty()) {
++  if (paint_buffer_opt.value_or(base::span<uint8_t>{}).empty()) {
+     LOCAL_SET_GL_ERROR(GL_INVALID_VALUE, "glRasterCHROMIUM",
+                        "Can not read paint buffer.");
+     return error::kNoError;
+@@ -3025,7 +3025,7 @@ error::Error RasterDecoderImpl::DoRaster
+       // Deserialize fonts before raster.
+       auto font_buffer_opt = GetSharedMemoryAsSpan<volatile uint8_t>(
+           font_shm_id, font_shm_offset, font_shm_size);
+-      if (font_buffer_opt.value_or({}).empty()) {
++      if (font_buffer_opt.value_or(base::span<volatile uint8_t>{}).empty()) {
+         LOCAL_SET_GL_ERROR(GL_INVALID_VALUE, "glRasterCHROMIUM",
+                            "Can not read font buffer.");
+         return error::kNoError;
 --- a/ui/gfx/paint_vector_icon.cc
 +++ b/ui/gfx/paint_vector_icon.cc
 @@ -235,7 +235,7 @@ void PaintPath(Canvas* canvas,
@@ -31,36 +95,3 @@
          SkScalar delta_x = 0;
          SkScalar delta_y = 0;
          if (IsCommandTypeCurve(previous_command_type)) {
---- a/components/autofill/core/browser/payments/full_card_request.cc
-+++ b/components/autofill/core/browser/payments/full_card_request.cc
-@@ -124,7 +124,7 @@ void FullCardRequest::GetFullCardImpl(
-   request_->card = std::move(card);
-   request_->last_committed_primary_main_frame_origin =
-       last_committed_primary_main_frame_origin;
--  request_->context_token = std::move(context_token).value_or({});
-+  request_->context_token = std::move(context_token).value_or(std::string{});
-   request_->selected_challenge_option = std::move(selected_challenge_option);
- 
-   should_unmask_card_ = request_->card.masked() ||
---- a/chrome/browser/net/profile_network_context_service.cc
-+++ b/chrome/browser/net/profile_network_context_service.cc
-@@ -1287,7 +1287,7 @@ std::vector<uint8_t>
- ProfileNetworkContextService::GetEncryptedCachePrimaryKey() {
-   std::string encoded_encrypted_primary_key = profile_->GetPrefs()->GetString(
-       enterprise_connectors::kEncryptedCachePrimaryKey);
--  return base::Base64Decode(encoded_encrypted_primary_key).value_or({});
-+  return base::Base64Decode(encoded_encrypted_primary_key).value_or(std::vector<uint8_t>{});
- }
- 
- #endif  // BUILDFLAG(ENTERPRISE_CACHE_ENCRYPTION)
---- a/content/browser/service_worker/service_worker_version.cc
-+++ b/content/browser/service_worker/service_worker_version.cc
-@@ -847,7 +847,7 @@ bool ServiceWorkerVersion::FinishRequest
-     }
-   } else {
-     // Equivalent to the previous, non-optional iterator behavior. Maybe unsafe.
--    request_timeouts_.erase(request->timeout_iter.value_or({}));
-+    request_timeouts_.erase(request->timeout_iter.value_or(std::set<InflightRequestTimeoutInfo>::iterator{}));
-   }
-   inflight_requests_.Remove(request_id);
-   // TODO(crbug.com/40864997): remove the following DCHECK when the cause

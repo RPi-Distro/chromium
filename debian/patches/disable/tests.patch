@@ -1,34 +1,3 @@
---- a/third_party/devtools-frontend/src/BUILD.gn
-+++ b/third_party/devtools-frontend/src/BUILD.gn
-@@ -28,7 +28,6 @@ group("devtools_all_files") {
-   data_deps = devtools_frontend_resources_deps + [
-                 "front_end:web_test_resources",
-                 "scripts/hosted_mode",
--                "test",
-               ]
-   deps = [ ":frontend_indexer_tsconfig" ]
-   public_deps = [ "scripts/component_docs" ]
---- a/components/update_client/BUILD.gn
-+++ b/components/update_client/BUILD.gn
-@@ -357,8 +357,6 @@ source_set("unit_tests") {
-     "//third_party/puffin:libpuffpatch",
-     "//third_party/re2",
-   ]
--
--  data_deps = [ "//components/test/data/update_client/puffin_patch_test:puffin_patch_test_files" ]
- }
- 
- fuzzer_test("update_client_protocol_serializer_fuzzer") {
---- a/third_party/puffin/BUILD.gn
-+++ b/third_party/puffin/BUILD.gn
-@@ -115,7 +115,6 @@ executable("puffin_unittest") {
-     "src/unittest_common.cc",
-     "src/utils_unittest.cc",
-   ]
--  data_deps = [ "//components/test/data/update_client/puffin_patch_test:puffin_patch_test_files" ]
-   deps = [
-     ":libpuffdiff",
-     ":libpuffpatch",
 --- a/chrome/test/variations/BUILD.gn
 +++ b/chrome/test/variations/BUILD.gn
 @@ -18,7 +18,6 @@ python_library("test_utils") {
@@ -39,3 +8,34 @@
  }
  
  python_library("fixtures") {
+--- a/components/update_client/BUILD.gn
++++ b/components/update_client/BUILD.gn
+@@ -361,8 +361,6 @@ source_set("unit_tests") {
+     "//third_party/puffin:libpuffpatch",
+     "//third_party/re2",
+   ]
+-
+-  data_deps = [ "//components/test/data/update_client/puffin_patch_test:puffin_patch_test_files" ]
+ }
+ 
+ fuzzer_test("update_client_protocol_serializer_fuzzer") {
+--- a/third_party/devtools-frontend/src/BUILD.gn
++++ b/third_party/devtools-frontend/src/BUILD.gn
+@@ -28,7 +28,6 @@ group("devtools_all_files") {
+   data_deps = devtools_frontend_resources_deps + [
+                 "front_end:web_test_resources",
+                 "scripts/hosted_mode",
+-                "test",
+               ]
+   deps = [ ":frontend_indexer_tsconfig" ]
+   public_deps = [ "scripts/component_docs" ]
+--- a/third_party/puffin/BUILD.gn
++++ b/third_party/puffin/BUILD.gn
+@@ -121,7 +121,6 @@ test("puffin_unittests") {
+     "src/unittest_common.cc",
+     "src/utils_unittest.cc",
+   ]
+-  data = [ "//components/test/data/update_client/puffin_patch_test/" ]
+   deps = [
+     ":libpuffdiff",
+     ":libpuffpatch",

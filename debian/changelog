@@ -1,3 +1,11 @@
+chromium (1:149.0.7827.196-1~deb13u1+rpt2) UNRELEASED; urgency=medium
+
+  * Disable loongarch statx patch
+  * base: Use udf instead of bkpt for ImmediateCrash() on ARMv7
+  * gl: Disable FallbackToSWIfGLES3NotSupported by default
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 06 Jul 2026 18:42:39 +0100
+
 chromium (1:149.0.7827.196-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]

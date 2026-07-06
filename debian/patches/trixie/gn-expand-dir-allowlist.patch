@@ -9,8 +9,8 @@ in April 2026.
 
 --- a/.gn
 +++ b/.gn
-@@ -171,4 +171,3 @@ exec_script_allowlist =
-       "//third_party/blink/renderer/build/scripts/scripts.gni",
+@@ -176,4 +176,3 @@ exec_script_allowlist =
+       "//third_party/dawn/third_party/meson/meson_target.gni",
      ]
  
 -expand_directory_allowlist = build_dotfile_settings.expand_directory_allowlist

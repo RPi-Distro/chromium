@@ -6316,17 +6316,9 @@ diff --git a/third_party/ffmpeg/ffmpeg_generated.gni b/third_party/ffmpeg/ffmpeg
 index 1913be5387..b5fcb0dca5 100644
 --- a/third_party/ffmpeg/ffmpeg_generated.gni
 +++ b/third_party/ffmpeg/ffmpeg_generated.gni
-@@ -220,6 +220,7 @@ if (current_cpu == "arm64" || current_cpu == "arm64e" || current_cpu == "x64" ||
- if (((current_cpu == "arm64" || current_cpu == "arm64e") &&
-      ffmpeg_branding == "Chrome") ||
-     (current_cpu == "x64" && ffmpeg_branding == "Chrome") ||
-+    (current_cpu == "loong64" && ffmpeg_branding == "Chrome") ||
-     (is_android && current_cpu == "x86" && ffmpeg_branding == "Chrome") ||
-     (is_apple && ffmpeg_branding == "Chrome") ||
-     (is_win && ffmpeg_branding == "Chrome") ||
-@@ -434,6 +435,19 @@ if (current_cpu == "arm64" || current_cpu == "arm64e") {
-   ]
- }
+@@ -78,6 +78,19 @@ ffmpeg_asm_include_dirs += [
+   "//third_party/ffmpeg/libavutil/x86",
+ ]
  
 +if ((use_linux_config && current_cpu == "loong64")) {
 +  ffmpeg_c_sources += [
@@ -6341,9 +6333,17 @@ index 1913be5387..b5fcb0dca5 100644
 +  ]
 +}
 +
- if ((is_android && current_cpu == "arm" && arm_use_neon) ||
-     (use_linux_config && current_cpu == "arm" && arm_use_neon) ||
-     (use_linux_config && current_cpu == "arm")) {
+ if (current_cpu == "arm64" || current_cpu == "arm64e" || current_cpu == "x64" ||
+     (is_android && current_cpu == "arm") ||
+     (is_android && current_cpu == "x86") || is_apple || is_win ||
+@@ -294,6 +307,7 @@ if (current_cpu == "arm64" || current_cpu == "arm64e" || current_cpu == "x64" ||
+ if (((current_cpu == "arm64" || current_cpu == "arm64e") &&
+      ffmpeg_branding == "Chrome") ||
+     (current_cpu == "x64" && ffmpeg_branding == "Chrome") ||
++    (current_cpu == "loong64" && ffmpeg_branding == "Chrome") ||
+     (is_android && current_cpu == "x86" && ffmpeg_branding == "Chrome") ||
+     (is_apple && ffmpeg_branding == "Chrome") ||
+     (is_win && ffmpeg_branding == "Chrome") ||
 -- 
 2.51.0
 

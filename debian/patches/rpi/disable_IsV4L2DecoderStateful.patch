@@ -1,6 +1,6 @@
 --- a/media/base/media_switches.cc
 +++ b/media/base/media_switches.cc
-@@ -813,6 +813,13 @@ BASE_FEATURE(kVaapiVp9SModeHWEncoding, b
+@@ -818,6 +818,13 @@ BASE_FEATURE(kVaapiVp9SModeHWEncoding, b
  BASE_FEATURE(kVSyncMjpegDecoding, base::FEATURE_DISABLED_BY_DEFAULT);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
@@ -16,7 +16,7 @@
               base::FEATURE_DISABLED_BY_DEFAULT);
 --- a/media/base/media_switches.h
 +++ b/media/base/media_switches.h
-@@ -365,6 +365,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
+@@ -369,6 +369,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapi
  MEDIA_EXPORT BASE_DECLARE_FEATURE(kVSyncMjpegDecoding);
  #endif  // defined(ARCH_CPU_X86_FAMILY) && BUILDFLAG(IS_CHROMEOS)
  #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
@@ -63,7 +63,7 @@
    // Set up our test environment.
 --- a/media/gpu/test/video_decode_accelerator_test_suite.cc
 +++ b/media/gpu/test/video_decode_accelerator_test_suite.cc
-@@ -250,6 +250,12 @@ VideoDecodeAcceleratorTestSuite* VideoDe
+@@ -252,6 +252,12 @@ VideoDecodeAcceleratorTestSuite* VideoDe
    feature_list->InitFromCommandLine(
        cmd_line->GetSwitchValueASCII(switches::kEnableFeatures),
        cmd_line->GetSwitchValueASCII(switches::kDisableFeatures));

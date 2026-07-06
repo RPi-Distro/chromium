@@ -20,7 +20,7 @@ Can be re-enabled for testing via chrome://flags
 (#fallback-to-sw-if-gles3-not-supported) or --enable-features.
 --- a/ui/gl/gl_features.cc
 +++ b/ui/gl/gl_features.cc
-@@ -120,15 +120,12 @@ constexpr base::FeatureParam<base::TimeD
+@@ -113,15 +113,12 @@ BASE_FEATURE(kDefaultPassthroughCommandD
  
  // Controls whether the GPU process falls back to software if GLES3 is not
  // supported.

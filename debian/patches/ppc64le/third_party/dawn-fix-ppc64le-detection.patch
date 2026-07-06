@@ -1,7 +1,7 @@
-Index: chromium-149.0.7827.53/third_party/dawn/src/dawn/common/Platform.h
+Index: chromium-150.0.7871.46/third_party/dawn/src/utils/platform.h
 ===================================================================
---- chromium-149.0.7827.53.orig/third_party/dawn/src/dawn/common/Platform.h
-+++ chromium-149.0.7827.53/third_party/dawn/src/dawn/common/Platform.h
+--- chromium-150.0.7871.46.orig/third_party/dawn/src/utils/platform.h
++++ chromium-150.0.7871.46/third_party/dawn/src/utils/platform.h
 @@ -163,10 +163,12 @@
  #elif defined(__s390x__)
  #define DAWN_PLATFORM_IS_S390X 1

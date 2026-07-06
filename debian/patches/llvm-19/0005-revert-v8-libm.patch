@@ -1,0 +1,43 @@
+Revert the following:
+
+commit 1e79e037bf40e0554d010a389d0635193bfca172
+Author: Nico Weber <thakis@chromium.org>
+Date:   Mon May 11 16:08:54 2026 -0400
+
+    [math] Remove no-longer-needed Wshadow suppressions
+    
+    Depends on:
+    https://chromium-review.googlesource.com/c/v8/node-ci/+/7841356
+    
+    (In regular v8, llvm-libc is autorolled.)
+    
+    Bug: 510499297
+    Change-Id: I98549a996e61320216ea2d9ee1a2a1a96376e811
+    Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/7837998
+    Reviewed-by: Leszek Swirski <leszeks@chromium.org>
+    Commit-Queue: Nico Weber <thakis@chromium.org>
+    Cr-Commit-Position: refs/heads/main@{#107328}
+
+--- a/v8/src/base/ieee754.cc
++++ b/v8/src/base/ieee754.cc
+@@ -21,7 +21,20 @@
+ #include "src/base/build_config.h"
+ #include "src/base/macros.h"
+ #include "src/base/overflowing-math.h"
++
++// TODO(thakis): Remove diagnostic pragmas once these are merged and upstream
++// builds with -Wshadow:
++// * https://github.com/llvm/llvm-project/pull/196337
++// * https://github.com/llvm/llvm-project/pull/196342
++// * https://github.com/llvm/llvm-project/pull/196346
++#pragma GCC diagnostic push
++#if defined(__has_warning)
++#if __has_warning("-Wshadow")
++#pragma GCC diagnostic ignored "-Wshadow"
++#endif
++#endif
+ #include "third_party/llvm-libc/src/shared/math.h"
++#pragma GCC diagnostic pop
+ 
+ namespace v8 {
+ namespace base {

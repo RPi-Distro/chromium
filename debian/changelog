@@ -1,4 +1,4 @@
-chromium (1:150.0.7871.46-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:150.0.7871.100-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -27,7 +27,18 @@ chromium (1:150.0.7871.46-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 06 Jul 2026 18:42:39 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 07 Jul 2026 20:22:45 +0100
+
+chromium (150.0.7871.100-1~deb13u1) trixie-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE list still to be announced.
+  * debian/patches/ungoogled/remove-navigation-source-param.patch: fix crash
+    related to the previous version's resynch. Thanks to
+    plmaneo <plmaneo@agent.qq.com> for the suggested patch (closes: #1141488).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 07 Jul 2026 13:47:51 -0400
 
 chromium (150.0.7871.46-1~deb13u1) trixie-security; urgency=high
 

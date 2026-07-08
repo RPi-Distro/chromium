@@ -1,3 +1,9 @@
+chromium (1:150.0.7871.100-1~deb12u1+rpt2) bookworm; urgency=medium
+
+  * Revert "Work around tabs crashing when using a 16k page size kernel"
+
+ -- Serge Schneider <serge@raspberrypi.com>  Wed, 08 Jul 2026 18:44:41 +0100
+
 chromium (1:150.0.7871.100-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches

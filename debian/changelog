@@ -1,3 +1,50 @@
+chromium (150.0.7871.114-1) unstable; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-15112: Use after free in Ozone. Reported by Google.
+    - CVE-2026-15129: Use after free in Views. Reported by Google.
+    - CVE-2026-15132: Uninitialized Use in V8.
+      Reported by Pierre Langlois from Arm.
+    - CVE-2026-15133: Use after free in InterestGroups. Reported by Jihyeon
+      Jeong (Compsec Lab, Seoul National University / Research Intern).
+    - CVE-2026-15108: Integer overflow in Extensions API. Reported by Google.
+    - CVE-2026-15109: Uninitialized Use in ANGLE. Reported by Google.
+    - CVE-2026-15110: Use after free in Extensions. Reported by Google.
+    - CVE-2026-15111: Use after free in Views. Reported by Google.
+    - CVE-2026-15113: Use after free in Autofill. Reported by Google.
+    - CVE-2026-15114: Out of bounds read and write in Codecs.
+      Reported by Google.
+    - CVE-2026-15115: Insufficient validation of untrusted input in
+      WebAppInstalls. Reported by Google.
+    - CVE-2026-15116: Use after free in Actor. Reported by Google.
+    - CVE-2026-15117: Use after free in Payments. Reported by Google.
+    - CVE-2026-15118: Use after free in Input. Reported by Google.
+    - CVE-2026-15119: Inappropriate implementation in GetUserMedia.
+      Reported by Google.
+    - CVE-2026-15120: Use after free in Core. Reported by Google.
+    - CVE-2026-15121: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-15122: Insufficient validation of untrusted input in Codecs.
+      Reported by Google.
+    - CVE-2026-15123: Insufficient data validation in DOM. Reported by Google
+    - CVE-2026-15124: Insufficient policy enforcement in Passwords.
+      Reported by Google.
+    - CVE-2026-15125: Inappropriate implementation in Forms.
+      Reported by Google.
+    - CVE-2026-15126: Use after free in Forms. Reported by Google.
+    - CVE-2026-15127: Inappropriate implementation in WebGL.
+      Reported by Google.
+    - CVE-2026-15128: Inappropriate implementation in Forms.
+      Reported by Google.
+    - CVE-2026-15130: Insufficient policy enforcement in Navigation.
+      Reported by Google.
+    - CVE-2026-15107: Use after free in IndexedDB.
+      Reported by zh1x1an1221 of Ant Group Tianqiong Security Lab.
+    - CVE-2026-15131: Insufficient data validation in Navigation.
+      Reported by Google.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 10 Jul 2026 01:45:42 -0400
+
 chromium (150.0.7871.100-1) unstable; urgency=high
 
   [ Andres Salomon ]

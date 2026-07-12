@@ -1,0 +1,25 @@
+Description: Run Perfetto build tools through the Debian cross wrapper
+ Perfetto's run_binary.py was added after Debian's general Chromium
+ cross-build patch and invokes target-architecture generators directly.
+ Honor HOST_EXEC_WRAPPER like the other build runners so armhf tools execute
+ through cross-exe-wrapper/QEMU on the native build host.
+Author: Tian Zheng <naitgnehz@gmail.com>
+Bug: https://github.com/RPi-Distro/chromium/issues/62
+Forwarded: https://github.com/RPi-Distro/chromium/issues/62
+Last-Update: 2026-07-12
+
+--- a/third_party/perfetto/gn/run_binary.py
++++ b/third_party/perfetto/gn/run_binary.py
+@@ -17,6 +17,11 @@ This script exists because GN action onl
+ 
++import os
+ import sys
+ import subprocess
+ 
+ if __name__ == '__main__':
+-  sys.exit(subprocess.call(sys.argv[1:]))
++  args = sys.argv[1:]
++  wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++  if wrapper_env:
++    args[0:0] = wrapper_env.split()
++  sys.exit(subprocess.call(args))

@@ -1,10 +1,4 @@
-chromium (1:150.0.7871.100-1~deb12u1+rpt2) bookworm; urgency=medium
-
-  * Revert "Work around tabs crashing when using a 16k page size kernel"
-
- -- Serge Schneider <serge@raspberrypi.com>  Wed, 08 Jul 2026 18:44:41 +0100
-
-chromium (1:150.0.7871.100-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:150.0.7871.114-1~deb12u1+rpt1) bookworm; urgency=medium
 
   * Import rpi and ubuntu patches
   * Remove debian patches duplicated by rpi
@@ -30,15 +24,60 @@ chromium (1:150.0.7871.100-1~deb12u1+rpt1) bookworm; urgency=medium
   * launcher: Add low memory warning
   * Enable PipeWire Camera support by default
   * Add --use-angle=gles unless --no-gl-override is specified
-  * Work around tabs crashing when using a 16k page size kernel
-    - https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1089647
   * d/c: Remove system-config-printer from recommends
   * Disable the GL mappings for YUV formats
   * Replace kill_yuv_mappings.patch with v4l2-bgr4-only.patch
   * base: Use udf instead of bkpt for ImmediateCrash() on ARMv7
   * gl: Disable FallbackToSWIfGLES3NotSupported by default
 
- -- Serge Schneider <serge@raspberrypi.com>  Wed, 08 Jul 2026 00:33:25 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Sun, 12 Jul 2026 13:28:21 +0100
+
+chromium (150.0.7871.114-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-15112: Use after free in Ozone. Reported by Google.
+    - CVE-2026-15129: Use after free in Views. Reported by Google.
+    - CVE-2026-15132: Uninitialized Use in V8.
+      Reported by Pierre Langlois from Arm.
+    - CVE-2026-15133: Use after free in InterestGroups. Reported by Jihyeon
+      Jeong (Compsec Lab, Seoul National University / Research Intern).
+    - CVE-2026-15108: Integer overflow in Extensions API. Reported by Google.
+    - CVE-2026-15109: Uninitialized Use in ANGLE. Reported by Google.
+    - CVE-2026-15110: Use after free in Extensions. Reported by Google.
+    - CVE-2026-15111: Use after free in Views. Reported by Google.
+    - CVE-2026-15113: Use after free in Autofill. Reported by Google.
+    - CVE-2026-15114: Out of bounds read and write in Codecs.
+      Reported by Google.
+    - CVE-2026-15115: Insufficient validation of untrusted input in
+      WebAppInstalls. Reported by Google.
+    - CVE-2026-15116: Use after free in Actor. Reported by Google.
+    - CVE-2026-15117: Use after free in Payments. Reported by Google.
+    - CVE-2026-15118: Use after free in Input. Reported by Google.
+    - CVE-2026-15119: Inappropriate implementation in GetUserMedia.
+      Reported by Google.
+    - CVE-2026-15120: Use after free in Core. Reported by Google.
+    - CVE-2026-15121: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-15122: Insufficient validation of untrusted input in Codecs.
+      Reported by Google.
+    - CVE-2026-15123: Insufficient data validation in DOM. Reported by Google
+    - CVE-2026-15124: Insufficient policy enforcement in Passwords.
+      Reported by Google.
+    - CVE-2026-15125: Inappropriate implementation in Forms.
+      Reported by Google.
+    - CVE-2026-15126: Use after free in Forms. Reported by Google.
+    - CVE-2026-15127: Inappropriate implementation in WebGL.
+      Reported by Google.
+    - CVE-2026-15128: Inappropriate implementation in Forms.
+      Reported by Google.
+    - CVE-2026-15130: Insufficient policy enforcement in Navigation.
+      Reported by Google.
+    - CVE-2026-15107: Use after free in IndexedDB.
+      Reported by zh1x1an1221 of Ant Group Tianqiong Security Lab.
+    - CVE-2026-15131: Insufficient data validation in Navigation.
+      Reported by Google.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 10 Jul 2026 01:45:42 -0400
 
 chromium (150.0.7871.100-1~deb12u1) bookworm-security; urgency=high
 

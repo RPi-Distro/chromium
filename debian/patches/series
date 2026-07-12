@@ -265,3 +265,4 @@ rpi/v4l2_startup.patch
 rpi/background-mode.patch
 rpi/0018-base-Use-udf-for-ImmediateCrash-on-ARMv7.patch
 rpi/0019-gl-Disable-FallbackToSWIfGLES3NotSupported.patch
+rpi/0021-X11-Import-BGRX-native-pixmaps-as-opaque-RGB.patch

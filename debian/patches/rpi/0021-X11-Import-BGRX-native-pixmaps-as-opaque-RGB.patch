@@ -1,0 +1,104 @@
+Description: Import BGRX native pixmaps as opaque RGB textures on X11
+ Raspberry Pi's bcm2835-codec exposes decoded BGR4 buffers as B,G,R,X bytes,
+ which Chromium correctly represents as XRGB/BGRX.  When dma-buf EGL import is
+ unavailable, Ozone X11 falls back through a DRI3 X pixmap, but that binding
+ only accepts BGRA and always binds it as EGL_TEXTURE_RGBA.  Accept BGRX in
+ that X11-only fallback and bind it as EGL_TEXTURE_RGB so the undefined X byte
+ is ignored and sampled alpha is one.  BGRA keeps its existing RGBA path.
+Author: Tian Zheng <naitgnehz@gmail.com>
+Bug: https://github.com/RPi-Distro/chromium/issues/61
+Forwarded: https://github.com/RPi-Distro/chromium/issues/61
+Last-Update: 2026-07-12
+
+--- a/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc
++++ b/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc
+@@ -20,7 +20,8 @@ namespace gl {
+ namespace {
+ bool IsFormatSupported(viz::SharedImageFormat format) {
+-  // Only supports BGRA_8888 format.
+-  return format == viz::SinglePlaneFormat::kBGRA_8888;
++  // The X11 pixmap path uses the same 32-bit storage for BGRA and BGRX.
++  return format == viz::SinglePlaneFormat::kBGRA_8888 ||
++         format == viz::SinglePlaneFormat::kBGRX_8888;
+ }
+ 
+ x11::Pixmap XPixmapFromNativePixmap(const gfx::NativePixmap& native_pixmap) {
+@@ -28,4 +29,7 @@ x11::Pixmap XPixmapFromNativePixmap(cons
+-  const uint8_t depth = 32;
++  const auto format = native_pixmap.GetSharedImageFormat();
++  CHECK(IsFormatSupported(format));
++  const uint8_t depth =
++      format == viz::SinglePlaneFormat::kBGRX_8888 ? 24 : 32;
+   const uint8_t bpp = 32;
+   const auto fd = HANDLE_EINTR(dup(native_pixmap.GetDmaBufFd(0)));
+   if (fd < 0) {
+@@ -133,8 +137,11 @@ bool NativePixmapEGLX11Binding::IsShared
+   return gl::IsFormatSupported(format);
+ }
+ 
+-bool NativePixmapEGLX11Binding::Initialize(x11::Pixmap pixmap) {
++bool NativePixmapEGLX11Binding::Initialize(
++    x11::Pixmap pixmap,
++    viz::SharedImageFormat format) {
+   CHECK_NE(pixmap, x11::Pixmap::None);
++  CHECK(gl::IsFormatSupported(format));
+   pixmap_ = pixmap;
+ 
+   if (eglInitialize(display_, nullptr, nullptr) != EGL_TRUE) {
+@@ -142,6 +149,15 @@ bool NativePixmapEGLX11Binding::Initiali
+     return false;
+   }
+ 
++  // BGRX uses a depth-24/bpp-32 X pixmap: its fourth byte is undefined
++  // padding. Binding it as RGB makes EGL/GL ignore that byte and return
++  // alpha=1 instead of exposing it as texture alpha.
++  const EGLint texture_format =
++      format == viz::SinglePlaneFormat::kBGRX_8888 ? EGL_TEXTURE_RGB
++                                                    : EGL_TEXTURE_RGBA;
++  const EGLint bind_to_texture =
++      format == viz::SinglePlaneFormat::kBGRX_8888 ? EGL_BIND_TO_TEXTURE_RGB
++                                                    : EGL_BIND_TO_TEXTURE_RGBA;
+   EGLint attribs[] = {EGL_BUFFER_SIZE,
+                       32,
+                       EGL_ALPHA_SIZE,
+@@ -158,7 +174,7 @@ bool NativePixmapEGLX11Binding::Initiali
+                       8,
+                       EGL_SURFACE_TYPE,
+                       EGL_PIXMAP_BIT,
+-                      EGL_BIND_TO_TEXTURE_RGBA,
++                      bind_to_texture,
+                       EGL_TRUE,
+                       EGL_NONE};
+ 
+@@ -166,8 +182,8 @@ bool NativePixmapEGLX11Binding::Initiali
+     return false;
+   }
+ 
+-  std::vector<EGLint> attrs = {EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA,
+-                               EGL_TEXTURE_TARGET, EGL_TEXTURE_2D, EGL_NONE};
++  std::vector<EGLint> attrs = {EGL_TEXTURE_FORMAT, texture_format,
++                               EGL_TEXTURE_TARGET, EGL_TEXTURE_2D, EGL_NONE};
+ 
+   surface_ = eglCreatePixmapSurface(
+       display_, config, static_cast<EGLNativePixmapType>(pixmap), attrs.data());
+@@ -209,7 +225,7 @@ std::unique_ptr<NativePixmapGLBinding> Na
+   }
+ 
+   // Transfer the ownership of `pixmap` to `NativePixmapEGLX11Binding`.
+-  if (!binding->Initialize(std::move(pixmap))) {
++  if (!binding->Initialize(std::move(pixmap), plane_format)) {
+     VLOG(1) << "Unable to initialize binding from pixmap";
+     return nullptr;
+   }
+--- a/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.h
++++ b/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.h
+@@ -38,7 +38,8 @@ class NativePixmapEGLX11Binding : public
+   static bool CanImportNativeGLXPixmap();
+ 
+  private:
+-  bool Initialize(x11::Pixmap pixmap);
++  bool Initialize(x11::Pixmap pixmap,
++                  viz::SharedImageFormat format);
+ 
+   // Binds image to texture currently bound to |target|. Returns true on
+   // success.

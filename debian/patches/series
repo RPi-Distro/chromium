@@ -5,6 +5,7 @@ debianization/clang-version.patch
 debianization/swiftshader-use-llvm-16.patch
 debianization/cross-build.patch
 debianization/cross-build-perfetto-run-binary.patch
+debianization/cross-build-dump-syms.patch
 debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
 

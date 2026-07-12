@@ -1,0 +1,28 @@
+Description: Run Breakpad dump_syms through the Debian cross wrapper
+ Chromium's Linux symbol actions build dump_syms with the configured host
+ CPU, which Raspberry Pi's single-toolchain cross build sets to armhf.  The
+ dump_app_syms.py runner executes that target binary directly on the x86-64
+ builder.  Honor HOST_EXEC_WRAPPER for dump_syms only; the later strip command
+ remains a native build-host tool.
+Author: Tian Zheng <naitgnehz@gmail.com>
+Bug: https://github.com/RPi-Distro/chromium/issues/62
+Forwarded: https://github.com/RPi-Distro/chromium/issues/62
+Last-Update: 2026-07-12
+
+--- a/build/linux/dump_app_syms.py
++++ b/build/linux/dump_app_syms.py
+@@ -24,9 +24,13 @@ outfile = sys.argv[4]
+ # Dump only when the output file is out-of-date.
+ if not os.path.isfile(outfile) or \
+    os.stat(outfile).st_mtime < os.stat(infile).st_mtime:
++  dump_syms_cmd = [dumpsyms, '-m', '-d', infile]
++  wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++  if wrapper_env:
++    dump_syms_cmd[0:0] = wrapper_env.split()
+   try:
+     with open(outfile, 'w') as outfileobj:
+-      subprocess.check_call([dumpsyms, '-m', '-d', infile], stdout=outfileobj)
++      subprocess.check_call(dump_syms_cmd, stdout=outfileobj)
+   except:
+     # Remove the output file on failure to make the build step atomic.
+     if os.path.isfile(outfile):

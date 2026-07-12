@@ -258,3 +258,4 @@ rpi/0019-gl-Disable-FallbackToSWIfGLES3NotSupported.patch
 rpi/v4l2-stateful-set-capture-format.patch
 rpi/v4l2-stateful-limit-instances.patch
 rpi/v4l2-do-not-advertise-stateless-codecs.patch
+rpi/0020-GPU-sandbox-Allow-RPI-V4L2-decoder-device.patch

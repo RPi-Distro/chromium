@@ -1,0 +1,33 @@
+Description: Allow the Raspberry Pi V4L2 decoder through the GPU broker
+ Chromium's Linux GPU sandbox is enabled before the sandboxed GPU process
+ enumerates decoder profiles. Raspberry Pi's downstream media patch opens
+ /dev/video10, but the ordinary Linux broker does not allow that path, so the
+ open logs Permission denied and advertised decoder configs remain empty.
+ Grant read/write access to that one decoder node only for the downstream RPi
+ V4L2 build.
+Author: Tian Zheng <naitgnehz@gmail.com>
+Bug: https://github.com/RPi-Distro/chromium/issues/63
+Forwarded: https://github.com/RPi-Distro/chromium/issues/63
+Last-Update: 2026-07-12
+
+--- a/content/common/gpu_pre_sandbox_hook_linux.cc
++++ b/content/common/gpu_pre_sandbox_hook_linux.cc
+@@ -630,6 +630,18 @@ std::vector<BrokerFilePermission> FilePe
+ 
+   AddVulkanICDPermissions(&permissions);
+ 
++#if BUILDFLAG(USE_V4L2_CODEC_RPI) && BUILDFLAG(USE_V4L2_CODEC)
++  // Raspberry Pi's stateful decoder is /dev/video10 rather than one of the
++  // ChromeOS-style /dev/video-dec* nodes.  Keep this permission exact: other
++  // /dev/video* nodes may be cameras or encoders and must remain unavailable
++  // to the sandboxed GPU process.
++  if (options.accelerated_video_decode_enabled) {
++    static constexpr char kRpiV4L2DecoderPath[] = "/dev/video10";
++    permissions.push_back(
++        BrokerFilePermission::ReadWrite(kRpiV4L2DecoderPath));
++  }
++#endif
++
+   if (IsChromeOS()) {
+     // Permissions are additive, there can be multiple GPUs in the system.
+     AddStandardChromeOsPermissions(&permissions);

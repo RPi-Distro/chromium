@@ -38,7 +38,7 @@ Build-Depends:
  nodejs:any,
  node-rollup-plugin-terser:native,
  rollup,
- esbuild,
+ esbuild:native,
  xz-utils,
  xcb-proto,
  xfonts-base,

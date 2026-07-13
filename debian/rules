@@ -231,6 +231,8 @@ override_dh_auto_configure: test_armhf_neon
 	$(CXX) --version
 	# prefer unbundled (system) libraries
 	./debian/scripts/unbundle
+	# setup for pre-generation framework
+	test ! -d pre-gen || ln -sf $(DEB_HOST_ARCH) pre-gen/arch
 
 override_dh_auto_build-arch:
 	gn gen out/Release --args="$(defines)"
@@ -262,6 +264,7 @@ override_dh_fixperms:
 
 override_dh_auto_clean:
 	rm -rf debian/esbuild/root
+	rm -f pre-gen/arch
 	rm -rf third_party/devtools-frontend/src/third_party/esbuild
 	rm -rf third_party/devtools-frontend/src/node_modules/esbuild
 	rm -rf third_party/gperf
@@ -335,3 +338,13 @@ check-version:
 		exit 1; \
 	fi
 	rm tmp.versions.*
+
+# create the orig-pre-gen source tarball
+init-pre-gen:
+	test -s .pc/applied-patches  # are patches applied?
+	rm -rf pre-gen
+	rm -fv ../chromium_$(version).orig-pre-gen.tar.xz
+	dh clean
+	debian/rules override_dh_auto_configure
+	gn gen out/Release --args="$(defines)"
+	debian/scripts/init-pre-gen.sh

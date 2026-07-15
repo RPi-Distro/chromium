@@ -1,3 +1,32 @@
+chromium (150.0.7871.124-1) unstable; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-15764: Use after free in Ozone. Reported by Google.
+    - CVE-2026-15765: Use after free in Ozone. Reported by Google.
+    - CVE-2026-15766: Uninitialized Use in Skia. Reported by Google.
+    - CVE-2026-15767: Heap buffer overflow in libyuv. Reported by Google.
+    - CVE-2026-15768: Insufficient policy enforcement in HTML-in-Canvas.
+      Reported by Google.
+    - CVE-2026-15769: Insufficient validation of untrusted input in
+      Linux Toolkit Theming. Reported by Google.
+    - CVE-2026-15770: Uninitialized Use in V8. Reported by Google.
+    - CVE-2026-15771: Insufficient validation of untrusted input in Media.
+      Reported by Google.
+    - CVE-2026-15772: Use after free in GPU. Reported by Google.
+    - CVE-2026-15773: Use after free in Core.
+      Reported by xinchaotian of Microsoft.
+    - CVE-2026-15774: Use after free in Skia. Reported by Google.
+    - CVE-2026-15775: Insufficient policy enforcement in V8.
+      Reported by wang1r923096443@gmail.com.
+    - CVE-2026-15776: Type Confusion in V8.
+      Reported by Salvatore Gulizia (nickname: Serotav).
+    - CVE-2026-15777: Use after free in UI. Reported by Google.
+    - CVE-2026-15778: Insufficient validation of untrusted input in
+      Navigation. Reported by Google.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 14 Jul 2026 23:16:33 -0400
+
 chromium (150.0.7871.114-1) unstable; urgency=high
 
   [ Andres Salomon ]

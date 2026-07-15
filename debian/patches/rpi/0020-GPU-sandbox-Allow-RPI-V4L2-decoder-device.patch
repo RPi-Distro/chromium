@@ -1,14 +1,17 @@
-Description: Allow the Raspberry Pi V4L2 decoder through the GPU broker
+Description: Allow the RPi V4L2 decoder and preload its exact GBM backend
  Chromium's Linux GPU sandbox is enabled before the sandboxed GPU process
  enumerates decoder profiles. Raspberry Pi's downstream media patch opens
  /dev/video10, but the ordinary Linux broker does not allow that path, so the
  open logs Permission denied and advertised decoder configs remain empty.
  Grant read/write access to that one decoder node only for the downstream RPi
- V4L2 build.
+ V4L2 build. Raspberry Pi OS's Mesa libgbm also discovers dri_gbm.so lazily
+ after the sandbox starts; preload that exact multiarch backend before the
+ sandbox is engaged so Ozone can import the decoder's native pixmaps without
+ opening a library or its dependencies through the broker.
 Author: Tian Zheng <naitgnehz@gmail.com>
 Bug: https://github.com/RPi-Distro/chromium/issues/63
-Forwarded: https://github.com/RPi-Distro/chromium/issues/63
-Last-Update: 2026-07-12
+Forwarded: https://github.com/RPi-Distro/chromium/pull/64
+Last-Update: 2026-07-14
 
 --- a/content/common/gpu_pre_sandbox_hook_linux.cc
 +++ b/content/common/gpu_pre_sandbox_hook_linux.cc
@@ -31,3 +34,27 @@ Last-Update: 2026-07-12
    if (IsChromeOS()) {
      // Permissions are additive, there can be multiple GPUs in the system.
      AddStandardChromeOsPermissions(&permissions);
+@@ -676,6 +688,23 @@ bool LoadLibrariesForGpu(
+     const sandbox::policy::SandboxSeccompBPF::Options& options) {
+   LoadVulkanLibraries();
++#if BUILDFLAG(USE_V4L2_CODEC_RPI)
++  if (options.accelerated_video_decode_enabled) {
++#if defined(__aarch64__)
++    static constexpr char kRpiGbmBackendPath[] =
++        "/usr/lib/aarch64-linux-gnu/gbm/dri_gbm.so";
++#else
++    static constexpr char kRpiGbmBackendPath[] =
++        "/usr/lib/arm-linux-gnueabihf/gbm/dri_gbm.so";
++#endif
++    // libgbm discovers this backend only when the first decoded native
++    // pixmap is imported, after the GPU sandbox has started. Load the exact
++    // backend and its dependencies while this pre-sandbox hook is unrestricted.
++    if (!dlopen(kRpiGbmBackendPath, dlopen_flag)) {
++      LOG(ERROR) << "Failed to preload Raspberry Pi GBM backend: " << dlerror();
++    }
++  }
++#endif
+   if (IsArchitectureArm()) {
+     LoadArmGpuLibraries();
+   }
+   if (IsChromeOS()) {

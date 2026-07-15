@@ -24,6 +24,8 @@ chromium (150.0.7871.124-1) unstable; urgency=high
     - CVE-2026-15777: Use after free in UI. Reported by Google.
     - CVE-2026-15778: Insufficient validation of untrusted input in
       Navigation. Reported by Google.
+  * d/patches/upstream/libyuv-loongarch-fix-row_lsx.cc-and-row_lasx.cc.patch:
+    drop, merged upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 14 Jul 2026 23:16:33 -0400
 

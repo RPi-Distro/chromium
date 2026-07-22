@@ -1,3 +1,36 @@
+chromium (150.0.7871.181-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-15899: Use after free in CameraCapture. Reported by Google.
+    - CVE-2026-15900: Use after free in GPU. Reported by Google.
+    - CVE-2026-15901: Use after free in Network. Reported by Google.
+    - CVE-2026-15902: Use after free in Cast. Reported by Google.
+    - CVE-2026-15903: Out of bounds read and write in V8.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-15904: Use after free in Ozone. Reported by Google.
+    - CVE-2026-15905: Use after free in Aura. Reported by Google.
+    - CVE-2026-16420: Type Confusion in WebAudio.
+      Reported by Found by XBOW and triaged by Brendan Dolan-Gavitt.
+    - CVE-2026-16421: Inappropriate implementation in WebAudio.
+      Reported by Found by XBOW and triaged by Brendan Dolan-Gavitt.
+    - CVE-2026-16413: Out of bounds write in ANGLE. Reported by Google.
+    - CVE-2026-16414: Insufficient validation of untrusted input in
+      Chromecast. Reported by Google.
+    - CVE-2026-16415: Insufficient validation of untrusted input in
+      Extensions. Reported by Google.
+    - CVE-2026-16416: Integer overflow in Chromecast. Reported by Google.
+    - CVE-2026-16417: Uninitialized Use in Skia. Reported by Google.
+    - CVE-2026-16418: Stack buffer overflow in V8. Reported by Google.
+    - CVE-2026-16419: Out of bounds read and write in ANGLE.
+      Reported by Google.
+    - CVE-2026-16422: Insufficient validation of untrusted input in
+      Certificate. Reported by Google.
+    - CVE-2026-16423: Use after free in UI. Reported by Google.
+    - CVE-2026-16424: Use after free in GPU. Reported by Google.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 21 Jul 2026 23:21:54 -0400
+
 chromium (150.0.7871.124-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

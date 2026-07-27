@@ -115,7 +115,7 @@ Recommends:
  chromium-sandbox,
  chromium-l10n,
  rpi-chromium-mods,
- libwidevinecdm0,
+ ${widevine:Recommends}
 Suggests:
  chromium-shell,
  chromium-driver,

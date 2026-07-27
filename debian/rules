@@ -209,6 +209,13 @@ endif
 
 DIST := $(shell dpkg-parsechangelog -l debian/changelog  | sed -n 's/^Distribution: //p')
 
+ifeq (armhf,$(DEB_HOST_ARCH))
+widevine_recommends := libwidevinecdm0
+endif
+
+override_dh_gencontrol:
+	dh_gencontrol -- -Vwidevine:Recommends="$(widevine_recommends)"
+
 %:
 	dh $@
 

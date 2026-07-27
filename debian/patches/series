@@ -45,7 +45,7 @@ disable/font-tests.patch
 disable/google-api-warning.patch
 disable/third-party-cookies.patch
 disable/driver-chrome-path.patch
-disable/widevine-cdm-cu.patch
+#disable/widevine-cdm-cu.patch
 disable/clang-version-check.patch
 disable/screen-ai-blob.patch
 disable/node-version-ck.patch
@@ -246,7 +246,6 @@ loongarch64/0023-loongarch64-enable-lsx-by-default.patch
 
 # Raspberry Pi OS patches
 rpi/0007-Widevide-Add.patch
-rpi/0008-UA-string-Set-to-something-netflix-likes.patch
 rpi/0009-Build-add-use_v4l2_codec_rpi-gn-option.patch
 rpi/0011-Video-decode-Fix-up-RPI-V4L2-decoder-devices.patch
 rpi/0013-v4l2_stateful-Add-info-line-to-indicate-V4L2-decode.patch

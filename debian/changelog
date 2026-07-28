@@ -17,6 +17,8 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
     - system/golang.patch: add patch to build using packaged golang instead of
       bundled go binary.
+    - llvm-19/privatefriends.patch: add yet another clang-19 workaround, this
+      one for the compiler ignoring class friend declarations.
   * d/control: add build-dep on golang.
 
   [ Daniel Richard G. ]

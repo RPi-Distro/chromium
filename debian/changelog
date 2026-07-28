@@ -7,14 +7,12 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
     - upstream/ar-path1.patch: drop, merged upstream.
     - upstream/ar-path2.patch: drop, merged upstream.
     - fixes/widevine-locations.patch: refresh.
-    - fixes/material-utils.patch: essentially a refresh, but a pretty big
-      change from upstream.
+    - fixes/material-utils.patch: refresh for lots of upstream changes.
     - disable/catapult.patch: refresh and add another build fix.
     - disable/widevine-cdm-cu.patch: fix this - it broke at some point.
     - system/jpeg.patch: refresh.
     - llvm-19/clang19.patch: refresh.
     - trixie/gn-inputs.patch: refresh.
-      an updated generate-ninja package [sid].
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
 

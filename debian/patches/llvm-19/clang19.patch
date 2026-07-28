@@ -2,16 +2,16 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -578,7 +578,7 @@ config("compiler") {
-     # Flags for diagnostics.
+@@ -579,7 +579,7 @@ config("compiler") {
      cflags += [ "-fcolor-diagnostics" ]
-     if (!is_win) {
--      cflags += [ "-fdiagnostics-show-inlining-chain" ]
-+      cflags += [  ]
-     } else {
-       # Combine after https://github.com/llvm/llvm-project/pull/192241
-       cflags += [ "/clang:-fdiagnostics-show-inlining-chain" ]
-@@ -617,7 +617,6 @@ config("compiler") {
+     if (!is_wasm) {
+       if (!is_win) {
+-        cflags += [ "-fdiagnostics-show-inlining-chain" ]
++        cflags += [  ]
+       } else {
+         # Combine after https://github.com/llvm/llvm-project/pull/192241
+         cflags += [ "/clang:-fdiagnostics-show-inlining-chain" ]
+@@ -619,7 +619,6 @@ config("compiler") {
      # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
      # for discussion.
      if (!is_wasm) {
@@ -19,7 +19,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
      }
  
      # TODO(hans): Remove this once Clang generates better optimized debug info
-@@ -1578,7 +1577,7 @@ ubsan_hardening("c_array_bounds") {
+@@ -1584,7 +1583,7 @@ ubsan_hardening("c_array_bounds") {
    # the related warning about "unsafe-buffer-usage-in-static-sized-array",
    # since we know that the array bounds sanitizing will catch any out-of-
    # bounds accesses.
@@ -28,23 +28,26 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
  }
  
  # Enable UBSan subset to ensure we always hit `return` statement in non-void
-@@ -1916,13 +1915,10 @@ config("default_warnings") {
+@@ -1926,16 +1925,13 @@ config("default_warnings") {
        "-Wno-thread-safety-reference-return",
  
        # TODO(crbug.com/376641662): Fix and re-enable.
 -      "-Wno-nontrivial-memcall",
- 
-       # TODO(crbug.com/432275627): Fix and re-enable.
--      "-Wno-uninitialized-const-pointer",
- 
-       # TODO(crbug.com/495753203): Fix and re-enable.
--      "-Wno-unused-but-set-global",
      ]
  
-     cflags_cc += [
+     if (!is_wasm) {
+       cflags += [
+         # TODO(crbug.com/432275627): Fix and re-enable.
+-        "-Wno-uninitialized-const-pointer",
+ 
+         # TODO(crbug.com/495753203): Fix and re-enable.
+-        "-Wno-unused-but-set-global",
+       ]
+     }
+ 
 --- a/v8/BUILD.gn
 +++ b/v8/BUILD.gn
-@@ -1807,7 +1807,6 @@ config("toolchain") {
+@@ -1825,7 +1825,6 @@ config("toolchain") {
      # rolling the compiler update into V8 instead.
      if (!build_with_chromium && v8_current_cpu != "ppc64" &&
          v8_current_cpu != "s390x") {
@@ -52,7 +55,7 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
      }
  
      if ((v8_current_cpu != "x64" && v8_current_cpu != "ia32") ||
-@@ -1910,7 +1909,6 @@ config("strict_warnings") {
+@@ -1928,7 +1927,6 @@ config("strict_warnings") {
      }
      cflags += [ "-Wmissing-field-initializers" ]
      if (v8_current_cpu != "ppc64" && v8_current_cpu != "s390x") {

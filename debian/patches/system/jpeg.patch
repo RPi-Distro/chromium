@@ -3,15 +3,15 @@ author: Michael Gilbert <mgilbert@debian.org>
 
 --- a/BUILD.gn
 +++ b/BUILD.gn
-@@ -730,7 +730,6 @@ group("gn_all") {
-         "//third_party/angle:libEGL",
-         "//third_party/angle:libGLESv2",
+@@ -741,7 +741,6 @@ group("gn_all") {
+       }
+       deps += [
          "//third_party/leveldatabase:leveldb_test_targets",
 -        "//third_party/libjpeg_turbo:simd",
          "//third_party/opus:opus_compare",
          "//third_party/opus:opus_demo",
          "//third_party/opus:test_opus_api",
-@@ -745,7 +744,6 @@ group("gn_all") {
+@@ -756,7 +755,6 @@ group("gn_all") {
          if (!is_android) {
            deps += [ "//chrome/test:load_library_perf_tests" ]
          }

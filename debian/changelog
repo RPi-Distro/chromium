@@ -19,6 +19,7 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
       bundled go binary.
     - llvm-19/privatefriends.patch: add yet another clang-19 workaround, this
       one for the compiler ignoring class friend declarations.
+    - llvm-19/constexpr.patch: add clang-19 constexpr workaround.
   * d/control: add build-dep on golang.
 
   [ Daniel Richard G. ]

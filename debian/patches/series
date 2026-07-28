@@ -81,6 +81,7 @@ llvm-19/0008-revert-v8-libm.patch
 llvm-19/0009-revert-v8-libm.patch
 llvm-19/0011-revert-v8-libm.patch
 llvm-19/privatefriends.patch
+llvm-19/constexpr.patch
 
 #rust-1.85/jxl-simd-avx512.patch
 #rust-1.85/jxl-features.patch

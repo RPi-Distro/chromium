@@ -52,6 +52,7 @@ disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
 
+system/golang.patch
 system/icu-shim.patch
 system/jpeg.patch
 system/openjpeg.patch

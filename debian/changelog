@@ -15,6 +15,9 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
     - trixie/gn-inputs.patch: refresh.
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+    - system/golang.patch: add patch to build using packaged golang instead of
+      bundled go binary.
+  * d/control: add build-dep on golang.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 21 Jul 2026 23:21:54 -0400
 

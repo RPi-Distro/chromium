@@ -33,6 +33,7 @@ Build-Depends:
  flex,
  xvfb,
  wdiff,
+ golang,
  gperf,
  bison,
  nodejs:any,

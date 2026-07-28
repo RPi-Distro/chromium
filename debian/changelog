@@ -19,6 +19,15 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
       bundled go binary.
   * d/control: add build-dep on golang.
 
+  [ Daniel Richard G. ]
+  * d/patches:
+    - bookworm/gn-absl.patch: Refresh.
+    - bookworm/gn-funcs.patch: Refresh, adjust indentation, and fix new call
+      to filter_labels_include().
+    - bookworm/gn-revert-path-exists.patch: Add fix for new call to
+      path_exists().
+    - llvm-19/clang19.patch: Fix new instance of -Wlifetime-safety-permissive.
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 21 Jul 2026 23:21:54 -0400
 
 chromium (150.0.7871.181-1) unstable; urgency=high

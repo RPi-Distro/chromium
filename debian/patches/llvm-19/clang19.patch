@@ -45,6 +45,16 @@ warning: unknown warning option '-Wno-nontrivial-memcall'; did you mean '-Wno-no
        ]
      }
  
+--- a/third_party/pdfium/BUILD.gn
++++ b/third_party/pdfium/BUILD.gn
+@@ -191,7 +191,6 @@ config("pdfium_core_config") {
+   if (is_clang) {
+     cflags += [
+       "-Wcovered-switch-default",
+-      "-Wlifetime-safety-permissive",
+     ]
+   }
+ }
 --- a/v8/BUILD.gn
 +++ b/v8/BUILD.gn
 @@ -1825,7 +1825,6 @@ config("toolchain") {

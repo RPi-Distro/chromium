@@ -133,7 +133,6 @@ bookworm/less-void.patch
 bookworm/modff.patch
 bookworm/foreach.patch
 #bookworm/crabbyav1f.patch
-bookworm/node18-import.patch
 bookworm/fmodf.patch
 bookworm/dav1d-extern.patch
 #bookworm/toktrie-utf8chunks.patch
@@ -145,7 +144,6 @@ bookworm/gn-hpp11.patch
 bookworm/path-rustfmt.patch
 bookworm/gn-path-exists2.patch
 bookworm/rust-unsafe-extern.patch
-bookworm/node-esm-dirname.patch
 bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
 

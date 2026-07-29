@@ -34,6 +34,8 @@ chromium (151.0.7922.47-1~deb12u1) UNRELEASED; urgency=high
     - bookworm/bindgen.patch: drop, now that we've got pre-gen [bookworm].
     - bookworm/node18-compat.patch: drop, now that we've got pre-gen
       [bookworm].
+    - bookworm/node18-import.patch: drop, now that we've got pre-gen.
+    - bookworm/node-esm-dirname.patch: drop, now that we've got pre-gen.
   * d/control: add build-dep on golang.
   * Drop the embedded bindgen 0.66.1 packages and various bindgen/esbuild
     workarounds now that we have that stuff pre-generated [bookworm].

@@ -1,0 +1,334 @@
+Description: Pre-generated source framework integration
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+Modify various Python scripts used in the build to hook them into our
+pre-generated source framework. This allows us to save a copy of source
+files that require new-ish versions of nodejs/bindgen/etc. to generate,
+and make use of them when building on older Debian releases that lack
+the aforementioned versions of those tools.
+
+Also part of the framework:
+
+* debian/scripts/init-pre-gen.sh -- maintainer script to drive the
+  generation of source files, and pack them into a new orig-pre-gen
+  source tarball
+
+* debian/deb_pre_gen.py -- main (Python) module, imported by the various
+  scripts after the modifications seen below
+
+
+--- a/build/rust/gni_impl/filter_clang_args.py
++++ b/build/rust/gni_impl/filter_clang_args.py
+@@ -12,6 +12,9 @@ which load plugins).
+ This function filters them out.
+ """
+ 
++import os
++deb_clang_target = os.environ.get('DEB_CR_PRE_GEN_CLANG')
++
+ 
+ def filter_clang_args(clangargs):
+ 
+@@ -27,6 +30,17 @@ def filter_clang_args(clangargs):
+           i += 2
+       elif args[i] == '-ftime-trace':
+         pass
++      # Debian filtering
++      elif deb_clang_target and args[i].startswith('--target='):
++        yield f'--target={deb_clang_target}'
++      elif deb_clang_target and args[i].startswith('-W'):
++        pass
++      elif deb_clang_target and args[i].startswith('-f') and args[i] != '-fparse-all-comments':
++        pass
++      elif deb_clang_target and args[i] == '-mllvm':
++        i += 1
++      elif deb_clang_target and args[i].startswith('-m'):
++        pass
+       else:
+         yield args[i]
+       i += 1
+--- a/build/rust/gni_impl/run_bindgen.py
++++ b/build/rust/gni_impl/run_bindgen.py
+@@ -18,6 +18,9 @@ import action_helpers
+ 
+ from filter_clang_args import filter_clang_args
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ 
+ def PrependVersionLine(filepath):
+   # Prepending a version line accomplishes two goals:
+@@ -66,6 +69,9 @@ def main():
+       nargs="*")
+   args = parser.parse_args()
+ 
++  if deb_pre_gen.before(args.output):
++    return
++
+   # Abort if `TARGET` exists in the environment. Cargo sets `TARGET` when
+   # running build scripts and bindgen will try to be helpful by using that value
+   # if it's set. In practice we've seen a case where someone had the value set
+@@ -139,6 +145,8 @@ def main():
+         pass
+       raise
+ 
++  deb_pre_gen.after()
++
+ 
+ if __name__ == '__main__':
+   main()
+--- a/third_party/dawn/tools/generate-sources-gn.py
++++ b/third_party/dawn/tools/generate-sources-gn.py
+@@ -30,6 +30,9 @@ import os
+ import subprocess
+ import sys
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ SCRIPT_DIR = os.path.dirname(__file__)
+ CMD_DIR = os.path.join(SCRIPT_DIR, 'src', 'cmd')
+ DAWN_ROOT = os.path.realpath(os.path.join(SCRIPT_DIR, '..'))
+@@ -61,6 +64,12 @@ def main() -> int:
+         os.path.join(os.getcwd(), sys.argv[1]),
+     ]
+ 
++    # No good way to get the (first) output filename
++    # (it's the first item of tint_generated_sources in
++    # third_party/dawn/src/tint/generated_sources.gni)
++    if deb_pre_gen.before('gen/src/tint/cmd/bench/enums_core_bench.cc', indep=True):
++        return 0
++
+     # Force Go modules to be ON so package imports within the dawn module
+     # resolve correctly, overriding any potential system-wide or user-wide
+     # environment settings like GO111MODULE=off.
+@@ -70,6 +79,10 @@ def main() -> int:
+     os.environ['CGO_ENABLED'] = '0'
+ 
+     proc = subprocess.run(cmd, check=False, cwd=DAWN_ROOT)
++
++    if proc.returncode == 0:
++        deb_pre_gen.after()
++
+     return proc.returncode
+ 
+ 
+--- a/third_party/devtools-frontend/src/scripts/build/build_inspector_overlay.py
++++ b/third_party/devtools-frontend/src/scripts/build/build_inspector_overlay.py
+@@ -18,6 +18,9 @@ import os
+ import sys
+ import subprocess
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ try:
+     original_sys_path = sys.path
+     sys.path = sys.path + [
+@@ -84,6 +87,9 @@ def main(argv):
+         rollup_plugin_index = argv.index('--rollup_plugin')
+         rollup_plugin = argv[rollup_plugin_index + 1]
+ 
++        if deb_pre_gen.before(f'{output_path}/{argv[1]}', indep=True):
++            return
++
+         file_names_with_sizes = to_pairs(argv[1:input_path_flag_index])
+         for filename, max_size in file_names_with_sizes:
+             max_size = int(max_size)
+@@ -95,6 +101,8 @@ def main(argv):
+                 check_size(filename, css_file, max_size)
+                 write_file(join(output_path, filename), css_file)
+ 
++        deb_pre_gen.after()
++
+     except:
+         print(
+             'Usage: %s filename_1 max_size_1 filename_2 max_size_2 ... filename_N max_size_N --input_path <input_path> --output_path <output_path>'
+--- a/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
++++ b/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
+@@ -14,6 +14,9 @@ import re
+ 
+ from os import path
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ _CURRENT_DIR = path.join(path.dirname(__file__))
+ 
+ ROOT_DIRECTORY_OF_REPOSITORY = path.join(_CURRENT_DIR, '..', '..', '..')
+@@ -266,6 +269,9 @@ def main():
+     runs_in_node_cjs_environment = opts.runs_in == 'node_cjs'
+     runs_in_node_esm_environment = opts.runs_in == 'node_esm'
+ 
++    if deb_pre_gen.before(opts.tsconfig_output_location, indep=True):
++      return 0
++
+     def get_relative_path_from_output_directory(file_to_resolve):
+         return path.relpath(path.join(os.getcwd(), file_to_resolve),
+                             tsconfig_output_directory)
+@@ -369,5 +375,12 @@ def main():
+     return 0
+ 
+ 
++def debian_main_wrap():
++    ret = main()
++    if ret == 0:
++      deb_pre_gen.after()
++    return ret
++
++
+ if __name__ == '__main__':
+-    sys.exit(main())
++    sys.exit(debian_main_wrap())
+--- a/third_party/node/node.py
++++ b/third_party/node/node.py
+@@ -9,6 +9,9 @@ import subprocess
+ import sys
+ import os
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ 
+ def GetBinaryPath():
+   if platform.machine() == 'arm64':
+@@ -49,4 +52,4 @@ def RunNode(cmd_parts, stdout=None):
+   return stdout
+ 
+ if __name__ == '__main__':
+-  RunNode(sys.argv[1:])
++  deb_pre_gen.node_wrap(sys.argv[1:], RunNode)
+--- a/tools/protoc_wrapper/protoc_wrapper.py
++++ b/tools/protoc_wrapper/protoc_wrapper.py
+@@ -26,6 +26,9 @@ import tempfile
+ import re
+ import itertools
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ PROTOC_INCLUDE_POINT = "// @@protoc_insertion_point(includes)"
+ 
+ 
+@@ -153,6 +156,15 @@ def main(argv):
+ 
+   options = parser.parse_args(argv)
+ 
++  # Debian pre-gen support: Only when --protoc-gen-ts is given
++  if options.protoc_gen_ts:
++    out_dir = options.ts_out_dir.rstrip("/")
++    in_file = options.protos[0]
++    assert in_file.endswith(".proto")
++    out_file = in_file[:-6] + ".ts"
++    if deb_pre_gen.before(f"{out_dir}/{out_file}", indep=True):
++      return
++
+   proto_dir = os.path.relpath(options.proto_in_dir)
+   protoc_cmd = [os.path.realpath(options.protoc)]
+ 
+@@ -266,6 +278,8 @@ def main(argv):
+   if options.include:
+     WriteIncludes(headers, options.include)
+ 
++  deb_pre_gen.after()
++
+ 
+ if __name__ == "__main__":
+   try:
+--- a/tools/typescript/ts_library.py
++++ b/tools/typescript/ts_library.py
+@@ -22,6 +22,9 @@ import node_modules
+ from path_utils import isInAshFolder, getTargetPath
+ from validate_tsconfig import validateTsconfigJson, validateJavaScriptAllowed, validateRootDir, isUnsupportedJsTarget, isMappingAllowed, validateDefinitionDeps
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ 
+ def _write_tsconfig_json(gen_dir, tsconfig, tsconfig_file):
+   if not os.path.exists(gen_dir):
+@@ -65,6 +68,9 @@ def main(argv):
+   parser.add_argument('--use_typescript_go', action='store_true')
+   args = parser.parse_args(argv)
+ 
++  if deb_pre_gen.before(f'{args.gen_dir}/tsconfig_{args.output_suffix}.json', indep=True):
++    return
++
+   root_dir = os.path.relpath(args.root_dir, args.gen_dir)
+   out_dir = os.path.relpath(args.out_dir, args.gen_dir)
+ 
+@@ -336,6 +342,8 @@ def main(argv):
+           [re.sub(r'\.ts$', '.js', f) for f in manifest_files]
+       json.dump(manifest_data, manifest_file)
+ 
++  deb_pre_gen.after()
++
+ 
+ if __name__ == '__main__':
+   main(sys.argv[1:])
+--- a/ui/webui/resources/tools/bundle_js.py
++++ b/ui/webui/resources/tools/bundle_js.py
+@@ -21,6 +21,9 @@ sys.path.append(os.path.join(_SRC_PATH,
+ import node
+ import node_modules
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ def _request_list_path(out_folder, target_name):
+   # Using |target_name| as a prefix which is guaranteed to be unique within the
+   # same folder, to avoid problems when multiple bundle_js() targets in the
+@@ -252,6 +255,12 @@ def main(argv):
+   parser.add_argument('--rollup_config')
+   args = parser.parse_args(argv)
+ 
++  deb_in_file = args.js_module_in_files[0]
++  assert deb_in_file.endswith('.js')
++  deb_out_file = deb_in_file[:-3] + '.rollup.js'
++  if deb_pre_gen.before(f'{args.out_folder}/{deb_out_file}', indep=True):
++    return
++
+   # NOTE(dbeam): on Windows, GN can send dirs/like/this. When joined, you might
+   # get dirs/like/this\file.txt. This looks odd to windows. Normalize to right
+   # the slashes.
+@@ -289,6 +298,8 @@ def main(argv):
+                                    optimize_output['js_module_out_files'][0])
+     _update_dep_file(args.input, args, dep_file_header, manifest)
+ 
++  deb_pre_gen.after()
++
+ 
+ if __name__ == '__main__':
+   main(sys.argv[1:])
+--- a/ui/webui/resources/tools/minify_js.py
++++ b/ui/webui/resources/tools/minify_js.py
+@@ -15,6 +15,9 @@ _CWD = os.getcwd()
+ sys.path.append(os.path.join(_SRC_PATH, 'third_party', 'node'))
+ import node
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ 
+ def main(argv):
+   parser = argparse.ArgumentParser()
+@@ -29,6 +32,9 @@ def main(argv):
+   in_path = os.path.normpath(
+       os.path.join(_CWD, args.in_folder).replace('\\', '/'))
+ 
++  if deb_pre_gen.before(f'{args.out_folder}/{args.in_files[0]}', indep=True):
++    return
++
+   # Spawn a NodeJS script to use the programmatic Terser API, since the CLI API
+   # does not allow compressing multiple files at once. This is done to avoid
+   # launching NodeJS once for every input file.
+@@ -45,6 +51,8 @@ def main(argv):
+       as manifest_file:
+     json.dump(manifest_data, manifest_file)
+ 
++  deb_pre_gen.after()
++
+ 
+ if __name__ == '__main__':
+   main(sys.argv[1:])

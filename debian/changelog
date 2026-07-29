@@ -1,3 +1,59 @@
+chromium (151.0.7922.47-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/patches:
+    - upstream/sysroot.patch: drop, merged upstream.
+    - upstream/ar-path1.patch: drop, merged upstream.
+    - upstream/ar-path2.patch: drop, merged upstream.
+    - fixes/widevine-locations.patch: refresh.
+    - fixes/material-utils.patch: refresh for lots of upstream changes.
+    - disable/catapult.patch: refresh and add another build fix.
+    - disable/widevine-cdm-cu.patch: fix this - it broke at some point.
+    - system/jpeg.patch: refresh.
+    - llvm-19/clang19.patch: refresh.
+    - trixie/gn-inputs.patch: refresh.
+    - ungoogled/disable-ai.patch: sync from u-c.
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+    - system/golang.patch: add patch to build using packaged golang instead of
+      bundled go binary.
+    - llvm-19/privatefriends.patch: add yet another clang-19 workaround, this
+      one for the compiler ignoring class friend declarations.
+    - llvm-19/constexpr.patch: add clang-19 constexpr workaround.
+    - trixie/nodejs-set-intersection.patch: drop, now that we've got the
+      pre-gen stuff.
+    - trixie/nodejs-main.patch: drop, now that we've got the pre-gen stuff
+      [trixie, bookworm].
+    - trixie/node20-compat.patch: drop, now that we've got the pre-gen
+      stuff [trixie, bookworm].
+    - trixie/bindgen-boringssl.patch: drop, now that we've got the pre-gen
+      stuff [trixie, bookworm].
+  * d/control: add build-dep on golang.
+
+  [ Daniel Richard G. ]
+  * d/patches:
+    - bookworm/gn-absl.patch: Refresh [bookworm].
+    - bookworm/gn-funcs.patch: Refresh, adjust indentation, and fix new call
+      to filter_labels_include() [bookworm].
+    - bookworm/gn-revert-path-exists.patch: Add fix for new call to
+      path_exists().
+    - llvm-19/clang19.patch: Fix new instance of -Wlifetime-safety-permissive.
+    - llvm-19/value-or.patch: Fix new instance of .value_or().
+  * d/rules: Set CPPFLAGS explicitly so that the env var is always populated.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - fixes/fix-partition-alloc-compile.patch: remove
+    - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: refresh for
+      upstream changes
+    - third_party/0001-Add-PPC64-support-for-boringssl.patch: refresh for
+      upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - third_party/skia-vsx-instructions.patch: refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 21 Jul 2026 23:21:54 -0400
+
 chromium (150.0.7871.181-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

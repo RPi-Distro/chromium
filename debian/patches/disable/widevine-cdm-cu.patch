@@ -3,12 +3,12 @@ author: Michel Le Bihan <michel@lebihan.pl>
 
 --- a/chrome/browser/component_updater/registration.cc
 +++ b/chrome/browser/component_updater/registration.cc
-@@ -121,7 +121,7 @@ void RegisterComponentsForUpdate() {
+@@ -139,7 +139,7 @@ void RegisterComponentsForUpdate() {
  #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC)
  
- #if BUILDFLAG(ENABLE_MEDIA_FOUNDATION_WIDEVINE_CDM)
--  RegisterMediaFoundationWidevineCdmComponent(cus);
-+//  RegisterMediaFoundationWidevineCdmComponent(cus);
- #endif
- 
  #if BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
+-  RegisterWidevineCdmComponent(cus);
++  //RegisterWidevineCdmComponent(cus);
+ #endif  // BUILDFLAG(ENABLE_WIDEVINE_CDM_COMPONENT)
+ 
+   RegisterSubresourceFilterComponent(cus);

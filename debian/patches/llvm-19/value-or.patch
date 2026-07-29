@@ -37,7 +37,7 @@
  HybridEncryptionKey::HybridEncryptionKey(base::span<const uint8_t> private_key)
 --- a/content/browser/service_worker/service_worker_version.cc
 +++ b/content/browser/service_worker/service_worker_version.cc
-@@ -857,7 +857,7 @@ bool ServiceWorkerVersion::FinishRequest
+@@ -864,7 +864,7 @@ bool ServiceWorkerVersion::FinishRequest
      }
    } else {
      // Equivalent to the previous, non-optional iterator behavior. Maybe unsafe.
@@ -95,3 +95,14 @@
          SkScalar delta_x = 0;
          SkScalar delta_y = 0;
          if (IsCommandTypeCurve(previous_command_type)) {
+--- a/ui/views/controls/native/native_view_host_aura.cc
++++ b/ui/views/controls/native/native_view_host_aura.cc
+@@ -195,7 +195,7 @@ void NativeViewHostAura::ShowWidget(int
+       host_->native_view()->SetTransform(transform);
+       original_transform_changed_ = true;
+     }
+-    GetUILayer()->SetClipRect(clip_rect_.value_or({}));
++    GetUILayer()->SetClipRect(clip_rect_.value_or(gfx::Rect{}));
+   }
+   ApplyRoundedCorners();
+   host_->native_view()->SetBounds({x, y, native_w, native_h});

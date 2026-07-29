@@ -6,6 +6,7 @@ debianization/swiftshader-use-llvm-16.patch
 debianization/cross-build.patch
 debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
+debianization/pre-gen.patch
 
 fixes/ps-print.patch
 fixes/widevine-locations.patch
@@ -33,9 +34,6 @@ fixes/bytemuck.patch
 #fixes/missing-dep.patch
 fixes/arm-logging.patch
 
-upstream/sysroot.patch
-upstream/ar-path1.patch
-upstream/ar-path2.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -55,6 +53,7 @@ disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
 
+system/golang.patch
 system/icu-shim.patch
 system/jpeg.patch
 system/openjpeg.patch
@@ -82,6 +81,8 @@ llvm-19/0007-revert-v8-libm.patch
 llvm-19/0008-revert-v8-libm.patch
 llvm-19/0009-revert-v8-libm.patch
 llvm-19/0011-revert-v8-libm.patch
+llvm-19/privatefriends.patch
+llvm-19/constexpr.patch
 
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
@@ -196,7 +197,6 @@ ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.pa
 ppc64le/fixes/fix-rustc.patch
 ppc64le/fixes/fix-rust-linking.patch
 ppc64le/fixes/fix-breakpad-compile.patch
-ppc64le/fixes/fix-partition-alloc-compile.patch
 ppc64le/fixes/fix-page-allocator-overflow.patch
 ppc64le/fixes/fix-different-data-layouts.patch
 

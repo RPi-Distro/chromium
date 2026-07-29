@@ -46,7 +46,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/base/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/base/BUILD.gn
-@@ -39,6 +39,7 @@ absl_source_set("log_severity") {
+@@ -47,6 +47,7 @@ absl_source_set("log_severity") {
  
  absl_source_set("no_destructor") {
    public = [ "no_destructor.h" ]
@@ -54,7 +54,7 @@ libs.
    deps = [
      ":config",
      ":nullability",
-@@ -47,6 +48,7 @@ absl_source_set("no_destructor") {
+@@ -55,6 +56,7 @@ absl_source_set("no_destructor") {
  
  absl_source_set("nullability") {
    public = [ "nullability.h" ]
@@ -62,7 +62,7 @@ libs.
    deps = [ ":config" ]
  }
  
-@@ -98,6 +100,7 @@ absl_source_set("config") {
+@@ -106,6 +108,7 @@ absl_source_set("config") {
      "options.h",
      "policy_checks.h",
    ]
@@ -70,7 +70,7 @@ libs.
  }
  
  absl_source_set("cycleclock_internal") {
-@@ -136,6 +139,7 @@ absl_source_set("core_headers") {
+@@ -144,6 +147,7 @@ absl_source_set("core_headers") {
      "port.h",
      "thread_annotations.h",
    ]
@@ -90,7 +90,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/container/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/container/BUILD.gn
-@@ -65,6 +65,7 @@ absl_source_set("inlined_vector_internal
+@@ -66,6 +66,7 @@ absl_source_set("inlined_vector_internal
  
  absl_source_set("inlined_vector") {
    public = [ "inlined_vector.h" ]
@@ -98,7 +98,7 @@ libs.
    deps = [
      ":inlined_vector_internal",
      "//third_party/abseil-cpp/absl/algorithm",
-@@ -115,6 +116,7 @@ absl_source_set("test_instance_tracker")
+@@ -117,6 +118,7 @@ absl_source_set("test_instance_tracker")
  
  absl_source_set("flat_hash_map") {
    public = [ "flat_hash_map.h" ]
@@ -106,7 +106,7 @@ libs.
    deps = [
      ":container_memory",
      ":hash_container_defaults",
-@@ -144,6 +146,7 @@ absl_test("flat_hash_map_test") {
+@@ -146,6 +148,7 @@ absl_test("flat_hash_map_test") {
  
  absl_source_set("flat_hash_set") {
    public = [ "flat_hash_set.h" ]
@@ -116,14 +116,14 @@ libs.
      ":hash_container_defaults",
 --- a/third_party/abseil-cpp/absl/crc/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/crc/BUILD.gn
-@@ -50,6 +50,7 @@ absl_source_set("crc32c") {
+@@ -40,6 +40,7 @@ absl_source_set("crc32c") {
      "internal/crc_memcpy_x86_arm_combined.cc",
      "internal/crc_non_temporal_memcpy.cc",
    ]
 +  visibility = [ "*" ]
    deps = [
-     ":cpu_detect",
      ":crc_internal",
+     ":non_temporal_memcpy",
 --- a/third_party/abseil-cpp/absl/flags/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/flags/BUILD.gn
 @@ -164,6 +164,7 @@ absl_source_set("flag") {
@@ -160,7 +160,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -52,6 +53,7 @@ absl_test("bind_back_test") {
+@@ -54,6 +55,7 @@ absl_test("bind_back_test") {
  absl_source_set("bind_front") {
    sources = [ "internal/front_binder.h" ]
    public = [ "bind_front.h" ]
@@ -168,7 +168,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/container:compressed_tuple",
      "//third_party/abseil-cpp/absl/meta:type_traits",
-@@ -85,6 +87,7 @@ absl_test("function_ref_test") {
+@@ -87,6 +89,7 @@ absl_test("function_ref_test") {
  
  absl_source_set("overload") {
    public = [ "overload.h" ]
@@ -224,7 +224,7 @@ libs.
    public_deps = [
      # string_view.h was once part of :strings, so string_view.h is
      # re-exported for backwards compatibility.
-@@ -149,6 +151,7 @@ absl_test("append_and_overwrite_test") {
+@@ -680,6 +682,7 @@ absl_test("str_cat_test") {
  
  absl_source_set("str_format") {
    public = [ "str_format.h" ]
@@ -242,7 +242,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/algorithm",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -82,6 +83,7 @@ absl_source_set("any_span") {
+@@ -83,6 +84,7 @@ absl_source_set("any_span") {
  
  absl_source_set("optional") {
    public = [ "optional.h" ]
@@ -250,7 +250,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -91,6 +93,7 @@ absl_source_set("optional") {
+@@ -92,6 +94,7 @@ absl_source_set("optional") {
  
  absl_source_set("variant") {
    public = [ "variant.h" ]

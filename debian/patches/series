@@ -143,7 +143,6 @@ bookworm/gn-hpp11.patch
 #bookworm/rust-box-to-vec.patch
 bookworm/path-rustfmt.patch
 bookworm/gn-path-exists2.patch
-bookworm/rust-unsafe-extern.patch
 bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
 

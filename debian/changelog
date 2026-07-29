@@ -22,6 +22,12 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
     - llvm-19/constexpr.patch: add clang-19 constexpr workaround.
     - trixie/nodejs-set-intersection.patch: drop, now that we've got the
       pre-gen stuff.
+    - trixie/nodejs-main.patch: drop, now that we've got the pre-gen stuff
+      [trixie].
+    - trixie/node20-compat.patch: drop, now that we've got the pre-gen
+      stuff [trixie].
+    - trixie/bindgen-boringssl.patch: drop, now that we've got the pre-gen
+      stuff [trixie].
   * d/control: add build-dep on golang.
 
   [ Daniel Richard G. ]

@@ -68,7 +68,7 @@ defines:=clang_use_chrome_plugins=false
 export CLANG_MVERS:=$(shell $(CC) --version 2>/dev/null | sed -n 's/.* clang version //p' | cut -d. -f1)
 rust_sysroot=/usr
 defines+=rust_sysroot_absolute=\"$(rust_sysroot)\"
-defines+=rust_bindgen_root=\"$(CURDIR)/debian/bindgen/root/usr\"
+defines+=rust_bindgen_root=\"/usr\"
 defines+=rustc_version=\"$(shell $(rust_sysroot)/bin/rustc --version 2>/dev/null | awk -v OFS='-' '{print $$1,$$2}' )\"
 defines+=clang_base_path=\"/usr/lib/llvm-$(CLANG_MVERS)\"
 defines+=clang_version=\"$(CLANG_MVERS)\"
@@ -188,27 +188,7 @@ test_armhf_neon:
 		}; \
 	fi
 
-set_up_bindgen:
-	# Bookworm's bindgen is too old. This is a workaround using the
-	# packages from
-	# <https://snapshot.debian.org/package/rust-bindgen-cli/0.66.1-3/>, which
-	# are new enough to build chromium but old enough to not be linked against
-	# Trixie's libc6 2.38
-	mkdir -p debian/bindgen/root
-	ar --output debian/bindgen/root vx debian/bindgen/bindgen_0.66.1-3_$(DEB_HOST_ARCH).deb
-	tar -C debian/bindgen/root -Jxvf debian/bindgen/root/data.tar.xz
-
-# unused for sid
-ESVERS=0.25.1-1
-set_up_esbuild:
-	# Esbuild binary version should match the libs in chromium. This uses
-	# esbuild packages from
-	# https://snapshot.debian.org/package/golang-github-evanw-esbuild/$(ESVERS)/
-	mkdir -p debian/esbuild/root
-	ar --output debian/esbuild/root vx debian/esbuild/esbuild_$(ESVERS)_$(DEB_HOST_ARCH).deb
-	tar -C debian/esbuild/root -Jxvf debian/esbuild/root/data.tar.xz
-
-override_dh_auto_configure: test_armhf_neon set_up_bindgen
+override_dh_auto_configure: test_armhf_neon
 	# use system node w/out patching source; upstream hardcodes x64 in path
 	mkdir -p third_party/node/linux/node-linux-x64/bin
 	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin
@@ -217,7 +197,6 @@ override_dh_auto_configure: test_armhf_neon set_up_bindgen
 	- test -L third_party/devtools-frontend/src/node_modules/rollup3 || ln -s /usr/share/nodejs/rollup third_party/devtools-frontend/src/node_modules/rollup3
 	# use debian's esbuild
 	cp -ra /usr/lib/$(DEB_BUILD_MULTIARCH)/nodejs/esbuild third_party/devtools-frontend/src/node_modules/
-	#cp debian/esbuild/root/usr/bin/esbuild third_party/devtools-frontend/src/third_party/esbuild/esbuild
 	mkdir -p third_party/devtools-frontend/src/third_party/esbuild
 	cp /usr/bin/esbuild third_party/devtools-frontend/src/third_party/esbuild/
 	mkdir -p third_party/gperf/cipd/bin/
@@ -258,8 +237,6 @@ override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_auto_clean:
-	rm -rf debian/bindgen/root
-	rm -rf debian/esbuild/root
 	rm -f pre-gen/arch
 	rm -rf third_party/devtools-frontend/src/third_party/esbuild
 	rm -rf third_party/devtools-frontend/src/node_modules/esbuild

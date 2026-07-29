@@ -245,19 +245,12 @@ ppc64le/fixes/fix-unknown-warning-option-messages.diff
 
 # Raspberry Pi OS patches
 rpi/0007-Widevide-Add.patch
-rpi/0009-Build-add-use_v4l2_codec_rpi-gn-option.patch
-rpi/0011-Video-decode-Fix-up-RPI-V4L2-decoder-devices.patch
-rpi/0013-v4l2_stateful-Add-info-line-to-indicate-V4L2-decode.patch
-rpi/0014-v4l2decode-Restrict-instances-to-2.patch
 rpi/0201-skia-Add-armv7-optimizations.patch
 # Patch for bullseye i386, but also needed for bookworm armhf
 rpi/master-preferences.patch
 rpi/title-bar-default-system.patch-v35
 rpi/0017-disable-browser-sign-in-feature-by-default.patch
 rpi/enable-pipewire-camera.patch
-rpi/disable_IsV4L2DecoderStateful.patch
-rpi/wayland-gbm-pixmap.patch
 rpi/enable-AcceleratedVideoDecodeLinux.patch
-rpi/v4l2-bgr4-only.patch
 rpi/0018-base-Use-udf-for-ImmediateCrash-on-ARMv7.patch
 rpi/0019-gl-Disable-FallbackToSWIfGLES3NotSupported.patch

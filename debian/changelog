@@ -31,6 +31,7 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
       path_exists().
     - llvm-19/clang19.patch: Fix new instance of -Wlifetime-safety-permissive.
     - llvm-19/value-or.patch: Fix new instance of .value_or().
+  * d/rules: Set CPPFLAGS explicitly so that the env var is always populated.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

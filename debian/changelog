@@ -31,7 +31,6 @@ chromium (151.0.7922.47-1~deb12u1) UNRELEASED; urgency=high
     - rust-1.85/let-chains.patch: add another build fix for older rustc
       [trixie, bookworm].
     - bookworm/freetype-COLRV1.patch: refresh [bookworm].
-    - bookworm/rust-unsafe-extern.patch: refresh [bookworm].
   * d/control: add build-dep on golang.
   * Drop the embedded bindgen 0.66.1 packages and various bindgen/esbuild
     workarounds now that we have that stuff pre-generated [bookworm].

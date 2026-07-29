@@ -33,7 +33,7 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
     - bookworm/freetype-COLRV1.patch: refresh [bookworm].
     - bookworm/bindgen.patch: drop, now that we've got pre-gen [bookworm].
     - bookworm/node18-compat.patch: drop, now that we've got pre-gen
-     [bookworm].
+      [bookworm].
   * d/control: add build-dep on golang.
 
   [ Daniel Richard G. ]

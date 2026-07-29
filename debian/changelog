@@ -23,11 +23,11 @@ chromium (151.0.7922.47-1) UNRELEASED; urgency=high
     - trixie/nodejs-set-intersection.patch: drop, now that we've got the
       pre-gen stuff.
     - trixie/nodejs-main.patch: drop, now that we've got the pre-gen stuff
-      [trixie].
+      [trixie, bookworm].
     - trixie/node20-compat.patch: drop, now that we've got the pre-gen
-      stuff [trixie].
+      stuff [trixie, bookworm].
     - trixie/bindgen-boringssl.patch: drop, now that we've got the pre-gen
-      stuff [trixie].
+      stuff [trixie, bookworm].
   * d/control: add build-dep on golang.
 
   [ Daniel Richard G. ]

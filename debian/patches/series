@@ -101,17 +101,17 @@ trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 #trixie/libxml2-no-xxe.patch
 trixie/gn-string-hash.patch
-trixie/nodejs-set-intersection.patch
+#trixie/nodejs-set-intersection.patch
 trixie/gn-len.patch
-trixie/nodejs-main.patch
+#trixie/nodejs-main.patch
 trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
 trixie/revert-v8-sanitize.patch
 trixie/gn-expand-dir-allowlist.patch
 trixie/gn-additional-outputs.patch
-trixie/node20-compat.patch
-trixie/bindgen-boringssl.patch
+#trixie/node20-compat.patch
+#trixie/bindgen-boringssl.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

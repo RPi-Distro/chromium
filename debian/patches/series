@@ -99,7 +99,7 @@ trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 trixie/gn-string-hash.patch
-trixie/nodejs-set-intersection.patch
+#trixie/nodejs-set-intersection.patch
 #trixie/gn-len.patch
 #trixie/nodejs-main.patch
 #trixie/gn-module-name.patch

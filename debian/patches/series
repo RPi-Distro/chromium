@@ -122,7 +122,6 @@ bookworm/gn-revert-path-exists.patch
 #bookworm/constexpr.patch
 #bookworm/constexpr3.patch
 bookworm/foreach.patch
-#bookworm/rust-unsafe-extern.patch
 #bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
 

@@ -9,11 +9,13 @@ by jammy and noble's version of rust-bindgen:
   3 | ... ; extern "C" { # [link_name = "\u{1}_ZN23rust_allocator_internal24alloc_error_handler_implEv"] pub fn alloc_error_handler_impl () ; } ...
     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
---- a/build/rust/gni_impl/run_bindgen.py
-+++ b/build/rust/gni_impl/run_bindgen.py
-@@ -113,6 +113,13 @@ def main():
-         pass
-       raise
+Index: chromium-151.0.7922.47/build/rust/gni_impl/run_bindgen.py
+===================================================================
+--- chromium-151.0.7922.47.orig/build/rust/gni_impl/run_bindgen.py
++++ chromium-151.0.7922.47/build/rust/gni_impl/run_bindgen.py
+@@ -147,6 +147,13 @@ def main():
+ 
+   deb_pre_gen.after()
  
 +    # Debian workaround for older rust-bindgen
 +    with open(args.output, 'r+') as f:

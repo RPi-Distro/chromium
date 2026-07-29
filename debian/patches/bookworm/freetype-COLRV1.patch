@@ -9,9 +9,11 @@ disable COLRV1. This patch is only appropriate for bookworm.
 See https://bugs.debian.org/1052455 for the description about freetype 2.12
 having a broken COLRV1.
 
---- a/third_party/skia/src/ports/SkFontHost_FreeType_common.cpp
-+++ b/third_party/skia/src/ports/SkFontHost_FreeType_common.cpp
-@@ -55,14 +55,7 @@ namespace {
+Index: chromium-151.0.7922.47/third_party/skia/src/ports/SkFontHost_FreeType_common.cpp
+===================================================================
+--- chromium-151.0.7922.47.orig/third_party/skia/src/ports/SkFontHost_FreeType_common.cpp
++++ chromium-151.0.7922.47/third_party/skia/src/ports/SkFontHost_FreeType_common.cpp
+@@ -59,14 +59,7 @@ namespace {
  // FT_PaintRadialGradient changed size and layout at VER-2-11-0-147-gd3d3ff76d
  // FT_STATIC_CAST introduced VER-2-11-0-172-g9079c5d91
  // So undefine TT_SUPPORT_COLRV1 before 2.11.1 but not if FT_STATIC_CAST is defined.
@@ -21,14 +23,16 @@ having a broken COLRV1.
 -    !defined(FT_STATIC_CAST)
  #    undef TT_SUPPORT_COLRV1
 -#else
--#    include "src/base/SkScopeExit.h"
+-#    include "src/core/SkScopeExit.h"
 -#endif
  #endif
  
  // FT_OUTLINE_OVERLAP was added in FreeType 2.10.3
---- a/third_party/skia/src/ports/SkFontHost_FreeType.cpp
-+++ b/third_party/skia/src/ports/SkFontHost_FreeType.cpp
-@@ -90,13 +90,8 @@ using SkUniqueFTSize = std::unique_ptr<F
+Index: chromium-151.0.7922.47/third_party/skia/src/ports/SkFontHost_FreeType.cpp
+===================================================================
+--- chromium-151.0.7922.47.orig/third_party/skia/src/ports/SkFontHost_FreeType.cpp
++++ chromium-151.0.7922.47/third_party/skia/src/ports/SkFontHost_FreeType.cpp
+@@ -98,13 +98,8 @@ using SkUniqueFTSize = std::unique_ptr<F
  // FT_PaintRadialGradient changed size and layout at VER-2-11-0-147-gd3d3ff76d
  // FT_STATIC_CAST introduced VER-2-11-0-172-g9079c5d91
  // So undefine TT_SUPPORT_COLRV1 before 2.11.1 but not if FT_STATIC_CAST is defined.

@@ -117,7 +117,7 @@ trixie/gn-additional-outputs.patch
 #bookworm/strlcpy.patch
 bookworm/dq-forward-iterator.patch
 bookworm/gn-revert-path-exists.patch
-bookworm/bindgen.patch
+#bookworm/bindgen.patch
 #bookworm/constflatset.patch
 bookworm/gn-allowlist.patch
 bookworm/freetype-COLRV1.patch
@@ -147,7 +147,7 @@ bookworm/gn-path-exists2.patch
 bookworm/rust-unsafe-extern.patch
 bookworm/node-esm-dirname.patch
 bookworm/dav1d-drop-hdr.patch
-bookworm/node18-compat.patch
+#bookworm/node18-compat.patch
 
 # unused patches:
 # bookworm/blink-attrib.patch

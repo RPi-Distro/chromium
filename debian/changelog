@@ -619,6 +619,10 @@ chromium (151.0.7922.71-1) UNRELEASED; urgency=high
       Reported by Google.
     - CVE-2026-18019: Side-channel information leakage in Media.
       Reported by Google.
+    - CVE-2026-16807: Out of bounds write in Codecs. Reported by Google.
+    - CVE-2026-16806: Use after free in WebMCP. Reported by Google.
+    - CVE-2026-16805: Use after free in Blink. Reported by Google.
+    - CVE-2026-16804: Use after free in Input. Reported by Google.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

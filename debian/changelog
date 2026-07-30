@@ -1,4 +1,4 @@
-chromium (151.0.7922.71-1) UNRELEASED; urgency=high
+chromium (151.0.7922.71-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
@@ -628,7 +628,7 @@ chromium (151.0.7922.71-1) UNRELEASED; urgency=high
   * d/patches/ppc64le:
     - core/baseline-isa-3-0.patch: refresh for upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 29 Jul 2026 14:29:24 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 30 Jul 2026 11:05:35 -0400
 
 chromium (151.0.7922.47-1) unstable; urgency=high
 

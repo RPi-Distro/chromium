@@ -620,6 +620,10 @@ chromium (151.0.7922.71-1) UNRELEASED; urgency=high
     - CVE-2026-18019: Side-channel information leakage in Media.
       Reported by Google.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - core/baseline-isa-3-0.patch: refresh for upstream changes
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 29 Jul 2026 14:29:24 -0400
 
 chromium (151.0.7922.47-1) unstable; urgency=high

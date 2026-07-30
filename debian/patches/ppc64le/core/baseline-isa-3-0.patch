@@ -1,21 +1,21 @@
-Index: chromium-149.0.7827.53/build/config/compiler/BUILD.gn
+Index: chromium-151.0.7922.47/build/config/compiler_cpu_abi.gn
 ===================================================================
---- chromium-149.0.7827.53.orig/build/config/compiler/BUILD.gn
-+++ chromium-149.0.7827.53/build/config/compiler/BUILD.gn
-@@ -1638,7 +1638,7 @@ config("compiler_cpu_abi") {
-         cflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
-         ldflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
-       } else {
--        cflags += [ "-m64" ]
-+        cflags += [ "-m64", "-mcpu=power9", "-mtune=power9" ]
-         ldflags += [ "-m64" ]
-       }
-     } else if (current_cpu == "riscv64") {
-Index: chromium-149.0.7827.53/third_party/libvpx/BUILD.gn
+--- chromium-151.0.7922.47.orig/build/config/compiler_cpu_abi.gn
++++ chromium-151.0.7922.47/build/config/compiler_cpu_abi.gn
+@@ -52,7 +52,7 @@ if ((is_posix && !is_apple) || is_fuchsi
+       cpu_abi_cflags += [ "--target=x86_64-unknown-linux-gnu" ]
+       cpu_abi_ldflags += [ "--target=x86_64-unknown-linux-gnu" ]
+     } else {
+-      cpu_abi_cflags += [ "-m64" ]
++      cpu_abi_cflags += [ "-m64", "-mcpu=power9", "-mtune=power9" ]
+       cpu_abi_ldflags += [ "-m64" ]
+     }
+     cpu_abi_cflags += [ "-msse3" ]
+Index: chromium-151.0.7922.47/third_party/libvpx/BUILD.gn
 ===================================================================
---- chromium-149.0.7827.53.orig/third_party/libvpx/BUILD.gn
-+++ chromium-149.0.7827.53/third_party/libvpx/BUILD.gn
-@@ -98,7 +98,7 @@ config("libvpx_config") {
+--- chromium-151.0.7922.47.orig/third_party/libvpx/BUILD.gn
++++ chromium-151.0.7922.47/third_party/libvpx/BUILD.gn
+@@ -97,7 +97,7 @@ config("libvpx_config") {
  
    if (current_cpu == "ppc64") {
      cflags += [
@@ -24,11 +24,11 @@ Index: chromium-149.0.7827.53/third_party/libvpx/BUILD.gn
        "-maltivec",
        "-mvsx",
      ]
-Index: chromium-149.0.7827.53/v8/BUILD.gn
+Index: chromium-151.0.7922.47/v8/BUILD.gn
 ===================================================================
---- chromium-149.0.7827.53.orig/v8/BUILD.gn
-+++ chromium-149.0.7827.53/v8/BUILD.gn
-@@ -1674,7 +1674,7 @@ config("toolchain") {
+--- chromium-151.0.7922.47.orig/v8/BUILD.gn
++++ chromium-151.0.7922.47/v8/BUILD.gn
+@@ -1696,7 +1696,7 @@ config("toolchain") {
      if (current_os == "linux") {
          cflags += [
          # Enable usage of AltiVec, VSX, and other POWER8 and higher features

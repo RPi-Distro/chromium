@@ -93,6 +93,7 @@ rust-1.85/file_as_c_str.patch
 rust-1.85/mojo-features.patch
 rust-1.85/zip8.patch
 rust-1.85/std-from-utf8.patch
+rust-1.85/let-chains.patch
 
 trixie/adler1.patch
 #trixie/libxml-parseerr.patch
@@ -118,6 +119,7 @@ bookworm/gn-revert-path-exists.patch
 #bookworm/bindgen.patch
 #bookworm/constflatset.patch
 #bookworm/gn-allowlist.patch
+#bookworm/freetype-COLRV1.patch
 #bookworm/gn-absl.patch
 #bookworm/constexpr.patch
 #bookworm/constexpr3.patch

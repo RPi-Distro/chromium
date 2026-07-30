@@ -1,0 +1,26 @@
+error[E0658]: `let` expressions in this position are unstable
+   --> ../../chrome/services/reading_mode_metrics/reading_mode_metrics.rs:177:16
+    |
+177 |             if let Some(&next_c) = chars.peek()
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: see issue #53667 <https://github.com/rust-lang/rust/issues/53667> for more information
+    = help: add `#![feature(let_chains)]` to the crate attributes to enable
+    = note: this compiler was built on 2025-03-15; consider upgrading it if it is out of date
+
+error: aborting due to 1 previous error
+
+
+Index: chromium-151.0.7922.47/chrome/services/reading_mode_metrics/reading_mode_metrics.rs
+===================================================================
+--- chromium-151.0.7922.47.orig/chrome/services/reading_mode_metrics/reading_mode_metrics.rs
++++ chromium-151.0.7922.47/chrome/services/reading_mode_metrics/reading_mode_metrics.rs
+@@ -2,6 +2,8 @@
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
+ 
++#![feature(let_chains)]
++
+ #[cxx::bridge(namespace = "reading_mode")]
+ mod ffi {
+     struct DistillationMetrics {

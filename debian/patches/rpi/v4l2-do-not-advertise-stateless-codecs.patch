@@ -1,0 +1,45 @@
+--- a/media/gpu/v4l2/v4l2_utils.cc
++++ b/media/gpu/v4l2/v4l2_utils.cc
+@@ -573,6 +573,24 @@ struct timeval TimeDeltaToTimeVal(base::
+           .tv_usec = base::checked_cast<__suseconds_t>(tv_usec)};
+ }
+ 
++#if !BUILDFLAG(IS_CHROMEOS)
++// A stateless decoder drives the hardware per slice and needs the Request API
++// to submit its controls, which only V4L2VideoDecoder implements; outside
++// ChromeOS the sole decoder wired up is V4L2StatefulVideoDecoder. Asking for
++// zero buffers reports the queue's capabilities without allocating anything.
++bool IsStatelessDecoder(int device_fd) {
++  struct v4l2_requestbuffers reqbufs;
++  memset(&reqbufs, 0, sizeof(reqbufs));
++  reqbufs.count = 0;
++  reqbufs.type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
++  reqbufs.memory = V4L2_MEMORY_MMAP;
++  if (HandledIoctl(device_fd, VIDIOC_REQBUFS, &reqbufs) != kIoctlOk) {
++    return false;
++  }
++  return !!(reqbufs.capabilities & V4L2_BUF_CAP_SUPPORTS_REQUESTS);
++}
++#endif
++
+ std::optional<SupportedVideoDecoderConfigs> GetSupportedV4L2DecoderConfigs() {
+   SupportedVideoDecoderConfigs supported_media_configs;
+   std::vector<std::string> candidate_paths;
+@@ -600,6 +618,17 @@ std::optional<SupportedVideoDecoderConfi
+       continue;
+     }
+ 
++#if !BUILDFLAG(IS_CHROMEOS)
++    // Advertising codecs from a device no decoder here can drive makes the
++    // renderer pick one and then fail outright, where reporting it unsupported
++    // lets the site fall back to a codec that works. On a Raspberry Pi 4 that
++    // device is /dev/video19 (HEVC): canPlayType() answers "probably" and
++    // playback then dies with DECODER_ERROR_NOT_SUPPORTED.
++    if (IsStatelessDecoder(device_fd.get())) {
++      continue;
++    }
++#endif
++
+     std::vector<uint32_t> v4l2_codecs = EnumerateSupportedPixFmts(
+         base::BindRepeating(&HandledIoctl, device_fd.get()),
+         V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);

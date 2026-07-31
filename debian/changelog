@@ -1,3 +1,19 @@
+chromium (151.0.7922.71-1.1) UNRELEASED; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/deb_pre_gen.py: Minor fixes to the pre-gen framework:
+    - Always record target outputs in an .OUTPUTS file, even if a target has
+      only a single output. This incurs only a small (tarball) size penalty,
+      and catches cases where there is disagreement on which is the first
+      output file of a .ninja target.
+    - Update the handling logic for generate_css_js_files.js, as the first
+      output file of the .ninja target changed from v150.
+    - Add an extra check to ensure that target outputs are unique.
+  * d/patches/debianization/pre-gen.patch: Tweak a script so that it outputs
+    a constant UUID, instead of one dependent on the build path.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 30 Jul 2026 11:05:36 -0400
+
 chromium (151.0.7922.71-1) unstable; urgency=high
 
   [ Andres Salomon ]

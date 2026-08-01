@@ -1,60 +1,184 @@
-Description: Allow the RPi V4L2 decoder and preload its exact GBM backend
+Description: Allow the RPi V4L2 decoder and its GBM backend through the sandbox
  Chromium's Linux GPU sandbox is enabled before the sandboxed GPU process
- enumerates decoder profiles. Raspberry Pi's downstream media patch opens
- /dev/video10, but the ordinary Linux broker does not allow that path, so the
- open logs Permission denied and advertised decoder configs remain empty.
- Grant read/write access to that one decoder node only for the downstream RPi
- V4L2 build. Raspberry Pi OS's Mesa libgbm also discovers dri_gbm.so lazily
- after the sandbox starts; preload that exact multiarch backend before the
- sandbox is engaged so Ozone can import the decoder's native pixmaps without
- opening a library or its dependencies through the broker.
+ enumerates decoder profiles. The media layer opens /dev/video10 on a Pi, but
+ the ordinary Linux broker does not allow that path, so the open logs
+ Permission denied and advertised decoder configs remain empty. Grant
+ read/write access to the decoder nodes V4L2Device::GetDevicesForType()
+ reports, so the sandbox policy cannot drift from the device the decoder picks.
+ Raspberry Pi OS's Mesa libgbm also discovers dri_gbm.so lazily after the
+ sandbox starts; preload the backends found alongside libgbm itself, and allow
+ them through the broker as well - preloading alone is not enough, because
+ glibc still opens the requested path to notice they are already resident.
 Author: Tian Zheng <naitgnehz@gmail.com>
+Author: Serge Schneider <serge@raspberrypi.com>
 Bug: https://github.com/RPi-Distro/chromium/issues/63
 Forwarded: https://github.com/RPi-Distro/chromium/pull/64
-Last-Update: 2026-07-14
+Last-Update: 2026-08-01
 
 --- a/content/common/gpu_pre_sandbox_hook_linux.cc
 +++ b/content/common/gpu_pre_sandbox_hook_linux.cc
-@@ -630,6 +630,18 @@ std::vector<BrokerFilePermission> FilePe
+@@ -6,6 +6,7 @@
  
-   AddVulkanICDPermissions(&permissions);
+ #include <dlfcn.h>
+ #include <errno.h>
++#include <limits.h>
+ #include <stdlib.h>
+ #include <sys/stat.h>
  
-+#if BUILDFLAG(USE_V4L2_CODEC_RPI) && BUILDFLAG(USE_V4L2_CODEC)
-+  // Raspberry Pi's stateful decoder is /dev/video10 rather than one of the
-+  // ChromeOS-style /dev/video-dec* nodes.  Keep this permission exact: other
-+  // /dev/video* nodes may be cameras or encoders and must remain unavailable
-+  // to the sandboxed GPU process.
+@@ -18,6 +19,7 @@
+ #include "base/base_paths.h"
+ #include "base/files/file_enumerator.h"
+ #include "base/files/file_path.h"
++#include "base/files/file_util.h"
+ #include "base/files/scoped_file.h"
+ #include "base/functional/bind.h"
+ #include "base/logging.h"
+@@ -191,6 +193,89 @@ void AddV4L2GpuPermissions(
+   }
+ }
+ 
++#if BUILDFLAG(USE_V4L2_CODEC)
++// The V4L2 decoder walks /dev/video* for a device it can drive, both when
++// enumerating supported configs and again when playback starts, but the Linux
++// broker policy only knows the ChromeOS /dev/video-dec* names - see
++// AddV4L2GpuPermissions(), which is only reached on ChromeOS and Chromecast.
++// On a Raspberry Pi the decoder is /dev/video10, so every open is refused and
++// playback drops to software with no diagnostic. Grant the decoder nodes here,
++// while the hook is still unsandboxed, reusing the media layer's own
++// enumeration so the sandbox policy cannot drift from the device the decoder
++// will actually pick.
++// libgbm resolves its backend lazily, on the first native pixmap import. Under
++// X11 that import is NativePixmapEGLX11Binding, which runs long after the
++// sandbox has closed, so the dlopen is refused:
++//
++//   MESA-LOADER: failed to open dri: /usr/lib/<triplet>/gbm/dri_gbm.so:
++//   cannot open shared object file: Permission denied
++//
++// Native pixmap support is then unavailable and video decode never starts, so
++// the decoder permission granted below is wasted. Both a broker permission and
++// a pre-sandbox load are needed, as for libmali.so: brokering alone fails on
++// the backend's own dependencies (libwayland-server.so.0), and loading alone
++// fails because glibc must open() the requested path to notice the library is
++// already resident - and dlinfo() reports the /lib spelling on merged-/usr
++// systems while mesa asks for /usr/lib.
++//
++// The directory comes from libgbm's own location rather than a hard-coded
++// multiarch path, and every backend found is used rather than naming
++// dri_gbm.so.
++std::vector<base::FilePath> GetGbmBackendPaths() {
++  std::vector<base::FilePath> paths;
++  void* gbm = dlopen("libgbm.so.1", dlopen_flag);
++  if (!gbm) {
++    return paths;
++  }
++  char origin[PATH_MAX];
++  if (dlinfo(gbm, RTLD_DI_ORIGIN, origin) != 0) {
++    LOG(WARNING) << "Could not locate libgbm; GBM backends unavailable";
++    return paths;
++  }
++  base::FileEnumerator backends(base::FilePath(origin).Append("gbm"),
++                                /*recursive=*/false,
++                                base::FileEnumerator::FILES,
++                                FILE_PATH_LITERAL("*.so"));
++  for (base::FilePath path = backends.Next(); !path.empty();
++       path = backends.Next()) {
++    paths.push_back(path);
++    // The broker matches the path as requested, so allow both spellings.
++    const base::FilePath resolved = base::MakeAbsoluteFilePath(path);
++    if (!resolved.empty() && resolved != path) {
++      paths.push_back(resolved);
++    }
++  }
++  return paths;
++}
++
++void AddGbmBackendPermissions(std::vector<BrokerFilePermission>* permissions) {
++  for (const base::FilePath& path : GetGbmBackendPaths()) {
++    VLOG(1) << "Allowing sandboxed access to GBM backend " << path;
++    permissions->push_back(BrokerFilePermission::ReadOnly(path.value()));
++  }
++}
++
++// Resolves each backend's dependency tree while we are still unsandboxed.
++void LoadGbmBackends() {
++  for (const base::FilePath& path : GetGbmBackendPaths()) {
++    if (dlopen(path.value().c_str(), dlopen_flag)) {
++      VLOG(1) << "Preloaded GBM backend " << path;
++    } else {
++      LOG(WARNING) << "Failed to preload GBM backend " << path << ": "
++                   << dlerror();
++    }
++  }
++}
++
++void AddLinuxV4L2DecoderPermissions(
++    std::vector<BrokerFilePermission>* permissions) {
++  for (const auto& path : media::V4L2Device::GetDecoderDevicePaths()) {
++    VLOG(1) << "Allowing sandboxed access to V4L2 decoder " << path;
++    permissions->push_back(BrokerFilePermission::ReadWrite(path));
++  }
++}
++#endif  // BUILDFLAG(USE_V4L2_CODEC)
++
+ void AddArmMaliGpuPermissions(std::vector<BrokerFilePermission>* permissions) {
+   // Device file needed by the ARM GPU userspace.
+   static const char kMali0Path[] = "/dev/mali0";
+@@ -668,6 +753,15 @@ std::vector<BrokerFilePermission> FilePe
+     }
+   }
+ 
++#if BUILDFLAG(USE_V4L2_CODEC)
++  // Ordinary Linux: the ChromeOS/Chromecast branches above never ran, so the
++  // decoder nodes still need permitting.
 +  if (options.accelerated_video_decode_enabled) {
-+    static constexpr char kRpiV4L2DecoderPath[] = "/dev/video10";
-+    permissions.push_back(
-+        BrokerFilePermission::ReadWrite(kRpiV4L2DecoderPath));
++    AddLinuxV4L2DecoderPermissions(&permissions);
++    AddGbmBackendPermissions(&permissions);
 +  }
 +#endif
 +
-   if (IsChromeOS()) {
-     // Permissions are additive, there can be multiple GPUs in the system.
-     AddStandardChromeOsPermissions(&permissions);
-@@ -676,6 +688,23 @@ bool LoadLibrariesForGpu(
+   AddStandardGpuPermissions(&permissions);
+   return permissions;
+ }
+@@ -675,6 +769,9 @@ std::vector<BrokerFilePermission> FilePe
+ bool LoadLibrariesForGpu(
      const sandbox::policy::SandboxSeccompBPF::Options& options) {
    LoadVulkanLibraries();
-+#if BUILDFLAG(USE_V4L2_CODEC_RPI)
-+  if (options.accelerated_video_decode_enabled) {
-+#if defined(__aarch64__)
-+    static constexpr char kRpiGbmBackendPath[] =
-+        "/usr/lib/aarch64-linux-gnu/gbm/dri_gbm.so";
-+#else
-+    static constexpr char kRpiGbmBackendPath[] =
-+        "/usr/lib/arm-linux-gnueabihf/gbm/dri_gbm.so";
-+#endif
-+    // libgbm discovers this backend only when the first decoded native
-+    // pixmap is imported, after the GPU sandbox has started. Load the exact
-+    // backend and its dependencies while this pre-sandbox hook is unrestricted.
-+    if (!dlopen(kRpiGbmBackendPath, dlopen_flag)) {
-+      LOG(ERROR) << "Failed to preload Raspberry Pi GBM backend: " << dlerror();
-+    }
-+  }
++#if BUILDFLAG(USE_V4L2_CODEC)
++  LoadGbmBackends();
 +#endif
    if (IsArchitectureArm()) {
      LoadArmGpuLibraries();
    }
-   if (IsChromeOS()) {
+--- a/media/gpu/v4l2/v4l2_device.cc
++++ b/media/gpu/v4l2/v4l2_device.cc
+@@ -145,6 +145,15 @@ bool V4L2Device::Open(Type type, uint32_
+   return true;
+ }
+ 
++std::vector<std::string> V4L2Device::GetDecoderDevicePaths() {
++  std::vector<std::string> paths;
++  auto dev = base::MakeRefCounted<V4L2Device>();
++  for (const auto& device : dev->GetDevicesForType(Type::kDecoder)) {
++    paths.push_back(device.first);
++  }
++  return paths;
++}
++
+ base::ScopedFD V4L2Device::OpenFDForType(Type type) {
+   DVLOGF(3);
+   base::ScopedFD devfd;
+--- a/media/gpu/v4l2/v4l2_device.h
++++ b/media/gpu/v4l2/v4l2_device.h
+@@ -96,6 +96,12 @@ class MEDIA_GPU_EXPORT V4L2Device
+   [[nodiscard]] bool Open(Type type, uint32_t v4l2_pixfmt);
+   static base::ScopedFD OpenFDForType(Type type);
+ 
++  // Device node paths of every V4L2 decoder on the system, classified exactly
++  // as Open()/OpenFDForType() would. Used by the GPU pre-sandbox hook to grant
++  // the broker access to those nodes and nothing else; going through the same
++  // enumeration keeps the sandbox policy and the decoder selection in step.
++  static std::vector<std::string> GetDecoderDevicePaths();
++
+   // Returns whether Open() has been succeeded.
+   bool IsValid();
+ 

@@ -255,3 +255,4 @@ rpi/enable-AcceleratedVideoDecodeLinux.patch
 rpi/0018-base-Use-udf-for-ImmediateCrash-on-ARMv7.patch
 rpi/0019-gl-Disable-FallbackToSWIfGLES3NotSupported.patch
 rpi/v4l2-stateful-set-capture-format.patch
+rpi/v4l2-stateful-limit-instances.patch

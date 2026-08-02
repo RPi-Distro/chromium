@@ -11,6 +11,8 @@ chromium (151.0.7922.71-1.1) UNRELEASED; urgency=high
     - Add an extra check to ensure that target outputs are unique.
   * d/patches/debianization/pre-gen.patch: Tweak a script so that it outputs
     a constant UUID, instead of one dependent on the build path.
+  * d/patches/system/golang.patch: Prevent the Go compiler from writing
+    things into our home dir, or accessing the network.
   * d/scripts/init-pre-gen.sh: Don't hard-code the package name, as we might
     be doing init-pre-gen for ungoogled-chromium.
 

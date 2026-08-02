@@ -4,7 +4,7 @@ Author: Andres Salomon <dilinger@debian.org>
 
 --- a/third_party/dawn/tools/generate-sources-gn.py
 +++ b/third_party/dawn/tools/generate-sources-gn.py
-@@ -40,8 +40,7 @@ from tools.python import cipd_deps
+@@ -43,11 +43,16 @@ from tools.python import cipd_deps
  
  
  def main() -> int:
@@ -14,3 +14,12 @@ Author: Andres Salomon <dilinger@debian.org>
      if sys.platform == 'win32':
          go_binary += '.exe'
  
++    # Debian: Prevent Go from putting stuff in a real $HOME dir,
++    # and disallow network access
++    if os.path.exists('toolchain.ninja'):
++        os.environ['HOME'] = os.path.join(os.getcwd(), 'go-home')
++        os.environ['GOPROXY'] = 'off'
++
+     tool_dir = os.path.relpath(os.path.join(CMD_DIR, 'gen', 'sources'),
+                                DAWN_ROOT)
+     # Go expects package paths relative to module root to start with './' or

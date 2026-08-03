@@ -71,25 +71,9 @@ Date:   Tue Mar 31 20:28:37 2026 -0700
          "build/linux/debian_bullseye_amd64-sysroot:rustlink": {
              "type": "glob",
              "includes": [
-@@ -287,6 +295,7 @@ def __step_config(ctx, step_config):
-             "command_prefix": "python3 ../../build/rust/gni_impl/run_build_script.py",
-             "inputs": [
-                 "third_party/rust-toolchain:toolchain",
-+                "third_party/rust:rustlib",
-             ],
-             "handler": "rust_build_handler",
-             "remote": remote and config.get(ctx, "cog"),
-@@ -297,6 +306,7 @@ def __step_config(ctx, step_config):
-             "command_prefix": "python3 ../../build/rust/std/find_std_rlibs.py",
-             "inputs": [
-                 "third_party/rust-toolchain:toolchain",
-+                "third_party/rust-toolchain/lib/rustlib:rlib",
-             ],
-             "remote": remote and config.get(ctx, "cog"),
-             "timeout": "2m",
 --- a/build/rust/cargo_crate.gni
 +++ b/build/rust/cargo_crate.gni
-@@ -462,13 +462,6 @@ template("cargo_crate") {
+@@ -467,13 +467,6 @@ template("cargo_crate") {
          _rustflags_txt,
          rustc_print_cfg_path,
        ]

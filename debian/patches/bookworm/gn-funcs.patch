@@ -9,76 +9,98 @@ with chromium, which is simple enough..
 
 --- a/third_party/webrtc/webrtc.gni
 +++ b/third_party/webrtc/webrtc.gni
-@@ -675,16 +675,13 @@ template("rtc_source_set") {
-         "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
+@@ -568,16 +568,13 @@ template("rtc_test") {
  
-     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
+     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl
+     # when build_with_chromium=true
 -    if (build_with_chromium && defined(deps)) {
 -      absl_dependencies =
 -          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
 -      if (absl_dependencies != []) {
 -        filtered_deps =
 -            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
--        deps = []
--        deps = filtered_deps
 +    if (build_with_chromium) {
-+        if (!defined(deps)) {
-+          deps = []
-+        }
-         deps += [ "//third_party/abseil-cpp:absl" ]
--      }
++      if (!defined(deps)) {
+         deps = []
+-        deps = filtered_deps
+-        deps += [ "//third_party/abseil-cpp:absl" ]
+       }
++      deps += [ "//third_party/abseil-cpp:absl" ]
 +    } else {
-+        assert("not building with chromium??")
++      assert("not building with chromium??")
      }
-   }
- }
-@@ -767,16 +764,13 @@ template("rtc_static_library") {
-         "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
  
-     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
+     # TODO(crbug.com/webrtc/13556): Adding the .app folder in the runtime_deps
+@@ -692,16 +689,13 @@ template("rtc_source_set") {
+ 
+     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl
+     # when build_with_chromium=true
 -    if (build_with_chromium && defined(deps)) {
 -      absl_dependencies =
 -          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
 -      if (absl_dependencies != []) {
 -        filtered_deps =
 -            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
--        deps = []
--        deps = filtered_deps
 +    if (build_with_chromium) {
-+        if (!defined(deps)) {
-+          deps = []
-+        }
-         deps += [ "//third_party/abseil-cpp:absl" ]
--      }
++      if (!defined(deps)) {
+         deps = []
+-        deps = filtered_deps
+-        deps += [ "//third_party/abseil-cpp:absl" ]
+       }
++      deps += [ "//third_party/abseil-cpp:absl" ]
 +    } else {
-+        assert("not building with chromium??")
++      assert("not building with chromium??")
      }
    }
  }
-@@ -910,16 +904,13 @@ template("rtc_library") {
+@@ -782,19 +776,15 @@ template("rtc_static_library") {
+     assert(
+         !defined(absl_deps),
          "`absl_deps` has been deprecated, add your Abseil dependencies to the `deps` variable.")
- 
-     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl when build_with_chromium=true
+-
+     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl
+     # when build_with_chromium=true
 -    if (build_with_chromium && defined(deps)) {
 -      absl_dependencies =
 -          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
 -      if (absl_dependencies != []) {
 -        filtered_deps =
 -            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
--        deps = []
--        deps = filtered_deps
 +    if (build_with_chromium) {
-+        if (!defined(deps)) {
-+          deps = []
-+        }
-         deps += [ "//third_party/abseil-cpp:absl" ]
--      }
++      if (!defined(deps)) {
+         deps = []
+-        deps = filtered_deps
+-        deps += [ "//third_party/abseil-cpp:absl" ]
+       }
++      deps += [ "//third_party/abseil-cpp:absl" ]
 +    } else {
-+        assert("not building with chromium??")
++      assert("not building with chromium??")
      }
    }
  }
-@@ -962,22 +953,10 @@ template("rtc_executable") {
+@@ -929,16 +919,13 @@ template("rtc_library") {
+ 
+     # Abseil dependencies need to be converted to //third_party/abseil-cpp:absl
+     # when build_with_chromium=true
+-    if (build_with_chromium && defined(deps)) {
+-      absl_dependencies =
+-          filter_labels_include(deps, [ "//third_party/abseil-cpp/*" ])
+-      if (absl_dependencies != []) {
+-        filtered_deps =
+-            filter_labels_exclude(deps, [ "//third_party/abseil-cpp/*" ])
++    if (build_with_chromium) {
++      if (!defined(deps)) {
+         deps = []
+-        deps = filtered_deps
+-        deps += [ "//third_party/abseil-cpp:absl" ]
+       }
++      deps += [ "//third_party/abseil-cpp:absl" ]
++    } else {
++      assert("not building with chromium??")
+     }
+   }
+ }
+@@ -981,22 +968,10 @@ template("rtc_executable") {
        ]
      }
  
@@ -104,7 +126,7 @@ with chromium, which is simple enough..
      }
    }
  }
-@@ -1504,11 +1483,6 @@ template("rtc_rust_cxx_bridge") {
+@@ -1527,11 +1502,6 @@ template("rtc_rust_cxx_bridge") {
    assert(defined(invoker.source), "source must be specified")
    assert(!defined(invoker.sources), "Use source instead of sources")
  

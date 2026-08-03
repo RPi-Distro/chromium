@@ -1,6 +1,6 @@
 --- a/media/gpu/v4l2/v4l2_utils.cc
 +++ b/media/gpu/v4l2/v4l2_utils.cc
-@@ -573,6 +573,24 @@ struct timeval TimeDeltaToTimeVal(base::
+@@ -575,6 +575,24 @@ struct timeval TimeDeltaToTimeVal(base::
            .tv_usec = base::checked_cast<__suseconds_t>(tv_usec)};
  }
  
@@ -25,7 +25,7 @@
  std::optional<SupportedVideoDecoderConfigs> GetSupportedV4L2DecoderConfigs() {
    SupportedVideoDecoderConfigs supported_media_configs;
    std::vector<std::string> candidate_paths;
-@@ -600,6 +618,17 @@ std::optional<SupportedVideoDecoderConfi
+@@ -602,6 +620,17 @@ std::optional<SupportedVideoDecoderConfi
        continue;
      }
  

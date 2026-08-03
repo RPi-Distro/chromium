@@ -91,5 +91,5 @@ Subject: [PATCH 07/17] Widevide: Add
 +    # No CDM is served for 32-bit ARM; it would download an x64 CRX forever.
 +    !(target_os == "linux" && target_cpu == "arm")
  
- # Enable (Windows) Media Foundation Widevine CDM component.
  declare_args() {
+   # Widevine CDM is bundled as part of Google Chrome and

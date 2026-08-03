@@ -1,3 +1,44 @@
+chromium (1:151.0.7922.71-1~deb12u1+rpt1) bookworm; urgency=medium
+
+  [ Serge Schneider ]
+  * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
+  * Move chromium-l10n to recommends
+  * Enable kAcceleratedVideoDecodeLinux and kAcceleratedVideoDecodeLinuxGL
+    by default
+  * Use zenoty instead of xmessage for displaying messages in launcher script
+  * Replace old chromium-browser packages
+  * Add chromium-browser symlink
+  * d/c: Add rpi-chromium-mods to chromium Recommends
+  * Launcher: extend NEON check to armv6l platforms
+  * Bump alternatives priority to 90
+  * d/r: Use DEB_VERSION_UPSTREAM from pkg-info.mk to determine upstream version
+  * launcher: Add low memory warning
+  * Enable PipeWire Camera support by default
+  * Add --use-angle=gles unless --no-gl-override is specified
+  * d/c: Remove system-config-printer from recommends
+  * base: Use udf instead of bkpt for ImmediateCrash() on ARMv7
+  * gl: Keep the GLES2 fallback on Linux
+  * Restrict Widevine to armhf and drop the UA-string patch
+  * Drop the legacy V4L2 decoder patches
+  * Apply the CAPTURE format the V4L2 decoder picks
+  * Cap concurrent V4L2 decoders on bcm2835-codec
+  * Do not advertise codecs from V4L2 devices no decoder can drive
+  * Reuse the main GL display for X11 native pixmap import
+  * Support cross-building armhf (the 32-bit linker runs out of address space)
+
+  [ Tian Zheng ]
+  * Let the sandboxed GPU process use the V4L2 decoder and GBM backends
+  * Import RPi BGRX video frames as opaque X11 pixmaps
+
+  [ David Turner ]
+  * Import rpi and ubuntu patches
+  * Remove debian patches duplicated by rpi
+  * rpi build customisations
+  * Remove debian's master_preferences file
+  * Add package recommend for libwidevinecdm0
+
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 03 Aug 2026 16:54:00 +0100
+
 chromium (151.0.7922.71-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

@@ -118,8 +118,11 @@ ifdef cross_pkg_config
 defines+=pkg_config=\"$(cross_pkg_config)\"
 endif
 
-# thin lto requires >4 GB RAM, so avoid it on 32-bit build hosts
-ifeq (32,$(DEB_BUILD_ARCH_BITS))
+# thin lto requires >4 GB RAM, so avoid it on 32-bit build hosts.
+# Keyed on the target (DEB_HOST_ARCH) rather than the builder: cross-building
+# armhf on a 64-bit builder must still produce the same output as a native
+# armhf build, which has thin LTO disabled.
+ifeq (32,$(DEB_HOST_ARCH_BITS))
 defines+=use_thin_lto=false \
          concurrent_links=1
 else

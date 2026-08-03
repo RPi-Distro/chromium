@@ -260,3 +260,4 @@ rpi/v4l2-stateful-limit-instances.patch
 rpi/v4l2-do-not-advertise-stateless-codecs.patch
 rpi/v4l2-sandbox-allow-decoder-devices.patch
 rpi/x11-import-bgrx-native-pixmap.patch
+rpi/x11-reuse-main-gl-display.patch

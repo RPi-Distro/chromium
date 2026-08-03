@@ -35,6 +35,7 @@ Build-Depends:
  yasm,
  xvfb,
  wdiff,
+ golang,
  gperf,
  bison,
  nodejs:any,

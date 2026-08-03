@@ -1,42 +1,37 @@
-gl: Disable FallbackToSWIfGLES3NotSupported by default
+gl: Keep the GLES2 fallback on Linux
 
-Upstream enabled this feature in M146 as part of deprecating GLES2
-(crbug.com/444049511): when an OpenGL ES 3.0 context cannot be created,
-the GPU process no longer retries ES 2.0 but gives up on hardware
-acceleration entirely, dropping to software compositing with no WebGL
-(the automatic SwiftShader fallback is also deprecated). On VideoCore IV
-devices (Pi 0-3), whose vc4 driver correctly reports OpenGL ES 2.0 only,
-this silently removed all hardware acceleration.
+Upstream deprecated GLES2 in M146 (crbug.com/444049511): when an OpenGL
+ES 3.0 context cannot be created, the GPU process no longer retries ES 2.0
+but gives up on hardware acceleration entirely, dropping to software
+compositing with no WebGL (the automatic SwiftShader fallback is also
+deprecated). On VideoCore IV devices (Pi 0-3), whose vc4 driver correctly
+reports OpenGL ES 2.0 only, this silently removes all hardware
+acceleration.
 
-Disable the feature by default, restoring the pre-M146 ES 2.0 fallback.
-The feature is only consulted when ES3 context creation fails, so
-ES3-capable devices (v3d on Pi 4/5) are unaffected. Google carved
-ChromeOS Flex out of the same feature for the same reason (GLES2-only
-hardware in the field; see ShouldFallbackToSWIfGLES3NotSupported in this
-file). Verified on a Pi 3B: with the feature disabled, the GPU process
-falls back to ES 2.0 and runs hardware-accelerated on vc4 via ANGLE.
+Until M150 the behaviour was governed by kFallbackToSWIfGLES3NotSupported,
+which we disabled by default. In M151 upstream removed the feature on
+Linux altogether -- it is now declared only for Windows and ChromeOS, and
+ShouldFallbackToSWIfGLES3NotSupported() returns a hard-coded true
+everywhere else, with no flag left to override it. So return false in that
+branch instead, restoring the pre-M146 ES 2.0 fallback.
 
-Can be re-enabled for testing via chrome://flags
-(#fallback-to-sw-if-gles3-not-supported) or --enable-features.
+The result is only consulted when ES3 context creation fails (it feeds
+GLContextAttribs::allow_es_version_fallback), so ES3-capable devices (v3d
+on Pi 4/5) are unaffected. Google carved ChromeOS Flex out of the same
+feature for the same reason (GLES2-only hardware in the field; see
+ShouldFallbackToSWIfGLES3NotSupported in this file).
 --- a/ui/gl/gl_features.cc
 +++ b/ui/gl/gl_features.cc
-@@ -113,15 +113,12 @@ BASE_FEATURE(kDefaultPassthroughCommandD
+@@ -277,7 +277,11 @@ bool ShouldFallbackToSWIfGLES3NotSupport
+ #elif BUILDFLAG(IS_WIN)
+   return base::FeatureList::IsEnabled(kFallbackToSWIfGLES3NotSupported);
+ #else   // BUILDFLAG(IS_CHROMEOS)
+-  return true;
++  // Raspberry Pi: keep the ES 2.0 fallback. On GLES2-only VideoCore IV
++  // devices (Pi 0-3) returning true replaces hardware ES 2.0 with software
++  // rendering. Only consulted when ES3 context creation fails, so
++  // ES3-capable hardware (v3d on Pi 4/5) is unaffected.
++  return false;
+ #endif  // BUILDFLAG(IS_CHROMEOS)
+ }
  
- // Controls whether the GPU process falls back to software if GLES3 is not
- // supported.
-+// Disabled for Raspberry Pi: on GLES2-only VideoCore IV devices (Pi 0-3)
-+// this feature replaces hardware ES 2.0 with software rendering. It is only
-+// consulted when ES3 context creation fails, so ES3-capable hardware
-+// (v3d on Pi 4/5) is unaffected.
- BASE_FEATURE(kFallbackToSWIfGLES3NotSupported,
--#if BUILDFLAG(IS_WIN)
--             // TODO(https://crbug.com/444049511): Currently disabled on
--             // Windows for D3D9 users that are still on ES 2. Enable once
--             // crbug.com/40874754 is fixed, deprecating D3D9 usage.
-              base::FEATURE_DISABLED_BY_DEFAULT);
--#else
--             base::FEATURE_ENABLED_BY_DEFAULT);
--#endif
- 
- #if BUILDFLAG(IS_WIN)
- // If true, VsyncThreadWin will use the compositor clock

@@ -68,3 +68,14 @@ in order to work on older gn that lacks path_exists().
  
  declare_args() {
    # Placeholder to allow having use_siso in args.gn file.
+--- a/tools/metrics/BUILD.gn
++++ b/tools/metrics/BUILD.gn
+@@ -11,7 +11,7 @@ import("//tools/metrics/histograms/histo
+ # dirmd doesn't work in non-git checkout.
+ # TODO(crbug.com/329080012): Remove this once dirmd works in non-git
+ # checkouts.
+-if (path_exists("//.git")) {
++if (false) {
+   action("histograms_xml") {
+     script = "histograms/merge_xml.py"
+     output = "$root_out_dir/histograms.xml"

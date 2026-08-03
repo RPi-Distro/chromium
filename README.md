@@ -13,11 +13,13 @@ If you're updating the Chromium package for a newer upstream version, first crea
 ```
 ./debian/rules get-orig-source
 ```
-Otherwise, just use the existing orig.tar.xz that's already in Debian.
+As an additional optional step, if you're building chromium for backports to stable/oldstable, run `./debian/rules init-pre-gen` as well to create the .orig-pre-gen.tar.xz file.
+Otherwise, just use the existing orig.tar.xz and orig-pre-gen.tar.xz that's already in Debian (eg, what you get with `apt source chromium`).
 
-Now unpack `chromium_<version>.orig.tar.xz` and copy the debian/ directory from this git repository into it.
+Now unpack `chromium_<version>.orig*.tar.xz` and copy the debian/ directory from this git repository into it.
 ```
 tar Jxvf chromium_<version>.orig.tar.xz
+tar Jxvf chromium_<version>.orig-pre-gen.tar.xz -C chromium-<version>/;   # this is optional
 cp -ra chromium-git/debian chromium-<version>
 ```
 

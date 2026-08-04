@@ -1,0 +1,83 @@
+sandbox: allow fcntl(F_DUPFD_QUERY) instead of killing the process
+
+Mesa >= 25.3 uses fcntl(fd1, F_DUPFD_QUERY, fd2) in os_same_file_description()
+to test whether two DRM fds share an open file description. Under X11 the GPU
+process holds two separate descriptions for the same DRM node -- ozone's
+GBMSupportX11 dup()s its own DRI3 fd for the gbm device, while libEGL's DRI3
+loader holds another -- so Mesa's pipe-screen cache runs that comparison while
+creating a WebGL context.
+
+F_DUPFD_QUERY is not in RestrictFcntlCommands()' allowlist, so it reaches
+.Default(CrashSIGSYS()) and the GPU process is killed. The renderer then fails
+with "BindToCurrentSequence failed" and getContext("webgl") returns null:
+WebGL is dead on any X11 desktop with Mesa >= 25.3 and Linux >= 6.10.
+
+Mesa has a correct fallback chain (kcmp, then an epoll trick, then a stat
+comparison in u_screen.c) for every errno the kernel can return, but a fatal
+trap never returns, so none of it is reachable. Chromium already relies on that
+fallback for the same Mesa function by answering kcmp with Error(ENOSYS).
+
+Allowing the command is safe: f_dupfd_query() is a one-bit equality test over
+two descriptors already in the caller's own fd table, with no capability check,
+no cross-process reach and no pointer ordering (unlike kcmp, which is withheld
+for that reason). The kernel lists it in check_fcntl_cmd() among the commands
+permitted on an O_PATH descriptor, alongside F_DUPFD, F_DUPFD_CLOEXEC, F_GETFD,
+F_SETFD and F_GETFL -- all already allowed here. The same oracle is in any case
+constructible from F_SETFL/F_GETFL, which are allowed.
+
+Firefox fixed this the same way in the browser (Mozilla #1995035), as did
+Ladybird (#10015).
+
+Note for forward-porting: the allowlist must be amended in
+RestrictFcntlCommands(), not in bpf_gpu_policy_linux.cc, which only handles
+__NR_fcntl. On 32-bit ARM the call arrives as __NR_fcntl64 and baseline_policy.cc
+routes it straight to this helper, so a GPU-policy-only change misses armhf.
+--- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
++++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
+@@ -66,6 +66,25 @@
+ 
+ #endif  // BUILDFLAG(IS_ANDROID)
+ 
++// F_DUPFD_QUERY was added in Linux 6.10 and may be missing from the build
++// sysroot's headers. Mesa (>= 25.3) uses it in os_same_file_description() to
++// test whether two DRM fds share an open file description.
++//
++// <linux/fcntl.h> cannot be included here to pick up the definition, because
++// its struct flock and struct f_owner_ex collide with the ones glibc's
++// <fcntl.h> already declared.
++#if !defined(F_DUPFD_QUERY)
++#define F_DUPFD_QUERY 1027  // F_LINUX_SPECIFIC_BASE + 3
++#endif
++// glibc does not expose F_LINUX_SPECIFIC_BASE, but it does expose
++// F_DUPFD_CLOEXEC, which the kernel defines as that base + 6. Tie the value
++// above to it so a platform that disagreed would fail the build rather than
++// silently allow the wrong fcntl() command.
++#if defined(F_DUPFD_CLOEXEC)
++static_assert(F_DUPFD_QUERY == F_DUPFD_CLOEXEC - 3,
++              "F_DUPFD_QUERY does not match the platform's fcntl.h");
++#endif
++
+ #if defined(__arm__) && !defined(MAP_STACK)
+ #define MAP_STACK 0x20000  // Daisy build environment has old headers.
+ #endif
+@@ -329,6 +348,7 @@ ResultExpr RestrictFcntlCommands() {
+               F_SETLKW,
+               F_GETLK,
+               F_DUPFD,
++              F_DUPFD_QUERY,
+               F_DUPFD_CLOEXEC
+ #if defined(__powerpc64__)
+ // On PPC64, F_SETLK, F_GETLK, F_SETLKW are defined as the 64-bit variants
+--- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
++++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
+@@ -52,8 +52,8 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
+ SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictMprotectFlags();
+ 
+ // Restrict fcntl(2) cmd argument to:
+-// We allow F_GETFL, F_SETFL, F_GETFD, F_SETFD, F_DUPFD, F_DUPFD_CLOEXEC,
+-// F_SETLK, F_SETLKW and F_GETLK.
++// We allow F_GETFL, F_SETFL, F_GETFD, F_SETFD, F_DUPFD, F_DUPFD_QUERY,
++// F_DUPFD_CLOEXEC, F_SETLK, F_SETLKW and F_GETLK.
+ // Also, in F_SETFL, restrict the allowed flags to: O_ACCMODE | O_APPEND |
+ // O_NONBLOCK | O_SYNC | O_LARGEFILE | O_CLOEXEC | O_NOATIME.
+ SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictFcntlCommands();

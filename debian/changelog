@@ -1,3 +1,9 @@
+chromium (1:151.0.7922.71-1~deb13u1+rpt2) trixie; urgency=medium
+
+  * Allow fcntl(F_DUPFD_QUERY) in the seccomp sandbox
+
+ -- Serge Schneider <serge@raspberrypi.com>  Tue, 04 Aug 2026 13:27:09 +0100
+
 chromium (1:151.0.7922.71-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]

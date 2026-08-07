@@ -30,10 +30,11 @@ then
 	exit 1
 fi
 
+package=$(sed -n 's/^Source: *// p' debian/control)
 version=$(dpkg-parsechangelog -S Version)
 orig_version=$(echo "$version" | cut -d- -f1)
 timestamp=$(cat build/util/LASTCHANGE.committime)
-tarball=../chromium_$orig_version.orig-pre-gen.tar.xz
+tarball=../${package}_$orig_version.orig-pre-gen.tar.xz
 
 if [ -d pre-gen ]
 then
@@ -196,7 +197,7 @@ END
 # Record a rudimentary deb-buildinfo(5) file
 cat > pre-gen/BUILDINFO << END
 Format: 1.0
-Source: chromium
+Source: $package
 Architecture: source
 Version: $version
 Build-Origin: $(perl -ne 'print $1 if /^NAME="(\w+)"/' /etc/os-release)

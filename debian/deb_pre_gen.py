@@ -18,7 +18,7 @@ if not arch:
 
 debug = True
 pre_gen_dir = "pre-gen"
-record_outputs_always = False
+record_outputs_always = True
 
 ################################################################
 
@@ -152,12 +152,9 @@ def node_wrap(cmd_parts, run_node_fn, check_only=False):
   elif cmd_parts[0] == f"{src}/scripts/build/esbuild.js":
     output_key = cmd_parts[2]
   elif cmd_parts[0] == f"{src}/scripts/build/generate_css_js_files.js":
+    target_name = cmd_parts[3]
     out_dir = cmd_parts[5]
-    file_list = cmd_parts[6].split(",")
-    first_file = file_list[0]
-    if first_file.startswith("./"):
-      first_file = first_file[2:]
-    output_key = f"{out_dir}/{first_file}.js"
+    output_key = f"{out_dir}/{target_name}-tsconfig.json"
   elif cmd_parts[0] == f"{src}/scripts/build/generate_devtools_json.mjs":
     output_key = cmd_parts[1]
   elif cmd_parts[0] == f"{src}/scripts/build/ninja/generate-declaration.js":
@@ -209,6 +206,7 @@ bad_outputs = set([
 def find_generated_files(indep=False):
   relevant_rules = set()
   generated_files = set()
+  all_outputs = set()
   for root, _, files in os.walk("out/Release"):
     for fname in files:
       if fname != "toolchain.ninja":
@@ -250,6 +248,8 @@ def find_generated_files(indep=False):
               outputs_flat = outputs_flat.replace("$:", ":")
               assert "$" not in outputs_flat, "Drat, need to process more escape sequences"
               outputs = outputs_flat.split()
+              assert not all_outputs.intersection(outputs), "Found non-unique output file(s)"
+              all_outputs.update(outputs)
               if "/chrome/test/data/" in outputs[0]:
                 continue
               if bad_outputs.intersection(outputs):

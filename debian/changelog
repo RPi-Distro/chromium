@@ -1,4 +1,4 @@
-chromium (151.0.7922.71-1.1) UNRELEASED; urgency=high
+chromium (151.0.7922.108-1) unstable; urgency=high
 
   [ Daniel Richard G. ]
   * d/deb_pre_gen.py: Minor fixes to the pre-gen framework:
@@ -16,7 +16,66 @@ chromium (151.0.7922.71-1.1) UNRELEASED; urgency=high
   * d/scripts/init-pre-gen.sh: Don't hard-code the package name, as we might
     be doing init-pre-gen for ungoogled-chromium.
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 30 Jul 2026 11:05:36 -0400
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-19137: Use after free in WebGL. Reported by anonymous.
+    - CVE-2026-19149: Use after free in Aura. Reported by Google.
+    - CVE-2026-19154: Use after free in Skia. Reported by Google.
+    - CVE-2026-19157: Out of bounds write in ANGLE. Reported by Google.
+    - CVE-2026-19170: Use after free in WebGL. Reported by Muhammad Alifa
+      Ramdhan, Pan ZhenPeng, Billy Jheng Bing Jhong of STAR Labs SG Pte. Ltd.
+    - CVE-2026-19172: Use after free in Views. Reported by Google.
+    - CVE-2026-19169: Insufficient validation of untrusted input in
+      Contextual Tasks. Reported by Sven Dysthe (@svn-dys).
+    - CVE-2026-19168: Inappropriate implementation in V8.
+      Reported by XBOW and triaged by Andrés Luksenberg.
+    - CVE-2026-19138: Heap buffer overflow in CrashReporting.
+      Reported by Google.
+    - CVE-2026-19139: Race in CredentialProvider. Reported by Google.
+    - CVE-2026-19140: Use after free in GPU. Reported by Google.
+    - CVE-2026-19141: Use after free in Resources. Reported by Google.
+    - CVE-2026-19142: Use after free in Views. Reported by Google.
+    - CVE-2026-19143: Insufficient validation of untrusted input in
+      WebAPKs. Reported by Google.
+    - CVE-2026-19144: Use after free in HTML. Reported by Google.
+    - CVE-2026-19145: Use after free in Translate. Reported by Google.
+    - CVE-2026-19146: Uninitialized Use in GPU. Reported by Google.
+    - CVE-2026-19147: Use after free in Aura. Reported by Google.
+    - CVE-2026-19148: Out of bounds write in GPU. Reported by Google.
+    - CVE-2026-19150: Inappropriate implementation in V8. Reported by Google.
+    - CVE-2026-19151: Use after free in V8. Reported by Google.
+    - CVE-2026-19152: Inappropriate implementation in Navigation.
+      Reported by Google.
+    - CVE-2026-19153: Insufficient validation of untrusted input in Workers.
+      Reported by Google.
+    - CVE-2026-19155: Use after free in Payments. Reported by Google.
+    - CVE-2026-19156: Heap buffer overflow in Base.
+      Reported by Viktoria Zlatinova.
+    - CVE-2026-19158: Use after free in Views. Reported by Google.
+    - CVE-2026-19159: Use after free in Views. Reported by Google.
+    - CVE-2026-19160: Uninitialized Use in Skia. Reported by Google.
+    - CVE-2026-19161: Uninitialized Use in Skia. Reported by Google.
+    - CVE-2026-19162: Out of bounds write in V8.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-19163: Use after free in Media. Reported by Google.
+    - CVE-2026-19164: Insufficient validation of untrusted input in Codecs.
+      Reported by Google.
+    - CVE-2026-19165: Use after free in Extensions. Reported by @bean5oup.
+    - CVE-2026-19166: Use after free in Web Authentication.
+      Reported by heesun.
+    - CVE-2026-19167: Integer overflow in GPU. Reported by Google.
+    - CVE-2026-19171: Use after free in Media. Reported by Google.
+    - CVE-2026-19173: Out of bounds write in Skia.
+      Reported by Vu Van Tien (@n0_Be3r).
+    - CVE-2026-19174: Integer overflow in V8.
+      Reported by Seunghyun Lee (@0x10n) of QED Audit (qedaudit.io).
+    - CVE-2026-19175: Use after free in Payments. Reported by Google.
+    - CVE-2026-19176: Use after free in Skia.
+      Reported by WinD39 - Huynh Dinh Vu.
+    - CVE-2026-19177: Insufficient validation of untrusted input in UI.
+      Reported by Fabian Wahle (Hap Security).
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 07 Aug 2026 12:19:50 -0400
 
 chromium (151.0.7922.71-1) unstable; urgency=high
 

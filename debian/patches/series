@@ -6,7 +6,7 @@ debianization/swiftshader-use-llvm-16.patch
 debianization/cross-build.patch
 debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
-debianization/pre-gen.patch
+#debianization/pre-gen.patch
 
 fixes/ps-print.patch
 fixes/widevine-locations.patch

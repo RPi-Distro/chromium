@@ -145,6 +145,18 @@ Also part of the framework:
      except:
          print(
              'Usage: %s filename_1 max_size_1 filename_2 max_size_2 ... filename_N max_size_N --input_path <input_path> --output_path <output_path>'
+--- a/third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs
++++ b/third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs
+@@ -15,7 +15,8 @@ const root = join(dirname(dirname(import
+ const NAMESPACE = '2ba62548-f4e9-11ef-9cd2-0242ac120002';
+ 
+ // Generate a v5 UUID with the root path as name.
+-const uuid = v5(root, NAMESPACE);
++// (Debian: Use a fixed name instead, for reproducibility)
++const uuid = v5('debian-chromium', NAMESPACE);
+ 
+ // Construct and write the `devtools.json`.
+ const devtools = {
 --- a/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
 +++ b/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
 @@ -14,6 +14,9 @@ import re

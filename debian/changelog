@@ -1,3 +1,11 @@
+chromium (151.0.7922.137-2) unstable; urgency=high
+
+  [ Andres Salomon ]
+  * d/rules: set optimize_for_size=true on armhf in an attempt to not run out
+    of memory when linking.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 13 Aug 2026 00:04:06 -0400
+
 chromium (151.0.7922.137-1) unstable; urgency=high
 
   [ Andres Salomon ]

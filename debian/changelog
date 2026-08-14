@@ -1,4 +1,4 @@
-chromium (1:151.0.7922.108-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:151.0.7922.137-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]
   * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
@@ -38,7 +38,21 @@ chromium (1:151.0.7922.108-1~deb12u1+rpt1) bookworm; urgency=medium
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Sun, 09 Aug 2026 02:47:14 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 14 Aug 2026 16:54:56 +0100
+
+chromium (151.0.7922.137-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-19556: Use after free in V8. Reported by Jihyeon
+      Jeong (Compsec Lab, Seoul National University / Research Intern).
+    - CVE-2026-19557: Use after free in TabStrip. Reported by Google.
+    - CVE-2026-19558: Use after free in Extensions. Reported by @bean5oup.
+    - CVE-2026-19559: Use after free in HTML. Reported by Google.
+    - CVE-2026-19560: Use after free in Blink.
+      Reported by WinD39 - Huynh Dinh Vu.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 12 Aug 2026 02:47:24 -0400
 
 chromium (151.0.7922.108-1~deb12u1) bookworm-security; urgency=high
 

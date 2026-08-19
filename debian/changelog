@@ -1,6 +1,8 @@
 chromium (151.0.7922.137-3) UNRELEASED; urgency=high
 
   * d/rules: remove optimize_for_size=true on armhf, as it didn't help.
+  * d/patches/debianization/rust-disable-debugsym.patch: add patch to
+    disable debug symbols for rust libs (to hopefully fix armhf linking).
 
  -- Andres Salomon <dilinger@debian.org>  Thu, 13 Aug 2026 00:04:06 -0400
 

@@ -97,8 +97,6 @@ defines+=use_av1_hw_decoder=true
 endif
 ifeq (armhf,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"arm\" use_v4l2_codec=true use_vaapi=false arm_use_neon=true
-# generate smaller object files so we don't run out of memory linking on armhf
-defines+=optimize_for_size=true
 endif
 ifeq (ppc64el,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"ppc64\" use_vaapi=true

@@ -1,0 +1,17 @@
+Author: Andres Salomon <dilinger@debian.org>
+Description: turn off debugging symbols in .rlibs
+
+Armhf keeps running out of memory when linking rust libs. Turning off
+debugging symbols reduces the size of chromium's .rlib files by more than
+half.
+
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -2615,6 +2615,7 @@ config("optimize") {
+     # `-O2`. But for rust, `-Copt-level=3` is the default and is thus reliable
+     # to use.
+     rustflags = [ "-Copt-level=3" ]
++    rustflags += [ "-Cdebuginfo=0" ]
+   }
+   ldflags = common_optimize_on_ldflags
+ }

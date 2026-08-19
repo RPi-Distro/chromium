@@ -1,3 +1,39 @@
+chromium (151.0.7922.169-1~deb12u1) bookworm-security; urgency=high
+
+  * d/rules: remove optimize_for_size=true on armhf, as it didn't help.
+  * d/patches/debianization/rust-disable-debugsym.patch: add patch to
+    disable debug symbols for rust libs (to hopefully fix armhf linking).
+  * New upstream security release.
+    - CVE-2026-76034: Buffer overflow in WebGL. Reported by Google.
+    - CVE-2026-76036: Buffer overflow in Dawn. Reported by Google.
+    - CVE-2026-76033: Inappropriate implementation in CORS. Reported by Google
+    - CVE-2026-76037: Link following in CredentialProvider. Reported by Google
+    - CVE-2026-76044: Race condition in USB. Reported by Google.
+    - CVE-2026-76039: Incorrect reference resolution in Core.
+      Reported by Google.
+    - CVE-2026-76040: Use after free in Browser. Reported by Google.
+    - CVE-2026-76035: Inappropriate implementation in Media.
+      Reported by Google.
+    - CVE-2026-76042: Use of uninitialized resource in GPU. Reported by Google
+    - CVE-2026-76046: Buffer overflow in ANGLE. Reported by Google.
+    - CVE-2026-76043: Incorrect calculation in V8.
+      Reported by Raghav Maheshwari.
+    - CVE-2026-76041: Information leak in Skia. Reported by Google.
+    - CVE-2026-76047: Type confusion in V8. Reported by ywatanabee.
+    - CVE-2026-76038: Type confusion in V8. Reported by un3xploitable && GF.
+    - CVE-2026-76045: Use after free in WebGL.
+      Reported by OpenAI Codex Security (amyb).
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 18 Aug 2026 22:50:18 -0400
+
+chromium (151.0.7922.137-2) unstable; urgency=high
+
+  [ Andres Salomon ]
+  * d/rules: set optimize_for_size=true on armhf in an attempt to not run out
+    of memory when linking.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 13 Aug 2026 00:04:06 -0400
+
 chromium (151.0.7922.137-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

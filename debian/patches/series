@@ -7,6 +7,7 @@ debianization/cross-build.patch
 debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
 debianization/pre-gen.patch
+#debianization/rust-disable-debugsym.patch
 
 fixes/ps-print.patch
 #fixes/widevine-locations.patch
@@ -95,7 +96,7 @@ rust-1.85/zip8.patch
 rust-1.85/std-from-utf8.patch
 rust-1.85/let-chains.patch
 
-trixie/adler1.patch
+#trixie/adler1.patch
 #trixie/libxml-parseerr.patch
 trixie/rust-no-alloc-shim.patch
 trixie/rust-sanitize.patch

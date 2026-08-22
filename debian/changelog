@@ -1,17 +1,14 @@
-chromium (151.0.7922.173-1) UNRELEASED; urgency=high
+chromium (151.0.7922.173-1) unstable; urgency=high
 
   * d/rules, d/control: switch to clang-22 now that it's also backported
     to stable and olstable (closes: #1124059).
   * d/patches:
     - llvm-19/static-assert.patch: drop, workaround no longer needed.
-    - llvm-19/keyfactory.patch: drop, workaround no longer needed.
     - llvm-19/clang-19-crash.patch: drop, workaround no longer needed.
     - llvm-19/octal.patch: drop, workaround no longer needed.
     - llvm-19/value-or.patch: drop, workaround no longer needed.
     - llvm-19/clang19.patch: drop, workaround no longer needed.
     - llvm-19/iota.patch: drop, workaround no longer needed.
-    - llvm-19/raw-ref-map-find.patch: drop, workaround no longer needed.
-    - llvm-19/const-profile.patch: drop, workaround no longer needed.
     - llvm-19/i18n-builder-enum.patch: drop, workaround no longer needed.
     - llvm-19/0001-revert-v8-libm.patch: drop, workaround no longer needed.
     - llvm-19/0002-revert-v8-libm.patch: drop, workaround no longer needed.
@@ -45,7 +42,7 @@ chromium (151.0.7922.173-1) UNRELEASED; urgency=high
     - CVE-2026-76023: Improper resource control in Linux Toolkit Theming.
       Reported by Keita Sode and Daisuke Hatakeyama of SYZD Research.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 18 Aug 2026 22:50:18 -0400
+ -- Andres Salomon <dilinger@debian.org>  Sat, 22 Aug 2026 13:45:57 -0400
 
 chromium (151.0.7922.169-1) unstable; urgency=high
 

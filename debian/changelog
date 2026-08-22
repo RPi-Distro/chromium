@@ -1,4 +1,4 @@
-chromium (151.0.7922.169-2) UNRELEASED; urgency=high
+chromium (151.0.7922.173-1) UNRELEASED; urgency=high
 
   * d/rules, d/control: switch to clang-22 now that it's also backported
     to stable and olstable (closes: #1124059).
@@ -30,6 +30,18 @@ chromium (151.0.7922.169-2) UNRELEASED; urgency=high
     - llvm-19/const-profile.patch -> llvm-22/const-profile.patch.
     - llvm-19/keyfactory.patch -> llvm-22/keyfactory.patch.
     - llvm-19/raw-ref-map-find.patch -> llvm-22/raw-ref-map-find.patch.
+  * New upstream security release.
+    - CVE-2026-76017: Use after free in Chromoting. Reported by Google.
+    - CVE-2026-76018: Privilege elevation in Import. Reported by Google.
+    - CVE-2026-76019: Incorrect authorization in Workers.
+      Reported by Anonymous.
+    - CVE-2026-76020: Race condition in V8.
+      Reported by Salvatore Gulizia (nickname: Serotav).
+    - CVE-2026-76021: Use after free in DOM.
+      Reported by Google BigSleep@Grape.
+    - CVE-2026-76022: Buffer overflow in Network. Reported by 0xAlessandro.
+    - CVE-2026-76023: Improper resource control in Linux Toolkit Theming.
+      Reported by Keita Sode and Daisuke Hatakeyama of SYZD Research.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 18 Aug 2026 22:50:18 -0400
 

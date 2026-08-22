@@ -30,6 +30,8 @@ chromium (151.0.7922.173-1) UNRELEASED; urgency=high
     - llvm-19/const-profile.patch -> llvm-22/const-profile.patch.
     - llvm-19/keyfactory.patch -> llvm-22/keyfactory.patch.
     - llvm-19/raw-ref-map-find.patch -> llvm-22/raw-ref-map-find.patch.
+    - ungoogled/disable-tos-dialog.patch: add patch from u-c to disable
+      initial pop-up terms of service screen (closes: #1145071).
   * New upstream security release.
     - CVE-2026-76017: Use after free in Chromoting. Reported by Google.
     - CVE-2026-76018: Privilege elevation in Import. Reported by Google.

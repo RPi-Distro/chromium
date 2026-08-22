@@ -153,6 +153,7 @@ ungoogled/disable-ai.patch
 ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
 ungoogled/remove-navigation-source-param.patch
+ungoogled/disable-tos-dialog.patch
 
 # i386 support
 i386/support-i386.patch

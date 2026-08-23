@@ -1,3 +1,13 @@
+chromium (151.0.7922.169-1~deb12u2) UNRELEASED; urgency=high
+
+  * d/control: bump rustc-web build-dep versioning up to 1.96, now that we
+    have that in bookworm-proposed-updates.
+  * d/patches:
+    - trixie/adler.patch: drop, now that we have a newer rustc-web in
+      bookworm.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 18 Aug 2026 22:50:18 -0400
+
 chromium (151.0.7922.169-1~deb12u1) bookworm-security; urgency=high
 
   * d/rules: remove optimize_for_size=true on armhf, as it didn't help.

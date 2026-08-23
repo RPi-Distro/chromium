@@ -33,8 +33,8 @@ endif
 # compile with clang (gcc is currently not supported)
 export AR=ar
 export NM=nm
-export CC=clang-19
-export CXX=clang++-19
+export CC=clang-22
+export CXX=clang++-22
 
 # initial flags from dpkg-buildflags
 export DEB_CXXFLAGS_MAINT_STRIP=-g

@@ -1,12 +1,52 @@
-chromium (151.0.7922.169-1~deb12u2) UNRELEASED; urgency=high
+chromium (151.0.7922.173-1~deb12u1) bookworm-security; urgency=high
 
+  * d/rules, d/control: switch to clang-22 now that it's also backported
+    to stable and olstable (closes: #1124059).
   * d/control: bump rustc-web build-dep versioning up to 1.96, now that we
     have that in bookworm-proposed-updates.
   * d/patches:
     - trixie/adler.patch: drop, now that we have a newer rustc-web in
       bookworm.
+    - llvm-19/static-assert.patch: drop, workaround no longer needed.
+    - llvm-19/clang-19-crash.patch: drop, workaround no longer needed.
+    - llvm-19/octal.patch: drop, workaround no longer needed.
+    - llvm-19/value-or.patch: drop, workaround no longer needed.
+    - llvm-19/clang19.patch: drop, workaround no longer needed.
+    - llvm-19/iota.patch: drop, workaround no longer needed.
+    - llvm-19/i18n-builder-enum.patch: drop, workaround no longer needed.
+    - llvm-19/0001-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0002-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0003-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0004-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0005-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0007-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0008-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0009-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/0011-revert-v8-libm.patch: drop, workaround no longer needed.
+    - llvm-19/privatefriends.patch: drop, workaround no longer needed.
+    - llvm-19/constexpr.patch: drop, workaround no longer needed.
+    - system/llvm.patch: add patch to remove dependencies on vendored llvm.
+    - llvm-22/clang22.patch: add patch for unsupported compiler options.
+    - llvm-19/clone-traits.patch -> llvm-22/clone-traits.patch.
+    - llvm-19/const-profile.patch -> llvm-22/const-profile.patch.
+    - llvm-19/keyfactory.patch -> llvm-22/keyfactory.patch.
+    - llvm-19/raw-ref-map-find.patch -> llvm-22/raw-ref-map-find.patch.
+    - ungoogled/disable-tos-dialog.patch: add patch from u-c to disable
+      initial pop-up terms of service screen (closes: #1145071).
+  * New upstream security release.
+    - CVE-2026-76017: Use after free in Chromoting. Reported by Google.
+    - CVE-2026-76018: Privilege elevation in Import. Reported by Google.
+    - CVE-2026-76019: Incorrect authorization in Workers.
+      Reported by Anonymous.
+    - CVE-2026-76020: Race condition in V8.
+      Reported by Salvatore Gulizia (nickname: Serotav).
+    - CVE-2026-76021: Use after free in DOM.
+      Reported by Google BigSleep@Grape.
+    - CVE-2026-76022: Buffer overflow in Network. Reported by 0xAlessandro.
+    - CVE-2026-76023: Improper resource control in Linux Toolkit Theming.
+      Reported by Keita Sode and Daisuke Hatakeyama of SYZD Research.
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 18 Aug 2026 22:50:18 -0400
+ -- Andres Salomon <dilinger@debian.org>  Sat, 22 Aug 2026 13:45:57 -0400
 
 chromium (151.0.7922.169-1~deb12u1) bookworm-security; urgency=high
 

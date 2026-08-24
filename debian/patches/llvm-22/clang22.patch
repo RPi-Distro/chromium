@@ -1,0 +1,38 @@
+Author: Andres Salomon <dilinger@debian.org>
+Description: Drop various compiler options not supported by clang-22
+
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -579,7 +579,6 @@ config("compiler") {
+     cflags += [ "-fcolor-diagnostics" ]
+     if (!is_wasm) {
+       if (!is_win) {
+-        cflags += [ "-fdiagnostics-show-inlining-chain" ]
+       } else {
+         # Combine after https://github.com/llvm/llvm-project/pull/192241
+         cflags += [ "/clang:-fdiagnostics-show-inlining-chain" ]
+@@ -619,7 +618,6 @@ config("compiler") {
+     # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
+     # for discussion.
+     if (!is_wasm) {
+-      cflags += [ "-fno-lifetime-dse" ]
+     }
+ 
+     # TODO(hans): Remove this once Clang generates better optimized debug info
+@@ -1584,7 +1582,7 @@ ubsan_hardening("c_array_bounds") {
+   # the related warning about "unsafe-buffer-usage-in-static-sized-array",
+   # since we know that the array bounds sanitizing will catch any out-of-
+   # bounds accesses.
+-  cflags = [ "-Wno-unsafe-buffer-usage-in-static-sized-array" ]
++  cflags = [ ]
+ }
+ 
+ # Enable UBSan subset to ensure we always hit `return` statement in non-void
+@@ -1939,7 +1937,6 @@ config("default_warnings") {
+         "-Wno-uninitialized-const-pointer",
+ 
+         # TODO(crbug.com/495753203): Fix and re-enable.
+-        "-Wno-unused-but-set-global",
+       ]
+     }
+ 

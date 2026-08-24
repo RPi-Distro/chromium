@@ -61,29 +61,26 @@ system/openjpeg.patch
 system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
+system/llvm.patch
 
-llvm-19/static-assert.patch
-llvm-19/keyfactory.patch
-llvm-19/clang-19-crash.patch
-llvm-19/clone-traits.patch
-llvm-19/octal.patch
-llvm-19/value-or.patch
-llvm-19/clang19.patch
-llvm-19/iota.patch
-llvm-19/raw-ref-map-find.patch
-llvm-19/const-profile.patch
-llvm-19/i18n-builder-enum.patch
-llvm-19/0001-revert-v8-libm.patch
-llvm-19/0002-revert-v8-libm.patch
-llvm-19/0003-revert-v8-libm.patch
-llvm-19/0004-revert-v8-libm.patch
-llvm-19/0005-revert-v8-libm.patch
-llvm-19/0007-revert-v8-libm.patch
-llvm-19/0008-revert-v8-libm.patch
-llvm-19/0009-revert-v8-libm.patch
-llvm-19/0011-revert-v8-libm.patch
-llvm-19/privatefriends.patch
-llvm-19/constexpr.patch
+#llvm-19/static-assert.patch
+#llvm-19/clang-19-crash.patch
+#llvm-19/octal.patch
+#llvm-19/value-or.patch
+#llvm-19/clang19.patch
+#llvm-19/iota.patch
+#llvm-19/i18n-builder-enum.patch
+#llvm-19/0001-revert-v8-libm.patch
+#llvm-19/0002-revert-v8-libm.patch
+#llvm-19/0003-revert-v8-libm.patch
+#llvm-19/0004-revert-v8-libm.patch
+#llvm-19/0005-revert-v8-libm.patch
+#llvm-19/0007-revert-v8-libm.patch
+#llvm-19/0008-revert-v8-libm.patch
+#llvm-19/0009-revert-v8-libm.patch
+#llvm-19/0011-revert-v8-libm.patch
+#llvm-19/privatefriends.patch
+#llvm-19/constexpr.patch
 
 rust-1.85/jxl-simd-avx512.patch
 rust-1.85/jxl-features.patch
@@ -163,6 +160,11 @@ bookworm/dav1d-drop-hdr.patch
 # bullseye/webui.patch
 
 llvm-22/ignore-for-ubsan.patch
+llvm-22/clang22.patch
+llvm-22/clone-traits.patch
+llvm-22/const-profile.patch
+llvm-22/keyfactory.patch
+llvm-22/raw-ref-map-find.patch
 
 # patches for system libhwy-dev
 #fixes/highway-include-path.patch
@@ -173,6 +175,7 @@ ungoogled/disable-ai.patch
 ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
 ungoogled/remove-navigation-source-param.patch
+ungoogled/disable-tos-dialog.patch
 
 # i386 support
 i386/support-i386.patch

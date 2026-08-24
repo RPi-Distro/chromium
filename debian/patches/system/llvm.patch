@@ -1,0 +1,64 @@
+Author: Andres Salomon <dilinger@debian.org>
+Description: drop dependencies on vendored llvm; we use system llvm.
+
+I don't actually know if there's a difference between, say,
+LIBC_NAMESPACE::shared::cbrt() and std::__math::cbrt(), but we're not
+about to start pulling in llvm's private headers.
+
+--- a/v8/BUILD.gn
++++ b/v8/BUILD.gn
+@@ -7452,8 +7452,6 @@ v8_component("v8_libbase") {
+     deps += [ ":libm" ]
+   }
+ 
+-  deps += [ "//third_party/llvm-libc:headers" ]
+-
+   # TODO(infra): Add support for qnx, freebsd, openbsd, netbsd, and solaris.
+ }
+ 
+--- a/v8/src/base/ieee754.cc
++++ b/v8/src/base/ieee754.cc
+@@ -21,7 +21,7 @@
+ #include "src/base/build_config.h"
+ #include "src/base/macros.h"
+ #include "src/base/overflowing-math.h"
+-#include "third_party/llvm-libc/src/shared/math.h"
++#include <math.h>
+ 
+ namespace v8 {
+ namespace base {
+@@ -77,6 +77,9 @@ namespace ieee754 {
+     (d) = base::bit_cast<double>(bits);          \
+   } while (false)
+ 
++#define LIBC_NAMESPACE std
++#define shared __math
++
+ double acos(double x) { return LIBC_NAMESPACE::shared::acos(x); }
+ 
+ /* acosh(x)
+@@ -313,6 +316,9 @@ double pow(double x, double y) { return
+ 
+ }  // namespace legacy
+ 
++#undef shared
++#undef LIBC_NAMESPACE
++
+ /*
+  * ES6 draft 09-27-13, section 20.2.2.30.
+  * Math.sinh
+--- a/v8/third_party/llvm-libc/BUILD.gn
++++ b/v8/third_party/llvm-libc/BUILD.gn
+@@ -10,11 +10,7 @@ config("config") {
+ 
+ group("llvm-libc-shared") {
+   # llvm-libc is only used as a dependency of libc++.
+-  visibility = [ "//buildtools/third_party/libc++" ]
++  visibility = [ "//buildtools/third_party/libc++:libc++" ]
+ 
+   public_configs = [ ":config" ]
+ }
+-
+-group("headers") {
+-  public_configs = [ ":config" ]
+-}

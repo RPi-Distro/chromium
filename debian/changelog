@@ -1,3 +1,16 @@
+chromium (152.0.7977.64-1) UNRELEASED; urgency=high
+
+  * New upstream stable release.
+  * d/patches:
+    - debianization/rustc-bootstrap.patch: update for upstream renamed var.
+    - fixes/libcpp-headers.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - system/llvm.patch: refresh.
+    - ungoogled/disable-ai.patch: sync from u-c.
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 25 Aug 2026 17:22:58 -0400
+
 chromium (151.0.7922.173-1) unstable; urgency=high
 
   * d/rules, d/control: switch to clang-22 now that it's also backported

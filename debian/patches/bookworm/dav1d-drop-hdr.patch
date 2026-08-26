@@ -20,7 +20,7 @@ Date:   Wed Dec 17 03:47:49 2025 -0800
 
 --- a/media/filters/dav1d_video_decoder.cc
 +++ b/media/filters/dav1d_video_decoder.cc
-@@ -468,21 +468,6 @@ bool Dav1dVideoDecoder::DecodeBuffer(sco
+@@ -468,18 +468,6 @@ bool Dav1dVideoDecoder::DecodeBuffer(sco
      }
  
      gfx::HDRMetadata hdr_metadata = config_.hdr_metadata();
@@ -32,11 +32,8 @@ Date:   Wed Dec 17 03:47:49 2025 -0800
 -        // SAFETY: The best we can do is trust the size provided by Dav1d.
 -        auto t35_payload_span = UNSAFE_BUFFERS(
 -            base::span<const uint8_t>(t35.payload, t35.payload_size));
--        if (auto agtm = GetAgtmFromT35WithCountryCode(t35.country_code,
--                                                      t35_payload_span)) {
--          // Overwrite existing AGTM metadata if any.
--          hdr_metadata.SetSerializedAgtm(agtm.value());
--        }
+-        SetAgtmFromT35WithCountryCode(hdr_metadata, t35.country_code,
+-                                      t35_payload_span);
 -      }
 -    }
      hdr_metadata_reordering_map_.MergeAndEraseMetadataForTimestamp(

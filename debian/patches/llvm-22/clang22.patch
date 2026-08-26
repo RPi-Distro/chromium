@@ -3,7 +3,7 @@ Description: Drop various compiler options not supported by clang-22
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -579,7 +579,6 @@ config("compiler") {
+@@ -581,7 +581,6 @@ config("compiler") {
      cflags += [ "-fcolor-diagnostics" ]
      if (!is_wasm) {
        if (!is_win) {
@@ -11,7 +11,7 @@ Description: Drop various compiler options not supported by clang-22
        } else {
          # Combine after https://github.com/llvm/llvm-project/pull/192241
          cflags += [ "/clang:-fdiagnostics-show-inlining-chain" ]
-@@ -619,7 +618,6 @@ config("compiler") {
+@@ -621,7 +620,6 @@ config("compiler") {
      # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
      # for discussion.
      if (!is_wasm) {
@@ -19,7 +19,7 @@ Description: Drop various compiler options not supported by clang-22
      }
  
      # TODO(hans): Remove this once Clang generates better optimized debug info
-@@ -1584,7 +1582,7 @@ ubsan_hardening("c_array_bounds") {
+@@ -1586,7 +1584,7 @@ ubsan_hardening("c_array_bounds") {
    # the related warning about "unsafe-buffer-usage-in-static-sized-array",
    # since we know that the array bounds sanitizing will catch any out-of-
    # bounds accesses.
@@ -28,7 +28,7 @@ Description: Drop various compiler options not supported by clang-22
  }
  
  # Enable UBSan subset to ensure we always hit `return` statement in non-void
-@@ -1935,7 +1933,6 @@ config("default_warnings") {
+@@ -1937,7 +1935,6 @@ config("default_warnings") {
          "-Wno-uninitialized-const-pointer",
  
          # TODO(crbug.com/495753203): Fix and re-enable.
@@ -38,7 +38,7 @@ Description: Drop various compiler options not supported by clang-22
  
 --- a/third_party/pdfium/BUILD.gn
 +++ b/third_party/pdfium/BUILD.gn
-@@ -191,7 +191,6 @@ config("pdfium_core_config") {
+@@ -193,7 +193,6 @@ config("pdfium_core_config") {
    if (is_clang) {
      cflags += [
        "-Wcovered-switch-default",

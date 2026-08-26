@@ -22,6 +22,11 @@ chromium (152.0.7977.64-1) UNRELEASED; urgency=high
       -Wlifetime-safety-permissive .
     - trixie/gn-module-name.patch: Refresh [trixie, bookworm].
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 25 Aug 2026 17:22:58 -0400
 
 chromium (151.0.7922.173-1) unstable; urgency=high

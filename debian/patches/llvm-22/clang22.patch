@@ -36,6 +36,19 @@ Description: Drop various compiler options not supported by clang-22
        ]
      }
  
+--- a/third_party/dawn/src/utils/BUILD.gn
++++ b/third_party/dawn/src/utils/BUILD.gn
+@@ -216,10 +216,6 @@ config("dawn_warnings") {
+       # -Wlifetime-safety-lifetimebound-violation) are not yet mapped to
+       # toggleable warning flags, so we suppress the entire group and disable
+       # the analysis pass.
+-      "-Wno-lifetime-safety",
+-      "-Wno-lifetime-safety-all",
+-      "-Xclang=-fno-lifetime-safety-inference",
+-      "-Xclang=-fno-experimental-lifetime-safety-tu-analysis",
+     ]
+ 
+     # P3. Checks that could be nice but probably don't help with hardening.
 --- a/third_party/pdfium/BUILD.gn
 +++ b/third_party/pdfium/BUILD.gn
 @@ -193,7 +193,6 @@ config("pdfium_core_config") {
@@ -46,3 +59,13 @@ Description: Drop various compiler options not supported by clang-22
      ]
    }
  }
+--- a/third_party/skia/gn/skia/BUILD.gn
++++ b/third_party/skia/gn/skia/BUILD.gn
+@@ -552,7 +552,6 @@ config("warnings") {
+       "-Wno-unused-member-function",
+       "-Wno-non-c-typedef-for-linkage",  # Dawn, not Skia per se.
+ 
+-      "-Wno-lifetime-safety",
+       "-Wno-lifetime-safety-suggestions",
+       "-Wno-lifetime-safety-validations",
+ 

@@ -62,6 +62,7 @@ system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
 system/llvm.patch
+system/rust-cbor.patch
 
 #llvm-19/static-assert.patch
 #llvm-19/clang-19-crash.patch

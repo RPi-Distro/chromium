@@ -28,7 +28,7 @@ Description: Drop various compiler options not supported by clang-22
  }
  
  # Enable UBSan subset to ensure we always hit `return` statement in non-void
-@@ -1939,7 +1937,6 @@ config("default_warnings") {
+@@ -1935,7 +1933,6 @@ config("default_warnings") {
          "-Wno-uninitialized-const-pointer",
  
          # TODO(crbug.com/495753203): Fix and re-enable.
@@ -36,3 +36,13 @@ Description: Drop various compiler options not supported by clang-22
        ]
      }
  
+--- a/third_party/pdfium/BUILD.gn
++++ b/third_party/pdfium/BUILD.gn
+@@ -191,7 +191,6 @@ config("pdfium_core_config") {
+   if (is_clang) {
+     cflags += [
+       "-Wcovered-switch-default",
+-      "-Wlifetime-safety-permissive",
+     ]
+   }
+ }

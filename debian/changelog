@@ -10,6 +10,8 @@ chromium (152.0.7977.64-1) UNRELEASED; urgency=high
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
     - system/rust-cbor.patch: add a patch (taken from u-c) that skips using
       vendored rust Crubit.
+    - llvm-22/shut-up-clang.patch: add patch to stop clang from complaining
+      every single time it's called if gcc crossbuild libs are installed.
 
   [ Daniel Richard G. ]
   * d/patches/llvm-22/clang22.patch: clang-22 still doesn't know about

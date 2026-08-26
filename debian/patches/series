@@ -145,6 +145,7 @@ llvm-22/clone-traits.patch
 llvm-22/const-profile.patch
 llvm-22/keyfactory.patch
 llvm-22/raw-ref-map-find.patch
+llvm-22/shut-up-clang.patch
 
 # patches for system libhwy-dev
 #fixes/highway-include-path.patch

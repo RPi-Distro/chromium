@@ -18,6 +18,7 @@ chromium (152.0.7977.64-1) UNRELEASED; urgency=high
     - bookworm/dav1d-drop-hdr.patch: Refresh [bookworm].
     - bookworm/gn-absl.patch: Refresh [bookworm].
     - bookworm/gn-revert-path-exists.patch: Refresh and extend [bookworm].
+    - disable/node-ts.patch: Avoid new TypeScript logic used for glic.
     - llvm-22/clang22.patch: clang-22 still doesn't know about
       -Wlifetime-safety-permissive, and some other lifetime-safety flags.
     - trixie/gn-module-name.patch: Refresh [trixie, bookworm].

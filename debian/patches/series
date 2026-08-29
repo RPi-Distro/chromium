@@ -53,6 +53,7 @@ disable/enterprise-tests.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
+disable/node-ts.patch
 
 system/golang.patch
 system/icu-shim.patch

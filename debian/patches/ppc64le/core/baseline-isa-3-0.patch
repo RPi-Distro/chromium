@@ -2,8 +2,12 @@ Index: chromium-152.0.7977.64/build/config/compiler_cpu_abi.gn
 ===================================================================
 --- chromium-152.0.7977.64.orig/build/config/compiler_cpu_abi.gn
 +++ chromium-152.0.7977.64/build/config/compiler_cpu_abi.gn
-@@ -337,7 +337,7 @@ if ((is_posix && !is_apple) || is_fuchsi
-       cpu_abi_cflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
+@@ -334,10 +334,10 @@
+         cpu_abi_ldflags += [ "-maix64" ]
+       }
+     } else if (is_clang) {
+-      cpu_abi_cflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
++      cpu_abi_cflags += [ "--target=powerpc64le-unknown-linux-gnu", "-mcpu=power9", "-mtune=power9" ]
        cpu_abi_ldflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
      } else {
 -      cpu_abi_cflags += [ "-m64" ]

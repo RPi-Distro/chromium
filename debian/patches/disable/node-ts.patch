@@ -2,9 +2,9 @@ Description: Don't run .ts via Node.js directly
 Author: Daniel Richard G. <skunk@iSKUNK.ORG>
 
 Direct execution of TypeScript only works with Node.js >= v26, or tsx(1).
-As the file generated here (enum_conversions.ts) isn't actually used,
-however (thanks to disable-ai.patch), we just create an empty file in
-its place.
+Swap in a handcrafted dummy enum_conversions.ts file instead of running the
+generation logic. As we disable glic anyway (see disable-ai.patch), this
+should hopefully not break anything.
 
 Also, don't run run_tsc.py / tsc.js, as it breaks with Node.js v12 and
 the output is just a stamp file anyway.
@@ -20,17 +20,18 @@ the output is just a stamp file anyway.
    inputs = [
               "tsconfig.json",
               "//third_party/node/node_modules/typescript/lib/tsc.js",
-@@ -47,12 +47,10 @@ node("check_generator_types") {
+@@ -47,12 +47,11 @@ node("check_generator_types") {
  }
  
  node("generate_enum_conversions") {
 -  script = "//third_party/node/node.py"
-+  script = "//build/touch.py"
++  script = "//debian/dummy/copy_file.py"
    inputs = [ "$target_gen_dir/mojom_ast.json" ] + generator_ts_sources
    outputs = [ "$target_gen_dir/enum_conversions.ts" ]
    args = [
 -    rebase_path("gen_enum_conversions.ts", root_build_dir),
 -    rebase_path("$target_gen_dir/mojom_ast.json", root_build_dir),
++    rebase_path("//debian/dummy/enum_conversions.ts", root_build_dir),
      rebase_path(outputs[0], root_build_dir),
    ]
    deps = [

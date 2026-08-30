@@ -14,6 +14,8 @@ chromium (152.0.7977.64-1) UNRELEASED; urgency=high
       every single time it's called if gcc crossbuild libs are installed.
 
   [ Daniel Richard G. ]
+  * d/deb_pre_gen.py: Exclude some additional targets to avoid the new
+    TypeScript logic used for glic.
   * d/patches:
     - bookworm/dav1d-drop-hdr.patch: Refresh [bookworm].
     - bookworm/gn-absl.patch: Refresh [bookworm].

@@ -1,4 +1,4 @@
-chromium (152.0.7977.64-1) UNRELEASED; urgency=high
+chromium (152.0.7977.64-1) unstable; urgency=high
 
   * New upstream stable release.
     - CVE-2026-79282: Use after free in ANGLE. Reported by Goodluck.
@@ -466,7 +466,7 @@ chromium (152.0.7977.64-1) UNRELEASED; urgency=high
   * d/patches/loongarch64:
     - 0015-ffmpeg-support-for-loongarch.patch: refresh for upstream
 
- -- Andres Salomon <dilinger@debian.org>  Tue, 25 Aug 2026 17:22:58 -0400
+ -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
 
 chromium (151.0.7922.173-1) unstable; urgency=high
 

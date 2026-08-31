@@ -22,7 +22,7 @@ elinks -dump "$1" 2>/dev/null | \
   tail -n +2 | \
   while read ln; do \
     length=`echo $ln | wc -c`; \
-    if [ $length -lt 78 ]; then \
+    if [ $length -lt 76 ]; then \
       echo "    $ln"; \
     else \
       echo -n "    "; \

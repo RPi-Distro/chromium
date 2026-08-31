@@ -426,6 +426,8 @@ chromium (152.0.7977.64-1) UNRELEASED; urgency=high
       vendored rust Crubit.
     - llvm-22/shut-up-clang.patch: add patch to stop clang from complaining
       every single time it's called if gcc crossbuild libs are installed.
+    - debianization/rust-disable-debugsym.patch: do some more build flags to
+      reduce size of rust libs on armhf.
 
   [ Daniel Richard G. ]
   * d/dummy/copy_file.py: Simple script to copy a file from GN.

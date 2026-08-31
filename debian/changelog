@@ -1,3 +1,13 @@
+chromium (152.0.7977.64-1~deb13u1) UNRELEASED; urgency=high
+
+  * d/control: bump rustc-web build-dep versioning up to 1.96, now that we
+    have that in bookworm-proposed-updates.
+  * d/patches
+    - trixie/adler1.patch: drop, now that we have a newer rustc-web in
+      bookworm.
+
+ -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
+
 chromium (152.0.7977.64-1) unstable; urgency=high
 
   * New upstream stable release.

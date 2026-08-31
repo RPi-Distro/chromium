@@ -7,15 +7,14 @@ about to start pulling in llvm's private headers.
 
 --- a/v8/BUILD.gn
 +++ b/v8/BUILD.gn
-@@ -7452,8 +7452,6 @@ v8_component("v8_libbase") {
-     deps += [ ":libm" ]
+@@ -7496,7 +7496,6 @@ v8_component("v8_libbase") {
+     }
    }
  
 -  deps += [ "//third_party/llvm-libc:headers" ]
--
+ 
    # TODO(infra): Add support for qnx, freebsd, openbsd, netbsd, and solaris.
  }
- 
 --- a/v8/src/base/ieee754.cc
 +++ b/v8/src/base/ieee754.cc
 @@ -21,7 +21,7 @@
@@ -37,7 +36,7 @@ about to start pulling in llvm's private headers.
  double acos(double x) { return LIBC_NAMESPACE::shared::acos(x); }
  
  /* acosh(x)
-@@ -313,6 +316,9 @@ double pow(double x, double y) { return
+@@ -301,6 +304,9 @@ double pow(double x, double y) { return
  
  }  // namespace legacy
  

@@ -6,7 +6,7 @@ in order to work on older gn that lacks path_exists().
 
 --- a/build/config/sysroot.gni
 +++ b/build/config/sysroot.gni
-@@ -63,7 +63,9 @@ if (sysroot == "") {
+@@ -58,7 +58,9 @@ if (sysroot == "") {
          _script_arch = "amd64"
        }
        assert(
@@ -45,7 +45,7 @@ in order to work on older gn that lacks path_exists().
 +  sys.exit(main())
 --- a/build/dotfile_settings.gni
 +++ b/build/dotfile_settings.gni
-@@ -24,6 +24,7 @@ build_dotfile_settings = {
+@@ -26,6 +26,7 @@ build_dotfile_settings = {
      "//build/config/mac/mac_sdk.gni",
      "//build/config/mac/rules.gni",
      "//build/config/posix/BUILD.gn",
@@ -79,3 +79,12 @@ in order to work on older gn that lacks path_exists().
    action("histograms_xml") {
      script = "histograms/merge_xml.py"
      output = "$root_out_dir/histograms.xml"
+@@ -45,7 +45,7 @@ group("metrics_metadata") {
+   # for non-git checkouts, as dirmd doesn't work on non-git checkout.
+   # TODO(crbug.com/329080012): Remove this condition once dirmd works
+   # in non-git checkouts.
+-  if (path_exists("//.git")) {
++  if (false) {
+     deps += [ ":histograms_xml" ]
+   }
+ }

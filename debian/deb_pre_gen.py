@@ -193,8 +193,8 @@ handled_python_indep_scripts = set([
   "../../ui/webui/resources/tools/minify_js.py",  # fails with Node.js v12
 ])
 
-# Don't make these, as they depend on files we've excluded
 bad_outputs = set([
+  # Don't make these, as they depend on files we've excluded
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/core/unittests-tsconfig.json",
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/unittests-tsconfig.json",
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/simulation/unittests-tsconfig.json",

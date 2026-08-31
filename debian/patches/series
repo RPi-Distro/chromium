@@ -53,6 +53,7 @@ disable/enterprise-tests.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
+disable/node-ts.patch
 
 system/golang.patch
 system/icu-shim.patch
@@ -62,6 +63,7 @@ system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
 system/llvm.patch
+system/rust-cbor.patch
 
 #llvm-19/static-assert.patch
 #llvm-19/clang-19-crash.patch
@@ -107,8 +109,7 @@ trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
 trixie/revert-v8-sanitize.patch
-trixie/gn-expand-dir-allowlist.patch
-trixie/gn-additional-outputs.patch
+trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
 
@@ -146,6 +147,7 @@ llvm-22/clone-traits.patch
 llvm-22/const-profile.patch
 llvm-22/keyfactory.patch
 llvm-22/raw-ref-map-find.patch
+llvm-22/shut-up-clang.patch
 
 # patches for system libhwy-dev
 #fixes/highway-include-path.patch

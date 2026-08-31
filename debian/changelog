@@ -46,6 +46,10 @@ chromium (152.0.7977.64-1) UNRELEASED; urgency=high
     - third_party/skia-vsx-instructions.patch: Reenable VSX and reset to
       POWER ISA 2.07 baseline (POWER8)
 
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0015-ffmpeg-support-for-loongarch.patch: refresh for upstream
+
  -- Andres Salomon <dilinger@debian.org>  Tue, 25 Aug 2026 17:22:58 -0400
 
 chromium (151.0.7922.173-1) unstable; urgency=high

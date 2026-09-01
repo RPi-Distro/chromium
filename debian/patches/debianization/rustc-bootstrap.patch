@@ -5,13 +5,13 @@ allow the use of -Z* compiler options, rather than erroring out with
 
 --- a/build/rust/gni_impl/rustc_wrapper.py
 +++ b/build/rust/gni_impl/rustc_wrapper.py
-@@ -285,6 +285,9 @@ def main():
+@@ -401,6 +401,9 @@ def main():
    # (but do this _after_ the `_SaveRustEnvAndFlags` call above).
    rustc_args += ["--emit", args.emit, "-o", args.o]
  
 +  # Debian: Allow -Z* compiler options
-+  env['RUSTC_BOOTSTRAP'] = '1'
++  rustenv['RUSTC_BOOTSTRAP'] = '1'
 +
    if args.v:
-     print(' '.join(f'{k}={shlex.quote(v)}' for k, v in env.items()), args.rustc,
-           shlex.join(rustc_args))
+     print(' '.join(f'{k}={shlex.quote(v)}' for k, v in rustenv.items()),
+           args.rustc, shlex.join(rustc_args))

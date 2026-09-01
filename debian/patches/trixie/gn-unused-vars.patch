@@ -1,0 +1,130 @@
+ERROR at //build/config/compiler/BUILD.gn:2817:9 (//build/toolchain/linux/unbundle:default_for_rust_host_build_tools): Assignment had no effect.
+        [ "{{target_out_dir}}/{{label_name}}/{{source_name_part}}.dwo" ]
+        ^--------------------------------------------------------------
+You set the variable "c_additional_outputs" here and it was unused before it
+went out of scope.
+See //build/config/BUILDCONFIG.gn:357:3: which caused the file to be included.
+
+This variable was added in https://gn.googlesource.com/gn/+/9641c502e7b394754033dc2ad873a4b3f3a68a6c
+in April 2026.
+
+
+ERROR at //.gn:174:30: Assignment had no effect.
+expand_directory_allowlist = build_dotfile_settings.expand_directory_allowlist
+                             ^------------------------------------------------
+You set the variable "expand_directory_allowlist" here and it was unused before it went out of scope.
+
+This variable was added in https://gn.googlesource.com/gn/+/42ace47bb426ca9705175d866bb9bdf168d5535f
+in April 2026.
+
+
+ERROR at //build/config/BUILDCONFIG.gn:628:30: Assignment had no effect.
+        generate_modulemap = default_modulemap_mode
+                             ^---------------------
+You set the variable "generate_modulemap" here and it was unused before it went
+out of scope.
+
+This variable was added in https://gn.googlesource.com/gn/+/6e8dcdebbadf4f8aa75e6a4b6e0bdf89dce1513a
+in March 2026.
+
+
+public_inputs was added in https://gn.googlesource.com/gn/+/7dce53a9983c3f2e4a7f3f06f3d3d30c77493dcd
+in July 2026.
+
+
+--- chromium-152.0.7977.64/.gn	2026-08-24 15:15:37.000000000 -0400
++++ chromium-152.0.7977.64-conv/.gn	2026-08-29 22:56:28.721339296 -0400
+@@ -177,4 +177,3 @@
+       "//third_party/dawn/third_party/meson/meson_target.gni",
+     ]
+ 
+-expand_directory_allowlist = build_dotfile_settings.expand_directory_allowlist
+--- chromium-152.0.7977.64/build/config/BUILDCONFIG.gn	2026-08-24 15:15:37.000000000 -0400
++++ chromium-152.0.7977.64-conv/build/config/BUILDCONFIG.gn	2026-08-29 22:56:42.362001690 -0400
+@@ -625,7 +625,6 @@
+       }
+ 
+       if (!defined(generate_modulemap)) {
+-        generate_modulemap = default_modulemap_mode
+       }
+ 
+       if (use_libcxx_modules) {
+@@ -755,7 +754,6 @@
+       }
+ 
+       if (!defined(generate_modulemap)) {
+-        generate_modulemap = default_modulemap_mode
+       }
+ 
+       if (use_libcxx_modules) {
+--- chromium-152.0.7977.64/build/config/compiler/BUILD.gn	2026-08-24 15:15:37.000000000 -0400
++++ chromium-152.0.7977.64-conv/build/config/compiler/BUILD.gn	2026-08-29 22:56:16.595750472 -0400
+@@ -2841,10 +2841,6 @@
+   # thinlto requires -gsplit-dwarf in ldflags.
+   if (use_thin_lto && !is_apple) {
+     ldflags = split_dwarf_flags
+-  } else {
+-    # .dwo files are generated when ThinLTO is not used.
+-    c_additional_outputs =
+-        [ "{{target_out_dir}}/{{label_name}}/{{source_name_part}}.dwo" ]
+   }
+ }
+ 
+--- chromium-152.0.7977.64/third_party/devtools-frontend/src/scripts/build/ninja/copy.gni	2026-08-24 15:15:37.000000000 -0400
++++ chromium-152.0.7977.64-conv/third_party/devtools-frontend/src/scripts/build/ninja/copy.gni	2026-08-29 22:56:42.362001690 -0400
+@@ -25,9 +25,6 @@
+       string_join(",", sources),
+     ]
+ 
+-    # Expose ts files to dependent targets.
+-    public_inputs = filter_include(sources, [ "*.ts" ])
+-
+     outputs = []
+     foreach(_input, sources) {
+       outputs += [ "$target_gen_dir/$_input" ]
+--- chromium-152.0.7977.64/third_party/devtools-frontend/src/scripts/build/ninja/devtools_entrypoint.gni	2026-08-24 15:15:37.000000000 -0400
++++ chromium-152.0.7977.64-conv/third_party/devtools-frontend/src/scripts/build/ninja/devtools_entrypoint.gni	2026-08-29 22:56:42.362001690 -0400
+@@ -197,9 +197,6 @@
+   node_action(target_name) {
+     script = "scripts/build/ninja/generate-tsconfig.js"
+ 
+-    # Expose ts files to dependent targets.
+-    public_inputs = [ invoker.entrypoint ]
+-
+     args = [
+              rebase_path(_generated_tsconfig_location, root_build_dir),
+              rebase_path(invoker.entrypoint, root_build_dir),
+--- chromium-152.0.7977.64/third_party/devtools-frontend/src/scripts/build/ninja/devtools_pre_built.gni	2026-08-24 15:15:37.000000000 -0400
++++ chromium-152.0.7977.64-conv/third_party/devtools-frontend/src/scripts/build/ninja/devtools_pre_built.gni	2026-08-29 22:56:42.363001739 -0400
+@@ -17,9 +17,6 @@
+ 
+     public_deps = invoker.deps
+ 
+-    # Expose ts files to dependent targets.
+-    public_inputs = filter_include(sources, [ "*.ts" ])
+-
+     _copy_src = rebase_path(get_path_info(target_name, "dir"), root_build_dir)
+     _copy_dest = rebase_path(target_gen_dir, root_build_dir)
+ 
+--- chromium-152.0.7977.64/third_party/devtools-frontend/src/scripts/build/typescript/typescript.gni	2026-08-24 15:15:37.000000000 -0400
++++ chromium-152.0.7977.64-conv/third_party/devtools-frontend/src/scripts/build/typescript/typescript.gni	2026-08-29 22:56:42.363001739 -0400
+@@ -212,19 +212,6 @@
+     output_files = [ "$target_gen_dir/$target_name-tsconfig.json" ]
+ 
+     if (defined(sources)) {
+-      # Expose ts files to dependent targets.
+-      public_inputs =
+-          filter_include(sources,
+-                         [
+-                           "*.ts",
+-
+-                           # TODO: Migrate the files below to TypeScript
+-                           # and remove them from this list.
+-                           "*ahem.js",
+-                           "*ARIAProperties.js",
+-                           "*SupportedCSSProperties.js",
+-                         ])
+-
+       args += [ "--sources" ] + rebase_path(sources, root_build_dir)
+ 
+       foreach(src, sources) {

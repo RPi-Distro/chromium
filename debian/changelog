@@ -5,6 +5,10 @@ chromium (152.0.7977.64-2) UNRELEASED; urgency=high
     - trixie/rust-no-alloc-shim.patch: drop, no longer needed with newer rust.
     - trixie/rust-sanitize.patch: drop, no longer needed with newer rust.
 
+  [ Daniel Richard G. ]
+  * d/deb_pre_gen.py: Exclude a couple of targets from the pre-gen process as
+    making them causes files to be written to the source tree.
+
  -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
 
 chromium (152.0.7977.64-1) unstable; urgency=high

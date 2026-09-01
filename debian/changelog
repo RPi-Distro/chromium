@@ -4,6 +4,17 @@ chromium (152.0.7977.64-2~deb12u1) UNRELEASED; urgency=high
   * d/patches:
     - trixie/rust-no-alloc-shim.patch: drop, no longer needed with newer rust.
     - trixie/rust-sanitize.patch: drop, no longer needed with newer rust.
+    - rust-1.85/jxl-simd-avx512.patch: drop, no longer needed with newer rust
+    - rust-1.85/jxl-features.patch: drop, no longer needed with newer rust.
+    - rust-1.85/parsing.patch: drop, no longer needed with newer rust.
+    - rust-1.85/image.patch: drop, no longer needed with newer rust.
+    - rust-1.85/rust-is-multiple-of.patch: drop, no longer needed with newer
+      rust.
+    - rust-1.85/file_as_c_str.patch: drop, no longer needed with newer rust.
+    - rust-1.85/mojo-features.patch: drop, no longer needed with newer rust.
+    - rust-1.85/zip8.patch: drop, no longer needed with newer rust.
+    - rust-1.85/std-from-utf8.patch: drop, no longer needed with newer rust.
+    - rust-1.85/let-chains.patch: drop, no longer needed with newer rust.
 
  -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
 

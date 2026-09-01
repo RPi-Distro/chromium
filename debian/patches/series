@@ -32,7 +32,6 @@ fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
-#fixes/missing-dep.patch
 fixes/arm-logging.patch
 
 
@@ -94,11 +93,11 @@ rust-1.85/mojo-features.patch
 rust-1.85/zip8.patch
 rust-1.85/std-from-utf8.patch
 rust-1.85/let-chains.patch
+#rust-1.85/rust-no-alloc-shim.patch
+#rust-1.85/rust-sanitize.patch
 
 #trixie/adler1.patch
 #trixie/libxml-parseerr.patch
-trixie/rust-no-alloc-shim.patch
-trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 #trixie/libxml2-no-xxe.patch
 trixie/gn-string-hash.patch

@@ -1,5 +1,15 @@
+chromium (152.0.7977.64-2) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * d/patches:
+    - trixie/rust-no-alloc-shim.patch: drop, no longer needed with newer rust.
+    - trixie/rust-sanitize.patch: drop, no longer needed with newer rust.
+
+ -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
+
 chromium (152.0.7977.64-1) unstable; urgency=high
 
+  [ Andres Salomon ]
   * New upstream stable release.
     - CVE-2026-79282: Use after free in ANGLE. Reported by Goodluck.
     - CVE-2026-79290: Use after free in Aura. Reported by Google.

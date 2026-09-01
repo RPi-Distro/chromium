@@ -93,11 +93,11 @@ system/rust-cbor.patch
 #rust-1.85/zip8.patch
 #rust-1.85/std-from-utf8.patch
 #rust-1.85/let-chains.patch
+#rust-1.85/rust-no-alloc-shim.patch
+#rust-1.85/rust-sanitize.patch
 
 #trixie/adler1.patch
 #trixie/libxml-parseerr.patch
-trixie/rust-no-alloc-shim.patch
-trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 trixie/gn-string-hash.patch
 #trixie/nodejs-set-intersection.patch

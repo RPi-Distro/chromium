@@ -1,9 +1,48 @@
-chromium (152.0.7977.64-2~deb12u1) UNRELEASED; urgency=high
+chromium (152.0.7977.75-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-84353: Use after free in Shared Tab Groups. Reported by Google.
+    - CVE-2026-84352: Use after free in WebGL. Reported by Google.
+    - CVE-2026-84354: Incorrect authorization in FileSystem.
+      Reported by Google.
+    - CVE-2026-84359: Information leak in Skia. Reported by Google.
+    - CVE-2026-84357: Improper input validation in Omnibox.
+      Reported by Google.
+    - CVE-2026-84324: Use after free in Proxy. Reported by Google.
+    - CVE-2026-84349: Use after free in Browser. Reported by Google.
+    - CVE-2026-84326: Uninitialized resource in V8. Reported by Jihyeon Jeong
+      (Compsec Lab, Seoul National University / Research Intern).
+    - CVE-2026-84333: Use after free in Dawn. Reported by Google.
+    - CVE-2026-84351: Buffer overflow in GPU. Reported by Cassio Lima.
+    - CVE-2026-84325: Improper input validation in DataTransfer.
+      Reported by Google.
+    - CVE-2026-84328: Missing authorization in FileSystem. Reported by Google.
+    - CVE-2026-84347: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-84323: Missing authorization in FileSystem. Reported by Google.
+    - CVE-2026-84355: Incorrect authorization in Navigation.
+      Reported by Google.
+    - CVE-2026-84358: Improper privilege management in Downloads.
+      Reported by Google.
+    - CVE-2026-84332: Incorrect authorization in SiteSettings.
+      Reported by Google.
+    - CVE-2026-84330: UI misrepresentation in FullScreen. Reported by Google.
+    - CVE-2026-84334: Incorrect authorization in Chromoting.
+      Reported by Google.
+    - CVE-2026-84348: Information leak in MediaCapture. Reported by Google.
+    - CVE-2026-84335: Incorrect authorization in TabStrip. Reported by Google.
+    - CVE-2026-84327: Incorrect authorization in Autofill. Reported by Google.
+    - CVE-2026-84329: Confused deputy in CredentialProvider.
+      Reported by Google.
+    - CVE-2026-84356: UI misrepresentation in FullScreen.
+      Reported by Francesco Topol (k4tedu).
+    - CVE-2026-84350: Use after free in TabStrip. Reported by Google.
+    - CVE-2026-84331: Incorrect authorization in Actor. Reported by Google.
   * d/patches:
     - trixie/rust-no-alloc-shim.patch: drop, no longer needed with newer rust.
     - trixie/rust-sanitize.patch: drop, no longer needed with newer rust.
+    - debianization/rust-disable-debugsym.patch: add --no-mmap-output-file
+      to link flags (another attempt to reduce armhf memory usage).
     - rust-1.85/jxl-simd-avx512.patch: drop, no longer needed with newer rust
     - rust-1.85/jxl-features.patch: drop, no longer needed with newer rust.
     - rust-1.85/parsing.patch: drop, no longer needed with newer rust.
@@ -24,7 +63,16 @@ chromium (152.0.7977.64-2~deb12u1) UNRELEASED; urgency=high
     - bookworm/fmodf.patch: drop, no longer needed with newer clang.
     - bookworm/path-rustfmt.patch: drop, no longer needed with newer clang.
 
- -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
+  [ Daniel Richard G. ]
+  * d/deb_pre_gen.py: Exclude a couple of targets from the pre-gen process as
+    making them causes files to be written to the source tree.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      Fix FTBFS on ppc64le systems due to FFmpeg patch update.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Sep 2026 14:22:49 -0400
 
 chromium (152.0.7977.64-1) unstable; urgency=high
 

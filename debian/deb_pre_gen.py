@@ -199,6 +199,10 @@ bad_outputs = set([
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/unittests-tsconfig.json",
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/simulation/unittests-tsconfig.json",
   "gen/third_party/devtools-frontend/src/frontend_indexer_tsconfig-tsconfig.json",
+
+  # These write to the source tree, see https://crbug.com/555806022
+  "gen/third_party/devtools-frontend/src/front_end/core/sdk/api_tests-tsconfig.json",
+  "gen/third_party/devtools-frontend/src/front_end/foundation/api_tests-tsconfig.json",
 ])
 
 # Parses toolchain.ninja files to determine the set of output files that

@@ -1,4 +1,4 @@
-chromium (152.0.7977.75-1) UNRELEASED; urgency=high
+chromium (152.0.7977.75-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
@@ -53,7 +53,7 @@ chromium (152.0.7977.75-1) UNRELEASED; urgency=high
     - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
       Fix FTBFS on ppc64le systems due to FFmpeg patch update.
 
- -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Sep 2026 14:22:49 -0400
 
 chromium (152.0.7977.64-1) unstable; urgency=high
 

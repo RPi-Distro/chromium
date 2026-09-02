@@ -7,7 +7,7 @@ half.
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -2618,10 +2618,13 @@ config("optimize") {
+@@ -2618,12 +2618,16 @@ config("optimize") {
    } else {
      cflags = [ "-O2" ] + common_optimize_on_cflags
  
@@ -24,4 +24,7 @@ half.
 +    }
    }
    ldflags = common_optimize_on_ldflags
++  ldflags += [ "-Wl,--no-mmap-output-file" ]
  }
+ 
+ # Turn off optimizations.

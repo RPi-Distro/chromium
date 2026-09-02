@@ -15,6 +15,14 @@ chromium (152.0.7977.64-2~deb12u1) UNRELEASED; urgency=high
     - rust-1.85/zip8.patch: drop, no longer needed with newer rust.
     - rust-1.85/std-from-utf8.patch: drop, no longer needed with newer rust.
     - rust-1.85/let-chains.patch: drop, no longer needed with newer rust.
+    - bookworm/dq-forward-iterator.patch: drop, no longer needed with newer
+      clang.
+    - bookworm/constexpr.patch: drop, no longer needed with newer clang.
+    - bookworm/less-void.patch: drop, no longer needed with newer clang.
+    - bookworm/modff.patch: drop, no longer needed with newer clang.
+    - bookworm/foreach.patch: drop, no longer needed with newer clang.
+    - bookworm/fmodf.patch: drop, no longer needed with newer clang.
+    - bookworm/path-rustfmt.patch: drop, no longer needed with newer clang.
 
  -- Andres Salomon <dilinger@debian.org>  Mon, 31 Aug 2026 14:52:09 -0400
 

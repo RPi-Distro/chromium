@@ -113,7 +113,7 @@ trixie/gn-unused-vars.patch
 #trixie/bindgen-boringssl.patch
 
 #bookworm/strlcpy.patch
-bookworm/dq-forward-iterator.patch
+#bookworm/dq-forward-iterator.patch
 bookworm/gn-revert-path-exists.patch
 #bookworm/bindgen.patch
 #bookworm/constflatset.patch
@@ -122,16 +122,16 @@ bookworm/freetype-COLRV1.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
 bookworm/partially-deployed-mseal-syscall.patch
-bookworm/constexpr.patch
+#bookworm/constexpr.patch
 #bookworm/constexpr2.patch
 #bookworm/constexpr3.patch
 #bookworm/rust-visibility.patch
-bookworm/less-void.patch
+#bookworm/less-void.patch
 #bookworm/stdarch-arm.patch
-bookworm/modff.patch
-bookworm/foreach.patch
+#bookworm/modff.patch
+#bookworm/foreach.patch
 #bookworm/crabbyav1f.patch
-bookworm/fmodf.patch
+#bookworm/fmodf.patch
 bookworm/dav1d-extern.patch
 #bookworm/toktrie-utf8chunks.patch
 #bookworm/derivre-create.patch
@@ -139,7 +139,7 @@ bookworm/gn-hpp11.patch
 #bookworm/rust-split-at-checked.patch
 #bookworm/crabbyav1f-macro-scope.patch
 #bookworm/rust-box-to-vec.patch
-bookworm/path-rustfmt.patch
+#bookworm/path-rustfmt.patch
 bookworm/gn-path-exists2.patch
 bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch

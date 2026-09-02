@@ -6542,6 +6542,50 @@ Index: chromium-152.0.7977.64/third_party/ffmpeg/chromium/config/Chromium/linux/
 +#define AVUTIL_FFVERSION_H
 +#define FFMPEG_VERSION "N-122375-g6c68cbfa92"
 +#endif /* AVUTIL_FFVERSION_H */
+Index: chromium-152.0.7977.64/third_party/ffmpeg/ffmpeg_generated.gni
+===================================================================
+--- chromium-152.0.7977.64.orig/third_party/ffmpeg/ffmpeg_generated.gni
++++ chromium-152.0.7977.64/third_party/ffmpeg/ffmpeg_generated.gni
+@@ -342,6 +342,39 @@ if (((current_cpu == "arm64" || current_
+   ]
+ }
+ 
++if  (use_linux_config && current_cpu == "ppc64") {
++  ffmpeg_c_sources += [
++    "libavutil/ppc/float_dsp_init.c",
++    "libavutil/ppc/cpu.c",
++    "libavutil/ppc/float_dsp_altivec.c",
++    "libavutil/ppc/float_dsp_vsx.c",
++    "libavcodec/ppc/audiodsp.c",
++    "libavcodec/ppc/blockdsp.c",
++    "libavcodec/ppc/fdctdsp.c",
++    "libavcodec/ppc/fmtconvert_altivec.c",
++    "libavcodec/ppc/h264dsp_ppc.c",
++    "libavcodec/ppc/h264qpel_ppc.c",
++    "libavcodec/ppc/h264chroma_init.c",
++    "libavcodec/ppc/hpeldsp_altivec.c",
++    "libavcodec/ppc/idctdsp.c",
++    "libavcodec/ppc/lossless_videodsp_altivec.c",
++    "libavcodec/ppc/me_cmp.c",
++    "libavcodec/ppc/mpegaudiodsp_altivec.c",
++    "libavcodec/ppc/mpegvideo_altivec.c",
++    "libavcodec/ppc/mpegvideoencdsp.c",
++    "libavcodec/ppc/pixblockdsp.c",
++    "libavcodec/ppc/svq1enc_altivec.c",
++    "libavcodec/ppc/vc1dsp_altivec.c",
++    "libavcodec/ppc/videodsp.c",
++    "libavcodec/ppc/vorbisdsp_altivec.c",
++    "libavcodec/ppc/vp3dsp_altivec.c",
++    "libavcodec/ppc/vp8dsp_altivec.c",
++  ]
++  ffmpeg_gas_sources += [
++    "libavcodec/ppc/asm.S",
++  ]
++}
++
+ if ((current_cpu == "x64" && ffmpeg_branding == "Chrome") ||
+     (is_win && current_cpu == "x86" && ffmpeg_branding == "Chrome") ||
+     (use_linux_config && current_cpu == "x86" && ffmpeg_branding == "Chrome")) {
 Index: chromium-152.0.7977.64/third_party/ffmpeg/libavcodec/ppc/h264dsp_ppc.c
 ===================================================================
 --- /dev/null

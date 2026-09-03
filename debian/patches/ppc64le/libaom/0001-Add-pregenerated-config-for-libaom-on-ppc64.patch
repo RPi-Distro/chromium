@@ -1,7 +1,7 @@
-Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
+Index: chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 ===================================================================
 --- /dev/null
-+++ chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
++++ chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_config.asm
 @@ -0,0 +1,100 @@
 +;
 +; Copyright (c) 2017, Alliance for Open Media. All rights reserved.
@@ -103,10 +103,10 @@ Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/confi
 +HAVE_VSX equ 1
 +HAVE_WXWIDGETS equ 0
 +STATIC_LINK_JXL equ 0
-Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
+Index: chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 ===================================================================
 --- /dev/null
-+++ chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
++++ chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_config.c
 @@ -0,0 +1,13 @@
 +/*
 + * Copyright (c) 2016, Alliance for Open Media. All rights reserved.
@@ -121,10 +121,10 @@ Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/confi
 +#include "aom/aom_codec.h"
 +static const char* const cfg = "cmake ../source/libaom -G \"Unix Makefiles\" -DCMAKE_TOOLCHAIN_FILE=\"../source/libaom/cmake/toolchains/ppc-linux-gcc.cmake\" -DCONFIG_AV1_DECODER=0 -DCONFIG_AV1_ENCODER=1 -DCONFIG_AV1_HIGHBITDEPTH=0 -DCONFIG_AV1_TEMPORAL_DENOISING=0 -DCONFIG_QUANT_MATRIX=0 -DCONFIG_REALTIME_ONLY=1 -DCONFIG_DENOISE=0 -DCONFIG_SIZE_LIMIT=1 -DDECODE_HEIGHT_LIMIT=16384 -DDECODE_WIDTH_LIMIT=16384";
 +const char *aom_codec_build_config(void) {return cfg;}
-Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
+Index: chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 ===================================================================
 --- /dev/null
-+++ chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
++++ chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_config.h
 @@ -0,0 +1,103 @@
 +/*
 + * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
@@ -229,11 +229,11 @@ Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/confi
 +#define HAVE_WXWIDGETS 0
 +#define STATIC_LINK_JXL 0
 +#endif  // AOM_CONFIG_H_
-Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+Index: chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
-@@ -0,0 +1,1177 @@
++++ chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_dsp_rtcd.h
+@@ -0,0 +1,1183 @@
 +/*
 + * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
 + *
@@ -286,6 +286,9 @@ Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/confi
 +
 +void aom_blend_a64_vmask_c(uint8_t *dst, uint32_t dst_stride, const uint8_t *src0, uint32_t src0_stride, const uint8_t *src1, uint32_t src1_stride, const uint8_t *mask, int w, int h);
 +#define aom_blend_a64_vmask aom_blend_a64_vmask_c
++
++int64_t aom_calc_variance_stat_c(const uint8_t *src, int stride, int bw, int bh);
++#define aom_calc_variance_stat aom_calc_variance_stat_c
 +
 +void aom_comp_avg_pred_c(uint8_t *comp_pred, const uint8_t *pred, int width, int height, const uint8_t *ref, int ref_stride);
 +#define aom_comp_avg_pred aom_comp_avg_pred_c
@@ -547,6 +550,9 @@ Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/confi
 +
 +void aom_hadamard_lp_8x8_dual_c(const int16_t *src_diff, ptrdiff_t src_stride, int16_t *coeff);
 +#define aom_hadamard_lp_8x8_dual aom_hadamard_lp_8x8_dual_c
++
++int64_t aom_highbd_calc_variance_stat_c(const uint16_t *src, int stride, int bw, int bh);
++#define aom_highbd_calc_variance_stat aom_highbd_calc_variance_stat_c
 +
 +void aom_ifft16x16_float_c(const float *input, float *temp, float *output);
 +#define aom_ifft16x16_float aom_ifft16x16_float_c
@@ -1411,10 +1417,10 @@ Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif  // AOM_DSP_RTCD_H_
-Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
+Index: chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
++++ chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/aom_scale_rtcd.h
 @@ -0,0 +1,88 @@
 +/*
 + * Copyright (c) 2017, Alliance for Open Media. All rights reserved.
@@ -1504,10 +1510,10 @@ Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/confi
 +#endif
 +
 +#endif  // AOM_SCALE_RTCD_H_
-Index: chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
+Index: chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 ===================================================================
 --- /dev/null
-+++ chromium-150.0.7871.46/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
++++ chromium-152.0.7977.64/third_party/libaom/source/config/linux/ppc64/config/av1_rtcd.h
 @@ -0,0 +1,405 @@
 +/*
 + * Copyright (c) 2017, Alliance for Open Media. All rights reserved.

@@ -193,12 +193,16 @@ handled_python_indep_scripts = set([
   "../../ui/webui/resources/tools/minify_js.py",  # fails with Node.js v12
 ])
 
-# Don't make these, as they depend on files we've excluded
 bad_outputs = set([
+  # Don't make these, as they depend on files we've excluded
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/core/unittests-tsconfig.json",
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/metrics/unittests-tsconfig.json",
   "gen/third_party/devtools-frontend/src/front_end/models/trace/lantern/simulation/unittests-tsconfig.json",
   "gen/third_party/devtools-frontend/src/frontend_indexer_tsconfig-tsconfig.json",
+
+  # These write to the source tree, see https://crbug.com/555806022
+  "gen/third_party/devtools-frontend/src/front_end/core/sdk/api_tests-tsconfig.json",
+  "gen/third_party/devtools-frontend/src/front_end/foundation/api_tests-tsconfig.json",
 ])
 
 # Parses toolchain.ninja files to determine the set of output files that

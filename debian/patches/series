@@ -32,7 +32,6 @@ fixes/autofill-binarypb.patch
 fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
-#fixes/missing-dep.patch
 fixes/arm-logging.patch
 
 
@@ -53,6 +52,7 @@ disable/enterprise-tests.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
+disable/node-ts.patch
 
 system/golang.patch
 system/icu-shim.patch
@@ -62,6 +62,7 @@ system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
 system/llvm.patch
+system/rust-cbor.patch
 
 #llvm-19/static-assert.patch
 #llvm-19/clang-19-crash.patch
@@ -82,21 +83,21 @@ system/llvm.patch
 #llvm-19/privatefriends.patch
 #llvm-19/constexpr.patch
 
-rust-1.85/jxl-simd-avx512.patch
-rust-1.85/jxl-features.patch
-rust-1.85/parsing.patch
-rust-1.85/image.patch
-rust-1.85/rust-is-multiple-of.patch
-rust-1.85/file_as_c_str.patch
-rust-1.85/mojo-features.patch
-rust-1.85/zip8.patch
-rust-1.85/std-from-utf8.patch
-rust-1.85/let-chains.patch
+#rust-1.85/jxl-simd-avx512.patch
+#rust-1.85/jxl-features.patch
+#rust-1.85/parsing.patch
+#rust-1.85/image.patch
+#rust-1.85/rust-is-multiple-of.patch
+#rust-1.85/file_as_c_str.patch
+#rust-1.85/mojo-features.patch
+#rust-1.85/zip8.patch
+#rust-1.85/std-from-utf8.patch
+#rust-1.85/let-chains.patch
+#rust-1.85/rust-no-alloc-shim.patch
+#rust-1.85/rust-sanitize.patch
 
 #trixie/adler1.patch
 #trixie/libxml-parseerr.patch
-trixie/rust-no-alloc-shim.patch
-trixie/rust-sanitize.patch
 trixie/cookie-string-view.patch
 #trixie/libxml2-no-xxe.patch
 trixie/gn-string-hash.patch
@@ -107,13 +108,12 @@ trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
 trixie/revert-v8-sanitize.patch
-trixie/gn-expand-dir-allowlist.patch
-trixie/gn-additional-outputs.patch
+trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
 
 #bookworm/strlcpy.patch
-bookworm/dq-forward-iterator.patch
+#bookworm/dq-forward-iterator.patch
 bookworm/gn-revert-path-exists.patch
 #bookworm/bindgen.patch
 #bookworm/constflatset.patch
@@ -122,16 +122,16 @@ bookworm/freetype-COLRV1.patch
 bookworm/gn-funcs.patch
 bookworm/gn-absl.patch
 bookworm/partially-deployed-mseal-syscall.patch
-bookworm/constexpr.patch
+#bookworm/constexpr.patch
 #bookworm/constexpr2.patch
 #bookworm/constexpr3.patch
 #bookworm/rust-visibility.patch
-bookworm/less-void.patch
+#bookworm/less-void.patch
 #bookworm/stdarch-arm.patch
-bookworm/modff.patch
-bookworm/foreach.patch
+#bookworm/modff.patch
+#bookworm/foreach.patch
 #bookworm/crabbyav1f.patch
-bookworm/fmodf.patch
+#bookworm/fmodf.patch
 bookworm/dav1d-extern.patch
 #bookworm/toktrie-utf8chunks.patch
 #bookworm/derivre-create.patch
@@ -139,7 +139,7 @@ bookworm/gn-hpp11.patch
 #bookworm/rust-split-at-checked.patch
 #bookworm/crabbyav1f-macro-scope.patch
 #bookworm/rust-box-to-vec.patch
-bookworm/path-rustfmt.patch
+#bookworm/path-rustfmt.patch
 bookworm/gn-path-exists2.patch
 bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
@@ -165,6 +165,7 @@ llvm-22/clone-traits.patch
 llvm-22/const-profile.patch
 llvm-22/keyfactory.patch
 llvm-22/raw-ref-map-find.patch
+llvm-22/shut-up-clang.patch
 
 # patches for system libhwy-dev
 #fixes/highway-include-path.patch
@@ -261,5 +262,4 @@ rpi/v4l2-stateful-limit-instances.patch
 rpi/v4l2-do-not-advertise-stateless-codecs.patch
 rpi/v4l2-sandbox-allow-decoder-devices.patch
 rpi/x11-import-bgrx-native-pixmap.patch
-rpi/x11-reuse-main-gl-display.patch
 rpi/sandbox-allow-fcntl-dupfd-query.patch

@@ -28,7 +28,7 @@ libs.
 
 --- a/third_party/abseil-cpp/absl/algorithm/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/algorithm/BUILD.gn
-@@ -6,6 +6,7 @@ import("//third_party/abseil-cpp/absl.gn
+@@ -8,6 +8,7 @@ import("//third_party/abseil-cpp/absl.gn
  
  absl_source_set("algorithm") {
    public = [ "algorithm.h" ]
@@ -36,7 +36,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -22,6 +23,7 @@ absl_test("algorithm_test") {
+@@ -24,6 +25,7 @@ absl_test("algorithm_test") {
  
  absl_source_set("container") {
    public = [ "container.h" ]
@@ -116,9 +116,9 @@ libs.
      ":hash_container_defaults",
 --- a/third_party/abseil-cpp/absl/crc/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/crc/BUILD.gn
-@@ -40,6 +40,7 @@ absl_source_set("crc32c") {
-     "internal/crc_memcpy_x86_arm_combined.cc",
-     "internal/crc_non_temporal_memcpy.cc",
+@@ -42,6 +42,7 @@ absl_source_set("crc32c") {
+     "internal/crc32c.h",
+     "internal/crc_memcpy.h",
    ]
 +  visibility = [ "*" ]
    deps = [
@@ -152,7 +152,7 @@ libs.
      ":commandlineflag_internal",
 --- a/third_party/abseil-cpp/absl/functional/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/functional/BUILD.gn
-@@ -7,6 +7,7 @@ import("//third_party/abseil-cpp/absl.gn
+@@ -9,6 +9,7 @@ import("//third_party/abseil-cpp/absl.gn
  absl_source_set("any_invocable") {
    sources = [ "internal/any_invocable.h" ]
    public = [ "any_invocable.h" ]
@@ -160,7 +160,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -54,6 +55,7 @@ absl_test("bind_back_test") {
+@@ -58,6 +59,7 @@ absl_test("bind_back_test") {
  absl_source_set("bind_front") {
    sources = [ "internal/front_binder.h" ]
    public = [ "bind_front.h" ]
@@ -168,7 +168,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/container:compressed_tuple",
      "//third_party/abseil-cpp/absl/meta:type_traits",
-@@ -87,6 +89,7 @@ absl_test("function_ref_test") {
+@@ -99,6 +101,7 @@ absl_test("function_ref_test") {
  
  absl_source_set("overload") {
    public = [ "overload.h" ]
@@ -178,7 +178,7 @@ libs.
      "//third_party/abseil-cpp/absl/meta:type_traits",
 --- a/third_party/abseil-cpp/absl/memory/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/memory/BUILD.gn
-@@ -6,6 +6,7 @@ import("//third_party/abseil-cpp/absl.gn
+@@ -8,6 +8,7 @@ import("//third_party/abseil-cpp/absl.gn
  
  absl_source_set("memory") {
    public = [ "memory.h" ]
@@ -188,7 +188,7 @@ libs.
      "//third_party/abseil-cpp/absl/meta:type_traits",
 --- a/third_party/abseil-cpp/absl/meta/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/meta/BUILD.gn
-@@ -29,6 +29,7 @@ absl_test("requires_test") {
+@@ -31,6 +31,7 @@ absl_test("requires_test") {
  
  absl_source_set("type_traits") {
    public = [ "type_traits.h" ]
@@ -198,7 +198,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:core_headers",
 --- a/third_party/abseil-cpp/absl/numeric/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/numeric/BUILD.gn
-@@ -9,6 +9,7 @@ absl_source_set("bits") {
+@@ -11,6 +11,7 @@ absl_source_set("bits") {
      "bits.h",
      "internal/bits.h",
    ]
@@ -216,7 +216,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -55,6 +56,7 @@ absl_source_set("strings") {
+@@ -54,6 +55,7 @@ absl_source_set("strings") {
      "strip.h",
      "substitute.h",
    ]
@@ -224,7 +224,7 @@ libs.
    public_deps = [
      # string_view.h was once part of :strings, so string_view.h is
      # re-exported for backwards compatibility.
-@@ -680,6 +682,7 @@ absl_test("str_cat_test") {
+@@ -679,6 +681,7 @@ absl_test("str_cat_test") {
  
  absl_source_set("str_format") {
    public = [ "str_format.h" ]
@@ -234,15 +234,15 @@ libs.
      ":string_view",
 --- a/third_party/abseil-cpp/absl/types/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/types/BUILD.gn
-@@ -36,6 +36,7 @@ absl_test("source_location_test") {
+@@ -37,6 +37,7 @@ absl_test("source_location_test") {
  absl_source_set("span") {
-   public = [ "span.h" ]
    sources = [ "internal/span.h" ]
+   public = [ "span.h" ]
 +  visibility = [ "*" ]
    deps = [
      "//third_party/abseil-cpp/absl/algorithm",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -83,6 +84,7 @@ absl_source_set("any_span") {
+@@ -85,6 +86,7 @@ absl_source_set("any_span") {
  
  absl_source_set("optional") {
    public = [ "optional.h" ]
@@ -250,7 +250,7 @@ libs.
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -92,6 +94,7 @@ absl_source_set("optional") {
+@@ -94,6 +96,7 @@ absl_source_set("optional") {
  
  absl_source_set("variant") {
    public = [ "variant.h" ]

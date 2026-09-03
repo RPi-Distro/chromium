@@ -72,16 +72,16 @@ Subject: [PATCH 07/17] Widevide: Add
  
 --- a/third_party/widevine/cdm/widevine.gni
 +++ b/third_party/widevine/cdm/widevine.gni
-@@ -26,7 +26,7 @@ if (is_chromeos && !is_chromeos_device)
+@@ -25,7 +25,7 @@ if (is_chromeos && !is_chromeos_device)
+ # supported via Android MediaDrm API.
  library_widevine_cdm_available =
-     (is_chromeos &&
-      (target_cpu == "x64" || target_cpu == "arm" || target_cpu == "arm64")) ||
+     (is_chromeos && (target_cpu == "x64" || target_cpu == "arm64")) ||
 -    (target_os == "linux" && (target_cpu == "x64" || target_cpu == "arm64")) ||
 +    (target_os == "linux" && (target_cpu == "x64" || target_cpu == "arm" || target_cpu == "arm64")) ||
      (target_os == "mac" && (target_cpu == "x64" || target_cpu == "arm64")) ||
      (target_os == "win" &&
       (target_cpu == "x86" || target_cpu == "x64" || target_cpu == "arm64"))
-@@ -41,7 +41,10 @@ enable_library_widevine_cdm =
+@@ -40,7 +40,10 @@ enable_library_widevine_cdm =
  # desktop platforms. The CDM can be bundled regardless whether it's a
  # component. See below.
  enable_widevine_cdm_component =

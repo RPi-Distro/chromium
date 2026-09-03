@@ -3,7 +3,7 @@ Description: Drop various compiler options not supported by clang-22
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -579,7 +579,6 @@ config("compiler") {
+@@ -581,7 +581,6 @@ config("compiler") {
      cflags += [ "-fcolor-diagnostics" ]
      if (!is_wasm) {
        if (!is_win) {
@@ -11,7 +11,7 @@ Description: Drop various compiler options not supported by clang-22
        } else {
          # Combine after https://github.com/llvm/llvm-project/pull/192241
          cflags += [ "/clang:-fdiagnostics-show-inlining-chain" ]
-@@ -619,7 +618,6 @@ config("compiler") {
+@@ -621,7 +620,6 @@ config("compiler") {
      # https://crbug.com/484082200 for background and https://crrev.com/c/7593035
      # for discussion.
      if (!is_wasm) {
@@ -19,7 +19,7 @@ Description: Drop various compiler options not supported by clang-22
      }
  
      # TODO(hans): Remove this once Clang generates better optimized debug info
-@@ -1584,7 +1582,7 @@ ubsan_hardening("c_array_bounds") {
+@@ -1586,7 +1584,7 @@ ubsan_hardening("c_array_bounds") {
    # the related warning about "unsafe-buffer-usage-in-static-sized-array",
    # since we know that the array bounds sanitizing will catch any out-of-
    # bounds accesses.
@@ -28,11 +28,44 @@ Description: Drop various compiler options not supported by clang-22
  }
  
  # Enable UBSan subset to ensure we always hit `return` statement in non-void
-@@ -1939,7 +1937,6 @@ config("default_warnings") {
+@@ -1937,7 +1935,6 @@ config("default_warnings") {
          "-Wno-uninitialized-const-pointer",
  
          # TODO(crbug.com/495753203): Fix and re-enable.
 -        "-Wno-unused-but-set-global",
        ]
      }
+ 
+--- a/third_party/dawn/src/utils/BUILD.gn
++++ b/third_party/dawn/src/utils/BUILD.gn
+@@ -216,10 +216,6 @@ config("dawn_warnings") {
+       # -Wlifetime-safety-lifetimebound-violation) are not yet mapped to
+       # toggleable warning flags, so we suppress the entire group and disable
+       # the analysis pass.
+-      "-Wno-lifetime-safety",
+-      "-Wno-lifetime-safety-all",
+-      "-Xclang=-fno-lifetime-safety-inference",
+-      "-Xclang=-fno-experimental-lifetime-safety-tu-analysis",
+     ]
+ 
+     # P3. Checks that could be nice but probably don't help with hardening.
+--- a/third_party/pdfium/BUILD.gn
++++ b/third_party/pdfium/BUILD.gn
+@@ -193,7 +193,6 @@ config("pdfium_core_config") {
+   if (is_clang) {
+     cflags += [
+       "-Wcovered-switch-default",
+-      "-Wlifetime-safety-permissive",
+     ]
+   }
+ }
+--- a/third_party/skia/gn/skia/BUILD.gn
++++ b/third_party/skia/gn/skia/BUILD.gn
+@@ -552,7 +552,6 @@ config("warnings") {
+       "-Wno-unused-member-function",
+       "-Wno-non-c-typedef-for-linkage",  # Dawn, not Skia per se.
+ 
+-      "-Wno-lifetime-safety",
+       "-Wno-lifetime-safety-suggestions",
+       "-Wno-lifetime-safety-validations",
  

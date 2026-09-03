@@ -1,20 +1,24 @@
-Index: chromium-151.0.7922.47/build/config/compiler_cpu_abi.gn
+Index: chromium-152.0.7977.64/build/config/compiler_cpu_abi.gn
 ===================================================================
---- chromium-151.0.7922.47.orig/build/config/compiler_cpu_abi.gn
-+++ chromium-151.0.7922.47/build/config/compiler_cpu_abi.gn
-@@ -52,7 +52,7 @@ if ((is_posix && !is_apple) || is_fuchsi
-       cpu_abi_cflags += [ "--target=x86_64-unknown-linux-gnu" ]
-       cpu_abi_ldflags += [ "--target=x86_64-unknown-linux-gnu" ]
+--- chromium-152.0.7977.64.orig/build/config/compiler_cpu_abi.gn
++++ chromium-152.0.7977.64/build/config/compiler_cpu_abi.gn
+@@ -334,10 +334,10 @@ if ((is_posix && !is_apple) || is_fuchsi
+         cpu_abi_ldflags += [ "-maix64" ]
+       }
+     } else if (is_clang) {
+-      cpu_abi_cflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
++      cpu_abi_cflags += [ "--target=powerpc64le-unknown-linux-gnu", "-mcpu=power9", "-mtune=power9" ]
+       cpu_abi_ldflags += [ "--target=powerpc64le-unknown-linux-gnu" ]
      } else {
 -      cpu_abi_cflags += [ "-m64" ]
 +      cpu_abi_cflags += [ "-m64", "-mcpu=power9", "-mtune=power9" ]
        cpu_abi_ldflags += [ "-m64" ]
      }
-     cpu_abi_cflags += [ "-msse3" ]
-Index: chromium-151.0.7922.47/third_party/libvpx/BUILD.gn
+   } else if (current_cpu == "riscv64") {
+Index: chromium-152.0.7977.64/third_party/libvpx/BUILD.gn
 ===================================================================
---- chromium-151.0.7922.47.orig/third_party/libvpx/BUILD.gn
-+++ chromium-151.0.7922.47/third_party/libvpx/BUILD.gn
+--- chromium-152.0.7977.64.orig/third_party/libvpx/BUILD.gn
++++ chromium-152.0.7977.64/third_party/libvpx/BUILD.gn
 @@ -97,7 +97,7 @@ config("libvpx_config") {
  
    if (current_cpu == "ppc64") {
@@ -24,11 +28,11 @@ Index: chromium-151.0.7922.47/third_party/libvpx/BUILD.gn
        "-maltivec",
        "-mvsx",
      ]
-Index: chromium-151.0.7922.47/v8/BUILD.gn
+Index: chromium-152.0.7977.64/v8/BUILD.gn
 ===================================================================
---- chromium-151.0.7922.47.orig/v8/BUILD.gn
-+++ chromium-151.0.7922.47/v8/BUILD.gn
-@@ -1696,7 +1696,7 @@ config("toolchain") {
+--- chromium-152.0.7977.64.orig/v8/BUILD.gn
++++ chromium-152.0.7977.64/v8/BUILD.gn
+@@ -1724,7 +1724,7 @@ config("toolchain") {
      if (current_os == "linux") {
          cflags += [
          # Enable usage of AltiVec, VSX, and other POWER8 and higher features
@@ -37,3 +41,70 @@ Index: chromium-151.0.7922.47/v8/BUILD.gn
          "-maltivec",
          "-mvsx",
        ]
+Index: chromium-152.0.7977.64/skia/BUILD.gn
+===================================================================
+--- chromium-152.0.7977.64.orig/skia/BUILD.gn
++++ chromium-152.0.7977.64/skia/BUILD.gn
+@@ -970,8 +970,8 @@ if (current_cpu == "ppc64") {
+   skia_source_set("skia_opts_vsx") {
+     sources = skia_opts.vsx_sources
+     cflags = [
+-      "-mcpu=power8",
+-      "-mtune=power8",
++      "-mcpu=power9",
++      "-mtune=power9",
+     ]
+     visibility = [ ":skia_opts" ]
+   }
+Index: chromium-152.0.7977.64/third_party/skia/BUILD.gn
+===================================================================
+--- chromium-152.0.7977.64.orig/third_party/skia/BUILD.gn
++++ chromium-152.0.7977.64/third_party/skia/BUILD.gn
+@@ -205,7 +205,7 @@ opts("lasx") {
+ opts("vsx") {
+   enabled = is_ppc64
+   sources = skia_opts.vsx_sources
+-  cflags = [ "-mcpu=power8", "-mtune=power8" ]
++  cflags = [ "-mcpu=power9", "-mtune=power9" ]
+ }
+ 
+ # Any feature of Skia that requires third-party code should be optional and use this template.
+Index: chromium-152.0.7977.64/third_party/skia/gn/skia/BUILD.gn
+===================================================================
+--- chromium-152.0.7977.64.orig/third_party/skia/gn/skia/BUILD.gn
++++ chromium-152.0.7977.64/third_party/skia/gn/skia/BUILD.gn
+@@ -147,7 +147,7 @@ config("default") {
+     ]
+     ldflags += [ "-m32" ]
+   } else if (current_cpu == "ppc64") {
+-    cflags += [ "-mcpu=power8", "-mtune=power8" ]
++    cflags += [ "-mcpu=power9", "-mtune=power9" ]
+   } else if (current_cpu == "loong64") {
+     cflags += [
+       "-mlsx",
+Index: chromium-152.0.7977.64/third_party/skia/src/opts/SkRasterPipeline_opts.h
+===================================================================
+--- chromium-152.0.7977.64.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
++++ chromium-152.0.7977.64/third_party/skia/src/opts/SkRasterPipeline_opts.h
+@@ -1849,9 +1849,7 @@ SI F from_half(U16 h) {
+ #elif defined(SKRP_CPU_AVX2)
+     return _mm256_cvtph_ps((__m128i)h);
+ 
+-// Disabled for now as this is not a particularly hot function
+-// and there is no good reason to lock Chromium to POWER9+ yet.
+-#elif 0 && defined(SKRP_CPU_VSX) && __has_builtin(__builtin_vsx_xvcvhpsp)
++#elif defined(SKRP_CPU_VSX) && __has_builtin(__builtin_vsx_xvcvhpsp)
+     #if defined(SK_CPU_LENDIAN)
+         return __builtin_vsx_xvcvhpsp({h[0], 0, h[1], 0, h[2], 0, h[3], 0});
+     #else
+@@ -1881,9 +1879,7 @@ SI U16 to_half(F f) {
+ #elif defined(SKRP_CPU_AVX2)
+     return (U16)_mm256_cvtps_ph(f, _MM_FROUND_CUR_DIRECTION);
+ 
+-// Disabled for now as this is not a particularly hot function
+-// and there is no good reason to lock Chromium to POWER9+ yet.
+-#elif 0 && defined(SKRP_CPU_VSX) && __has_builtin(__builtin_vsx_xvcvsphp)
++#elif defined(SKRP_CPU_VSX) && __has_builtin(__builtin_vsx_xvcvsphp)
+     __vector unsigned short v = __builtin_vsx_xvcvsphp(f);
+     #if defined(SK_CPU_LENDIAN)
+         return U16{v[0], v[2], v[4], v[6]};

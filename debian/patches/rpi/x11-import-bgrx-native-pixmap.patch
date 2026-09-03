@@ -15,7 +15,7 @@ Last-Update: 2026-08-03
 
 --- a/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc
 +++ b/ui/ozone/platform/x11/native_pixmap_egl_x11_binding.cc
-@@ -22,12 +22,21 @@ namespace gl {
+@@ -23,12 +23,21 @@ namespace gl {
  
  namespace {
  bool IsFormatSupported(viz::SharedImageFormat format) {
@@ -39,7 +39,7 @@ Last-Update: 2026-08-03
    const uint8_t bpp = 32;
    const auto fd = HANDLE_EINTR(dup(native_pixmap.GetDmaBufFd(0)));
    if (fd < 0) {
-@@ -133,18 +142,27 @@ bool NativePixmapEGLX11Binding::IsShared
+@@ -129,14 +138,23 @@ bool NativePixmapEGLX11Binding::IsShared
    return gl::IsFormatSupported(format);
  }
  
@@ -50,10 +50,6 @@ Last-Update: 2026-08-03
    CHECK_NE(pixmap, x11::Pixmap::None);
 +  CHECK(gl::IsFormatSupported(format));
    pixmap_ = pixmap;
- 
-   if (eglInitialize(display_, nullptr, nullptr) != EGL_TRUE) {
-     return false;
-   }
  
 +  // BGRX uses a depth-24/bpp-32 X pixmap: its fourth byte is undefined
 +  // padding. Binding it as RGB makes EGL/GL ignore that byte and return
@@ -70,7 +66,7 @@ Last-Update: 2026-08-03
                        EGL_BLUE_SIZE,
                        8,
                        EGL_GREEN_SIZE,
-@@ -153,7 +171,8 @@ bool NativePixmapEGLX11Binding::Initiali
+@@ -145,7 +163,8 @@ bool NativePixmapEGLX11Binding::Initiali
                        8,
                        EGL_SURFACE_TYPE,
                        EGL_PIXMAP_BIT,
@@ -80,7 +76,7 @@ Last-Update: 2026-08-03
                        EGL_TRUE,
                        EGL_NONE};
  
-@@ -166,8 +185,9 @@ bool NativePixmapEGLX11Binding::Initiali
+@@ -158,8 +177,9 @@ bool NativePixmapEGLX11Binding::Initiali
      return false;
    }
  
@@ -92,7 +88,7 @@ Last-Update: 2026-08-03
  
    surface_ = eglCreatePixmapSurface(
        display_, config, static_cast<EGLNativePixmapType>(pixmap), attrs.data());
-@@ -209,7 +229,7 @@ std::unique_ptr<NativePixmapGLBinding> N
+@@ -201,7 +221,7 @@ std::unique_ptr<NativePixmapGLBinding> N
    }
  
    // Transfer the ownership of `pixmap` to `NativePixmapEGLX11Binding`.

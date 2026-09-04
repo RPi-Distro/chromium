@@ -6,7 +6,7 @@ lld vs gold).
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1046,7 +1046,7 @@ config("linker") {
+@@ -1050,7 +1050,7 @@ config("linker") {
        inputs = [ linker_path ]
        ldflags += [ "--ld-path=" + rebase_path(linker_path, root_build_dir) ]
      } else if (use_lld) {
@@ -15,3 +15,11 @@ lld vs gold).
        if (lld_path != "") {
          ldflags += [ "-B" + rebase_path(lld_path, root_build_dir) ]
        }
+@@ -2624,6 +2624,7 @@ config("optimize") {
+     rustflags = [ "-Copt-level=3" ]
+   }
+   ldflags = common_optimize_on_ldflags
++  rustflags += [ "-Clink-arg=-fuse-ld=lld-22" ]
+ }
+ 
+ # Turn off optimizations.

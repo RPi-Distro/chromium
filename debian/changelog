@@ -1,3 +1,14 @@
+chromium (152.0.7977.75-2) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * d/patches:
+    - debianization/clang-version: fix to stop using gnu ld and instead
+      use llvm's lld-22 when linking rust libs.
+    - debianization/rust-disable-debugsym.patch: refresh for prior patch
+      changes.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 02 Sep 2026 14:22:49 -0400
+
 chromium (152.0.7977.75-1) unstable; urgency=high
 
   [ Andres Salomon ]

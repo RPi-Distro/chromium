@@ -1,0 +1,35 @@
+Description: cross-build: keep a directory component on the protoc plugin path
+ With HOST_EXEC_WRAPPER set (debianization/cross-build.patch), protoc spawns
+ each plugin as "wrapper plugin" (see subprocess.cc) and the wrapper
+ execvp()s that name. A bare relative plugin name such as "cppgen_plugin"
+ is then searched for in PATH, which does not include the build directory,
+ and the build dies with "setarch: failed to execute cppgen_plugin". Keep a
+ "./" prefix on the plugin path whenever the wrapper is in use so execvp()
+ resolves it relative to the build directory instead.
+ .
+ This is a fix to Debian's cross-build support with nothing Raspberry Pi
+ specific about it; it used to live as an extra hunk inside Debian's
+ cross-build.patch and was split out so that patch stays pristine.
+Author: Serge Schneider <serge@raspberrypi.com>
+Forwarded: no
+
+--- a/tools/protoc_wrapper/protoc_wrapper.py
++++ b/tools/protoc_wrapper/protoc_wrapper.py
+@@ -207,8 +207,16 @@
+ 
+   if options.plugin_out_dir:
+     plugin_options = FormatGeneratorOptions(options.plugin_options)
++    plugin_path = os.path.relpath(options.plugin)
++    # Debian cross-build support: with HOST_EXEC_WRAPPER set, protoc spawns
++    # the plugin as "wrapper plugin" (see subprocess.cc), and the wrapper
++    # execvp()s that name. A bare relative name would be searched for in
++    # PATH, which does not include the build directory, so keep a directory
++    # component.
++    if os.environ.get('HOST_EXEC_WRAPPER') and os.sep not in plugin_path:
++      plugin_path = os.path.join('.', plugin_path)
+     protoc_cmd += [
+-      "--plugin", "protoc-gen-plugin=" + os.path.relpath(options.plugin),
++      "--plugin", "protoc-gen-plugin=" + plugin_path,
+       "--plugin_out", plugin_options + options.plugin_out_dir
+     ]
+ 

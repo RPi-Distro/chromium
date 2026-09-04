@@ -72,7 +72,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
    if ret <= -100:
 --- a/build/toolchain/gcc_toolchain.gni
 +++ b/build/toolchain/gcc_toolchain.gni
-@@ -913,6 +913,16 @@ template("gcc_rust_host_build_tools_tool
+@@ -794,6 +794,16 @@ template("gcc_rust_host_build_tools_tool
      forward_variables_from(invoker,
                             "*",
                             TESTONLY_AND_VISIBILITY + [ "toolchain_args" ])
@@ -89,7 +89,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
      toolchain_args = {
        # Populate toolchain args from the invoker.
        forward_variables_from(invoker.toolchain_args, "*")
-@@ -927,6 +937,29 @@ template("gcc_rust_host_build_tools_tool
+@@ -808,6 +818,29 @@ template("gcc_rust_host_build_tools_tool
        use_sanitizer_coverage = false
        generate_linker_map = false
        use_thin_lto = false
@@ -228,25 +228,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
  import subprocess
  import sys
  import tempfile
-@@ -207,8 +207,16 @@ def main(argv):
- 
-   if options.plugin_out_dir:
-     plugin_options = FormatGeneratorOptions(options.plugin_options)
-+    plugin_path = os.path.relpath(options.plugin)
-+    # Debian cross-build support: with HOST_EXEC_WRAPPER set, protoc spawns
-+    # the plugin as "wrapper plugin" (see subprocess.cc), and the wrapper
-+    # execvp()s that name. A bare relative name would be searched for in
-+    # PATH, which does not include the build directory, so keep a directory
-+    # component.
-+    if os.environ.get('HOST_EXEC_WRAPPER') and os.sep not in plugin_path:
-+      plugin_path = os.path.join('.', plugin_path)
-     protoc_cmd += [
--      "--plugin", "protoc-gen-plugin=" + os.path.relpath(options.plugin),
-+      "--plugin", "protoc-gen-plugin=" + plugin_path,
-       "--plugin_out", plugin_options + options.plugin_out_dir
-     ]
- 
-@@ -227,6 +235,16 @@ def main(argv):
+@@ -227,6 +227,16 @@ def main(argv):
      if not options.exclude_imports:
        protoc_cmd += ["--include_imports"]
  

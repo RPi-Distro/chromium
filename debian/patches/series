@@ -268,3 +268,4 @@ rpi/v4l2-do-not-advertise-stateless-codecs.patch
 rpi/v4l2-sandbox-allow-decoder-devices.patch
 rpi/x11-import-bgrx-native-pixmap.patch
 rpi/sandbox-allow-fcntl-dupfd-query.patch
+rpi/cross-build-protoc-plugin-path.patch

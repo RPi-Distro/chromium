@@ -1,3 +1,10 @@
+chromium (152.0.7977.82-2) UNRELEASED; urgency=high
+
+  [ Timothy Pearson ]
+  * d/control: build against libstd-rust-web-dev instead of libstd-rust-dev
+
+ -- Timothy Pearson <tpearson@debian.org>  Sat, 05 Sep 2026 09:31:09 -0500
+
 chromium (152.0.7977.82-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

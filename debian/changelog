@@ -1,4 +1,4 @@
-chromium (152.0.7977.82-1~deb12u1) UNRELEASED; urgency=high
+chromium (152.0.7977.82-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]
   * d/patches:

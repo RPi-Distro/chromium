@@ -21,7 +21,7 @@ Build-Depends:
  libclang-rt-22-dev,
  libc++-22-dev,
  rustc-web:any (>= 1.96.0),
- libstd-rust-dev (>= 1.96.0),
+ libstd-rust-web-dev (>= 1.96.0),
  bindgen:native,
  rustfmt,
  python3:any,

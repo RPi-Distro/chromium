@@ -1,4 +1,4 @@
-chromium (152.0.7977.82-1) UNRELEASED; urgency=high
+chromium (152.0.7977.82-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]
   * d/patches:

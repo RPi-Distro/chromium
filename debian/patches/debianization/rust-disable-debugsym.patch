@@ -25,6 +25,6 @@ half.
    }
    ldflags = common_optimize_on_ldflags
 +  ldflags += [ "-Wl,--no-mmap-output-file" ]
+   rustflags += [ "-Clink-arg=-fuse-ld=lld-22" ]
  }
  
- # Turn off optimizations.

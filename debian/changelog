@@ -1,3 +1,11 @@
+chromium (152.0.7977.82-2) UNRELEASED; urgency=high
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - v8/0002-Add-ppc64-trap-instructions.patch: drop, no longer needed
+
+ -- Timothy Pearson <tpearson@debian.org>  Mon, 07 Sep 2026 10:02:00 -0500
+
 chromium (152.0.7977.82-1) unstable; urgency=high
 
   [ Andres Salomon ]

@@ -1,3 +1,11 @@
+chromium (1:152.0.7977.82-1~deb13u1+rpt2) trixie; urgency=medium
+
+  * Drop our CAPTURE format patch, upstream fixed it in 151
+  * Count V4L2 stateful decoder instances exactly once
+  * Keep polling the V4L2 stateful decoder after POLLERR
+
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 10 Sep 2026 22:43:16 +0100
+
 chromium (1:152.0.7977.82-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]

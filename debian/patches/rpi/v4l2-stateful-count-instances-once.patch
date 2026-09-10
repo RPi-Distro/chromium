@@ -1,0 +1,166 @@
+Description: v4l2: count a stateful decoder instance exactly once
+ The stateful decoder limits how many hardware decoders exist at once with
+ a static counter. Initialize() increments it speculatively and undoes that
+ on refusal, but Reset() and the destructor decrement unconditionally. A
+ decoder that was refused, or never initialised, still gives a slot back
+ when destroyed; one that is Reset() and then destroyed gives its slot back
+ twice; one re-initialised for a track change takes a second slot that is
+ only returned when it is reset or destroyed, so with our bcm2835 limit of
+ two (v4l2-stateful-limit-instances.patch; upstream's 15 only hides the
+ drift longer) one track change leaves that video holding both slots, and
+ at the limit the track change fails outright with kTooManyDecoders. Each
+ spurious decrement permanently raises the effective limit by one, so a
+ page with several videos erodes the limit within minutes.
+ .
+ On a Pi 4 a third 1080p instance runs the VideoCore's relocatable heap out
+ (alloc_compact_internal failures in vclog), after which the firmware stops
+ answering and the next port disable times out: the signature reported in
+ trixie-feedback#101. We reproduced the counter drift and that hang with
+ four <video> elements and a page reload, and the same hang with three
+ standalone V4L2 clients and no Chromium at all. This patch removes
+ Chromium's way of getting there; the firmware's reaction to running out of
+ memory is a separate bug.
+ .
+ Remember per object whether it holds a slot, take one only when it does
+ not, and release it exactly once, in Reset() or in the destructor. Reset()
+ closes the device and Decode() then re-runs Initialize(), which takes a
+ slot again. The owner destroys a decoder whose Initialize() failed, so no
+ separate release is needed there. The flag has to survive that failure:
+ an Initialize() that fails after opening the device leaves the fd open, so
+ the slot must stay held, and Decode() would retry Initialize() on the same
+ object. Every release is guarded by the per-object flag, as
+ V4L2VideoDecoder does with can_use_decoder_, except that a re-Initialize()
+ for a track change keeps the slot rather than releasing and re-taking it,
+ which is what stops that track change failing at the limit. The pipeline's
+ own DecoderReservation is private to it and hard-coded to a different
+ limit, so it cannot be reused here.
+ .
+ Known and deliberately not addressed. The destructor releases the slot
+ before the posted close of the device fd runs, so a new decoder can briefly
+ hold a second fd on the device; when teardown succeeds both queues are
+ destroyed synchronously first, and an open fd with no buffers does not hold
+ the VPU memory the limit exists to protect (a loop of open/close alongside
+ two 1080p decoders leaves the relocatable heap untouched). Reset() likewise
+ releases the slot that the following Decode() re-takes, so a decoder that
+ seeks can lose its slot to another one and fail with kTooManyDecoders,
+ which is fatal once it has produced a frame; the window is upstream's, but
+ it only becomes reachable now that the limit binds, so seeking on a
+ multi-video page wants testing. Finally GetMaxNumDecoderInstances() returns
+ INT_MAX if it cannot open the device, and the result is cached for the life
+ of the process, so one transient failure still disables the limit
+ entirely.
+ .
+ Upstream main has the same code. The destructor decrement has been
+ unconditional since the counter arrived in crrev.com/c/5368833; c/5474676
+ later re-added the Reset() decrement (first added by c/5423008, dropped by
+ c/5436089), also unconditional. Not forwarded yet; a crbug and CL should
+ follow.
+Author: Serge Schneider <serge@raspberrypi.com>
+Bug-RaspberryPi: https://github.com/raspberrypi/trixie-feedback/issues/101
+Forwarded: no
+Last-Update: 2026-09-10
+--- a/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
++++ b/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
+@@ -280,18 +280,32 @@ void V4L2StatefulVideoDecoder::Initializ
+     return;
+   }
+ 
++  // The device fd is only ever open while this object holds a slot in
++  // |num_decoder_instances_|: the slot is taken before the fd is opened, and
++  // only Reset(), after it has closed the fd, and the destructor, while tearing
++  // down, give it back.
++  DCHECK(!device_fd_.is_valid() || holds_instance_slot_);
++
+   // Verify there's still room for more decoders before querying whether
+   // |config| is supported because some drivers (e.g. Qualcomm Venus on SC7180)
+   // would not allow for opening the device fd and we'd think it an error.
+   static const auto decoder_instances_limit =
+       V4L2StatefulVideoDecoder::GetMaxNumDecoderInstances();
+-  const bool can_create_decoder =
+-      num_decoder_instances_.Increment() < decoder_instances_limit;
+-  if (!can_create_decoder) {
+-    num_decoder_instances_.Decrement();
+-    LOG(ERROR) << "Too many decoder instances, max=" << decoder_instances_limit;
+-    std::move(init_cb).Run(DecoderStatus::Codes::kTooManyDecoders);
+-    return;
++  // Skip the check if this object already holds a slot: a re-Initialize() for
++  // a track change, or Decode()'s retry after a failed one. Unlike
++  // V4L2VideoDecoder the slot is kept rather than released and re-taken, so
++  // that a track change at the limit no longer fails with kTooManyDecoders.
++  if (!holds_instance_slot_) {
++    const bool can_create_decoder =
++        num_decoder_instances_.Increment() < decoder_instances_limit;
++    if (!can_create_decoder) {
++      num_decoder_instances_.Decrement();
++      LOG(ERROR) << "Too many decoder instances, max="
++                 << decoder_instances_limit;
++      std::move(init_cb).Run(DecoderStatus::Codes::kTooManyDecoders);
++      return;
++    }
++    holds_instance_slot_ = true;
+   }
+ 
+   if (supported_configs_.empty()) {
+@@ -580,7 +594,7 @@ void V4L2StatefulVideoDecoder::Reset(bas
+   device_fd_.reset();
+ 
+   event_task_runner_.reset();
+-  num_decoder_instances_.Decrement();
++  ReleaseInstanceSlot();
+   encoding_timestamps_.clear();
+ 
+   if (flush_cb_) {
+@@ -666,7 +680,7 @@ V4L2StatefulVideoDecoder::~V4L2StatefulV
+ 
+   CAPTURE_queue_.reset();
+   OUTPUT_queue_.reset();
+-  num_decoder_instances_.Decrement();
++  ReleaseInstanceSlot();
+ 
+   if (event_task_runner_) {
+     // Destroy the two ScopedFDs (hence the PostTask business ISO DeleteSoon) on
+@@ -1207,6 +1221,19 @@ bool V4L2StatefulVideoDecoder::IsInitial
+   return !!OUTPUT_queue_;
+ }
+ 
++void V4L2StatefulVideoDecoder::ReleaseInstanceSlot() {
++  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
++  if (!holds_instance_slot_) {
++    return;
++  }
++  holds_instance_slot_ = false;
++  // A tripwire for a decrement added later without the flag guard: this class
++  // can no longer drive the count negative by itself, and each spurious
++  // decrement permanently raises the effective limit by one.
++  DCHECK_GT(num_decoder_instances_.SubtleRefCountForDebug(), 0);
++  num_decoder_instances_.Decrement();
++}
++
+ // static
+ int V4L2StatefulVideoDecoder::GetMaxNumDecoderInstances() {
+   if (!base::FeatureList::IsEnabled(media::kLimitConcurrentDecoderInstances)) {
+--- a/media/gpu/v4l2/v4l2_stateful_video_decoder.h
++++ b/media/gpu/v4l2/v4l2_stateful_video_decoder.h
+@@ -133,12 +133,22 @@ class MEDIA_GPU_EXPORT V4L2StatefulVideo
+   // Returns true if this class has successfully Initialize()d.
+   bool IsInitialized() const;
+ 
++  // Gives back this object's slot in |num_decoder_instances_|, if it holds
++  // one. Idempotent.
++  void ReleaseInstanceSlot();
++
+   // Pages with multiple decoder instances might run out of memory (e.g.
+   // b/170870476) or crash (e.g. crbug.com/1109312). this class method provides
+   // that number to prevent that erroneous behaviour during Initialize().
+   static int GetMaxNumDecoderInstances();
+   // Tracks the number of decoder instances globally in the process.
+   static base::AtomicRefCount num_decoder_instances_;
++  // True while this object holds one slot in |num_decoder_instances_|. Taken
++  // by the Initialize() that gets past the instance count check, including one
++  // that then fails, and released once per acquisition by Reset() or by the
++  // destructor. Reset() releases it and the Initialize() that the next
++  // Decode() runs takes it again.
++  bool holds_instance_slot_ GUARDED_BY_CONTEXT(sequence_checker_) = false;
+ 
+   base::ScopedFD device_fd_ GUARDED_BY_CONTEXT(sequence_checker_);
+   // This |wake_event_| is used to interrupt a blocking poll() call, such as the

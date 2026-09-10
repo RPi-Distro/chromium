@@ -1,0 +1,385 @@
+Description: v4l2: keep polling the stateful decoder after POLLERR
+ A memory-to-memory V4L2 device returns POLLERR from poll(), immediately
+ rather than blocking, when for each queue that queue is not streaming, or
+ has had vb2_queue_error() called on it, or has nothing queued. The last of
+ those is normal here: the CAPTURE queue is small (on the MMAP path,
+ reference frames plus two) and its buffers are mostly downstream at any
+ moment. WaitOnceForEvents() treated POLLERR as unhandled and returned, and
+ only the next Decode() re-armed the poll. After V4L2_DEC_CMD_STOP there is
+ no next Decode(), so the flush never finished: a looping <video> froze just
+ before the end of every clip. bcm2835-codec hits it at every clip end
+ because it forwards the stop as an MMAL EOS buffer, and the EOS comes back
+ on a CAPTURE buffer, so the LAST buffer can only be produced by a QBUF that
+ happens after the poll has given up.
+ .
+ The older V4L2Device stack solved exactly this: V4L2DevicePoller documents
+ that poll() returns immediately with nothing queued, and V4L2Queue's
+ schedule_poll_cb exists so that every QBUF can wake the poller. The
+ stateful decoder passes base::DoNothing() for it. Use it: every QBUF, and
+ every DQBUF that leaves buffers queued or returns EAGAIN/EPIPE, arms
+ monitoring unless a poll task is already pending. WaitOnceForEvents() now
+ reports every exit with the revents it saw, and that report re-arms when
+ nothing else did and the driver still owns buffers, which also covers two
+ paths that never re-armed before: a LAST buffer dequeued while the OUTPUT
+ queue still has work, and a failed VIDIOC_DQEVENT. A poll that returned
+ with neither POLLIN nor POLLPRI returns immediately, so consecutive re-arms
+ after such a poll are capped, and reaching the cap fails a pending flush
+ and any unanswered Decode() instead of hanging them.
+ .
+ Task counts: the poll tasks upstream stacks one per Decode() are not
+ de-duplicated (crrev.com/c/7850080 was reverted for doing that); the new
+ arming is a no-op while a task is pending, so it adds at most one task in
+ the places Decode() or InitializeCAPTUREQueue() queue buffers before their
+ own unconditional re-arm, and the count does not grow. The count kept is of
+ reports still expected, not of running tasks: cancelling leaves a task
+ blocked in poll() that never reports. Not addressed: upstream's spin when
+ V4L2_DEC_CMD_START fails after a LAST buffer (poll() then returns POLLIN
+ for ever and the dequeue path re-arms on every pass); the cap here counts
+ only polls without POLLIN or POLLPRI, so it does not bound that.
+ .
+ Upstream main still has the unhandled path. Nothing here is Pi-specific, so
+ this should go upstream once tested; it will conflict textually with open
+ CL 8181668, which reorders POLLPRI and POLLIN in the same function.
+Author: Serge Schneider <serge@raspberrypi.com>
+Bug-RaspberryPi: https://github.com/raspberrypi/trixie-feedback/issues/101
+Forwarded: no
+Last-Update: 2026-09-10
+--- a/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
++++ b/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
+@@ -39,6 +39,13 @@ namespace {
+ // Numerical value of ioctl() OK return value;
+ constexpr int kIoctlOk = 0;
+ 
++// How many times in a row OnCAPTUREQueuePollDone() may re-arm a poll() that
++// returned without data while the driver owns buffers. One retry covers the
++// race this re-arm exists for (a QBUF landing between poll() returning and the
++// callback running); the rest absorb a short burst of them. Past that the
++// device is not going to make progress, so stop and fail a pending flush.
++constexpr int kMaxFruitlessRearms = 4;
++
+ int HandledIoctl(int fd, int request, void* arg) {
+   return HANDLE_EINTR(ioctl(fd, request, arg));
+ }
+@@ -57,12 +64,18 @@ void* Mmap(int fd,
+ // POLLPRI (meaning a resolution change event) and from |device_fd|, this
+ // function calls |dequeue_callback| or |resolution_change_callback|,
+ // respectively. Since it blocks, it needs to work on its own
+-// SingleThreadTaskRunner, in this case |event_task_runner_|.
+-// TODO(mcasas): Add an error callback too.
++// SingleThreadTaskRunner, in this case |event_task_runner_|. Whatever
++// happens, |poll_result_callback| is run last with the revents seen on
++// |device_fd| (0 if poll() failed or if |wake_event_| woke us, and without
++// POLLPRI if the event could not be dequeued) so the caller can tell that this
++// task has finished and what it saw.
++// TODO(mcasas): Add an error callback too; this one reports what happened,
++// it is not a way to tell our client that decoding has failed.
+ void WaitOnceForEvents(int device_fd,
+                        int wake_event,
+                        base::OnceClosure dequeue_callback,
+-                       base::OnceClosure resolution_change_callback) {
++                       base::OnceClosure resolution_change_callback,
++                       base::OnceCallback<void(int)> poll_result_callback) {
+   VLOGF(5) << "Going to poll()";
+ 
+   // POLLERR, POLLHUP, or POLLNVAL are always return-able and anyway ignored
+@@ -70,10 +83,15 @@ void WaitOnceForEvents(int device_fd,
+   // https://www.kernel.org/doc/html/v5.15/userspace-api/media/v4l/func-poll.html
+   struct pollfd pollfds[] = {{.fd = device_fd, .events = POLLIN | POLLPRI},
+                              {.fd = wake_event, .events = POLLIN}};
++  absl::Cleanup report_result = [&poll_result_callback, &pollfds] {
++    std::move(poll_result_callback).Run(pollfds[0].revents);
++  };
+   constexpr int kInfiniteTimeout = -1;
+   if (HANDLE_EINTR(poll(pollfds, std::size(pollfds), kInfiniteTimeout)) <
+       kIoctlOk) {
+     PLOG(ERROR) << "Poll()ing for events failed";
++    // POSIX leaves revents unspecified here; report "nothing happened".
++    pollfds[0].revents = 0;
+     return;
+   }
+ 
+@@ -97,6 +115,10 @@ void WaitOnceForEvents(int device_fd,
+       struct v4l2_event event = {};
+       if (HandledIoctl(device_fd, VIDIOC_DQEVENT, &event) != kIoctlOk) {
+         PLOG(ERROR) << "Failed dequeing an event";
++        // The event is still pending, so the next poll() would return POLLPRI
++        // straight away: report this as a poll that made no progress, so that
++        // the caller's re-arm is capped instead of spinning.
++        pollfds[0].revents &= ~POLLPRI;
+         return;
+       }
+       // If we get an event, it must be an V4L2_EVENT_SOURCE_CHANGE since it's
+@@ -111,13 +133,15 @@ void WaitOnceForEvents(int device_fd,
+   }
+   if (other_events & POLLIN) {
+     // Somebody woke us up because they didn't want us waiting on |device_fd|.
+-    // Do nothing.
++    // Do nothing, and report nothing: whatever poll() set on |device_fd| is
++    // not ours to act on any more.
++    pollfds[0].revents = 0;
+     return;
+   }
+ 
+-  // This could mean that |device_fd| has become invalid (closed, maybe);
+-  // there's little we can do here.
+-  // TODO(mcasas): Use the error callback to be added.
++  // This could mean that |device_fd| has become invalid (closed, maybe), or
++  // simply that neither queue has a buffer queued; |poll_result_callback|
++  // reports the revents and the caller decides.
+   CHECK((events_from_device & (POLLERR | POLLHUP | POLLNVAL)) ||
+         (other_events & (POLLERR | POLLHUP | POLLNVAL)));
+   VLOG(2) << "Unhandled |events_from_device|: 0x" << std::hex
+@@ -366,9 +390,7 @@ void V4L2StatefulVideoDecoder::Initializ
+ 
+     // Invalidate pointers from and cancel all hypothetical in-flight requests
+     // to the WaitOnceForEvents() routine.
+-    weak_ptr_factory_for_events_.InvalidateWeakPtrs();
+-    weak_ptr_factory_for_CAPTURE_availability_.InvalidateWeakPtrs();
+-    cancelable_task_tracker_.TryCancelAll();
++    CancelCAPTUREQueueMonitoring();
+     encoding_timestamps_.clear();
+ 
+     if (OUTPUT_queue_ && !OUTPUT_queue_->Streamoff()) {
+@@ -392,7 +414,10 @@ void V4L2StatefulVideoDecoder::Initializ
+   OUTPUT_queue_ = base::MakeRefCounted<V4L2Queue>(
+       V4L2Queue::PassKey::Get(),
+       base::BindRepeating(&HandledIoctl, device_fd_.get()),
+-      /*schedule_poll_cb=*/base::DoNothing(),
++      /*schedule_poll_cb=*/
++      base::BindRepeating(
++          &V4L2StatefulVideoDecoder::ArmCAPTUREQueueMonitoringIfIdle,
++          weak_ptr_factory_for_queue_hooks_.GetWeakPtr()),
+       /*mmap_cb=*/base::BindRepeating(&Mmap, device_fd_.get()),
+       AllocateSecureBufferAsCallback(), V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
+       /*destroy_cb=*/base::DoNothing());
+@@ -567,9 +592,7 @@ void V4L2StatefulVideoDecoder::Reset(bas
+ 
+   // Invalidate pointers from and cancel all hypothetical in-flight requests
+   // to the WaitOnceForEvents() routine.
+-  weak_ptr_factory_for_events_.InvalidateWeakPtrs();
+-  weak_ptr_factory_for_CAPTURE_availability_.InvalidateWeakPtrs();
+-  cancelable_task_tracker_.TryCancelAll();
++  CancelCAPTUREQueueMonitoring();
+ 
+   if (wake_event_.is_valid()) {
+     const uint64_t buf = 1;
+@@ -668,9 +691,11 @@ V4L2StatefulVideoDecoder::~V4L2StatefulV
+   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+   DVLOGF(1);
+ 
+-  weak_ptr_factory_for_events_.InvalidateWeakPtrs();
+-  weak_ptr_factory_for_CAPTURE_availability_.InvalidateWeakPtrs();
+-  cancelable_task_tracker_.TryCancelAll();  // Not needed, but good explicit.
++  // The queues are destroyed below, from this body, so stop them being able to
++  // arm monitoring first.
++  weak_ptr_factory_for_queue_hooks_.InvalidateWeakPtrs();
++
++  CancelCAPTUREQueueMonitoring();  // Not needed, but good explicit.
+ 
+   if (wake_event_.is_valid()) {
+     const uint64_t buf = 1;
+@@ -703,7 +728,10 @@ bool V4L2StatefulVideoDecoder::Initializ
+   CAPTURE_queue_ = base::MakeRefCounted<V4L2Queue>(
+       V4L2Queue::PassKey::Get(),
+       base::BindRepeating(&HandledIoctl, device_fd_.get()),
+-      /*schedule_poll_cb=*/base::DoNothing(),
++      /*schedule_poll_cb=*/
++      base::BindRepeating(
++          &V4L2StatefulVideoDecoder::ArmCAPTUREQueueMonitoringIfIdle,
++          weak_ptr_factory_for_queue_hooks_.GetWeakPtr()),
+       /*mmap_cb=*/base::BindRepeating(&Mmap, device_fd_.get()),
+       AllocateSecureBufferAsCallback(), V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE,
+       /*destroy_cb=*/base::DoNothing());
+@@ -927,11 +955,132 @@ void V4L2StatefulVideoDecoder::RearmCAPT
+   //   background SingleThreadTaskRunner so that the FDs monitored by poll() are
+   //   guaranteed to stay alive until poll() returns, thus avoiding unspecified
+   //   behavior.
++  auto poll_result_callback = base::BindPostTaskToCurrentDefault(
++      base::BindOnce(&V4L2StatefulVideoDecoder::OnCAPTUREQueuePollDone,
++                     weak_ptr_factory_for_events_.GetWeakPtr()));
++
++  ++pending_poll_tasks_;
+   cancelable_task_tracker_.PostTask(
+       event_task_runner_.get(), FROM_HERE,
+       base::BindOnce(&WaitOnceForEvents, device_fd_.get(), wake_event_.get(),
+                      std::move(dequeue_callback),
+-                     std::move(resolution_change_callback)));
++                     std::move(resolution_change_callback),
++                     std::move(poll_result_callback)));
++}
++
++void V4L2StatefulVideoDecoder::CancelCAPTUREQueueMonitoring() {
++  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
++  weak_ptr_factory_for_events_.InvalidateWeakPtrs();
++  weak_ptr_factory_for_CAPTURE_availability_.InvalidateWeakPtrs();
++  cancelable_task_tracker_.TryCancelAll();
++  // The invalidated WeakPtrs drop the result callbacks of any in-flight
++  // WaitOnceForEvents() tasks, so forget them here as well. Note this does not
++  // stop a task already blocked in poll(): |pending_poll_tasks_| counts result
++  // callbacks we still expect, not tasks that are still running.
++  pending_poll_tasks_ = 0;
++  consecutive_fruitless_rearms_ = 0;
++  rearm_limit_reported_ = false;
++}
++
++void V4L2StatefulVideoDecoder::ArmCAPTUREQueueMonitoringIfIdle() {
++  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
++  // Called by |OUTPUT_queue_| and |CAPTURE_queue_| after a QBUF, after a DQBUF
++  // that leaves buffers queued, and when DQBUF returns EAGAIN/EPIPE. The first
++  // OUTPUT buffers are queued before |event_task_runner_| exists; Decode()
++  // arms monitoring itself right after creating it.
++  //
++  // V4L2Queue calls this from inside its own QBUF/DQBUF handling, while its
++  // bookkeeping is half updated, so nothing here may call back into a queue.
++  // IsInitialized() implies an open |device_fd_|: it is opened before
++  // |OUTPUT_queue_| is created, and only Reset() and the destructor close it,
++  // dropping both.
++  if (pending_poll_tasks_ > 0 || !IsInitialized() || !event_task_runner_) {
++    return;
++  }
++  RearmCAPTUREQueueMonitoring();
++}
++
++void V4L2StatefulVideoDecoder::OnCAPTUREQueuePollDone(int revents) {
++  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
++  // The two directions are not symmetric: a count left too high disables both
++  // re-arming paths for good, while one left too low only costs an extra poll
++  // task, so clamp rather than risk the former in release builds.
++  DCHECK_GT(pending_poll_tasks_, 0);
++  if (pending_poll_tasks_ > 0) {
++    --pending_poll_tasks_;
++  }
++
++  if (revents & (POLLIN | POLLPRI)) {
++    // The device made progress, so any run of fruitless re-arms is over. Note
++    // the kernel can return POLLERR alongside POLLPRI, so test this first.
++    consecutive_fruitless_rearms_ = 0;
++    rearm_limit_reported_ = false;
++  }
++  if (revents & POLLPRI) {
++    // A resolution change. The client has been asked to prepare for it and
++    // will call ApplyResolutionChange(), whose InitializeCAPTUREQueue() arms
++    // monitoring again; until then the device stays unwatched, as upstream.
++    return;
++  }
++  if (pending_poll_tasks_ > 0 || !IsInitialized()) {
++    return;
++  }
++
++  // Nothing is watching |device_fd_| any more. Usually the dequeue callback
++  // has re-armed it before we get here, but not on every path:
++  // TryAndDequeueCAPTUREQueueBuffers() returns early on a LAST buffer while
++  // the OUTPUT queue still has work, WaitOnceForEvents() returns early if
++  // VIDIOC_DQEVENT fails, and a poll() that returned POLLERR or failed
++  // outright never re-arms by itself. If the driver still owns buffers then
++  // something is going to happen on them, so watch again. If it owns none
++  // there is nothing to wait for, any run of fruitless polls is over, and the
++  // next QBUF arms us through ArmCAPTUREQueueMonitoringIfIdle().
++  const bool driver_owns_buffers =
++      OUTPUT_queue_->QueuedBuffersCount() > 0 ||
++      (CAPTURE_queue_ && CAPTURE_queue_->QueuedBuffersCount() > 0);
++  if (!driver_owns_buffers) {
++    consecutive_fruitless_rearms_ = 0;
++    rearm_limit_reported_ = false;
++    return;
++  }
++  if (revents & POLLIN) {
++    RearmCAPTUREQueueMonitoring();
++    return;
++  }
++
++  // POLLERR, POLLHUP/POLLNVAL, or a poll() that made no progress. A V4L2
++  // memory-to-memory device returns POLLERR when, for each queue, the queue is
++  // not streaming, or vb2_queue_error() has been called on it, or it has
++  // nothing queued (v4l2_m2m_poll_for_data()). The last of those is the normal
++  // transient state here and is already handled above, since the driver then
++  // owns nothing; a queue in error keeps returning POLLERR even with buffers
++  // queued, which is what this cap is for. All of these return immediately.
++  if (consecutive_fruitless_rearms_ >= kMaxFruitlessRearms) {
++    if (!rearm_limit_reported_) {
++      rearm_limit_reported_ = true;
++      constexpr char kMessage[] =
++          "poll() keeps returning without data while the driver owns buffers; "
++          "no longer re-arming |CAPTURE_queue_| monitoring.";
++      LOG(ERROR) << kMessage;
++      MEDIA_LOG(ERROR, media_log_) << kMessage;
++    }
++    // Only a later POLLIN/POLLPRI clears this; until then the decoder relies
++    // on QBUF-driven arming alone. There is no error callback to our client,
++    // so fail what we can rather than leave it waiting: a pending flush and
++    // any Decode() not yet answered, as Reset() does with kAborted.
++    if (flush_cb_) {
++      std::move(flush_cb_).Run(DecoderStatus::Codes::kFailed);
++    }
++    while (!decoder_buffer_and_callbacks_.empty()) {
++      auto media_decode_cb =
++          std::move(decoder_buffer_and_callbacks_.front().second);
++      decoder_buffer_and_callbacks_.pop();
++      std::move(media_decode_cb).Run(DecoderStatus::Codes::kFailed);
++    }
++    return;
++  }
++  ++consecutive_fruitless_rearms_;
++  RearmCAPTUREQueueMonitoring();
+ }
+ 
+ void V4L2StatefulVideoDecoder::TryAndDequeueCAPTUREQueueBuffers() {
+--- a/media/gpu/v4l2/v4l2_stateful_video_decoder.h
++++ b/media/gpu/v4l2/v4l2_stateful_video_decoder.h
+@@ -103,7 +103,25 @@ class MEDIA_GPU_EXPORT V4L2StatefulVideo
+   // Convenience method to PostTask a wait for a |CAPTURE_queue_| event with
+   // callbacks pointing to TryAndDequeueCAPTUREQueueBuffers() (for data
+   // available) and InitializeCAPTUREQueue() (for re/configuration events).
++  // Always posts a WaitOnceForEvents() task and counts it in
++  // |pending_poll_tasks_|. A task's result callback arrives after its
++  // dequeue/resolution change callback, so while those run the count still
++  // includes the task that just finished: code reacting to a poll result (e.g.
++  // the tail of TryAndDequeueCAPTUREQueueBuffers()) must call this rather than
++  // ArmCAPTUREQueueMonitoringIfIdle(), which would see it as still pending.
+   void RearmCAPTUREQueueMonitoring();
++  // Invalidates the WeakPtrs handed to WaitOnceForEvents() tasks, cancels the
++  // ones not yet started and forgets them all. Used by Reset(), by a
++  // re-Initialize() and by the destructor.
++  void CancelCAPTUREQueueMonitoring();
++  // Bound as the |schedule_poll_cb| of both V4L2Queues: arms monitoring unless
++  // a WaitOnceForEvents() task is already pending.
++  void ArmCAPTUREQueueMonitoringIfIdle();
++  // Run on this sequence each time a WaitOnceForEvents() task finishes, with
++  // the revents seen on |device_fd_| (0 if poll() failed or if |wake_event_|
++  // woke us, without POLLPRI if the event could not be dequeued). Re-arms
++  // monitoring if nothing else did and the driver still owns buffers.
++  void OnCAPTUREQueuePollDone(int revents);
+   // Dequeues all the available |CAPTURE_queue_| buffers and sends their
+   // associated VideoFrames to |output_cb_|. If all goes well, it will
+   // RearmCAPTUREQueueMonitoring().
+@@ -195,6 +213,15 @@ class MEDIA_GPU_EXPORT V4L2StatefulVideo
+   // and not serviced yet, when no longer needed.
+   base::CancelableTaskTracker cancelable_task_tracker_
+       GUARDED_BY_CONTEXT(sequence_checker_);
++  // Result callbacks we still expect from WaitOnceForEvents() tasks. Not a
++  // count of running tasks: CancelCAPTUREQueueMonitoring() zeroes it while a
++  // cancelled task may still be blocked in poll().
++  int pending_poll_tasks_ GUARDED_BY_CONTEXT(sequence_checker_) = 0;
++  // Re-arms of a poll() that returned without data, without a POLLIN/POLLPRI
++  // in between.
++  int consecutive_fruitless_rearms_ GUARDED_BY_CONTEXT(sequence_checker_) = 0;
++  // Whether reaching kMaxFruitlessRearms has been reported already.
++  bool rearm_limit_reported_ GUARDED_BY_CONTEXT(sequence_checker_) = false;
+ 
+   // Optional helper class to reassemble full H.264 frames out of NALUs.
+   std::unique_ptr<H264FrameReassembler> h264_frame_reassembler_
+@@ -208,6 +235,14 @@ class MEDIA_GPU_EXPORT V4L2StatefulVideo
+   base::WeakPtrFactory<V4L2StatefulVideoDecoder> weak_ptr_factory_for_events_;
+   base::WeakPtrFactory<V4L2StatefulVideoDecoder>
+       weak_ptr_factory_for_CAPTURE_availability_;
++  // Handed to both V4L2Queues as their |schedule_poll_cb|. Unlike the two
++  // above it is invalidated only on destruction, so the CAPTURE queue, which
++  // outlives a CancelCAPTUREQueueMonitoring() during a re-Initialize(), keeps
++  // a working hook. That is safe: V4L2Queue only runs the hook from QBUF and
++  // DQBUF, never from Streamoff() or its destructor, and
++  // ArmCAPTUREQueueMonitoringIfIdle() checks its own preconditions.
++  base::WeakPtrFactory<V4L2StatefulVideoDecoder>
++      weak_ptr_factory_for_queue_hooks_{this};
+ };
+ 
+ }  // namespace media

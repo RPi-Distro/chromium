@@ -63,7 +63,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1684,7 +1684,12 @@ config("runtime_library") {
+@@ -1702,7 +1702,12 @@ config("runtime_library") {
    # can be replaced by the C++ symbols. This config ensures the C++ symbols
    # exist and are strong in order to cause that replacement to occur by
    # explicitly linking in clang's compiler-rt library.
@@ -79,7 +79,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
  
 --- a/build/config/rust.gni
 +++ b/build/config/rust.gni
-@@ -420,6 +420,13 @@ if (toolchain_for_rust_host_build_tools)
+@@ -408,6 +408,13 @@ if (toolchain_for_rust_host_build_tools)
    rust_macro_toolchain = "${host_toolchain}_for_rust_host_build_tools"
  }
  
@@ -95,18 +95,18 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
  # compiled, which is typically as unwind.
 --- a/build/gn_run_binary.py
 +++ b/build/gn_run_binary.py
-@@ -23,6 +23,11 @@ if not os.path.isabs(path):
+@@ -22,6 +22,11 @@ if not os.path.isabs(path):
  # The rest of the arguments are passed directly to the executable.
  args = [path] + sys.argv[2:]
  
 +# Debian cross-build support
 +wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
 +if wrapper_env:
-+  args[0:0] = wrapper_env.split()
++    args[0:0] = wrapper_env.split()
 +
  ret = subprocess.call(args)
  if ret != 0:
-   if ret <= -100:
+     if ret <= -100:
 --- a/build/toolchain/linux/unbundle/BUILD.gn
 +++ b/build/toolchain/linux/unbundle/BUILD.gn
 @@ -23,19 +23,24 @@ gcc_toolchain("default") {
@@ -145,7 +145,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 --- a/build/toolchain/toolchain.gni
 +++ b/build/toolchain/toolchain.gni
 @@ -44,6 +44,13 @@ declare_args() {
-   clang_version = "23"
+   clang_version = "24"
  }
  
 +declare_args() {
@@ -249,7 +249,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
    if not __brotli_executable:
 --- a/tools/protoc_wrapper/protoc_convert.py
 +++ b/tools/protoc_wrapper/protoc_convert.py
-@@ -10,6 +10,13 @@ of processing is not supported by GN.
+@@ -10,6 +10,12 @@ of processing is not supported by GN.
  import argparse
  import subprocess
  
@@ -259,17 +259,16 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 +wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
 +if wrapper_env:
 +  wrapper = wrapper_env.split()
-+
+ 
  def Main():
    parser = argparse.ArgumentParser()
-   parser.add_argument('--protoc', help='Path to protoc compiler.')
-@@ -22,7 +29,7 @@ def Main():
-   stdin = open(args.infile, 'r')
+@@ -30,7 +36,7 @@ def Main():
    stdout = open(args.outfile, 'w')
  
--  subprocess.check_call([args.protoc] + passthrough_args, stdin=stdin,
-+  subprocess.check_call(wrapper + [args.protoc] + passthrough_args, stdin=stdin,
-       stdout=stdout)
+   subprocess.check_call(
+-    [args.protoc] + passthrough_args, stdin=stdin, stdout=stdout
++    wrapper + [args.protoc] + passthrough_args, stdin=stdin, stdout=stdout
+   )
  
  
 --- a/tools/protoc_wrapper/protoc_wrapper.py
@@ -283,7 +282,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
  import subprocess
  import sys
  import tempfile
-@@ -227,6 +227,16 @@ def main(argv):
+@@ -258,6 +258,16 @@ def main(argv):
      if not options.exclude_imports:
        protoc_cmd += ["--include_imports"]
  
@@ -302,21 +301,19 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
      protoc_cmd += ['--dependency_out', options.descriptor_set_dependency_file]
 --- a/ui/webui/resources/tools/generate_code_cache.py
 +++ b/ui/webui/resources/tools/generate_code_cache.py
-@@ -33,7 +33,13 @@ def main(argv):
-       os.path.join(_CWD, args.out_manifest).replace('\\', '/'))
+@@ -37,6 +37,12 @@ def main(argv):
+   )
    out_file_suffix = '.code_cache'
  
--  subprocess.run([
 +  # Debian cross-build support
 +  wrapper = []
 +  wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
 +  if wrapper_env:
 +    wrapper = wrapper_env.split()
 +
-+  subprocess.run(wrapper + [
-       util_path, f'--in_folder={in_folder}',
-       '--in_files=' + ','.join(args.in_files), f'--out_folder={out_folder}',
-       f'--out_file_suffix={out_file_suffix}'
+   subprocess.run(
+     [
+       util_path,
 --- a/v8/tools/run.py
 +++ b/v8/tools/run.py
 @@ -21,6 +21,12 @@ if cmd and cmd[0] == '--redirect-stdout'

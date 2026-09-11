@@ -2,29 +2,33 @@ Description: Enable QEMU-based cross build of Chromium
 Author: Daniel Richard G. <skunk@iSKUNK.ORG>
 
 The modifications in this patch allow our cross build of Chromium to run
-foreign-arch build tooling via QEMU, without requiring binfmt-support to be
-set up in the build environment.
+foreign-arch build tooling via QEMU, in the manner of DEB_BUILD_OPTIONS =
+crossbuildcanrunhostbinaries, without requiring binfmt-support to be set up
+in the build environment.
 
 Note that this is not the standard cross-build approach supported by the GN
-build system. Instead of having two separate configurations for host_cpu vs.
-target_cpu, we use a single one---that of the foreign arch---and rely on
-QEMU for any foreign binary invocations needed by the build. This turns out
-to be much easier to set up, since we don't have to worry about two large
-(and overlapping) sets of build dependencies.
+build system. Instead of having separate configurations for host_cpu vs.
+target_cpu, we use a single one (host_cpu == target_cpu == the foreign arch
+we are targeting) and rely on QEMU for any foreign binary invocations
+needed by the build. This turns out to be much easier to set up, since we
+don't have to worry about two large parallel stacks of build dependencies.
+(To say nothing of the fact that in a standard GN cross build, we end up
+building a significant chunk of the codebase twice.)
 
 Main objectives of this patch:
 
-* Wherever a compiled tool may be executed, look at the HOST_EXEC_WRAPPER
-  environment variable. If it is set, then split the value on whitespace,
-  and prepend the resulting words to the tool invocation. This will usually
-  be the appropriate QEMU user mode emulation binary, e.g. "qemu-armhf";
+* Wherever a foreign-arch compiled tool may be executed, look at the
+  HOST_EXEC_WRAPPER environment variable. If it is set, then split the
+  value on whitespace, and prepend the resulting words to the tool
+  invocation. This will usually be the appropriate QEMU user mode emulation
+  binary, e.g. "qemu-armhf";
 
 * Rust macros need to be handled a little differently, because they are
   dynamically loaded by rustc, and we are using the native-arch rustc.
   We thus special-case the build logic so that they are compiled for the
   native arch, unlike everything else.
 
-Note that Debian and Chromium use different nomenclature for the native
+Note that Debian and Chromium/GN use different nomenclature for the native
 versus target architectures, which can make "host arch" ambiguous:
 
             | native arch    | foreign arch
@@ -33,7 +37,8 @@ versus target architectures, which can make "host arch" ambiguous:
    Chromium | host_cpu       | target_cpu
 
 (To make things even more confusing, there is also a DEB_TARGET_ARCH, but
-it is relevant only to compilers and other tools that generate binaries.)
+it is relevant only to compilers and other tools that generate binaries.
+There is no counterpart to it in the Chromium build system.)
 
 See dpkg-architecture(1) for more information on the Debian side, and the
 generate-ninja reference for details on host_* versus target_* variables:
@@ -56,6 +61,38 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 4. (in source tree) $ dpkg-buildpackage -b --host-arch armhf -Pcross
 
 
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -1684,7 +1684,12 @@ config("runtime_library") {
+   # can be replaced by the C++ symbols. This config ensures the C++ symbols
+   # exist and are strong in order to cause that replacement to occur by
+   # explicitly linking in clang's compiler-rt library.
+-  if (is_clang && !(is_a_target_toolchain && is_cronet_build)) {
++  if (is_clang && !(is_a_target_toolchain && is_cronet_build) &&
++      # Debian cross build: Only allow this for the target (foreign) arch.
++      # The clang builtins library is in libclang-rt-NN-dev, which (at this
++      # time) is not co-installable, so we don't have it available for both
++      # architectures.
++      current_cpu == host_cpu) {
+     configs += [ "//build/config/clang:compiler_builtins" ]
+   }
+ 
+--- a/build/config/rust.gni
++++ b/build/config/rust.gni
+@@ -420,6 +420,13 @@ if (toolchain_for_rust_host_build_tools)
+   rust_macro_toolchain = "${host_toolchain}_for_rust_host_build_tools"
+ }
+ 
++if (deb_build_cpu != "" && deb_build_cpu != host_cpu) {
++  # Debian cross build: Use the host (native) toolchain for Rust macro code,
++  # as it needs to be dlopen()ed by the native rustc.
++  rust_macro_toolchain =
++      "//build/toolchain/linux/unbundle:host_for_rust_host_build_tools"
++}
++
+ # When this is true, a prebuilt Rust stdlib will be used. This has implications
+ # such as that the panic strategy (unwind, abort) must match how the stdlib is
+ # compiled, which is typically as unwind.
 --- a/build/gn_run_binary.py
 +++ b/build/gn_run_binary.py
 @@ -23,6 +23,11 @@ if not os.path.isabs(path):
@@ -70,55 +107,73 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
  ret = subprocess.call(args)
  if ret != 0:
    if ret <= -100:
---- a/build/toolchain/gcc_toolchain.gni
-+++ b/build/toolchain/gcc_toolchain.gni
-@@ -794,6 +794,16 @@ template("gcc_rust_host_build_tools_tool
-     forward_variables_from(invoker,
-                            "*",
-                            TESTONLY_AND_VISIBILITY + [ "toolchain_args" ])
-+
-+    deb_build_arch = getenv("DEB_BUILD_ARCH")
-+    deb_host_arch  = getenv("DEB_HOST_ARCH")
-+
-+    #cxx           = getenv("RUST_MACRO_CXX")
-+    extra_ldflags  = getenv("RUST_MACRO_LDFLAGS")
-+
-+    # Avoid "Assignment had no effect" error when env var is unset
-+    deb_build_arch = deb_build_arch
-+
-     toolchain_args = {
-       # Populate toolchain args from the invoker.
-       forward_variables_from(invoker.toolchain_args, "*")
-@@ -808,6 +818,29 @@ template("gcc_rust_host_build_tools_tool
-       use_sanitizer_coverage = false
-       generate_linker_map = false
-       use_thin_lto = false
-+
-+      if (deb_host_arch != "" && deb_build_arch != "" &&
-+          deb_host_arch != deb_build_arch) {
-+        # Debian cross build: Use the build (native) arch for Rust macro
-+        # code, as it needs to dlopen()ed by rustc.
-+
-+        if (deb_build_arch == "amd64") {
-+          current_cpu = "x64"
-+        } else if (deb_build_arch == "armhf") {
-+          current_cpu = "arm"
-+        } else if (deb_build_arch == "arm64") {
-+          current_cpu = "arm64"
-+        } else if (deb_build_arch == "i386") {
-+          current_cpu = "x86"
-+        } else if (deb_build_arch == "ppc64el") {
-+          current_cpu = "ppc64"
-+        } else {
-+          assert(false)  # Unhandled CPU type
-+        }
-+
-+        # Needed to make linking work
-+        is_clang = false
-+      }
-     }
+--- a/build/toolchain/linux/unbundle/BUILD.gn
++++ b/build/toolchain/linux/unbundle/BUILD.gn
+@@ -23,19 +23,24 @@ gcc_toolchain("default") {
+ }
  
-     # When cross-compiling we don't want to use the target platform's file
+ gcc_toolchain("host") {
+-  cc = getenv("BUILD_CC")
+-  cxx = getenv("BUILD_CXX")
+-  ar = getenv("BUILD_AR")
+-  nm = getenv("BUILD_NM")
++  cc = getenv("CC")
++  cxx = getenv("CXX")
++  ar = getenv("AR")
++  nm = getenv("NM")
+   ld = cxx
+ 
+-  extra_cflags = getenv("BUILD_CFLAGS")
+-  extra_cppflags = getenv("BUILD_CPPFLAGS")
+-  extra_cxxflags = getenv("BUILD_CXXFLAGS")
+-  extra_ldflags = getenv("BUILD_LDFLAGS")
++  extra_cflags = getenv("CFLAGS_FOR_BUILD")
++  extra_cppflags = getenv("CPPFLAGS_FOR_BUILD")
++  extra_cxxflags = getenv("CXXFLAGS_FOR_BUILD")
++  extra_ldflags = getenv("LDFLAGS_FOR_BUILD")
+ 
+   toolchain_args = {
+     current_cpu = current_cpu
++
++    if (deb_build_cpu != "") {
++      current_cpu = deb_build_cpu
++    }
++
+     current_os = current_os
+   }
+ }
+--- a/build/toolchain/toolchain.gni
++++ b/build/toolchain/toolchain.gni
+@@ -44,6 +44,13 @@ declare_args() {
+   clang_version = "23"
+ }
+ 
++declare_args() {
++  # The GN CPU identifier corresponding to Debian's DEB_BUILD_ARCH.
++  # (In a Debian cross build, host_cpu/target_cpu are both set to the
++  # foreign architecture, so this specifies the native one.)
++  deb_build_cpu = ""
++}
++
+ # Extension for shared library files (including leading dot).
+ if (is_apple) {
+   shlib_extension = ".dylib"
+--- a/third_party/perfetto/gn/run_binary.py
++++ b/third_party/perfetto/gn/run_binary.py
+@@ -18,5 +18,12 @@ This script exists because GN action onl
+ import sys
+ import subprocess
+ 
++# Debian cross-build support
++import os
++wrapper = []
++wrapper_env = os.environ.get('HOST_EXEC_WRAPPER')
++if wrapper_env:
++  wrapper = wrapper_env.split()
++
+ if __name__ == '__main__':
+-  sys.exit(subprocess.call(sys.argv[1:]))
++  sys.exit(subprocess.call(wrapper + sys.argv[1:]))
 --- a/third_party/protobuf/src/google/protobuf/compiler/subprocess.cc
 +++ b/third_party/protobuf/src/google/protobuf/compiler/subprocess.cc
 @@ -309,7 +309,19 @@ void Subprocess::Start(const std::string

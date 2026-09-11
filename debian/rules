@@ -81,8 +81,9 @@ defines+=host_toolchain=\"//build/toolchain/linux/unbundle:default\"
 defines+=custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
 
 # set the appropriate cpu architecture
-DEB_HOST_ARCH_value := $(shell dpkg-architecture -qDEB_HOST_ARCH)
-DEB_HOST_ARCH ?= $(DEB_HOST_ARCH_value)
+gn_build_cpu:=$(shell echo $(DEB_BUILD_ARCH) \
+	| sed 's/amd64/x64/; s/armhf/arm/; s/i386/x86/; s/ppc64el/ppc64/')
+defines+=deb_build_cpu=\"$(gn_build_cpu)\"
 ifeq (i386,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"x86\" use_vaapi=true
 endif
@@ -210,6 +211,7 @@ set_up_esbuild:
 	tar -C debian/esbuild/root -Jxvf debian/esbuild/root/data.tar.xz
 
 override_dh_auto_configure: test_armhf_neon
+	test -n '$(DEB_HOST_ARCH)'
 	# use system node w/out patching source; upstream hardcodes x64 in path
 	mkdir -p third_party/node/linux/node-linux-x64/bin
 	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin

@@ -328,6 +328,8 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
     Get cross builds working again after various recent updates broke it,
     along with improvements in the overall approach and copy-editing of
     the documentation in the patch file.
+  * d/rules: Update template-variable convention used when generating the
+    man page, to match an upstream change (crrev.com/c/7253206).
 
  -- Timothy Pearson <tpearson@debian.org>  Mon, 07 Sep 2026 10:02:00 -0500
 

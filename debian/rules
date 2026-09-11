@@ -245,7 +245,7 @@ override_dh_auto_build-arch:
 	cp out/Release/chrome_sandbox out/Release/chrome-sandbox
 	cp out/Release/locales/en-US.pak out/Release/resources
 	chmod 4755 out/Release/chrome-sandbox # suid sandbox
-	sed -e s/@@PACKAGE@@/chromium/g -e s/@@MENUNAME@@/chromium/g \
+	sed -e s/@@PACKAGE/chromium/g -e s/@@MENUNAME/chromium/g \
 	    < chrome/app/resources/manpage.1.in > out/Release/chromium.1
 
 override_dh_auto_build-indep:

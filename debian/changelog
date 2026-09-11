@@ -323,6 +323,12 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
   * d/patches/ppc64le:
     - v8/0002-Add-ppc64-trap-instructions.patch: drop, no longer needed
 
+  [ Daniel Richard G. ]
+  * d/control, d/rules, d/patches/debianization/cross-build.patch:
+    Get cross builds working again after various recent updates broke it,
+    along with improvements in the overall approach and copy-editing of
+    the documentation in the patch file.
+
  -- Timothy Pearson <tpearson@debian.org>  Mon, 07 Sep 2026 10:02:00 -0500
 
 chromium (152.0.7977.82-1) unstable; urgency=high

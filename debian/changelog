@@ -1,3 +1,11 @@
+chromium (1:152.0.7977.82-1~deb12u1+rpt2) bookworm; urgency=medium
+
+  * Drop our CAPTURE format patch, upstream fixed it in 151
+  * Count V4L2 stateful decoder instances exactly once
+  * Keep polling the V4L2 stateful decoder after POLLERR
+
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 11 Sep 2026 02:19:41 +0100
+
 chromium (1:152.0.7977.82-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]

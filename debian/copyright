@@ -88,6 +88,7 @@ Files-Excluded:
  third_party/catapult
  third_party/checkstyle
  third_party/chromevox/third_party/sre
+ third_party/cpython3
  third_party/crashpad/crashpad/handler/win
  third_party/dav1d
  third_party/dawn/third_party/dxc

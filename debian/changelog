@@ -318,6 +318,10 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
     - debianization/cross-build.patch: refresh.
     - debianization/rustc-bootstrap.patch: refresh.
     - debianization/pre-gen.patch: refresh.
+    - disable/google-api-warning.patch: refresh.
+    - disable/clang-version-check.patch: refresh.
+    - disable/libei.patch: refresh.
+    - disable/node-ts.patch: refresh.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

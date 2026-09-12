@@ -33,6 +33,7 @@ fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/arm-logging.patch
+fixes/crubit.patch
 
 
 disable/tests.patch

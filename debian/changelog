@@ -330,6 +330,8 @@ XXX: check whether ^ still needed in trixie/bookworm
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/disable-mei-preload.patch: sync from u-c.
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+    - fixes/crubit.patch: add patch to not use crubit (until we get crubit
+      packaged for debian).
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

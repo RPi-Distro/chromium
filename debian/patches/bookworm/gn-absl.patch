@@ -46,7 +46,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/base/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/base/BUILD.gn
-@@ -47,6 +47,7 @@ absl_source_set("log_severity") {
+@@ -49,6 +49,7 @@ absl_source_set("log_severity") {
  
  absl_source_set("no_destructor") {
    public = [ "no_destructor.h" ]
@@ -54,7 +54,7 @@ libs.
    deps = [
      ":config",
      ":nullability",
-@@ -55,6 +56,7 @@ absl_source_set("no_destructor") {
+@@ -57,6 +58,7 @@ absl_source_set("no_destructor") {
  
  absl_source_set("nullability") {
    public = [ "nullability.h" ]
@@ -62,7 +62,7 @@ libs.
    deps = [ ":config" ]
  }
  
-@@ -106,6 +108,7 @@ absl_source_set("config") {
+@@ -108,6 +110,7 @@ absl_source_set("config") {
      "options.h",
      "policy_checks.h",
    ]
@@ -70,7 +70,7 @@ libs.
  }
  
  absl_source_set("cycleclock_internal") {
-@@ -144,6 +147,7 @@ absl_source_set("core_headers") {
+@@ -143,6 +146,7 @@ absl_source_set("core_headers") {
      "port.h",
      "thread_annotations.h",
    ]
@@ -80,7 +80,7 @@ libs.
  
 --- a/third_party/abseil-cpp/absl/cleanup/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/cleanup/BUILD.gn
-@@ -16,6 +16,7 @@ absl_source_set("cleanup_internal") {
+@@ -18,6 +18,7 @@ absl_source_set("cleanup_internal") {
  
  absl_source_set("cleanup") {
    public = [ "cleanup.h" ]
@@ -90,7 +90,7 @@ libs.
      "//third_party/abseil-cpp/absl/base:config",
 --- a/third_party/abseil-cpp/absl/container/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/container/BUILD.gn
-@@ -66,6 +66,7 @@ absl_source_set("inlined_vector_internal
+@@ -71,6 +71,7 @@ absl_source_set("inlined_vector_internal
  
  absl_source_set("inlined_vector") {
    public = [ "inlined_vector.h" ]
@@ -98,7 +98,7 @@ libs.
    deps = [
      ":inlined_vector_internal",
      "//third_party/abseil-cpp/absl/algorithm",
-@@ -117,6 +118,7 @@ absl_source_set("test_instance_tracker")
+@@ -130,6 +131,7 @@ absl_test("test_instance_tracker_test")
  
  absl_source_set("flat_hash_map") {
    public = [ "flat_hash_map.h" ]
@@ -106,7 +106,7 @@ libs.
    deps = [
      ":container_memory",
      ":hash_container_defaults",
-@@ -146,6 +148,7 @@ absl_test("flat_hash_map_test") {
+@@ -159,6 +161,7 @@ absl_test("flat_hash_map_test") {
  
  absl_source_set("flat_hash_set") {
    public = [ "flat_hash_set.h" ]
@@ -126,7 +126,7 @@ libs.
      ":non_temporal_memcpy",
 --- a/third_party/abseil-cpp/absl/flags/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/flags/BUILD.gn
-@@ -164,6 +164,7 @@ absl_source_set("flag") {
+@@ -173,6 +173,7 @@ absl_source_set("flag") {
      "declare.h",
      "flag.h",
    ]
@@ -134,7 +134,7 @@ libs.
    deps = [
      ":commandlineflag",
      ":config",
-@@ -201,6 +202,7 @@ absl_source_set("usage_internal") {
+@@ -211,6 +212,7 @@ absl_source_set("usage_internal") {
  absl_source_set("usage") {
    sources = [ "usage.cc" ]
    public = [ "usage.h" ]
@@ -142,7 +142,7 @@ libs.
    deps = [
      ":usage_internal",
      "//third_party/abseil-cpp/absl/base:config",
-@@ -217,6 +219,7 @@ absl_source_set("parse") {
+@@ -228,6 +230,7 @@ absl_source_set("parse") {
      "internal/parse.h",
      "parse.h",
    ]
@@ -208,23 +208,23 @@ libs.
      "//third_party/abseil-cpp/absl/base:core_headers",
 --- a/third_party/abseil-cpp/absl/strings/BUILD.gn
 +++ b/third_party/abseil-cpp/absl/strings/BUILD.gn
-@@ -7,6 +7,7 @@ import("//third_party/abseil-cpp/absl.gn
+@@ -8,6 +8,7 @@ import("//third_party/abseil-cpp/absl.gn
  
  absl_source_set("string_view") {
-   sources = [ "string_view.h" ]
+   public = [ "string_view.h" ]
 +  visibility = [ "*" ]
    deps = [
      "//third_party/abseil-cpp/absl/base:config",
      "//third_party/abseil-cpp/absl/base:core_headers",
-@@ -54,6 +55,7 @@ absl_source_set("strings") {
+@@ -55,6 +56,7 @@ absl_source_set("strings") {
      "strip.h",
      "substitute.h",
    ]
 +  visibility = [ "*" ]
-   public_deps = [
-     # string_view.h was once part of :strings, so string_view.h is
-     # re-exported for backwards compatibility.
-@@ -679,6 +681,7 @@ absl_test("str_cat_test") {
+   deps = [
+     ":append_and_overwrite",
+     ":charset",
+@@ -830,6 +832,7 @@ absl_test("charconv_bigint_test") {
  
  absl_source_set("str_format") {
    public = [ "str_format.h" ]

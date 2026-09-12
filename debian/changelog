@@ -323,7 +323,6 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
     - disable/libei.patch: refresh.
     - disable/node-ts.patch: refresh.
     - trixie/gn-inputs2.patch: refresh [trixie, bookworm].
-    - trixie/gn-inputs2.patch: drop w/ newer generate-ninja [sid].
     - trixie/revert-v8-sanitize.patch: drop
 XXX: check whether ^ still needed in trixie/bookworm
     - trixie/gn-unused-vars.patch: drop w/ newer generate-ninja [sid].

@@ -104,7 +104,7 @@ trixie/gn-string-hash.patch
 #trixie/gn-len.patch
 #trixie/nodejs-main.patch
 #trixie/gn-module-name.patch
-#trixie/gn-inputs.patch
+trixie/gn-inputs.patch
 #trixie/gn-inputs2.patch
 #trixie/revert-v8-sanitize.patch
 #trixie/gn-unused-vars.patch

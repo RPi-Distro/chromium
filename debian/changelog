@@ -332,6 +332,8 @@ XXX: check whether ^ still needed in trixie/bookworm
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/disable-mei-preload.patch: sync from u-c.
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+    - system/python3.patch: add patch to use debian's python3 rather than
+      the vendored binary (which we delete).
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

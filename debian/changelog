@@ -325,7 +325,11 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
     - trixie/gn-inputs.patch: drop in sid w/ newer generate-ninja [sid].
     - trixie/gn-inputs2.patch: refresh, drop only for sid [sid].
     - trixie/revert-v8-sanitize.patch: drop
-    XXX: check whether ^ still needed in trixie/bookworm
+XXX: check whether ^ still needed in trixie/bookworm
+    - llvm-22/clang22.patch: refresh.
+    - ungoogled/disable-ai.patch: sync from u-c.
+    - ungoogled/disable-mei-preload.patch: sync from u-c.
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

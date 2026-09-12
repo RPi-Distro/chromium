@@ -107,7 +107,7 @@ trixie/gn-string-hash.patch
 #trixie/gn-inputs.patch
 #trixie/gn-inputs2.patch
 #trixie/revert-v8-sanitize.patch
-trixie/gn-unused-vars.patch
+#trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
 

@@ -332,6 +332,7 @@ XXX: check whether ^ still needed in trixie/bookworm
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
     - fixes/crubit.patch: add patch to not use crubit (until we get crubit
       packaged for debian).
+    - fixes/glic.patch: add another glic interface build fix.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

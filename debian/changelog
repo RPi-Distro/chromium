@@ -326,7 +326,7 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
     - trixie/revert-v8-sanitize.patch: drop
 XXX: check whether ^ still needed in trixie/bookworm
     - trixie/gn-unused-vars.patch: drop w/ newer generate-ninja [sid].
-    - llvm-22/clang22.patch: refresh.
+    - llvm-22/clang22.patch: refresh and also drop Wno-stringop-overread.
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/disable-mei-preload.patch: sync from u-c.
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.

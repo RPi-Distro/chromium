@@ -350,6 +350,7 @@ XXX: check whether ^ still needed in trixie/bookworm
     the documentation in the patch file.
   * d/patches:
     - bookworm/gn-absl.patch: Refresh.
+    - bookworm/gn-funcs.patch: Zap the newer expand_directory() function.
     - rust-1.85/mojo-features.patch: Refresh.
     - system/python.patch: New patch to use the system Python interpreter.
     - trixie/gn-unused-vars.patch: Refresh (and fix patch format).

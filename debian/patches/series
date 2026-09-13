@@ -34,8 +34,7 @@ fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/arm-logging.patch
 fixes/crubit.patch
-fixes/glic.patch
-
+#fixes/glic.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

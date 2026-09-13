@@ -11,21 +11,22 @@ the output is just a stamp file anyway.
 
 --- a/chrome/browser/resources/glic/glic_api_impl/generate_impl/BUILD.gn
 +++ b/chrome/browser/resources/glic/glic_api_impl/generate_impl/BUILD.gn
-@@ -16,7 +16,7 @@ generator_ts_sources = [
- ]
- 
- action_with_pydeps("parse_mojom") {
--  script = "parse.py"
-+  script = "//chrome/tools/build/win/touch_sentinel.py"
-   inputs = [
-     "//chrome/browser/glic/host/glic.mojom",
-     "//chrome/common/actor_webui.mojom",
-@@ -36,7 +36,7 @@ ts_library("check_generator_types") {
+@@ -36,15 +36,13 @@ ts_library("check_generator_types") {
  }
  
  node("generate_enum_conversions") {
 -  script = "//third_party/node/node.py"
 +  script = "//debian/dummy/copy_file.py"
    inputs = [
-     "$target_gen_dir/gen_enum_conversions.js",
-     "$target_gen_dir/mojom_ast.json",
+-    "$target_gen_dir/gen_enum_conversions.js",
+-    "$target_gen_dir/mojom_ast.json",
++    "//debian/dummy/enum_conversions.ts"
+   ]
+   outputs = [ "$target_gen_dir/enum_conversions.ts" ]
+   args = [
+-    rebase_path("$target_gen_dir/gen_enum_conversions.js", root_build_dir),
+-    rebase_path("$target_gen_dir/mojom_ast.json", root_build_dir),
++    rebase_path(inputs[0], root_build_dir),
+     rebase_path(outputs[0], root_build_dir),
+   ]
+   deps = [

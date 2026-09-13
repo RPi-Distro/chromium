@@ -27,3 +27,13 @@ ninja: error: '../../third_party/typescript/linux-amd64/src/lib/tsc', needed by 
 -foreach(file, _tsgo_lib_files) {
 -  tsgo_inputs += [ "//third_party/typescript/$_platform_dir/src/lib/$file" ]
 -}
+--- a/third_party/typescript/typescript.py
++++ b/third_party/typescript/typescript.py
+@@ -11,6 +11,7 @@ import os
+ 
+ 
+ def GetBinaryPath():
++  return '/usr/bin/tsc'
+   if platform.machine() == 'arm64':
+     darwin_path = 'mac-arm64'
+   else:

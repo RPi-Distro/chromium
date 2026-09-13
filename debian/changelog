@@ -333,6 +333,8 @@ XXX: check whether ^ still needed in trixie/bookworm
     - fixes/crubit.patch: add patch to not use crubit (until we get crubit
       packaged for debian).
     - fixes/glic.patch: add another glic interface build fix.
+    - fixes/autofill-binarypb.patch: add a new fix for the missing
+      DE.binarypb blob.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

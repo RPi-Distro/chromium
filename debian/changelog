@@ -314,6 +314,7 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
     - CVE-2026-87593: Information leak in Editing. Reported by Google.
   * d/copyright:
     - delete //third_party/cpython3/.
+  * d/control: add a build-dep on node-typescript.
   * d/patches:
     - debianization/cross-build.patch: refresh.
     - debianization/rustc-bootstrap.patch: refresh.

@@ -66,6 +66,7 @@ system/rollup.patch
 system/llvm.patch
 system/rust-cbor.patch
 system/python.patch
+system/tsc.patch
 
 #llvm-19/static-assert.patch
 #llvm-19/clang-19-crash.patch

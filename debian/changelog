@@ -342,6 +342,10 @@ XXX: check whether ^ still needed in trixie/bookworm
   [ Timothy Pearson ]
   * d/patches/ppc64le:
     - v8/0002-Add-ppc64-trap-instructions.patch: drop, no longer needed
+    - workarounds/HACK-debian-clang-disable-pa-musttail.patch: refresh for
+      upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
 
   [ Daniel Richard G. ]
   * d/control, d/rules, d/patches/debianization/cross-build.patch:

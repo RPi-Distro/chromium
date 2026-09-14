@@ -342,6 +342,8 @@ XXX: check whether ^ still needed in trixie/bookworm
       __sanitizer_set_death_callback() symbols.
     - system/opus.patch: fix additional locations that were including
       bundled opus headers.
+    - system/tsc2.patch: don't raise an assertion error about missing tsc
+      stuff that we purposefully removed.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

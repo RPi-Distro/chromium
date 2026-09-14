@@ -35,6 +35,7 @@ fixes/bytemuck.patch
 fixes/arm-logging.patch
 fixes/crubit.patch
 #fixes/glic.patch
+fixes/only-address-sanitizer.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

@@ -338,6 +338,8 @@ XXX: check whether ^ still needed in trixie/bookworm
       DE.binarypb blob.
     - system/tsc.patch: add patch to use debian's node-typescript instead
       of the bundled one.
+    - fixes/only-address-sanitizer.patch: add patch to fix undefined
+      __sanitizer_set_death_callback() symbols.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

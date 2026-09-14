@@ -91,7 +91,7 @@ ifeq (amd64,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"x64\" use_vaapi=true
 endif
 ifeq (arm64,$(DEB_HOST_ARCH))
-defines+=host_cpu=\"arm64\" use_v4l2_codec=true use_vaapi=false
+defines+=host_cpu=\"arm64\" use_v4l2_codec=true use_vaapi=true
 # use_av1_hw_decoder is enabled by default for vaapi, but disabled for
 # v4l2, we can remove it when chromium enables it for v4l2 by default
 defines+=use_av1_hw_decoder=true

@@ -365,6 +365,8 @@ XXX: check whether ^ still needed in trixie/bookworm
     - rust-1.85/mojo-features.patch: Refresh.
     - system/python.patch: New patch to use the system Python interpreter.
     - trixie/gn-unused-vars.patch: Refresh (and fix patch format).
+    - fixes/typescript-compat.patch: New patch to work around
+      node-typescript 6.x packages in debian.
   * d/rules: Update template-variable convention used when generating the
     man page, to match an upstream change (crrev.com/c/7253206).
 

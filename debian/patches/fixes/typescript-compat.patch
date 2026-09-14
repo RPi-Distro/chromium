@@ -1,0 +1,612 @@
+--- a/chrome/browser/resources/bluetooth_internals/object_fieldset.ts
++++ b/chrome/browser/resources/bluetooth_internals/object_fieldset.ts
+@@ -55,7 +55,7 @@ export class ObjectFieldsetElement exten
+     }
+ 
+     const fieldset = this.shadowRoot!.querySelector('fieldset')!;
+-    fieldset.innerHTML = window.trustedTypes!.emptyHTML;
++    fieldset.innerHTML = window.trustedTypes!.emptyHTML.toString();
+ 
+     const nameMap = JSON.parse(this.dataset['nameMap']!);
+     const valueObject: Record<string, unknown> =
+--- a/chrome/browser/resources/contextual_tasks/icons.html.ts
++++ b/chrome/browser/resources/contextual_tasks/icons.html.ts
+@@ -78,7 +78,7 @@ L 10 12.83 Z"/>
+ 
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+--- a/chrome/browser/resources/downloads/item.ts
++++ b/chrome/browser/resources/downloads/item.ts
+@@ -1030,7 +1030,7 @@ export class DownloadsItemElement extend
+ 
+   private updateControlledBy_() {
+     const controlledBy = this.computeControlledBy_();
+-    this.$.controlledBy.innerHTML = sanitizeInnerHtml(controlledBy);
++    this.$.controlledBy.innerHTML = sanitizeInnerHtml(controlledBy).toString();
+     if (controlledBy) {
+       const link = this.shadowRoot.querySelector('#controlledBy a');
+       link!.setAttribute('focus-row-control', '');
+--- a/chrome/browser/resources/drive_picker_host/untrusted/drive_picker_api_proxy.ts
++++ b/chrome/browser/resources/drive_picker_host/untrusted/drive_picker_api_proxy.ts
+@@ -113,7 +113,7 @@ export class DrivePickerApiProxyImpl imp
+     if (!window.gapi) {
+       const script = document.createElement('script');
+       script.type = 'text/javascript';
+-      script.src = getTrustedScriptURL`https://apis.google.com/js/api.js`;
++      script.src = getTrustedScriptURL`https://apis.google.com/js/api.js`.toString();
+       script.onerror = () => {
+         this.onError_();
+       };
+--- a/chrome/browser/resources/engagement/app.ts
++++ b/chrome/browser/resources/engagement/app.ts
+@@ -219,7 +219,7 @@ export class SiteEngagementAppElement ex
+    */
+   private clearTable() {
+     assert(this.engagementTableBody);
+-    this.engagementTableBody.innerHTML = window.trustedTypes!.emptyHTML;
++    this.engagementTableBody.innerHTML = window.trustedTypes!.emptyHTML.toString();
+   }
+ 
+   /**
+--- a/chrome/browser/resources/feedback/report_unsafe_site/icons.html.ts
++++ b/chrome/browser/resources/feedback/report_unsafe_site/icons.html.ts
+@@ -23,7 +23,7 @@ div.innerHTML = getTrustedHTML`
+         <path d="M12.9133 10.7198L9.28043 7.08692C9.511 7.03014 9.75206 7.00003 10.0002 7.00003C11.657 7.00003 13.0002 8.34317 13.0002 10C13.0002 10.2481 12.97 10.4892 12.9133 10.7198Z"></path>
+       </g>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+--- a/chrome/browser/resources/glic/icons.html.ts
++++ b/chrome/browser/resources/glic/icons.html.ts
+@@ -154,7 +154,7 @@ fill="currentColor"/>
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+--- a/chrome/browser/resources/location_internals/diagnose_info_table.ts
++++ b/chrome/browser/resources/location_internals/diagnose_info_table.ts
+@@ -35,8 +35,8 @@ export class DiagnoseInfoTableElement ex
+   hideTable() {
+     this.style.display = 'none';
+     this.tableTitle_.textContent = '';
+-    this.tableHead_.innerHTML = getTrustedHTML``;
+-    this.tableBody_.innerHTML = getTrustedHTML``;
++    this.tableHead_.innerHTML = getTrustedHTML``.toString();
++    this.tableBody_.innerHTML = getTrustedHTML``.toString();
+     this.tableFooter_.textContent = '';
+   }
+ 
+@@ -54,8 +54,8 @@ export class DiagnoseInfoTableElement ex
+     this.lastTableEntries_ = entries;
+     this.style.display = 'block';
+     this.tableTitle_.textContent = tableName;
+-    this.tableHead_.innerHTML = getTrustedHTML``;
+-    this.tableBody_.innerHTML = getTrustedHTML``;
++    this.tableHead_.innerHTML = getTrustedHTML``.toString();
++    this.tableBody_.innerHTML = getTrustedHTML``.toString();
+     const tableHeadFirstRow = document.createElement('tr');
+     this.tableHead_.appendChild(tableHeadFirstRow);
+     for (let i: number = 0; i < entries.length; i++) {
+--- a/chrome/browser/resources/media/media_engagement.ts
++++ b/chrome/browser/resources/media/media_engagement.ts
+@@ -59,7 +59,7 @@ function createRow(rowInfo: MediaEngagem
+ function clearTable() {
+   assert(engagementTableBody);
+   engagementTableBody.innerHTML =
+-      window.trustedTypes ? window.trustedTypes.emptyHTML : '';
++      window.trustedTypes ? window.trustedTypes.emptyHTML.toString() : '';
+ }
+ 
+ /**
+@@ -122,7 +122,7 @@ function createConfigRow(name: string, v
+ function renderConfigTable(config: MediaEngagementConfig) {
+   assert(configTableBody);
+   configTableBody.innerHTML =
+-      window.trustedTypes ? (window.trustedTypes.emptyHTML) : '';
++      window.trustedTypes ? (window.trustedTypes.emptyHTML).toString() : '';
+ 
+   configTableBody.appendChild(
+       createConfigRow('Min Sessions', config.scoreMinVisits));
+--- a/chrome/browser/resources/new_tab_page/app.ts
++++ b/chrome/browser/resources/new_tab_page/app.ts
+@@ -158,7 +158,7 @@ function recordCustomizeChromeOpen(eleme
+ function ensureLazyLoaded() {
+   const script = document.createElement('script');
+   script.type = 'module';
+-  script.src = getTrustedScriptURL`./lazy_load.js`;
++  script.src = getTrustedScriptURL`./lazy_load.js`.toString();
+   document.body.appendChild(script);
+ }
+ 
+--- a/chrome/browser/resources/new_tab_shared/customize_buttons/icons.html.ts
++++ b/chrome/browser/resources/new_tab_shared/customize_buttons/icons.html.ts
+@@ -20,7 +20,7 @@ div.innerHTML = getTrustedHTML`
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+--- a/chrome/browser/resources/pdf/elements/icons.html.ts
++++ b/chrome/browser/resources/pdf/elements/icons.html.ts
+@@ -82,7 +82,7 @@ if (document.documentElement.hasAttribut
+     </svg>
+   </cr-iconset>
+ </if>
+-`;
++`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`<cr-iconset size="20" name="pdf">
+   <svg>
+@@ -158,7 +158,7 @@ if (document.documentElement.hasAttribut
+     </svg>
+   </cr-iconset>
+ </if>
+-`;
++`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/chrome/browser/resources/segmentation_internals/segmentation_internals.ts
++++ b/chrome/browser/resources/segmentation_internals/segmentation_internals.ts
+@@ -39,14 +39,14 @@ function addSegmentInfoToParent(
+   const buttonDiv = document.createElement('div');
+   if (info.canExecuteSegment) {
+     const btn = document.createElement('button');
+-    btn.innerHTML = getTrustedHTML`Execute model`;
++    btn.innerHTML = getTrustedHTML`Execute model`.toString();
+     btn.addEventListener('click', () => {
+       getProxy().handler.executeModel(info.segmentId);
+     });
+     buttonDiv.appendChild(btn);
+   }
+   const overwriteText = document.createElement('label');
+-  overwriteText.innerHTML = getTrustedHTML`Overwrite result: `;
++  overwriteText.innerHTML = getTrustedHTML`Overwrite result: `.toString();
+   buttonDiv.appendChild(overwriteText);
+   const overwriteValue = document.createElement('input');
+   overwriteValue.type = 'number';
+@@ -54,14 +54,14 @@ function addSegmentInfoToParent(
+   overwriteValue.className = 'overwrite';
+   buttonDiv.appendChild(overwriteValue);
+   const overwriteBtn = document.createElement('button');
+-  overwriteBtn.innerHTML = getTrustedHTML`Overwrite`;
++  overwriteBtn.innerHTML = getTrustedHTML`Overwrite`.toString();
+   overwriteBtn.addEventListener('click', () => {
+     getProxy().handler.overwriteResult(
+         info.segmentId, parseFloat(overwriteValue.value));
+   });
+   buttonDiv.appendChild(overwriteBtn);
+   const setSelectionBtn = document.createElement('button');
+-  setSelectionBtn.innerHTML = getTrustedHTML`Set Selected`;
++  setSelectionBtn.innerHTML = getTrustedHTML`Set Selected`.toString();
+   setSelectionBtn.addEventListener('click', () => {
+     getProxy().handler.setSelected(segmentationKey, info.segmentId);
+   });
+--- a/chrome/browser/resources/settings/ensure_lazy_loaded.ts
++++ b/chrome/browser/resources/settings/ensure_lazy_loaded.ts
+@@ -11,7 +11,7 @@ export function ensureLazyLoaded(): Prom
+   if (lazyLoadPromise === null) {
+     const script = document.createElement('script');
+     script.type = 'module';
+-    script.src = getTrustedScriptURL`./lazy_load.js`;
++    script.src = getTrustedScriptURL`./lazy_load.js`.toString();
+     document.body.appendChild(script);
+ 
+     lazyLoadPromise = Promise
+--- a/chrome/browser/resources/settings/icons.html.ts
++++ b/chrome/browser/resources/settings/icons.html.ts
+@@ -243,7 +243,7 @@ NOTE: Chrome OS icons go in ./chromeos/o
+     </defs>
+   </svg>
+ </cr-iconset>
+-`;
++`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <!--
+@@ -481,7 +481,7 @@ NOTE: Chrome OS icons go in ./chromeos/o
+     </defs>
+   </svg>
+ </cr-iconset>
+-`;
++`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/chrome/browser/resources/settings/privacy_icons.html.ts
++++ b/chrome/browser/resources/settings/privacy_icons.html.ts
+@@ -215,7 +215,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <cr-iconset name="privacy20" size="20">
+@@ -425,7 +425,7 @@ if (document.documentElement.hasAttribut
+     </defs>
+   </svg>
+ </cr-iconset>
+-`;
++`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/chrome/browser/resources/settings/site_settings/all_sites_icons.html.ts
++++ b/chrome/browser/resources/settings/site_settings/all_sites_icons.html.ts
+@@ -17,7 +17,7 @@ if (document.documentElement.hasAttribut
+   <g id="shoppingmode" viewBox="0 0 24 24"><path d="M11.227 21.602c-.235 0-.461-.043-.676-.125a1.751 1.751 0 0 1-.602-.403l-7.023-7.05a1.652 1.652 0 0 1-.399-.602 1.833 1.833 0 0 1-.004-1.336 1.81 1.81 0 0 1 .403-.586l8.582-8.582c.18-.18.375-.309.594-.395.218-.082.441-.125.671-.125h7.028c.496 0 .918.18 1.27.532.35.351.53.773.53 1.27v7.027c0 .234-.042.46-.124.675a1.74 1.74 0 0 1-.395.59L12.5 21.074a1.751 1.751 0 0 1-.602.403 1.88 1.88 0 0 1-.671.125Zm0-1.801 8.574-8.574V4.199h-7.028L4.2 12.773Zm6.171-11.7a1.45 1.45 0 0 0 1.063-.437c.293-.293.437-.648.437-1.062 0-.418-.144-.774-.437-1.063a1.435 1.435 0 0 0-1.063-.437c-.414 0-.77.144-1.062.437a1.45 1.45 0 0 0-.438 1.063c0 .414.149.77.438 1.062.293.29.648.438 1.062.438ZM12 12Zm0 0"></path></g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <cr-iconset name="all-sites" size="20">
+@@ -28,7 +28,7 @@ if (document.documentElement.hasAttribut
+   <g id="shoppingmode" width="24px" height="24px" viewBox="0 0 24 24"><path transform="scale(-1, 1) translate(-24, 0)" d="M14.25 21.4q-.575.575-1.425.575-.85 0-1.425-.575l-8.8-8.8q-.275-.275-.437-.65Q2 11.575 2 11.15V4q0-.825.588-1.413Q3.175 2 4 2h7.15q.425 0 .8.162.375.163.65.438l8.8 8.825q.575.575.575 1.412 0 .838-.575 1.413ZM12.825 20l7.15-7.15L11.15 4H4v7.15ZM6.5 8q.625 0 1.062-.438Q8 7.125 8 6.5t-.438-1.062Q7.125 5 6.5 5t-1.062.438Q5 5.875 5 6.5t.438 1.062Q5.875 8 6.5 8ZM4 4Z"></g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/chrome/browser/resources/skills/icons.html.ts
++++ b/chrome/browser/resources/skills/icons.html.ts
+@@ -43,7 +43,7 @@ div.innerHTML = getTrustedHTML`
+       <g id="edit"><path d="M5.398 18.602h1.278l9.375-9.375-1.278-1.278-9.375 9.375Zm-.894 1.796a.878.878 0 0 1-.64-.257.846.846 0 0 1-.262-.637v-2.172c0-.238.039-.465.125-.684.082-.214.214-.414.398-.597L16.051 4.125a1.728 1.728 0 0 1 1.27-.523c.238 0 .464.039.679.125.215.082.418.214.602.398l1.273 1.273a1.773 1.773 0 0 1 .523 1.266c0 .242-.039.469-.125.688a1.639 1.639 0 0 1-.398.597L7.949 19.875a1.706 1.706 0 0 1-.597.398 1.81 1.81 0 0 1-.68.125ZM18.602 6.676l-1.278-1.278Zm-3.2 1.922-.629-.649 1.278 1.278Zm0 0"></path></g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+--- a/chrome/browser/resources/updater/icons.html.ts
++++ b/chrome/browser/resources/updater/icons.html.ts
+@@ -19,7 +19,7 @@ div.innerHTML = getTrustedHTML`
+             </g>
+         </defs>
+     </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+--- a/chrome/browser/resources/usb_internals/app.ts
++++ b/chrome/browser/resources/usb_internals/app.ts
+@@ -38,7 +38,7 @@ export class UsbInternalsAppElement exte
+     this.attachShadow({mode: 'open'});
+     const template = document.createElement('template');
+     template.innerHTML =
+-        UsbInternalsAppElement.template || window.trustedTypes!.emptyHTML;
++        ( UsbInternalsAppElement.template || window.trustedTypes!.emptyHTML ).toString();
+     this.shadowRoot!.appendChild(template.content.cloneNode(true));
+   }
+ 
+@@ -82,7 +82,7 @@ export class UsbInternalsAppElement exte
+     const response = await this.usbManagerTest_.getTestDevices();
+ 
+     const tableBody = this.$<HTMLElement>('#test-device-list');
+-    tableBody.innerHTML = window.trustedTypes!.emptyHTML;
++    tableBody.innerHTML = window.trustedTypes!.emptyHTML.toString();
+ 
+     const rowTemplate = this.$<HTMLTemplateElement>('#test-device-row');
+     const td = rowTemplate.content.querySelectorAll('td');
+--- a/chrome/browser/resources/usb_internals/devices_page.ts
++++ b/chrome/browser/resources/usb_internals/devices_page.ts
+@@ -50,7 +50,7 @@ export class DevicesPage {
+ 
+     const tableBody = this.root_.querySelector<HTMLElement>('#device-list');
+     assert(tableBody);
+-    tableBody.innerHTML = window.trustedTypes!.emptyHTML;
++    tableBody.innerHTML = window.trustedTypes!.emptyHTML.toString();
+ 
+     const rowTemplate =
+         this.root_.querySelector<HTMLTemplateElement>('#device-row');
+--- a/chrome/browser/resources/webui_gallery/demos/cr_icons/icons.html.ts
++++ b/chrome/browser/resources/webui_gallery/demos/cr_icons/icons.html.ts
+@@ -15,7 +15,7 @@ if (document.documentElement.hasAttribut
+       <g id="cake"><path d="M4.8 21.602c-.34 0-.624-.118-.855-.348a1.16 1.16 0 0 1-.343-.856v-4.796c0-.497.175-.922.527-1.274a1.735 1.735 0 0 1 1.27-.527H6V9.6c0-.496.176-.921.527-1.273a1.744 1.744 0 0 1 1.274-.527h3.3V6.449a2.783 2.783 0 0 1-.664-.625c-.16-.215-.238-.515-.238-.894 0-.235.043-.457.125-.668.086-.207.215-.403.399-.582l.953-.953.324-.153c.066 0 .176.043.324.125l.973.973c.183.183.316.383.39.59.075.21.114.433.114.668 0 .379-.078.68-.239.894-.16.219-.378.426-.664.625v1.352H16.2c.496 0 .918.176 1.274.527.351.352.527.777.527 1.274V13.8h.602c.492 0 .918.176 1.27.527.35.352.526.777.526 1.274v4.796c0 .34-.113.625-.343.856-.23.23-.516.348-.856.348Zm3-7.801h8.4V9.6H7.8Zm-2.402 6h13.204v-4.2H5.398Zm2.403-6h8.398Zm-2.403 6h13.204Zm13.204-6H5.398Zm0 0"></path></g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <cr-iconset name="desserts">
+@@ -24,7 +24,7 @@ if (document.documentElement.hasAttribut
+       <g id="cake"><path d="M4 22q-.425 0-.712-.288Q3 21.425 3 21v-5q0-.825.587-1.413Q4.175 14 5 14v-4q0-.825.588-1.413Q6.175 8 7 8h4V6.55q-.45-.3-.725-.725Q10 5.4 10 4.8q0-.375.15-.738.15-.362.45-.662L12 2l1.4 1.4q.3.3.45.662.15.363.15.738 0 .6-.275 1.025-.275.425-.725.725V8h4q.825 0 1.413.587Q19 9.175 19 10v4q.825 0 1.413.587Q21 15.175 21 16v5q0 .425-.288.712Q20.425 22 20 22Zm3-8h10v-4H7Zm-2 6h14v-4H5Zm2-6h10Zm-2 6h14Zm14-6H5h14Z"></g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/components/data_sharing/data_sharing_internals/resources/data_sharing_internals.ts
++++ b/components/data_sharing/data_sharing_internals/resources/data_sharing_internals.ts
+@@ -183,7 +183,7 @@ function initialize() {
+         });
+         const logMessage = logMessageContainer.insertRow();
+         logMessage.innerHTML =
+-            window.trustedTypes ? window.trustedTypes.emptyHTML : '';
++            window.trustedTypes ? window.trustedTypes.emptyHTML.toString() : '';
+         appendTD(logMessage, eventTimeStr, 'event-logs-time');
+         appendTD(logMessage, logSourceStr, 'event-logs-log-source');
+         appendTD(
+--- a/components/history_clusters/history_clusters_internals/resources/history_clusters_internals.ts
++++ b/components/history_clusters/history_clusters_internals/resources/history_clusters_internals.ts
+@@ -74,7 +74,7 @@ function initialize() {
+     if (logMessageContainer) {
+       const logmessage = logMessageContainer.insertRow();
+       const cell = logmessage.insertCell();
+-      cell.innerHTML = window.trustedTypes!.emptyHTML;
++      cell.innerHTML = window.trustedTypes!.emptyHTML.toString();
+       const pre = document.createElement('pre');
+       pre.textContent = message;
+       cell.appendChild(pre);
+--- a/components/metrics/debug/field_trials.ts
++++ b/components/metrics/debug/field_trials.ts
+@@ -101,7 +101,7 @@ export class TrialRow {
+         <button class="expand-button"></button>
+         <span class="trial-name"></span>
+       </div>
+-      <div class="trial-groups"></div>`;
++      <div class="trial-groups"></div>`.toString();
+ 
+     for (const group of trial.groups) {
+       this.overridden = this.overridden || group.forceEnabled;
+@@ -174,7 +174,7 @@ class ExperimentRow {
+         <label for="override">
+           Override <input type="checkbox" name="override">
+         </label>
+-      </div>`;
++      </div>`.toString();
+     if (group.enabled) {
+       this.root.dataset['enrolled'] = '1';
+     }
+--- a/components/optimization_guide/optimization_guide_internals/resources/optimization_guide_internals.ts
++++ b/components/optimization_guide/optimization_guide_internals/resources/optimization_guide_internals.ts
+@@ -438,7 +438,7 @@ function initialize() {
+         });
+         const logMessage = logMessageContainer.insertRow();
+         logMessage.innerHTML =
+-            window.trustedTypes ? window.trustedTypes.emptyHTML : '';
++            window.trustedTypes ? window.trustedTypes.emptyHTML.toString() : '';
+         appendTD(logMessage, eventTimeStr, 'event-logs-time');
+         appendTD(logMessage, logSourceStr, 'event-logs-log-source');
+         createChromiumSourceLink(
+--- a/components/sync/service/resources/sync_search.ts
++++ b/components/sync/service/resources/sync_search.ts
+@@ -107,7 +107,7 @@ export class SyncSearchManager {
+     this.selected_ = null;
+     this.selectedIndex_ = -1;
+     this.resultsControl_.innerHTML =
+-        window.trustedTypes ? window.trustedTypes.emptyHTML : '';
++        window.trustedTypes ? window.trustedTypes.emptyHTML.toString() : '';
+     this.resultsData_.forEach((item: object, index: number) => {
+       const li = document.createElement('li');
+       li.setAttribute('role', 'listitem');
+--- a/components/webui/flags/resources/icons.html.ts
++++ b/components/webui/flags/resources/icons.html.ts
+@@ -19,7 +19,7 @@ div.innerHTML = getTrustedHTML`
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+--- a/components/webui/safe_browsing/resources/safe_browsing.ts
++++ b/components/webui/safe_browsing/resources/safe_browsing.ts
+@@ -684,7 +684,7 @@ function addReferrerChain(ev: Event) {
+         assert(referrerChainContent);
+         // TrustedTypes is not supported on iOS
+         if (window.trustedTypes) {
+-          referrerChainContent.innerHTML = window.trustedTypes.emptyHTML;
++          referrerChainContent.innerHTML = window.trustedTypes.emptyHTML.toString();
+         } else {
+           referrerChainContent.innerHTML = '';
+         }
+@@ -698,7 +698,7 @@ function addReferringAppInfo(info: strin
+   assert(referringAppInfo);
+   // TrustedTypes is not supported on iOS
+   if (window.trustedTypes) {
+-    referringAppInfo.innerHTML = window.trustedTypes.emptyHTML;
++    referringAppInfo.innerHTML = window.trustedTypes.emptyHTML.toString();
+   } else {
+     referringAppInfo.innerHTML = '';
+   }
+@@ -717,7 +717,7 @@ function displayTailoredVerdictOverride(
+   assert(overrideContent);
+   // TrustedTypes is not supported on iOS
+   if (window.trustedTypes) {
+-    overrideContent.innerHTML = window.trustedTypes.emptyHTML;
++    overrideContent.innerHTML = window.trustedTypes.emptyHTML.toString();
+   } else {
+     overrideContent.innerHTML = '';
+   }
+--- a/components/webui/version/resources/about_version.ts
++++ b/components/webui/version/resources/about_version.ts
+@@ -159,7 +159,7 @@ async function copyActiveVariationsToCli
+  */
+ function announceCopy(id: string) {
+   const messagesDiv = getRequiredElement('messages');
+-  messagesDiv.innerHTML = window.trustedTypes!.emptyHTML;
++  messagesDiv.innerHTML = window.trustedTypes!.emptyHTML.toString();
+ 
+   // <if expr="is_macosx">
+   // VoiceOver on Mac does not seem to consistently read out the contents of
+--- a/content/browser/resources/histograms/histograms_internals.ts
++++ b/content/browser/resources/histograms/histograms_internals.ts
+@@ -39,7 +39,7 @@ function requestHistograms() {
+ 
+ /** Clears all loaded histograms on the webpage. */
+ function clearHistograms(): void {
+-  getRequiredElement('histograms').innerHTML = window.trustedTypes!.emptyHTML;
++  getRequiredElement('histograms').innerHTML = window.trustedTypes!.emptyHTML.toString();
+ }
+ 
+ /** Makes the subprocess checkbox disabled, and sets a tooltip. */
+--- a/content/browser/resources/traces_internals/icons.html.ts
++++ b/content/browser/resources/traces_internals/icons.html.ts
+@@ -17,7 +17,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <cr-iconset name="trace-report-icons" size="24">
+@@ -28,6 +28,6 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ }
+ document.head.appendChild(div.firstElementChild!);
+--- a/tools/polymer/html_to_wrapper.py
++++ b/tools/polymer/html_to_wrapper.py
+@@ -66,7 +66,7 @@ _LIT_ICONS_TEMPLATE = """import '%(schem
+ import {getTrustedHTML} from '%(scheme)s//resources/js/static_types.js';
+ 
+ const div = document.createElement('div');
+-div.innerHTML = getTrustedHTML`%(content)s`;
++div.innerHTML = getTrustedHTML`%(content)s`.toString();
+ const iconsets = div.querySelectorAll('cr-iconset');
+ for (const iconset of iconsets) {
+   document.head.appendChild(iconset);
+--- a/ui/webui/resources/cr_components/composebox/icons.html.ts
++++ b/ui/webui/resources/cr_components/composebox/icons.html.ts
+@@ -129,7 +129,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <cr-iconset name="composebox">
+@@ -252,7 +252,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/ui/webui/resources/cr_components/help_bubble/help_bubble_icons.html.ts
++++ b/ui/webui/resources/cr_components/help_bubble/help_bubble_icons.html.ts
+@@ -32,7 +32,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <cr-iconset name="iph" size="24">
+@@ -62,7 +62,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/ui/webui/resources/cr_components/localized_link/localized_link.ts
++++ b/ui/webui/resources/cr_components/localized_link/localized_link.ts
+@@ -116,7 +116,7 @@ export class LocalizedLinkElement extend
+   private getAriaLabelledContent_(localizedString: string, linkUrl: string):
+       string {
+     const tempEl = document.createElement('div');
+-    tempEl.innerHTML = sanitizeInnerHtml(localizedString, {attrs: ['id']});
++    tempEl.innerHTML = sanitizeInnerHtml(localizedString, {attrs: ['id']}).toString();
+ 
+     const ariaLabelledByIds: string[] = [];
+     tempEl.childNodes.forEach((node, index) => {
+@@ -174,7 +174,7 @@ export class LocalizedLinkElement extend
+         'id',
+         'tabindex',
+       ],
+-    });
++    }).toString();
+     const anchorTag = this.shadowRoot.querySelector('a');
+     if (anchorTag) {
+       anchorTag.addEventListener(
+--- a/ui/webui/resources/cr_elements/cr_a11y_announcer/cr_a11y_announcer.ts
++++ b/ui/webui/resources/cr_elements/cr_a11y_announcer/cr_a11y_announcer.ts
+@@ -88,7 +88,7 @@ export class CrA11yAnnouncerElement exte
+ 
+     this.currentTimeout_ = setTimeout(() => {
+       const messagesDiv = this.shadowRoot.querySelector('#messages')!;
+-      messagesDiv.innerHTML = window.trustedTypes!.emptyHTML;
++      messagesDiv.innerHTML = window.trustedTypes!.emptyHTML.toString();
+ 
+       // <if expr="is_macosx">
+       // VoiceOver on Mac does not seem to consistently read out the contents of
+--- a/ui/webui/resources/cr_elements/cr_toast/cr_toast_manager.ts
++++ b/ui/webui/resources/cr_elements/cr_toast/cr_toast_manager.ts
+@@ -61,7 +61,7 @@ export class CrToastManagerElement exten
+   }
+ 
+   get slottedHidden(): boolean {
+-    return this.$.slotted.hidden;
++    return Boolean(this.$.slotted.hidden);
+   }
+ 
+   override connectedCallback() {
+--- a/ui/webui/resources/cr_elements/icons.html.ts
++++ b/ui/webui/resources/cr_elements/icons.html.ts
+@@ -222,7 +222,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ } else {
+   div.innerHTML = getTrustedHTML`
+ <cr-iconset name="cr20" size="20">
+@@ -518,7 +518,7 @@ if (document.documentElement.hasAttribut
+       </g>
+     </defs>
+   </svg>
+-</cr-iconset>`;
++</cr-iconset>`.toString();
+ }
+ 
+ const iconsets = div.querySelectorAll('cr-iconset');
+--- a/ui/webui/resources/js/custom_element.ts
++++ b/ui/webui/resources/js/custom_element.ts
+@@ -25,7 +25,7 @@ export class CustomElement extends HTMLE
+     this.attachShadow({mode: 'open'});
+     const template = document.createElement('template');
+     template.innerHTML =
+-        (this.constructor as typeof CustomElement).template || emptyHTML();
++        ( (this.constructor as typeof CustomElement).template || emptyHTML() ).toString();
+     this.shadowRoot!.appendChild(template.content.cloneNode(true));
+   }
+ 

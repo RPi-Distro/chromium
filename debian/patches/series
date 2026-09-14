@@ -36,6 +36,7 @@ fixes/arm-logging.patch
 fixes/crubit.patch
 #fixes/glic.patch
 fixes/only-address-sanitizer.patch
+fixes/typescript-compat.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

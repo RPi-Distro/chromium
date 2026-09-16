@@ -67,6 +67,7 @@ system/rollup.patch
 system/llvm.patch
 system/rust-cbor.patch
 system/python.patch
+system/tsc.patch
 system/tsc2.patch
 
 #llvm-19/static-assert.patch
@@ -116,6 +117,7 @@ trixie/gn-inputs2.patch
 trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
+#trixie/gn-funcs.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

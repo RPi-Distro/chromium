@@ -67,6 +67,7 @@ system/rollup.patch
 system/llvm.patch
 system/rust-cbor.patch
 system/python.patch
+system/tsc.patch
 system/tsc2.patch
 
 #llvm-19/static-assert.patch

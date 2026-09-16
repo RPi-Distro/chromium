@@ -386,8 +386,7 @@ chromium (153.0.8010.47-1) UNRELEASED; urgency=high
     - disable/libei.patch: refresh.
     - disable/node-ts.patch: refresh.
     - trixie/gn-inputs2.patch: refresh [trixie, bookworm].
-    - trixie/revert-v8-sanitize.patch: drop
-XXX: check whether ^ still needed in trixie/bookworm
+    - trixie/revert-v8-sanitize.patch: drop, no longer needed.
     - trixie/gn-unused-vars.patch: drop w/ newer generate-ninja [sid].
     - llvm-22/clang22.patch: refresh and also drop Wno-stringop-overread.
     - ungoogled/disable-ai.patch: sync from u-c.

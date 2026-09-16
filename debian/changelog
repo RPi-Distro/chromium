@@ -1,3 +1,10 @@
+chromium (153.0.8010.47-2~deb13u1) trixie-security; urgency=high
+
+  [ Andres Salomon ]
+  * d/control: Change generate-ninja:native build-dep to generate-ninja.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 16 Sep 2026 19:27:42 -0400
+
 chromium (153.0.8010.47-1~deb13u1) trixie-security; urgency=high
 
   [ Andres Salomon ]

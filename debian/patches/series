@@ -114,6 +114,7 @@ trixie/gn-inputs2.patch
 #trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
+#trixie/gn-funcs.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

@@ -38,7 +38,7 @@ Build-Depends:
  bison,
  nodejs:any,
  node-rollup-plugin-terser:native,
- node-typescript (>= 6.0.0),
+ node-typescript,
  rollup,
  esbuild:native,
  xz-utils,

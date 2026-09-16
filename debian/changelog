@@ -404,6 +404,8 @@ XXX: check whether ^ still needed in trixie/bookworm
       bundled opus headers.
     - system/tsc2.patch: don't raise an assertion error about missing tsc
       stuff that we purposefully removed.
+    - debianization/strip-rlibs.patch: add patch to strip debugging symbols
+      from libstd-rust-dev's .rlibs before we use them.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

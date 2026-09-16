@@ -8,6 +8,7 @@ debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
 debianization/pre-gen.patch
 debianization/rust-disable-debugsym.patch
+debianization/strip-rlibs.patch
 
 fixes/ps-print.patch
 fixes/widevine-locations.patch

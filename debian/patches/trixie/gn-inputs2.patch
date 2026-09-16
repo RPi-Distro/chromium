@@ -17,19 +17,21 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
 
 --- a/build/config/siso/rust.star
 +++ b/build/config/siso/rust.star
-@@ -197,6 +197,11 @@ def __step_config(ctx, step_config):
-         # TODO(b/285225184): use precomputed subtree
+@@ -202,6 +202,13 @@ def __step_config(ctx, step_config):
          "third_party/rust-toolchain:toolchain",
+         "third_party/cpython3/linux-amd64:cpython3",
      ]
++
 +    rust_inputs = [
 +        "build/action_helpers.py",
 +        "build/gn_helpers.py",
 +        "build/rust/gni_impl/rustc_wrapper.py",
 +    ] + rust_toolchain
++
      rust_link_indirect_inputs = {
          "includes": [
              # https://crbug.com/488158799#comment21 explains why `rustc` requires
-@@ -240,7 +245,7 @@ def __step_config(ctx, step_config):
+@@ -245,7 +252,7 @@ def __step_config(ctx, step_config):
          {
              "name": "rust_bin",
              "action": "(.*_)?rust_bin",
@@ -38,7 +40,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
              "indirect_inputs": rust_link_indirect_inputs,
              "handler": "rust_link_handler",
              "deps": "none",  # disable gcc scandeps
-@@ -251,7 +256,7 @@ def __step_config(ctx, step_config):
+@@ -257,7 +264,7 @@ def __step_config(ctx, step_config):
          {
              "name": "rust_cdylib",
              "action": "(.*_)?rust_cdylib",
@@ -47,7 +49,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
              "indirect_inputs": rust_link_indirect_inputs,
              "handler": "rust_link_handler",
              "deps": "none",  # disable gcc scandeps
-@@ -262,7 +267,7 @@ def __step_config(ctx, step_config):
+@@ -269,7 +276,7 @@ def __step_config(ctx, step_config):
          {
              "name": "rust_macro",
              "action": "(.*_)?rust_macro",
@@ -56,7 +58,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
              "indirect_inputs": rust_link_indirect_inputs,
              "handler": "rust_link_handler",
              "deps": "none",  # disable gcc scandeps
-@@ -273,7 +278,7 @@ def __step_config(ctx, step_config):
+@@ -281,7 +288,7 @@ def __step_config(ctx, step_config):
          {
              "name": "rust_rlib",
              "action": "(.*_)?rust_rlib",
@@ -65,7 +67,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
              "indirect_inputs": rust_compile_indirect_inputs,
              "deps": "none",  # disable gcc scandeps
              "remote": remote,
-@@ -283,7 +288,7 @@ def __step_config(ctx, step_config):
+@@ -292,7 +299,7 @@ def __step_config(ctx, step_config):
          {
              "name": "rust_staticlib",
              "action": "(.*_)?rust_staticlib",
@@ -74,19 +76,19 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
              "indirect_inputs": rust_compile_indirect_inputs,
              "deps": "none",  # disable gcc scandeps
              "remote": remote,
-@@ -314,7 +319,7 @@ def __step_config(ctx, step_config):
+@@ -324,7 +331,7 @@ def __step_config(ctx, step_config):
          {
              "name": "rust/clippy",
-             "command_prefix": "python3 ../../build/rust/gni_impl/clippy_wrapper.py",
+             "command_prefix": platform.python_bin + " ../../build/rust/gni_impl/clippy_wrapper.py",
 -            "inputs": rust_toolchain,
 +            "inputs": rust_inputs,
              "indirect_inputs": rust_link_indirect_inputs,
              "remote": remote,
              "timeout": "2m",
-@@ -325,7 +330,7 @@ def __step_config(ctx, step_config):
+@@ -336,7 +343,7 @@ def __step_config(ctx, step_config):
              # TODO(b/356496947): need to run scandeps?
              "name": "rust/bindgen",
-             "command_prefix": "python3 ../../build/rust/gni_impl/run_bindgen.py",
+             "command_prefix": platform.python_bin + " ../../build/rust/gni_impl/run_bindgen.py",
 -            "inputs": rust_toolchain + clang_inputs,
 +            "inputs": rust_inputs + clang_inputs,
              "remote": False,
@@ -94,7 +96,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
          },
 --- a/build/toolchain/gcc_toolchain.gni
 +++ b/build/toolchain/gcc_toolchain.gni
-@@ -712,7 +712,6 @@ template("single_gcc_toolchain") {
+@@ -764,7 +764,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $libname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -102,7 +104,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_rlib") {
-@@ -745,7 +744,6 @@ template("single_gcc_toolchain") {
+@@ -797,7 +796,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link,metadata=$rmetaname -o $rlibname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -110,7 +112,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_bin") {
-@@ -767,7 +765,6 @@ template("single_gcc_toolchain") {
+@@ -819,7 +817,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $exename -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -118,7 +120,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_cdylib") {
-@@ -790,7 +787,6 @@ template("single_gcc_toolchain") {
+@@ -842,7 +839,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $dllname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -126,7 +128,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_dylib") {
-@@ -815,7 +811,6 @@ template("single_gcc_toolchain") {
+@@ -867,7 +863,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link,metadata=$rmetaname -o $dllname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative
@@ -134,7 +136,7 @@ Date:   Mon Mar 30 01:42:11 2026 -0700
        }
  
        tool("rust_macro") {
-@@ -838,7 +833,6 @@ template("single_gcc_toolchain") {
+@@ -890,7 +885,6 @@ template("single_gcc_toolchain") {
              "$rustc_common_args {{rustdeps}} {{externs}} SOURCES {{sources}}"
          command = "$rustc_wrapper --depfile=$depfile --emit=dep-info=$depfile,link -o $dllname -- -Clinker=\"${invoker.cxx}\" {{source}} LDFLAGS {{ldflags}} ${extra_ldflags} RUSTENV {{rustenv}}"
          rust_sysroot = rust_sysroot_relative

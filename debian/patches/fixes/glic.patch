@@ -1,0 +1,32 @@
+TODO: investigate why u-c doesn't see this issue despite using
+disable-ai.patch to turn off glic.
+
+
+--- a/chrome/browser/resources/glic/BUILD.gn
++++ b/chrome/browser/resources/glic/BUILD.gn
+@@ -85,7 +85,6 @@ build_webui("build") {
+   extra_grdp_files = [ "$target_gen_dir/glic_api_injection.grdp" ]
+ 
+   mojo_files_deps = [
+-    "glic_api_impl/generate_impl:generate_enum_conversions",
+     "//chrome/browser/glic:mojo_bindings_ts__generator",
+     "//chrome/common:actor_webui_mojom_ts__generator",
+     "//chrome/common:glic_enums_mojom_ts__generator",
+@@ -94,7 +93,6 @@ build_webui("build") {
+     "//third_party/blink/public/mojom/content_extraction:content_extraction_ts__generator",
+   ]
+   mojo_files = [
+-    "$target_gen_dir/glic_api_impl/generate_impl/enum_conversions.ts",
+     "$root_gen_dir/chrome/browser/glic/host/glic.mojom-webui.ts",
+     "$root_gen_dir/chrome/browser/glic/host/glic_internals.mojom-webui.ts",
+     "$root_gen_dir/chrome/common/actor_webui.mojom-webui.ts",
+--- a/chrome/browser/resources/glic/glic_api_impl/generate_impl/BUILD.gn
++++ b/chrome/browser/resources/glic/glic_api_impl/generate_impl/BUILD.gn
+@@ -20,7 +20,6 @@ action_with_pydeps("parse_mojom") {
+   inputs = [
+     "//chrome/browser/glic/host/glic.mojom",
+     "//chrome/common/actor_webui.mojom",
+-    "//chrome/common/glic_enums.mojom",
+     "//third_party/blink/public/mojom/content_extraction/ai_page_content_metadata.mojom",
+   ]
+   outputs = [ "$target_gen_dir/mojom_ast.json" ]

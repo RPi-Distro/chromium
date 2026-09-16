@@ -1,4 +1,4 @@
-chromium (153.0.8010.47-1) UNRELEASED; urgency=high
+chromium (153.0.8010.47-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -438,7 +438,7 @@ chromium (153.0.8010.47-1) UNRELEASED; urgency=high
   * d/rules: enable vaapi for arm64 because upstream has supported both
     v4l2_codec and vaapi since v152.
 
- -- Timothy Pearson <tpearson@debian.org>  Mon, 07 Sep 2026 10:02:00 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 16 Sep 2026 14:46:55 -0400
 
 chromium (152.0.7977.82-1) unstable; urgency=high
 

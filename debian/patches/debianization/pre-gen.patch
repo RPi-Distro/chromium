@@ -268,16 +268,13 @@ Also part of the framework:
    root_dir = os.path.relpath(args.root_dir, args.gen_dir)
    out_dir = os.path.relpath(args.out_dir, args.gen_dir)
  
-@@ -387,5 +393,11 @@ def main(argv):
+@@ -386,6 +392,8 @@ def main(argv):
+       ]
        json.dump(manifest_data, manifest_file)
  
- 
-+def debian_main_wrap():
-+    ret = main()
-+    if ret == 0:
-+      deb_pre_gen.after()
-+    return ret
++  deb_pre_gen.after()
 +
+ 
  if __name__ == '__main__':
    main(sys.argv[1:])
 --- a/ui/webui/resources/tools/bundle_js.py

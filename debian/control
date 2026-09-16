@@ -53,7 +53,7 @@ Build-Depends:
  libegl1-mesa-dev,
  libgles2-mesa-dev,
  libopenh264-dev,
- generate-ninja:any,
+ generate-ninja,
  mesa-common-dev,
  rapidjson-dev,
  libva-dev,

@@ -1,9 +1,9 @@
 chromium (153.0.8010.47-2) unstable; urgency=high
 
   [ Andres Salomon ]
-  * d/control: Change generate-ninja:native build-dep to generate-ninja:any.
+  * d/control: Change generate-ninja:native build-dep to generate-ninja.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 16 Sep 2026 17:20:09 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 16 Sep 2026 19:27:42 -0400
 
 chromium (153.0.8010.47-1) unstable; urgency=high
 

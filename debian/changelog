@@ -422,6 +422,7 @@ XXX: check whether ^ still needed in trixie/bookworm
     Get cross builds working again after various recent updates broke it,
     along with improvements in the overall approach and copy-editing of
     the documentation in the patch file.
+  * d/control: add versioning to the node-typescript build-dep [sid].
   * d/deb_pre_gen.py: Update to account for /usr/bin/ prefix on python3.
   * d/patches:
     - bookworm/gn-absl.patch: Refresh [bookworm].

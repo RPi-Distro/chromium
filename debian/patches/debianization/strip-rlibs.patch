@@ -1,0 +1,19 @@
+Author: Andres Salomon <dilinger@debian.org>
+
+In an attempt to reduce memory usage by lld (especially on armhf), when
+copying over .rlibs from libstd-rust-dev, strip out debugging symbols
+first.
+
+--- a/build/rust/std/find_std_rlibs.py
++++ b/build/rust/std/find_std_rlibs.py
+@@ -95,7 +95,9 @@ def main():
+                 if os.path.exists(outfile):
+                     st = os.stat(outfile)
+                     os.chmod(outfile, st.st_mode | stat.S_IWUSR)
+-                shutil.copy(infile, outfile)
++                #shutil.copy(infile, outfile)
++                cmd=f'D=`pwd`; T=`mktemp -d`; cd "$T"; ar x {infile} ; strip -d *.o; ar rv $D/{outfile} *.rmeta *.o ;  rm -rf "$T"'
++                subprocess.Popen(cmd, shell=True)
+ 
+         # Each rlib is named "lib<crate_name>-<metadata>.rlib". The metadata
+         # disambiguates multiple crates of the same name. We want to throw away the

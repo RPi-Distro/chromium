@@ -81,8 +81,9 @@ defines+=host_toolchain=\"//build/toolchain/linux/unbundle:default\"
 defines+=custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
 
 # set the appropriate cpu architecture
-DEB_HOST_ARCH_value := $(shell dpkg-architecture -qDEB_HOST_ARCH)
-DEB_HOST_ARCH ?= $(DEB_HOST_ARCH_value)
+gn_build_cpu:=$(shell echo $(DEB_BUILD_ARCH) \
+	| sed 's/amd64/x64/; s/armhf/arm/; s/i386/x86/; s/ppc64el/ppc64/')
+defines+=deb_build_cpu=\"$(gn_build_cpu)\"
 ifeq (i386,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"x86\" use_vaapi=true
 endif
@@ -90,7 +91,7 @@ ifeq (amd64,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"x64\" use_vaapi=true
 endif
 ifeq (arm64,$(DEB_HOST_ARCH))
-defines+=host_cpu=\"arm64\" use_v4l2_codec=true use_vaapi=false
+defines+=host_cpu=\"arm64\" use_v4l2_codec=true use_vaapi=true
 # use_av1_hw_decoder is enabled by default for vaapi, but disabled for
 # v4l2, we can remove it when chromium enables it for v4l2 by default
 defines+=use_av1_hw_decoder=true
@@ -209,6 +210,10 @@ set_up_esbuild:
 	tar -C debian/esbuild/root -Jxvf debian/esbuild/root/data.tar.xz
 
 override_dh_auto_configure: test_armhf_neon
+	test -n '$(DEB_HOST_ARCH)'
+	# use system tsc
+	./debian/scripts/customize-typescript.sh add "third_party/typescript/linux-amd64/src/lib"
+	./debian/scripts/customize-typescript.sh add "third_party/node/node_modules/typescript/lib"
 	# use system node w/out patching source; upstream hardcodes x64 in path
 	mkdir -p third_party/node/linux/node-linux-x64/bin
 	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin
@@ -238,7 +243,7 @@ override_dh_auto_build-arch:
 	cp out/Release/chrome_sandbox out/Release/chrome-sandbox
 	cp out/Release/locales/en-US.pak out/Release/resources
 	chmod 4755 out/Release/chrome-sandbox # suid sandbox
-	sed -e s/@@PACKAGE@@/chromium/g -e s/@@MENUNAME@@/chromium/g \
+	sed -e s/@@PACKAGE/chromium/g -e s/@@MENUNAME/chromium/g \
 	    < chrome/app/resources/manpage.1.in > out/Release/chromium.1
 
 override_dh_auto_build-indep:
@@ -258,6 +263,8 @@ override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_auto_clean:
+	rm -rf third_party/typescript/linux-amd64
+	./debian/scripts/customize-typescript.sh rm "third_party/node/node_modules/typescript/lib"
 	rm -rf debian/esbuild/root
 	rm -f pre-gen/arch
 	rm -rf third_party/devtools-frontend/src/third_party/esbuild

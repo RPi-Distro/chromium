@@ -7,6 +7,20 @@ so obviously bookworm's gn doesn't have it.
 The old webrtc code just hardcoded abseil-cpp:absl if building
 with chromium, which is simple enough..
 
+expand_directory() was added to gn in Apr 2026
+(https://gn.googlesource.com/gn/+/42ace47bb426ca9705175d866bb9bdf168d5535f)
+
+--- a/components/policy/BUILD.gn
++++ b/components/policy/BUILD.gn
+@@ -149,7 +149,7 @@ grit("translate_policy_templates") {
+              "resources/policy_templates_zh-TW.xtb",
+              "resources/policy_templates.py",
+              "tools/template_writers/policy_template_generator.py",
+-           ] + expand_directory("resources/templates", true)
++           ]
+ 
+   output_dir = "$root_gen_dir/chrome"
+   outputs = policy_templates_translation_outputs
 --- a/third_party/webrtc/webrtc.gni
 +++ b/third_party/webrtc/webrtc.gni
 @@ -568,16 +568,13 @@ template("rtc_test") {

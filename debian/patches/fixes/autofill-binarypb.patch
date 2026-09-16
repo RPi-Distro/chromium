@@ -20,6 +20,39 @@ protoc --decode_raw shows, for example:
 }
 
 
+--- a/components/autofill/core/browser/BUILD.gn
++++ b/components/autofill/core/browser/BUILD.gn
+@@ -232,7 +232,6 @@ grit("autofill_alternative_state_name_ma
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/CX.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/CY.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/CZ.binarypb",
+-      "geo/chrome_alternative_state_name_maps/data/binary_pb/DE.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/DJ.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/DK.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/DM.binarypb",
+@@ -244,7 +243,6 @@ grit("autofill_alternative_state_name_ma
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/EH.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/EMPTY.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/ER.binarypb",
+-      "geo/chrome_alternative_state_name_maps/data/binary_pb/ES.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/ET.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/FI.binarypb",
+       "geo/chrome_alternative_state_name_maps/data/binary_pb/FJ.binarypb",
+@@ -413,9 +411,7 @@ grit("autofill_alternative_state_name_ma
+   } else {
+     source = "geo/autofill_alternative_state_name_map_resources.grd"
+     inputs = [
+-      "geo/alternative_state_name_maps/DE.binarypb",
+       "geo/alternative_state_name_maps/EMTPY.binarypb",
+-      "geo/alternative_state_name_maps/ES.binarypb",
+     ]
+   }
+   outputs = [
+--- /dev/null
++++ b/components/autofill/core/browser/geo/alternative_state_name_maps/EMTPY.binarypb
+@@ -0,0 +1,2 @@
++
++
 --- a/components/autofill/core/browser/geo/autofill_alternative_state_name_map_resources.grd
 +++ b/components/autofill/core/browser/geo/autofill_alternative_state_name_map_resources.grd
 @@ -60,7 +60,7 @@
@@ -47,7 +80,3 @@ protoc --decode_raw shows, for example:
 -</grit>
 \ No newline at end of file
 +</grit>
---- /dev/null
-+++ b/components/autofill/core/browser/geo/alternative_state_name_maps/EMTPY.binarypb
-@@ -0,0 +1 @@
-+ 

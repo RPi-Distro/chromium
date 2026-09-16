@@ -24,10 +24,9 @@ add_tsc() {
 	cp -ra /usr/share/nodejs/typescript/lib/* "$d/"
 	cp /usr/share/nodejs/typescript/bin/* "$d/"
 	test -f "$parent/package.json" && cp "$parent/package.json" "$parent/package.json.bak" || true
-	ls "$parent" || true
 	cp /usr/share/nodejs/typescript/package.json "$parent/"
-	ls "$parent" || true
-	(cd "$d" && patch -p4 < $TSPATCH)
+	V=`tsc --version | sed 's/version //i'`
+	dpkg --compare-versions "$V" gt 6.0 && (cd "$d" && patch -p4 < $TSPATCH) || true
 }
 
 rm_tsc() {

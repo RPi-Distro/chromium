@@ -314,7 +314,11 @@ chromium (153.0.8010.36-1) UNRELEASED; urgency=high
     - CVE-2026-87593: Information leak in Editing. Reported by Google.
   * d/copyright:
     - delete //third_party/cpython3/.
+    - delete //third_party/node/node_modules/typescript/lib/.
   * d/control: add a build-dep on node-typescript.
+  * d/scripts/customize-typescript.sh: copy debian's node-typescript into
+    the chromium build tree and patch it to match what upstream uses.
+  * d/rules: call out to customize-typescript.sh where needed.
   * d/patches:
     - debianization/cross-build.patch: refresh.
     - debianization/rustc-bootstrap.patch: refresh.
@@ -336,8 +340,6 @@ XXX: check whether ^ still needed in trixie/bookworm
     - fixes/glic.patch: add another glic interface build fix.
     - fixes/autofill-binarypb.patch: add a new fix for the missing
       DE.binarypb blob.
-    - system/tsc.patch: add patch to use debian's node-typescript instead
-      of the bundled one.
     - fixes/only-address-sanitizer.patch: add patch to fix undefined
       __sanitizer_set_death_callback() symbols.
     - system/opus.patch: fix additional locations that were including

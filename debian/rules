@@ -212,6 +212,9 @@ set_up_esbuild:
 
 override_dh_auto_configure: test_armhf_neon
 	test -n '$(DEB_HOST_ARCH)'
+	# use system tsc
+	./debian/scripts/customize-typescript.sh add "third_party/typescript/linux-amd64/src/lib"
+	./debian/scripts/customize-typescript.sh add "third_party/node/node_modules/typescript/lib"
 	# use system node w/out patching source; upstream hardcodes x64 in path
 	mkdir -p third_party/node/linux/node-linux-x64/bin
 	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin
@@ -265,6 +268,8 @@ override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_auto_clean:
+	rm -rf third_party/typescript/linux-amd64
+	./debian/scripts/customize-typescript.sh rm "third_party/node/node_modules/typescript/lib"
 	rm -rf debian/esbuild/root
 	rm -f pre-gen/arch
 	rm -rf third_party/devtools-frontend/src/third_party/esbuild

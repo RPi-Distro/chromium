@@ -145,6 +145,7 @@ Files-Excluded:
  third_party/node/node_modules/acorn
  third_party/node/node_modules/chai/chai.js
  third_party/node/node_modules/mocha/mocha.js
+ third_party/node/node_modules/typescript/lib
  third_party/openh264/BUILD.gn
  third_party/openh264/src
  third_party/openscreen/src/buildtools

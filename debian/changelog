@@ -1,4 +1,11 @@
-chromium (153.0.8010.47-1~deb12u1) UNRELEASED; urgency=high
+chromium (153.0.8010.47-2~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * d/control: Change generate-ninja:native build-dep to generate-ninja.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 16 Sep 2026 19:27:42 -0400
+
+chromium (153.0.8010.47-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -386,8 +393,7 @@ chromium (153.0.8010.47-1~deb12u1) UNRELEASED; urgency=high
     - disable/libei.patch: refresh.
     - disable/node-ts.patch: refresh.
     - trixie/gn-inputs2.patch: refresh [trixie, bookworm].
-    - trixie/revert-v8-sanitize.patch: drop
-XXX: check whether ^ still needed in trixie/bookworm
+    - trixie/revert-v8-sanitize.patch: drop, no longer needed.
     - trixie/gn-unused-vars.patch: drop w/ newer generate-ninja [sid].
     - llvm-22/clang22.patch: refresh and also drop Wno-stringop-overread.
     - ungoogled/disable-ai.patch: sync from u-c.
@@ -436,7 +442,7 @@ XXX: check whether ^ still needed in trixie/bookworm
   * d/rules: Update template-variable convention used when generating the
     man page, to match an upstream change (crrev.com/c/7253206).
 
- -- Timothy Pearson <tpearson@debian.org>  Mon, 07 Sep 2026 10:02:00 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 16 Sep 2026 14:46:55 -0400
 
 chromium (152.0.7977.82-1~deb12u1) bookworm-security; urgency=high
 

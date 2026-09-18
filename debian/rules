@@ -85,8 +85,9 @@ defines+=host_toolchain=\"//build/toolchain/linux/unbundle:default\"
 defines+=custom_toolchain=\"//build/toolchain/linux/unbundle:default\"
 
 # set the appropriate cpu architecture
-DEB_HOST_ARCH_value := $(shell dpkg-architecture -qDEB_HOST_ARCH)
-DEB_HOST_ARCH ?= $(DEB_HOST_ARCH_value)
+gn_build_cpu:=$(shell echo $(DEB_BUILD_ARCH) \
+	| sed 's/amd64/x64/; s/armhf/arm/; s/i386/x86/; s/ppc64el/ppc64/')
+defines+=deb_build_cpu=\"$(gn_build_cpu)\"
 ifeq (i386,$(DEB_HOST_ARCH))
 defines+=host_cpu=\"x86\" use_vaapi=true
 endif
@@ -216,6 +217,10 @@ test_armhf_neon:
 	fi
 
 override_dh_auto_configure: test_armhf_neon
+	test -n '$(DEB_HOST_ARCH)'
+	# use system tsc
+	./debian/scripts/customize-typescript.sh add "third_party/typescript/linux-amd64/src/lib"
+	./debian/scripts/customize-typescript.sh add "third_party/node/node_modules/typescript/lib"
 	# use system node w/out patching source; upstream hardcodes x64 in path
 	mkdir -p third_party/node/linux/node-linux-x64/bin
 	cp /usr/bin/node third_party/node/linux/node-linux-x64/bin
@@ -244,7 +249,7 @@ override_dh_auto_build-arch:
 	cp out/Release/chrome_sandbox out/Release/chrome-sandbox
 	cp out/Release/locales/en-US.pak out/Release/resources
 	chmod 4755 out/Release/chrome-sandbox # suid sandbox
-	sed -e s/@@PACKAGE@@/chromium/g -e s/@@MENUNAME@@/chromium/g \
+	sed -e s/@@PACKAGE/chromium/g -e s/@@MENUNAME/chromium/g \
 	    < chrome/app/resources/manpage.1.in > out/Release/chromium.1
 
 override_dh_auto_build-indep:
@@ -264,6 +269,8 @@ override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 
 override_dh_auto_clean:
+	rm -rf third_party/typescript/linux-amd64
+	./debian/scripts/customize-typescript.sh rm "third_party/node/node_modules/typescript/lib"
 	rm -f pre-gen/arch
 	rm -rf third_party/devtools-frontend/src/third_party/esbuild
 	rm -rf third_party/devtools-frontend/src/node_modules/esbuild

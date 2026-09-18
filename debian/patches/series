@@ -8,6 +8,7 @@ debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
 debianization/pre-gen.patch
 #debianization/rust-disable-debugsym.patch
+#debianization/strip-rlibs.patch
 
 fixes/ps-print.patch
 #fixes/widevine-locations.patch
@@ -33,7 +34,9 @@ fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/arm-logging.patch
-
+fixes/crubit.patch
+#fixes/glic.patch
+fixes/only-address-sanitizer.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -63,6 +66,9 @@ system/rapidjson.patch
 system/rollup.patch
 system/llvm.patch
 system/rust-cbor.patch
+system/python.patch
+system/tsc.patch
+system/tsc2.patch
 
 #llvm-19/static-assert.patch
 #llvm-19/clang-19-crash.patch
@@ -107,10 +113,11 @@ trixie/gn-len.patch
 trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
-trixie/revert-v8-sanitize.patch
+#trixie/revert-v8-sanitize.patch
 trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
+trixie/gn-funcs.patch
 
 #bookworm/strlcpy.patch
 #bookworm/dq-forward-iterator.patch
@@ -228,7 +235,6 @@ ppc64le/fixes/fix-page-allocator-overflow.patch
 ppc64le/fixes/fix-different-data-layouts.patch
 
 ppc64le/v8/0001-Enable-ppc64-pointer-compression.patch
-ppc64le/v8/0002-Add-ppc64-trap-instructions.patch
 
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
 ppc64le/third_party/0005-blink-add-audio-vector-support.patch

@@ -6,7 +6,7 @@ we re-add libei.
 
 --- a/remoting/host/BUILD.gn
 +++ b/remoting/host/BUILD.gn
-@@ -668,7 +668,6 @@ static_library("common") {
+@@ -704,7 +704,6 @@ static_library("common") {
      deps += [
        "//remoting/host/linux:platform_impls",
        "//remoting/host/linux:utils",
@@ -16,10 +16,10 @@ we re-add libei.
        "//ui/gfx/x",
 --- a/remoting/host/linux/BUILD.gn
 +++ b/remoting/host/linux/BUILD.gn
-@@ -345,7 +345,6 @@ source_set("platform_impls") {
-     "//remoting/host/security_key",
+@@ -353,7 +353,6 @@ source_set("platform_impls") {
      "//remoting/proto",
      "//remoting/protocol",
+     "//sandbox/linux:seccomp_bpf",
 -    "//third_party/libei",
      "//third_party/webrtc_overrides:webrtc_component",
      "//ui/base",

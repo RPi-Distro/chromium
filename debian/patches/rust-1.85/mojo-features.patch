@@ -17,5 +17,5 @@
  // found in the LICENSE file.
 +#![feature(ptr_as_ref_unchecked)]
  
+ pub mod buffer;
  pub mod data_pipe;
- pub mod message;

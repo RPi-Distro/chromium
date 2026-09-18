@@ -15,7 +15,7 @@ Forwarded: no
 
 --- a/tools/protoc_wrapper/protoc_wrapper.py
 +++ b/tools/protoc_wrapper/protoc_wrapper.py
-@@ -219,8 +219,16 @@ def main(argv):
+@@ -248,9 +248,17 @@ def main(argv):
  
    if options.plugin_out_dir:
      plugin_options = FormatGeneratorOptions(options.plugin_options)
@@ -28,8 +28,9 @@ Forwarded: no
 +    if os.environ.get('HOST_EXEC_WRAPPER') and os.sep not in plugin_path:
 +      plugin_path = os.path.join('.', plugin_path)
      protoc_cmd += [
--      "--plugin", "protoc-gen-plugin=" + os.path.relpath(options.plugin),
-+      "--plugin", "protoc-gen-plugin=" + plugin_path,
-       "--plugin_out", plugin_options + options.plugin_out_dir
+       "--plugin",
+-      "protoc-gen-plugin=" + os.path.relpath(options.plugin),
++      "protoc-gen-plugin=" + plugin_path,
+       "--plugin_out",
+       plugin_options + options.plugin_out_dir,
      ]
- 

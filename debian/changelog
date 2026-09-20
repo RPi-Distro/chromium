@@ -1,4 +1,4 @@
-chromium (1:153.0.8010.47-2~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:153.0.8010.52-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -39,7 +39,36 @@ chromium (1:153.0.8010.47-2~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 18 Sep 2026 02:52:18 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Sun, 20 Sep 2026 05:38:42 +0100
+
+chromium (153.0.8010.52-1~deb13u1) trixie-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-93374: Use after free in Dawn. Reported by Florian Schweitzer.
+    - CVE-2026-93372: Buffer overflow in WebGL. Reported by Google.
+    - CVE-2026-93375: Incorrect reference resolution in Tracing.
+      Reported by M. Fauzan Wijaya (Gh05t666nero).
+    - CVE-2026-93382: Use after free in PDFium.
+      Reported by WinD39 - Huynh Dinh Vu.
+    - CVE-2026-93387: Improper state validation in Skia. Reported by Google.
+    - CVE-2026-93373: Use after free in Extensions. Reported by Google.
+    - CVE-2026-93381: Buffer overflow in PDFium.
+      Reported by SeungMyung Lee (@sm1ee), Siung kim (@ksw9722).
+    - CVE-2026-93379: Incorrect authorization in ORB.
+      Reported by OGINOME Tomohito.
+    - CVE-2026-93377: Type confusion in V8. Reported by Google.
+    - CVE-2026-93380: Race condition in FileSystem. Reported by Google.
+    - CVE-2026-93384: Server-side request forgery in Omnibox.
+      Reported by Google.
+    - CVE-2026-93383: Information leak in Permissions. Reported by Google.
+    - CVE-2026-93376: Out of bounds read in DataTransfer. Reported by Google.
+    - CVE-2026-93378: Missing authorization in Storage. Reported by Google.
+    - CVE-2026-93385: Information leak in Paint. Reported by Google.
+    - CVE-2026-93386: UI misrepresentation in WebAppInstalls.
+      Reported by Google.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 
 chromium (153.0.8010.47-2~deb13u1) trixie-security; urgency=high
 

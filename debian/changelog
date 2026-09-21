@@ -1,3 +1,13 @@
+chromium (154.0.8037.44-1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/patches:
+    - debianization/pre-gen.patch: rework clang argument filtering due to
+      upstream changes.
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
+
 chromium (153.0.8010.52-1) unstable; urgency=high
 
   [ Andres Salomon ]

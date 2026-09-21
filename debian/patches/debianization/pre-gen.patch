@@ -19,8 +19,8 @@ Also part of the framework:
 
 --- a/build/rust/gni_impl/filter_clang_args.py
 +++ b/build/rust/gni_impl/filter_clang_args.py
-@@ -12,6 +12,9 @@ which load plugins).
- This function filters them out.
+@@ -28,6 +28,9 @@ options (e.g. linker inputs or `/TP` in
+ unknown synthesized arguments.
  """
  
 +import os
@@ -29,24 +29,30 @@ Also part of the framework:
  
  def filter_clang_args(clangargs):
  
-@@ -27,6 +30,17 @@ def filter_clang_args(clangargs):
-                     i += 2
-             elif args[i] == '-ftime-trace':
-                 pass
+@@ -58,6 +61,23 @@ def filter_clang_args(clangargs):
+                 i += 1
+                 continue
+ 
 +            # Debian filtering
-+            elif deb_clang_target and args[i].startswith('--target='):
-+                yield f'--target={deb_clang_target}'
-+            elif deb_clang_target and args[i].startswith('-W'):
-+                pass
-+            elif deb_clang_target and args[i].startswith('-f') and args[i] != '-fparse-all-comments':
-+                pass
-+            elif deb_clang_target and args[i] == '-mllvm':
-+                i += 1
-+            elif deb_clang_target and args[i].startswith('-m'):
-+                pass
-             else:
-                 yield args[i]
-             i += 1
++            if deb_clang_target:
++                if arg.startswith('--target='):
++                    i += 1
++                    yield f'--target={deb_clang_target}'
++                    continue
++
++                if arg.startswith('-f') and arg != '-fparse-all-comments':
++                    i += 1
++                    continue
++
++                if arg.startswith('-m'):
++                    i += 1
++                    if arg == '-mllvm':
++                        i += 1  # skip an extra arg
++                    continue
++
+             # Filter all warning flags (Clang/GCC -W*, clang-cl /W*, /wd*,
+             # /clang:-W*) and warning-as-error flags (-Werror, /WX).
+             if (
 --- a/build/rust/gni_impl/run_bindgen.py
 +++ b/build/rust/gni_impl/run_bindgen.py
 @@ -24,6 +24,8 @@ import action_helpers
@@ -167,7 +173,7 @@ Also part of the framework:
  _CURRENT_DIR = path.join(path.dirname(__file__))
  
  ROOT_DIRECTORY_OF_REPOSITORY = path.join(_CURRENT_DIR, '..', '..', '..')
-@@ -241,6 +244,9 @@ def main():
+@@ -239,6 +242,9 @@ def main():
      runs_in_node_cjs_environment = opts.runs_in == 'node_cjs'
      runs_in_node_esm_environment = opts.runs_in == 'node_esm'
  
@@ -177,7 +183,7 @@ Also part of the framework:
      def get_relative_path_from_output_directory(file_to_resolve):
          return path.relpath(path.join(os.getcwd(), file_to_resolve),
                              tsconfig_output_directory)
-@@ -344,5 +350,12 @@ def main():
+@@ -379,5 +385,12 @@ def main():
      return 0
  
  

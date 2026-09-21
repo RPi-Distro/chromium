@@ -11,6 +11,10 @@ chromium (154.0.8037.44-1) UNRELEASED; urgency=high
     - ungoogled/disable-ai.patch: sync from u-c
     - ungoogled/disable-mei-preload.patch: sync from u-c
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c
+    - fixes/crubit.patch: drop
+    - system/rust-cbor.patch: drop
+    - ungoogled/crubit.patch: add a patch pulled from u-c, which includes
+      stuff from fixes/crubit.patch and system/rust-cbor.patch.. plus more.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 

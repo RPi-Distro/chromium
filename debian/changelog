@@ -15,6 +15,9 @@ chromium (154.0.8037.44-1) UNRELEASED; urgency=high
     - system/rust-cbor.patch: drop
     - ungoogled/crubit.patch: add a patch pulled from u-c, which includes
       stuff from fixes/crubit.patch and system/rust-cbor.patch.. plus more.
+    - ungoogled/verification-tokens.patch: add a patch pulled from u-c to
+      fix a build failure related to private verification tokens. Two week
+      release cycle is awesomesauce.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 

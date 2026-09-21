@@ -5,6 +5,12 @@ chromium (154.0.8037.44-1) UNRELEASED; urgency=high
   * d/patches:
     - debianization/pre-gen.patch: rework clang argument filtering due to
       upstream changes.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - llvm-22/clang22.patch: refresh.
+    - ungoogled/disable-ai.patch: sync from u-c
+    - ungoogled/disable-mei-preload.patch: sync from u-c
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 

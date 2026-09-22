@@ -36,6 +36,7 @@ fixes/bytemuck.patch
 fixes/arm-logging.patch
 #fixes/glic.patch
 fixes/only-address-sanitizer.patch
+fixes/tsc-split-comp.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch

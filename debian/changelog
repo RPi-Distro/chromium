@@ -18,6 +18,7 @@ chromium (154.0.8037.44-1) UNRELEASED; urgency=high
     - ungoogled/verification-tokens.patch: add a patch pulled from u-c to
       fix a build failure related to private verification tokens. Two week
       release cycle is awesomesauce.
+    - fixes/tsc-split-comp.patch: add a build fix for debian's typescript.
 
  -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 

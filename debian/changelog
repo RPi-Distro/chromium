@@ -26,6 +26,12 @@ chromium (154.0.8037.44-1) UNRELEASED; urgency=high
       release cycle is awesomesauce.
     - fixes/tsc-split-comp.patch: add a build fix for debian's typescript.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - fixes/fix-rust-linking.patch: refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+
  -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 
 chromium (153.0.8010.52-1) unstable; urgency=high

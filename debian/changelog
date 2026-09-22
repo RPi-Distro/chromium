@@ -32,6 +32,15 @@ chromium (154.0.8037.57-1) UNRELEASED; urgency=high
     - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
       changes
 
+  [ Daniel Richard G. ]
+  * d/deb_pre_gen.py: Handle new arg signature of generate_css_js_files.js,
+    and the new run_with_restat.py script; also streamline regexes a bit.
+  * d/patches:
+    - debianization/pre-gen.patch: Handle run_with_restat.py script, and
+      neuter run_with_stamp.py.
+    - trixie/gn-unused-vars.patch: Refresh.
+  * d/rules: Set njobs for the init-pre-gen target for a faster GN build.
+
  -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 
 chromium (153.0.8010.52-1) unstable; urgency=high

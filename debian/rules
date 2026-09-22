@@ -349,6 +349,7 @@ check-version:
 	rm tmp.versions.*
 
 # create the orig-pre-gen source tarball
+init-pre-gen: njobs=$(shell nproc)
 init-pre-gen: override_dh_auto_clean out/Release/gn
 	test -s .pc/applied-patches  # are patches applied?
 	rm -rf pre-gen

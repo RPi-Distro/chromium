@@ -29,7 +29,7 @@ Also part of the framework:
  
  def filter_clang_args(clangargs):
  
-@@ -58,6 +61,23 @@ def filter_clang_args(clangargs):
+@@ -58,6 +61,21 @@ def filter_clang_args(clangargs):
                  i += 1
                  continue
  
@@ -39,11 +39,9 @@ Also part of the framework:
 +                    i += 1
 +                    yield f'--target={deb_clang_target}'
 +                    continue
-+
 +                if arg.startswith('-f') and arg != '-fparse-all-comments':
 +                    i += 1
 +                    continue
-+
 +                if arg.startswith('-m'):
 +                    i += 1
 +                    if arg == '-mllvm':
@@ -55,16 +53,17 @@ Also part of the framework:
              if (
 --- a/build/rust/gni_impl/run_bindgen.py
 +++ b/build/rust/gni_impl/run_bindgen.py
-@@ -24,6 +24,8 @@ import action_helpers
+@@ -24,6 +24,9 @@ import action_helpers
  
  from filter_clang_args import filter_clang_args
  
 +sys.path.append('../../debian')
 +import deb_pre_gen
++
  
  def PrependVersionLine(filepath):
      # Prepending a version line accomplishes two goals:
-@@ -85,6 +87,9 @@ def main():
+@@ -85,6 +88,9 @@ def main():
      )
      args = parser.parse_args()
  
@@ -74,7 +73,7 @@ Also part of the framework:
      # Abort if `TARGET` exists in the environment. Cargo sets `TARGET` when
      # running build scripts and bindgen will try to be helpful by using that value
      # if it's set. In practice we've seen a case where someone had the value set
-@@ -162,6 +167,7 @@ def main():
+@@ -162,6 +168,7 @@ def main():
                  pass
              raise
  
@@ -161,6 +160,57 @@ Also part of the framework:
  
  // Construct and write the `devtools.json`.
  const devtools = {
+--- a/third_party/devtools-frontend/src/scripts/build/run_with_restat.py
++++ b/third_party/devtools-frontend/src/scripts/build/run_with_restat.py
+@@ -37,6 +37,9 @@ if _SCRIPTS_BUILD_DIR not in sys.path:
+ 
+ from response_file import expand_response_files
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ 
+ def hash_file(path):
+     h = hashlib.sha1()
+@@ -68,6 +71,11 @@ def main():
+         print("Error: No command specified after '--'", file=sys.stderr)
+         sys.exit(1)
+ 
++    if deb_pre_gen.before(tracked_files[0], indep=True):
++        sys.exit(0)
++    assert command_args[0].endswith("tsc"), \
++      "Script is no longer being used exclusively with tsc"
++
+     # Record existing state of tracked output files (nanosecond precision)
+     before_state = {}
+     for path in tracked_files:
+@@ -96,6 +104,8 @@ def main():
+             except OSError:
+                 pass
+ 
++    deb_pre_gen.after()
++
+     sys.exit(0)
+ 
+ 
+--- a/third_party/devtools-frontend/src/scripts/build/run_with_stamp.py
++++ b/third_party/devtools-frontend/src/scripts/build/run_with_stamp.py
+@@ -58,6 +58,15 @@ def main():
+         print("Error: No command specified to run", file=sys.stderr)
+         sys.exit(1)
+ 
++    # Debian: This script seems to be used to run checks only, not produce
++    # any output files (stamp aside). Instead of hooking in to deb_pre_gen,
++    # just handle it as a no-op outside of the generation process.
++    if os.environ.get("DEB_CR_PRE_GEN") == "generate":
++        assert command_args[0].endswith("tsc"), \
++          "Script is no longer being used exclusively with tsc"
++    else:
++        command_args = [ "true" ]
++
+     ret = subprocess.call(command_args)
+     if ret != 0:
+         if ret < 0:
 --- a/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
 +++ b/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
 @@ -14,6 +14,9 @@ import re

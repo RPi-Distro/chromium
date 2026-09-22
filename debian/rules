@@ -189,6 +189,8 @@ DIST := $(shell dpkg-parsechangelog -l debian/changelog  | sed -n 's/^Distributi
 %:
 	dh $@
 
+out/Release/gn:
+	./tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles -j$(njobs)
 
 # don't build armhf on build systems that lack NEON
 test_armhf_neon:
@@ -239,8 +241,8 @@ override_dh_auto_configure: test_armhf_neon
 	# setup for pre-generation framework
 	test ! -d pre-gen || ln -sf $(DEB_HOST_ARCH) pre-gen/arch
 
-override_dh_auto_build-arch:
-	gn gen out/Release --args="$(defines)"
+override_dh_auto_build-arch: out/Release/gn
+	./out/Release/gn gen out/Release --args="$(defines)"
 	ninja $(CR_VERBOSE) -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
 	cp out/Release/chrome out/Release/chromium
 	cp out/Release/content_shell out/Release/chromium-shell
@@ -251,8 +253,8 @@ override_dh_auto_build-arch:
 	sed -e s/@@PACKAGE/chromium/g -e s/@@MENUNAME/chromium/g \
 	    < chrome/app/resources/manpage.1.in > out/Release/chromium.1
 
-override_dh_auto_build-indep:
-	gn gen out/Release --args="$(defines)"
+override_dh_auto_build-indep: out/Release/gn
+	./out/Release/gn gen out/Release --args="$(defines)"
 	ninja $(CR_VERBOSE) -j$(njobs) -C out/Release packed_resources
 	rm -f out/Release/locales/en-US.pak
 
@@ -347,11 +349,10 @@ check-version:
 	rm tmp.versions.*
 
 # create the orig-pre-gen source tarball
-init-pre-gen:
+init-pre-gen: override_dh_auto_clean out/Release/gn
 	test -s .pc/applied-patches  # are patches applied?
 	rm -rf pre-gen
 	rm -fv ../chromium_$(version).orig-pre-gen.tar.xz
-	dh clean
 	debian/rules override_dh_auto_configure
-	gn gen out/Release --args="$(defines)"
+	./out/Release/gn gen out/Release --args="$(defines)"
 	debian/scripts/init-pre-gen.sh

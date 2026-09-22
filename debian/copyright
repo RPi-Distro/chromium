@@ -190,7 +190,6 @@ Files-Excluded:
  third_party/zstd
  tools/android
  tools/emacs
- tools/gn
  tools/luci-go
  tools/page_cycler/acid3
  tools/perf/contrib

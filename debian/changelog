@@ -2,6 +2,12 @@ chromium (154.0.8037.44-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+  * d/control: remove generate-ninja build-dep.
+  * d/copyright: stop deleting tools/gn/.
+  * d/rules: restore old code that builds the bundled version of
+    generate-ninja as part of the chromium build. Upstream keeps using
+    brand new gn features (sometimes not even available in sid yet) and
+    we're carrying too many patches to work around that.
   * d/patches:
     - debianization/pre-gen.patch: rework clang argument filtering due to
       upstream changes.

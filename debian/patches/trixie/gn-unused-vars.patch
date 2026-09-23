@@ -34,7 +34,7 @@ in July 2026.
 
 --- a/.gn
 +++ b/.gn
-@@ -175,9 +175,3 @@ exec_script_allowlist =
+@@ -176,9 +176,3 @@ exec_script_whitelist =
        # set. If/when a 'proper' GN build for Mesa exists, this can be removed.
        "//third_party/dawn/third_party/meson/meson_target.gni",
      ]
@@ -46,7 +46,7 @@ in July 2026.
 -    ]
 --- a/build/config/BUILDCONFIG.gn
 +++ b/build/config/BUILDCONFIG.gn
-@@ -625,7 +625,6 @@ foreach(_target_type,
+@@ -626,7 +626,6 @@ foreach(_target_type,
        }
  
        if (!defined(generate_modulemap)) {
@@ -54,7 +54,7 @@ in July 2026.
        }
  
        if (use_libcxx_modules) {
-@@ -755,7 +754,6 @@ foreach(_target_type,
+@@ -762,7 +761,6 @@ foreach(_target_type,
        }
  
        if (!defined(generate_modulemap)) {
@@ -89,7 +89,7 @@ in July 2026.
        outputs += [ "$target_gen_dir/$_input" ]
 --- a/third_party/devtools-frontend/src/scripts/build/ninja/devtools_entrypoint.gni
 +++ b/third_party/devtools-frontend/src/scripts/build/ninja/devtools_entrypoint.gni
-@@ -197,9 +197,6 @@ template("devtools_entrypoint") {
+@@ -215,9 +215,6 @@ template("legacy_devtools_entrypoint") {
    node_action(target_name) {
      script = "scripts/build/ninja/generate-tsconfig.js"
  
@@ -99,29 +99,17 @@ in July 2026.
      args = [
               rebase_path(_generated_tsconfig_location, root_build_dir),
               rebase_path(invoker.entrypoint, root_build_dir),
---- a/third_party/devtools-frontend/src/scripts/build/ninja/devtools_pre_built.gni
-+++ b/third_party/devtools-frontend/src/scripts/build/ninja/devtools_pre_built.gni
-@@ -17,9 +17,6 @@ template("devtools_pre_built") {
- 
-     public_deps = invoker.deps
- 
--    # Expose ts files to dependent targets.
--    public_inputs = filter_include(sources, [ "*.ts" ])
--
-     _copy_src = rebase_path(get_path_info(target_name, "dir"), root_build_dir)
-     _copy_dest = rebase_path(target_gen_dir, root_build_dir)
- 
 --- a/third_party/devtools-frontend/src/scripts/build/typescript/typescript.gni
 +++ b/third_party/devtools-frontend/src/scripts/build/typescript/typescript.gni
-@@ -207,6 +207,7 @@ template("ts_library") {
-     output_files = [ "$target_gen_dir/$target_name-tsconfig.json" ]
+@@ -204,6 +204,7 @@ template("legacy_ts_library") {
+     ]
  
      if (defined(sources)) {
 +      if (false) {  ### unused
        # Expose ts files to dependent targets.
        public_inputs =
            filter_include(sources,
-@@ -217,6 +218,7 @@ template("ts_library") {
+@@ -214,6 +215,7 @@ template("legacy_ts_library") {
                             # and remove them from this list.
                             "*ahem.js",
                           ])

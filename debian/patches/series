@@ -34,9 +34,9 @@ fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/arm-logging.patch
-fixes/crubit.patch
 #fixes/glic.patch
 fixes/only-address-sanitizer.patch
+fixes/tsc-split-comp.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -65,7 +65,6 @@ system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
 system/llvm.patch
-system/rust-cbor.patch
 system/python.patch
 system/tsc.patch
 system/tsc2.patch
@@ -164,6 +163,8 @@ ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
 ungoogled/remove-navigation-source-param.patch
 ungoogled/disable-tos-dialog.patch
+ungoogled/crubit.patch
+ungoogled/verification-tokens.patch
 
 # i386 support
 i386/support-i386.patch

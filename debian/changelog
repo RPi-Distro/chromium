@@ -25,6 +25,8 @@ chromium (154.0.8037.57-1) UNRELEASED; urgency=high
       fix a build failure related to private verification tokens. Two week
       release cycle is awesomesauce.
     - fixes/tsc-split-comp.patch: add a build fix for debian's typescript.
+    - ungoogled/disable-ai-search-shortcuts.patch: add patch to disable the
+      new AI button and the @gemini/@aimode shortcuts (closes: #1146746).
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

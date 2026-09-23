@@ -163,6 +163,7 @@ ungoogled/remove-navigation-source-param.patch
 ungoogled/disable-tos-dialog.patch
 ungoogled/crubit.patch
 ungoogled/verification-tokens.patch
+ungoogled/disable-ai-search-shortcuts.patch
 
 # i386 support
 i386/support-i386.patch

@@ -41,6 +41,11 @@ chromium (154.0.8037.57-1) UNRELEASED; urgency=high
     - trixie/gn-unused-vars.patch: Refresh.
   * d/rules: Set njobs for the init-pre-gen target for a faster GN build.
 
+  [ Jianfeng Liu ]
+  * d/patches:
+    loongarch64/0020-user_agent-add-loongarch-architecture-support.patch:
+    refresh for upstream changes
+
  -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
 
 chromium (153.0.8010.52-1) unstable; urgency=high

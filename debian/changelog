@@ -31,6 +31,8 @@ chromium (154.0.8037.57-1) UNRELEASED; urgency=high
     - fixes/fix-rust-linking.patch: refresh for upstream changes
     - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
       changes
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
 
   [ Daniel Richard G. ]
   * d/deb_pre_gen.py: Handle new arg signature of generate_css_js_files.js,

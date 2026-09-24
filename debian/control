@@ -112,8 +112,6 @@ Depends:
  ${shlibs:Depends},
  libgtk-3-0t64 | xdg-desktop-portal-backend,
  chromium-common (= ${binary:Version}),
-Recommends:
- chromium-sandbox,
 Suggests:
  chromium-l10n,
  chromium-shell,
@@ -204,7 +202,6 @@ Recommends:
  upower,
  udev,
  libgl1-mesa-dri,
- chromium-sandbox,
  fonts-liberation,
  notification-daemon,
  system-config-printer,

@@ -40,6 +40,12 @@ chromium (154.0.8037.57-1~deb12u1) UNRELEASED; urgency=high
       bundled gn.
     - bookworm/foreach.patch: drop, no longer needed with newer clang [sid,
       trixie].
+    - bookworm/gn-allowlist.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-funcs.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-absl.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-hpp11.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-path-exists2.patch: drop, no longer needed with bundled
+      gn.
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

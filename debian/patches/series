@@ -123,10 +123,9 @@ trixie/gn-inputs2.patch
 #bookworm/gn-revert-path-exists.patch
 #bookworm/bindgen.patch
 #bookworm/constflatset.patch
-bookworm/gn-allowlist.patch
+#bookworm/gn-allowlist.patch
 bookworm/freetype-COLRV1.patch
-bookworm/gn-funcs.patch
-bookworm/gn-absl.patch
+#bookworm/gn-absl.patch
 bookworm/partially-deployed-mseal-syscall.patch
 #bookworm/constexpr.patch
 #bookworm/constexpr2.patch
@@ -141,12 +140,10 @@ bookworm/partially-deployed-mseal-syscall.patch
 bookworm/dav1d-extern.patch
 #bookworm/toktrie-utf8chunks.patch
 #bookworm/derivre-create.patch
-bookworm/gn-hpp11.patch
 #bookworm/rust-split-at-checked.patch
 #bookworm/crabbyav1f-macro-scope.patch
 #bookworm/rust-box-to-vec.patch
 #bookworm/path-rustfmt.patch
-bookworm/gn-path-exists2.patch
 bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
 

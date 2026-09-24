@@ -103,13 +103,18 @@ system/tsc2.patch
 #trixie/adler1.patch
 #trixie/libxml-parseerr.patch
 trixie/cookie-string-view.patch
+#trixie/gn-string-hash.patch
 #trixie/nodejs-set-intersection.patch
+#trixie/gn-len.patch
 #trixie/nodejs-main.patch
+#trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
 #trixie/revert-v8-sanitize.patch
+#trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
+#trixie/gn-funcs.patch
 
 #bookworm/strlcpy.patch
 bookworm/gn-revert-path-exists.patch

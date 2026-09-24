@@ -120,7 +120,7 @@ trixie/gn-inputs2.patch
 
 #bookworm/strlcpy.patch
 #bookworm/dq-forward-iterator.patch
-bookworm/gn-revert-path-exists.patch
+#bookworm/gn-revert-path-exists.patch
 #bookworm/bindgen.patch
 #bookworm/constflatset.patch
 bookworm/gn-allowlist.patch

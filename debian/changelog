@@ -36,6 +36,10 @@ chromium (154.0.8037.57-1) UNRELEASED; urgency=high
       [trixie, bookworm].
     - trixie/gn-funcs.patch: drop, no longer needed with bundled gn [trixie,
       bookworm].
+    - bookworm/gn-revert-path-exists.patch: drop, no longer needed with
+      bundled gn.
+    - bookworm/foreach.patch: drop, no longer needed with newer clang [sid,
+      trixie].
 
   [ Timothy Pearson ]
   * d/patches/ppc64le:

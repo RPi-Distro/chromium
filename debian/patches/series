@@ -117,7 +117,7 @@ trixie/gn-inputs2.patch
 #trixie/gn-funcs.patch
 
 #bookworm/strlcpy.patch
-bookworm/gn-revert-path-exists.patch
+#bookworm/gn-revert-path-exists.patch
 #bookworm/bindgen.patch
 #bookworm/constflatset.patch
 #bookworm/gn-allowlist.patch
@@ -125,7 +125,7 @@ bookworm/gn-revert-path-exists.patch
 #bookworm/gn-absl.patch
 #bookworm/constexpr.patch
 #bookworm/constexpr3.patch
-bookworm/foreach.patch
+#bookworm/foreach.patch
 #bookworm/dav1d-drop-hdr.patch
 #bookworm/node18-compat.patch
 

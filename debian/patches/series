@@ -34,9 +34,9 @@ fixes/bindgen-paths.patch
 fixes/swiftshader-dependencies.patch
 fixes/bytemuck.patch
 fixes/arm-logging.patch
-fixes/crubit.patch
 #fixes/glic.patch
 fixes/only-address-sanitizer.patch
+fixes/tsc-split-comp.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -65,7 +65,6 @@ system/opus.patch
 system/rapidjson.patch
 system/rollup.patch
 system/llvm.patch
-system/rust-cbor.patch
 system/python.patch
 system/tsc.patch
 system/tsc2.patch
@@ -106,18 +105,18 @@ system/tsc2.patch
 #trixie/libxml-parseerr.patch
 trixie/cookie-string-view.patch
 #trixie/libxml2-no-xxe.patch
-trixie/gn-string-hash.patch
+#trixie/gn-string-hash.patch
 #trixie/nodejs-set-intersection.patch
-trixie/gn-len.patch
+#trixie/gn-len.patch
 #trixie/nodejs-main.patch
-trixie/gn-module-name.patch
+#trixie/gn-module-name.patch
 trixie/gn-inputs.patch
 trixie/gn-inputs2.patch
 #trixie/revert-v8-sanitize.patch
-trixie/gn-unused-vars.patch
+#trixie/gn-unused-vars.patch
 #trixie/node20-compat.patch
 #trixie/bindgen-boringssl.patch
-trixie/gn-funcs.patch
+#trixie/gn-funcs.patch
 
 #bookworm/strlcpy.patch
 #bookworm/dq-forward-iterator.patch
@@ -184,6 +183,9 @@ ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
 ungoogled/remove-navigation-source-param.patch
 ungoogled/disable-tos-dialog.patch
+ungoogled/crubit.patch
+ungoogled/verification-tokens.patch
+ungoogled/disable-ai-search-shortcuts.patch
 
 # i386 support
 i386/support-i386.patch

@@ -1,3 +1,66 @@
+chromium (154.0.8037.57-1~deb12u1) UNRELEASED; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+  * d/control: remove generate-ninja build-dep.
+  * d/copyright: stop deleting tools/gn/.
+  * d/rules: restore old code that builds the bundled version of
+    generate-ninja as part of the chromium build. Upstream keeps using
+    brand new gn features (sometimes not even available in sid yet) and
+    we're carrying too many patches to work around that.
+  * d/patches:
+    - debianization/pre-gen.patch: rework clang argument filtering due to
+      upstream changes.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - llvm-22/clang22.patch: refresh.
+    - ungoogled/disable-ai.patch: sync from u-c
+    - ungoogled/disable-mei-preload.patch: sync from u-c
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c
+    - fixes/crubit.patch: drop
+    - system/rust-cbor.patch: drop
+    - ungoogled/crubit.patch: add a patch pulled from u-c, which includes
+      stuff from fixes/crubit.patch and system/rust-cbor.patch.. plus more.
+    - ungoogled/verification-tokens.patch: add a patch pulled from u-c to
+      fix a build failure related to private verification tokens. Two week
+      release cycle is awesomesauce.
+    - fixes/tsc-split-comp.patch: add a build fix for debian's typescript.
+    - ungoogled/disable-ai-search-shortcuts.patch: add patch to disable the
+      new AI button and the @gemini/@aimode shortcuts (closes: #1146746).
+    - trixie/gn-string-hash.patch: drop, no longer needed with bundled gn.
+    - trixie/gn-len.patch: drop, no longer needed with bundled gn
+      [trixie, bookworm].
+    - trixie/gn-module-name.patch: drop, no longer needed with bundled gn
+      [trixie, bookworm].
+    - trixie/gn-unused-vars.patch: drop, no longer needed with bundled gn
+      [trixie, bookworm].
+    - trixie/gn-funcs.patch: drop, no longer needed with bundled gn [trixie,
+      bookworm].
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - fixes/fix-rust-linking.patch: refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
+
+  [ Daniel Richard G. ]
+  * d/deb_pre_gen.py: Handle new arg signature of generate_css_js_files.js,
+    and the new run_with_restat.py script; also streamline regexes a bit.
+  * d/patches:
+    - debianization/pre-gen.patch: Handle run_with_restat.py script, and
+      neuter run_with_stamp.py.
+    - trixie/gn-unused-vars.patch: Refresh.
+  * d/rules: Set njobs for the init-pre-gen target for a faster GN build.
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    loongarch64/0020-user_agent-add-loongarch-architecture-support.patch:
+    refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
+
 chromium (153.0.8010.52-1~deb12u1) bookworm-security; urgency=high
 
   [ Andres Salomon ]

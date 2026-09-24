@@ -1,4 +1,4 @@
-chromium (154.0.8037.57-1) UNRELEASED; urgency=high
+chromium (154.0.8037.57-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
@@ -212,7 +212,7 @@ chromium (154.0.8037.57-1) UNRELEASED; urgency=high
     loongarch64/0020-user_agent-add-loongarch-architecture-support.patch:
     refresh for upstream changes
 
- -- Andres Salomon <dilinger@debian.org>  Fri, 18 Sep 2026 01:16:02 -0400
+ -- Andres Salomon <dilinger@debian.org>  Thu, 24 Sep 2026 17:31:48 -0400
 
 chromium (153.0.8010.52-1) unstable; urgency=high
 

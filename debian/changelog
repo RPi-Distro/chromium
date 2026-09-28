@@ -29,6 +29,8 @@ chromium (1:154.0.8037.57-1~deb12u1+rpt1) bookworm; urgency=medium
   * Disable debian's patches that strip rust debug symbols
   * Split the protoc plugin path fix out of Debian's cross-build patch
   * Fix Debian's pre-generated output path for cross builds
+  * Fix bootstrapping the bundled gn with our linker flags and when
+    cross-building
 
   [ Tian Zheng ]
   * Let the sandboxed GPU process use the V4L2 decoder and GBM backends

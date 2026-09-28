@@ -205,8 +205,19 @@ override_dh_gencontrol:
 %:
 	dh $@
 
+# gn is bootstrapped with the system linker (bfd), which lacks --threads.
+# It also runs on the build machine, but a cross build only has the host
+# arch's libc++-22-dev (it is not co-installable), so use libstdc++ there.
+comma:=,
+gn_cxxflags=$(CXXFLAGS)
+gn_ldflags=$(filter-out -Wl$(comma)--threads=1,$(LDFLAGS))
+ifneq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
+gn_cxxflags=$(filter-out -stdlib=libc++,$(CXXFLAGS))
+gn_ldflags=$(filter-out -stdlib=libc++ -Wl$(comma)--threads=1,$(LDFLAGS))
+endif
+
 out/Release/gn:
-	./tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles -j$(njobs)
+	CXXFLAGS="$(gn_cxxflags)" LDFLAGS="$(gn_ldflags)" ./tools/gn/bootstrap/bootstrap.py --skip-generate-buildfiles -j$(njobs)
 
 # don't build armhf on build systems that lack NEON
 test_armhf_neon:

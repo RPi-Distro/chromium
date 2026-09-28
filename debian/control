@@ -52,7 +52,6 @@ Build-Depends:
  libegl1-mesa-dev,
  libgles2-mesa-dev,
  libopenh264-dev,
- generate-ninja,
  mesa-common-dev,
  rapidjson-dev,
  libva-dev,
@@ -114,7 +113,6 @@ Depends:
  libgtk-3-0t64 | xdg-desktop-portal-backend,
  chromium-common (= ${binary:Version}),
 Recommends:
- chromium-sandbox,
  chromium-l10n,
  rpi-chromium-mods,
  ${widevine:Recommends}
@@ -207,7 +205,6 @@ Recommends:
  upower,
  udev,
  libgl1-mesa-dri,
- chromium-sandbox,
  fonts-liberation,
  notification-daemon,
 Breaks:

@@ -1,4 +1,4 @@
-chromium (1:153.0.8010.52-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:154.0.8037.57-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]
   * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
@@ -41,7 +41,229 @@ chromium (1:153.0.8010.52-1~deb12u1+rpt1) bookworm; urgency=medium
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Sun, 20 Sep 2026 05:44:15 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 28 Sep 2026 09:49:48 +0100
+
+chromium (154.0.8037.57-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2026-95350: Buffer overflow in ANGLE. Reported by Billy Jheng Bing
+      Jhong, Muhammad Alifa Ramdhan, Pan Zhenpeng of STAR.
+    - CVE-2026-95357: Out of bounds write in GPU. Reported by Anymous.
+    - CVE-2026-95339: Use after free in ServiceWorker.
+      Reported by Andrew Boni.
+    - CVE-2026-95281: Buffer overflow in ANGLE.
+      Reported by Muhammad Alifa Ramdhan of STAR Labs SG Pte. Ltd.
+    - CVE-2026-95313: Use after free in Fullscreen.
+      Reported by WinD39 - Huynh Dinh Vu.
+    - CVE-2026-95349: Buffer overflow in WebGL. Reported by Google.
+    - CVE-2026-95284: Buffer overflow in ANGLE.
+      Reported by Muhammad Alifa Ramdhan (STARLABS SG).
+    - CVE-2026-95322: Out of bounds write in GPU.
+      Reported by David Sievers (@loknop).
+    - CVE-2026-95329: Out of bounds write in WebGL. Reported by Google.
+    - CVE-2026-95356: Use after free in WindowDialog. Reported by Xinyang Ge.
+    - CVE-2026-95310: Use after free in AdFilter. Reported by Xinyang Ge.
+    - CVE-2026-95301: Missing authorization in Extensions.
+      Reported by OGINOME Tomohito.
+    - CVE-2026-95291: UI misrepresentation in SecurityIndicators.
+      Reported by NH DEV.
+    - CVE-2026-95355: Incorrect authorization in Navigation.
+      Reported by Google.
+    - CVE-2026-95315: Use after free in Aura. Reported by Google.
+    - CVE-2026-95298: Use after free in Browser. Reported by Google.
+    - CVE-2026-95372: Use after free in Chromecast. Reported by Google.
+    - CVE-2026-95324: Uninitialized resource in GPU. Reported by Google.
+    - CVE-2026-95283: Buffer overflow in Tint. Reported by Google.
+    - CVE-2026-95293: Uninitialized resource in GPU.
+      Reported by TienPA - NGS Holdings.
+    - CVE-2026-95274: Improper output encoding in DevTools.
+      Reported by Google.
+    - CVE-2026-95282: Use after free in Platform. Reported by Google.
+    - CVE-2026-95373: Use after free in DevTools. Reported by Google.
+    - CVE-2026-95277: Use after free in Views. Reported by Google.
+    - CVE-2026-95348: Use after free in Bluetooth. Reported by Google.
+    - CVE-2026-95335: Use after free in HID.
+      Reported by WinD39 - Huynh Dinh Vu.
+    - CVE-2026-95338: Use after free in PDFium.
+      Reported by SeungMyung Lee (@sm1ee), Siung kim (@ksw9722).
+    - CVE-2026-95318: Buffer overflow in Video. Reported by alex.laboirie.
+    - CVE-2026-95286: Type confusion in Bindings. Reported by @bean5oup.
+    - CVE-2026-95365: Type confusion in IndexedDB. Reported by HoneyBee.
+    - CVE-2026-95343: Use after free in WebAudio. Reported by HoneyBee.
+    - CVE-2026-95280: Race condition in V8. Reported by Google.
+    - CVE-2026-95304: Out of bounds write in V8.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-95306: Type confusion in V8.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-95299: Use after free in GPU. Reported by Google.
+    - CVE-2026-95351: Use after free in Views. Reported by Xinyang Ge.
+    - CVE-2026-95287: Missing authorization in Navigation. Reported by Google
+    - CVE-2026-95366: Use of released resource in Core. Reported by Google.
+    - CVE-2026-95382: Improper input validation in Auth. Reported by Google.
+    - CVE-2026-95381: Improper input validation in Printing.
+      Reported by Google.
+    - CVE-2026-95331: Out of bounds write in ANGLE. Reported by Google.
+    - CVE-2026-95297: Missing authorization in Contextual Tasks.
+      Reported by Google.
+    - CVE-2026-95375: Incorrect authorization in BrowserTag.
+      Reported by Google.
+    - CVE-2026-95302: Incorrect authorization in WebAPKs. Reported by Google.
+    - CVE-2026-95362: Cross-site request forgery in DevTools.
+      Reported by Google.
+    - CVE-2026-95369: Inappropriate implementation in XML. Reported by Google
+    - CVE-2026-95376: Externally controlled reference in DevTools.
+      Reported by Google.
+    - CVE-2026-95359: Uninitialized resource in GPU. Reported by Google.
+    - CVE-2026-95294: UI misrepresentation in Browser. Reported by Google.
+    - CVE-2026-95337: UI misrepresentation in Messages. Reported by Google.
+    - CVE-2026-95346: UI misrepresentation in Chromoting. Reported by Google.
+    - CVE-2026-95320: Missing authorization in Navigation. Reported by Google
+    - CVE-2026-95317: Incorrect authorization in MediaCapture.
+      Reported by Google.
+    - CVE-2026-95345: Use after free in Actor. Reported by Google.
+    - CVE-2026-95330: Improper state validation in Downloads.
+      Reported by Google.
+    - CVE-2026-95370: Inappropriate implementation in NFC. Reported by Google
+    - CVE-2026-95303: Incomplete cleanup in SmartCard. Reported by Google.
+    - CVE-2026-95360: Race condition in Editing. Reported by Google.
+    - CVE-2026-95295: Information leak in Mobile. Reported by Google.
+    - CVE-2026-95276: Improper input validation in Themes. Reported by Google
+    - CVE-2026-95314: Incorrect authorization in HID. Reported by Google.
+    - CVE-2026-95371: Missing authorization in Views. Reported by Google.
+    - CVE-2026-95353: Use after free in Bindings. Reported by Google.
+    - CVE-2026-95363: UI misrepresentation in FileSystem. Reported by Google.
+    - CVE-2026-95341: Improper input validation in Desktop.
+      Reported by Google.
+    - CVE-2026-95354: Use after free in Verifier. Reported by Google.
+    - CVE-2026-95384: Race condition in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-95336: Information leak in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-95290: Missing authorization in NFC. Reported by Google.
+    - CVE-2026-95325: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-95275: Incorrect reference resolution in MediaStream.
+      Reported by Zabith Mohammed (@nmzabith).
+    - CVE-2026-95374: Incorrect authorization in Network. Reported by NH DEV.
+    - CVE-2026-95300: Missing authorization in DevTools. Reported by Google.
+    - CVE-2026-95321: UI misrepresentation in Payments.
+      Reported by jodyritonga.
+    - CVE-2026-95323: UI misrepresentation in Chromium.
+      Reported by Wihdatu Nuuro Ahmadi.
+    - CVE-2026-95332: Use of uninitialized variable in Tint.
+      Reported by Google.
+    - CVE-2026-95312: Information leak in Passwords. Reported by Google.
+    - CVE-2026-95344: Race condition in DevTools. Reported by @bean5oup.
+    - CVE-2026-95289: Incorrect authorization in Scroll.
+      Reported by Vu Van Tien (@n0_Be3r).
+    - CVE-2026-95347: Use after free in Updater. Reported by a45hif.
+    - CVE-2026-95311: Free of non-heap memory in Fonts. Reported by Google.
+    - CVE-2026-95358: Incorrect authorization in Mobile. Reported by Google.
+    - CVE-2026-95333: Use after free in Metrics. Reported by sean geofrey.
+    - CVE-2026-95307: UI misrepresentation in ExtensionsMenu.
+      Reported by Hafiizh.
+    - CVE-2026-95285: Missing authorization in WebView. Reported by Google.
+    - CVE-2026-95278: Missing authorization in WakeLock. Reported by Google.
+    - CVE-2026-95327: Information leak in Networking. Reported by Google.
+    - CVE-2026-95334: Incorrect reference resolution in WebProtect.
+      Reported by Google.
+    - CVE-2026-95308: Integer overflow in Metrics. Reported by Google.
+    - CVE-2026-95292: Incorrect authorization in Safebrowsing.
+      Reported by Google.
+    - CVE-2026-95352: Incorrect authorization in DevTools. Reported by Google
+    - CVE-2026-95279: UI misrepresentation in Omnibox. Reported by Google.
+    - CVE-2026-95367: Information leak in DataTransfer. Reported by Google.
+    - CVE-2026-95385: Inappropriate implementation in PlatformIntegration.
+      Reported by Google.
+    - CVE-2026-95368: Incorrect authorization in DevTools. Reported by Google
+    - CVE-2026-95319: Use after free in Printing. Reported by Google.
+    - CVE-2026-95326: Incomplete cleanup in Bluetooth. Reported by Google.
+    - CVE-2026-95309: UI misrepresentation in Mobile. Reported by Google.
+    - CVE-2026-95361: Confused deputy in DevTools. Reported by Google.
+    - CVE-2026-95288: UI misrepresentation in Mobile. Reported by Google.
+    - CVE-2026-95380: Type confusion in V8. Reported by Google.
+    - CVE-2026-95342: Missing authorization in V8. Reported by Hongwei Li,
+      Zhun Wang, Ziyue Pan, Junmin Zhu, Saastha Vasan, and Wenbo Guo.
+    - CVE-2026-95296: Missing authorization in Core.
+      Reported by Quyền Sơn (@zer0qs1337).
+    - CVE-2026-95316: Unchecked return value in Performance.
+      Reported by Google.
+    - CVE-2026-95328: Confused deputy in Mobile. Reported by Google.
+    - CVE-2026-95340: Incorrect authorization in PictureInPicture.
+      Reported by Google.
+    - CVE-2026-95364: Improper input validation in Passwords.
+      Reported by Google.
+    - CVE-2026-95305: UI misrepresentation in Chromoting. Reported by Google.
+  * d/control:
+    - remove generate-ninja build-dep.
+    - stop recommending chromium-sandbox (closes: #1135653).
+  * d/copyright: stop deleting tools/gn/.
+  * d/rules: restore old code that builds the bundled version of
+    generate-ninja as part of the chromium build. Upstream keeps using
+    brand new gn features (sometimes not even available in sid yet) and
+    we're carrying too many patches to work around that.
+  * d/patches:
+    - debianization/pre-gen.patch: rework clang argument filtering due to
+      upstream changes.
+    - disable/tests.patch: refresh.
+    - disable/catapult.patch: refresh.
+    - llvm-22/clang22.patch: refresh.
+    - ungoogled/disable-ai.patch: sync from u-c
+    - ungoogled/disable-mei-preload.patch: sync from u-c
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c
+    - fixes/crubit.patch: drop
+    - system/rust-cbor.patch: drop
+    - ungoogled/crubit.patch: add a patch pulled from u-c, which includes
+      stuff from fixes/crubit.patch and system/rust-cbor.patch.. plus more.
+    - ungoogled/verification-tokens.patch: add a patch pulled from u-c to
+      fix a build failure related to private verification tokens. Two week
+      release cycle is awesomesauce.
+    - fixes/tsc-split-comp.patch: add a build fix for debian's typescript.
+    - ungoogled/disable-ai-search-shortcuts.patch: add patch to disable the
+      new AI button and the @gemini/@aimode shortcuts (closes: #1146746).
+    - trixie/gn-string-hash.patch: drop, no longer needed with bundled gn.
+    - trixie/gn-len.patch: drop, no longer needed with bundled gn
+      [trixie, bookworm].
+    - trixie/gn-module-name.patch: drop, no longer needed with bundled gn
+      [trixie, bookworm].
+    - trixie/gn-unused-vars.patch: drop, no longer needed with bundled gn
+      [trixie, bookworm].
+    - trixie/gn-funcs.patch: drop, no longer needed with bundled gn [trixie,
+      bookworm].
+    - bookworm/gn-revert-path-exists.patch: drop, no longer needed with
+      bundled gn.
+    - bookworm/foreach.patch: drop, no longer needed with newer clang [sid,
+      trixie].
+    - bookworm/gn-allowlist.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-funcs.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-absl.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-hpp11.patch: drop, no longer needed with bundled gn.
+    - bookworm/gn-path-exists2.patch: drop, no longer needed with bundled
+      gn.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - fixes/fix-rust-linking.patch: refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch:
+      refresh for upstream changes
+
+  [ Daniel Richard G. ]
+  * d/deb_pre_gen.py: Handle new arg signature of generate_css_js_files.js,
+    and the new run_with_restat.py script; also streamline regexes a bit.
+  * d/patches:
+    - debianization/pre-gen.patch: Handle run_with_restat.py script, and
+      neuter run_with_stamp.py.
+    - trixie/gn-unused-vars.patch: Refresh.
+  * d/rules: Set njobs for the init-pre-gen target for a faster GN build.
+
+  [ Jianfeng Liu ]
+  * d/patches:
+    loongarch64/0020-user_agent-add-loongarch-architecture-support.patch:
+    refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 24 Sep 2026 17:31:48 -0400
 
 chromium (153.0.8010.52-1~deb12u1) bookworm-security; urgency=high
 

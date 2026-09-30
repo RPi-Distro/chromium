@@ -1,4 +1,4 @@
-chromium (154.0.8037.92-1) UNRELEASED; urgency=high
+chromium (154.0.8037.92-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * New upstream security release.
@@ -48,7 +48,7 @@ chromium (154.0.8037.92-1) UNRELEASED; urgency=high
     - disable/omnibox-ai-mode.patch: add patch that *actually* removes the
       AI Mode button from the new tab page's omnibox.
 
- -- Andres Salomon <dilinger@debian.org>  Thu, 24 Sep 2026 17:31:48 -0400
+ -- Andres Salomon <dilinger@debian.org>  Wed, 30 Sep 2026 03:47:05 -0400
 
 chromium (154.0.8037.57-1) unstable; urgency=high
 

@@ -1,0 +1,350 @@
+Description: Add more search-engine options, and change the default
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+* Increase the maximum number of search engines shown in the selection
+  dialogs accessible via "Settings -> Search engine"
+
+* Set DuckDuckGo as the default search engine (when available)
+
+* Use a different new-tab URL for DuckDuckGo, to avoid an obtrusive "Add
+  Duck.ai Toggle" dialog on the first run
+
+* Define a new region mapping, so that most regions are presented the
+  "ZZ" list of options, which we augment below
+
+* Regions better served by the original Google list are deliberately
+  commented out from our mapping
+
+* Modify a build-tooling script so that our region mapping can specify
+  aliases that shadow existing elements, so that we can redirect e.g.
+  "US" to "ZZ" without needing to modify/remove the "US" element
+
+Note: Also see kMaxRowPrepopulatedEngines in
+components/search_engines/template_url_prepopulate_data.h . It appears to
+be a semi-duplicate of kTopSearchEnginesThreshold, but modifying it alone
+does not affect the search-engine selection dialog.
+
+--- a/components/regional_capabilities/regional_capabilities_utils.cc
++++ b/components/regional_capabilities/regional_capabilities_utils.cc
+@@ -44,7 +44,7 @@ GetPrepopulatedEnginesTestOverrideIntern
+ 
+ // The number of search engines for each country falling into the "top"
+ // category.
+-constexpr size_t kTopSearchEnginesThreshold = 5;
++constexpr size_t kTopSearchEnginesThreshold = 15;
+ 
+ // Returns regional settings appropriate for the provided country. If no
+ // specific regional settings are defined, returns the default settings.
+--- a/components/search_engines/template_url_prepopulate_data.cc
++++ b/components/search_engines/template_url_prepopulate_data.cc
+@@ -318,7 +318,7 @@ std::unique_ptr<TemplateURLData> GetPrep
+     const std::vector<raw_ptr<const PrepopulatedEngine>>&
+         regional_prepopulated_engines) {
+   return FindPrepopulatedEngineInternal(prefs, regional_prepopulated_engines,
+-                                        google.id,
++                                        duckduckgo.id,
+                                         /*use_first_as_fallback=*/true);
+ }
+ 
+--- a/third_party/search_engines_data/resources/definitions/prepopulated_engines.json
++++ b/third_party/search_engines_data/resources/definitions/prepopulated_engines.json
+@@ -126,7 +126,7 @@
+       "logo_url": "https://staticcdn.duckduckgo.com/android/DuckDuckGoLogo.png",
+       "search_url": "https://duckduckgo.com/?q={searchTerms}",
+       "suggest_url": "https://duckduckgo.com/ac/?q={searchTerms}&type=list",
+-      "new_tab_url": "https://duckduckgo.com/chrome_newtab",
++      "new_tab_url": "https://start.duckduckgo.com/",
+       "type": "SEARCH_ENGINE_DUCKDUCKGO",
+       "id": 92,
+       "regulatory_extensions": [
+--- a/third_party/search_engines_data/resources/definitions/regional_settings.json
++++ b/third_party/search_engines_data/resources/definitions/regional_settings.json
+@@ -6,6 +6,260 @@
+     "export_items": false,
+     "map_aliases": {
+       "AD": "ZZ",
++      "AE": "ZZ",
++      "AF": "ZZ",
++      "AG": "ZZ",
++      "AI": "ZZ",
++      "AL": "ZZ",
++      "AM": "ZZ",
++      "AO": "ZZ",
++      "AQ": "ZZ",
++      "AR": "ZZ",
++      "AS": "ZZ",
++      "AT": "ZZ",
++      "AU": "ZZ",
++      "AW": "ZZ",
++      "AX": "ZZ",
++      "AZ": "ZZ",
++      "BA": "ZZ",
++      "BB": "ZZ",
++      "BD": "ZZ",
++      "BE": "ZZ",
++      "BF": "ZZ",
++      "BG": "ZZ",
++      "BH": "ZZ",
++      "BI": "ZZ",
++      "BJ": "ZZ",
++      "BL": "ZZ",
++      "BM": "ZZ",
++      "BN": "ZZ",
++      "BO": "ZZ",
++      "BQ": "ZZ",
++      "BR": "ZZ",
++      "BS": "ZZ",
++      "BT": "ZZ",
++      "BV": "ZZ",
++      "BW": "ZZ",
++      "BY": "ZZ",
++      "BZ": "ZZ",
++      "CA": "ZZ",
++      "CC": "ZZ",
++      "CD": "ZZ",
++      "CF": "ZZ",
++      "CG": "ZZ",
++      "CH": "ZZ",
++      "CI": "ZZ",
++      "CK": "ZZ",
++      "CL": "ZZ",
++      "CM": "ZZ",
++      // "CN": "ZZ",
++      "CO": "ZZ",
++      "CQ": "ZZ",
++      "CR": "ZZ",
++      "CU": "ZZ",
++      "CV": "ZZ",
++      "CW": "ZZ",
++      "CX": "ZZ",
++      "CY": "ZZ",
++      // "CZ": "ZZ",
++      "DE": "ZZ",
++      "DJ": "ZZ",
++      "DK": "ZZ",
++      "DM": "ZZ",
++      "DO": "ZZ",
++      "DZ": "ZZ",
++      "EA": "ZZ",
++      "EC": "ZZ",
++      "EE": "ZZ",
++      "EG": "ZZ",
++      "EH": "ZZ",
++      "ER": "ZZ",
++      "ES": "ZZ",
++      "ET": "ZZ",
++      "FI": "ZZ",
++      "FJ": "ZZ",
++      "FK": "ZZ",
++      "FM": "ZZ",
++      "FO": "ZZ",
++      "FR": "ZZ",
++      "GA": "ZZ",
++      "GB": "ZZ",
++      "GD": "ZZ",
++      "GE": "ZZ",
++      "GF": "ZZ",
++      "GG": "ZZ",
++      "GH": "ZZ",
++      "GI": "ZZ",
++      "GL": "ZZ",
++      "GM": "ZZ",
++      "GN": "ZZ",
++      "GP": "ZZ",
++      "GQ": "ZZ",
++      "GR": "ZZ",
++      "GS": "ZZ",
++      "GT": "ZZ",
++      "GU": "ZZ",
++      "GW": "ZZ",
++      "GY": "ZZ",
++      // "HK": "ZZ",
++      "HM": "ZZ",
++      "HN": "ZZ",
++      "HR": "ZZ",
++      "HT": "ZZ",
++      "HU": "ZZ",
++      "IC": "ZZ",
++      // "ID": "ZZ",
++      "IE": "ZZ",
++      "IL": "ZZ",
++      "IM": "ZZ",
++      "IN": "ZZ",
++      "IO": "ZZ",
++      "IQ": "ZZ",
++      "IR": "ZZ",
++      "IS": "ZZ",
++      "IT": "ZZ",
++      "JE": "ZZ",
++      "JM": "ZZ",
++      "JO": "ZZ",
++      "JP": "ZZ",
++      "KE": "ZZ",
++      "KG": "ZZ",
++      // "KH": "ZZ",
++      "KI": "ZZ",
++      "KM": "ZZ",
++      "KN": "ZZ",
++      "KP": "ZZ",
++      // "KR": "ZZ",
++      "KW": "ZZ",
++      "KY": "ZZ",
++      "KZ": "ZZ",
++      // "LA": "ZZ",
++      "LB": "ZZ",
++      "LC": "ZZ",
++      "LI": "ZZ",
++      "LK": "ZZ",
++      "LR": "ZZ",
++      "LS": "ZZ",
++      "LT": "ZZ",
++      "LU": "ZZ",
++      "LV": "ZZ",
++      "LY": "ZZ",
++      "MA": "ZZ",
++      "MC": "ZZ",
++      "MD": "ZZ",
++      "ME": "ZZ",
++      "MF": "ZZ",
++      "MG": "ZZ",
++      "MH": "ZZ",
++      "MK": "ZZ",
++      "ML": "ZZ",
++      // "MM": "ZZ",
++      // "MN": "ZZ",
++      // "MO": "ZZ",
++      "MP": "ZZ",
++      "MQ": "ZZ",
++      "MR": "ZZ",
++      "MS": "ZZ",
++      "MT": "ZZ",
++      "MU": "ZZ",
++      "MV": "ZZ",
++      "MW": "ZZ",
++      "MX": "ZZ",
++      // "MY": "ZZ",
++      "MZ": "ZZ",
++      "NA": "ZZ",
++      "NC": "ZZ",
++      "NE": "ZZ",
++      "NF": "ZZ",
++      "NG": "ZZ",
++      "NI": "ZZ",
++      "NL": "ZZ",
++      "NO": "ZZ",
++      "NP": "ZZ",
++      "NR": "ZZ",
++      "NU": "ZZ",
++      "NZ": "ZZ",
++      "OM": "ZZ",
++      "PA": "ZZ",
++      "PE": "ZZ",
++      "PF": "ZZ",
++      "PG": "ZZ",
++      // "PH": "ZZ",
++      "PK": "ZZ",
++      "PL": "ZZ",
++      "PM": "ZZ",
++      "PN": "ZZ",
++      "PR": "ZZ",
++      "PS": "ZZ",
++      "PT": "ZZ",
++      "PW": "ZZ",
++      "PY": "ZZ",
++      "QA": "ZZ",
++      "RE": "ZZ",
++      "RO": "ZZ",
++      "RS": "ZZ",
++      "RU": "ZZ",
++      "RW": "ZZ",
++      "SA": "ZZ",
++      "SB": "ZZ",
++      "SC": "ZZ",
++      "SD": "ZZ",
++      "SE": "ZZ",
++      // "SG": "ZZ",
++      "SH": "ZZ",
++      "SI": "ZZ",
++      "SJ": "ZZ",
++      // "SK": "ZZ",
++      "SL": "ZZ",
++      "SM": "ZZ",
++      "SN": "ZZ",
++      "SO": "ZZ",
++      "SR": "ZZ",
++      "ST": "ZZ",
++      "SV": "ZZ",
++      "SX": "ZZ",
++      "SY": "ZZ",
++      "SZ": "ZZ",
++      "TC": "ZZ",
++      "TD": "ZZ",
++      "TF": "ZZ",
++      "TG": "ZZ",
++      // "TH": "ZZ",
++      "TJ": "ZZ",
++      "TK": "ZZ",
++      "TL": "ZZ",
++      "TM": "ZZ",
++      "TN": "ZZ",
++      "TO": "ZZ",
++      "TR": "ZZ",
++      "TT": "ZZ",
++      "TV": "ZZ",
++      // "TW": "ZZ",
++      "TZ": "ZZ",
++      "UA": "ZZ",
++      "UG": "ZZ",
++      "UM": "ZZ",
++      "US": "ZZ",
++      "UY": "ZZ",
++      // "UZ": "ZZ",
++      "VA": "ZZ",
++      "VC": "ZZ",
++      "VE": "ZZ",
++      "VG": "ZZ",
++      "VI": "ZZ",
++      // "VN": "ZZ",
++      "VU": "ZZ",
++      "WF": "ZZ",
++      "WS": "ZZ",
++      "XK": "ZZ",
++      "YE": "ZZ",
++      "YT": "ZZ",
++      "ZA": "ZZ",
++      "ZM": "ZZ",
++      "ZW": "ZZ"
++    },
++    "map_aliases_ORIGINAL": {
++      "AD": "ZZ",
+       "AG": "ZZ",
+       "AI": "GB",
+       "AQ": "ZZ",
+@@ -1419,8 +1673,15 @@
+     },
+     "ZZ": {
+       "search_engines": [
++        "&duckduckgo",
+         "&google",
+         "&bing",
++        "&brave",
++        "&ecosia",
++        "&mojeek",
++        "&privacywall",
++        "&qwant",
++        "&startpage",
+         "&yahoo"
+       ]
+     }
+--- a/tools/json_to_struct/aggregation.py
++++ b/tools/json_to_struct/aggregation.py
+@@ -92,7 +92,8 @@ def GetAggregationDetails(description) -
+       # Note: we do not need to verify duplicate aliases, because `map_aliases`
+       # is already a dict - all keys should be unique.
+       if elements.get(alias, None):
+-        raise Exception(f"Alias `{alias}` already defined as element.")
++        import sys
++        print(f"Note: Alias `{alias}` hides an element.", file=sys.stderr)
+ 
+       # Detect that alias does not point to a valid element.
+       if not elements.get(element, None):

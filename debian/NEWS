@@ -1,3 +1,15 @@
+chromium (154.0.8037.92-1.1) unstable; urgency=high
+
+  We now patch Chromium directly to make DuckDuckGo the default search
+  engine, instead of using a configuration setting in master_preferences.
+  Our modifications also make more options available in the search engine
+  selection dialog.
+
+  This change should not affect the selected search engine in an existing
+  user profile.
+
+ -- Daniel Richard G. <skunk@iSKUNK.ORG>  Thu, 01 Oct 2026 00:00:00 -0400
+
 chromium-browser (104.0.5112.79-1) unstable; urgency=low
 
   We've switched the default search engine from Google to DuckDuckGo.

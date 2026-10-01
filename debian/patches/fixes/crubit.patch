@@ -1,5 +1,7 @@
 This is pulled from https://github.com/ungoogled-software/ungoogled-chromium/pull/3966
 
+(Note: This is not part of the official ungoogled-chromium patch set)
+
 --- a/components/cbor/BUILD.gn
 +++ b/components/cbor/BUILD.gn
 @@ -12,7 +12,7 @@ buildflag_header("buildflags") {

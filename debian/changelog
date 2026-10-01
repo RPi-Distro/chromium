@@ -1,3 +1,12 @@
+chromium (154.0.8037.92-1.1) unstable; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/patches:
+    - fixes/crubit.patch, fixes/verification-tokens.patch: Relocate from
+      ungoogled/ subdirectory as these are not official project patches.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 30 Sep 2026 03:47:06 -0400
+
 chromium (154.0.8037.92-1) unstable; urgency=high
 
   [ Andres Salomon ]

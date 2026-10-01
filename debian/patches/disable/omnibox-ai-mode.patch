@@ -1,0 +1,21 @@
+Author: Andres Salomon <dilinger@debian.org>
+Description: Disable "AI Mode" button in omnibox
+
+In the omni/search box, when you open a new tab, if your search engine is
+set to Google it will show an "AI Mode" button. Typing part of a URL and
+hitting tab will change focus to that button rather than auto-completing
+the URL. This changes things so that the AI Mode button isn't displayed.
+Google _already_ has an AI Mode button on its new tab page, it's
+ridiculous to have two.
+
+--- a/components/omnibox/browser/omnibox_prefs.cc
++++ b/components/omnibox/browser/omnibox_prefs.cc
+@@ -27,7 +27,7 @@ void RegisterProfilePrefs(PrefRegistrySi
+       kShowGoogleLensShortcut, true,
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+-      kShowAiModeOmniboxButton, true,
++      kShowAiModeOmniboxButton, false,
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+   registry->RegisterBooleanPref(
+       kShowSearchTools, true, user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);

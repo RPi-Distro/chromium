@@ -1,9 +1,11 @@
 # currently unavoidable embedded libraries
-embedded-library usr/lib/chromium/chromium: freetype
-embedded-library usr/lib/chromium/chromium: libjsoncpp
-embedded-library usr/lib/chromium/chromium: srtp
-embedded-library usr/lib/chromium/chromium: sqlite
-embedded-library usr/lib/chromium/chromium: tiff
+embedded-library freetype   [usr/lib/chromium/chromium]
+embedded-library libjsoncpp [usr/lib/chromium/chromium]
+embedded-library srtp       [usr/lib/chromium/chromium]
+embedded-library tiff       [usr/lib/chromium/chromium]
+
+# bookmarks, not documentation
+package-contains-documentation-outside-usr-share-doc [usr/share/chromium/initial_bookmarks.html]
 
 # too many upstream spelling mistakes
 spelling-error-in-binary

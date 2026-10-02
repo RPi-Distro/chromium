@@ -1,6 +1,9 @@
 chromium (154.0.8037.92-1.1) unstable; urgency=high
 
   [ Daniel Richard G. ]
+  * d/*.lintian-overrides: General syntax and content update to eliminate
+    most of the lintian warnings produced from the built packages.
+  * d/control: Move libsecret-1-0 from Breaks: to Conflicts:, per lintian.
   * d/patches:
     - fixes/crubit.patch, fixes/verification-tokens.patch: Relocate from
       ungoogled/ subdirectory as these are not official project patches.

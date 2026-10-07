@@ -1,4 +1,4 @@
-chromium (154.0.8037.92-1.1) unstable; urgency=high
+chromium (155.0.8059.39-1) unstable; urgency=high
 
   We now patch Chromium directly to make DuckDuckGo the default search
   engine, instead of using a configuration setting in master_preferences.
@@ -12,7 +12,7 @@ chromium (154.0.8037.92-1.1) unstable; urgency=high
   master_preferences file, and we will follow Google's lead in renaming
   this file to initial_preferences in an upcoming release.
 
- -- Daniel Richard G. <skunk@iSKUNK.ORG>  Thu, 01 Oct 2026 00:00:00 -0400
+ -- Daniel Richard G. <skunk@iSKUNK.ORG>  Wed, 07 Oct 2026 01:00:00 -0400
 
 chromium-browser (104.0.5112.79-1) unstable; urgency=low
 

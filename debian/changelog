@@ -7,6 +7,8 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
   * d/copyright: drop a few more bundled rollups.
   * d/patches:
     - debianization/cross-build.patch: refresh for upstream changes.
+    - debianization/pre-gen.patch: drop parts of the patch that are now
+      unnecessary.
     - fixes/crubit.patch: sync from u-c.
     - fixes/verification-tokens.patch: sync from u-c.
     - fixes/tsc-split-comp.patch: replace my patch with one pulled from u-c.

@@ -177,7 +177,7 @@ ppc64le/sandbox/0009-sandbox-ignore-byte-span-error.patch
 ppc64le/third_party/0001-third_party-angle-Include-missing-header-cstddef-in-.patch
 ppc64le/third_party/0001-Add-PPC64-support-for-boringssl.patch
 ppc64le/third_party/0001-third_party-libvpx-Disable-vsx-on-ppc64.patch
-ppc64le/third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
+###ppc64le/third_party/0001-third_party-libvpx-Properly-generate-gni-on-ppc64.patch
 ppc64le/third_party/0001-third_party-pffft-Include-altivec.h-on-ppc64-with-SI.patch
 ppc64le/third_party/0001-swiftshader-fix-build.patch
 ppc64le/third_party/0002-Add-PPC64-generated-files-for-boringssl.patch
@@ -202,14 +202,14 @@ ppc64le/third_party/0003-third_party-ffmpeg-Add-ppc64-generated-config.patch
 ppc64le/third_party/0004-third_party-libvpx-work-around-ambiguous-vsx.patch
 
 ppc64le/third_party/0001-add-xnn-ppc64el-support.patch
-ppc64le/third_party/0002-regenerate-xnn-buildgn.patch
+###ppc64le/third_party/0002-regenerate-xnn-buildgn.patch
 
 # Enable VSX acceleration in Skia.  Requires POWER8 or higher.
 ppc64le/third_party/skia-vsx-instructions.patch
 
 ppc64le/breakpad/0001-Implement-support-for-ppc64-on-Linux.patch
 ppc64le/crashpad/0001-Implement-support-for-PPC64-on-Linux.patch
-ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch
+###ppc64le/third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch
 ppc64le/fixes/fix-rustc.patch
 ppc64le/fixes/fix-rust-linking.patch
 ppc64le/fixes/fix-breakpad-compile.patch
@@ -219,7 +219,7 @@ ppc64le/fixes/fix-different-data-layouts.patch
 ppc64le/v8/0001-Enable-ppc64-pointer-compression.patch
 
 ppc64le/third_party/dawn-fix-ppc64le-detection.patch
-ppc64le/third_party/0005-blink-add-audio-vector-support.patch
+###ppc64le/third_party/0005-blink-add-audio-vector-support.patch
 
 ppc64le/core/add-ppc64-architecture-string.patch
 ppc64le/core/add-ppc64-pthread-stack-size.patch

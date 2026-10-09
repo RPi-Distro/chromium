@@ -10,6 +10,8 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
     - fixes/verification-tokens.patch: sync from u-c.
     - fixes/tsc-split-comp.patch: replace my patch with one pulled from u-c.
     - ungoogled/disable-ai.patch: sync from u-c.
+    - system/rollup.patch: drop most of the patch due to upstream replacing
+      a bunch of rollup usage with esbuild.
 
   [ Daniel Richard G. ]
   * d/*.lintian-overrides: General syntax and content update to eliminate

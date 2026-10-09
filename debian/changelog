@@ -6,6 +6,7 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
     - debianization/cross-build.patch: refresh for upstream changes.
     - fixes/crubit.patch: sync from u-c.
     - fixes/verification-tokens.patch: sync from u-c.
+    - ungoogled/disable-ai.patch: sync from u-c.
 
   [ Daniel Richard G. ]
   * d/*.lintian-overrides: General syntax and content update to eliminate

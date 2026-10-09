@@ -2,8 +2,8 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
-  * d/rules: set some new v8_metagen args to nonsense; used only for by the
-    vendored llvm toolchain, which we don't use.
+  * d/rules: disable metagen instance types in v8, which don't currently
+    work with our toolchain.
   * d/copyright: drop a few more bundled rollups.
   * d/patches:
     - debianization/cross-build.patch: refresh for upstream changes.

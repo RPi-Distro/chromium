@@ -63,7 +63,7 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 
 --- a/build/config/compiler/BUILD.gn
 +++ b/build/config/compiler/BUILD.gn
-@@ -1702,7 +1702,12 @@ config("runtime_library") {
+@@ -1716,7 +1716,12 @@ config("runtime_library") {
    # can be replaced by the C++ symbols. This config ensures the C++ symbols
    # exist and are strong in order to cause that replacement to occur by
    # explicitly linking in clang's compiler-rt library.
@@ -176,36 +176,21 @@ a matter of course, the steps below represent a simpler, "manual" approach.)
 +  sys.exit(subprocess.call(wrapper + sys.argv[1:]))
 --- a/third_party/protobuf/src/google/protobuf/compiler/subprocess.cc
 +++ b/third_party/protobuf/src/google/protobuf/compiler/subprocess.cc
-@@ -309,7 +309,19 @@ void Subprocess::Start(const std::string
-   ABSL_CHECK(pipe(stdin_pipe) != -1);
-   ABSL_CHECK(pipe(stdout_pipe) != -1);
+@@ -331,6 +331,14 @@ void Subprocess::Start(const std::string
  
--  char* argv[2] = {portable_strdup(program.c_str()), nullptr};
-+  char* argv[3];
-+  int argc = 0;
+   std::vector<std::string> argv_storage;
+   argv_storage.reserve(args.size() + 1);
 +
 +  // Debian cross-build support
 +  char* wrapper_env = getenv("HOST_EXEC_WRAPPER");
 +  if (wrapper_env) {
 +    // TODO: split on whitespace
-+    argv[argc++] = portable_strdup(wrapper_env);
++    argv_storage.push_back(wrapper_env);
 +    search_mode = SEARCH_PATH;
 +  }
-+
-+  argv[argc++] = portable_strdup(program.c_str());
-+  argv[argc++] = nullptr;
+   argv_storage.push_back(program);
+   argv_storage.insert(argv_storage.end(), args.begin(), args.end());
  
-   child_pid_ = fork();
-   if (child_pid_ == -1) {
-@@ -349,6 +361,8 @@ void Subprocess::Start(const std::string
-     _exit(1);
-   } else {
-     free(argv[0]);
-+    if (argc == 3)
-+      free(argv[1]);
- 
-     close(stdin_pipe[0]);
-     close(stdout_pipe[1]);
 --- a/third_party/wayland/wayland_scanner_wrapper.py
 +++ b/third_party/wayland/wayland_scanner_wrapper.py
 @@ -14,8 +14,14 @@ import os.path

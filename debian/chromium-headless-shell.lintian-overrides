@@ -1,7 +1,6 @@
 # currently unavoidable embedded libraries
-embedded-library usr/lib/chromium/chromium-headless-shell: freetype
-embedded-library usr/lib/chromium/chromium-headless-shell: libjsoncpp
-embedded-library usr/lib/chromium/chromium-headless-shell: srtp
+embedded-library freetype [usr/lib/chromium/chromium-headless-shell]
+embedded-library srtp     [usr/lib/chromium/chromium-headless-shell]
 
 # too many upstream spelling mistakes
 spelling-error-in-binary

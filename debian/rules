@@ -146,6 +146,8 @@ defines+=is_debug=false \
          treat_warnings_as_errors=false \
          toolchain_supports_rust_thin_lto=false \
          clang_warning_suppression_file=\"\" \
+         v8_metagen_libclang_so=\"/bin/true\" \
+         v8_metagen_libclang_bindings_dir=\"/usr/lib/\" \
          use_qt5=false use_qt6=false \
          is_cfi=false \
          chrome_pgo_phase=0 \

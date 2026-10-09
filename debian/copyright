@@ -90,6 +90,9 @@ Files-Excluded:
  third_party/catapult
  third_party/checkstyle
  third_party/chromevox/third_party/sre
+ third_party/chromium-bidi/node_modules/@rollup/wasm-node
+ third_party/chromium-bidi/node_modules/.bin
+ third_party/chromium-bidi/node_modules/rollup
  third_party/cpython3
  third_party/crashpad/crashpad/handler/win
  third_party/dav1d

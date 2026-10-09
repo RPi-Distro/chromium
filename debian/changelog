@@ -4,6 +4,7 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
   * New upstream stable release.
   * d/rules: set some new v8_metagen args to nonsense; used only for by the
     vendored llvm toolchain, which we don't use.
+  * d/copyright: drop a few more bundled rollups.
   * d/patches:
     - debianization/cross-build.patch: refresh for upstream changes.
     - fixes/crubit.patch: sync from u-c.
@@ -11,7 +12,7 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
     - fixes/tsc-split-comp.patch: replace my patch with one pulled from u-c.
     - ungoogled/disable-ai.patch: sync from u-c.
     - system/rollup.patch: drop most of the patch due to upstream replacing
-      a bunch of rollup usage with esbuild.
+      some rollup usage with esbuild, and update for a new rollup usage.
 
   [ Daniel Richard G. ]
   * d/*.lintian-overrides: General syntax and content update to eliminate

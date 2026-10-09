@@ -2,6 +2,20 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2026-103628: Out of bounds write in WebGL. Reported by Google.
+    - CVE-2026-103626: Incorrect authorization in FileSystem.
+      Reported by Google.
+    - CVE-2026-103621: Integer overflow in Compositing. Reported by Google.
+    - CVE-2026-103630: Use after free in FedCM. Reported by xinyang.
+    - CVE-2026-103625: Type confusion in V8. Reported by Google.
+    - CVE-2026-103624: Use after free in Contextual Tasks.
+      Reported by xuanocto1221.
+    - CVE-2026-103629: Integer overflow in Skia. Reported by Google.
+    - CVE-2026-103622: Use after free in SVG. Reported by xinyang.
+    - CVE-2026-103623: Use after free in MediaStream. Reported by xinyang.
+    - CVE-2026-103631: Buffer overflow in WebRTC.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-103627: Information leak in SVG. Reported by Google.
   * d/rules: disable metagen instance types in v8, which don't currently
     work with our toolchain.
   * d/copyright: drop a few more bundled rollups.

@@ -135,6 +135,7 @@ defines+=is_debug=false \
          enable_screen_ai_browsertests=false \
          treat_warnings_as_errors=false \
          clang_warning_suppression_file=\"\" \
+         v8_use_metagen_instance_types=false \
          use_qt5=false use_qt6=false \
          is_cfi=false \
          chrome_pgo_phase=0 \

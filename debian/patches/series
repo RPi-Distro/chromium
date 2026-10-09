@@ -9,6 +9,7 @@ debianization/safe-libcxx.patch
 debianization/pre-gen.patch
 debianization/rust-disable-debugsym.patch
 debianization/strip-rlibs.patch
+debianization/search-engines.patch
 
 fixes/ps-print.patch
 fixes/widevine-locations.patch
@@ -37,6 +38,8 @@ fixes/arm-logging.patch
 #fixes/glic.patch
 fixes/only-address-sanitizer.patch
 fixes/tsc-split-comp.patch
+fixes/crubit.patch
+fixes/verification-tokens.patch
 
 disable/tests.patch
 disable/tests-swiftshader.patch
@@ -181,8 +184,6 @@ ungoogled/disable-mei-preload.patch
 ungoogled/disable-privacy-sandbox.patch
 ungoogled/remove-navigation-source-param.patch
 ungoogled/disable-tos-dialog.patch
-ungoogled/crubit.patch
-ungoogled/verification-tokens.patch
 ungoogled/disable-ai-search-shortcuts.patch
 
 # i386 support

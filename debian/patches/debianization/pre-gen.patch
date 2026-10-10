@@ -81,6 +81,37 @@ Also part of the framework:
  
  if __name__ == '__main__':
      main()
+--- a/third_party/chromium-bidi/tools/build/scripts/rollup.py
++++ b/third_party/chromium-bidi/tools/build/scripts/rollup.py
+@@ -18,6 +18,9 @@ import os
+ import subprocess
+ import sys
+ 
++sys.path.append("../../debian")
++import deb_pre_gen
++
+ 
+ def main():
+     parser = argparse.ArgumentParser()
+@@ -28,6 +31,9 @@ def main():
+     parser.add_argument("--notices-file")
+     args = parser.parse_args()
+ 
++    if deb_pre_gen.before(args.output, indep=True):
++        return
++
+     # Resolve absolute path to rollup under repository root
+     script_dir = os.path.dirname(os.path.abspath(__file__))
+     repo_root = os.path.abspath(os.path.join(script_dir, "../../.."))
+@@ -63,6 +69,8 @@ def main():
+         sys.stderr.write(result.stdout + "\n" + result.stderr)
+         sys.exit(result.returncode)
+ 
++    deb_pre_gen.after()
++
+ 
+ if __name__ == "__main__":
+     main()
 --- a/third_party/dawn/tools/generate-sources-gn.py
 +++ b/third_party/dawn/tools/generate-sources-gn.py
 @@ -30,6 +30,9 @@ import os

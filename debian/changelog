@@ -394,9 +394,12 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
     most of the lintian warnings produced from the built packages.
   * d/control: Move libsecret-1-0 from Breaks: to Conflicts:, per lintian.
   * d/copyright: Add new Files-Excluded: entries, and update/drop old ones.
+  * d/deb_pre_gen.py: Add handling for two additional build scripts
+    (optimize_images.js and rollup.py).
   * d/etc/master_preferences: Drop initial search-engine config as it is no
     longer needed, drop obsolete pref keys, and clean up the formatting.
   * d/patches:
+    - debianization/pre-gen.patch: Add pre-gen hooks to rollup.py.
     - debianization/search-engines.patch: New patch to set DuckDuckGo as the
       default search engine directly in the code, and show more options in
       the search-engine selection dialog.

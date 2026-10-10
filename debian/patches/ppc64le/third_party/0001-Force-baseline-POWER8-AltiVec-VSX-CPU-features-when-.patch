@@ -8,15 +8,15 @@ Subject: [PATCH] Force baseline POWER8 / AltiVec / VSX CPU features when on a
  BUILD.gn | 6 ++++++
  1 file changed, 6 insertions(+)
 
-Index: chromium-149.0.7827.53/v8/BUILD.gn
+Index: chromium-155.0.8059.39/v8/BUILD.gn
 ===================================================================
---- chromium-149.0.7827.53.orig/v8/BUILD.gn
-+++ chromium-149.0.7827.53/v8/BUILD.gn
-@@ -1671,7 +1671,14 @@ config("toolchain") {
+--- chromium-155.0.8059.39.orig/v8/BUILD.gn
++++ chromium-155.0.8059.39/v8/BUILD.gn
+@@ -1775,7 +1775,14 @@ config("toolchain") {
    if (v8_current_cpu == "ppc64") {
      defines += [ "V8_TARGET_ARCH_PPC64" ]
      cflags += [ "-ffp-contract=off" ]
--    if (current_os == "aix" && !is_clang) {
+-    if (!v8_target_is_simulator) {
 +    if (current_os == "linux") {
 +        cflags += [
 +        # Enable usage of AltiVec, VSX, and other POWER8 and higher features
@@ -24,7 +24,7 @@ Index: chromium-149.0.7827.53/v8/BUILD.gn
 +        "-maltivec",
 +        "-mvsx",
 +      ]
-+    } else if (current_os == "aix" && !is_clang) {
-       cflags += [
-         # Work around AIX ceil, trunc and round oddities.
-         "-mcpu=power5+",
++    } else if (!v8_target_is_simulator) {
+       cflags += [ "-mcpu=pwr9" ]
+     }
+   }

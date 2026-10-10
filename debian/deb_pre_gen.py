@@ -166,6 +166,11 @@ def node_wrap(cmd_parts, run_node_fn, check_only=False):
     output_key = f"{out_dir}/{entry_name[:-3]}.d.ts"
   elif cmd_parts[0] == f"{src}/scripts/build/ninja/generate-tsconfig.js":
     output_key = cmd_parts[1]
+  elif cmd_parts[0] == f"{src}/scripts/build/optimize_images.js":
+    if check_only: return True
+    out_pos = cmd_parts.index("--target-gen-dir") + 1
+    out_dir = cmd_parts[out_pos]
+    output_key = f"{out_dir}/Images.js"
   elif not check_only:
     print(f"note: unhandled script: {cmd_parts[0]}", file=sys.stderr)
 
@@ -187,6 +192,7 @@ handled_python_arch_scripts = set([
 ])
 
 handled_python_indep_scripts = set([
+  "../../third_party/chromium-bidi/tools/build/scripts/rollup.py",  # needs rollup >= 2.78
   "../../third_party/dawn/tools/generate-sources-gn.py",  # golang
   "../../third_party/devtools-frontend/src/scripts/build/build_inspector_overlay.py",
   "../../third_party/devtools-frontend/src/scripts/build/run_with_restat.py",  # tsc

@@ -1,7 +1,7 @@
-Index: chromium-152.0.7977.64/build/config/compiler_cpu_abi.gn
+Index: chromium-155.0.8059.39/build/config/compiler_cpu_abi.gn
 ===================================================================
---- chromium-152.0.7977.64.orig/build/config/compiler_cpu_abi.gn
-+++ chromium-152.0.7977.64/build/config/compiler_cpu_abi.gn
+--- chromium-155.0.8059.39.orig/build/config/compiler_cpu_abi.gn
++++ chromium-155.0.8059.39/build/config/compiler_cpu_abi.gn
 @@ -334,10 +334,10 @@ if ((is_posix && !is_apple) || is_fuchsi
          cpu_abi_ldflags += [ "-maix64" ]
        }
@@ -15,10 +15,10 @@ Index: chromium-152.0.7977.64/build/config/compiler_cpu_abi.gn
        cpu_abi_ldflags += [ "-m64" ]
      }
    } else if (current_cpu == "riscv64") {
-Index: chromium-152.0.7977.64/third_party/libvpx/BUILD.gn
+Index: chromium-155.0.8059.39/third_party/libvpx/BUILD.gn
 ===================================================================
---- chromium-152.0.7977.64.orig/third_party/libvpx/BUILD.gn
-+++ chromium-152.0.7977.64/third_party/libvpx/BUILD.gn
+--- chromium-155.0.8059.39.orig/third_party/libvpx/BUILD.gn
++++ chromium-155.0.8059.39/third_party/libvpx/BUILD.gn
 @@ -97,7 +97,7 @@ config("libvpx_config") {
  
    if (current_cpu == "ppc64") {
@@ -28,11 +28,11 @@ Index: chromium-152.0.7977.64/third_party/libvpx/BUILD.gn
        "-maltivec",
        "-mvsx",
      ]
-Index: chromium-152.0.7977.64/v8/BUILD.gn
+Index: chromium-155.0.8059.39/v8/BUILD.gn
 ===================================================================
---- chromium-152.0.7977.64.orig/v8/BUILD.gn
-+++ chromium-152.0.7977.64/v8/BUILD.gn
-@@ -1724,7 +1724,7 @@ config("toolchain") {
+--- chromium-155.0.8059.39.orig/v8/BUILD.gn
++++ chromium-155.0.8059.39/v8/BUILD.gn
+@@ -1778,7 +1778,7 @@ config("toolchain") {
      if (current_os == "linux") {
          cflags += [
          # Enable usage of AltiVec, VSX, and other POWER8 and higher features
@@ -41,11 +41,11 @@ Index: chromium-152.0.7977.64/v8/BUILD.gn
          "-maltivec",
          "-mvsx",
        ]
-Index: chromium-152.0.7977.64/skia/BUILD.gn
+Index: chromium-155.0.8059.39/skia/BUILD.gn
 ===================================================================
---- chromium-152.0.7977.64.orig/skia/BUILD.gn
-+++ chromium-152.0.7977.64/skia/BUILD.gn
-@@ -970,8 +970,8 @@ if (current_cpu == "ppc64") {
+--- chromium-155.0.8059.39.orig/skia/BUILD.gn
++++ chromium-155.0.8059.39/skia/BUILD.gn
+@@ -1083,8 +1083,8 @@ if (current_cpu == "ppc64") {
    skia_source_set("skia_opts_vsx") {
      sources = skia_opts.vsx_sources
      cflags = [
@@ -56,11 +56,11 @@ Index: chromium-152.0.7977.64/skia/BUILD.gn
      ]
      visibility = [ ":skia_opts" ]
    }
-Index: chromium-152.0.7977.64/third_party/skia/BUILD.gn
+Index: chromium-155.0.8059.39/third_party/skia/BUILD.gn
 ===================================================================
---- chromium-152.0.7977.64.orig/third_party/skia/BUILD.gn
-+++ chromium-152.0.7977.64/third_party/skia/BUILD.gn
-@@ -205,7 +205,7 @@ opts("lasx") {
+--- chromium-155.0.8059.39.orig/third_party/skia/BUILD.gn
++++ chromium-155.0.8059.39/third_party/skia/BUILD.gn
+@@ -211,7 +211,7 @@ opts("lasx") {
  opts("vsx") {
    enabled = is_ppc64
    sources = skia_opts.vsx_sources
@@ -69,10 +69,10 @@ Index: chromium-152.0.7977.64/third_party/skia/BUILD.gn
  }
  
  # Any feature of Skia that requires third-party code should be optional and use this template.
-Index: chromium-152.0.7977.64/third_party/skia/gn/skia/BUILD.gn
+Index: chromium-155.0.8059.39/third_party/skia/gn/skia/BUILD.gn
 ===================================================================
---- chromium-152.0.7977.64.orig/third_party/skia/gn/skia/BUILD.gn
-+++ chromium-152.0.7977.64/third_party/skia/gn/skia/BUILD.gn
+--- chromium-155.0.8059.39.orig/third_party/skia/gn/skia/BUILD.gn
++++ chromium-155.0.8059.39/third_party/skia/gn/skia/BUILD.gn
 @@ -147,7 +147,7 @@ config("default") {
      ]
      ldflags += [ "-m32" ]
@@ -82,10 +82,10 @@ Index: chromium-152.0.7977.64/third_party/skia/gn/skia/BUILD.gn
    } else if (current_cpu == "loong64") {
      cflags += [
        "-mlsx",
-Index: chromium-152.0.7977.64/third_party/skia/src/opts/SkRasterPipeline_opts.h
+Index: chromium-155.0.8059.39/third_party/skia/src/opts/SkRasterPipeline_opts.h
 ===================================================================
---- chromium-152.0.7977.64.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
-+++ chromium-152.0.7977.64/third_party/skia/src/opts/SkRasterPipeline_opts.h
+--- chromium-155.0.8059.39.orig/third_party/skia/src/opts/SkRasterPipeline_opts.h
++++ chromium-155.0.8059.39/third_party/skia/src/opts/SkRasterPipeline_opts.h
 @@ -1849,9 +1849,7 @@ SI F from_half(U16 h) {
  #elif defined(SKRP_CPU_AVX2)
      return _mm256_cvtph_ps((__m128i)h);

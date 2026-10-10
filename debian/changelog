@@ -406,6 +406,16 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
     - fixes/crubit.patch, fixes/verification-tokens.patch: Relocate from
       ungoogled/ subdirectory as these are not official project patches.
 
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch:
+      refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - third_party/0005-blink-add-audio-vector-support.patch: refresh for upstream
+      changes
+    - core/baseline-isa-3-0.patch: refresh for upstream changes
+
   [ Jianfeng Liu ]
   * d/patches/loongarch64/0024-optimize-nested-128-bit-additions.patch:
     Add patch from upsteam to fix v8 build on loong64.

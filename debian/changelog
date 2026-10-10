@@ -406,6 +406,10 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
     - fixes/crubit.patch, fixes/verification-tokens.patch: Relocate from
       ungoogled/ subdirectory as these are not official project patches.
 
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64/0024-optimize-nested-128-bit-additions.patch:
+    Add patch from upsteam to fix v8 build on loong64.
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 30 Sep 2026 03:47:06 -0400
 
 chromium (154.0.8037.92-1) unstable; urgency=high

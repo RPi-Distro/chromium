@@ -81,6 +81,37 @@ Also part of the framework:
  
  if __name__ == '__main__':
      main()
+--- a/third_party/chromium-bidi/tools/build/scripts/compile_ts.py
++++ b/third_party/chromium-bidi/tools/build/scripts/compile_ts.py
+@@ -19,6 +19,9 @@ import os
+ import subprocess
+ import sys
+ 
++sys.path.append("../../debian")
++import deb_pre_gen
++
+ 
+ def main():
+     parser = argparse.ArgumentParser()
+@@ -33,6 +36,9 @@ def main():
+     parser.add_argument("--root_dir")
+     args = parser.parse_args()
+ 
++    if deb_pre_gen.before(args.tsconfig_output, indep=True):
++        return
++
+     # Read template config
+     with open(args.tsconfig_template) as f:
+         config = json.load(f)
+@@ -132,6 +138,8 @@ def main():
+                 if os.path.exists(path):
+                     os.utime(path, None)
+ 
++    deb_pre_gen.after()
++
+ 
+ if __name__ == "__main__":
+     main()
 --- a/third_party/chromium-bidi/tools/build/scripts/rollup.py
 +++ b/third_party/chromium-bidi/tools/build/scripts/rollup.py
 @@ -18,6 +18,9 @@ import os
@@ -229,6 +260,37 @@ Also part of the framework:
  if __name__ == '__main__':
 -  RunNode(sys.argv[1:])
 +  deb_pre_gen.node_wrap(sys.argv[1:], RunNode)
+--- a/tools/polymer/css_to_wrapper.py
++++ b/tools/polymer/css_to_wrapper.py
+@@ -23,6 +23,9 @@ _CWD = getcwd()
+ sys.path.append(path.join(_SRC_PATH, 'third_party', 'node'))
+ import node
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ _METADATA_START_REGEX = '#css_wrapper_metadata_start'
+ _METADATA_END_REGEX = '#css_wrapper_metadata_end'
+ _IMPORT_REGEX = '#import='
+@@ -207,6 +210,9 @@ def main(argv):
+   parser.add_argument('--is_ios', action='store_true')
+   args = parser.parse_args(argv)
+ 
++  if deb_pre_gen.before(f'{args.out_folder}/{args.in_files[0]}.ts', indep=True):
++    return
++
+   in_folder = path.normpath(path.join(_CWD, args.in_folder))
+   out_folder = path.normpath(path.join(_CWD, args.out_folder))
+   extension = '.js' if args.use_js else '.ts'
+@@ -346,6 +352,8 @@ def main(argv):
+     # longer needed.
+     shutil.rmtree(tmp_out_dir)
+ 
++  deb_pre_gen.after()
++
+   return
+ 
+ 
 --- a/tools/protoc_wrapper/protoc_wrapper.py
 +++ b/tools/protoc_wrapper/protoc_wrapper.py
 @@ -26,6 +26,9 @@ import tempfile

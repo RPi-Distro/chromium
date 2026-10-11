@@ -412,8 +412,8 @@ chromium (155.0.8059.39-1) UNRELEASED; urgency=high
       refresh for upstream changes
     - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
       changes
-    - third_party/0005-blink-add-audio-vector-support.patch: refresh for upstream
-      changes
+    - third_party/0005-blink-add-audio-vector-support.patch: refresh for
+      upstream changes
     - core/baseline-isa-3-0.patch: refresh for upstream changes
 
   [ Jianfeng Liu ]

@@ -192,11 +192,13 @@ handled_python_arch_scripts = set([
 ])
 
 handled_python_indep_scripts = set([
+  "../../third_party/chromium-bidi/tools/build/scripts/compile_ts.py",  # fails with Node.js v12
   "../../third_party/chromium-bidi/tools/build/scripts/rollup.py",  # needs rollup >= 2.78
   "../../third_party/dawn/tools/generate-sources-gn.py",  # golang
   "../../third_party/devtools-frontend/src/scripts/build/build_inspector_overlay.py",
   "../../third_party/devtools-frontend/src/scripts/build/run_with_restat.py",  # tsc
   "../../third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py",
+  "../../tools/polymer/css_to_wrapper.py",  # fails with Node.js v12
   "../../tools/typescript/ts_library.py",  # fails with Node.js v12
   "../../ui/webui/resources/tools/bundle_js.py",  # fails with Node.js v12
   "../../ui/webui/resources/tools/minify_js.py",  # fails with Node.js v12

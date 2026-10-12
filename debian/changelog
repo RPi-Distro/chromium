@@ -1,3 +1,12 @@
+chromium (155.0.8059.39-2) UNRELEASED; urgency=high
+
+  [ Timothy Pearson]
+  * d/patches/ppc64le:
+    - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: Fix syscall
+      execution go/no-go test logic error
+
+ -- Timothy Pearson <tpearson@debian.org>  Mon, 12 Oct 2026 12:13:00 -0500
+
 chromium (155.0.8059.39-1) unstable; urgency=high
 
   [ Andres Salomon ]

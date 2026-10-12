@@ -81,6 +81,68 @@ Also part of the framework:
  
  if __name__ == '__main__':
      main()
+--- a/third_party/chromium-bidi/tools/build/scripts/compile_ts.py
++++ b/third_party/chromium-bidi/tools/build/scripts/compile_ts.py
+@@ -19,6 +19,9 @@ import os
+ import subprocess
+ import sys
+ 
++sys.path.append("../../debian")
++import deb_pre_gen
++
+ 
+ def main():
+     parser = argparse.ArgumentParser()
+@@ -33,6 +36,9 @@ def main():
+     parser.add_argument("--root_dir")
+     args = parser.parse_args()
+ 
++    if deb_pre_gen.before(args.tsconfig_output, indep=True):
++        return
++
+     # Read template config
+     with open(args.tsconfig_template) as f:
+         config = json.load(f)
+@@ -132,6 +138,8 @@ def main():
+                 if os.path.exists(path):
+                     os.utime(path, None)
+ 
++    deb_pre_gen.after()
++
+ 
+ if __name__ == "__main__":
+     main()
+--- a/third_party/chromium-bidi/tools/build/scripts/rollup.py
++++ b/third_party/chromium-bidi/tools/build/scripts/rollup.py
+@@ -18,6 +18,9 @@ import os
+ import subprocess
+ import sys
+ 
++sys.path.append("../../debian")
++import deb_pre_gen
++
+ 
+ def main():
+     parser = argparse.ArgumentParser()
+@@ -28,6 +31,9 @@ def main():
+     parser.add_argument("--notices-file")
+     args = parser.parse_args()
+ 
++    if deb_pre_gen.before(args.output, indep=True):
++        return
++
+     # Resolve absolute path to rollup under repository root
+     script_dir = os.path.dirname(os.path.abspath(__file__))
+     repo_root = os.path.abspath(os.path.join(script_dir, "../../.."))
+@@ -63,6 +69,8 @@ def main():
+         sys.stderr.write(result.stdout + "\n" + result.stderr)
+         sys.exit(result.returncode)
+ 
++    deb_pre_gen.after()
++
+ 
+ if __name__ == "__main__":
+     main()
 --- a/third_party/dawn/tools/generate-sources-gn.py
 +++ b/third_party/dawn/tools/generate-sources-gn.py
 @@ -30,6 +30,9 @@ import os
@@ -117,37 +179,6 @@ Also part of the framework:
      return proc.returncode
  
  
---- a/third_party/devtools-frontend/src/scripts/build/build_inspector_overlay.py
-+++ b/third_party/devtools-frontend/src/scripts/build/build_inspector_overlay.py
-@@ -18,6 +18,9 @@ import os
- import sys
- import subprocess
- 
-+sys.path.append('../../debian')
-+import deb_pre_gen
-+
- try:
-     original_sys_path = sys.path
-     sys.path = sys.path + [
-@@ -84,6 +87,9 @@ def main(argv):
-         rollup_plugin_index = argv.index('--rollup_plugin')
-         rollup_plugin = argv[rollup_plugin_index + 1]
- 
-+        if deb_pre_gen.before(f'{output_path}/{argv[1]}', indep=True):
-+            return
-+
-         file_names_with_sizes = to_pairs(argv[1:input_path_flag_index])
-         for filename, max_size in file_names_with_sizes:
-             max_size = int(max_size)
-@@ -95,6 +101,8 @@ def main(argv):
-                 check_size(filename, css_file, max_size)
-                 write_file(join(output_path, filename), css_file)
- 
-+        deb_pre_gen.after()
-+
-     except:
-         print(
-             'Usage: %s filename_1 max_size_1 filename_2 max_size_2 ... filename_N max_size_N --input_path <input_path> --output_path <output_path>'
 --- a/third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs
 +++ b/third_party/devtools-frontend/src/scripts/build/generate_devtools_json.mjs
 @@ -15,7 +15,8 @@ const root = join(dirname(dirname(import
@@ -211,42 +242,6 @@ Also part of the framework:
      ret = subprocess.call(command_args)
      if ret != 0:
          if ret < 0:
---- a/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
-+++ b/third_party/devtools-frontend/src/scripts/build/typescript/ts_library.py
-@@ -14,6 +14,9 @@ import re
- 
- from os import path
- 
-+sys.path.append('../../debian')
-+import deb_pre_gen
-+
- _CURRENT_DIR = path.join(path.dirname(__file__))
- 
- ROOT_DIRECTORY_OF_REPOSITORY = path.join(_CURRENT_DIR, '..', '..', '..')
-@@ -239,6 +242,9 @@ def main():
-     runs_in_node_cjs_environment = opts.runs_in == 'node_cjs'
-     runs_in_node_esm_environment = opts.runs_in == 'node_esm'
- 
-+    if deb_pre_gen.before(opts.tsconfig_output_location, indep=True):
-+      return 0
-+
-     def get_relative_path_from_output_directory(file_to_resolve):
-         return path.relpath(path.join(os.getcwd(), file_to_resolve),
-                             tsconfig_output_directory)
-@@ -379,5 +385,12 @@ def main():
-     return 0
- 
- 
-+def debian_main_wrap():
-+    ret = main()
-+    if ret == 0:
-+      deb_pre_gen.after()
-+    return ret
-+
-+
- if __name__ == '__main__':
--    sys.exit(main())
-+    sys.exit(debian_main_wrap())
 --- a/third_party/node/node.py
 +++ b/third_party/node/node.py
 @@ -9,6 +9,9 @@ import subprocess
@@ -265,6 +260,37 @@ Also part of the framework:
  if __name__ == '__main__':
 -  RunNode(sys.argv[1:])
 +  deb_pre_gen.node_wrap(sys.argv[1:], RunNode)
+--- a/tools/polymer/css_to_wrapper.py
++++ b/tools/polymer/css_to_wrapper.py
+@@ -23,6 +23,9 @@ _CWD = getcwd()
+ sys.path.append(path.join(_SRC_PATH, 'third_party', 'node'))
+ import node
+ 
++sys.path.append('../../debian')
++import deb_pre_gen
++
+ _METADATA_START_REGEX = '#css_wrapper_metadata_start'
+ _METADATA_END_REGEX = '#css_wrapper_metadata_end'
+ _IMPORT_REGEX = '#import='
+@@ -207,6 +210,9 @@ def main(argv):
+   parser.add_argument('--is_ios', action='store_true')
+   args = parser.parse_args(argv)
+ 
++  if deb_pre_gen.before(f'{args.out_folder}/{args.in_files[0]}.ts', indep=True):
++    return
++
+   in_folder = path.normpath(path.join(_CWD, args.in_folder))
+   out_folder = path.normpath(path.join(_CWD, args.out_folder))
+   extension = '.js' if args.use_js else '.ts'
+@@ -346,6 +352,8 @@ def main(argv):
+     # longer needed.
+     shutil.rmtree(tmp_out_dir)
+ 
++  deb_pre_gen.after()
++
+   return
+ 
+ 
 --- a/tools/protoc_wrapper/protoc_wrapper.py
 +++ b/tools/protoc_wrapper/protoc_wrapper.py
 @@ -26,6 +26,9 @@ import tempfile

@@ -1,0 +1,242 @@
+From ee7d3807f46fa6926a2d79ea01b9f1f29f76b21f Mon Sep 17 00:00:00 2001
+From: Liu Yu <liuyu@loongson.cn>
+Date: Wed, 16 Sep 2026 15:09:09 +0800
+Subject: [PATCH] optimize nested 128 bit additions
+
+Port commit 02548d49d2ad491107ec701ed16de8edca404985
+Port commit 2df48b20d7a89abe9e3b7999ed30fdb022ace2a8
+
+Bug: 491766259
+Change-Id: Iccf2ae0979844440b14452e1f6de7e12fb0cf7da
+Reviewed-on: https://chromium-review.googlesource.com/c/v8/v8/+/8416173
+Commit-Queue: Matthias Liedtke <mliedtke@chromium.org>
+Auto-Submit: Liu Yu <liuyu@loongson.cn>
+Reviewed-by: Matthias Liedtke <mliedtke@chromium.org>
+Reviewed-by: Zhao Jiazhong <zhaojiazhong-hf@loongson.cn>
+Cr-Commit-Position: refs/heads/main@{#109857}
+---
+ .../backend/loong64/code-generator-loong64.cc | 16 ++++++++++
+ .../loong64/instruction-codes-loong64.h       |  1 +
+ .../loong64/instruction-selector-loong64.cc   | 31 +++++++++++++++++++
+ .../backend/mips64/code-generator-mips64.cc   | 16 ++++++++++
+ .../backend/mips64/instruction-codes-mips64.h |  1 +
+ .../mips64/instruction-scheduler-mips64.cc    |  1 +
+ .../mips64/instruction-selector-mips64.cc     | 31 +++++++++++++++++++
+ .../turboshaft/machine-optimization-reducer.h |  6 ++--
+ 8 files changed, 101 insertions(+), 2 deletions(-)
+
+diff --git a/v8/src/compiler/backend/loong64/code-generator-loong64.cc b/v8/src/compiler/backend/loong64/code-generator-loong64.cc
+index 9bc155f821..83dbab96a7 100644
+--- a/v8/src/compiler/backend/loong64/code-generator-loong64.cc
++++ b/v8/src/compiler/backend/loong64/code-generator-loong64.cc
+@@ -1397,6 +1397,22 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
+                        i.InputOperand(1), scratch);
+       break;
+     }
++    case kLoong64Add64_3: {
++      Register low = i.OutputRegister(0);
++      UseScratchRegisterScope temps(masm());
++      Register scratch = temps.Acquire();
++      __ Add_d(scratch, i.InputRegister(0), i.InputOperand(1));
++      if (instr->OutputCount() > 1) {
++        Register high = i.OutputRegister(1);
++        __ Sltu(high, scratch, i.InputRegister(0));
++        __ Add_d(low, scratch, i.InputOperand(2));
++        __ Sltu(scratch, low, scratch);
++        __ Add_d(high, high, scratch);
++      } else {
++        __ Add_d(low, scratch, i.InputOperand(2));
++      }
++      break;
++    }
+     case kLoong64Add128: {
+       UseScratchRegisterScope temps(masm());
+       Register scratch = temps.Acquire();
+diff --git a/v8/src/compiler/backend/loong64/instruction-codes-loong64.h b/v8/src/compiler/backend/loong64/instruction-codes-loong64.h
+index 92396bc25a..5939b1c59e 100644
+--- a/v8/src/compiler/backend/loong64/instruction-codes-loong64.h
++++ b/v8/src/compiler/backend/loong64/instruction-codes-loong64.h
+@@ -55,6 +55,7 @@ namespace compiler {
+   V(Loong64Add_w)                                    \
+   V(Loong64AddOvf_d)                                 \
+   V(Loong64AddOvf_w)                                 \
++  V(Loong64Add64_3)                                  \
+   V(Loong64Add128)                                   \
+   V(Loong64Sub_d)                                    \
+   V(Loong64Sub_w)                                    \
+diff --git a/v8/src/compiler/backend/loong64/instruction-selector-loong64.cc b/v8/src/compiler/backend/loong64/instruction-selector-loong64.cc
+index 735b1d90d8..a719e188a6 100644
+--- a/v8/src/compiler/backend/loong64/instruction-selector-loong64.cc
++++ b/v8/src/compiler/backend/loong64/instruction-selector-loong64.cc
+@@ -33,6 +33,13 @@ class Loong64OperandGenerator final : public OperandGenerator {
+     return UseRegister(node);
+   }
+ 
++  InstructionOperand UseUniqueOperand(OpIndex node, InstructionCode opcode) {
++    if (CanBeImmediate(node, opcode)) {
++      return UseImmediate(node);
++    }
++    return UseUniqueRegister(node);
++  }
++
+   bool IsImmediateZero(OpIndex node) {
+     if (const ConstantOp* constant =
+             selector()->Get(node).TryCast<ConstantOp>()) {
+@@ -1537,6 +1544,30 @@ void InstructionSelector::VisitUint64MulHigh(OpIndex node) {
+   VisitRRR(this, kLoong64Mulh_du, node);
+ }
+ 
++void InstructionSelector::VisitUint64Add3WithCarry(OpIndex node) {
++  Loong64OperandGenerator g(this);
++  const auto& op = Get(node).Cast<Word64Add3Op>();
++
++  OptionalV<Word64> out_low = FindProjection(node, 0);
++  OptionalV<Word64> out_high = FindProjection(node, 1);
++
++  InstructionOperand inputs[3];
++  size_t input_count = 0;
++  inputs[input_count++] = g.UseRegister(op.first());
++  inputs[input_count++] = g.UseOperand(op.second(), kLoong64Add_d);
++  inputs[input_count++] = g.UseUniqueOperand(op.third(), kLoong64Add_d);
++
++  InstructionOperand outputs[2];
++  size_t output_count = 0;
++  outputs[output_count++] =
++      g.DefineAsRegister(out_low.valid() ? out_low.value() : node);
++  if (out_high.valid() && IsUsed(out_high.value())) {
++    outputs[output_count++] = g.DefineAsRegister(out_high.value());
++  }
++
++  Emit(kLoong64Add64_3, output_count, outputs, input_count, inputs);
++}
++
+ void InstructionSelector::VisitInt64Mul(OpIndex node) {
+   Loong64OperandGenerator g(this);
+   const WordBinopOp& mul = Get(node).Cast<WordBinopOp>();
+diff --git a/v8/src/compiler/backend/mips64/code-generator-mips64.cc b/v8/src/compiler/backend/mips64/code-generator-mips64.cc
+index 750cceb960..2f1edb777c 100644
+--- a/v8/src/compiler/backend/mips64/code-generator-mips64.cc
++++ b/v8/src/compiler/backend/mips64/code-generator-mips64.cc
+@@ -1024,6 +1024,22 @@ CodeGenerator::CodeGenResult CodeGenerator::AssembleArchInstruction(
+       __ DaddOverflow(i.OutputRegister(), i.InputRegister(0), i.InputOperand(1),
+                       kScratchReg);
+       break;
++    case kMips64Add64_3: {
++      Register low = i.OutputRegister(0);
++      UseScratchRegisterScope temps(masm());
++      Register scratch = temps.Acquire();
++      __ Daddu(scratch, i.InputRegister(0), i.InputOperand(1));
++      if (instr->OutputCount() > 1) {
++        Register high = i.OutputRegister(1);
++        __ Sltu(high, scratch, i.InputRegister(0));
++        __ Daddu(low, scratch, i.InputOperand(2));
++        __ Sltu(scratch, low, scratch);
++        __ Daddu(high, high, scratch);
++      } else {
++        __ Daddu(low, scratch, i.InputOperand(2));
++      }
++      break;
++    }
+     case kMips64Add128: {
+       UseScratchRegisterScope temps(masm());
+       Register scratch = temps.Acquire();
+diff --git a/v8/src/compiler/backend/mips64/instruction-codes-mips64.h b/v8/src/compiler/backend/mips64/instruction-codes-mips64.h
+index ecfb5b2c3a..27604bcd75 100644
+--- a/v8/src/compiler/backend/mips64/instruction-codes-mips64.h
++++ b/v8/src/compiler/backend/mips64/instruction-codes-mips64.h
+@@ -16,6 +16,7 @@ namespace compiler {
+   V(Mips64Add)                        \
+   V(Mips64Dadd)                       \
+   V(Mips64DaddOvf)                    \
++  V(Mips64Add64_3)                    \
+   V(Mips64Add128)                     \
+   V(Mips64Sub)                        \
+   V(Mips64Dsub)                       \
+diff --git a/v8/src/compiler/backend/mips64/instruction-scheduler-mips64.cc b/v8/src/compiler/backend/mips64/instruction-scheduler-mips64.cc
+index d19373e102..24c96e56f2 100644
+--- a/v8/src/compiler/backend/mips64/instruction-scheduler-mips64.cc
++++ b/v8/src/compiler/backend/mips64/instruction-scheduler-mips64.cc
+@@ -66,6 +66,7 @@ int InstructionScheduler::GetTargetInstructionFlags(
+     case kMips64MulHighU:
+     case kMips64Dadd:
+     case kMips64DaddOvf:
++    case kMips64Add64_3:
+     case kMips64Add128:
+     case kMips64Dclz:
+     case kMips64Dctz:
+diff --git a/v8/src/compiler/backend/mips64/instruction-selector-mips64.cc b/v8/src/compiler/backend/mips64/instruction-selector-mips64.cc
+index b23b324c39..adc54b2756 100644
+--- a/v8/src/compiler/backend/mips64/instruction-selector-mips64.cc
++++ b/v8/src/compiler/backend/mips64/instruction-selector-mips64.cc
+@@ -32,6 +32,13 @@ class Mips64OperandGenerator final : public OperandGenerator {
+     return UseRegister(node);
+   }
+ 
++  InstructionOperand UseUniqueOperand(OpIndex node, InstructionCode opcode) {
++    if (CanBeImmediate(node, opcode)) {
++      return UseImmediate(node);
++    }
++    return UseUniqueRegister(node);
++  }
++
+   // Use the zero register if the node has the immediate value zero, otherwise
+   // assign a register.
+   InstructionOperand UseRegisterOrImmediateZero(OpIndex node) {
+@@ -763,6 +770,30 @@ void InstructionSelector::VisitUint64MulHigh(OpIndex node) {
+   VisitRRR(this, kMips64DMulHighU, node);
+ }
+ 
++void InstructionSelector::VisitUint64Add3WithCarry(OpIndex node) {
++  Mips64OperandGenerator g(this);
++  const auto& op = Get(node).Cast<Word64Add3Op>();
++
++  OptionalV<Word64> out_low = FindProjection(node, 0);
++  OptionalV<Word64> out_high = FindProjection(node, 1);
++
++  InstructionOperand inputs[3];
++  size_t input_count = 0;
++  inputs[input_count++] = g.UseRegister(op.first());
++  inputs[input_count++] = g.UseOperand(op.second(), kMips64Dadd);
++  inputs[input_count++] = g.UseUniqueOperand(op.third(), kMips64Dadd);
++
++  InstructionOperand outputs[2];
++  size_t output_count = 0;
++  outputs[output_count++] =
++      g.DefineAsRegister(out_low.valid() ? out_low.value() : node);
++  if (out_high.valid() && IsUsed(out_high.value())) {
++    outputs[output_count++] = g.DefineAsRegister(out_high.value());
++  }
++
++  Emit(kMips64Add64_3, output_count, outputs, input_count, inputs);
++}
++
+ void InstructionSelector::VisitInt64Mul(OpIndex node) {
+   // TODO(MIPS_dev): May could be optimized like in Turbofan.
+   VisitBinop(this, node, kMips64Dmul, true, kMips64Dmul);
+diff --git a/v8/src/compiler/turboshaft/machine-optimization-reducer.h b/v8/src/compiler/turboshaft/machine-optimization-reducer.h
+index 3e2b973e07..1a1d4ade97 100644
+--- a/v8/src/compiler/turboshaft/machine-optimization-reducer.h
++++ b/v8/src/compiler/turboshaft/machine-optimization-reducer.h
+@@ -1639,7 +1639,8 @@ class MachineOptimizationReducer : public Next {
+     }
+ 
+     // TODO(ryandiaz): implement on arm64
+-#ifdef V8_TARGET_ARCH_X64
++#if defined(V8_TARGET_ARCH_X64) || \
++    defined(V8_TARGET_ARCH_LOONG64) || defined(V8_TARGET_ARCH_MIPS64)
+     if (kind == Word64AddSub128BinopOp::Kind::kAdd) {
+       // add128(add128(x, 0, y, 0), z, 0) -> add3(x, y, z)
+       if (const Word64AddSub128BinopOp* nested = TryMatchAdd3(al, ah, bh)) {
+@@ -1654,7 +1655,8 @@ class MachineOptimizationReducer : public Next {
+       // TODO(ryandiaz): sub128(sub128(x, 0, y, 0), z, 0) -> sub2(x, y, z)
+       // TODO(ryandiaz): sub128(x, 0, add128(y, 0, z, 0)) -> sub2(x, y, z)
+     }
+-#endif  // V8_TARGET_ARCH_X64
++#endif  // defined(V8_TARGET_ARCH_X64) ||
++        // defined(V8_TARGET_ARCH_LOONG64) || defined(V8_TARGET_ARCH_MIPS64)
+     return Next::ReduceWord64AddSub128Binop(al, ah, bl, bh, kind);
+   }
+ 
+-- 
+2.53.0
+

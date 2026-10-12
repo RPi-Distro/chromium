@@ -7,7 +7,7 @@ This changes the default to disabled; users can re-enable it in
 
 --- a/chrome/browser/background/extensions/background_mode_manager.cc
 +++ b/chrome/browser/background/extensions/background_mode_manager.cc
-@@ -347,7 +347,7 @@ BackgroundModeManager::~BackgroundModeMa
+@@ -348,7 +348,7 @@ BackgroundModeManager::~BackgroundModeMa
  
  // static
  void BackgroundModeManager::RegisterPrefs(PrefRegistrySimple* registry) {

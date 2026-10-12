@@ -23,7 +23,7 @@ browser's GPU crash detection keep working. Upstream already uses udf #0 as
 TRAP_SEQUENCE2_() and tracks removing bkpt in crbug.com/40625592.
 --- a/base/immediate_crash.h
 +++ b/base/immediate_crash.h
-@@ -76,12 +76,11 @@ extern "C" int __attribute__((weak)) __l
+@@ -77,12 +77,11 @@ extern "C" int __attribute__((weak)) __l
  
  #elif defined(ARCH_CPU_ARMEL)
  

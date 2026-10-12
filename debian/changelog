@@ -1,4 +1,4 @@
-chromium (1:154.0.8037.92-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:155.0.8059.39-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]
   * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
@@ -31,6 +31,8 @@ chromium (1:154.0.8037.92-1~deb12u1+rpt1) bookworm; urgency=medium
   * Fix Debian's pre-generated output path for cross builds
   * Fix bootstrapping the bundled gn with our linker flags and when
     cross-building
+  * Disable debian's search-engines patch
+  * Drop debian's NEWS entry about the search-engines patch
 
   [ Tian Zheng ]
   * Let the sandboxed GPU process use the V4L2 decoder and GBM backends
@@ -43,7 +45,427 @@ chromium (1:154.0.8037.92-1~deb12u1+rpt1) bookworm; urgency=medium
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Thu, 01 Oct 2026 20:11:55 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 12 Oct 2026 12:40:16 +0100
+
+chromium (155.0.8059.39-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2026-103628: Out of bounds write in WebGL. Reported by Google.
+    - CVE-2026-103626: Incorrect authorization in FileSystem.
+      Reported by Google.
+    - CVE-2026-103621: Integer overflow in Compositing. Reported by Google.
+    - CVE-2026-103630: Use after free in FedCM. Reported by xinyang.
+    - CVE-2026-103625: Type confusion in V8. Reported by Google.
+    - CVE-2026-103624: Use after free in Contextual Tasks.
+      Reported by xuanocto1221.
+    - CVE-2026-103629: Integer overflow in Skia. Reported by Google.
+    - CVE-2026-103622: Use after free in SVG. Reported by xinyang.
+    - CVE-2026-103623: Use after free in MediaStream. Reported by xinyang.
+    - CVE-2026-103631: Buffer overflow in WebRTC.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-103627: Information leak in SVG. Reported by Google.
+    - CVE-2026-106382: Use after free in Chromecast. Reported by Google.
+    - CVE-2026-106197: Use after free in Browser. Reported by Xinyang Ge.
+    - CVE-2026-106358: Use after free in Navigation.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106347: Use after free in Track.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-102322: Incorrect Authorization in SiteIsolation.
+      Reported by Avadhut Mahamuni.
+    - CVE-2026-106245: Uninitialized resource in ANGLE.
+      Reported by JonathanBouman.
+    - CVE-2026-106327: Incorrect authorization in Core.
+      Reported by OGINOME Tomohito.
+    - CVE-2026-106366: Incomplete cleanup in CustomTabs.
+      Reported by Naoya Miyaguchi.
+    - CVE-2026-106258: Uninitialized resource in ANGLE.
+      Reported by weihengqiuu.
+    - CVE-2026-106376: Uninitialized resource in ANGLE.
+      Reported by weihengqiuu.
+    - CVE-2026-106308: Incorrect reference resolution in Autofill.
+      Reported by Anonymous.
+    - CVE-2026-106215: Uninitialized resource in ANGLE.
+      Reported by JonathanBouman.
+    - CVE-2026-106369: Missing authorization in Translate.
+      Reported by M. Fauzan Wijaya (Gh05t666nero).
+    - CVE-2026-106293: Type confusion in ANGLE. Reported by Jinpyo Lee.
+    - CVE-2026-106377: Race condition in Fonts. Reported by Google.
+    - CVE-2026-106412: Race condition in Core. Reported by Google.
+    - CVE-2026-106243: Incomplete cleanup in Proxy Auth. Reported by Google.
+    - CVE-2026-106214: Information leak in Proxy. Reported by Google.
+    - CVE-2026-106364: Incorrect authorization in Omnibox. Reported by Google.
+    - CVE-2026-106239: Integer overflow in WebGL. Reported by Google.
+    - CVE-2026-106426: Race condition in Fonts. Reported by Emond Papegaaij.
+    - CVE-2026-106419: Use after free in ANGLE.
+      Reported by Shaked Reiner (Palo Alto Networks).
+    - CVE-2026-106396: Improper input validation in Omnibox.
+      Reported by Google.
+    - CVE-2026-106323: Missing authorization in Chrome for iOS.
+      Reported by Google.
+    - CVE-2026-106231: Uninitialized resource in Dawn. Reported by Google.
+    - CVE-2026-106202: Uninitialized resource in ANGLE. Reported by Google.
+    - CVE-2026-106273: Uninitialized resource in Video. Reported by Google.
+    - CVE-2026-106203: Incomplete cleanup in Autofill. Reported by Anonymous.
+    - CVE-2026-106332: Integer overflow in Compositing. Reported by Google.
+    - CVE-2026-106281: Use after free in Tint. Reported by 0599jiangyc.
+    - CVE-2026-106298: Use after free in Chrome Tabs. Reported by TIENPA.
+    - CVE-2026-106193: Use after free in Parser.
+      Reported by Blockian Creator of Kritt and Open-Kritt.
+    - CVE-2026-106255: Race condition in V8. Reported by Google.
+    - CVE-2026-106393: Use after free in Storage. Reported by Xinyang Ge.
+    - CVE-2026-106227: Use after free in Core. Reported by Google.
+    - CVE-2026-106379: Uninitialized resource in Skia. Reported by Google.
+    - CVE-2026-106211: Use after free in TabStrip. Reported by Google.
+    - CVE-2026-106329: Incorrect authorization in FileSystem.
+      Reported by Google.
+    - CVE-2026-106248: Use after free in Bindings.
+      Reported by Alessandro Rizzo (0xAlessandro).
+    - CVE-2026-106235: Use after free in WebAudio. Reported by
+      Team Allied (Hyeongeun Ji, h4nk3r1n, h4vrut4, HunSec, nag0x).
+    - CVE-2026-106257: Use after free in HTML.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-106268: Use after free in WebRTC. Reported by xinyang.
+    - CVE-2026-106278: Use after free in Select.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106233: Use after free in Metrics.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106318: Use after free in Media.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106411: Use after free in Parser.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106423: Use after free in Media.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106346: Improper state validation in DevTools.
+      Reported by Google.
+    - CVE-2026-106190: Use after free in Media. Reported by weihengqiuu.
+    - CVE-2026-106357: Use after free in WebRTC.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106240: Type confusion in V8.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-106184: Uninitialized resource in Media.
+      Reported by James Burton (Offensive Security @ Meta).
+    - CVE-2026-106383: Use after free in Media.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106349: Use after free in V8.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106421: Use after free in PDF.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106204: Use after free in PDF.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-106200: Use after free in Track. Reported by Google.
+    - CVE-2026-106265: UI misrepresentation in File. Reported by Umar Farooq.
+    - CVE-2026-106238: Race condition in Fonts.
+      Reported by c6eed09fc8b174b0f3eebedcceb1e792.
+    - CVE-2026-106324: Incorrect authorization in WebAppInstalls.
+      Reported by Narenda Singh (@_3P1C).
+    - CVE-2026-106420: Incorrect calculation in API.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-106222: Incorrect authorization in Sync. Reported by Google.
+    - CVE-2026-106208: Missing authorization in API. Reported by Google.
+    - CVE-2026-106286: Confused deputy in Omnibox. Reported by Google.
+    - CVE-2026-106181: Incorrect reference resolution in DevTools.
+      Reported by Google.
+    - CVE-2026-106315: Use after free in Modularization. Reported by Google.
+    - CVE-2026-106274: Incorrect reference resolution in Browser.
+      Reported by Google.
+    - CVE-2026-106365: Missing authorization in Animation. Reported by Google.
+    - CVE-2026-106267: Missing authorization in Network. Reported by Google.
+    - CVE-2026-106194: Missing authorization in WebAppInstalls.
+      Reported by Google.
+    - CVE-2026-106313: Incorrect authorization in Browser. Reported by Google.
+    - CVE-2026-106283: Use after free in Streaming. Reported by Google.
+    - CVE-2026-106291: Use after free in GarbageCollection.
+      Reported by Google.
+    - CVE-2026-106300: Race condition in CacheStorage. Reported by Google.
+    - CVE-2026-106314: Incorrect authorization in Bluetooth.
+      Reported by Google.
+    - CVE-2026-106223: Uninitialized resource in GPU. Reported by Google.
+    - CVE-2026-106242: Information leak in Omnibox. Reported by Google.
+    - CVE-2026-106241: Incorrect authorization in Search. Reported by Google.
+    - CVE-2026-106381: Incorrect authorization in Passwords.
+      Reported by Google.
+    - CVE-2026-106217: Missing authorization in Google Lens.
+      Reported by Google.
+    - CVE-2026-106425: Missing authorization in BrowserTag.
+      Reported by Google.
+    - CVE-2026-106225: Missing authorization in Autofill. Reported by Google.
+    - CVE-2026-106363: Missing authorization in FullScreen.
+      Reported by Google.
+    - CVE-2026-106266: Confused deputy in Contextual Tasks.
+      Reported by Google.
+    - CVE-2026-106189: Code injection in ReaderMode. Reported by Google.
+    - CVE-2026-106335: Use after free in Media. Reported by Google.
+    - CVE-2026-106415: Information leak in Enterprise. Reported by Google.
+    - CVE-2026-106224: Missing authorization in Google Lens.
+      Reported by Google.
+    - CVE-2026-106185: Improper input validation in Viz. Reported by Google.
+    - CVE-2026-106244: Incorrect authorization in Permissions.
+      Reported by Google.
+    - CVE-2026-106407: Incorrect authorization in GetUserMedia.
+      Reported by Google.
+    - CVE-2026-106389: Incorrect authorization in USB. Reported by Google.
+    - CVE-2026-106397: Incorrect authorization in Mobile. Reported by Google.
+    - CVE-2026-106196: Missing authorization in Navigation.
+      Reported by Google.
+    - CVE-2026-106414: Improper input validation in Mobile.
+      Reported by Google.
+    - CVE-2026-106408: Protection mechanism failure in Mobile.
+      Reported by Google.
+    - CVE-2026-106261: Uninitialized resource in Video. Reported by Google.
+    - CVE-2026-106406: Missing authorization in Mobile. Reported by Google.
+    - CVE-2026-106290: Uninitialized resource in GPU. Reported by Google.
+    - CVE-2026-106378: Privilege elevation in Sandbox.
+      Reported by Paulos Yibelo Mesfin.
+    - CVE-2026-106198: Missing authorization in FileSystem.
+      Reported by pakhunov.anton.n.
+    - CVE-2026-106326: Confused deputy in UI. Reported by Google.
+    - CVE-2026-106354: Improper resource exposure in Extensions.
+      Reported by Google.
+    - CVE-2026-106342: Information leak in Autofill. Reported by Google.
+    - CVE-2026-106424: Information leak in Audio. Reported by Google.
+    - CVE-2026-106253: Incorrect authorization in Extensions.
+      Reported by Google.
+    - CVE-2026-106279: Incorrect reference resolution in Passwords.
+      Reported by Google.
+    - CVE-2026-106361: Incorrect provision of specified functionality in
+      Mobile. Reported by Google.
+    - CVE-2026-106402: Incorrect authorization in Extensions.
+      Reported by Google.
+    - CVE-2026-106311: Clickjacking in PermissionElement. Reported by Google.
+    - CVE-2026-106246: Incorrect authorization in Browser. Reported by Google.
+    - CVE-2026-106302: UI misrepresentation in PermissionElement.
+      Reported by Google.
+    - CVE-2026-106416: Code injection in Extensions. Reported by Google.
+    - CVE-2026-106182: UI misrepresentation in Paint. Reported by Google.
+    - CVE-2026-106282: UI misrepresentation in WebOTP. Reported by Google.
+    - CVE-2026-106392: Information leak in WebAudio. Reported by Google.
+    - CVE-2026-106188: Confused deputy in SignIn. Reported by Google.
+    - CVE-2026-106370: Uninitialized resource in GPU. Reported by Google.
+    - CVE-2026-106356: Clickjacking in EVP. Reported by Google.
+    - CVE-2026-106405: Race condition in CustomTabs. Reported by Google.
+    - CVE-2026-106322: Open redirect in AppManifest. Reported by Google.
+    - CVE-2026-106280: Incorrect authorization in PermissionElement.
+      Reported by Google.
+    - CVE-2026-106206: Improper input validation in Mobile.
+      Reported by Google.
+    - CVE-2026-106180: Observable discrepancy in Animation.
+      Reported by Google.
+    - CVE-2026-106303: Observable discrepancy in Autofill AI.
+      Reported by Google.
+    - CVE-2026-106201: Race condition in V8. Reported by Google.
+    - CVE-2026-106333: Incorrect authorization in Input. Reported by Google.
+    - CVE-2026-106228: Confused deputy in Google Lens. Reported by Google.
+    - CVE-2026-106289: Missing authorization in FedCM. Reported by Google.
+    - CVE-2026-106277: Information leak in Animation. Reported by Google.
+    - CVE-2026-106410: Missing authorization in Permissions.
+      Reported by Google.
+    - CVE-2026-106284: Out of bounds read in Printing. Reported by Google.
+    - CVE-2026-106209: UI misrepresentation in Mobile. Reported by Google.
+    - CVE-2026-106216: Cross-site request forgery in ReadingList.
+      Reported by Google.
+    - CVE-2026-106328: Incorrect authorization in PDF. Reported by Google.
+    - CVE-2026-106387: Missing authorization in Mobile. Reported by Google.
+    - CVE-2026-106400: Clickjacking in Messages. Reported by Google.
+    - CVE-2026-106205: Missing authorization in Passwords. Reported by Google.
+    - CVE-2026-106213: Race condition in WebAudio. Reported by Google.
+    - CVE-2026-106230: Incorrect reference resolution in Offline.
+      Reported by Google.
+    - CVE-2026-106367: Missing authorization in Mobile. Reported by Google.
+    - CVE-2026-106226: Improper input validation in Compositing.
+      Reported by Google.
+    - CVE-2026-106229: UI misrepresentation in FileSystem. Reported by Google.
+    - CVE-2026-106232: UI misrepresentation in Browser. Reported by Google.
+    - CVE-2026-106391: Incorrect authorization in WebShare.
+      Reported by Google.
+    - CVE-2026-106336: Observable discrepancy in Paint. Reported by Google.
+    - CVE-2026-106403: Incorrect authorization in Accessibility.
+      Reported by Google.
+    - CVE-2026-106373: Use after free in Fonts. Reported by Google.
+    - CVE-2026-106301: Confused deputy in Contextual Tasks.
+      Reported by Google.
+    - CVE-2026-106292: Buffer overflow in Fonts. Reported by Google.
+    - CVE-2026-106262: Incomplete cleanup in GetUserMedia. Reported by Google.
+    - CVE-2026-106360: Information leak in Payments. Reported by NH DEV.
+    - CVE-2026-106375: Incomplete cleanup in Dawn. Reported by Google.
+    - CVE-2026-106348: Information leak in Animation. Reported by Google.
+    - CVE-2026-106307: Incorrect authorization in Network. Reported by Google.
+    - CVE-2026-106212: Incorrect authorization in Autofill.
+      Reported by Google.
+    - CVE-2026-106398: Incorrect authorization in Media. Reported by caveeroo.
+    - CVE-2026-106388: Missing authorization in DataTransfer.
+      Reported by leolee.
+    - CVE-2026-106271: Missing authorization in Workers. Reported by Google.
+    - CVE-2026-106395: Uninitialized resource in Dawn. Reported by Google.
+    - CVE-2026-106304: Out of bounds read in ANGLE. Reported by Google.
+    - CVE-2026-106401: Out of bounds write in Media. Reported by Google.
+    - CVE-2026-106330: Information leak in Paint. Reported by Google.
+    - CVE-2026-106295: Incorrect authorization in Unbounded Element.
+      Reported by Google.
+    - CVE-2026-106352: Incorrect authorization in WebProtect.
+      Reported by Google.
+    - CVE-2026-106337: UI misrepresentation in UI. Reported by Google.
+    - CVE-2026-106263: Improper input validation in SignIn.
+      Reported by Google.
+    - CVE-2026-106404: Incorrect authorization in FontAccess.
+      Reported by Google.
+    - CVE-2026-106183: Missing authorization in Chromoting.
+      Reported by Google.
+    - CVE-2026-106386: Uninitialized resource in WebAudio. Reported by Google.
+    - CVE-2026-106351: Observable discrepancy in Safebrowsing.
+      Reported by Google.
+    - CVE-2026-106384: Missing authorization in SiteIsolation.
+      Reported by med.bassia.
+    - CVE-2026-106207: Race condition in V8. Reported by flyyy.
+    - CVE-2026-106321: Information leak in Editing. Reported by Google.
+    - CVE-2026-106210: Observable discrepancy in Scroll. Reported by Hafiizh.
+    - CVE-2026-106254: Information leak in Mobile. Reported by Anonymous.
+    - CVE-2026-106372: Incorrect authorization in UI.
+      Reported by Quyen Son at VinFast (@zer0qs).
+    - CVE-2026-106341: Type confusion in V8. Reported by Google.
+    - CVE-2026-106409: Incorrect reference resolution in WebAppInstalls.
+      Reported by Quyen Son at VinFast (@zer0qs).
+    - CVE-2026-106340: Missing authorization in CredentialProvider.
+      Reported by Wooseok Sung.
+    - CVE-2026-106276: UI misrepresentation in Payments.
+      Reported by Khalil Zhani.
+    - CVE-2026-106338: UI misrepresentation in PictureInPicture.
+      Reported by Hafiizh.
+    - CVE-2026-106317: UI misrepresentation in FullScreen. Reported by
+      Manojkumar Jaganathan Aka TheWhiteEvil with HackerBro Technologies.
+    - CVE-2026-106344: Missing authorization in Permissions.
+      Reported by Google.
+    - CVE-2026-106359: Confused deputy in DeviceBoundSessionCredentials.
+      Reported by Google.
+    - CVE-2026-106353: Improper input validation in Mobile.
+      Reported by Google.
+    - CVE-2026-106312: Missing authorization in SignIn. Reported by Google.
+    - CVE-2026-106191: Missing authorization in Actor. Reported by Google.
+    - CVE-2026-106250: Missing authorization in Actor. Reported by Google.
+    - CVE-2026-106309: Incorrect authorization in Selection.
+      Reported by Putra Mahardika | Instagram @mhrdkaa._.
+    - CVE-2026-106187: Missing authorization in Permissions.
+      Reported by Google.
+    - CVE-2026-106394: Incomplete cleanup in Glic.
+      Reported by Project Fortify.
+    - CVE-2026-106306: Incorrect authorization in DevTools.
+      Reported by Google.
+    - CVE-2026-106427: Confused deputy in Mobile. Reported by Google.
+    - CVE-2026-106252: Incorrect comparison in Fonts. Reported by Google.
+    - CVE-2026-106287: Information loss in CORS. Reported by Google.
+    - CVE-2026-106297: Incorrect authorization in Scheduling.
+      Reported by Google.
+    - CVE-2026-106260: Incorrect authorization in DevTools.
+      Reported by Google.
+    - CVE-2026-106362: Missing authorization in DevTools. Reported by Google.
+    - CVE-2026-106275: Uninitialized resource in GPU. Reported by Google.
+    - CVE-2026-106199: Incorrect authorization in Actor. Reported by Google.
+    - CVE-2026-106299: Improper input validation in WebAudio.
+      Reported by Google.
+    - CVE-2026-106422: Incorrect authorization in API. Reported by Google.
+    - CVE-2026-106186: Uncontrolled search path element in CredentialProvider.
+      Reported by Google.
+    - CVE-2026-106247: Buffer overflow in ANGLE. Reported by Google.
+    - CVE-2026-106192: Information leak in Mobile. Reported by Google.
+    - CVE-2026-106399: Out of bounds read in Skia. Reported by Google.
+    - CVE-2026-106264: Missing authorization in Web Authentication
+      (Passkeys & Security Keys). Reported by Google.
+    - CVE-2026-106285: UI misrepresentation in WebAppInstalls.
+      Reported by Google.
+    - CVE-2026-106220: Information leak in Passwords. Reported by Google.
+    - CVE-2026-106417: Integer overflow in Media. Reported by Google.
+    - CVE-2026-106221: Confused deputy in WebAPKs. Reported by Google.
+    - CVE-2026-106259: Incorrect authorization in PermissionElement.
+      Reported by Google.
+    - CVE-2026-106296: Improper privilege management in UI.
+      Reported by Google.
+    - CVE-2026-106249: Incorrect authorization in Autofill.
+      Reported by mute1008.
+    - CVE-2026-106374: Type confusion in V8.
+      Reported by SecBuddyN, Tencent KeenLab (CodeBuddy Security).
+    - CVE-2026-106380: UI misrepresentation in UI. Reported by Google.
+    - CVE-2026-106179: UI misrepresentation in WebAppInstalls.
+      Reported by Google.
+    - CVE-2026-106368: UI misrepresentation in UI. Reported by Google.
+    - CVE-2026-106237: Information leak in Permissions. Reported by Google.
+    - CVE-2026-106331: Improper input validation in Extensions.
+      Reported by Google.
+    - CVE-2026-106270: Incorrect authorization in WebAppInstalls.
+      Reported by Google.
+    - CVE-2026-106350: Incorrect authorization in Browser. Reported by Google.
+    - CVE-2026-106288: Missing authorization in Browser. Reported by Google.
+    - CVE-2026-106305: UI misrepresentation in Mobile. Reported by Google.
+    - CVE-2026-106418: Missing authorization in Network. Reported by Google.
+    - CVE-2026-106343: Improper state validation in Autofill AI.
+      Reported by Google.
+    - CVE-2026-106371: Incorrect authorization in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-106256: Information leak in Passwords. Reported by Google.
+    - CVE-2026-106413: Race condition in Browser. Reported by Google.
+    - CVE-2026-106339: Use of released resource in Core. Reported by Google.
+    - CVE-2026-106320: Use of released resource in UI. Reported by Google.
+    - CVE-2026-106195: Incorrect authorization in Chromoting.
+      Reported by Google.
+    - CVE-2026-106316: UI misrepresentation in Chromoting. Reported by Google.
+    - CVE-2026-106385: Race condition in Chromoting. Reported by Google.
+    - CVE-2026-106325: Incorrect reference resolution in Core.
+      Reported by Google.
+    - CVE-2026-106390: Incorrect provision of specified functionality in
+      SanitizerAPI. Reported by Google.
+    - CVE-2026-106294: Incomplete cleanup in Chromoting. Reported by Google.
+    - CVE-2026-106334: Information leak in Payments. Reported by Google.
+    - CVE-2026-106236: UI misrepresentation in Chromoting. Reported by Google.
+    - CVE-2026-106251: UI misrepresentation in Chromoting. Reported by Google.
+    - CVE-2026-106310: Use of released resource in FontAccess.
+      Reported by Google.
+    - CVE-2026-106345: Use of released resource in Session.
+      Reported by Google.
+    - CVE-2026-106272: UI misrepresentation in Chromoting. Reported by Google.
+    - CVE-2026-106355: Missing authorization in Media. Reported by Google.
+    - CVE-2026-106234: Use after free in Network. Reported by Findingz.
+    - CVE-2026-106269: Use after free in CSS. Reported by xinyang.
+  * d/rules: disable metagen instance types in v8, which don't currently
+    work with our toolchain.
+  * d/copyright: drop a few more bundled rollups.
+  * d/patches:
+    - debianization/cross-build.patch: refresh for upstream changes.
+    - debianization/pre-gen.patch: drop parts of the patch that are now
+      unnecessary.
+    - fixes/crubit.patch: sync from u-c.
+    - fixes/verification-tokens.patch: sync from u-c.
+    - fixes/tsc-split-comp.patch: replace my patch with one pulled from u-c.
+    - ungoogled/disable-ai.patch: sync from u-c.
+    - system/rollup.patch: drop most of the patch due to upstream replacing
+      some rollup usage with esbuild, and update for a new rollup usage.
+
+  [ Daniel Richard G. ]
+  * d/*.lintian-overrides: General syntax and content update to eliminate
+    most of the lintian warnings produced from the built packages.
+  * d/control: Move libsecret-1-0 from Breaks: to Conflicts:, per lintian.
+  * d/copyright: Add new Files-Excluded: entries, and update/drop old ones.
+  * d/deb_pre_gen.py: Add handling for four additional build scripts
+    (optimize_images.js, compile_ts.py, rollup.py, and css_to_wrapper.py).
+  * d/etc/master_preferences: Drop initial search-engine config as it is no
+    longer needed, drop obsolete pref keys, and clean up the formatting.
+  * d/patches:
+    - debianization/pre-gen.patch: Add pre-gen hooks to three new scripts.
+    - debianization/search-engines.patch: New patch to set DuckDuckGo as the
+      default search engine directly in the code, and show more options in
+      the search-engine selection dialog.
+    - fixes/crubit.patch, fixes/verification-tokens.patch: Relocate from
+      ungoogled/ subdirectory as these are not official project patches.
+
+  [ Timothy Pearson ]
+  * d/patches/ppc64le:
+    - third_party/0001-Force-baseline-POWER8-AltiVec-VSX-CPU-features-when-.patch:
+      refresh for upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - third_party/0005-blink-add-audio-vector-support.patch: refresh for
+      upstream changes
+    - core/baseline-isa-3-0.patch: refresh for upstream changes
+
+ -- Andres Salomon <dilinger@debian.org>  Sun, 11 Oct 2026 14:38:49 -0400
 
 chromium (154.0.8037.92-1~deb12u1) bookworm-security; urgency=high
 

@@ -21,7 +21,7 @@ on Pi 4/5) are unaffected. Windows and ChromeOS keep the feature flag and
 can still turn the fallback off; only the hard-coded branch is changed.
 --- a/ui/gl/gl_features.cc
 +++ b/ui/gl/gl_features.cc
-@@ -277,7 +277,11 @@ bool ShouldFallbackToSWIfGLES3NotSupport
+@@ -275,7 +275,11 @@ bool ShouldFallbackToSWIfGLES3NotSupport
  #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS)
    return base::FeatureList::IsEnabled(kFallbackToSWIfGLES3NotSupported);
  #else   // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS)

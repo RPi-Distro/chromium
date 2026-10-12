@@ -250,7 +250,7 @@ Subject: [PATCH] skia: Add armv7 optimizations
  
 --- a/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
 +++ b/third_party/skia/src/core/SkBitmapProcState_matrixProcs.cpp
-@@ -287,6 +287,530 @@ static unsigned clamp(SkFixed fx, int ma
+@@ -288,6 +288,530 @@ static unsigned clamp(SkFixed fx, int ma
      return SkTPin(fx >> 16, 0, max);
  }
  
@@ -778,17 +778,17 @@ Subject: [PATCH] skia: Add armv7 optimizations
 +    };
 +#else
 +
- static const SkBitmapProcState::MatrixProc ClampX_ClampY_Procs[] = {
+ static constexpr auto ClampX_ClampY_Procs = std::to_array<SkBitmapProcState::MatrixProc>({
      nofilter_scale <clamp, clamp, true>, filter_scale <clamp, clamp, extract_low_bits_clamp_clamp, true>,
      nofilter_affine<clamp, clamp>,       filter_affine<clamp, clamp, extract_low_bits_clamp_clamp>,
-@@ -295,6 +819,9 @@ static const SkBitmapProcState::MatrixPr
+@@ -296,6 +820,9 @@ static constexpr auto RepeatX_RepeatY_Pr
      nofilter_scale <repeat, repeat, false>, filter_scale <repeat, repeat, extract_low_bits_general, false>,
      nofilter_affine<repeat, repeat>,        filter_affine<repeat, repeat, extract_low_bits_general>
- };
+ });
 +
 +#endif
 +
- static const SkBitmapProcState::MatrixProc MirrorX_MirrorY_Procs[] = {
+ static constexpr auto MirrorX_MirrorY_Procs = std::to_array<SkBitmapProcState::MatrixProc>({
      nofilter_scale <mirror, mirror,  false>, filter_scale <mirror, mirror, extract_low_bits_general, false>,
      nofilter_affine<mirror, mirror>,         filter_affine<mirror, mirror, extract_low_bits_general>,
 --- a/third_party/skia/src/core/SkBitmapProcState_opts.cpp

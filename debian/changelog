@@ -1,5 +1,9 @@
 chromium (155.0.8059.39-2) UNRELEASED; urgency=high
 
+  [ Andres Salomon ]
+  * d/patches/debianization/strip-rlibs.patch: drop, it didn't actually
+    help with armhf builds crashing with OOM.
+
   [ Timothy Pearson]
   * d/patches/ppc64le:
     - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: Fix syscall

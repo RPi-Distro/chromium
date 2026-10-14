@@ -1,0 +1,11 @@
+--- a/generate_build_gn.py
++++ b/generate_build_gn.py
+@@ -358,7 +358,7 @@
+     # version prior to 9.0.0 since that version no longer has built-in support
+     # for cc_* rules, and XNNPACK doesn't have the necessary load statements to
+     # load those rules.
+-    exec_path = "/google/bin/releases/bazel-infra/bazelisk/gbazelisk"
++    exec_path = "/usr/bin/bazel"
+ 
+     cmd = [exec_path]
+     cmd.extend(args)

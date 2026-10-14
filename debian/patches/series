@@ -8,7 +8,6 @@ debianization/rustc-bootstrap.patch
 debianization/safe-libcxx.patch
 debianization/pre-gen.patch
 debianization/rust-disable-debugsym.patch
-debianization/strip-rlibs.patch
 debianization/search-engines.patch
 
 fixes/ps-print.patch

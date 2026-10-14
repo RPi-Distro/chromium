@@ -1,16 +1,62 @@
-chromium (155.0.8059.79-1) UNRELEASED; urgency=high
+chromium (155.0.8059.79-1) unstable; urgency=high
 
   [ Andres Salomon ]
   * d/patches/debianization/strip-rlibs.patch: drop, it didn't actually
     help with armhf builds crashing with OOM.
   * New upstream security release.
+    - CVE-2026-110152: Buffer overflow in ANGLE.
+      Reported by Zhenpeng (Leo) Lin at depthfirst.
+    - CVE-2026-110149: Use after free in Browser. Reported by Google.
+    - CVE-2026-110136: Use after free in PDF. Reported by Xinyang Ge.
+    - CVE-2026-110161: Use after free in Network. Reported by Google.
+    - CVE-2026-110165: Use after free in Core. Reported by Google.
+    - CVE-2026-110148: Use after free in SVG. Reported by Xinyang Ge.
+    - CVE-2026-110151: Use after free in Media. Reported by Xinyang Ge.
+    - CVE-2026-110162: Use after free in Desktop. Reported by Findingz.
+    - CVE-2026-110170: Use after free in Bindings. Reported by Google.
+    - CVE-2026-110160: Missing authorization in ReadingMode.
+      Reported by Google.
+    - CVE-2026-110143: Use of uninitialized variable in ThirdParty lmza_sdk.
+      Reported by Google.
+    - CVE-2026-110146: Information leak in Passwords. Reported by Hoyong Jin.
+    - CVE-2026-110150: Privilege elevation in Installer.
+      Reported by M. Fauzan Wijaya (Gh05t666nero).
+    - CVE-2026-110156: Incorrect reference resolution in Extensions.
+      Reported by Google.
+    - CVE-2026-110137: Use after free in WebRTC. Reported by Google.
+    - CVE-2026-110140: Type confusion in V8. Reported by Google.
+    - CVE-2026-110158: Use after free in Passwords. Reported by Xinyang Ge.
+    - CVE-2026-110145: Use after free in Passwords. Reported by Xinyang Ge.
+    - CVE-2026-110159: Incorrect authorization in Updater.
+      Reported by Aria Akhavan - Haikhavan Security.
+    - CVE-2026-110144: Incorrect authorization in Mojo.
+      Reported by Souma Ohsawa.
+    - CVE-2026-110153: Use after free in Media. Reported by xinyang.
+    - CVE-2026-110166: Buffer overflow in Animation.
+      Reported by Syn4pse (@ret2happy).
+    - CVE-2026-110169: Use after free in V8.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-110168: Use after free in V8. Reported by Google.
+    - CVE-2026-110139: Use after free in Media. Reported by weihengqiuu.
+    - CVE-2026-110172: Use after free in Media. Reported by Xinyang Ge.
+    - CVE-2026-110164: Use after free in DOM. Reported by Xinyang Ge.
+    - CVE-2026-110163: Use after free in DOM. Reported by Xinyang Ge.
+    - CVE-2026-110141: Observable discrepancy in Media. Reported by Google.
+    - CVE-2026-110138: Use after free in ShapeDetection. Reported by Google.
+    - CVE-2026-110157: Use after free in SVG. Reported by Xinyang Ge.
+    - CVE-2026-110147: Use after free in PDF. Reported by Xinyang Ge.
+    - CVE-2026-110154: Use after free in Canvas. Reported by Xinyang Ge.
+    - CVE-2026-110155: Buffer overflow in PDFium. Reported by Xinyang Ge.
+    - CVE-2026-110167: Use after free in Media. Reported by Xinyang Ge.
+    - CVE-2026-110171: Use after free in Media. Reported by Xinyang Ge.
+    - CVE-2026-110142: Use after free in FileSystem. Reported by Andrew Boni.
 
   [ Timothy Pearson]
   * d/patches/ppc64le:
     - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: Fix syscall
       execution go/no-go test logic error
 
- -- Timothy Pearson <tpearson@debian.org>  Mon, 12 Oct 2026 12:13:00 -0500
+ -- Andres Salomon <dilinger@debian.org>  Wed, 14 Oct 2026 17:13:29 -0400
 
 chromium (155.0.8059.39-1) unstable; urgency=high
 

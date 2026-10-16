@@ -973,7 +973,7 @@ Index: chromium-151.0.7922.47/sandbox/linux/seccomp-bpf/syscall.cc
  // Number that's not currently used by any Linux kernel ABIs.
  const int kInvalidSyscallNumber = 0x351d3;
  #else
-@@ -309,10 +309,54 @@ asm(// We need to be able to tell the ke
+@@ -309,10 +309,57 @@ asm(// We need to be able to tell the ke
      "2:ret\n"
      ".cfi_endproc\n"
      ".size SyscallAsm, .-SyscallAsm\n"
@@ -984,9 +984,12 @@ Index: chromium-151.0.7922.47/sandbox/linux/seccomp-bpf/syscall.cc
 +    "SyscallAsm:\n"
 +    ".cfi_startproc\n"
 +
-+    // Check if r3 is negative
++    // Check if r3 is negative. If so, do not attempt to make a
++    // system call. Instead, compute the return address that is visible
++    // to the kernel after we execute "syscall". This address can be
++    // used as a marker that BPF code inspects.
 +    "cmpdi 3, 0\n"
-+    "bgt 2f\n"
++    "bge 2f\n"
 +
 +    // Load address of 3f into r3 and return
 +    "mflr 10\n"

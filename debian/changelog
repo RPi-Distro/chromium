@@ -1,3 +1,15 @@
+chromium (155.0.8059.79-1.1) UNRELEASED; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/chromium-headless-shell.lintian-overrides: Add tiff embedded library
+    to resolve a lintian error.
+  * d/chromium-l10n.lintian-overrides: New override file to resolve several
+    lintian "package-contains-documentation-outside-usr-share-doc" checks.
+  * d/chromium.lintian-overrides: Drop the libjsoncpp embedded library, to
+    resolve a lintian "mismatched-override" warning.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 14 Oct 2026 17:13:30 -0400
+
 chromium (155.0.8059.79-1) unstable; urgency=high
 
   [ Andres Salomon ]

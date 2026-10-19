@@ -7,3 +7,15 @@ enable_wayland_server=true
 enable_reporting=false
 
 build/linux/sysroot_scripts
+
+
+Component build
+===============
+
+On an architecture named in COMPONENT_BUILD_ARCHS in debian/rules, the code
+links into several hundred shared libraries under /usr/lib/chromium instead of
+one chrome binary. A 32-bit architecture needs this, because the final link of
+chrome does not fit in a 32-bit address space.
+
+A component build requires is_official_build=false, so use_mold and
+dcheck_always_on are set to false on every architecture.

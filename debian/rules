@@ -150,10 +150,11 @@ defines+=is_debug=false \
          use_qt5=false use_qt6=false \
          is_cfi=false \
          chrome_pgo_phase=0 \
+         use_mold=false \
+         dcheck_always_on=false \
 
 # enabled features
 defines+=use_gio=true \
-         is_official_build=true \
          symbol_level=0 \
          use_pulseaudio=true \
          link_pulseaudio=true \
@@ -172,6 +173,20 @@ defines+=use_gio=true \
          proprietary_codecs=true \
          ffmpeg_branding=\"Chrome\" \
          disable_fieldtrial_testing_config=true \
+
+# A component build links the code into several hundred shared libraries
+# instead of one chrome binary. Name an architecture here to enable it.
+COMPONENT_BUILD_ARCHS ?=
+ifneq ($(filter $(DEB_HOST_ARCH),$(COMPONENT_BUILD_ARCHS)),)
+component_build = yes
+endif
+
+ifeq ($(component_build),yes)
+defines+=is_component_build=true
+component_libdir = debian/chromium-common/usr/lib/chromium
+else
+defines+=is_official_build=true
+endif
 
 # handle parallel build options
 njobs=1
@@ -275,6 +290,18 @@ override_dh_auto_install-arch:
 	    < debian/scripts/chromium > debian/chromium/usr/bin/chromium
 	# move icons into /usr/share
 	./debian/scripts/icons
+ifeq ($(component_build),yes)
+	# chromium loads some of these by name at run time, so copy them all
+	# rather than the DT_NEEDED closure, which leaves out what it dlopens
+	install -d $(component_libdir)
+	cp -a out/Release/lib*.so $(component_libdir)/
+endif
+
+ifeq ($(component_build),yes)
+override_dh_shlibdeps:
+	# the private libraries are on no linker search path
+	dh_shlibdeps -- -l$(CURDIR)/$(component_libdir)
+endif
 
 override_dh_makeshlibs:
 	# /usr/lib/chromium is private to this source

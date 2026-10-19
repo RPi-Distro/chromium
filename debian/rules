@@ -276,6 +276,10 @@ override_dh_auto_install-arch:
 	# move icons into /usr/share
 	./debian/scripts/icons
 
+override_dh_makeshlibs:
+	# /usr/lib/chromium is private to this source
+	dh_makeshlibs -Xusr/lib/chromium
+
 override_dh_fixperms:
 	dh_fixperms --exclude chrome-sandbox
 

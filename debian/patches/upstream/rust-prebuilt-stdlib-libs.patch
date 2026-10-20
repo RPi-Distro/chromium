@@ -5,11 +5,10 @@ Description: pass the prebuilt Rust stdlib rlibs through libs, not ldflags
  instead stops at the nearest shared library or executable.
 Origin: upstream, https://chromium-review.googlesource.com/c/chromium/src/+/8564239
 Author: Łukasz Anforowicz <lukasza@chromium.org>
-Applied-Upstream: landed in main on 2026-10-14 as
- f3417da85a5f7a176e13ff9ae6d5d822e3f5faae, when main was 158.0.8106.0. Drop
- this patch when the package reaches a Chromium whose release branch was cut
- after that date.
-Last-Update: 2026-10-14
+Applied-Upstream: in Chromium main only, as
+ f3417da85a5f7a176e13ff9ae6d5d822e3f5faae. Not in the 8059, 8078 or 8103
+ release branches. Drop this patch at M158.
+Last-Update: 2026-10-20
 
 diff --git a/build/rust/std/BUILD.gn b/build/rust/std/BUILD.gn
 index 7892e61..2cfca9b 100644

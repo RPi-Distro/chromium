@@ -24,6 +24,15 @@ chromium (156.0.8078.35-1) UNRELEASED; urgency=high
     - ungoogled/disable-mei-preload.patch: sync from u-c.
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
 
+  [ Trung Lê ]
+  * d/patches/ppc64le:
+    - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: read the
+      first syscall argument from orig_gpr3 instead of gpr[3] in the SIGSYS
+      ucontext, and drop the trap.cc hack that negated it. Linux 7.2.x with
+      GENERIC_ENTRY leaves -ENOSYS in gpr[3] for SECCOMP_RET_TRAP, which made
+      the pid checks for sched_getaffinity/sched_getparam fail and crashed
+      every renderer with "seccomp-bpf failure".
+
  -- Andres Salomon <dilinger@debian.org>  Wed, 14 Oct 2026 17:13:30 -0400
 
 chromium (155.0.8059.79-1) unstable; urgency=high

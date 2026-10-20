@@ -112,10 +112,20 @@ ifdef cross_pkg_config
 defines+=pkg_config=\"$(cross_pkg_config)\"
 endif
 
+# A component build links the code into several hundred shared libraries
+# instead of one chrome binary. Name an architecture here to enable it.
+COMPONENT_BUILD_ARCHS ?=
+ifneq ($(filter $(DEB_HOST_ARCH),$(COMPONENT_BUILD_ARCHS)),)
+component_build = yes
+endif
+
 # thin lto requires >4 GB RAM, so avoid it on 32-bit build hosts
 ifeq (32,$(DEB_BUILD_ARCH_BITS))
 defines+=use_thin_lto=false \
          concurrent_links=1
+else ifeq ($(component_build),yes)
+# thin lto assumes a single final link, which a component build does not have
+defines+=use_thin_lto=false
 else
 defines+=use_thin_lto=true
 endif
@@ -173,13 +183,6 @@ defines+=use_gio=true \
          proprietary_codecs=true \
          ffmpeg_branding=\"Chrome\" \
          disable_fieldtrial_testing_config=true \
-
-# A component build links the code into several hundred shared libraries
-# instead of one chrome binary. Name an architecture here to enable it.
-COMPONENT_BUILD_ARCHS ?=
-ifneq ($(filter $(DEB_HOST_ARCH),$(COMPONENT_BUILD_ARCHS)),)
-component_build = yes
-endif
 
 ifeq ($(component_build),yes)
 defines+=is_component_build=true

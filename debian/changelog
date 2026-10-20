@@ -5,6 +5,9 @@ chromium (156.0.8078.73-1.1) UNRELEASED; urgency=high
     with the two a component build needs.
   * d/rules: set use_mold=false and dcheck_always_on=false, which a component
     build needs because both default back on when is_official_build is off.
+  * d/rules: turn off use_thin_lto in a component build. Thin lto adds
+    -fwhole-program-vtables, which a component build makes unsound, and the
+    browser then crashes in mojo at startup.
   * d/rules: keep dh_makeshlibs out of /usr/lib/chromium. That directory is
     private, and chromium-common was declaring libvulkan in its shlibs and
     activating an ldconfig trigger for it.

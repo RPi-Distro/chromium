@@ -12,7 +12,7 @@ chromium (156.0.8078.35-1) UNRELEASED; urgency=high
   * New upstream stable release.
   * d/copyright:
     - delete all of third_party/oak/src/mcp/ for some remote proxy binaries.
-    - delete all of third_party/tflite/src/tensorflow/lite/experimental/ due
+    - delete third_party/tflite/src/tensorflow/lite/*/*/compatibility/ due
       to binary blobs.
   * d/patches:
     - debianization/pre-gen.patch: refresh (and drop compile_ts.py part).

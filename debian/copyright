@@ -173,7 +173,8 @@ Files-Excluded:
  third_party/swiftshader/third_party/llvm-10.0
  third_party/test_fonts/README*
  third_party/tflite/src/tensorflow/examples/multibox_detector/data/surfers.jpg
- third_party/tflite/src/tensorflow/lite/experimental
+ third_party/tflite/src/tensorflow/lite/experimental/acceleration/compatibility
+ third_party/tflite/src/tensorflow/lite/experimental/acceleration/mini_benchmark/models
  third_party/tflite/src/tensorflow/lite/g3doc
  third_party/tflite/src/tensorflow/python
  third_party/tflite/src/third_party/xla/docs

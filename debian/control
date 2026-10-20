@@ -42,6 +42,7 @@ Build-Depends:
  rollup,
  esbuild:native,
  esbuild-wasm,
+ tsx,
  xz-utils,
  xcb-proto,
  xfonts-base,

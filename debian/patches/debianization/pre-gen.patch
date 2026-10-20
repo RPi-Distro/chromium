@@ -278,10 +278,10 @@ Also part of the framework:
  
 +  # Debian pre-gen support: Only when --protoc-gen-ts is given
 +  if options.protoc_gen_ts:
-+    out_dir = options.ts_out_dir.rstrip("/")
++    out_dir = (options.cc_out_dir or options.ts_out_dir).rstrip("/")
 +    in_file = options.protos[0]
 +    assert in_file.endswith(".proto")
-+    out_file = in_file[:-6] + ".ts"
++    out_file = in_file[:-6] + (".pb.h" if options.cc_out_dir else ".ts")
 +    if deb_pre_gen.before(f"{out_dir}/{out_file}", indep=True):
 +      return
 +

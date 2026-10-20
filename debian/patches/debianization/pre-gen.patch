@@ -81,37 +81,6 @@ Also part of the framework:
  
  if __name__ == '__main__':
      main()
---- a/third_party/chromium-bidi/tools/build/scripts/compile_ts.py
-+++ b/third_party/chromium-bidi/tools/build/scripts/compile_ts.py
-@@ -19,6 +19,9 @@ import os
- import subprocess
- import sys
- 
-+sys.path.append("../../debian")
-+import deb_pre_gen
-+
- 
- def main():
-     parser = argparse.ArgumentParser()
-@@ -33,6 +36,9 @@ def main():
-     parser.add_argument("--root_dir")
-     args = parser.parse_args()
- 
-+    if deb_pre_gen.before(args.tsconfig_output, indep=True):
-+        return
-+
-     # Read template config
-     with open(args.tsconfig_template) as f:
-         config = json.load(f)
-@@ -132,6 +138,8 @@ def main():
-                 if os.path.exists(path):
-                     os.utime(path, None)
- 
-+    deb_pre_gen.after()
-+
- 
- if __name__ == "__main__":
-     main()
 --- a/third_party/chromium-bidi/tools/build/scripts/rollup.py
 +++ b/third_party/chromium-bidi/tools/build/scripts/rollup.py
 @@ -18,6 +18,9 @@ import os
@@ -340,8 +309,8 @@ Also part of the framework:
  _CWD = os.getcwd()
  _HERE_DIR = os.path.dirname(__file__)
  _SRC_DIR = os.path.normpath(os.path.join(_HERE_DIR, '..', '..'))
-@@ -74,6 +77,9 @@ def main(argv):
-   parser.add_argument('--use_typescript_go', action='store_true')
+@@ -72,6 +75,9 @@ def main(argv):
+   parser.add_argument('--output_suffix', required=True)
    args = parser.parse_args(argv)
  
 +  if deb_pre_gen.before(f'{args.gen_dir}/tsconfig_{args.output_suffix}.json', indep=True):
@@ -350,7 +319,7 @@ Also part of the framework:
    root_dir = os.path.relpath(args.root_dir, args.gen_dir)
    out_dir = os.path.relpath(args.out_dir, args.gen_dir)
  
-@@ -386,6 +392,8 @@ def main(argv):
+@@ -361,6 +367,8 @@ def main(argv):
        ]
        json.dump(manifest_data, manifest_file)
  

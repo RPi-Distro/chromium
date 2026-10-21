@@ -7,7 +7,8 @@ chromium (156.0.8078.47-1) UNRELEASED; urgency=high
     lintian "package-contains-documentation-outside-usr-share-doc" checks.
   * d/chromium.lintian-overrides: Drop the libjsoncpp embedded library, to
     resolve a lintian "mismatched-override" warning.
-  * d/control: Add tsx build-dep, to allow executing TypeScript directly.
+  * d/control: Add tsx build-dep, to allow executing TypeScript directly
+    [sid].
   * d/deb_pre_gen.py: Handle three new scripts, including a TypeScript one.
   * d/patches:
     - debianization/pre-gen.patch: Update edits to protoc_wrapper.py.
@@ -51,8 +52,17 @@ chromium (156.0.8078.47-1) UNRELEASED; urgency=high
       every renderer with "seccomp-bpf failure".
 
   [ Dominique Belhachemi]
-  * d/rules: use esbuild native binary instead of esbuild-wasm where
-    available to speed up builds and avoid riscv64 esbuild-wasm crashing.
+  * d/rules: use esbuild native binary instead of esbuild-wasm to speed
+    up builds and avoid riscv64 esbuild-wasm crashing [sid].
+
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0004-loong64-sandbox-sandbox-linux-Update-syscall-helpers.patch: refresh
+      for upstream changes.
+    - 0012-sandbox-linux-add-statx-support-for-loongarch64.patch: refresh for
+      upstream changes.
+    - 0024-optimize-nested-128-bit-additions.patch: remove since merged by
+      upstream.
 
  -- Andres Salomon <dilinger@debian.org>  Wed, 14 Oct 2026 17:13:30 -0400
 

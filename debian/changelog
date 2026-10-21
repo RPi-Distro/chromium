@@ -34,6 +34,7 @@ chromium (156.0.8078.47-1~deb12u1) UNRELEASED; urgency=high
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/disable-mei-preload.patch: sync from u-c.
     - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+    - bookworm/dav1d-extern.patch: refresh [bookworm].
 
   [ Timothy Pearson]
   * d/patches/ppc64le:

@@ -41,6 +41,8 @@ chromium (156.0.8078.47-1) UNRELEASED; urgency=high
       upstream changes
     - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
       changes
+    - third_party/0005-blink-add-audio-vector-support.patch: resync with
+      upstream amd64 SSE2 file
 
   [ Trung Lê ]
   * d/patches/ppc64le:

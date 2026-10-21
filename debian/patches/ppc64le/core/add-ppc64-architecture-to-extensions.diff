@@ -1,8 +1,8 @@
-Index: chromium-149.0.7827.53/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+Index: chromium-156.0.8078.35/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
 ===================================================================
---- chromium-149.0.7827.53.orig/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
-+++ chromium-149.0.7827.53/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
-@@ -390,6 +390,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatfo
+--- chromium-156.0.8078.35.orig/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
++++ chromium-156.0.8078.35/chrome/browser/extensions/api/runtime/chrome_runtime_api_delegate.cc
+@@ -365,6 +365,8 @@ bool ChromeRuntimeAPIDelegate::GetPlatfo
      info->arch = extensions::api::runtime::PlatformArch::kMips64;
    } else if (arch == "riscv64") {
      info->arch = extensions::api::runtime::PlatformArch::kRiscv64;
@@ -11,11 +11,11 @@ Index: chromium-149.0.7827.53/chrome/browser/extensions/api/runtime/chrome_runti
    } else {
      NOTREACHED();
    }
-Index: chromium-149.0.7827.53/extensions/common/api/runtime.json
+Index: chromium-156.0.8078.35/extensions/common/api/runtime.json
 ===================================================================
---- chromium-149.0.7827.53.orig/extensions/common/api/runtime.json
-+++ chromium-149.0.7827.53/extensions/common/api/runtime.json
-@@ -98,7 +98,8 @@
+--- chromium-156.0.8078.35.orig/extensions/common/api/runtime.json
++++ chromium-156.0.8078.35/extensions/common/api/runtime.json
+@@ -117,7 +117,8 @@
              {"name": "x86-64", "description": "Specifies the processer architecture as x86-64."},
              {"name": "mips", "description": "Specifies the processer architecture as mips."},
              {"name": "mips64", "description": "Specifies the processer architecture as mips64."},
@@ -25,7 +25,7 @@ Index: chromium-149.0.7827.53/extensions/common/api/runtime.json
           ],
          "description": "The machine's processor architecture."
        },
-@@ -112,7 +113,8 @@
+@@ -131,7 +132,8 @@
            {"name": "x86-32", "description": "Specifies the native client architecture as x86-32."},
            {"name": "x86-64", "description": "Specifies the native client architecture as x86-64."},
            {"name": "mips", "description": "Specifies the native client architecture as mips."},

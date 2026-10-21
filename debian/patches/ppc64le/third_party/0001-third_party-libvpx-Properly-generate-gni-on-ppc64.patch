@@ -8,9 +8,11 @@ Subject: [PATCH] third_party/libvpx: Properly generate gni on ppc64
  third_party/libvpx/generate_gni.sh | 10 ++++++++++
  2 files changed, 12 insertions(+)
 
---- a/third_party/libvpx/BUILD.gn
-+++ b/third_party/libvpx/BUILD.gn
-@@ -283,6 +283,8 @@ if (current_cpu == "x86" || (current_cpu
+Index: chromium-156.0.8078.35/third_party/libvpx/BUILD.gn
+===================================================================
+--- chromium-156.0.8078.35.orig/third_party/libvpx/BUILD.gn
++++ chromium-156.0.8078.35/third_party/libvpx/BUILD.gn
+@@ -282,6 +282,8 @@ if (current_cpu == "x86" || (current_cpu
        sources = libvpx_srcs_x86_avx512
      } else if (current_cpu == "x64") {
        sources = libvpx_srcs_x86_64_avx512

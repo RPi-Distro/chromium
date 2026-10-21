@@ -1,7 +1,7 @@
-Index: chromium-149.0.7827.53/third_party/libvpx/generate_gni.sh
+Index: chromium-156.0.8078.35/third_party/libvpx/generate_gni.sh
 ===================================================================
---- chromium-149.0.7827.53.orig/third_party/libvpx/generate_gni.sh
-+++ chromium-149.0.7827.53/third_party/libvpx/generate_gni.sh
+--- chromium-156.0.8078.35.orig/third_party/libvpx/generate_gni.sh
++++ chromium-156.0.8078.35/third_party/libvpx/generate_gni.sh
 @@ -407,6 +407,8 @@ x86_platforms="--enable-pic --as=yasm $D
  # third_party\llvm-build\Release+Asserts\lib\clang\18\include\arm_sve.h(271,1):
  # error: cannot mangle this built-in __SVInt8_t type yet

@@ -8,7 +8,7 @@ the libclang shared library.
  }
  
 +# Debian overrides to the above
-+_rustfmt_path  = "/usr/bin/rustfmt"
++_rustfmt_path  = "${rust_sysroot_absolute}/bin/rustfmt"
 +_libclang_path = clang_base_path + "/lib"
 +
  # Template to build Rust/C bindings with bindgen.

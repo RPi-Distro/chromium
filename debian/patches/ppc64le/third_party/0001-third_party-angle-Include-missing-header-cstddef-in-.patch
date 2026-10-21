@@ -1,7 +1,7 @@
-Index: chromium-149.0.7827.53/third_party/angle/src/libANGLE/Constants.h
+Index: chromium-156.0.8078.35/third_party/angle/src/libANGLE/Constants.h
 ===================================================================
---- chromium-149.0.7827.53.orig/third_party/angle/src/libANGLE/Constants.h
-+++ chromium-149.0.7827.53/third_party/angle/src/libANGLE/Constants.h
+--- chromium-156.0.8078.35.orig/third_party/angle/src/libANGLE/Constants.h
++++ chromium-156.0.8078.35/third_party/angle/src/libANGLE/Constants.h
 @@ -9,6 +9,7 @@
  #ifndef LIBANGLE_CONSTANTS_H_
  #define LIBANGLE_CONSTANTS_H_

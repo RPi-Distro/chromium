@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# (c) 2026 Timothy Pearson <tpearson@debian.org>
+# Licensed under the terms of the GNU General Public License v3
+#
+# Requires Bazel 8 preinstalled on the host
+
+set -e
+
+CHROMIUM_DIR="${PWD}"
+rm -rf ~/xnnpack
+patch -p1 < debian/patches/ppc64le/third_party/0001-add-xnn-ppc64el-support.patch
+cp -Rp third_party/xnnpack ~/xnnpack
+patch -p1 -R < debian/patches/ppc64le/third_party/0001-add-xnn-ppc64el-support.patch
+cd ~/xnnpack
+patch -p1 < ${CHROMIUM_DIR}/debian/scripts/autoregen/xnnpack/xnnpack_local_regen_hacks.patch
+python3 generate_build_gn.py || true
+gn format BUILD.gn
+cd "${CHROMIUM_DIR}"
+mv third_party/xnnpack/BUILD.gn third_party/xnnpack/BUILD.gn.old
+cp -Rp ~/xnnpack/BUILD.gn third_party/xnnpack/BUILD.gn
+cat ${CHROMIUM_DIR}/debian/scripts/autoregen/xnnpack/xnnpatch_header.txt > debian/patches/ppc64le/third_party/0002-regenerate-xnn-buildgn.patch
+diff -ur third_party/xnnpack/BUILD.gn.old third_party/xnnpack/BUILD.gn | sed -re '1,2 s/\t.*//' &>> debian/patches/ppc64le/third_party/0002-regenerate-xnn-buildgn.patch
+mv third_party/xnnpack/BUILD.gn.old third_party/xnnpack/BUILD.gn
+sed -i 's/--- third_party\/xnnpack\/BUILD.gn.old/--- a\/third_party\/xnnpack\/BUILD.gn/g' debian/patches/ppc64le/third_party/0002-regenerate-xnn-buildgn.patch
+sed -i 's/+++ third_party\/xnnpack\/BUILD.gn/+++ b\/third_party\/xnnpack\/BUILD.gn/g' debian/patches/ppc64le/third_party/0002-regenerate-xnn-buildgn.patch

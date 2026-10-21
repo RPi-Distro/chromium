@@ -154,6 +154,8 @@ def node_wrap(cmd_parts, run_node_fn, check_only=False):
     if check_only: return True
     out_pos = cmd_parts.index("--file") + 1
     output_key = cmd_parts[out_pos]
+  elif cmd_parts[0] == f"{src}/scripts/build/build_ai_skills.mjs":
+    output_key = cmd_parts[3]
   elif cmd_parts[0] == f"{src}/scripts/build/esbuild.js":
     output_key = cmd_parts[2]
   elif cmd_parts[0] == f"{src}/scripts/build/generate_css_js_files.js":

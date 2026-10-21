@@ -8,7 +8,7 @@ chromium (156.0.8078.47-1) UNRELEASED; urgency=high
   * d/chromium.lintian-overrides: Drop the libjsoncpp embedded library, to
     resolve a lintian "mismatched-override" warning.
   * d/control: Add tsx build-dep, to allow executing TypeScript directly.
-  * d/deb_pre_gen.py: Handle two new scripts, including a TypeScript one.
+  * d/deb_pre_gen.py: Handle three new scripts, including a TypeScript one.
   * d/patches:
     - debianization/pre-gen.patch: Update edits to protoc_wrapper.py.
     - fixes/bindgen-paths.patch: Use rust_sysroot_absolute to locate rustfmt,

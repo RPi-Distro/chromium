@@ -227,6 +227,8 @@ override_dh_auto_configure: test_armhf_neon
 	# use debian's esbuild
 	if [ -e /usr/lib/$(DEB_BUILD_MULTIARCH)/nodejs/esbuild ]; then \
 		cp -ra /usr/lib/$(DEB_BUILD_MULTIARCH)/nodejs/esbuild third_party/devtools-frontend/src/node_modules/; \
+	elif [ -e /usr/share/nodejs/esbuild ]; then \
+		cp -ra /usr/share/nodejs/esbuild third_party/devtools-frontend/src/node_modules/; \
 	else \
 		cp -ra /usr/share/nodejs/esbuild-wasm third_party/devtools-frontend/src/node_modules/esbuild; \
 	fi;

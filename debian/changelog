@@ -21,6 +21,18 @@ chromium (156.0.8078.47-1) UNRELEASED; urgency=high
 
   [ Andres Salomon ]
   * New upstream stable release.
+    - CVE-2026-110922: Use after free in Prerender. Reported by Xinyang Ge.
+    - CVE-2026-110913: Memory corruption in DOM.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-110919: Use after free in V8. Reported by Xinyang Ge.
+    - CVE-2026-110918: Memory corruption in Core. Reported by Google.
+    - CVE-2026-110917: Memory corruption in SVG. Reported by C0rk1.
+    - CVE-2026-110921: Use after free in V8. Reported by Xinyang Ge.
+    - CVE-2026-110920: Memory corruption in V8. Reported by Xinyang Ge.
+    - CVE-2026-110916: Improper input validation in Desktop.
+      Reported by Google.
+    - CVE-2026-110915: Use after free in Compositing. Reported by Google.
+    - CVE-2026-110914: Memory corruption in Workers. Reported by Google.
     - CVE-2026-113341: Memory corruption in Skia. Reported by Google.
     - CVE-2026-113279: Memory corruption in Accessibility.
       Reported by Xinyang Ge.

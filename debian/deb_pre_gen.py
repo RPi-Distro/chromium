@@ -129,7 +129,12 @@ def node_wrap(cmd_parts, run_node_fn, check_only=False):
   output_key = None
   src = "../../third_party/devtools-frontend/src"
 
-  if cmd_parts[0] == f"{src}/front_end/Images/generate-css-vars.js":
+  if cmd_parts[0] == "../../third_party/blink/public/devtools_protocol/scripts/protocol_dts_generator.ts":
+    if check_only: return True
+    out_pos = cmd_parts.index("--output-dir") + 1
+    out_dir = cmd_parts[out_pos]
+    output_key = f"{out_dir}/protocol.d.ts"
+  elif cmd_parts[0] == f"{src}/front_end/Images/generate-css-vars.js":
     out_dir = cmd_parts[2]
     output_key = f"{out_dir}/Images.prebundle.js"
   elif cmd_parts[0] == f"{src}/front_end/core/i18n/collect-ui-strings.js":
@@ -149,6 +154,8 @@ def node_wrap(cmd_parts, run_node_fn, check_only=False):
     if check_only: return True
     out_pos = cmd_parts.index("--file") + 1
     output_key = cmd_parts[out_pos]
+  elif cmd_parts[0] == f"{src}/scripts/build/build_ai_skills.mjs":
+    output_key = cmd_parts[3]
   elif cmd_parts[0] == f"{src}/scripts/build/esbuild.js":
     output_key = cmd_parts[2]
   elif cmd_parts[0] == f"{src}/scripts/build/generate_css_js_files.js":
@@ -159,6 +166,13 @@ def node_wrap(cmd_parts, run_node_fn, check_only=False):
     output_key = f"{out_dir}/{first_file}.js"
   elif cmd_parts[0] == f"{src}/scripts/build/generate_devtools_json.mjs":
     output_key = cmd_parts[1]
+  elif cmd_parts[0] == f"{src}/scripts/build/generate_html_entrypoint.js":
+    if check_only: return True
+    out_pos = cmd_parts.index("--out-directory") + 1
+    out_dir = cmd_parts[out_pos]
+    ent_pos = cmd_parts.index("--entrypoints") + 1
+    ent_name = cmd_parts[ent_pos]
+    output_key = f"{out_dir}/{ent_name}.html"
   elif cmd_parts[0] == f"{src}/scripts/build/ninja/generate-declaration.js":
     if check_only: return True
     out_dir, entry_name = cmd_parts[1:3]

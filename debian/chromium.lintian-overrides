@@ -1,6 +1,5 @@
 # currently unavoidable embedded libraries
 embedded-library freetype   [usr/lib/chromium/chromium]
-embedded-library libjsoncpp [usr/lib/chromium/chromium]
 embedded-library srtp       [usr/lib/chromium/chromium]
 embedded-library tiff       [usr/lib/chromium/chromium]
 

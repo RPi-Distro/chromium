@@ -1,0 +1,27 @@
+Description: Run .ts scripts using tsx(1)
+Author: Daniel Richard G. <skunk@iSKUNK.ORG>
+
+Node.js prior to v26 is unable to run TypeScript files directly, so swap in
+TypeScript Execute (tsx) in that case.
+
+--- a/third_party/node/node.py
++++ b/third_party/node/node.py
+@@ -28,7 +28,8 @@ def GetBinaryPath():
+ 
+ 
+ def RunNodeRaw(cmd_parts, stdout=None):
+-  cmd = [GetBinaryPath()] + cmd_parts
++  bin = 'tsx' if cmd_parts[0].endswith('.ts') else GetBinaryPath()
++  cmd = [bin] + cmd_parts
+   process = subprocess.Popen(
+       cmd, cwd=os.getcwd(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+       universal_newlines=True, encoding='utf-8')
+@@ -46,7 +47,7 @@ def RunNode(cmd_parts, stdout=None):
+       # example https://github.com/microsoft/TypeScript/issues/615
+       errs.append("stdout:\n" + stdout)
+     errs.append("exit=%d" % code)
+-    cmd = [GetBinaryPath()] + cmd_parts
++    cmd = ['node-or-tsx'] + cmd_parts
+     raise RuntimeError('Command \'%s\' failed\n%s' % (
+         ' '.join(cmd), '\n'.join(errs)))
+   return stdout

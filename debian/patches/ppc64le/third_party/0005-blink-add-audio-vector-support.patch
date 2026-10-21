@@ -1,7 +1,7 @@
-Index: chromium-155.0.8059.39/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
+Index: chromium-156.0.8078.35/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
 ===================================================================
 --- /dev/null
-+++ chromium-155.0.8059.39/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
++++ chromium-156.0.8078.35/third_party/blink/renderer/platform/audio/cpu/ppc64/delay_altivec.cc
 @@ -0,0 +1,183 @@
 +// Copyright 2016 The Chromium Authors
 +// Use of this source code is governed by a BSD-style license that can be
@@ -186,10 +186,10 @@ Index: chromium-155.0.8059.39/third_party/blink/renderer/platform/audio/cpu/ppc6
 +}
 +
 +}  // namespace blink
-Index: chromium-155.0.8059.39/third_party/blink/renderer/platform/audio/delay.cc
+Index: chromium-156.0.8078.35/third_party/blink/renderer/platform/audio/delay.cc
 ===================================================================
---- chromium-155.0.8059.39.orig/third_party/blink/renderer/platform/audio/delay.cc
-+++ chromium-155.0.8059.39/third_party/blink/renderer/platform/audio/delay.cc
+--- chromium-156.0.8078.35.orig/third_party/blink/renderer/platform/audio/delay.cc
++++ chromium-156.0.8078.35/third_party/blink/renderer/platform/audio/delay.cc
 @@ -100,7 +100,7 @@ double Delay::DelayTime(float sample_rat
    return desired_delay_frames_ / sample_rate;
  }
@@ -199,11 +199,11 @@ Index: chromium-155.0.8059.39/third_party/blink/renderer/platform/audio/delay.cc
  // Default scalar versions if simd/neon are not available.
  std::tuple<size_t, size_t> Delay::ProcessARateVector(
      base::span<float> destination,
-Index: chromium-155.0.8059.39/third_party/blink/renderer/platform/BUILD.gn
+Index: chromium-156.0.8078.35/third_party/blink/renderer/platform/BUILD.gn
 ===================================================================
---- chromium-155.0.8059.39.orig/third_party/blink/renderer/platform/BUILD.gn
-+++ chromium-155.0.8059.39/third_party/blink/renderer/platform/BUILD.gn
-@@ -1994,6 +1994,10 @@ component("platform") {
+--- chromium-156.0.8078.35.orig/third_party/blink/renderer/platform/BUILD.gn
++++ chromium-156.0.8078.35/third_party/blink/renderer/platform/BUILD.gn
+@@ -1997,6 +1997,10 @@ component("platform") {
      sources += [ "audio/cpu/arm/delay_neon.cc" ]
    }
  

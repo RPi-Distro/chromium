@@ -1,6 +1,7 @@
 # currently unavoidable embedded libraries
 embedded-library freetype [usr/lib/chromium/chromium-headless-shell]
 embedded-library srtp     [usr/lib/chromium/chromium-headless-shell]
+embedded-library tiff     [usr/lib/chromium/chromium-headless-shell]
 
 # too many upstream spelling mistakes
 spelling-error-in-binary

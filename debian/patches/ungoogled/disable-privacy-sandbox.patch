@@ -1,14 +1,6 @@
 --- a/chrome/BUILD.gn
 +++ b/chrome/BUILD.gn
-@@ -386,7 +386,6 @@ if (!is_android && !is_mac) {
- 
-     data_deps += [
-       "//chrome/browser/web_applications/isolated_web_apps/key_distribution/preload:component",
--      "//components/privacy_sandbox/privacy_sandbox_attestations/preload:component",
-       "//third_party/widevine/cdm",
-     ]
- 
-@@ -1382,7 +1381,6 @@ if (is_win) {
+@@ -1393,7 +1393,6 @@ if (is_win) {
        ":swiftshader_binaries",
        ":widevine_cdm_library",
        "//chrome/browser/web_applications/isolated_web_apps/key_distribution/preload:component_bundle",
@@ -16,13 +8,3 @@
      ]
  
      if (is_chrome_branded) {
---- a/chrome/browser/resources/BUILD.gn
-+++ b/chrome/browser/resources/BUILD.gn
-@@ -134,7 +134,6 @@ group("resources") {
-   if (is_mac) {
-     public_deps += [
-       "unexportable_keys_internals:resources",
--      "//components/privacy_sandbox/privacy_sandbox_attestations/preload:component",
-     ]
-   }
- 

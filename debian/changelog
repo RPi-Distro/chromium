@@ -1,3 +1,23 @@
+chromium (156.0.8078.47-1.1) UNRELEASED; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/clean: Drop files created by d/scripts/unbundle, as they are now
+    cleaned up in the override_dh_auto_clean target in d/rules.
+  * d/rules:
+    - Move the functionality of d/scripts/customize-typescript.sh into the
+      override_dh_auto_configure target.
+    - On cleaning, restore upstream files that were modified in said target.
+    - Tweak what files get cleaned up, and delete any resulting empty dirs.
+    - Don't clean up Cargo.toml.orig files, as the upstream tarball
+      (not ours) has many of these.
+  * d/scripts/check-upstream: Error out if the upstream tarball has anything
+    named *.upstream, as we use that suffix for our purposes.
+  * d/scripts/customize-typescript.sh: Drop, now handled in d/rules.
+  * d/scripts/unbundle: Use Python calls (instead of shell commands) to
+    create symlinks, and preserve existing files.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 21 Oct 2026 14:43:51 -0400
+
 chromium (156.0.8078.47-1) unstable; urgency=high
 
   [ Daniel Richard G. ]

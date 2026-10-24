@@ -1,0 +1,25 @@
+Minor tweaks to a script so that we can run it outside of Google's
+infrastructure
+
+--- a/third_party/xnnpack/generate_build_gn.py
++++ b/third_party/xnnpack/generate_build_gn.py
+@@ -358,7 +358,7 @@ def _run_bazel_cmd(args: list[str]) -> s
+     # version prior to 9.0.0 since that version no longer has built-in support
+     # for cc_* rules, and XNNPACK doesn't have the necessary load statements to
+     # load those rules.
+-    exec_path = "/google/bin/releases/bazel-infra/bazelisk/gbazelisk"
++    exec_path = "bazel-8"
+ 
+     cmd = [exec_path]
+     cmd.extend(args)
+@@ -573,10 +573,6 @@ def main():
+ 
+     CleanupBazelroot()
+ 
+-    logging.info('Running `git cl format` for you.')
+-
+-    subprocess.check_output(['git', 'cl', 'format'], cwd=_xnnpack_dir())
+-
+     logging.info('Done')
+ 
+ 

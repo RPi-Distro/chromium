@@ -9,28 +9,43 @@ reports OpenGL ES 2.0 only, this silently removes all hardware
 acceleration.
 
 Until M150 the behaviour was governed by kFallbackToSWIfGLES3NotSupported,
-which we disabled by default. In M151 upstream removed the feature on
-Linux altogether -- it is now declared only for Windows and ChromeOS, and
-ShouldFallbackToSWIfGLES3NotSupported() returns a hard-coded true
-everywhere else, with no flag left to override it. So return false in that
-branch instead, restoring the pre-M146 ES 2.0 fallback.
+which we disabled by default; from M151 to M155 we overrode the hard-coded
+Linux branch of ShouldFallbackToSWIfGLES3NotSupported(). M156 deleted the
+feature and that function (crbug.com/555664323) and inlined
+allow_es_version_fallback = false at its only two callers: the GPU info
+collection context and the passthrough decoder's ES3/WebGL2 context. Set
+both back to true, restoring the pre-M146 ES 2.0 fallback.
 
-The result is only consulted when ES3 context creation fails (it feeds
-GLContextAttribs::allow_es_version_fallback), so ES3-capable devices (v3d
-on Pi 4/5) are unaffected. Windows and ChromeOS keep the feature flag and
-can still turn the fallback off; only the hard-coded branch is changed.
---- a/ui/gl/gl_features.cc
-+++ b/ui/gl/gl_features.cc
-@@ -275,7 +275,11 @@ bool ShouldFallbackToSWIfGLES3NotSupport
- #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS)
-   return base::FeatureList::IsEnabled(kFallbackToSWIfGLES3NotSupported);
- #else   // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS)
--  return true;
+allow_es_version_fallback is only consulted when an ES3 context cannot be
+created (gl_context_egl.cc), so ES3-capable devices (v3d on Pi 4/5) are
+unaffected.
+--- a/gpu/command_buffer/service/service_utils.cc
++++ b/gpu/command_buffer/service/service_utils.cc
+@@ -157,7 +157,11 @@ gl::GLContextAttribs GenerateGLContextAt
+     if (IsWebGL2OrES3ContextType(context_type)) {
+       attribs.client_major_es_version = 3;
+       attribs.client_minor_es_version = 0;
+-      attribs.allow_es_version_fallback = false;
++      // Raspberry Pi: keep the ES 2.0 fallback. On GLES2-only VideoCore IV
++      // devices (Pi 0-3) disallowing it replaces hardware ES 2.0 with software
++      // rendering. Only consulted when ES3 context creation fails, so
++      // ES3-capable hardware (v3d on Pi 4/5) is unaffected.
++      attribs.allow_es_version_fallback = true;
+     } else {
+       DCHECK(IsWebGL1OrES2ContextType(context_type));
+       attribs.client_major_es_version = 2;
+--- a/gpu/config/gpu_info_collector.cc
++++ b/gpu/config/gpu_info_collector.cc
+@@ -91,7 +91,11 @@ scoped_refptr<gl::GLSurface> InitializeG
+ scoped_refptr<gl::GLContext> InitializeGLContext(gl::GLSurface* surface) {
+   TRACE_EVENT("gpu,startup", "gpu_info_collector::InitializeGLContext");
+   gl::GLContextAttribs attribs;
+-  attribs.allow_es_version_fallback = false;
 +  // Raspberry Pi: keep the ES 2.0 fallback. On GLES2-only VideoCore IV
-+  // devices (Pi 0-3) returning true replaces hardware ES 2.0 with software
++  // devices (Pi 0-3) disallowing it replaces hardware ES 2.0 with software
 +  // rendering. Only consulted when ES3 context creation fails, so
 +  // ES3-capable hardware (v3d on Pi 4/5) is unaffected.
-+  return false;
- #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS)
- }
- 
++  attribs.allow_es_version_fallback = true;
+   scoped_refptr<gl::GLContext> context(
+       gl::init::CreateGLContext(nullptr, surface, attribs));
+   if (!context.get()) {

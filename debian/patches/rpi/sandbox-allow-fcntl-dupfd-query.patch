@@ -34,7 +34,7 @@ __NR_fcntl. On 32-bit ARM the call arrives as __NR_fcntl64 and baseline_policy.c
 routes it straight to this helper, so a GPU-policy-only change misses armhf.
 --- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
 +++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.cc
-@@ -66,6 +66,25 @@
+@@ -68,6 +68,25 @@
  
  #endif  // BUILDFLAG(IS_ANDROID)
  
@@ -60,7 +60,7 @@ routes it straight to this helper, so a GPU-policy-only change misses armhf.
  #if defined(__arm__) && !defined(MAP_STACK)
  #define MAP_STACK 0x20000  // Daisy build environment has old headers.
  #endif
-@@ -329,6 +348,7 @@ ResultExpr RestrictFcntlCommands() {
+@@ -340,6 +359,7 @@ ResultExpr RestrictFcntlCommands() {
                F_SETLKW,
                F_GETLK,
                F_DUPFD,
@@ -70,7 +70,7 @@ routes it straight to this helper, so a GPU-policy-only change misses armhf.
  // On PPC64, F_SETLK, F_GETLK, F_SETLKW are defined as the 64-bit variants
 --- a/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
 +++ b/sandbox/linux/seccomp-bpf-helpers/syscall_parameters_restrictions.h
-@@ -52,8 +52,8 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
+@@ -53,8 +53,8 @@ SANDBOX_EXPORT bpf_dsl::ResultExpr Restr
  SANDBOX_EXPORT bpf_dsl::ResultExpr RestrictMprotectFlags();
  
  // Restrict fcntl(2) cmd argument to:

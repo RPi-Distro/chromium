@@ -71,6 +71,7 @@ system/llvm.patch
 system/python.patch
 system/tsc.patch
 system/tsc2.patch
+system/node-ts.patch
 
 #llvm-19/static-assert.patch
 #llvm-19/clang-19-crash.patch
@@ -259,7 +260,6 @@ loongarch64/0020-user_agent-add-loongarch-architecture-support.patch
 loongarch64/0021-components-metrics-add-loongarch64-support.patch
 loongarch64/0022-blink-fix-lsx-code-of-webgl_image_conversion_lsx.patch
 loongarch64/0023-loongarch64-enable-lsx-by-default.patch
-loongarch64/0024-optimize-nested-128-bit-additions.patch
 
 # Raspberry Pi OS patches
 rpi/0007-Widevide-Add.patch

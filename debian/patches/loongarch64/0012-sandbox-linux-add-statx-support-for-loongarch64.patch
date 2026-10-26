@@ -158,8 +158,8 @@ index 9d0fdee5f3..1c7f951436 100644
 +             bool follow_links,
 +             struct kernel_statx* sb) const override;
    int Unlink(const char* unlink) const override;
-   int InotifyAddWatch(int fd,
-                       const char* pathname,
+   int Connect(int sockfd, const char* name) const override;
+   int Bind(int sockfd, const char* name) const override;
 diff --git a/sandbox/linux/syscall_broker/broker_command.h b/sandbox/linux/syscall_broker/broker_command.h
 index d44c42fe2b..5fd22d8186 100644
 --- a/sandbox/linux/syscall_broker/broker_command.h
@@ -171,7 +171,7 @@ index d44c42fe2b..5fd22d8186 100644
 +  COMMAND_STATX,
    COMMAND_UNLINK,
    COMMAND_INOTIFY_ADD_WATCH,
- 
+   COMMAND_CONNECT,
 diff --git a/sandbox/linux/syscall_broker/broker_file_permission.h b/sandbox/linux/syscall_broker/broker_file_permission.h
 index 0b9fb9c04e..4202dc1889 100644
 --- a/sandbox/linux/syscall_broker/broker_file_permission.h

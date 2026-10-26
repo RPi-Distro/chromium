@@ -1,0 +1,2 @@
+# these are resource metadata files, not documentation
+package-contains-documentation-outside-usr-share-doc [usr/lib/chromium/locales/*.pak.info]

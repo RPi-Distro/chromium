@@ -1,4 +1,4 @@
-chromium (1:155.0.8059.79-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:156.0.8078.47-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]
   * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
@@ -45,7 +45,529 @@ chromium (1:155.0.8059.79-1~deb12u1+rpt1) bookworm; urgency=medium
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Fri, 16 Oct 2026 16:43:53 +0100
+ -- Serge Schneider <serge@raspberrypi.com>  Mon, 26 Oct 2026 15:10:56 +0000
+
+chromium (156.0.8078.47-1~deb12u1) bookworm-security; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/chromium-headless-shell.lintian-overrides: Add tiff embedded library
+    to resolve a lintian error.
+  * d/chromium-l10n.lintian-overrides: New override file to resolve several
+    lintian "package-contains-documentation-outside-usr-share-doc" checks.
+  * d/chromium.lintian-overrides: Drop the libjsoncpp embedded library, to
+    resolve a lintian "mismatched-override" warning.
+  * d/control: Add tsx build-dep, to allow executing TypeScript directly
+    [sid].
+  * d/deb_pre_gen.py: Handle three new scripts, including a TypeScript one.
+  * d/patches:
+    - debianization/pre-gen.patch: Update edits to protoc_wrapper.py.
+    - fixes/bindgen-paths.patch: Use rust_sysroot_absolute to locate rustfmt,
+      instead of hard-coding /usr. This simplifies Ubuntu support.
+    - system/node-ts.patch: New patch to use "tsx" instead of "node" when a
+      .ts script is executed, as Node.js can't do that prior to v26.
+    - system/tsc2.patch: Fix a couple of apparent TypeScript 6 vs. 7
+      incompatibilities.
+
+  [ Andres Salomon ]
+  * New upstream stable release.
+    - CVE-2026-110922: Use after free in Prerender. Reported by Xinyang Ge.
+    - CVE-2026-110913: Memory corruption in DOM.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-110919: Use after free in V8. Reported by Xinyang Ge.
+    - CVE-2026-110918: Memory corruption in Core. Reported by Google.
+    - CVE-2026-110917: Memory corruption in SVG. Reported by C0rk1.
+    - CVE-2026-110921: Use after free in V8. Reported by Xinyang Ge.
+    - CVE-2026-110920: Memory corruption in V8. Reported by Xinyang Ge.
+    - CVE-2026-110916: Improper input validation in Desktop.
+      Reported by Google.
+    - CVE-2026-110915: Use after free in Compositing. Reported by Google.
+    - CVE-2026-110914: Memory corruption in Workers. Reported by Google.
+    - CVE-2026-113341: Memory corruption in Skia. Reported by Google.
+    - CVE-2026-113279: Memory corruption in Accessibility.
+      Reported by Xinyang Ge.
+    - CVE-2026-113072: Memory corruption in CSS. Reported by Xinyang Ge.
+    - CVE-2026-113280: Memory corruption in Paint. Reported by Xinyang Ge.
+    - CVE-2026-113271: Use after free in Accessibility.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-113303: Memory corruption in WebRTC.
+      Reported by OpenAI Codex Security (kylebot).
+    - CVE-2026-113101: Use after free in SiteIsolation.
+      Reported by Quyen Son at VinFast (@zer0qs).
+    - CVE-2026-113097: Use after free in FileSystem. Reported by nh.dev2022.
+    - CVE-2026-113098: Memory corruption in CacheStorage.
+      Reported by Salvatore Gulizia (nickname: Serotav).
+    - CVE-2026-113242: Memory corruption in ANGLE. Reported by JonathanBouman.
+    - CVE-2026-113058: Use after free in WebUI. Reported by OGINOME Tomohito.
+    - CVE-2026-113082: Memory corruption in ANGLE.
+      Reported by Zabith Mohammed.
+    - CVE-2026-113119: Use after free in Network. Reported by JonathanBouman.
+    - CVE-2026-113092: Use after free in Passwords.
+      Reported by OGINOME Tomohito.
+    - CVE-2026-113134: Memory corruption in ANGLE. Reported by Jinpyo Lee.
+    - CVE-2026-113339: Use after free in SVG.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-113317: Memory corruption in Accessibility.
+      Reported by Findingz.
+    - CVE-2026-113193: Memory corruption in V8.
+      Reported by Nebula Security (@nebusecurity).
+    - CVE-2026-113117: Improper input validation in ANGLE.
+      Reported by hamayanhamayan.
+    - CVE-2026-113188: Memory corruption in GPU. Reported by Google.
+    - CVE-2026-113104: Memory corruption in Frames. Reported by Google.
+    - CVE-2026-113322: Memory corruption in Dawn. Reported by Google.
+    - CVE-2026-113163: Use after free in WebGL. Reported by Google.
+    - CVE-2026-113253: Use after free in Canvas. Reported by Google.
+    - CVE-2026-113298: Use after free in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-113315: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-113236: Use after free in Navigation. Reported by Google.
+    - CVE-2026-113284: Memory corruption in XML. Reported by Google.
+    - CVE-2026-113141: Use after free in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-113316: Improper input validation in Views. Reported by Google.
+    - CVE-2026-113234: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-113252: Improper input validation in ANGLE. Reported by Google.
+    - CVE-2026-113305: Use after free in Privacy. Reported by Hafiizh.
+    - CVE-2026-113044: Use after free in V8.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-113135: Memory corruption in PictureInPicture.
+      Reported by Xinyang Ge.
+    - CVE-2026-113266: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-113273: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-113293: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-113225: Memory corruption in Browser. Reported by Google.
+    - CVE-2026-113210: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-113285: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-113324: Use after free in GPU. Reported by Google.
+    - CVE-2026-113334: Improper input validation in ANGLE.
+      Reported by Jinpyo Lee.
+    - CVE-2026-113020: Improper input validation in Date.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-113222: Use after free in V8.
+      Reported by zenneth (randomguy6407).
+    - CVE-2026-113318: Memory corruption in ServiceWorker.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-113310: Out of bounds read in Bluetooth.
+      Reported by James Burton.
+    - CVE-2026-113338: Use after free in Turbolev.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-113093: Memory corruption in DisplayLocking.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-113012: Improper input validation in GPU.
+      Reported by Matthias Pleschinger (Popax21).
+    - CVE-2026-113175: Improper input validation in FileSystem.
+      Reported by huntersnot4.
+    - CVE-2026-113192: Memory corruption in V8. Reported by Xinyang Ge.
+    - CVE-2026-113309: Out of bounds read in Media. Reported by Xinyang Ge.
+    - CVE-2026-113295: Out of bounds read in ANGLE. Reported by Google.
+    - CVE-2026-113217: Use after free in WebAppInstalls. Reported by Google.
+    - CVE-2026-113040: Improper input validation in Proxy. Reported by o.
+    - CVE-2026-113161: Use after free in WebRTC. Reported by C0rk1.
+    - CVE-2026-113154: Memory corruption in Canvas. Reported by Xinyang Ge.
+    - CVE-2026-113336: Memory corruption in Compositing.
+      Reported by Xinyang Ge.
+    - CVE-2026-113181: Use after free in Navigation. Reported by Xinyang Ge.
+    - CVE-2026-113019: Use after free in Turbolev.
+      Reported by Project WhatForLunch (@nebusecurity).
+    - CVE-2026-113095: Out of bounds read in Focus. Reported by Xinyang Ge.
+    - CVE-2026-113160: Use after free in Turbolev. Reported by Hoyong Jin.
+    - CVE-2026-113212: Memory corruption in PDF.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-113000: Memory corruption in Paint.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-113179: Use after free in Paint.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-112993: Use after free in Input.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-113055: Type confusion in FullScreen. Reported by Kirill Baev.
+    - CVE-2026-113068: Use after free in Input.
+      Reported by Hafiizh.
+    - CVE-2026-113320: Memory corruption in Navigation. Reported by @RenwaX23.
+    - CVE-2026-113231: Improper input validation in Extensions.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-113174: Use after free in Extensions. Reported by foxribeye.
+    - CVE-2026-113022: Memory corruption in PDFium.
+      Reported by Jamos Zhu, Sebastian Dowell.
+    - CVE-2026-113079: Use after free in SiteIsolation.
+      Reported by David Erceg.
+    - CVE-2026-113191: Use after free in Internals. Reported by Google.
+    - CVE-2026-113250: Use after free in ANGLE.
+      Reported by mikey233 of HackerOne.
+    - CVE-2026-113109: Memory corruption in API. Reported by Google.
+    - CVE-2026-113113: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113069: Memory corruption in Compositing. Reported by Google.
+    - CVE-2026-113006: Out of bounds read in Navigation. Reported by Google.
+    - CVE-2026-113263: Use after free in Core. Reported by Google.
+    - CVE-2026-113018: Memory corruption in IME. Reported by Google.
+    - CVE-2026-113301: Memory corruption in WebAppInstalls.
+      Reported by Google.
+    - CVE-2026-113034: Memory corruption in FileSystem. Reported by Google.
+    - CVE-2026-113094: Memory corruption in API. Reported by Google.
+    - CVE-2026-113240: Use after free in Chromecast. Reported by Google.
+    - CVE-2026-113102: Out of bounds read in FileSystem. Reported by Google.
+    - CVE-2026-113142: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113281: Memory corruption in SiteIsolation. Reported by Google.
+    - CVE-2026-113035: Out of bounds read in API. Reported by Google.
+    - CVE-2026-113211: Memory corruption in ServiceWorker. Reported by Google.
+    - CVE-2026-113011: Use after free in CredentialProvider.
+      Reported by Google.
+    - CVE-2026-113198: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113257: Memory corruption in Media. Reported by Google.
+    - CVE-2026-113070: Out of bounds read in GetUserMedia. Reported by Google.
+    - CVE-2026-113176: Memory corruption in Omnibox. Reported by Google.
+    - CVE-2026-113150: Memory corruption in Bindings. Reported by Google.
+    - CVE-2026-113311: Use after free in ServiceWorker. Reported by Google.
+    - CVE-2026-113078: Improper input validation in Compositing.
+      Reported by Werner Kasselman.
+    - CVE-2026-113033: Use after free in Streaming. Reported by Google.
+    - CVE-2026-113026: Memory corruption in PDF. Reported by Google.
+    - CVE-2026-113302: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113164: Memory corruption in Voice. Reported by Google.
+    - CVE-2026-113239: Range error in SiteIsolation. Reported by Google.
+    - CVE-2026-113131: Memory corruption in Bluetooth. Reported by Google.
+    - CVE-2026-113333: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113147: Improper input validation in WebShare.
+      Reported by Google.
+    - CVE-2026-113337: Memory corruption in Scroll. Reported by Google.
+    - CVE-2026-113127: Memory corruption in Browser. Reported by Google.
+    - CVE-2026-113129: Improper access control in Extensions.
+      Reported by Google.
+    - CVE-2026-113264: Improper input validation in Extensions.
+      Reported by Google.
+    - CVE-2026-113105: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113220: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113275: Use after free in API. Reported by Google.
+    - CVE-2026-113283: Memory corruption in CredentialProvider.
+      Reported by Google.
+    - CVE-2026-113014: Use after free in PerformanceAPIs. Reported by Google.
+    - CVE-2026-113108: Use after free in Script. Reported by Google.
+    - CVE-2026-113343: Memory corruption in Sandbox. Reported by Google.
+    - CVE-2026-113319: Use after free in Accessibility. Reported by Google.
+    - CVE-2026-113057: Improper access control in ComputePressure.
+      Reported by Google.
+    - CVE-2026-113219: Memory corruption in Contacts. Reported by Google.
+    - CVE-2026-113005: Memory corruption in Bluetooth. Reported by Google.
+    - CVE-2026-113209: Memory corruption in Navigation. Reported by Google.
+    - CVE-2026-113166: Memory corruption in History. Reported by Google.
+    - CVE-2026-113051: Memory corruption in CSS. Reported by Google.
+    - CVE-2026-113196: Improper access control in Mobile. Reported by Google.
+    - CVE-2026-113003: Memory corruption in HID. Reported by Florian Pradines.
+    - CVE-2026-113155: Use after free in Glic. Reported by Google.
+    - CVE-2026-113290: Use after free in Input. Reported by Google.
+    - CVE-2026-113183: Memory corruption in FedCM. Reported by Google.
+    - CVE-2026-113289: Improper input validation in PerformanceAPIs.
+      Reported by Google.
+    - CVE-2026-113146: Memory corruption in PerformanceAPIs.
+      Reported by Google.
+    - CVE-2026-113207: Use after free in SiteIsolation. Reported by Google.
+    - CVE-2026-113205: Use after free in Variations. Reported by Google.
+    - CVE-2026-113162: Improper input validation in Actor. Reported by Google.
+    - CVE-2026-113118: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113232: Memory corruption in Search. Reported by Google.
+    - CVE-2026-113327: Use after free in Chromecast. Reported by Google.
+    - CVE-2026-112999: Use after free in API. Reported by Google.
+    - CVE-2026-113249: Improper input validation in Mobile.
+      Reported by Google.
+    - CVE-2026-113272: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113112: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113321: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113059: Memory corruption in Sensor. Reported by Google.
+    - CVE-2026-113137: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113208: Use after free in ContextualSearch. Reported by Google.
+    - CVE-2026-113238: Memory corruption in CustomTabs. Reported by Google.
+    - CVE-2026-113194: Memory corruption in Core. Reported by Google.
+    - CVE-2026-113189: Use after free in Core. Reported by Google.
+    - CVE-2026-113060: Improper input validation in Bluetooth.
+      Reported by Google.
+    - CVE-2026-113115: Use after free in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-113045: Out of bounds read in Offline. Reported by Google.
+    - CVE-2026-113307: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113009: Use after free in WindowControlsOverlay.
+      Reported by Google.
+    - CVE-2026-113071: Use after free in Notifications. Reported by Google.
+    - CVE-2026-113278: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113190: Use after free in ServiceWorker. Reported by TheKng.
+    - CVE-2026-112992: Memory corruption in Canvas. Reported by Google.
+    - CVE-2026-112995: Use after free in Animation. Reported by Google.
+    - CVE-2026-113261: Use after free in WebAppInstalls. Reported by Google.
+    - CVE-2026-113172: Memory corruption in ServiceWorker. Reported by Bhavya.
+    - CVE-2026-113332: Memory corruption in GPU. Reported by Google.
+    - CVE-2026-113262: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113149: Memory corruption in FullScreen. Reported by Google.
+    - CVE-2026-113206: Memory corruption in Omnibox. Reported by Google.
+    - CVE-2026-113185: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113171: Memory corruption in Prompts. Reported by Google.
+    - CVE-2026-113042: Use after free in Extensions. Reported by Google.
+    - CVE-2026-113276: Memory corruption in Passwords. Reported by Google.
+    - CVE-2026-113218: Use after free in DataTransfer. Reported by Google.
+    - CVE-2026-113195: Improper input validation in Downloads.
+      Reported by Google.
+    - CVE-2026-113328: Improper input validation in Privacy.
+      Reported by Google.
+    - CVE-2026-113335: Memory corruption in Extensions. Reported by Google.
+    - CVE-2026-113255: Use after free in CustomTabs. Reported by Google.
+    - CVE-2026-113076: Use after free in Toolbar. Reported by Google.
+    - CVE-2026-113325: Memory corruption in SignIn. Reported by Google.
+    - CVE-2026-113084: Improper input validation in Permissions.
+      Reported by Google.
+    - CVE-2026-113308: Use after free in Core. Reported by Google.
+    - CVE-2026-113224: Memory corruption in WebAppInstalls.
+      Reported by Google.
+    - CVE-2026-113148: Memory corruption in WebUI. Reported by Google.
+    - CVE-2026-113010: Out of bounds read in Extensions. Reported by Google.
+    - CVE-2026-113073: Use after free in Browser. Reported by Google.
+    - CVE-2026-113265: Memory corruption in BFCache. Reported by Google.
+    - CVE-2026-113329: Out of bounds read in Installer. Reported by Google.
+    - CVE-2026-113043: Use after free in iOSWeb. Reported by Google.
+    - CVE-2026-113202: Use after free in BrowserTag. Reported by Google.
+    - CVE-2026-113016: Improper input validation in Extensions.
+      Reported by Google.
+    - CVE-2026-113246: Memory corruption in iOSWebView. Reported by Google.
+    - CVE-2026-113041: Use after free in Actor. Reported by Google.
+    - CVE-2026-113126: Memory corruption in PolicyContainer.
+      Reported by Google.
+    - CVE-2026-113031: Memory corruption in Media. Reported by Google.
+    - CVE-2026-113081: Use after free in Compositing. Reported by Google.
+    - CVE-2026-113139: Memory corruption in Autofill. Reported by Google.
+    - CVE-2026-113128: Missing authorization in Animation. Reported by Google.
+    - CVE-2026-113049: Memory corruption in Core. Reported by Google.
+    - CVE-2026-113032: Memory corruption in Omnibox. Reported by Anonymous.
+    - CVE-2026-113204: Use after free in TrustedWebActivities.
+      Reported by jodyritonga.
+    - CVE-2026-113144: Memory corruption in Speech. Reported by Cassio Lima.
+    - CVE-2026-113054: Out of bounds read in SiteIsolation.
+      Reported by a45hif.
+    - CVE-2026-113123: Use after free in GPU. Reported by TIENPA.
+    - CVE-2026-113277: Out of bounds read in CustomTabs. Reported by mute1008.
+    - CVE-2026-113136: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113106: Memory corruption in Skia. Reported by Google.
+    - CVE-2026-113001: Use after free in Workers. Reported by Google.
+    - CVE-2026-113064: Memory corruption in OptimizationGuide.
+      Reported by Google.
+    - CVE-2026-113243: Memory corruption in DOM. Reported by Google.
+    - CVE-2026-113326: Memory corruption in Core. Reported by Google.
+    - CVE-2026-113124: Memory corruption in DataTransfer. Reported by Google.
+    - CVE-2026-113230: Improper input validation in Browser.
+      Reported by Google.
+    - CVE-2026-113090: Memory corruption in Interstitials. Reported by Google.
+    - CVE-2026-113158: Use after free in Streaming. Reported by Google.
+    - CVE-2026-113077: Memory corruption in Core. Reported by Google.
+    - CVE-2026-113282: Use after free in Views. Reported by Google.
+    - CVE-2026-113165: Use after free in Core. Reported by Google.
+    - CVE-2026-113178: Memory corruption in Views. Reported by Google.
+    - CVE-2026-113110: Memory corruption in ShadowDOM.
+      Reported by Zabith Mohammed.
+    - CVE-2026-113007: Memory corruption in Permissions.
+      Reported by Anonymous.
+    - CVE-2026-113187: Use after free in DOM. Reported by Zabith Mohammed.
+    - CVE-2026-113075: Use after free in DevTools. Reported by Google.
+    - CVE-2026-113259: Use after free in Frames. Reported by Zabith Mohammed.
+    - CVE-2026-113228: Use after free in Network. Reported by Google.
+    - CVE-2026-113099: Improper input validation in Omnibox.
+      Reported by Google.
+    - CVE-2026-113216: Use after free in Navigation. Reported by Google.
+    - CVE-2026-113270: Use after free in Internals. Reported by weihengqiuu.
+    - CVE-2026-113087: Use after free in Actor. Reported by Joshua Uphold.
+    - CVE-2026-113267: Memory corruption in Video. Reported by weihengqiuu.
+    - CVE-2026-113304: Memory corruption in GPU. Reported by Google.
+    - CVE-2026-113177: Use after free in FileSystem. Reported by Hoyong Jin.
+    - CVE-2026-113151: Out of bounds read in Actor. Reported by Google.
+    - CVE-2026-113028: Use after free in Media. Reported by Google.
+    - CVE-2026-113120: Improper input validation in Media. Reported by Google.
+    - CVE-2026-112997: Memory corruption in CSS. Reported by caveeroo.
+    - CVE-2026-113037: Use after free in WebSockets. Reported by HoneyBee.
+    - CVE-2026-113153: Memory corruption in SiteIsolation.
+      Reported by Hoyong Jin.
+    - CVE-2026-113138: Memory corruption in WebAppInstalls.
+      Reported by phamtien.ohr.s.
+    - CVE-2026-113030: Improper access control in V8.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-113100: Memory corruption in Audio. Reported by Google.
+    - CVE-2026-113221: Use after free in Google Lens.
+      Reported by OGINOME Tomohito.
+    - CVE-2026-113344: Use after free in Performance. Reported by Google.
+    - CVE-2026-113342: Memory corruption in Network. Reported by Google.
+    - CVE-2026-113159: Improper access control in DevTools.
+      Reported by Google.
+    - CVE-2026-113233: Out of bounds read in Core. Reported by Google.
+    - CVE-2026-113065: Use after free in Media. Reported by Google.
+    - CVE-2026-113002: Memory corruption in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-113199: Out of bounds read in Payments. Reported by Google.
+    - CVE-2026-113197: Use after free in Forms. Reported by Google.
+    - CVE-2026-113203: Use after free in CSS. Reported by Google.
+    - CVE-2026-113170: Use after free in Autofill. Reported by Google.
+    - CVE-2026-113258: Memory corruption in Chromoting. Reported by Google.
+    - CVE-2026-113297: Improper access control in Ozone. Reported by Google.
+    - CVE-2026-113062: Improper input validation in API. Reported by Google.
+    - CVE-2026-113096: Memory corruption in Text. Reported by Google.
+    - CVE-2026-113050: Out of bounds read in HID. Reported by Google.
+    - CVE-2026-113008: Memory corruption in Transactions Platform.
+      Reported by Google.
+    - CVE-2026-113111: Use after free in Compositing.
+      Reported by Shubham Raj, Causal Security.
+    - CVE-2026-113200: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-113143: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-113157: Information leak in ANGLE. Reported by Google.
+    - CVE-2026-113235: Improper input validation in Passwords.
+      Reported by Google.
+    - CVE-2026-113089: Improper input validation in PrintPreview.
+      Reported by Google.
+    - CVE-2026-113340: Memory corruption in ANGLE. Reported by Jinpyo Lee.
+    - CVE-2026-113052: Memory corruption in V8. Reported by gundyman.
+    - CVE-2026-113133: Memory corruption in PlatformIntegration.
+      Reported by Roshan Singh.
+    - CVE-2026-113086: Improper input validation in Input. Reported by Google.
+    - CVE-2026-113251: Use after free in PDF. Reported by kirtikumarar.
+    - CVE-2026-113215: Use after free in Extensions. Reported by David Erceg.
+    - CVE-2026-113053: Use after free in Cookies.
+      Reported by Luan Herrera (@lbherrera_).
+    - CVE-2026-113312: Memory corruption in Autofill. Reported by
+      Manojkumar Jaganathan Aka TheWhiteEvil with HackerBro Technologies.
+    - CVE-2026-113323: Use after free in Chrome for iOS.
+      Reported by Qadhafy Muhammad Tera.
+    - CVE-2026-113114: Use after free in SignIn. Reported by Google.
+    - CVE-2026-113015: Use after free in Workers. Reported by Google.
+    - CVE-2026-113091: Use after free in PerformanceAPIs. Reported by Google.
+    - CVE-2026-113168: Use after free in Permissions. Reported by Google.
+    - CVE-2026-113229: Use after free in Loader. Reported by Google.
+    - CVE-2026-113256: Use after free in Permissions. Reported by Google.
+    - CVE-2026-113103: Use after free in WebProtect. Reported by Google.
+    - CVE-2026-113056: Memory corruption in PerformanceAPIs.
+      Reported by Google.
+    - CVE-2026-113201: Memory corruption in Google Lens. Reported by Google.
+    - CVE-2026-113027: Memory corruption in WebFonts. Reported by Google.
+    - CVE-2026-113214: Improper input validation in FullScreen.
+      Reported by Google.
+    - CVE-2026-113004: Memory corruption in Sync. Reported by Google.
+    - CVE-2026-113300: Out of bounds write in Forms. Reported by Google.
+    - CVE-2026-113213: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113167: Memory corruption in Network. Reported by Google.
+    - CVE-2026-113223: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113291: Memory corruption in FullScreen. Reported by Google.
+    - CVE-2026-113241: Memory corruption in Toolbar. Reported by Google.
+    - CVE-2026-113244: Improper input validation in UI. Reported by Google.
+    - CVE-2026-113048: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113247: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113023: Improper input validation in Extensions.
+      Reported by Google.
+    - CVE-2026-113330: Memory corruption in CustomTabs. Reported by Google.
+    - CVE-2026-113226: Memory corruption in Model. Reported by Google.
+    - CVE-2026-113152: Memory corruption in SignIn. Reported by Google.
+    - CVE-2026-113029: Improper access control in ANGLE. Reported by Google.
+    - CVE-2026-113296: Memory corruption in Actor. Reported by Google.
+    - CVE-2026-113306: Improper input validation in Network.
+      Reported by Google.
+    - CVE-2026-113245: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113299: Memory corruption in WebProtect. Reported by Google.
+    - CVE-2026-113024: Use after free in WebAppInstalls. Reported by Google.
+    - CVE-2026-113025: Use after free in Input. Reported by Google.
+    - CVE-2026-113080: Use after free in WebAppInstalls. Reported by Google.
+    - CVE-2026-113186: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113180: Memory corruption in ContentCapture.
+      Reported by Google.
+    - CVE-2026-113140: Use after free in ANGLE. Reported by Google.
+    - CVE-2026-113184: Memory corruption in Scheduling. Reported by Google.
+    - CVE-2026-113017: Use after free in Views. Reported by Google.
+    - CVE-2026-112998: Memory corruption in Views. Reported by Google.
+    - CVE-2026-113021: Use after free in WebAppInstalls. Reported by Google.
+    - CVE-2026-113145: Memory corruption in Messages. Reported by Google.
+    - CVE-2026-113292: Improper input validation in Omnibox.
+      Reported by Google.
+    - CVE-2026-113156: Use after free in Messages. Reported by Google.
+    - CVE-2026-113116: Use after free in DevTools. Reported by Google.
+    - CVE-2026-113047: Memory corruption in BrowserTag. Reported by Google.
+    - CVE-2026-113173: Improper input validation in UI. Reported by Google.
+    - CVE-2026-113260: Memory corruption in Core. Reported by Google.
+    - CVE-2026-113269: Memory corruption in BrowserTag. Reported by Google.
+    - CVE-2026-113036: Memory corruption in HTML. Reported by Google.
+    - CVE-2026-113268: Memory corruption in Navigation. Reported by Google.
+    - CVE-2026-113038: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113313: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113061: Memory corruption in Chromoting. Reported by Google.
+    - CVE-2026-113248: Memory corruption in FileSystem. Reported by Google.
+    - CVE-2026-113288: Memory corruption in Core. Reported by Google.
+    - CVE-2026-113085: Use after free in Media. Reported by Google.
+    - CVE-2026-113107: Use after free in Media. Reported by Google.
+    - CVE-2026-113066: Memory corruption in Fonts. Reported by Google.
+    - CVE-2026-113121: Memory corruption in ContextMenu. Reported by Google.
+    - CVE-2026-113287: Use after free in Prompts. Reported by Google.
+    - CVE-2026-113132: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113169: Memory corruption in WebAppInstalls.
+      Reported by Google.
+    - CVE-2026-113254: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113063: Improper input validation in Chromoting.
+      Reported by Google.
+    - CVE-2026-112994: Memory corruption in Browser. Reported by Google.
+    - CVE-2026-113314: Use after free in Media. Reported by Google.
+    - CVE-2026-113237: Memory corruption in Chromoting. Reported by Google.
+    - CVE-2026-113331: Memory corruption in Controls. Reported by Google.
+    - CVE-2026-113182: Memory corruption in Passwords. Reported by Google.
+    - CVE-2026-113046: Improper input validation in Passwords.
+      Reported by Google.
+    - CVE-2026-113067: Use after free in Chromoting. Reported by Google.
+    - CVE-2026-113074: Use after free in Media. Reported by Google.
+    - CVE-2026-113130: Use after free in Actor. Reported by Google.
+    - CVE-2026-113294: Improper input validation in Loader.
+      Reported by Google.
+    - CVE-2026-112996: Memory corruption in Loader. Reported by Google.
+    - CVE-2026-113122: Memory corruption in Loader. Reported by Google.
+    - CVE-2026-113227: Use after free in Editing. Reported by Google.
+    - CVE-2026-113286: Memory corruption in Google Lens. Reported by Google.
+    - CVE-2026-113083: Memory corruption in Actor. Reported by Google.
+    - CVE-2026-113088: Memory corruption in Mobile. Reported by Google.
+    - CVE-2026-113013: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113125: Memory corruption in DevTools. Reported by Google.
+    - CVE-2026-113039: Use after free in Bookmarks. Reported by NH DEV.
+    - CVE-2026-113274: Use after free in ReadingMode. Reported by chipsec.
+  * d/copyright:
+    - delete all of third_party/oak/src/mcp/ for some remote proxy binaries.
+    - delete third_party/tflite/src/tensorflow/lite/*/*/compatibility/ due
+      to binary blobs.
+  * d/patches:
+    - debianization/pre-gen.patch: refresh (and drop compile_ts.py part).
+    - fixes/only-address-sanitizer.patch: refresh.
+    - fixes/crubit.patch: sync from u-c.
+    - fixes/verification-tokens.patch: sync from u-c.
+    - disable/catapult.patch: refresh.
+    - ungoogled/disable-ai.patch: sync from u-c.
+    - ungoogled/disable-mei-preload.patch: sync from u-c.
+    - ungoogled/disable-privacy-sandbox.patch: sync from u-c.
+    - bookworm/dav1d-extern.patch: refresh [bookworm].
+
+  [ Timothy Pearson]
+  * d/patches/ppc64le:
+    - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: refresh for
+      upstream changes
+    - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
+      changes
+    - third_party/0005-blink-add-audio-vector-support.patch: resync with
+      upstream amd64 SSE2 file
+
+  [ Trung Lê ]
+  * d/patches/ppc64le:
+    - sandbox/0001-sandbox-Enable-seccomp_bpf-for-ppc64.patch: read the
+      first syscall argument from orig_gpr3 instead of gpr[3] in the SIGSYS
+      ucontext, and drop the trap.cc hack that negated it. Linux 7.2.x with
+      GENERIC_ENTRY leaves -ENOSYS in gpr[3] for SECCOMP_RET_TRAP, which made
+      the pid checks for sched_getaffinity/sched_getparam fail and crashed
+      every renderer with "seccomp-bpf failure".
+
+  [ Dominique Belhachemi]
+  * d/rules: use esbuild native binary instead of esbuild-wasm to speed
+    up builds and avoid riscv64 esbuild-wasm crashing [sid].
+
+  [ Jianfeng Liu ]
+  * d/patches/loongarch64:
+    - 0004-loong64-sandbox-sandbox-linux-Update-syscall-helpers.patch: refresh
+      for upstream changes.
+    - 0012-sandbox-linux-add-statx-support-for-loongarch64.patch: refresh for
+      upstream changes.
+    - 0024-optimize-nested-128-bit-additions.patch: remove since merged by
+      upstream.
+
+ -- Andres Salomon <dilinger@debian.org>  Wed, 21 Oct 2026 14:43:50 -0400
 
 chromium (155.0.8059.79-1~deb12u1) bookworm-security; urgency=high
 

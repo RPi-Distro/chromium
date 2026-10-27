@@ -275,8 +275,8 @@ rpi/0019-gl-Disable-FallbackToSWIfGLES3NotSupported.patch
 rpi/v4l2-stateful-limit-instances.patch
 rpi/v4l2-do-not-advertise-stateless-codecs.patch
 rpi/v4l2-sandbox-allow-decoder-devices.patch
-rpi/v4l2-stateful-count-instances-once.patch
+rpi/v4l2-stateful-fix-instance-counting.patch
 rpi/v4l2-stateful-rearm-poll-after-pollerr.patch
-rpi/x11-import-bgrx-native-pixmap.patch
+rpi/x11-add-bgrx-native-pixmap-binding.patch
 rpi/sandbox-allow-fcntl-dupfd-query.patch
 rpi/cross-build-protoc-plugin-path.patch

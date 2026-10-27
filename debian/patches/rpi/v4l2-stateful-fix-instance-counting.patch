@@ -1,0 +1,222 @@
+Description: Fix V4L2 stateful decoder instance counting
+ The V4L2 stateful decoder keeps an instance count as several
+ hardware decoders have a fixed upper limit of how many streams they
+ can deal with. The current code has multiple places where the slot
+ can be freed twice. e.g. if the instance count is exceeded the
+ count is decremented immediately and again when the object is
+ destroyed. Fix by keeping a flag that is set when the slot is claimed.
+ .
+ Fix v4l2_unittest to catch miscounting on fail in TooManyDecoderInstances
+ Run the allocate until failure test twice to check that instances are
+ correctly freed on destruction.
+ .
+ Bug: none
+ Change-Id: I85e8c514de659eae1ba60527560fdbc9d44febd4
+ Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/8460007
+ Reviewed-by: Nathan Hebert <nhebert@chromium.org>
+ Reviewed-by: Bijan Choobineh‎ <bchoobineh@chromium.org>
+ Commit-Queue: Nathan Hebert <nhebert@chromium.org>
+ Cr-Commit-Position: refs/heads/main@{#1706542}
+Author: John Cox <john.cox@raspberrypi.com>
+Origin: upstream, https://chromium.googlesource.com/chromium/src/+/bbd9b346363f4125cbc83a0373a3ab8c87f97583
+---
+diff --git a/media/gpu/v4l2/v4l2_stateful_video_decoder.cc b/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
+index e262ad22d96ec..5978d3f07c3e1 100644
+--- a/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
++++ b/media/gpu/v4l2/v4l2_stateful_video_decoder.cc
+@@ -283,15 +283,21 @@ void V4L2StatefulVideoDecoder::Initialize(const VideoDecoderConfig& config,
+   // Verify there's still room for more decoders before querying whether
+   // |config| is supported because some drivers (e.g. Qualcomm Venus on SC7180)
+   // would not allow for opening the device fd and we'd think it an error.
+-  static const auto decoder_instances_limit =
+-      V4L2StatefulVideoDecoder::GetMaxNumDecoderInstances();
+-  const bool can_create_decoder =
+-      num_decoder_instances_.Increment() < decoder_instances_limit;
+-  if (!can_create_decoder) {
+-    num_decoder_instances_.Decrement();
+-    LOG(ERROR) << "Too many decoder instances, max=" << decoder_instances_limit;
+-    std::move(init_cb).Run(DecoderStatus::Codes::kTooManyDecoders);
+-    return;
++  // Only take a slot if this instance doesn't already hold one, e.g. when
++  // re-Initialize()d to change configuration.
++  if (!holds_decoder_instance_slot_) {
++    static const auto decoder_instances_limit =
++        V4L2StatefulVideoDecoder::GetMaxNumDecoderInstances();
++    const bool can_create_decoder =
++        num_decoder_instances_.Increment() < decoder_instances_limit;
++    if (!can_create_decoder) {
++      num_decoder_instances_.Decrement();
++      LOG(ERROR) << "Too many decoder instances, max="
++                 << decoder_instances_limit;
++      std::move(init_cb).Run(DecoderStatus::Codes::kTooManyDecoders);
++      return;
++    }
++    holds_decoder_instance_slot_ = true;
+   }
+ 
+   if (supported_configs_.empty()) {
+@@ -580,7 +586,7 @@ void V4L2StatefulVideoDecoder::Reset(base::OnceClosure closure) {
+   device_fd_.reset();
+ 
+   event_task_runner_.reset();
+-  num_decoder_instances_.Decrement();
++  ReleaseDecoderInstanceSlot();
+   encoding_timestamps_.clear();
+ 
+   if (flush_cb_) {
+@@ -666,7 +672,7 @@ V4L2StatefulVideoDecoder::~V4L2StatefulVideoDecoder() {
+ 
+   CAPTURE_queue_.reset();
+   OUTPUT_queue_.reset();
+-  num_decoder_instances_.Decrement();
++  ReleaseDecoderInstanceSlot();
+ 
+   if (event_task_runner_) {
+     // Destroy the two ScopedFDs (hence the PostTask business ISO DeleteSoon) on
+@@ -1202,6 +1208,15 @@ void V4L2StatefulVideoDecoder::PrintAndTraceQueueStates(
+                                     : 0));
+ }
+ 
++void V4L2StatefulVideoDecoder::ReleaseDecoderInstanceSlot() {
++  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
++  if (!holds_decoder_instance_slot_) {
++    return;
++  }
++  num_decoder_instances_.Decrement();
++  holds_decoder_instance_slot_ = false;
++}
++
+ bool V4L2StatefulVideoDecoder::IsInitialized() const {
+   DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
+   return !!OUTPUT_queue_;
+diff --git a/media/gpu/v4l2/v4l2_stateful_video_decoder.h b/media/gpu/v4l2/v4l2_stateful_video_decoder.h
+index b0e85f0e45da2..7eed560168fe2 100644
+--- a/media/gpu/v4l2/v4l2_stateful_video_decoder.h
++++ b/media/gpu/v4l2/v4l2_stateful_video_decoder.h
+@@ -133,12 +133,19 @@ class MEDIA_GPU_EXPORT V4L2StatefulVideoDecoder : public VideoDecoderMixin {
+   // Returns true if this class has successfully Initialize()d.
+   bool IsInitialized() const;
+ 
++  // Gives back this instance's slot in |num_decoder_instances_|, if it holds
++  // one.
++  void ReleaseDecoderInstanceSlot();
++
+   // Pages with multiple decoder instances might run out of memory (e.g.
+   // b/170870476) or crash (e.g. crbug.com/1109312). this class method provides
+   // that number to prevent that erroneous behaviour during Initialize().
+   static int GetMaxNumDecoderInstances();
+   // Tracks the number of decoder instances globally in the process.
+   static base::AtomicRefCount num_decoder_instances_;
++  // True if this instance has been counted in |num_decoder_instances_|.
++  bool holds_decoder_instance_slot_ GUARDED_BY_CONTEXT(sequence_checker_) =
++      false;
+ 
+   base::ScopedFD device_fd_ GUARDED_BY_CONTEXT(sequence_checker_);
+   // This |wake_event_| is used to interrupt a blocking poll() call, such as the
+diff --git a/media/gpu/v4l2/v4l2_unittest.cc b/media/gpu/v4l2/v4l2_unittest.cc
+index 0cd1fb05ce5c3..b234ab4d68f82 100644
+--- a/media/gpu/v4l2/v4l2_unittest.cc
++++ b/media/gpu/v4l2/v4l2_unittest.cc
+@@ -302,7 +302,8 @@ TEST_F(V4L2FlatVideoDecoderTest, UnsupportedVideoCodec) {
+ }
+ 
+ // Verifies that V4L2StatefulVideoDecoder::Initialize() fails after the limit of
+-// created instances exceeds the threshold.
++// created instances exceeds the threshold, and that destroying the decoders
++// releases their slots so that the same limit is reached again.
+ TEST_F(V4L2FlatVideoDecoderTest, TooManyDecoderInstances) {
+   base::test::TaskEnvironment task_environment;
+   ::testing::NiceMock<MockVideoDecoderMixinClient> mock_client;
+@@ -311,43 +312,56 @@ TEST_F(V4L2FlatVideoDecoderTest, TooManyDecoderInstances) {
+   const int kMaxNumOfInstances =
+       V4L2StatefulVideoDecoder::GetMaxNumDecoderInstancesForTesting();
+ 
+-  ::testing::InSequence s;
+-  EXPECT_CALL(mock_client,
+-              InitCallback(DecoderStatus(DecoderStatus::Codes::kOk)))
+-      .Times(::testing::Exactly(kMaxNumOfInstances));
+-
+-  std::vector<std::unique_ptr<VideoDecoderMixin>> decoders(kMaxNumOfInstances);
+-  for (auto& decoder : decoders) {
+-    decoder = V4L2StatefulVideoDecoder::Create(
+-        std::make_unique<MockMediaLog>(),
+-        base::SequencedTaskRunner::GetCurrentDefault(),
+-        mock_client.weak_ptr_factory_.GetWeakPtr());
+-
+-    static_cast<V4L2StatefulVideoDecoder*>(decoder.get())
+-        ->Initialize(supported_config,
+-                     /*low_delay=*/false, /*cdm_context=*/nullptr,
+-                     base::BindOnce(&MockVideoDecoderMixinClient::InitCallback,
+-                                    mock_client.weak_ptr_factory_.GetWeakPtr()),
+-                     /*output_cb=*/base::DoNothing(),
+-                     /*waiting_cb*/ base::DoNothing());
++  constexpr int kNumPasses = 2;
++  for (int pass = 0; pass < kNumPasses; ++pass) {
++    SCOPED_TRACE(::testing::Message() << "pass " << pass);
++    {
++      ::testing::InSequence s;
++      EXPECT_CALL(mock_client,
++                  InitCallback(DecoderStatus(DecoderStatus::Codes::kOk)))
++          .Times(::testing::Exactly(kMaxNumOfInstances));
++
++      std::vector<std::unique_ptr<VideoDecoderMixin>> decoders(
++          kMaxNumOfInstances);
++      for (auto& decoder : decoders) {
++        decoder = V4L2StatefulVideoDecoder::Create(
++            std::make_unique<MockMediaLog>(),
++            base::SequencedTaskRunner::GetCurrentDefault(),
++            mock_client.weak_ptr_factory_.GetWeakPtr());
++
++        static_cast<V4L2StatefulVideoDecoder*>(decoder.get())
++            ->Initialize(
++                supported_config,
++                /*low_delay=*/false, /*cdm_context=*/nullptr,
++                base::BindOnce(&MockVideoDecoderMixinClient::InitCallback,
++                               mock_client.weak_ptr_factory_.GetWeakPtr()),
++                /*output_cb=*/base::DoNothing(),
++                /*waiting_cb*/ base::DoNothing());
++      }
++      testing::Mock::VerifyAndClearExpectations(&mock_client);
++
++      // Next one fails:
++      EXPECT_CALL(
++          mock_client,
++          InitCallback(DecoderStatus(DecoderStatus::Codes::kTooManyDecoders)));
++      auto decoder = V4L2StatefulVideoDecoder::Create(
++          std::make_unique<MockMediaLog>(),
++          base::SequencedTaskRunner::GetCurrentDefault(),
++          mock_client.weak_ptr_factory_.GetWeakPtr());
++      static_cast<V4L2StatefulVideoDecoder*>(decoder.get())
++          ->Initialize(
++              supported_config,
++              /*low_delay=*/false, /*cdm_context=*/nullptr,
++              base::BindOnce(&MockVideoDecoderMixinClient::InitCallback,
++                             mock_client.weak_ptr_factory_.GetWeakPtr()),
++              /*output_cb=*/base::DoNothing(),
++              /*waiting_cb*/ base::DoNothing());
++      testing::Mock::VerifyAndClearExpectations(&mock_client);
++
++      // |decoder| and |decoders| are destroyed here; this synchronously frees
++      // all instance slots.
++    }
+   }
+-  testing::Mock::VerifyAndClearExpectations(&mock_client);
+-
+-  // Next one fails:
+-  EXPECT_CALL(
+-      mock_client,
+-      InitCallback(DecoderStatus(DecoderStatus::Codes::kTooManyDecoders)));
+-  auto decoder = V4L2StatefulVideoDecoder::Create(
+-      std::make_unique<MockMediaLog>(),
+-      base::SequencedTaskRunner::GetCurrentDefault(),
+-      mock_client.weak_ptr_factory_.GetWeakPtr());
+-  static_cast<V4L2StatefulVideoDecoder*>(decoder.get())
+-      ->Initialize(supported_config,
+-                   /*low_delay=*/false, /*cdm_context=*/nullptr,
+-                   base::BindOnce(&MockVideoDecoderMixinClient::InitCallback,
+-                                  mock_client.weak_ptr_factory_.GetWeakPtr()),
+-                   /*output_cb=*/base::DoNothing(),
+-                   /*waiting_cb*/ base::DoNothing());
+ }
+ 
+ }  // namespace media

@@ -1,4 +1,4 @@
-chromium (156.0.8078.47-1.1) UNRELEASED; urgency=high
+chromium (156.0.8078.73-1) unstable; urgency=high
 
   [ Daniel Richard G. ]
   * d/clean: Drop files created by d/scripts/unbundle, as they are now
@@ -22,7 +22,87 @@ chromium (156.0.8078.47-1.1) UNRELEASED; urgency=high
   * d/scripts/unbundle: Use Python calls (instead of shell commands) to
     create symlinks, and preserve existing files.
 
- -- Andres Salomon <dilinger@debian.org>  Wed, 21 Oct 2026 14:43:51 -0400
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-118306: Memory corruption in FileSystem.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118331: Improper input validation in FileAPI.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118348: Improper input validation in Skia.
+      Reported by Xinyang Ge.
+    - CVE-2026-118344: Use after free in Layout. Reported by Xinyang Ge.
+    - CVE-2026-118357: Use after free in FileSystem. Reported by Xinyang Ge.
+    - CVE-2026-118318: Improper access control in V8. Reported by Jihyeon
+      Jeong (Compsec Lab, Seoul National University / Research Intern).
+    - CVE-2026-118350: Use after free in Turbolev.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-118339: Use after free in Animation.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118305: Memory corruption in Turbolev. Reported by Google.
+    - CVE-2026-118317: Memory corruption in HTML. Reported by Xinyang Ge.
+    - CVE-2026-118320: Memory corruption in V8. Reported by Google.
+    - CVE-2026-118322: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-118329: Improper input validation in ANGLE. Reported by Google.
+    - CVE-2026-118354: Improper input validation in Skia. Reported by Google.
+    - CVE-2026-118340: Memory corruption in Skia. Reported by Google.
+    - CVE-2026-118321: Improper input validation in Core. Reported by Google.
+    - CVE-2026-118337: Improper access control in Forms.
+      Reported by Xinyang Ge.
+    - CVE-2026-118352: Memory corruption in Cache. Reported by Xinyang Ge.
+    - CVE-2026-118355: Improper input validation in Command.
+      Reported by Xinyang Ge.
+    - CVE-2026-118307: Use after free in Paint. Reported by Xinyang Ge.
+    - CVE-2026-118351: Memory corruption in Skia. Reported by Xinyang Ge.
+    - CVE-2026-118328: Improper input validation in WebRTC.
+      Reported by Mozilla.
+    - CVE-2026-118333: Missing authorization in Video.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118336: Improper input validation in Headless.
+      Reported by Anonymous.
+    - CVE-2026-118358: Memory corruption in WebAudio.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118353: Use after free in Paint.
+      Reported by Anthropic and Ada Logics.
+    - CVE-2026-118349: Memory corruption in Payments.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118327: Memory corruption in Media.
+      Reported by Please attribute Anthropic and Ada Logics.
+    - CVE-2026-118359: Memory corruption in V8.
+      Reported by zenneth (randomguy6407).
+    - CVE-2026-118343: Improper input validation in ReadingList.
+      Reported by malichamdan.
+    - CVE-2026-118311: Memory corruption in Media. Reported by secbuddy(Ben).
+    - CVE-2026-118334: Use after free in ImageCapture.
+      Reported by OpenAI Codex Security (kylebot).
+    - CVE-2026-118332: Improper input validation in Compositing.
+      Reported by e7be95afd6e4ad8d8abc6076c284c79db9e35cc2.
+    - CVE-2026-118313: Use after free in Video.
+      Reported by OpenAI Codex Security (kylebot).
+    - CVE-2026-118345: Use after free in PDFium.
+      Reported by OpenAI Codex Security (kylebot).
+    - CVE-2026-118304: Improper input validation in SVG.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-118316: Improper input validation in V8. Reported by Google.
+    - CVE-2026-118346: Use after free in Compositing. Reported by Google.
+    - CVE-2026-118342: Out of bounds write in Editing. Reported by Google.
+    - CVE-2026-118310: Improper input validation in Views. Reported by Google.
+    - CVE-2026-118335: Improper input validation in Metrics.
+      Reported by Google.
+    - CVE-2026-118308: Use after free in SVG. Reported by Google.
+    - CVE-2026-118314: Improper input validation in UI. Reported by Google.
+    - CVE-2026-118347: Use after free in FileSystem. Reported by Google.
+    - CVE-2026-118341: Use after free in Modularization. Reported by Google.
+    - CVE-2026-118330: Use after free in Browser. Reported by Google.
+    - CVE-2026-118315: Improper input validation in SVG.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-118356: Use after free in WTF. Reported by malichamdan.
+    - CVE-2026-118309: Improper input validation in UI. Reported by Google.
+    - CVE-2026-118319: Memory corruption in Skia. Reported by Xinyang Ge.
+    - CVE-2026-118312: Memory corruption in Paint. Reported by Google.
+    - CVE-2026-118338: Use after free in Animation.
+      Reported by flapjack-security-bugs-access.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 27 Oct 2026 22:31:04 -0400
 
 chromium (156.0.8078.47-1) unstable; urgency=high
 

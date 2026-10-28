@@ -21,3 +21,11 @@ if [ -n "$list" ]; then
     echo "$list"
     exit 1
 fi
+
+# check for anything named *.upstream, because we use that suffix
+list=$(find . -name \*.upstream)
+if [ -n "$list" ]; then
+	echo 'files using our .upstream suffix:'
+	echo "$list"
+	exit 1
+fi

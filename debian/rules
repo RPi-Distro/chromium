@@ -253,6 +253,7 @@ override_dh_auto_configure: test_armhf_neon
 
 override_dh_auto_build-arch: out/Release/gn
 	./out/Release/gn gen out/Release --args="$(defines)"
+	test ! -d pre-gen || python3 debian/deb_pre_gen.py -C out/Release add-ninja-hooks
 	ninja $(CR_VERBOSE) -j$(njobs) -C out/Release chrome chrome_sandbox content_shell chromedriver headless_shell
 	cp out/Release/chrome out/Release/chromium
 	cp out/Release/content_shell out/Release/chromium-shell
@@ -265,6 +266,7 @@ override_dh_auto_build-arch: out/Release/gn
 
 override_dh_auto_build-indep: out/Release/gn
 	./out/Release/gn gen out/Release --args="$(defines)"
+	test ! -d pre-gen || python3 debian/deb_pre_gen.py -C out/Release add-ninja-hooks
 	ninja $(CR_VERBOSE) -j$(njobs) -C out/Release packed_resources
 	rm -f out/Release/locales/en-US.pak
 
@@ -378,3 +380,13 @@ init-pre-gen: override_dh_auto_clean out/Release/gn
 	debian/rules override_dh_auto_configure
 	./out/Release/gn gen out/Release --args="$(defines)"
 	debian/scripts/init-pre-gen.sh
+
+# run this on the oldest supported system
+check-pre-gen: njobs=$(shell nproc)
+check-pre-gen: pre-gen/BUILDINFO override_dh_auto_clean out/Release/gn
+	test -s .pc/applied-patches  # are patches applied?
+	debian/rules override_dh_auto_configure
+	./out/Release/gn gen out/Release --args="$(defines)"
+	python3 debian/deb_pre_gen.py -C out/Release add-ninja-hooks
+	DEB_CR_PRE_GEN=check ninja -C out/Release -k0 -j$(njobs) $$(cat pre-gen/FILES_*)
+	@echo 'PASS: $@'

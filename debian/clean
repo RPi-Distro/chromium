@@ -2,26 +2,3 @@ debian/files
 debian/scripts/mk-origtargz
 
 Makefile
-
-build/secondary/third_party/libjpeg_turbo/BUILD.gn
-
-third_party/dav1d/BUILD.gn
-third_party/flac/BUILD.gn
-third_party/harfbuzz/harfbuzz.gni
-third_party/zlib/BUILD.gn
-third_party/zstd/BUILD.gn
-third_party/opus/BUILD.gn
-third_party/libpng/BUILD.gn
-third_party/libjpeg/BUILD.gn
-third_party/openh264/BUILD.gn
-third_party/freetype/BUILD.gn
-third_party/fontconfig/BUILD.gn
-
-third_party/libjpeg.gni
-build/config/freetype/freetype.gni
-
-base/third_party/double_conversion/BUILD.gn
-third_party/angle/src/third_party/libXNVCtrl/BUILD.gn
-
-third_party/libsecret/BUILD.gn
-third_party/libusb/BUILD.gn

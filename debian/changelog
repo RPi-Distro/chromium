@@ -1,4 +1,4 @@
-chromium (1:156.0.8078.47-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:156.0.8078.73-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]
   * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
@@ -33,6 +33,8 @@ chromium (1:156.0.8078.47-1~deb12u1+rpt1) bookworm; urgency=medium
     cross-building
   * Disable debian's search-engines patch
   * Drop debian's NEWS entry about the search-engines patch
+  * Replace V4L2 instance counting and X11 BGRX patches with upstream
+    versions
 
   [ Tian Zheng ]
   * Let the sandboxed GPU process use the V4L2 decoder and GBM backends
@@ -45,7 +47,113 @@ chromium (1:156.0.8078.47-1~deb12u1+rpt1) bookworm; urgency=medium
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 26 Oct 2026 15:10:56 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Thu, 29 Oct 2026 16:16:09 +0000
+
+chromium (156.0.8078.73-1~deb12u1) bookworm-security; urgency=high
+
+  [ Daniel Richard G. ]
+  * d/clean: Drop files created by d/scripts/unbundle, as they are now
+    cleaned up in the override_dh_auto_clean target in d/rules.
+  * d/patches/ppc64le/regen:
+    - regenerate_xnnpack_patch: Revised version of Tim's script for
+      generating 0002-regenerate-xnn-buildgn.patch.
+    - xnnpack_local_regen_hacks.patch: New standalone patch, also of Tim's,
+      to support the regenerate_xnnpack_patch script.
+  * d/rules:
+    - Move the functionality of d/scripts/customize-typescript.sh into the
+      override_dh_auto_configure target.
+    - On cleaning, restore upstream files that were modified in said target.
+    - Tweak what files get cleaned up, and delete any resulting empty dirs.
+    - Don't clean up Cargo.toml.orig files, as the upstream tarball
+      (not ours) has many of these.
+  * d/scripts/autoregen/xnnpack/*: Move Tim's patch tooling from here.
+  * d/scripts/check-upstream: Error out if the upstream tarball has anything
+    named *.upstream, as we use that suffix for our purposes.
+  * d/scripts/customize-typescript.sh: Drop, now handled in d/rules.
+  * d/scripts/unbundle: Use Python calls (instead of shell commands) to
+    create symlinks, and preserve existing files.
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-118306: Memory corruption in FileSystem.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118331: Improper input validation in FileAPI.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118348: Improper input validation in Skia.
+      Reported by Xinyang Ge.
+    - CVE-2026-118344: Use after free in Layout. Reported by Xinyang Ge.
+    - CVE-2026-118357: Use after free in FileSystem. Reported by Xinyang Ge.
+    - CVE-2026-118318: Improper access control in V8. Reported by Jihyeon
+      Jeong (Compsec Lab, Seoul National University / Research Intern).
+    - CVE-2026-118350: Use after free in Turbolev.
+      Reported by OpenAI Codex Security (amyb).
+    - CVE-2026-118339: Use after free in Animation.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118305: Memory corruption in Turbolev. Reported by Google.
+    - CVE-2026-118317: Memory corruption in HTML. Reported by Xinyang Ge.
+    - CVE-2026-118320: Memory corruption in V8. Reported by Google.
+    - CVE-2026-118322: Memory corruption in ANGLE. Reported by Google.
+    - CVE-2026-118329: Improper input validation in ANGLE. Reported by Google.
+    - CVE-2026-118354: Improper input validation in Skia. Reported by Google.
+    - CVE-2026-118340: Memory corruption in Skia. Reported by Google.
+    - CVE-2026-118321: Improper input validation in Core. Reported by Google.
+    - CVE-2026-118337: Improper access control in Forms.
+      Reported by Xinyang Ge.
+    - CVE-2026-118352: Memory corruption in Cache. Reported by Xinyang Ge.
+    - CVE-2026-118355: Improper input validation in Command.
+      Reported by Xinyang Ge.
+    - CVE-2026-118307: Use after free in Paint. Reported by Xinyang Ge.
+    - CVE-2026-118351: Memory corruption in Skia. Reported by Xinyang Ge.
+    - CVE-2026-118328: Improper input validation in WebRTC.
+      Reported by Mozilla.
+    - CVE-2026-118333: Missing authorization in Video.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118336: Improper input validation in Headless.
+      Reported by Anonymous.
+    - CVE-2026-118358: Memory corruption in WebAudio.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118353: Use after free in Paint.
+      Reported by Anthropic and Ada Logics.
+    - CVE-2026-118349: Memory corruption in Payments.
+      Reported by Xinyang Ge (Anthropic), assisted by Claude.
+    - CVE-2026-118327: Memory corruption in Media.
+      Reported by Please attribute Anthropic and Ada Logics.
+    - CVE-2026-118359: Memory corruption in V8.
+      Reported by zenneth (randomguy6407).
+    - CVE-2026-118343: Improper input validation in ReadingList.
+      Reported by malichamdan.
+    - CVE-2026-118311: Memory corruption in Media. Reported by secbuddy(Ben).
+    - CVE-2026-118334: Use after free in ImageCapture.
+      Reported by OpenAI Codex Security (kylebot).
+    - CVE-2026-118332: Improper input validation in Compositing.
+      Reported by e7be95afd6e4ad8d8abc6076c284c79db9e35cc2.
+    - CVE-2026-118313: Use after free in Video.
+      Reported by OpenAI Codex Security (kylebot).
+    - CVE-2026-118345: Use after free in PDFium.
+      Reported by OpenAI Codex Security (kylebot).
+    - CVE-2026-118304: Improper input validation in SVG.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-118316: Improper input validation in V8. Reported by Google.
+    - CVE-2026-118346: Use after free in Compositing. Reported by Google.
+    - CVE-2026-118342: Out of bounds write in Editing. Reported by Google.
+    - CVE-2026-118310: Improper input validation in Views. Reported by Google.
+    - CVE-2026-118335: Improper input validation in Metrics.
+      Reported by Google.
+    - CVE-2026-118308: Use after free in SVG. Reported by Google.
+    - CVE-2026-118314: Improper input validation in UI. Reported by Google.
+    - CVE-2026-118347: Use after free in FileSystem. Reported by Google.
+    - CVE-2026-118341: Use after free in Modularization. Reported by Google.
+    - CVE-2026-118330: Use after free in Browser. Reported by Google.
+    - CVE-2026-118315: Improper input validation in SVG.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-118356: Use after free in WTF. Reported by malichamdan.
+    - CVE-2026-118309: Improper input validation in UI. Reported by Google.
+    - CVE-2026-118319: Memory corruption in Skia. Reported by Xinyang Ge.
+    - CVE-2026-118312: Memory corruption in Paint. Reported by Google.
+    - CVE-2026-118338: Use after free in Animation.
+      Reported by flapjack-security-bugs-access.
+
+ -- Andres Salomon <dilinger@debian.org>  Tue, 27 Oct 2026 22:31:04 -0400
 
 chromium (156.0.8078.47-1~deb12u1) bookworm-security; urgency=high
 

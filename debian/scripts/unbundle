@@ -66,13 +66,13 @@ keepers = (
 for lib,rule in replace_gn_files.REPLACEMENTS.items():
     if lib not in keepers:
         # create a symlink to the unbundle gn file
-        symlink = "ln -sf "
         path = os.path.split(rule)
         if not os.path.exists(path[0]):
             os.mkdir(path[0])
-        while path[0] != '':
-            path = os.path.split(path[0])
-            symlink += '../'
-        symlink += "build/linux/unbundle/%s.gn %s"%(lib,rule)
-        if os.system(symlink):
-            raise RuntimeError("error creating symlink",symlink)
+        rel = os.path.relpath('.', path[0])
+        if os.path.exists(rule):
+            os.rename(rule, f'{rule}.upstream')
+        else:
+            # placeholder, will be deleted in "clean" rule
+            os.symlink('/dev/null', f'{rule}.upstream')
+        os.symlink(f'{rel}/build/linux/unbundle/{lib}.gn', rule)

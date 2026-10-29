@@ -21,6 +21,9 @@ Description: Add BGRX to x11 bindings for native pixmap
  Cr-Commit-Position: refs/heads/main@{#1726092}
 Author: John Cox <john.cox@raspberrypi.com>
 Origin: upstream, https://chromium.googlesource.com/chromium/src/+/827dc26939e177a2eb8578c8969abc2cb744a858
+Last-Update: 2026-10-29
+Note: backported to 156, where NativePixmapEGLX11Binding::Create() still
+ names its format parameter plane_format.
 ---
 --- a/ui/ozone/gl/native_pixmap_gl_binding_unittest.cc
 +++ b/ui/ozone/gl/native_pixmap_gl_binding_unittest.cc
@@ -247,7 +250,7 @@ Origin: upstream, https://chromium.googlesource.com/chromium/src/+/827dc26939e17
  
    // Transfer the ownership of `pixmap` to `NativePixmapEGLX11Binding`.
 -  if (!binding->Initialize(std::move(pixmap))) {
-+  if (!binding->Initialize(std::move(pixmap), format)) {
++  if (!binding->Initialize(std::move(pixmap), plane_format)) {
      VLOG(1) << "Unable to initialize binding from pixmap";
      return nullptr;
    }

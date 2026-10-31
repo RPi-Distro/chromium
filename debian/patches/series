@@ -57,7 +57,6 @@ disable/enterprise-tests.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
-disable/node-ts.patch
 disable/omnibox-ai-mode.patch
 
 system/golang.patch

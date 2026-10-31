@@ -57,7 +57,6 @@ disable/enterprise-tests.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
-disable/node-ts.patch
 disable/omnibox-ai-mode.patch
 
 system/golang.patch
@@ -253,3 +252,5 @@ ppc64le/fixes/fix-unknown-warning-option-messages.diff
 # They will not work on POWER8 (ISA 2.07) or below
 #ppc64le/core/baseline-isa-3-0.patch
 
+upstream/rust-prebuilt-stdlib-libs.patch
+upstream/partition-alloc-serialize-pool-init.patch

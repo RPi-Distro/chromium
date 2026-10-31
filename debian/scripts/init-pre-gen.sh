@@ -76,7 +76,8 @@ missing_arch_list=
 for arch in loong64 ppc64el
 do
 	pfx=$(echo $arch | sed 's/loong64/loongarch64/; s/ppc64el/ppc64le/')
-	if ! grep -q "^$pfx/" .pc/applied-patches
+	if grep -q "^$pfx/" debian/patches/series && \
+	   ! grep -q "^$pfx/" .pc/applied-patches
 	then
 		echo "note: $arch patches not applied, skipping architecture"
 		arch_list=$(echo $arch_list | sed "s/ $arch//")
@@ -85,31 +86,14 @@ do
 done
 test -z "$missing_arch_list" || echo
 
-mkdir pre-gen
-python3 debian/deb_pre_gen.py make-lists
-echo
+export DEB_CR_PRE_GEN=generate
 
-# Edit the toolchain.ninja files to remove the static-library dependency
-# from the bindgen targets; this dependency is spurious and removing it
-# speeds up the generation process significantly
-stamp=out/Release/deb-pre-gen-edit.stamp
-test -f $stamp || perl -pi.orig-pre-gen \
-	-e 'BEGIN {' \
-	-e '  open(F, "pre-gen/RULES_ARCH.tmp") or die;' \
-	-e '  while (<F>) { chomp; $r{$_}=1; }' \
-	-e '  close(F);' \
-	-e '}' \
-	-e 'if (/^build .*: (\S+) / && $r{$1}) {' \
-	-e '  s! obj/\S+/lib\w+\.a( |$)!!;' \
-	-e '}' \
-	$(find out/Release -type f -name toolchain.ninja)
-rm pre-gen/RULES_ARCH.tmp
-touch $stamp
+mkdir -p pre-gen/meta
+python3 debian/deb_pre_gen.py -C out/Release add-ninja-hooks
+echo
 
 target_arch_list=$(cat pre-gen/FILES_ARCH)
 target_indep_list=$(cat pre-gen/FILES_INDEP)
-
-export DEB_CR_PRE_GEN=generate
 
 for arch in $arch_list
 do
@@ -202,7 +186,6 @@ Architecture: source
 Version: $version
 Build-Origin: $(perl -ne 'print $1 if /^NAME="(\w+)"/' /etc/os-release)
 Build-Architecture: $(dpkg --print-architecture)
-Build-Date: $(date -Ru)
 Installed-Build-Depends:
 $(dpkg-query --show --showformat=' ${binary:Package} (= ${Version}),\n' | sed '$ s/,$//')
 END

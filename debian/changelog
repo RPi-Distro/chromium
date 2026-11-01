@@ -13,6 +13,11 @@ chromium (156.0.8078.73-1.1) UNRELEASED; urgency=high
     activating an ldconfig trigger for it.
   * d/rules: add the component build configuration, off by default. Name an
     architecture in COMPONENT_BUILD_ARCHS to turn it on there.
+  * d/rules: build chromium as a component build on armhf, the only
+    configuration whose final link fits in a 32-bit address space.
+    (Closes: #1150706)
+  * d/README.armhf: new, why armhf is built this way and what to check on a
+    version bump.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 27 Oct 2026 22:31:05 -0400
 

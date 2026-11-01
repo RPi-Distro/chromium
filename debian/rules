@@ -52,6 +52,13 @@ export LDFLAGS+=-Wl,--stats
 # Somewhere around 10-20 should work but use 1 for now, it isn't too slow.
 export LDFLAGS+=-Wl,--threads=1
 
+# Cortex-A53 (Pi 3, Zero 2 W, CM3) erratum 843419: clang does not ask lld for
+# the workaround on Linux, and an unpatched adrp+ldr pair at a page end can
+# load from the wrong page.
+ifeq (arm64,$(DEB_HOST_ARCH))
+export LDFLAGS+=-Wl,--fix-cortex-a53-843419
+endif
+
 # extra flags to reduce warnings that aren't very useful
 export CXXFLAGS+=-Wno-conversion \
                  -Wno-unused-function \

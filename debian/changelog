@@ -1,4 +1,4 @@
-chromium (156.0.8078.73-1.1) UNRELEASED; urgency=high
+chromium (156.0.8078.79-1) UNRELEASED; urgency=high
 
   [ Juan Manuel Méndez Rey ]
   * d/patches/upstream: new directory for fixes that are already upstream,
@@ -18,6 +18,37 @@ chromium (156.0.8078.73-1.1) UNRELEASED; urgency=high
     (Closes: #1150706)
   * d/README.armhf: new, why armhf is built this way and what to check on a
     version bump.
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-76024: Memory corruption in MediaStream.
+      Reported by Xinyang Ge.
+    - CVE-2026-76025: Use after free in FileSystem. Reported by Google.
+    - CVE-2026-76026: Memory corruption in Autofill. Reported by Google.
+    - CVE-2026-76027: Memory corruption in CacheStorage. Reported by Google.
+    - CVE-2026-76028: Use after free in FileSystem. Reported by Google.
+    - CVE-2026-76029: Memory corruption in Network.
+      Reported by Cristian Di Nicola (crih.exe) (https://crihexe.com).
+    - CVE-2026-76030: Memory corruption in FileSystem.
+      Reported by huntersnot4.
+    - CVE-2026-76031: Use after free in Input.
+      Reported by Arni Hardarson (Neonix Security).
+    - CVE-2026-119260: Use after free in Frames. Reported by Google.
+    - CVE-2026-119261: Improper input validation in Skia. Reported by Google.
+    - CVE-2026-119262: Improper input validation in V8.
+      Reported by Hyeonjun Ahn (@_deayzl).
+    - CVE-2026-119263: Memory corruption in GarbageCollection.
+      Reported by Xinyang Ge.
+    - CVE-2026-119264: Memory corruption in Dawn. Reported by leegn4a.
+    - CVE-2026-119265: Memory corruption in Quota. Reported by Google.
+    - CVE-2026-119266: Use after free in Quota. Reported by Google.
+    - CVE-2026-119267: Memory corruption in DOM. Reported by Xinyang Ge.
+    - CVE-2026-119268: Integer overflow in Editing. Reported by Xinyang Ge.
+    - CVE-2026-119269: Use after free in Blink. Reported by Google.
+    - CVE-2026-119270: Improper input validation in CacheStorage.
+      Reported by Google.
+    - CVE-2026-119271: Use after free in Skia. Reported by Google.
+    - CVE-2026-119272: Out of bounds read in FileSystem. Reported by Google.
 
  -- Andres Salomon <dilinger@debian.org>  Tue, 27 Oct 2026 22:31:05 -0400
 

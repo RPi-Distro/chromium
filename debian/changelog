@@ -1,3 +1,9 @@
+chromium (1:156.0.8078.73-1~deb12u1+rpt2) bookworm; urgency=medium
+
+  * Link arm64 with the Cortex-A53 erratum 843419 workaround
+
+ -- Serge Schneider <serge@raspberrypi.com>  Sun, 01 Nov 2026 22:03:14 +0000
+
 chromium (1:156.0.8078.73-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]

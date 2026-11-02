@@ -1,0 +1,43 @@
+armhf is a component build
+==========================
+
+Why
+---
+
+The final link of chrome does not fit in a 32-bit address space. lld needs
+3.25 GB of address space for a target that carries about half of chrome's
+input, against about 4 GiB for an AArch32 process. That was measured by
+bisecting RLIMIT_AS on a replayed link. On the buildd it ends as:
+
+  ld.lld-22: error: failed to open ./chrome: Cannot allocate memory
+
+A component build links each library on its own, so no single link needs
+that much address space.
+
+armhf had no chromium between 150.0.7871.181-1, built on 2026-07-23, and
+this change. The bug is https://bugs.debian.org/1150706 .
+
+What was ruled out first
+------------------------
+
+ld.bfd, ld.gold and mold all needed more memory than lld, not less.
+
+Linking on a 64-bit host does work, and it was proposed twice:
+
+  https://salsa.debian.org/chromium-team/chromium/-/merge_requests/44
+  https://salsa.debian.org/chromium-team/chromium/-/merge_requests/45
+
+Both need a build dependency from another architecture, which wanna-build
+cannot express. That request was declined on 2026-10-06:
+
+  https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=770925#44
+
+What to check on a version bump
+-------------------------------
+
+- The browser starts, on a machine that can execute armhf.
+- The largest link still fits. To check it without a buildd round trip,
+  replay that link on an x86_64 host with a cross linker and bisect
+  RLIMIT_AS.
+- The packages are produced even when the lintian step after them fails.
+  Under qemu, lintian fails by running out of memory.

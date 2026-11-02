@@ -103,7 +103,7 @@ endif
 
 # A component build links the code into several hundred shared libraries
 # instead of one chrome binary. Name an architecture here to enable it.
-COMPONENT_BUILD_ARCHS ?=
+COMPONENT_BUILD_ARCHS ?= armhf
 ifneq ($(filter $(DEB_HOST_ARCH),$(COMPONENT_BUILD_ARCHS)),)
 component_build = yes
 endif

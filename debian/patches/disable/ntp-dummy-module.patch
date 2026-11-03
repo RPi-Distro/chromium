@@ -1,0 +1,87 @@
+Description: do not build the New Tab Page dummy module
+ Upstream adds a developer placeholder module when is_official_build is false,
+ which a component build has to be. That changes the webui file list, and the
+ pre-generated outputs under pre-gen/ then match nothing. Dropping the module
+ keeps the file list the same on every architecture.
+Author: Juan Manuel Méndez Rey <juan.mendezr@proton.me>
+Forwarded: not-needed
+Last-Update: 2026-11-03
+
+diff --git a/chrome/browser/resources/new_tab_page/BUILD.gn b/chrome/browser/resources/new_tab_page/BUILD.gn
+index a874b94..06acce8 100644
+--- a/chrome/browser/resources/new_tab_page/BUILD.gn
++++ b/chrome/browser/resources/new_tab_page/BUILD.gn
+@@ -87,13 +87,6 @@ build_webui("build") {
+     "$root_gen_dir/ui/webui/resources/cr_components/composebox/composebox.mojom-webui.ts",
+   ]
+ 
+-  if (!is_official_build) {
+-    mojo_files_deps += [
+-      "//chrome/browser/ui/webui/new_tab_page/foo:mojo_bindings_ts__generator",
+-    ]
+-    mojo_files += [ "$root_gen_dir/chrome/browser/ui/webui/new_tab_page/foo/foo.mojom-webui.ts" ]
+-  }
+-
+   ts_tsconfig_base = "tsconfig_base.json"
+   ts_composite = true
+   ts_definitions = [
+diff --git a/chrome/browser/resources/new_tab_page/modules/module_descriptors.ts b/chrome/browser/resources/new_tab_page/modules/module_descriptors.ts
+index 33259c6..ebc8234 100644
+--- a/chrome/browser/resources/new_tab_page/modules/module_descriptors.ts
++++ b/chrome/browser/resources/new_tab_page/modules/module_descriptors.ts
+@@ -12,9 +12,6 @@ import {NewTabPageProxy} from '../new_tab_page_proxy.js';
+ import {microsoftAuthModuleDescriptor} from './authentication/microsoft_auth_module.js';
+ import {googleCalendarDescriptor} from './calendar/google_calendar_module.js';
+ import {outlookCalendarDescriptor} from './calendar/outlook_calendar_module.js';
+-// <if expr="not is_official_build">
+-import {dummyV2Descriptor} from './dummy/module.js';
+-// </if>
+ import {driveModuleDescriptor} from './file_suggestion/drive_module.js';
+ import {microsoftFilesModuleDescriptor} from './file_suggestion/microsoft_files_module.js';
+ import type {ModuleDescriptor} from './module_descriptor.js';
+@@ -31,10 +28,6 @@ descriptors.push(outlookCalendarDescriptor);
+ descriptors.push(microsoftFilesModuleDescriptor);
+ descriptors.push(tabGroupsDescriptor);
+ 
+-// <if expr="not is_official_build">
+-descriptors.push(dummyV2Descriptor);
+-// </if>
+-
+ export async function counterfactualLoad() {
+   // Instantiate modules even if |modulesEnabled| is false to counterfactually
+   // trigger a HaTS survey in a potential control group.
+diff --git a/chrome/browser/resources/new_tab_page/modules/modules.gni b/chrome/browser/resources/new_tab_page/modules/modules.gni
+index fc7777b..0c91a6b 100644
+--- a/chrome/browser/resources/new_tab_page/modules/modules.gni
++++ b/chrome/browser/resources/new_tab_page/modules/modules.gni
+@@ -8,10 +8,6 @@ import("./file_suggestion/file_suggestion.gni")
+ import("./most_relevant_tab_resumption/most_relevant_tab_resumption.gni")
+ import("./tab_groups/tab_groups.gni")
+ 
+-if (!is_official_build) {
+-  import("./dummy/dummy.gni")
+-}
+-
+ # List of files that don't need to be passed to html_to_wrapper().
+ modules_ts_files =
+     [
+@@ -22,10 +18,6 @@ modules_ts_files =
+     ] + calendar_ts_files + file_suggestion_ts_files +
+     most_relevant_tab_resumption_ts_files + tab_groups_ts_files
+ 
+-if (!is_official_build) {
+-  modules_ts_files += dummy_ts_files
+-}
+-
+ # List of files that should be passed to html_to_wrapper().
+ modules_web_component_files =
+     [
+@@ -47,8 +39,3 @@ modules_css_files =
+     ] + authentication_css_files + calendar_css_files +
+     file_suggestion_css_files + most_relevant_tab_resumption_css_files +
+     tab_groups_css_files
+-
+-if (!is_official_build) {
+-  modules_web_component_files += dummy_web_component_files
+-  modules_css_files += dummy_css_files
+-}

@@ -15,7 +15,7 @@ Forwarded: no
 
 --- a/tools/protoc_wrapper/protoc_wrapper.py
 +++ b/tools/protoc_wrapper/protoc_wrapper.py
-@@ -248,9 +248,17 @@ def main(argv):
+@@ -236,9 +236,17 @@ def main(argv):
  
    if options.plugin_out_dir:
      plugin_options = FormatGeneratorOptions(options.plugin_options)

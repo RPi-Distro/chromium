@@ -57,7 +57,6 @@ disable/enterprise-tests.patch
 disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
-disable/node-ts.patch
 disable/omnibox-ai-mode.patch
 
 system/golang.patch
@@ -261,6 +260,8 @@ loongarch64/0021-components-metrics-add-loongarch64-support.patch
 loongarch64/0022-blink-fix-lsx-code-of-webgl_image_conversion_lsx.patch
 loongarch64/0023-loongarch64-enable-lsx-by-default.patch
 
+upstream/rust-prebuilt-stdlib-libs.patch
+upstream/partition-alloc-serialize-pool-init.patch
 # Raspberry Pi OS patches
 rpi/0007-Widevide-Add.patch
 rpi/0201-skia-Add-armv7-optimizations.patch

@@ -1,0 +1,77 @@
+Description: partition_alloc: serialize the initialization of the pools
+ PartitionAddressSpace::Init() registers the pools in process-wide state, but
+ it runs under PartitionRoot::lock_, a member of the root being initialized.
+ Two roots initializing on two threads hold two different locks, both pass the
+ IsInitialized() test, and the second one fails:
+ .
+   [FATAL:address_pool_manager.cc(62)] Check failed: !pool->IsInitialized().
+ .
+ Give the global initialization a lock of its own. A component build creates
+ roots lazily per shared library, which turns a rare race into a build failure.
+Author: Juan Manuel Méndez Rey <juan.mendezr@proton.me>
+Forwarded: https://chromium-review.googlesource.com/c/chromium/src/+/8549218
+Last-Update: 2026-10-28
+
+diff --git a/base/allocator/partition_allocator/src/partition_alloc/partition_address_space.cc b/base/allocator/partition_allocator/src/partition_alloc/partition_address_space.cc
+index 23a26e0..ff49bae 100644
+--- a/base/allocator/partition_allocator/src/partition_alloc/partition_address_space.cc
++++ b/base/allocator/partition_allocator/src/partition_alloc/partition_address_space.cc
+@@ -27,6 +27,7 @@
+ #include "partition_alloc/partition_alloc_check.h"
+ #include "partition_alloc/partition_alloc_config.h"
+ #include "partition_alloc/partition_alloc_public_constants.h"
++#include "partition_alloc/partition_lock.h"
+ #include "partition_alloc/thread_isolation/thread_isolation.h"
+ 
+ #if PA_BUILDFLAG(IS_IOS)
+@@ -47,6 +48,24 @@ namespace partition_alloc::internal {
+ 
+ namespace {
+ 
++// Serializes the initialization of the pools, which is process-wide state.
++//
++// The callers cannot do it: `Init()` and `InitThreadIsolatedPool()` are
++// reached from `PartitionRoot::Init()`, which holds the lock of the root it is
++// initializing. Two roots initializing on two threads hold two different
++// locks, so both pass the `IsInitialized()` test at the top of `Init()`, and
++// `AddressPoolManager::Add()` then fails `PA_CHECK(!pool->IsInitialized())` in
++// whichever thread gets there second. A component build makes this easy to
++// hit, because a root is created lazily per library rather than once, early,
++// on the main thread.
++//
++// Holding this lock around the whole of the initialization is safe: it
++// reserves address space with `AllocPages()` and releases it with
++// `FreePages()`, allocating nothing, which is what already allows the same
++// code to run under `PartitionRoot::lock_`. It is never held while calling
++// into a `PartitionRoot`, so it cannot be part of a cycle.
++Lock g_pool_init_lock;
++
+ #if PA_BUILDFLAG(IS_WIN)
+ 
+ PA_NOINLINE void HandlePoolAllocFailureOutOfVASpace() {
+@@ -144,6 +163,7 @@ bool PartitionAddressSpace::IsIOSTestProcess() {
+ #endif  // PA_CONFIG(DYNAMICALLY_SELECT_POOL_SIZE)
+ 
+ void PartitionAddressSpace::Init() {
++  ScopedGuard guard(g_pool_init_lock);
+   if (IsInitialized()) {
+     return;
+   }
+@@ -324,6 +344,8 @@ void PartitionAddressSpace::InitZeroSegment() {
+ 
+ void PartitionAddressSpace::InitConfigurablePool(uintptr_t pool_base,
+                                                  size_t size) {
++  ScopedGuard guard(g_pool_init_lock);
++
+   // The ConfigurablePool must only be initialized once.
+   PA_CHECK(!IsConfigurablePoolInitialized());
+ 
+@@ -374,6 +396,8 @@ void PartitionAddressSpace::InitConfigurablePool(uintptr_t pool_base,
+ #if PA_BUILDFLAG(ENABLE_THREAD_ISOLATION)
+ void PartitionAddressSpace::InitThreadIsolatedPool(
+     ThreadIsolationOption thread_isolation) {
++  ScopedGuard guard(g_pool_init_lock);
++
+   // The ThreadIsolated pool can't be initialized with conflicting settings.
+   if (IsThreadIsolatedPoolInitialized()) {
+     PA_CHECK(setup_.thread_isolation_ == thread_isolation);

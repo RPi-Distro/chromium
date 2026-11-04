@@ -13,6 +13,9 @@ chromium (157.0.8103.38-1) UNRELEASED; urgency=high
     - system/openjpeg.patch: refresh.
 
   [ Timothy Pearson]
+  * d/patches:
+    - fixes/predictor-denial-of-service.patch: drop in favor of upstream
+      fix (Chromium issue #568010591)
   * d/patches/ppc64le:
     - third_party/0002-regenerate-xnn-buildgn.patch: refresh for upstream
       changes

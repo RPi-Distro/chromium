@@ -156,7 +156,7 @@ defines+=is_debug=false \
          treat_warnings_as_errors=false \
          toolchain_supports_rust_thin_lto=false \
          clang_warning_suppression_file=\"\" \
-         v8_use_metagen_instance_types=false \
+         v8_use_metagen=false \
          use_qt5=false use_qt6=false \
          is_cfi=false \
          chrome_pgo_phase=0 \

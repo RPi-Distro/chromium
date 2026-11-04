@@ -11,6 +11,26 @@ does not use those features.
 Add appropriate includes to fix the build on Linux platforms.
 
 Signed-off-by: Matt Jolly <kangie@gentoo.org>
+
+
+From 0a1de20a85504ed8cb40961f76631c1430ed634c Mon Sep 17 00:00:00 2001
+From: Matt Jolly <kangie@gentoo.org>
+Date: Tue, 9 Sep 2025 12:56:38 +1000
+Subject: [PATCH 2/2] IWYU css_style_sheet.h in generator
+
+Signed-off-by: Matt Jolly <kangie@gentoo.org>
+
+
+--- a/third_party/blink/renderer/bindings/scripts/bind_gen/observable_array.py
++++ b/third_party/blink/renderer/bindings/scripts/bind_gen/observable_array.py
+@@ -532,6 +532,7 @@ def generate_observable_array(observable
+             component_export_header(api_component, for_testing),
+             "third_party/blink/renderer/bindings/core/v8/idl_types.h",
+             "third_party/blink/renderer/platform/bindings/observable_array.h",
++            "third_party/blink/renderer/core/css/css_style_sheet.h",
+         ]
+     )
+     source_node.accumulator.add_include_headers(
 --- a/third_party/blink/renderer/core/css/css_style_declaration.h
 +++ b/third_party/blink/renderer/core/css/css_style_declaration.h
 @@ -23,6 +23,7 @@
@@ -21,25 +41,3 @@ Signed-off-by: Matt Jolly <kangie@gentoo.org>
  #include "third_party/blink/renderer/core/execution_context/execution_context_lifecycle_observer.h"
  #include "third_party/blink/renderer/platform/bindings/script_wrappable.h"
  #include "third_party/blink/renderer/platform/bindings/v8_binding.h"
--- 
-2.50.1
-
-
-From 0a1de20a85504ed8cb40961f76631c1430ed634c Mon Sep 17 00:00:00 2001
-From: Matt Jolly <kangie@gentoo.org>
-Date: Tue, 9 Sep 2025 12:56:38 +1000
-Subject: [PATCH 2/2] IWYU css_style_sheet.h in generator
-
-Signed-off-by: Matt Jolly <kangie@gentoo.org>
---- a/third_party/blink/renderer/bindings/scripts/bind_gen/observable_array.py
-+++ b/third_party/blink/renderer/bindings/scripts/bind_gen/observable_array.py
-@@ -434,6 +434,7 @@ def generate_observable_array(observable_array_identifier):
-         component_export_header(api_component, for_testing),
-         "third_party/blink/renderer/bindings/core/v8/idl_types.h",
-         "third_party/blink/renderer/platform/bindings/observable_array.h",
-+        "third_party/blink/renderer/core/css/css_style_sheet.h",
-     ])
-     source_node.accumulator.add_include_headers([
-         "third_party/blink/renderer/bindings/core/v8/generated_code_helper.h",
--- 
-2.50.1

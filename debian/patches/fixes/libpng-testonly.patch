@@ -12,16 +12,16 @@ not worth it.
 
 --- a/chrome/test/BUILD.gn
 +++ b/chrome/test/BUILD.gn
-@@ -11567,7 +11567,7 @@ if (!is_android && !is_chromeos_device)
-       "//testing/gtest",
-       "//third_party/hunspell",
-       "//third_party/icu",
--      "//third_party/libpng:libpng_for_testonly",
-+      "//third_party/libpng",
-       "//ui/base:base_interactive_ui_tests",
-       "//ui/base:ozone_buildflags",
-       "//ui/base:test_support",
-@@ -12526,7 +12526,7 @@ if (!is_android) {
+@@ -4319,7 +4319,7 @@ if (!is_android) {
+         "//testing/gtest",
+         "//third_party/hunspell",
+         "//third_party/icu",
+-        "//third_party/libpng:libpng_for_testonly",
++        "//third_party/libpng",
+         "//ui/base:test_support",
+         "//ui/events:test_support",
+         "//ui/ozone",
+@@ -4951,7 +4951,7 @@ if (!is_android) {
        "//testing/gtest",
        "//third_party/hunspell",
        "//third_party/icu",
@@ -43,7 +43,7 @@ not worth it.
    }
 --- a/ui/gfx/BUILD.gn
 +++ b/ui/gfx/BUILD.gn
-@@ -902,7 +902,7 @@ test("gfx_unittests") {
+@@ -899,7 +899,7 @@ test("gfx_unittests") {
      "//skia:skcms",
      "//testing/gtest",
      "//third_party/icu:icuuc",

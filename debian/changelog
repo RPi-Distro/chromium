@@ -11,6 +11,7 @@ chromium (157.0.8103.38-1) UNRELEASED; urgency=high
     - fixes/gentoo-stylesheet.patch: refresh.
     - fixes/libpng-testonly.patch: refresh.
     - system/openjpeg.patch: refresh.
+    - upstream/rust-prebuilt-stdlib-libs.patch: drop, merged upstream.
 
   [ Timothy Pearson]
   * d/patches:

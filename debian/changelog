@@ -51,12 +51,22 @@ chromium (156.0.8078.79-1) unstable; urgency=high
     - CVE-2026-119272: Out of bounds read in FileSystem. Reported by Google.
 
   [ Daniel Richard G. ]
-  * d/deb_pre_gen.py: Rework script to be called directly by ninja, instead
-    of being called by various upstream build scripts.
+  * d/deb_pre_gen.py: Rework this into a wrapper for Ninja build-rule
+    commands, instead of a library called from Python scripts. This approach
+    is much less invasive and will be easier to maintain over time. Numerous
+    other improvements to the implementation as well.
+  * d/dummy/enum_conversions.ts: Drop, no longer needed thanks to tsx(1).
   * d/patches:
-    - debianization/pre-gen.patch: stop patching various upstream scripts
-      (eg, run_bindgen.py).
-    - disable/node-ts.patch: drop, no longer needed with above rework.
+    - debianization/pre-gen.patch: Drop the addition of deb_pre_gen hooks
+      into Python scripts, as this approach is no longer used. Also slim down
+      the boilerplate text, as it was somewhat redundant.
+    - disable/node-ts.patch: Drop, no longer needed thanks to tsx(1).
+  * d/rules: Add pre-gen add-ninja-hooks steps after "gn gen" invocations,
+    plus a new check-pre-gen target for validation purposes.
+  * d/scripts/init-pre-gen.sh: Update to accommodate the new deb_pre_gen.py
+    design. Also, be more discerning of which platform patches are missing,
+    drop the static-lib dep edit as it has been moved to deb_pre_gen.py, and
+    drop the Build-Date: field from pre-gen/BUILDINFO to aid reproducibility.
 
  -- Andres Salomon <dilinger@debian.org>  Sun, 01 Nov 2026 22:51:42 -0500
 

@@ -149,6 +149,13 @@ if [ $want_memcheck -eq 1 ]; then
   fi
 fi
 
+# On low-memory boards start-up paging can delay the browser past the 15 s
+# deadline children allow for their IPC connection; they then exit and the
+# window stays blank.
+if [ "$(awk '/^MemTotal/{print $2; exit}' /proc/meminfo)" -le 524288 ]; then
+	CHROMIUM_FLAGS="$CHROMIUM_FLAGS --ipc-connection-timeout=120"
+fi
+
 if [ $want_gles -eq 1 ]; then
 	CHROMIUM_FLAGS="$CHROMIUM_FLAGS --use-angle=gles"
 fi

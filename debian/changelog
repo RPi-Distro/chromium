@@ -8,9 +8,6 @@ chromium (157.0.8103.38-1) UNRELEASED; urgency=high
     - fixes/crubit.patch: sync from u-c.
     - ungoogled/disable-ai.patch: sync from u-c.
     - ungoogled/disable-tos-dialog.patch: drop, no longer needed.
-    - fixes/gentoo-stylesheet.patch: refresh.
-    - fixes/libpng-testonly.patch: refresh.
-    - system/openjpeg.patch: refresh.
 
  -- Andres Salomon <dilinger@debian.org>  Sun, 01 Nov 2026 22:51:42 -0500
 

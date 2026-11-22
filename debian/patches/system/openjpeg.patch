@@ -8,7 +8,7 @@
  import("//testing/test.gni")
  import("pdfium.gni")
  
-@@ -15,6 +16,13 @@ group("default") {
+@@ -24,6 +25,13 @@ group("freetype_common") {
    }
  }
  
@@ -22,12 +22,14 @@
  config("pdfium_common_config") {
    cflags = []
    cflags_cc = []
-@@ -25,6 +33,8 @@ config("pdfium_common_config") {
+@@ -31,7 +39,9 @@ config("pdfium_common_config") {
+   include_dirs = [ "." ]
+   defines = []
  
-   if (!use_system_libopenjpeg2) {
-     defines += [ "OPJ_STATIC" ]
-+  } else {
+-  if (!use_system_libopenjpeg2) {
++  if (use_system_libopenjpeg2) {
 +    configs = [ ":libopenjpeg2_from_pkgconfig" ]
++  } else {
+     defines += [ "OPJ_STATIC" ]
    }
  
-   if (pdf_enable_click_logging) {

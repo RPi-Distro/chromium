@@ -58,6 +58,7 @@ disable/rustc-allow-features.patch
 disable/lint.patch
 disable/libei.patch
 disable/omnibox-ai-mode.patch
+disable/ntp-dummy-module.patch
 
 system/golang.patch
 system/icu-shim.patch

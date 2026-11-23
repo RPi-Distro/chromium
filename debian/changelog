@@ -1,3 +1,12 @@
+chromium (156.0.8078.108-2) UNRELEASED; urgency=medium
+
+  * Install chromedriver in /usr/lib/chromium next to the component
+    libraries it links against, with a symlink at /usr/bin/chromedriver.
+    Its RPATH is $ORIGIN, so in /usr/bin it could not find them and
+    failed to start on armhf.
+
+ -- Juan Manuel Méndez Rey <juan.mendezr@proton.me>  Mon, 23 Nov 2026 20:46:17 +0100
+
 chromium (156.0.8078.108-1) unstable; urgency=high
 
   [ Andres Salomon ]

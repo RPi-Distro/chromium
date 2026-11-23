@@ -17,6 +17,7 @@ elinks -dump "$1" 2>/dev/null | \
   tr -d '\n' | \
   sed -e 's/[[:space:]]\+/ /g' | \
   sed -ne 's/CVE-/\n- CVE-/pg' | \
+  sed -e 's/ \[\[[0-9].*$//' | \
   sed -e 's/ on [0-9][0-9].*$/./' | \
   grep -v 'CVE-[0-9\-]\+ exists in the wild' | \
   tail -n +2 | \

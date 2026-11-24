@@ -4,6 +4,12 @@ chromium (156.0.8078.114-1) UNRELEASED; urgency=high
   * New upstream security release.
     - CVE-2026-134401
 
+  [ Juan Manuel Méndez Rey ]
+  * Install chromedriver in /usr/lib/chromium next to the component
+    libraries it links against, with a symlink at /usr/bin/chromedriver.
+    Its RPATH is $ORIGIN, so in /usr/bin it could not find them and
+    failed to start on armhf.
+
  -- Andres Salomon <dilinger@debian.org>  Sun, 22 Nov 2026 03:58:53 -0500
 
 chromium (156.0.8078.108-1) unstable; urgency=high

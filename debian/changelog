@@ -1,4 +1,4 @@
-chromium (1:156.0.8078.108-1~deb13u1+rpt1) trixie; urgency=medium
+chromium (1:156.0.8078.114-1~deb13u1+rpt1) trixie; urgency=medium
 
   [ Serge Schneider ]
   * Import PiOS patches from Bookworm
@@ -48,7 +48,21 @@ chromium (1:156.0.8078.108-1~deb13u1+rpt1) trixie; urgency=medium
   * rpi build customisations
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 23 Nov 2026 13:46:37 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 27 Nov 2026 22:25:15 +0000
+
+chromium (156.0.8078.114-1~deb13u1) trixie-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-134401
+
+  [ Juan Manuel Méndez Rey ]
+  * Install chromedriver in /usr/lib/chromium next to the component
+    libraries it links against, with a symlink at /usr/bin/chromedriver.
+    Its RPATH is $ORIGIN, so in /usr/bin it could not find them and
+    failed to start on armhf.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 26 Nov 2026 03:25:22 -0500
 
 chromium (156.0.8078.108-1~deb13u1) trixie-security; urgency=high
 

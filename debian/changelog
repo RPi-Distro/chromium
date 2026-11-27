@@ -1,4 +1,4 @@
-chromium (1:156.0.8078.108-1~deb12u1+rpt1) bookworm; urgency=medium
+chromium (1:156.0.8078.114-1~deb12u1+rpt1) bookworm; urgency=medium
 
   [ Serge Schneider ]
   * Use Ubuntu's browser sign-in disable-by-default patch instead of Debian's
@@ -50,7 +50,21 @@ chromium (1:156.0.8078.108-1~deb12u1+rpt1) bookworm; urgency=medium
   * Remove debian's master_preferences file
   * Add package recommend for libwidevinecdm0
 
- -- Serge Schneider <serge@raspberrypi.com>  Mon, 23 Nov 2026 13:51:33 +0000
+ -- Serge Schneider <serge@raspberrypi.com>  Fri, 27 Nov 2026 22:28:51 +0000
+
+chromium (156.0.8078.114-1~deb12u1) bookworm-security; urgency=high
+
+  [ Andres Salomon ]
+  * New upstream security release.
+    - CVE-2026-134401
+
+  [ Juan Manuel Méndez Rey ]
+  * Install chromedriver in /usr/lib/chromium next to the component
+    libraries it links against, with a symlink at /usr/bin/chromedriver.
+    Its RPATH is $ORIGIN, so in /usr/bin it could not find them and
+    failed to start on armhf.
+
+ -- Andres Salomon <dilinger@debian.org>  Thu, 26 Nov 2026 03:25:22 -0500
 
 chromium (156.0.8078.108-1~deb12u1) bookworm-security; urgency=high
 
